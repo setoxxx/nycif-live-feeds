@@ -1,27 +1,27 @@
 {
   "borough_counts": {
-    "Bronx": 123,
-    "Brooklyn": 222,
-    "Manhattan": 308,
-    "Queens": 193,
-    "Staten Island": 35
+    "Bronx": 122,
+    "Brooklyn": 213,
+    "Manhattan": 289,
+    "Queens": 186,
+    "Staten Island": 33
   },
   "category_counts": {
     "arts": 12,
     "market": 9,
-    "parks": 180,
-    "sports": 680
+    "parks": 193,
+    "sports": 629
   },
   "duplicate_policy": {
     "one_day_street_events": "dedupe by title + borough + location + coordinate; keep earliest source date; recurring sports and park events are not deduped by this rule",
     "production_feeds_modified": false
   },
-  "eligible_rows_before_one_day_street_dedupe": 884,
-  "generated_at_utc": "2026-06-27T18:26:31.487391+00:00",
+  "eligible_rows_before_one_day_street_dedupe": 846,
+  "generated_at_utc": "2026-06-27T19:43:20.805163+00:00",
   "match_counts": {
-    "event_id": 760,
-    "location_cache": 120,
-    "text_date_location": 1
+    "event_id": 694,
+    "location_cache": 147,
+    "text_date_location": 2
   },
   "one_day_street_duplicates_suppressed": 3,
   "production_feed": false,
@@ -29,20 +29,9 @@
   "sample_one_day_street_rejected_rows": [
     {
       "borough": "Queens",
-      "date": "2026-07-07",
-      "display_location": "34 AVENUE between 93 STREET and 94 STREET",
-      "kept_date": "2026-06-29",
-      "kept_source_event_id": "934014",
-      "reason": "one_day_street_duplicate_suppressed",
-      "source_cemsid": [],
-      "source_event_id": "934014",
-      "title": "Afterschool Fun"
-    },
-    {
-      "borough": "Queens",
       "date": "2026-07-08",
       "display_location": "34 AVENUE between 93 STREET and 94 STREET",
-      "kept_date": "2026-06-29",
+      "kept_date": "2026-07-07",
       "kept_source_event_id": "934014",
       "reason": "one_day_street_duplicate_suppressed",
       "source_cemsid": [],
@@ -53,22 +42,45 @@
       "borough": "Queens",
       "date": "2026-07-18",
       "display_location": "34 AVENUE between 93 STREET and 94 STREET",
-      "kept_date": "2026-06-29",
+      "kept_date": "2026-07-07",
       "kept_source_event_id": "934014",
       "reason": "one_day_street_duplicate_suppressed",
       "source_cemsid": [],
       "source_event_id": "934014",
       "title": "Afterschool Fun"
+    },
+    {
+      "borough": "Manhattan",
+      "date": "2026-07-21",
+      "display_location": "MADISON AVENUE between EAST   51 STREET and EAST   50 STREET,  MADISON AVENUE between EAST   48 STREET and EAST   49 STREET,  EAST   50 STREET between MADISON AVENUE and PARK AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  LEXINGTON AVENUE between EAST   49 STREET and EAST   50 STREET,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between 3 AVENUE and 2 AVENUE,  WEST   35 STREET between 8 AVENUE and 9 AVENUE",
+      "kept_date": "2026-07-07",
+      "kept_source_event_id": "947413",
+      "reason": "one_day_street_duplicate_suppressed",
+      "source_cemsid": [],
+      "source_event_id": "947413",
+      "title": "FWC2026"
     }
   ],
   "sample_skipped_rows": [
     {
-      "borough": "Bronx",
-      "display_location": "HALL PLACE between EAST  167 STREET and ROGERS PLACE",
-      "display_time": "11:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "932757",
-      "title": "Hall Place Family Day"
+      "borough": "Brooklyn",
+      "display_location": "Edmonds Playground (IS 113): Basketball-01",
+      "display_time": "6:00 PM",
+      "source_cemsid": [
+        "5427"
+      ],
+      "source_event_id": "954123",
+      "title": "Basketball"
+    },
+    {
+      "borough": "Queens",
+      "display_location": "Baisley Pond Park: Cricket-04",
+      "display_time": "8:00 AM",
+      "source_cemsid": [
+        "11886"
+      ],
+      "source_event_id": "912982",
+      "title": "Cricket"
     },
     {
       "borough": "Manhattan",
@@ -191,6 +203,14 @@
       "title": "Basketball"
     },
     {
+      "borough": "Manhattan",
+      "display_location": "SPRUCE STREET between GOLD STREET and NASSAU STREET",
+      "display_time": "12:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "955506",
+      "title": "NY Presbyterian Employee Appreciation Event"
+    },
+    {
       "borough": "Queens",
       "display_location": "Roy Wilkins Park: Tennis-02",
       "display_time": "1:00 PM",
@@ -198,6 +218,16 @@
         "11860"
       ],
       "source_event_id": "915290",
+      "title": "Tennis"
+    },
+    {
+      "borough": "Queens",
+      "display_location": "Alley Athletic Playground: Tennis-03",
+      "display_time": "1:00 PM",
+      "source_cemsid": [
+        "10149"
+      ],
+      "source_event_id": "914318",
       "title": "Tennis"
     },
     {
@@ -221,16 +251,6 @@
       "title": "Tennis"
     },
     {
-      "borough": "Brooklyn",
-      "display_location": "Friends Field: Lawn Area",
-      "display_time": "10:00 AM",
-      "source_cemsid": [
-        "4251"
-      ],
-      "source_event_id": "940431",
-      "title": "Miscellaneous"
-    },
-    {
       "borough": "Staten Island",
       "display_location": "1850  CLOVE ROAD, NARROWS ROAD SOUTH between RICHMOND ROAD and TARGEE STREET,  NARROWS ROAD SOUTH between TARGEE STREET and MOSEL AVENUE,  NARROWS ROAD SOUTH between MOSEL AVENUE and FINGERBOARD ROAD,  STATEN ISLAND EXPY RAMP between NARROWS ROAD S and LILY POND AVENUE,  BELT PARKWAY between VERRAZZANO BRIDGE and FLATBUSH AVENUE,  FLATBUSH AVENUE between BELT PARKWAY and AVIATION ROAD, 157 ROCKAWAY BEACH BOULEVARD, ROCKAWAY BEACH BOULEVARD between BEACH  149 STREET and BEACH  120 STREET,  BEACH  120 STREET between ROCKAWAY BEACH BOULEVARD and BEACH CHANNEL DRIVE,  BEACH CHANNEL DRIVE between BEACH  120 STREET and BEACH  169 STREET,  STATE ROAD between BEACH 169 STREET and BEACH CHANNEL DRIVE,  ROCKAWAY POINT BOULEVARD between STATE ROAD and BEACH  201 STREET, 2-45  BAYSIDE AVENUE",
       "display_time": "6:00 PM",
@@ -242,31 +262,11 @@
       ],
       "source_event_id": "948395",
       "title": "Rockaway Warrior Weekend"
-    },
-    {
-      "borough": "Queens",
-      "display_location": "Cunningham Park: Tennis-02",
-      "display_time": "8:00 AM",
-      "source_cemsid": [
-        "6131"
-      ],
-      "source_event_id": "904232",
-      "title": "Tennis"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "Fort Washington Park: Volleyball-02",
-      "display_time": "9:00 AM",
-      "source_cemsid": [
-        "10986"
-      ],
-      "source_event_id": "909466",
-      "title": "Volleyball"
     }
   ],
-  "skipped_needs_review_or_bad_gps": 56,
+  "skipped_needs_review_or_bad_gps": 74,
   "source": "nycif_live_test_enriched_events.json",
   "staged_feed": true,
-  "staged_feed_events": 881,
-  "test_feed_rows_loaded": 940
+  "staged_feed_events": 843,
+  "test_feed_rows_loaded": 920
 }

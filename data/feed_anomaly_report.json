@@ -10771,42 +10771,8 @@
     },
     {
       "feed": "test_enriched",
-      "high_issues": 95,
+      "high_issues": 82,
       "issues": [
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-06-30"
-          ],
-          "feed": "test_enriched",
-          "key": "846603",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.69150,-73.95768",
-              "location": "Star Spangled Playground (IS 117): Football-01",
-              "source_event_id": "846603",
-              "title": "Untitled NYC event"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.69150,-73.95768",
-              "location": "Star Spangled Playground (IS 117): Football-01",
-              "source_event_id": "846603",
-              "title": "Untitled NYC event"
-            }
-          ],
-          "severity": "high"
-        },
         {
           "count": 2,
           "dates": [
@@ -10837,74 +10803,6 @@
               "location": "Marcus Garvey Park: Amphitheater",
               "source_event_id": "890793",
               "title": "Classical Theatre of Harlem"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-16"
-          ],
-          "feed": "test_enriched",
-          "key": "891690",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Special Event",
-              "latlng": "40.75907,-73.98497",
-              "location": "Father Duffy Square: Father Duffy Square",
-              "source_event_id": "891690",
-              "title": "TSQ LIVE Programming"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-16",
-              "end_date": "2026-07-16",
-              "event_type": "Special Event",
-              "latlng": "40.75907,-73.98497",
-              "location": "Father Duffy Square: Father Duffy Square",
-              "source_event_id": "891690",
-              "title": "TSQ LIVE Programming"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-06-30"
-          ],
-          "feed": "test_enriched",
-          "key": "892773",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Special Event",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: South Dead Road B",
-              "source_event_id": "892773",
-              "title": "Miscellaneous"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Special Event",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: South Dead Road B",
-              "source_event_id": "892773",
-              "title": "Miscellaneous"
             }
           ],
           "severity": "high"
@@ -10957,33 +10855,67 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-20"
+            "2026-07-09",
+            "2026-07-14"
           ],
           "feed": "test_enriched",
-          "key": "899956",
+          "key": "899938",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "date": "2026-07-09",
+              "end_date": "2026-07-09",
               "event_type": "Sport - Youth",
-              "latlng": "40.65534,-73.88662",
-              "location": "Shore Road Park and Parkway: 95th St Fields-Softball-03",
-              "source_event_id": "899956",
-              "title": "Baseball - T-ball"
+              "latlng": "40.69757,-73.91678",
+              "location": "Hope Ballfields: Softball-01",
+              "source_event_id": "899938",
+              "title": "Baseball - 12 and Under (Little League)"
             },
             {
               "borough": "Brooklyn",
-              "date": "2026-07-20",
-              "end_date": "2026-07-20",
+              "date": "2026-07-14",
+              "end_date": "2026-07-14",
               "event_type": "Sport - Youth",
-              "latlng": "40.65534,-73.88662",
-              "location": "Shore Road Park and Parkway: 95th St Fields-Softball-03",
-              "source_event_id": "899956",
-              "title": "Baseball - T-ball"
+              "latlng": "40.69757,-73.91678",
+              "location": "Hope Ballfields: Softball-01",
+              "source_event_id": "899938",
+              "title": "Baseball - 12 and Under (Little League)"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-06-28",
+            "2026-07-12"
+          ],
+          "feed": "test_enriched",
+          "key": "899942",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Brooklyn",
+              "date": "2026-06-28",
+              "end_date": "2026-06-28",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72022,-73.95065",
+              "location": "McCarren Park: PO Gilroy Field-Baseball-03",
+              "source_event_id": "899942",
+              "title": "Baseball - 13 and Older (Little League)"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-12",
+              "end_date": "2026-07-12",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72022,-73.95065",
+              "location": "McCarren Park: PO Gilroy Field-Baseball-03",
+              "source_event_id": "899942",
+              "title": "Baseball - 13 and Older (Little League)"
             }
           ],
           "severity": "high"
@@ -11023,10 +10955,11 @@
           "severity": "high"
         },
         {
-          "count": 2,
+          "count": 3,
           "dates": [
             "2026-07-01",
-            "2026-07-22"
+            "2026-07-22",
+            "2026-07-24"
           ],
           "feed": "test_enriched",
           "key": "900034",
@@ -11052,40 +10985,16 @@
               "location": "Thomas Jefferson Park: Softball-03",
               "source_event_id": "900034",
               "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-02"
-          ],
-          "feed": "test_enriched",
-          "key": "900084",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.63515,-74.01881",
-              "location": "Leif Ericson Park: Dust Bowl-Softball-02",
-              "source_event_id": "900084",
-              "title": "Baseball - 12 and Under (Little League)"
             },
             {
-              "borough": "Brooklyn",
-              "date": "2026-07-02",
-              "end_date": "2026-07-02",
-              "event_type": "Sport - Youth",
-              "latlng": "40.63515,-74.01881",
-              "location": "Leif Ericson Park: Dust Bowl-Softball-02",
-              "source_event_id": "900084",
-              "title": "Baseball - 12 and Under (Little League)"
+              "borough": "Manhattan",
+              "date": "2026-07-24",
+              "end_date": "2026-07-24",
+              "event_type": "Sport - Adult",
+              "latlng": "40.79320,-73.93559",
+              "location": "Thomas Jefferson Park: Softball-03",
+              "source_event_id": "900034",
+              "title": "Softball - Adults"
             }
           ],
           "severity": "high"
@@ -11149,203 +11058,33 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-13"
+            "2026-06-28",
+            "2026-07-05"
           ],
           "feed": "test_enriched",
-          "key": "900095",
+          "key": "901411",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "date": "2026-06-28",
+              "end_date": "2026-06-28",
               "event_type": "Sport - Youth",
-              "latlng": "40.66138,-73.96963",
-              "location": "Prospect Park: Softball-07",
-              "source_event_id": "900095",
-              "title": "Softball (Little league)"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-13",
-              "end_date": "2026-07-13",
-              "event_type": "Sport - Youth",
-              "latlng": "40.66138,-73.96963",
-              "location": "Prospect Park: Softball-07",
-              "source_event_id": "900095",
-              "title": "Softball (Little league)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-02"
-          ],
-          "feed": "test_enriched",
-          "key": "900300",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.84112,-73.93369",
-              "location": "Highbridge Park: Softball-03",
-              "source_event_id": "900300",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-02",
-              "end_date": "2026-07-02",
-              "event_type": "Sport - Youth",
-              "latlng": "40.84112,-73.93369",
-              "location": "Highbridge Park: Softball-03",
-              "source_event_id": "900300",
-              "title": "Baseball - 12 and Under (Little League)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-14"
-          ],
-          "feed": "test_enriched",
-          "key": "900312",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.69147,-73.93225",
-              "location": "Jesse Owens Playground: Youth-Multipurpose Play Area-01",
-              "source_event_id": "900312",
+              "latlng": "40.64798,-74.00374",
+              "location": "Sunset Park: Soccer-01A",
+              "source_event_id": "901411",
               "title": "Soccer - Non Regulation"
             },
             {
               "borough": "Brooklyn",
-              "date": "2026-07-14",
-              "end_date": "2026-07-14",
+              "date": "2026-07-05",
+              "end_date": "2026-07-05",
               "event_type": "Sport - Youth",
-              "latlng": "40.69147,-73.93225",
-              "location": "Jesse Owens Playground: Youth-Multipurpose Play Area-01",
-              "source_event_id": "900312",
+              "latlng": "40.64798,-74.00374",
+              "location": "Sunset Park: Soccer-01A",
+              "source_event_id": "901411",
               "title": "Soccer - Non Regulation"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-13"
-          ],
-          "feed": "test_enriched",
-          "key": "901303",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Adult",
-              "latlng": "40.86932,-73.80036",
-              "location": "Pelham Bay Park: Softball-03",
-              "source_event_id": "901303",
-              "title": "Softball - Adults"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-07-13",
-              "end_date": "2026-07-13",
-              "event_type": "Sport - Adult",
-              "latlng": "40.86932,-73.80036",
-              "location": "Pelham Bay Park: Softball-03",
-              "source_event_id": "901303",
-              "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-06"
-          ],
-          "feed": "test_enriched",
-          "key": "901308",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Adult",
-              "latlng": "40.87628,-73.89188",
-              "location": "Harris Park: Softball-03",
-              "source_event_id": "901308",
-              "title": "Softball - Adults"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-07-06",
-              "end_date": "2026-07-06",
-              "event_type": "Sport - Adult",
-              "latlng": "40.87628,-73.89188",
-              "location": "Harris Park: Softball-03",
-              "source_event_id": "901308",
-              "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-24"
-          ],
-          "feed": "test_enriched",
-          "key": "901511",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.82659,-73.94113",
-              "location": "Jackie Robinson Park: Playground One Forty Nine-Basketball-01",
-              "source_event_id": "901511",
-              "title": "Basketball"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-24",
-              "end_date": "2026-07-24",
-              "event_type": "Sport - Youth",
-              "latlng": "40.82659,-73.94113",
-              "location": "Jackie Robinson Park: Playground One Forty Nine-Basketball-01",
-              "source_event_id": "901511",
-              "title": "Basketball"
             }
           ],
           "severity": "high"
@@ -11380,6 +11119,74 @@
               "location": "Parade Ground: Soccer-10",
               "source_event_id": "902074",
               "title": "Soccer - Non Regulation"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-01",
+            "2026-07-08"
+          ],
+          "feed": "test_enriched",
+          "key": "902481",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-01",
+              "end_date": "2026-07-01",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72980,-74.00615",
+              "location": "James J Walker Park: Softball-01",
+              "source_event_id": "902481",
+              "title": "Baseball - 12 and Under (Little League)"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-08",
+              "end_date": "2026-07-08",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72980,-74.00615",
+              "location": "James J Walker Park: Softball-01",
+              "source_event_id": "902481",
+              "title": "Baseball - 12 and Under (Little League)"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-05",
+            "2026-07-19"
+          ],
+          "feed": "test_enriched",
+          "key": "902899",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-05",
+              "end_date": "2026-07-05",
+              "event_type": "Sport - Adult",
+              "latlng": "40.59704,-73.91945",
+              "location": "Marine Park: Cricket-02",
+              "source_event_id": "902899",
+              "title": "Cricket"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-19",
+              "end_date": "2026-07-19",
+              "event_type": "Sport - Adult",
+              "latlng": "40.59704,-73.91945",
+              "location": "Marine Park: Cricket-02",
+              "source_event_id": "902899",
+              "title": "Cricket"
             }
           ],
           "severity": "high"
@@ -11455,8 +11262,42 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-30",
-            "2026-07-02"
+            "2026-07-11",
+            "2026-07-25"
+          ],
+          "feed": "test_enriched",
+          "key": "903771",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-11",
+              "end_date": "2026-07-11",
+              "event_type": "Sport - Youth",
+              "latlng": "40.87239,-73.92611",
+              "location": "Inwood Hill Park: Baseball-06",
+              "source_event_id": "903771",
+              "title": "Baseball - 12 and Under (Little League)"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-25",
+              "end_date": "2026-07-25",
+              "event_type": "Sport - Youth",
+              "latlng": "40.87239,-73.92611",
+              "location": "Inwood Hill Park: Baseball-06",
+              "source_event_id": "903771",
+              "title": "Baseball - 12 and Under (Little League)"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-02",
+            "2026-07-19"
           ],
           "feed": "test_enriched",
           "key": "904014",
@@ -11465,8 +11306,8 @@
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
+              "date": "2026-07-02",
+              "end_date": "2026-07-02",
               "event_type": "Sport - Youth",
               "latlng": "40.58469,-73.99516",
               "location": "Calvert Vaux Park: Soccer-03",
@@ -11475,8 +11316,8 @@
             },
             {
               "borough": "Brooklyn",
-              "date": "2026-07-02",
-              "end_date": "2026-07-02",
+              "date": "2026-07-19",
+              "end_date": "2026-07-19",
               "event_type": "Sport - Youth",
               "latlng": "40.58469,-73.99516",
               "location": "Calvert Vaux Park: Soccer-03",
@@ -11555,6 +11396,96 @@
           "severity": "high"
         },
         {
+          "count": 4,
+          "dates": [
+            "2026-07-04",
+            "2026-07-08",
+            "2026-07-11",
+            "2026-07-20"
+          ],
+          "feed": "test_enriched",
+          "key": "904677",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Bronx",
+              "date": "2026-07-04",
+              "end_date": "2026-07-04",
+              "event_type": "Sport - Youth",
+              "latlng": "40.90000,-73.89222",
+              "location": "Van Cortlandt Park: Frank Kelly-Softball-02",
+              "source_event_id": "904677",
+              "title": "Baseball - 12 and Under (Little League)"
+            },
+            {
+              "borough": "Bronx",
+              "date": "2026-07-08",
+              "end_date": "2026-07-08",
+              "event_type": "Sport - Youth",
+              "latlng": "40.90000,-73.89222",
+              "location": "Van Cortlandt Park: Frank Kelly-Softball-02",
+              "source_event_id": "904677",
+              "title": "Baseball - 12 and Under (Little League)"
+            },
+            {
+              "borough": "Bronx",
+              "date": "2026-07-11",
+              "end_date": "2026-07-11",
+              "event_type": "Sport - Youth",
+              "latlng": "40.90000,-73.89222",
+              "location": "Van Cortlandt Park: Frank Kelly-Softball-02",
+              "source_event_id": "904677",
+              "title": "Baseball - 12 and Under (Little League)"
+            },
+            {
+              "borough": "Bronx",
+              "date": "2026-07-20",
+              "end_date": "2026-07-20",
+              "event_type": "Sport - Youth",
+              "latlng": "40.90000,-73.89222",
+              "location": "Van Cortlandt Park: Frank Kelly-Softball-02",
+              "source_event_id": "904677",
+              "title": "Baseball - 12 and Under (Little League)"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-14",
+            "2026-07-24"
+          ],
+          "feed": "test_enriched",
+          "key": "904707",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-14",
+              "end_date": "2026-07-14",
+              "event_type": "Sport - Youth",
+              "latlng": "40.64974,-73.97102",
+              "location": "Parade Ground: Soccer-10",
+              "source_event_id": "904707",
+              "title": "Soccer - Non Regulation"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-24",
+              "end_date": "2026-07-24",
+              "event_type": "Sport - Youth",
+              "latlng": "40.64974,-73.97102",
+              "location": "Parade Ground: Soccer-10",
+              "source_event_id": "904707",
+              "title": "Soccer - Non Regulation"
+            }
+          ],
+          "severity": "high"
+        },
+        {
           "count": 2,
           "dates": [
             "2026-07-14",
@@ -11584,40 +11515,6 @@
               "location": "Fort Washington Park: 165th St-Softball-02",
               "source_event_id": "904854",
               "title": "Softball"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-01"
-          ],
-          "feed": "test_enriched",
-          "key": "904887",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.84245,-73.94700",
-              "location": "Fort Washington Park: Volleyball-05",
-              "source_event_id": "904887",
-              "title": "Volleyball"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-01",
-              "end_date": "2026-07-01",
-              "event_type": "Sport - Youth",
-              "latlng": "40.84245,-73.94700",
-              "location": "Fort Washington Park: Volleyball-05",
-              "source_event_id": "904887",
-              "title": "Volleyball"
             }
           ],
           "severity": "high"
@@ -11659,41 +11556,42 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-15"
+            "2026-07-19",
+            "2026-07-23"
           ],
           "feed": "test_enriched",
-          "key": "905050",
+          "key": "905185",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Adult",
-              "latlng": "40.79097,-73.98019",
-              "location": "Riverside Park: 107th/108th St-Softball-06",
-              "source_event_id": "905050",
-              "title": "Softball - Adults"
+              "borough": "Brooklyn",
+              "date": "2026-07-19",
+              "end_date": "2026-07-19",
+              "event_type": "Sport - Youth",
+              "latlng": "40.64974,-73.97102",
+              "location": "Parade Ground: Baseball-01",
+              "source_event_id": "905185",
+              "title": "Baseball - 13 and Older (Little League)"
             },
             {
-              "borough": "Manhattan",
-              "date": "2026-07-15",
-              "end_date": "2026-07-15",
-              "event_type": "Sport - Adult",
-              "latlng": "40.79097,-73.98019",
-              "location": "Riverside Park: 107th/108th St-Softball-06",
-              "source_event_id": "905050",
-              "title": "Softball - Adults"
+              "borough": "Brooklyn",
+              "date": "2026-07-23",
+              "end_date": "2026-07-23",
+              "event_type": "Sport - Youth",
+              "latlng": "40.64974,-73.97102",
+              "location": "Parade Ground: Baseball-01",
+              "source_event_id": "905185",
+              "title": "Baseball - 13 and Older (Little League)"
             }
           ],
           "severity": "high"
         },
         {
-          "count": 2,
+          "count": 3,
           "dates": [
             "2026-07-01",
+            "2026-07-09",
             "2026-07-17"
           ],
           "feed": "test_enriched",
@@ -11705,6 +11603,16 @@
               "borough": "Brooklyn",
               "date": "2026-07-01",
               "end_date": "2026-07-01",
+              "event_type": "Sport - Youth",
+              "latlng": "40.64974,-73.97102",
+              "location": "Parade Ground: Baseball-07",
+              "source_event_id": "905229",
+              "title": "Baseball - 13 and Older (Little League)"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-09",
+              "end_date": "2026-07-09",
               "event_type": "Sport - Youth",
               "latlng": "40.64974,-73.97102",
               "location": "Parade Ground: Baseball-07",
@@ -11817,40 +11725,6 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-30",
-            "2026-07-18"
-          ],
-          "feed": "test_enriched",
-          "key": "906004",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.67219,-73.98446",
-              "location": "JHS 51 JOP: Basketball-05",
-              "source_event_id": "906004",
-              "title": "Miscellaneous"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-18",
-              "end_date": "2026-07-18",
-              "event_type": "Sport - Youth",
-              "latlng": "40.67219,-73.98446",
-              "location": "JHS 51 JOP: Basketball-05",
-              "source_event_id": "906004",
-              "title": "Miscellaneous"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
             "2026-07-04",
             "2026-07-25"
           ],
@@ -11878,6 +11752,40 @@
               "location": "Canarsie Park: Cricket-01",
               "source_event_id": "907006",
               "title": "Cricket"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-08",
+            "2026-07-22"
+          ],
+          "feed": "test_enriched",
+          "key": "907250",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Bronx",
+              "date": "2026-07-08",
+              "end_date": "2026-07-08",
+              "event_type": "Sport - Youth",
+              "latlng": "40.83854,-73.89299",
+              "location": "Crotona Park: Soccer-02",
+              "source_event_id": "907250",
+              "title": "Soccer - Non Regulation"
+            },
+            {
+              "borough": "Bronx",
+              "date": "2026-07-22",
+              "end_date": "2026-07-22",
+              "event_type": "Sport - Youth",
+              "latlng": "40.83854,-73.89299",
+              "location": "Crotona Park: Soccer-02",
+              "source_event_id": "907250",
+              "title": "Soccer - Non Regulation"
             }
           ],
           "severity": "high"
@@ -11919,33 +11827,67 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-08"
+            "2026-07-11",
+            "2026-07-25"
           ],
           "feed": "test_enriched",
-          "key": "907655",
+          "key": "907602",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.60245,-74.01110",
-              "location": "Bath Beach Park: Softball-01",
-              "source_event_id": "907655",
-              "title": "Softball (Little league)"
+              "date": "2026-07-11",
+              "end_date": "2026-07-11",
+              "event_type": "Sport - Adult",
+              "latlng": "40.61065,-74.01917",
+              "location": "Dyker Beach Park: Dyker 14th Ave-Asphalt-Softball-07",
+              "source_event_id": "907602",
+              "title": "Soccer - Non Regulation"
             },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-25",
+              "end_date": "2026-07-25",
+              "event_type": "Sport - Adult",
+              "latlng": "40.61065,-74.01917",
+              "location": "Dyker Beach Park: Dyker 14th Ave-Asphalt-Softball-07",
+              "source_event_id": "907602",
+              "title": "Soccer - Non Regulation"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-08",
+            "2026-07-22"
+          ],
+          "feed": "test_enriched",
+          "key": "907714",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
             {
               "borough": "Brooklyn",
               "date": "2026-07-08",
               "end_date": "2026-07-08",
-              "event_type": "Sport - Youth",
-              "latlng": "40.60245,-74.01110",
-              "location": "Bath Beach Park: Softball-01",
-              "source_event_id": "907655",
-              "title": "Softball (Little league)"
+              "event_type": "Sport - Adult",
+              "latlng": "40.72022,-73.95065",
+              "location": "McCarren Park: Asphalt-Softball-01",
+              "source_event_id": "907714",
+              "title": "Softball - Adults"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-22",
+              "end_date": "2026-07-22",
+              "event_type": "Sport - Adult",
+              "latlng": "40.72022,-73.95065",
+              "location": "McCarren Park: Asphalt-Softball-01",
+              "source_event_id": "907714",
+              "title": "Softball - Adults"
             }
           ],
           "severity": "high"
@@ -11987,67 +11929,33 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-30",
-            "2026-07-14"
+            "2026-07-06",
+            "2026-07-07"
           ],
           "feed": "test_enriched",
-          "key": "908308",
+          "key": "908396",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
-              "borough": "Staten Island",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.62327,-74.14553",
-              "location": "Markham Playground: Multi Purpose Play Area-01",
-              "source_event_id": "908308",
-              "title": "Soccer - Non Regulation"
+              "borough": "Manhattan",
+              "date": "2026-07-06",
+              "end_date": "2026-07-06",
+              "event_type": "Sport - Adult",
+              "latlng": "40.77215,-73.97778",
+              "location": "Central Park: North Meadow-Softball-02",
+              "source_event_id": "908396",
+              "title": "Softball - Adults"
             },
             {
-              "borough": "Staten Island",
-              "date": "2026-07-14",
-              "end_date": "2026-07-14",
-              "event_type": "Sport - Youth",
-              "latlng": "40.62327,-74.14553",
-              "location": "Markham Playground: Multi Purpose Play Area-01",
-              "source_event_id": "908308",
-              "title": "Soccer - Non Regulation"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-12"
-          ],
-          "feed": "test_enriched",
-          "key": "908672",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.61454,-73.91609",
-              "location": "Monsignor Crawford Field: Softball-02",
-              "source_event_id": "908672",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-12",
-              "end_date": "2026-07-12",
-              "event_type": "Sport - Youth",
-              "latlng": "40.61454,-73.91609",
-              "location": "Monsignor Crawford Field: Softball-02",
-              "source_event_id": "908672",
-              "title": "Baseball - 12 and Under (Little League)"
+              "borough": "Manhattan",
+              "date": "2026-07-07",
+              "end_date": "2026-07-07",
+              "event_type": "Sport - Adult",
+              "latlng": "40.77215,-73.97778",
+              "location": "Central Park: North Meadow-Softball-02",
+              "source_event_id": "908396",
+              "title": "Softball - Adults"
             }
           ],
           "severity": "high"
@@ -12087,9 +11995,8 @@
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 3,
           "dates": [
-            "2026-06-29",
             "2026-07-10",
             "2026-07-13",
             "2026-07-24"
@@ -12099,16 +12006,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Queens",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.70721,-73.89123",
-              "location": "Mafera Park: Football-01",
-              "source_event_id": "908790",
-              "title": "Football - Youth"
-            },
             {
               "borough": "Queens",
               "date": "2026-07-10",
@@ -12143,9 +12040,8 @@
           "severity": "high"
         },
         {
-          "count": 3,
+          "count": 2,
           "dates": [
-            "2026-06-29",
             "2026-07-15",
             "2026-07-20"
           ],
@@ -12154,16 +12050,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Adult",
-              "latlng": "40.82701,-73.92779",
-              "location": "Macombs Dam Park: Elston Gene Howard Field-Softball-02",
-              "source_event_id": "909024",
-              "title": "Softball - Adults"
-            },
             {
               "borough": "Bronx",
               "date": "2026-07-15",
@@ -12188,80 +12074,35 @@
           "severity": "high"
         },
         {
-          "count": 3,
-          "dates": [
-            "2026-06-29",
-            "2026-06-30",
-            "2026-07-08"
-          ],
-          "feed": "test_enriched",
-          "key": "909311",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Adult",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: Great Lawn-Softball-08",
-              "source_event_id": "909311",
-              "title": "Softball - Adults"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Adult",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: Great Lawn-Softball-08",
-              "source_event_id": "909311",
-              "title": "Softball - Adults"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-08",
-              "end_date": "2026-07-08",
-              "event_type": "Sport - Adult",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: Great Lawn-Softball-08",
-              "source_event_id": "909311",
-              "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-02"
+            "2026-07-06",
+            "2026-07-17"
           ],
           "feed": "test_enriched",
-          "key": "909376",
+          "key": "909522",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
               "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "date": "2026-07-06",
+              "end_date": "2026-07-06",
               "event_type": "Sport - Youth",
-              "latlng": "40.76819,-73.99429",
-              "location": "De Witt Clinton Park: Soccer-01B",
-              "source_event_id": "909376",
-              "title": "Soccer - Non Regulation"
+              "latlng": "",
+              "location": "Fort Washington Park: Tennis-01",
+              "source_event_id": "909522",
+              "title": "Tennis"
             },
             {
               "borough": "Manhattan",
-              "date": "2026-07-02",
-              "end_date": "2026-07-02",
+              "date": "2026-07-17",
+              "end_date": "2026-07-17",
               "event_type": "Sport - Youth",
-              "latlng": "40.76819,-73.99429",
-              "location": "De Witt Clinton Park: Soccer-01B",
-              "source_event_id": "909376",
-              "title": "Soccer - Non Regulation"
+              "latlng": "",
+              "location": "Fort Washington Park: Tennis-01",
+              "source_event_id": "909522",
+              "title": "Tennis"
             }
           ],
           "severity": "high"
@@ -12295,40 +12136,6 @@
               "latlng": "40.79097,-73.98019",
               "location": "Riverside Park: 111th St-Basketball-01",
               "source_event_id": "909638",
-              "title": "Basketball"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-02"
-          ],
-          "feed": "test_enriched",
-          "key": "909820",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.79097,-73.98019",
-              "location": "Riverside Park: 111th St-Basketball-05",
-              "source_event_id": "909820",
-              "title": "Basketball"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-02",
-              "end_date": "2026-07-02",
-              "event_type": "Sport - Youth",
-              "latlng": "40.79097,-73.98019",
-              "location": "Riverside Park: 111th St-Basketball-05",
-              "source_event_id": "909820",
               "title": "Basketball"
             }
           ],
@@ -12403,9 +12210,10 @@
           "severity": "high"
         },
         {
-          "count": 2,
+          "count": 3,
           "dates": [
-            "2026-06-29",
+            "2026-07-03",
+            "2026-07-10",
             "2026-07-15"
           ],
           "feed": "test_enriched",
@@ -12415,8 +12223,18 @@
           "samples": [
             {
               "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "date": "2026-07-03",
+              "end_date": "2026-07-03",
+              "event_type": "Sport - Youth",
+              "latlng": "40.83344,-73.92381",
+              "location": "Reverend T. Wendell Foster Park: Baseball-01",
+              "source_event_id": "910161",
+              "title": "Baseball - 13 and Older (Little League)"
+            },
+            {
+              "borough": "Bronx",
+              "date": "2026-07-10",
+              "end_date": "2026-07-10",
               "event_type": "Sport - Youth",
               "latlng": "40.83344,-73.92381",
               "location": "Reverend T. Wendell Foster Park: Baseball-01",
@@ -12505,9 +12323,8 @@
           "severity": "high"
         },
         {
-          "count": 3,
+          "count": 2,
           "dates": [
-            "2026-06-30",
             "2026-07-09",
             "2026-07-12"
           ],
@@ -12516,16 +12333,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.82701,-73.92779",
-              "location": "Macombs Dam Park: Basketball-03",
-              "source_event_id": "910637",
-              "title": "Basketball"
-            },
             {
               "borough": "Bronx",
               "date": "2026-07-09",
@@ -12545,74 +12352,6 @@
               "location": "Macombs Dam Park: Basketball-03",
               "source_event_id": "910637",
               "title": "Basketball"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-14"
-          ],
-          "feed": "test_enriched",
-          "key": "910859",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Adult",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: North Meadow-Softball-09",
-              "source_event_id": "910859",
-              "title": "Softball - Adults"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-14",
-              "end_date": "2026-07-14",
-              "event_type": "Sport - Adult",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: North Meadow-Softball-09",
-              "source_event_id": "910859",
-              "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-22"
-          ],
-          "feed": "test_enriched",
-          "key": "910942",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Adult",
-              "latlng": "40.71514,-74.00000",
-              "location": "Columbus Park: Soccer-01",
-              "source_event_id": "910942",
-              "title": "Soccer - Non Regulation"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-22",
-              "end_date": "2026-07-22",
-              "event_type": "Sport - Adult",
-              "latlng": "40.71514,-74.00000",
-              "location": "Columbus Park: Soccer-01",
-              "source_event_id": "910942",
-              "title": "Soccer - Non Regulation"
             }
           ],
           "severity": "high"
@@ -12647,176 +12386,6 @@
               "location": "P.S. 29 Ball Field: Softball-01",
               "source_event_id": "910954",
               "title": "Baseball - 13 and Older (Little League)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-01"
-          ],
-          "feed": "test_enriched",
-          "key": "911706",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.81691,-73.87101",
-              "location": "Soundview Park: Track-01",
-              "source_event_id": "911706",
-              "title": "Track and Field"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-07-01",
-              "end_date": "2026-07-01",
-              "event_type": "Sport - Youth",
-              "latlng": "40.81691,-73.87101",
-              "location": "Soundview Park: Track-01",
-              "source_event_id": "911706",
-              "title": "Track and Field"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-06"
-          ],
-          "feed": "test_enriched",
-          "key": "912027",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.64798,-74.00374",
-              "location": "Sunset Park: Soccer-01B",
-              "source_event_id": "912027",
-              "title": "Soccer - Non Regulation"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-06",
-              "end_date": "2026-07-06",
-              "event_type": "Sport - Youth",
-              "latlng": "40.64798,-74.00374",
-              "location": "Sunset Park: Soccer-01B",
-              "source_event_id": "912027",
-              "title": "Soccer - Non Regulation"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-20"
-          ],
-          "feed": "test_enriched",
-          "key": "912143",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Adult",
-              "latlng": "40.67157,-74.00510",
-              "location": "Red Hook Recreation Area: Softball-08",
-              "source_event_id": "912143",
-              "title": "Softball - Adults"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-20",
-              "end_date": "2026-07-20",
-              "event_type": "Sport - Adult",
-              "latlng": "40.67157,-74.00510",
-              "location": "Red Hook Recreation Area: Softball-08",
-              "source_event_id": "912143",
-              "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-16"
-          ],
-          "feed": "test_enriched",
-          "key": "912385",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.66138,-73.96963",
-              "location": "Prospect Park: Baseball-02",
-              "source_event_id": "912385",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-16",
-              "end_date": "2026-07-16",
-              "event_type": "Sport - Youth",
-              "latlng": "40.66138,-73.96963",
-              "location": "Prospect Park: Baseball-02",
-              "source_event_id": "912385",
-              "title": "Baseball - 12 and Under (Little League)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-08"
-          ],
-          "feed": "test_enriched",
-          "key": "912534",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.84158,-73.83934",
-              "location": "Pelham Bay Little League: Softball-03",
-              "source_event_id": "912534",
-              "title": "Softball (Little league)"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-07-08",
-              "end_date": "2026-07-08",
-              "event_type": "Sport - Youth",
-              "latlng": "40.84158,-73.83934",
-              "location": "Pelham Bay Little League: Softball-03",
-              "source_event_id": "912534",
-              "title": "Softball (Little league)"
             }
           ],
           "severity": "high"
@@ -12892,33 +12461,33 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-02"
+            "2026-07-03",
+            "2026-07-18"
           ],
           "feed": "test_enriched",
-          "key": "912938",
+          "key": "912857",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "borough": "Brooklyn",
+              "date": "2026-07-03",
+              "end_date": "2026-07-03",
               "event_type": "Sport - Youth",
-              "latlng": "40.90000,-73.89222",
-              "location": "Van Cortlandt Park: Stadium-Baseball-01",
-              "source_event_id": "912938",
-              "title": "Baseball - 13 and Older (Little League)"
+              "latlng": "40.68157,-73.95917",
+              "location": "Crispus Attucks Playground: Basketball-01",
+              "source_event_id": "912857",
+              "title": "Basketball"
             },
             {
-              "borough": "Bronx",
-              "date": "2026-07-02",
-              "end_date": "2026-07-02",
+              "borough": "Brooklyn",
+              "date": "2026-07-18",
+              "end_date": "2026-07-18",
               "event_type": "Sport - Youth",
-              "latlng": "40.90000,-73.89222",
-              "location": "Van Cortlandt Park: Stadium-Baseball-01",
-              "source_event_id": "912938",
-              "title": "Baseball - 13 and Older (Little League)"
+              "latlng": "40.68157,-73.95917",
+              "location": "Crispus Attucks Playground: Basketball-01",
+              "source_event_id": "912857",
+              "title": "Basketball"
             }
           ],
           "severity": "high"
@@ -12926,24 +12495,48 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-10"
+            "2026-07-01",
+            "2026-07-16"
+          ],
+          "feed": "test_enriched",
+          "key": "912982",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Queens",
+              "date": "2026-07-01",
+              "end_date": "2026-07-01",
+              "event_type": "Sport - Youth",
+              "latlng": "",
+              "location": "Baisley Pond Park: Cricket-04",
+              "source_event_id": "912982",
+              "title": "Cricket"
+            },
+            {
+              "borough": "Queens",
+              "date": "2026-07-16",
+              "end_date": "2026-07-16",
+              "event_type": "Sport - Youth",
+              "latlng": "",
+              "location": "Baisley Pond Park: Cricket-04",
+              "source_event_id": "912982",
+              "title": "Cricket"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-10",
+            "2026-07-12"
           ],
           "feed": "test_enriched",
           "key": "913273",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.88591,-73.91700",
-              "location": "Seton Park: Softball-02",
-              "source_event_id": "913273",
-              "title": "Softball (Little league)"
-            },
             {
               "borough": "Bronx",
               "date": "2026-07-10",
@@ -12953,6 +12546,16 @@
               "location": "Seton Park: Softball-02",
               "source_event_id": "913273",
               "title": "Softball (Little league)"
+            },
+            {
+              "borough": "Bronx",
+              "date": "2026-07-12",
+              "end_date": "2026-07-12",
+              "event_type": "Sport - Youth",
+              "latlng": "40.88591,-73.91700",
+              "location": "Seton Park: Softball-02",
+              "source_event_id": "913273",
+              "title": "Softball (Little league)"
             }
           ],
           "severity": "high"
@@ -12960,67 +12563,33 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-08"
+            "2026-07-01",
+            "2026-07-20"
           ],
           "feed": "test_enriched",
-          "key": "913285",
+          "key": "914215",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
-              "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "borough": "Staten Island",
+              "date": "2026-07-01",
+              "end_date": "2026-07-01",
               "event_type": "Sport - Youth",
-              "latlng": "40.62734,-73.89570",
-              "location": "Canarsie Park: Monroe Cohen-Baseball-02",
-              "source_event_id": "913285",
-              "title": "Baseball - 13 and Older (Little League)"
+              "latlng": "40.58658,-74.10023",
+              "location": "Gen. Douglas MacArthur Park: Basketball-01",
+              "source_event_id": "914215",
+              "title": "Basketball"
             },
             {
-              "borough": "Brooklyn",
-              "date": "2026-07-08",
-              "end_date": "2026-07-08",
+              "borough": "Staten Island",
+              "date": "2026-07-20",
+              "end_date": "2026-07-20",
               "event_type": "Sport - Youth",
-              "latlng": "40.62734,-73.89570",
-              "location": "Canarsie Park: Monroe Cohen-Baseball-02",
-              "source_event_id": "913285",
-              "title": "Baseball - 13 and Older (Little League)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-06-30"
-          ],
-          "feed": "test_enriched",
-          "key": "913877",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.80071,-73.96327",
-              "location": "Booker T. Washington Playground: Soccer-01",
-              "source_event_id": "913877",
-              "title": "Soccer - Non Regulation"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.80071,-73.96327",
-              "location": "Booker T. Washington Playground: Soccer-01",
-              "source_event_id": "913877",
-              "title": "Soccer - Non Regulation"
+              "latlng": "40.58658,-74.10023",
+              "location": "Gen. Douglas MacArthur Park: Basketball-01",
+              "source_event_id": "914215",
+              "title": "Basketball"
             }
           ],
           "severity": "high"
@@ -13055,6 +12624,40 @@
               "location": "Astoria Park: Tennis-01",
               "source_event_id": "914281",
               "title": "Tennis"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-10",
+            "2026-07-20"
+          ],
+          "feed": "test_enriched",
+          "key": "914955",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Bronx",
+              "date": "2026-07-10",
+              "end_date": "2026-07-10",
+              "event_type": "Sport - Adult",
+              "latlng": "40.81691,-73.87101",
+              "location": "Soundview Park: Softball-02",
+              "source_event_id": "914955",
+              "title": "Softball - Adults"
+            },
+            {
+              "borough": "Bronx",
+              "date": "2026-07-20",
+              "end_date": "2026-07-20",
+              "event_type": "Sport - Adult",
+              "latlng": "40.81691,-73.87101",
+              "location": "Soundview Park: Softball-02",
+              "source_event_id": "914955",
+              "title": "Softball - Adults"
             }
           ],
           "severity": "high"
@@ -13130,40 +12733,6 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-06"
-          ],
-          "feed": "test_enriched",
-          "key": "916079",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Adult",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: Great Lawn-Softball-07",
-              "source_event_id": "916079",
-              "title": "Softball - Adults"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-06",
-              "end_date": "2026-07-06",
-              "event_type": "Sport - Adult",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: Great Lawn-Softball-07",
-              "source_event_id": "916079",
-              "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
             "2026-07-16",
             "2026-07-22"
           ],
@@ -13198,33 +12767,33 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-30",
-            "2026-07-15"
+            "2026-07-15",
+            "2026-07-23"
           ],
           "feed": "test_enriched",
-          "key": "924157",
+          "key": "917231",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.67157,-74.00510",
-              "location": "Red Hook Recreation Area: Softball-08",
-              "source_event_id": "924157",
-              "title": "Baseball - 12 and Under (Little League)"
+              "date": "2026-07-15",
+              "end_date": "2026-07-15",
+              "event_type": "Special Event",
+              "latlng": "40.66138,-73.96963",
+              "location": "Prospect Park: Sugar Bowl",
+              "source_event_id": "917231",
+              "title": "Oasis Day Camp (July)"
             },
             {
               "borough": "Brooklyn",
-              "date": "2026-07-15",
-              "end_date": "2026-07-15",
-              "event_type": "Sport - Youth",
-              "latlng": "40.67157,-74.00510",
-              "location": "Red Hook Recreation Area: Softball-08",
-              "source_event_id": "924157",
-              "title": "Baseball - 12 and Under (Little League)"
+              "date": "2026-07-23",
+              "end_date": "2026-07-23",
+              "event_type": "Special Event",
+              "latlng": "40.66138,-73.96963",
+              "location": "Prospect Park: Sugar Bowl",
+              "source_event_id": "917231",
+              "title": "Oasis Day Camp (July)"
             }
           ],
           "severity": "high"
@@ -13232,33 +12801,33 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-30",
-            "2026-07-06"
+            "2026-07-10",
+            "2026-07-17"
           ],
           "feed": "test_enriched",
-          "key": "924641",
+          "key": "917705",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.69043,-73.99929",
-              "location": "Van Voorhees Playground: Softball-01",
-              "source_event_id": "924641",
-              "title": "Baseball - 12 and Under (Little League)"
+              "date": "2026-07-10",
+              "end_date": "2026-07-10",
+              "event_type": "Special Event",
+              "latlng": "",
+              "location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
+              "source_event_id": "917705",
+              "title": "Miscellaneous"
             },
             {
               "borough": "Brooklyn",
-              "date": "2026-07-06",
-              "end_date": "2026-07-06",
-              "event_type": "Sport - Youth",
-              "latlng": "40.69043,-73.99929",
-              "location": "Van Voorhees Playground: Softball-01",
-              "source_event_id": "924641",
-              "title": "Baseball - 12 and Under (Little League)"
+              "date": "2026-07-17",
+              "end_date": "2026-07-17",
+              "event_type": "Special Event",
+              "latlng": "",
+              "location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
+              "source_event_id": "917705",
+              "title": "Miscellaneous"
             }
           ],
           "severity": "high"
@@ -13293,6 +12862,40 @@
               "location": "Annunciation Park: Softball-01",
               "source_event_id": "924649",
               "title": "Baseball - 12 and Under (Little League)"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-10",
+            "2026-07-17"
+          ],
+          "feed": "test_enriched",
+          "key": "925028",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Queens",
+              "date": "2026-07-10",
+              "end_date": "2026-07-10",
+              "event_type": "Sport - Youth",
+              "latlng": "40.67313,-73.85403",
+              "location": "Addabbo Park: Pals Oval-Baseball-02",
+              "source_event_id": "925028",
+              "title": "Baseball - 13 and Older (Little League)"
+            },
+            {
+              "borough": "Queens",
+              "date": "2026-07-17",
+              "end_date": "2026-07-17",
+              "event_type": "Sport - Youth",
+              "latlng": "40.67313,-73.85403",
+              "location": "Addabbo Park: Pals Oval-Baseball-02",
+              "source_event_id": "925028",
+              "title": "Baseball - 13 and Older (Little League)"
             }
           ],
           "severity": "high"
@@ -13366,40 +12969,6 @@
           "severity": "high"
         },
         {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-23"
-          ],
-          "feed": "test_enriched",
-          "key": "925347",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.68795,-73.92572",
-              "location": "P.O. Reinaldo Salgado Playground (PS 309): Basketball-01",
-              "source_event_id": "925347",
-              "title": "Basketball"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-23",
-              "end_date": "2026-07-23",
-              "event_type": "Sport - Youth",
-              "latlng": "40.68795,-73.92572",
-              "location": "P.O. Reinaldo Salgado Playground (PS 309): Basketball-01",
-              "source_event_id": "925347",
-              "title": "Basketball"
-            }
-          ],
-          "severity": "high"
-        },
-        {
           "count": 4,
           "dates": [
             "2026-07-02",
@@ -13456,43 +13025,9 @@
           "severity": "high"
         },
         {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-21"
-          ],
-          "feed": "test_enriched",
-          "key": "926473",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Queens",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Adult",
-              "latlng": "40.72902,-73.76467",
-              "location": "Cunningham Park: Softball-12",
-              "source_event_id": "926473",
-              "title": "Softball - Adults"
-            },
-            {
-              "borough": "Queens",
-              "date": "2026-07-21",
-              "end_date": "2026-07-21",
-              "event_type": "Sport - Adult",
-              "latlng": "40.72902,-73.76467",
-              "location": "Cunningham Park: Softball-12",
-              "source_event_id": "926473",
-              "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
           "count": 3,
           "dates": [
-            "2026-06-29",
+            "2026-07-01",
             "2026-07-13",
             "2026-07-17"
           ],
@@ -13503,8 +13038,8 @@
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "date": "2026-07-01",
+              "end_date": "2026-07-01",
               "event_type": "Sport - Youth",
               "latlng": "40.63830,-73.94787",
               "location": "Nostrand Playground (PS 269): Basketball-01",
@@ -13537,66 +13072,32 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-06-30"
+            "2026-07-21",
+            "2026-07-24"
           ],
           "feed": "test_enriched",
-          "key": "926796",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.86226,-73.87300",
-              "location": "Bronx Park: Frisch Field-Baseball-01",
-              "source_event_id": "926796",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.86226,-73.87300",
-              "location": "Bronx Park: Frisch Field-Baseball-01",
-              "source_event_id": "926796",
-              "title": "Baseball - 12 and Under (Little League)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-06-30"
-          ],
-          "feed": "test_enriched",
-          "key": "927214",
+          "key": "927218",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
               "borough": "Staten Island",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "date": "2026-07-21",
+              "end_date": "2026-07-21",
               "event_type": "Sport - Adult",
               "latlng": "40.60128,-74.15834",
-              "location": "Willowbrook Park: Softball-02",
-              "source_event_id": "927214",
+              "location": "Willowbrook Park: Softball-03",
+              "source_event_id": "927218",
               "title": "Softball - Adults"
             },
             {
               "borough": "Staten Island",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
+              "date": "2026-07-24",
+              "end_date": "2026-07-24",
               "event_type": "Sport - Adult",
               "latlng": "40.60128,-74.15834",
-              "location": "Willowbrook Park: Softball-02",
-              "source_event_id": "927214",
+              "location": "Willowbrook Park: Softball-03",
+              "source_event_id": "927218",
               "title": "Softball - Adults"
             }
           ],
@@ -13631,6 +13132,85 @@
               "latlng": "40.81556,-73.88924",
               "location": "Julio Carballo Fields: Softball-01",
               "source_event_id": "929104",
+              "title": "Baseball - 12 and Under (Little League)"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-02",
+            "2026-07-09"
+          ],
+          "feed": "test_enriched",
+          "key": "929374",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-02",
+              "end_date": "2026-07-02",
+              "event_type": "Sport - Adult",
+              "latlng": "40.79553,-73.92176",
+              "location": "Randall's Island Park: Sunken Meadow Fields-Softball-25",
+              "source_event_id": "929374",
+              "title": "Softball - Adults"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-09",
+              "end_date": "2026-07-09",
+              "event_type": "Sport - Adult",
+              "latlng": "40.79553,-73.92176",
+              "location": "Randall's Island Park: Sunken Meadow Fields-Softball-25",
+              "source_event_id": "929374",
+              "title": "Softball - Adults"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 3,
+          "dates": [
+            "2026-07-13",
+            "2026-07-21",
+            "2026-07-24"
+          ],
+          "feed": "test_enriched",
+          "key": "929791",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Queens",
+              "date": "2026-07-13",
+              "end_date": "2026-07-13",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72007,-73.88114",
+              "location": "Juniper Valley Park: Softball-06",
+              "source_event_id": "929791",
+              "title": "Baseball - 12 and Under (Little League)"
+            },
+            {
+              "borough": "Queens",
+              "date": "2026-07-21",
+              "end_date": "2026-07-21",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72007,-73.88114",
+              "location": "Juniper Valley Park: Softball-06",
+              "source_event_id": "929791",
+              "title": "Baseball - 12 and Under (Little League)"
+            },
+            {
+              "borough": "Queens",
+              "date": "2026-07-24",
+              "end_date": "2026-07-24",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72007,-73.88114",
+              "location": "Juniper Valley Park: Softball-06",
+              "source_event_id": "929791",
               "title": "Baseball - 12 and Under (Little League)"
             }
           ],
@@ -13718,41 +13298,40 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-30",
-            "2026-07-07"
+            "2026-07-19",
+            "2026-07-23"
           ],
           "feed": "test_enriched",
-          "key": "933591",
+          "key": "932802",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
+              "borough": "Queens",
+              "date": "2026-07-19",
+              "end_date": "2026-07-19",
               "event_type": "Sport - Youth",
-              "latlng": "40.79320,-73.93559",
-              "location": "Thomas Jefferson Park: Softball-01",
-              "source_event_id": "933591",
-              "title": "Baseball - T-ball"
+              "latlng": "40.67603,-73.78544",
+              "location": "Baisley Pond Park: Football-01",
+              "source_event_id": "932802",
+              "title": "Football - Youth"
             },
             {
-              "borough": "Manhattan",
-              "date": "2026-07-07",
-              "end_date": "2026-07-07",
+              "borough": "Queens",
+              "date": "2026-07-23",
+              "end_date": "2026-07-23",
               "event_type": "Sport - Youth",
-              "latlng": "40.79320,-73.93559",
-              "location": "Thomas Jefferson Park: Softball-01",
-              "source_event_id": "933591",
-              "title": "Baseball - T-ball"
+              "latlng": "40.67603,-73.78544",
+              "location": "Baisley Pond Park: Football-01",
+              "source_event_id": "932802",
+              "title": "Football - Youth"
             }
           ],
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 3,
           "dates": [
-            "2026-06-29",
             "2026-07-07",
             "2026-07-08",
             "2026-07-18"
@@ -13762,16 +13341,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Queens",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Open Street Partner Event",
-              "latlng": "40.76213,-73.86826",
-              "location": "34 AVENUE between 93 STREET and 94 STREET",
-              "source_event_id": "934014",
-              "title": "Afterschool Fun"
-            },
             {
               "borough": "Queens",
               "date": "2026-07-07",
@@ -13808,67 +13377,33 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-17"
+            "2026-07-01",
+            "2026-07-13"
           ],
           "feed": "test_enriched",
-          "key": "935373",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.86932,-73.80036",
-              "location": "Pelham Bay Park: Softball-04",
-              "source_event_id": "935373",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-07-17",
-              "end_date": "2026-07-17",
-              "event_type": "Sport - Youth",
-              "latlng": "40.86932,-73.80036",
-              "location": "Pelham Bay Park: Softball-04",
-              "source_event_id": "935373",
-              "title": "Baseball - 12 and Under (Little League)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-12"
-          ],
-          "feed": "test_enriched",
-          "key": "943203",
+          "key": "935709",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "date": "2026-07-01",
+              "end_date": "2026-07-01",
               "event_type": "Sport - Youth",
-              "latlng": "40.78249,-73.96554",
-              "location": "Heckscher Playground: Soccer-01",
-              "source_event_id": "943203",
-              "title": "Soccer - Non Regulation"
+              "latlng": "",
+              "location": "Pratt Playground: Basketball-02",
+              "source_event_id": "935709",
+              "title": "Basketball"
             },
             {
               "borough": "Brooklyn",
-              "date": "2026-07-12",
-              "end_date": "2026-07-12",
+              "date": "2026-07-13",
+              "end_date": "2026-07-13",
               "event_type": "Sport - Youth",
-              "latlng": "40.78249,-73.96554",
-              "location": "Heckscher Playground: Soccer-01",
-              "source_event_id": "943203",
-              "title": "Soccer - Non Regulation"
+              "latlng": "",
+              "location": "Pratt Playground: Basketball-02",
+              "source_event_id": "935709",
+              "title": "Basketball"
             }
           ],
           "severity": "high"
@@ -13919,80 +13454,35 @@
           "severity": "high"
         },
         {
-          "count": 3,
-          "dates": [
-            "2026-06-29",
-            "2026-06-30",
-            "2026-07-02"
-          ],
-          "feed": "test_enriched",
-          "key": "944013",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.86438,-73.90979",
-              "location": "Fordham Landing Playground: Softball-01",
-              "source_event_id": "944013",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.86438,-73.90979",
-              "location": "Fordham Landing Playground: Softball-01",
-              "source_event_id": "944013",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-07-02",
-              "end_date": "2026-07-02",
-              "event_type": "Sport - Youth",
-              "latlng": "40.86438,-73.90979",
-              "location": "Fordham Landing Playground: Softball-01",
-              "source_event_id": "944013",
-              "title": "Baseball - 12 and Under (Little League)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-10"
+            "2026-07-07",
+            "2026-07-23"
           ],
           "feed": "test_enriched",
-          "key": "944968",
+          "key": "945465",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "borough": "Queens",
+              "date": "2026-07-07",
+              "end_date": "2026-07-07",
               "event_type": "Sport - Youth",
-              "latlng": "40.90000,-73.89222",
-              "location": "Van Cortlandt Park: Parade Ground-Baseball-03",
-              "source_event_id": "944968",
-              "title": "Baseball - 13 and Older (Little League)"
+              "latlng": "",
+              "location": "Forest Park: Tennis-05",
+              "source_event_id": "945465",
+              "title": "Tennis"
             },
             {
-              "borough": "Bronx",
-              "date": "2026-07-10",
-              "end_date": "2026-07-10",
+              "borough": "Queens",
+              "date": "2026-07-23",
+              "end_date": "2026-07-23",
               "event_type": "Sport - Youth",
-              "latlng": "40.90000,-73.89222",
-              "location": "Van Cortlandt Park: Parade Ground-Baseball-03",
-              "source_event_id": "944968",
-              "title": "Baseball - 13 and Older (Little League)"
+              "latlng": "",
+              "location": "Forest Park: Tennis-05",
+              "source_event_id": "945465",
+              "title": "Tennis"
             }
           ],
           "severity": "high"
@@ -14066,40 +13556,6 @@
           "severity": "high"
         },
         {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-06-30"
-          ],
-          "feed": "test_enriched",
-          "key": "946348",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Adult",
-              "latlng": "40.72171,-73.99155",
-              "location": "Sara D. Roosevelt Park: Nike Field-Soccer-02",
-              "source_event_id": "946348",
-              "title": "Soccer - Non Regulation"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Adult",
-              "latlng": "40.72171,-73.99155",
-              "location": "Sara D. Roosevelt Park: Nike Field-Soccer-02",
-              "source_event_id": "946348",
-              "title": "Soccer - Non Regulation"
-            }
-          ],
-          "severity": "high"
-        },
-        {
           "count": 3,
           "dates": [
             "2026-07-01",
@@ -14140,6 +13596,40 @@
               "location": "Annadale Playground: Basketball-01",
               "source_event_id": "946395",
               "title": "Basketball"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-07",
+            "2026-07-21"
+          ],
+          "feed": "test_enriched",
+          "key": "947413",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-07",
+              "end_date": "2026-07-07",
+              "event_type": "Street Event",
+              "latlng": "40.75427,-73.97774",
+              "location": "MADISON AVENUE between EAST   51 STREET and EAST   50 STREET,  MADISON AVENUE between EAST   48 STREET and EAST   49 STREET,  EAST   50 STREET between MADISON AVENUE and PARK AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  LEXINGTON AVENUE between EAST   49 STREET and EAST   50 STREET,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between 3 AVENUE and 2 AVENUE,  WEST   35 STREET between 8 AVENUE and 9 AVENUE",
+              "source_event_id": "947413",
+              "title": "FWC2026"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-21",
+              "end_date": "2026-07-21",
+              "event_type": "Street Event",
+              "latlng": "40.75427,-73.97774",
+              "location": "MADISON AVENUE between EAST   51 STREET and EAST   50 STREET,  MADISON AVENUE between EAST   48 STREET and EAST   49 STREET,  EAST   50 STREET between MADISON AVENUE and PARK AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  LEXINGTON AVENUE between EAST   49 STREET and EAST   50 STREET,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between 3 AVENUE and 2 AVENUE,  WEST   35 STREET between 8 AVENUE and 9 AVENUE",
+              "source_event_id": "947413",
+              "title": "FWC2026"
             }
           ],
           "severity": "high"
@@ -14211,50 +13701,84 @@
             }
           ],
           "severity": "high"
-        }
-      ],
-      "issues_total": 95,
-      "medium_issues": 0,
-      "rows_loaded": 940
-    },
-    {
-      "feed": "staged",
-      "high_issues": 88,
-      "issues": [
+        },
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-06-30"
+            "2026-07-16",
+            "2026-07-24"
           ],
-          "feed": "staged",
-          "key": "846603",
+          "feed": "test_enriched",
+          "key": "952596",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
-              "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "borough": "Manhattan",
+              "date": "2026-07-16",
+              "end_date": "2026-07-16",
               "event_type": "Sport - Youth",
-              "latlng": "40.69150,-73.95768",
-              "location": "Star Spangled Playground (IS 117): Football-01",
-              "source_event_id": "846603",
-              "title": "Untitled NYC event"
+              "latlng": "40.81727,-73.94882",
+              "location": "St Nicholas Park: Arlington Edinboro Playground-Basketball-01",
+              "source_event_id": "952596",
+              "title": "Basketball"
             },
             {
-              "borough": "Brooklyn",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
+              "borough": "Manhattan",
+              "date": "2026-07-24",
+              "end_date": "2026-07-24",
               "event_type": "Sport - Youth",
-              "latlng": "40.69150,-73.95768",
-              "location": "Star Spangled Playground (IS 117): Football-01",
-              "source_event_id": "846603",
-              "title": "Untitled NYC event"
+              "latlng": "40.81727,-73.94882",
+              "location": "St Nicholas Park: Arlington Edinboro Playground-Basketball-01",
+              "source_event_id": "952596",
+              "title": "Basketball"
             }
           ],
           "severity": "high"
         },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-07",
+            "2026-07-21"
+          ],
+          "feed": "test_enriched",
+          "key": "fwc2026|manhattan|madison avenue between east 51 street and east 50 street madison avenue between east 48 street and east 49 street east 50 street between madison avenue and park avenue east 49 street between park avenue and lexington avenue east 49 street between park avenue and lexington avenue lexington avenue between east 49 street and east 50 street east 49 street between lexington avenue and 3 avenue east 49 street between lexington avenue and 3 avenue east 49 street between 3 avenue and 2 avenue west 35 street between 8 avenue and 9 avenue|40.75427,-73.97774",
+          "kind": "same_street_event_content_multiple_dates",
+          "note": "Same title/location/coordinate street-style event appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-07",
+              "end_date": "2026-07-07",
+              "event_type": "Street Event",
+              "latlng": "40.75427,-73.97774",
+              "location": "MADISON AVENUE between EAST   51 STREET and EAST   50 STREET,  MADISON AVENUE between EAST   48 STREET and EAST   49 STREET,  EAST   50 STREET between MADISON AVENUE and PARK AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  LEXINGTON AVENUE between EAST   49 STREET and EAST   50 STREET,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between 3 AVENUE and 2 AVENUE,  WEST   35 STREET between 8 AVENUE and 9 AVENUE",
+              "source_event_id": "947413",
+              "title": "FWC2026"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-21",
+              "end_date": "2026-07-21",
+              "event_type": "Street Event",
+              "latlng": "40.75427,-73.97774",
+              "location": "MADISON AVENUE between EAST   51 STREET and EAST   50 STREET,  MADISON AVENUE between EAST   48 STREET and EAST   49 STREET,  EAST   50 STREET between MADISON AVENUE and PARK AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  LEXINGTON AVENUE between EAST   49 STREET and EAST   50 STREET,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between 3 AVENUE and 2 AVENUE,  WEST   35 STREET between 8 AVENUE and 9 AVENUE",
+              "source_event_id": "947413",
+              "title": "FWC2026"
+            }
+          ],
+          "severity": "high"
+        }
+      ],
+      "issues_total": 82,
+      "medium_issues": 0,
+      "rows_loaded": 920
+    },
+    {
+      "feed": "staged",
+      "high_issues": 68,
+      "issues": [
         {
           "count": 2,
           "dates": [
@@ -14285,74 +13809,6 @@
               "location": "Marcus Garvey Park: Amphitheater",
               "source_event_id": "890793",
               "title": "Classical Theatre of Harlem"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-16"
-          ],
-          "feed": "staged",
-          "key": "891690",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Special Event",
-              "latlng": "40.75907,-73.98497",
-              "location": "Father Duffy Square: Father Duffy Square",
-              "source_event_id": "891690",
-              "title": "TSQ LIVE Programming"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-16",
-              "end_date": "2026-07-16",
-              "event_type": "Special Event",
-              "latlng": "40.75907,-73.98497",
-              "location": "Father Duffy Square: Father Duffy Square",
-              "source_event_id": "891690",
-              "title": "TSQ LIVE Programming"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-06-30"
-          ],
-          "feed": "staged",
-          "key": "892773",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Special Event",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: South Dead Road B",
-              "source_event_id": "892773",
-              "title": "Miscellaneous"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Special Event",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: South Dead Road B",
-              "source_event_id": "892773",
-              "title": "Miscellaneous"
             }
           ],
           "severity": "high"
@@ -14405,33 +13861,67 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-20"
+            "2026-07-09",
+            "2026-07-14"
           ],
           "feed": "staged",
-          "key": "899956",
+          "key": "899938",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "date": "2026-07-09",
+              "end_date": "2026-07-09",
               "event_type": "Sport - Youth",
-              "latlng": "40.65534,-73.88662",
-              "location": "Shore Road Park and Parkway: 95th St Fields-Softball-03",
-              "source_event_id": "899956",
-              "title": "Baseball - T-ball"
+              "latlng": "40.69757,-73.91678",
+              "location": "Hope Ballfields: Softball-01",
+              "source_event_id": "899938",
+              "title": "Baseball - 12 and Under (Little League)"
             },
             {
               "borough": "Brooklyn",
-              "date": "2026-07-20",
-              "end_date": "2026-07-20",
+              "date": "2026-07-14",
+              "end_date": "2026-07-14",
               "event_type": "Sport - Youth",
-              "latlng": "40.65534,-73.88662",
-              "location": "Shore Road Park and Parkway: 95th St Fields-Softball-03",
-              "source_event_id": "899956",
-              "title": "Baseball - T-ball"
+              "latlng": "40.69757,-73.91678",
+              "location": "Hope Ballfields: Softball-01",
+              "source_event_id": "899938",
+              "title": "Baseball - 12 and Under (Little League)"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-06-28",
+            "2026-07-12"
+          ],
+          "feed": "staged",
+          "key": "899942",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Brooklyn",
+              "date": "2026-06-28",
+              "end_date": "2026-06-28",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72022,-73.95065",
+              "location": "McCarren Park: PO Gilroy Field-Baseball-03",
+              "source_event_id": "899942",
+              "title": "Baseball - 13 and Older (Little League)"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-12",
+              "end_date": "2026-07-12",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72022,-73.95065",
+              "location": "McCarren Park: PO Gilroy Field-Baseball-03",
+              "source_event_id": "899942",
+              "title": "Baseball - 13 and Older (Little League)"
             }
           ],
           "severity": "high"
@@ -14471,10 +13961,11 @@
           "severity": "high"
         },
         {
-          "count": 2,
+          "count": 3,
           "dates": [
             "2026-07-01",
-            "2026-07-22"
+            "2026-07-22",
+            "2026-07-24"
           ],
           "feed": "staged",
           "key": "900034",
@@ -14500,40 +13991,16 @@
               "location": "Thomas Jefferson Park: Softball-03",
               "source_event_id": "900034",
               "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-02"
-          ],
-          "feed": "staged",
-          "key": "900084",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.63515,-74.01881",
-              "location": "Leif Ericson Park: Dust Bowl-Softball-02",
-              "source_event_id": "900084",
-              "title": "Baseball - 12 and Under (Little League)"
             },
             {
-              "borough": "Brooklyn",
-              "date": "2026-07-02",
-              "end_date": "2026-07-02",
-              "event_type": "Sport - Youth",
-              "latlng": "40.63515,-74.01881",
-              "location": "Leif Ericson Park: Dust Bowl-Softball-02",
-              "source_event_id": "900084",
-              "title": "Baseball - 12 and Under (Little League)"
+              "borough": "Manhattan",
+              "date": "2026-07-24",
+              "end_date": "2026-07-24",
+              "event_type": "Sport - Adult",
+              "latlng": "40.79320,-73.93559",
+              "location": "Thomas Jefferson Park: Softball-03",
+              "source_event_id": "900034",
+              "title": "Softball - Adults"
             }
           ],
           "severity": "high"
@@ -14597,203 +14064,33 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-13"
+            "2026-06-28",
+            "2026-07-05"
           ],
           "feed": "staged",
-          "key": "900095",
+          "key": "901411",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "date": "2026-06-28",
+              "end_date": "2026-06-28",
               "event_type": "Sport - Youth",
-              "latlng": "40.66138,-73.96963",
-              "location": "Prospect Park: Softball-07",
-              "source_event_id": "900095",
-              "title": "Softball (Little league)"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-13",
-              "end_date": "2026-07-13",
-              "event_type": "Sport - Youth",
-              "latlng": "40.66138,-73.96963",
-              "location": "Prospect Park: Softball-07",
-              "source_event_id": "900095",
-              "title": "Softball (Little league)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-02"
-          ],
-          "feed": "staged",
-          "key": "900300",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.84112,-73.93369",
-              "location": "Highbridge Park: Softball-03",
-              "source_event_id": "900300",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-02",
-              "end_date": "2026-07-02",
-              "event_type": "Sport - Youth",
-              "latlng": "40.84112,-73.93369",
-              "location": "Highbridge Park: Softball-03",
-              "source_event_id": "900300",
-              "title": "Baseball - 12 and Under (Little League)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-14"
-          ],
-          "feed": "staged",
-          "key": "900312",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.69147,-73.93225",
-              "location": "Jesse Owens Playground: Youth-Multipurpose Play Area-01",
-              "source_event_id": "900312",
+              "latlng": "40.64798,-74.00374",
+              "location": "Sunset Park: Soccer-01A",
+              "source_event_id": "901411",
               "title": "Soccer - Non Regulation"
             },
             {
               "borough": "Brooklyn",
-              "date": "2026-07-14",
-              "end_date": "2026-07-14",
+              "date": "2026-07-05",
+              "end_date": "2026-07-05",
               "event_type": "Sport - Youth",
-              "latlng": "40.69147,-73.93225",
-              "location": "Jesse Owens Playground: Youth-Multipurpose Play Area-01",
-              "source_event_id": "900312",
+              "latlng": "40.64798,-74.00374",
+              "location": "Sunset Park: Soccer-01A",
+              "source_event_id": "901411",
               "title": "Soccer - Non Regulation"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-13"
-          ],
-          "feed": "staged",
-          "key": "901303",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Adult",
-              "latlng": "40.86932,-73.80036",
-              "location": "Pelham Bay Park: Softball-03",
-              "source_event_id": "901303",
-              "title": "Softball - Adults"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-07-13",
-              "end_date": "2026-07-13",
-              "event_type": "Sport - Adult",
-              "latlng": "40.86932,-73.80036",
-              "location": "Pelham Bay Park: Softball-03",
-              "source_event_id": "901303",
-              "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-06"
-          ],
-          "feed": "staged",
-          "key": "901308",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Adult",
-              "latlng": "40.87628,-73.89188",
-              "location": "Harris Park: Softball-03",
-              "source_event_id": "901308",
-              "title": "Softball - Adults"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-07-06",
-              "end_date": "2026-07-06",
-              "event_type": "Sport - Adult",
-              "latlng": "40.87628,-73.89188",
-              "location": "Harris Park: Softball-03",
-              "source_event_id": "901308",
-              "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-24"
-          ],
-          "feed": "staged",
-          "key": "901511",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.82659,-73.94113",
-              "location": "Jackie Robinson Park: Playground One Forty Nine-Basketball-01",
-              "source_event_id": "901511",
-              "title": "Basketball"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-24",
-              "end_date": "2026-07-24",
-              "event_type": "Sport - Youth",
-              "latlng": "40.82659,-73.94113",
-              "location": "Jackie Robinson Park: Playground One Forty Nine-Basketball-01",
-              "source_event_id": "901511",
-              "title": "Basketball"
             }
           ],
           "severity": "high"
@@ -14828,6 +14125,74 @@
               "location": "Parade Ground: Soccer-10",
               "source_event_id": "902074",
               "title": "Soccer - Non Regulation"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-01",
+            "2026-07-08"
+          ],
+          "feed": "staged",
+          "key": "902481",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-01",
+              "end_date": "2026-07-01",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72980,-74.00615",
+              "location": "James J Walker Park: Softball-01",
+              "source_event_id": "902481",
+              "title": "Baseball - 12 and Under (Little League)"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-08",
+              "end_date": "2026-07-08",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72980,-74.00615",
+              "location": "James J Walker Park: Softball-01",
+              "source_event_id": "902481",
+              "title": "Baseball - 12 and Under (Little League)"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-05",
+            "2026-07-19"
+          ],
+          "feed": "staged",
+          "key": "902899",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-05",
+              "end_date": "2026-07-05",
+              "event_type": "Sport - Adult",
+              "latlng": "40.59704,-73.91945",
+              "location": "Marine Park: Cricket-02",
+              "source_event_id": "902899",
+              "title": "Cricket"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-19",
+              "end_date": "2026-07-19",
+              "event_type": "Sport - Adult",
+              "latlng": "40.59704,-73.91945",
+              "location": "Marine Park: Cricket-02",
+              "source_event_id": "902899",
+              "title": "Cricket"
             }
           ],
           "severity": "high"
@@ -14903,8 +14268,42 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-30",
-            "2026-07-02"
+            "2026-07-11",
+            "2026-07-25"
+          ],
+          "feed": "staged",
+          "key": "903771",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-11",
+              "end_date": "2026-07-11",
+              "event_type": "Sport - Youth",
+              "latlng": "40.87239,-73.92611",
+              "location": "Inwood Hill Park: Baseball-06",
+              "source_event_id": "903771",
+              "title": "Baseball - 12 and Under (Little League)"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-25",
+              "end_date": "2026-07-25",
+              "event_type": "Sport - Youth",
+              "latlng": "40.87239,-73.92611",
+              "location": "Inwood Hill Park: Baseball-06",
+              "source_event_id": "903771",
+              "title": "Baseball - 12 and Under (Little League)"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-02",
+            "2026-07-19"
           ],
           "feed": "staged",
           "key": "904014",
@@ -14913,8 +14312,8 @@
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
+              "date": "2026-07-02",
+              "end_date": "2026-07-02",
               "event_type": "Sport - Youth",
               "latlng": "40.58469,-73.99516",
               "location": "Calvert Vaux Park: Soccer-03",
@@ -14923,12 +14322,102 @@
             },
             {
               "borough": "Brooklyn",
-              "date": "2026-07-02",
-              "end_date": "2026-07-02",
+              "date": "2026-07-19",
+              "end_date": "2026-07-19",
               "event_type": "Sport - Youth",
               "latlng": "40.58469,-73.99516",
               "location": "Calvert Vaux Park: Soccer-03",
               "source_event_id": "904014",
+              "title": "Soccer - Non Regulation"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 4,
+          "dates": [
+            "2026-07-04",
+            "2026-07-08",
+            "2026-07-11",
+            "2026-07-20"
+          ],
+          "feed": "staged",
+          "key": "904677",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Bronx",
+              "date": "2026-07-04",
+              "end_date": "2026-07-04",
+              "event_type": "Sport - Youth",
+              "latlng": "40.90000,-73.89222",
+              "location": "Van Cortlandt Park: Frank Kelly-Softball-02",
+              "source_event_id": "904677",
+              "title": "Baseball - 12 and Under (Little League)"
+            },
+            {
+              "borough": "Bronx",
+              "date": "2026-07-08",
+              "end_date": "2026-07-08",
+              "event_type": "Sport - Youth",
+              "latlng": "40.90000,-73.89222",
+              "location": "Van Cortlandt Park: Frank Kelly-Softball-02",
+              "source_event_id": "904677",
+              "title": "Baseball - 12 and Under (Little League)"
+            },
+            {
+              "borough": "Bronx",
+              "date": "2026-07-11",
+              "end_date": "2026-07-11",
+              "event_type": "Sport - Youth",
+              "latlng": "40.90000,-73.89222",
+              "location": "Van Cortlandt Park: Frank Kelly-Softball-02",
+              "source_event_id": "904677",
+              "title": "Baseball - 12 and Under (Little League)"
+            },
+            {
+              "borough": "Bronx",
+              "date": "2026-07-20",
+              "end_date": "2026-07-20",
+              "event_type": "Sport - Youth",
+              "latlng": "40.90000,-73.89222",
+              "location": "Van Cortlandt Park: Frank Kelly-Softball-02",
+              "source_event_id": "904677",
+              "title": "Baseball - 12 and Under (Little League)"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-14",
+            "2026-07-24"
+          ],
+          "feed": "staged",
+          "key": "904707",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-14",
+              "end_date": "2026-07-14",
+              "event_type": "Sport - Youth",
+              "latlng": "40.64974,-73.97102",
+              "location": "Parade Ground: Soccer-10",
+              "source_event_id": "904707",
+              "title": "Soccer - Non Regulation"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-24",
+              "end_date": "2026-07-24",
+              "event_type": "Sport - Youth",
+              "latlng": "40.64974,-73.97102",
+              "location": "Parade Ground: Soccer-10",
+              "source_event_id": "904707",
               "title": "Soccer - Non Regulation"
             }
           ],
@@ -14971,40 +14460,6 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-30",
-            "2026-07-01"
-          ],
-          "feed": "staged",
-          "key": "904887",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.84245,-73.94700",
-              "location": "Fort Washington Park: Volleyball-05",
-              "source_event_id": "904887",
-              "title": "Volleyball"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-01",
-              "end_date": "2026-07-01",
-              "event_type": "Sport - Youth",
-              "latlng": "40.84245,-73.94700",
-              "location": "Fort Washington Park: Volleyball-05",
-              "source_event_id": "904887",
-              "title": "Volleyball"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
             "2026-07-03",
             "2026-07-20"
           ],
@@ -15039,41 +14494,42 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-15"
+            "2026-07-19",
+            "2026-07-23"
           ],
           "feed": "staged",
-          "key": "905050",
+          "key": "905185",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Adult",
-              "latlng": "40.79097,-73.98019",
-              "location": "Riverside Park: 107th/108th St-Softball-06",
-              "source_event_id": "905050",
-              "title": "Softball - Adults"
+              "borough": "Brooklyn",
+              "date": "2026-07-19",
+              "end_date": "2026-07-19",
+              "event_type": "Sport - Youth",
+              "latlng": "40.64974,-73.97102",
+              "location": "Parade Ground: Baseball-01",
+              "source_event_id": "905185",
+              "title": "Baseball - 13 and Older (Little League)"
             },
             {
-              "borough": "Manhattan",
-              "date": "2026-07-15",
-              "end_date": "2026-07-15",
-              "event_type": "Sport - Adult",
-              "latlng": "40.79097,-73.98019",
-              "location": "Riverside Park: 107th/108th St-Softball-06",
-              "source_event_id": "905050",
-              "title": "Softball - Adults"
+              "borough": "Brooklyn",
+              "date": "2026-07-23",
+              "end_date": "2026-07-23",
+              "event_type": "Sport - Youth",
+              "latlng": "40.64974,-73.97102",
+              "location": "Parade Ground: Baseball-01",
+              "source_event_id": "905185",
+              "title": "Baseball - 13 and Older (Little League)"
             }
           ],
           "severity": "high"
         },
         {
-          "count": 2,
+          "count": 3,
           "dates": [
             "2026-07-01",
+            "2026-07-09",
             "2026-07-17"
           ],
           "feed": "staged",
@@ -15085,6 +14541,16 @@
               "borough": "Brooklyn",
               "date": "2026-07-01",
               "end_date": "2026-07-01",
+              "event_type": "Sport - Youth",
+              "latlng": "40.64974,-73.97102",
+              "location": "Parade Ground: Baseball-07",
+              "source_event_id": "905229",
+              "title": "Baseball - 13 and Older (Little League)"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-09",
+              "end_date": "2026-07-09",
               "event_type": "Sport - Youth",
               "latlng": "40.64974,-73.97102",
               "location": "Parade Ground: Baseball-07",
@@ -15197,40 +14663,6 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-30",
-            "2026-07-18"
-          ],
-          "feed": "staged",
-          "key": "906004",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.67219,-73.98446",
-              "location": "JHS 51 JOP: Basketball-05",
-              "source_event_id": "906004",
-              "title": "Miscellaneous"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-18",
-              "end_date": "2026-07-18",
-              "event_type": "Sport - Youth",
-              "latlng": "40.67219,-73.98446",
-              "location": "JHS 51 JOP: Basketball-05",
-              "source_event_id": "906004",
-              "title": "Miscellaneous"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
             "2026-07-04",
             "2026-07-25"
           ],
@@ -15258,6 +14690,40 @@
               "location": "Canarsie Park: Cricket-01",
               "source_event_id": "907006",
               "title": "Cricket"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-08",
+            "2026-07-22"
+          ],
+          "feed": "staged",
+          "key": "907250",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Bronx",
+              "date": "2026-07-08",
+              "end_date": "2026-07-08",
+              "event_type": "Sport - Youth",
+              "latlng": "40.83854,-73.89299",
+              "location": "Crotona Park: Soccer-02",
+              "source_event_id": "907250",
+              "title": "Soccer - Non Regulation"
+            },
+            {
+              "borough": "Bronx",
+              "date": "2026-07-22",
+              "end_date": "2026-07-22",
+              "event_type": "Sport - Youth",
+              "latlng": "40.83854,-73.89299",
+              "location": "Crotona Park: Soccer-02",
+              "source_event_id": "907250",
+              "title": "Soccer - Non Regulation"
             }
           ],
           "severity": "high"
@@ -15299,33 +14765,67 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-08"
+            "2026-07-11",
+            "2026-07-25"
           ],
           "feed": "staged",
-          "key": "907655",
+          "key": "907602",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.60245,-74.01110",
-              "location": "Bath Beach Park: Softball-01",
-              "source_event_id": "907655",
-              "title": "Softball (Little league)"
+              "date": "2026-07-11",
+              "end_date": "2026-07-11",
+              "event_type": "Sport - Adult",
+              "latlng": "40.61065,-74.01917",
+              "location": "Dyker Beach Park: Dyker 14th Ave-Asphalt-Softball-07",
+              "source_event_id": "907602",
+              "title": "Soccer - Non Regulation"
             },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-25",
+              "end_date": "2026-07-25",
+              "event_type": "Sport - Adult",
+              "latlng": "40.61065,-74.01917",
+              "location": "Dyker Beach Park: Dyker 14th Ave-Asphalt-Softball-07",
+              "source_event_id": "907602",
+              "title": "Soccer - Non Regulation"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-08",
+            "2026-07-22"
+          ],
+          "feed": "staged",
+          "key": "907714",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
             {
               "borough": "Brooklyn",
               "date": "2026-07-08",
               "end_date": "2026-07-08",
-              "event_type": "Sport - Youth",
-              "latlng": "40.60245,-74.01110",
-              "location": "Bath Beach Park: Softball-01",
-              "source_event_id": "907655",
-              "title": "Softball (Little league)"
+              "event_type": "Sport - Adult",
+              "latlng": "40.72022,-73.95065",
+              "location": "McCarren Park: Asphalt-Softball-01",
+              "source_event_id": "907714",
+              "title": "Softball - Adults"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-22",
+              "end_date": "2026-07-22",
+              "event_type": "Sport - Adult",
+              "latlng": "40.72022,-73.95065",
+              "location": "McCarren Park: Asphalt-Softball-01",
+              "source_event_id": "907714",
+              "title": "Softball - Adults"
             }
           ],
           "severity": "high"
@@ -15367,67 +14867,33 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-30",
-            "2026-07-14"
+            "2026-07-06",
+            "2026-07-07"
           ],
           "feed": "staged",
-          "key": "908308",
+          "key": "908396",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
-              "borough": "Staten Island",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.62327,-74.14553",
-              "location": "Markham Playground: Multi Purpose Play Area-01",
-              "source_event_id": "908308",
-              "title": "Soccer - Non Regulation"
+              "borough": "Manhattan",
+              "date": "2026-07-06",
+              "end_date": "2026-07-06",
+              "event_type": "Sport - Adult",
+              "latlng": "40.77215,-73.97778",
+              "location": "Central Park: North Meadow-Softball-02",
+              "source_event_id": "908396",
+              "title": "Softball - Adults"
             },
             {
-              "borough": "Staten Island",
-              "date": "2026-07-14",
-              "end_date": "2026-07-14",
-              "event_type": "Sport - Youth",
-              "latlng": "40.62327,-74.14553",
-              "location": "Markham Playground: Multi Purpose Play Area-01",
-              "source_event_id": "908308",
-              "title": "Soccer - Non Regulation"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-12"
-          ],
-          "feed": "staged",
-          "key": "908672",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.61454,-73.91609",
-              "location": "Monsignor Crawford Field: Softball-02",
-              "source_event_id": "908672",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-12",
-              "end_date": "2026-07-12",
-              "event_type": "Sport - Youth",
-              "latlng": "40.61454,-73.91609",
-              "location": "Monsignor Crawford Field: Softball-02",
-              "source_event_id": "908672",
-              "title": "Baseball - 12 and Under (Little League)"
+              "borough": "Manhattan",
+              "date": "2026-07-07",
+              "end_date": "2026-07-07",
+              "event_type": "Sport - Adult",
+              "latlng": "40.77215,-73.97778",
+              "location": "Central Park: North Meadow-Softball-02",
+              "source_event_id": "908396",
+              "title": "Softball - Adults"
             }
           ],
           "severity": "high"
@@ -15467,9 +14933,8 @@
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 3,
           "dates": [
-            "2026-06-29",
             "2026-07-10",
             "2026-07-13",
             "2026-07-24"
@@ -15479,16 +14944,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Queens",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.70721,-73.89123",
-              "location": "Mafera Park: Football-01",
-              "source_event_id": "908790",
-              "title": "Football - Youth"
-            },
             {
               "borough": "Queens",
               "date": "2026-07-10",
@@ -15523,9 +14978,8 @@
           "severity": "high"
         },
         {
-          "count": 3,
+          "count": 2,
           "dates": [
-            "2026-06-29",
             "2026-07-15",
             "2026-07-20"
           ],
@@ -15534,16 +14988,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Adult",
-              "latlng": "40.82701,-73.92779",
-              "location": "Macombs Dam Park: Elston Gene Howard Field-Softball-02",
-              "source_event_id": "909024",
-              "title": "Softball - Adults"
-            },
             {
               "borough": "Bronx",
               "date": "2026-07-15",
@@ -15563,85 +15007,6 @@
               "location": "Macombs Dam Park: Elston Gene Howard Field-Softball-02",
               "source_event_id": "909024",
               "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 3,
-          "dates": [
-            "2026-06-29",
-            "2026-06-30",
-            "2026-07-08"
-          ],
-          "feed": "staged",
-          "key": "909311",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Adult",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: Great Lawn-Softball-08",
-              "source_event_id": "909311",
-              "title": "Softball - Adults"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Adult",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: Great Lawn-Softball-08",
-              "source_event_id": "909311",
-              "title": "Softball - Adults"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-08",
-              "end_date": "2026-07-08",
-              "event_type": "Sport - Adult",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: Great Lawn-Softball-08",
-              "source_event_id": "909311",
-              "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-02"
-          ],
-          "feed": "staged",
-          "key": "909376",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.76819,-73.99429",
-              "location": "De Witt Clinton Park: Soccer-01B",
-              "source_event_id": "909376",
-              "title": "Soccer - Non Regulation"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-02",
-              "end_date": "2026-07-02",
-              "event_type": "Sport - Youth",
-              "latlng": "40.76819,-73.99429",
-              "location": "De Witt Clinton Park: Soccer-01B",
-              "source_event_id": "909376",
-              "title": "Soccer - Non Regulation"
             }
           ],
           "severity": "high"
@@ -15675,40 +15040,6 @@
               "latlng": "40.79097,-73.98019",
               "location": "Riverside Park: 111th St-Basketball-01",
               "source_event_id": "909638",
-              "title": "Basketball"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-02"
-          ],
-          "feed": "staged",
-          "key": "909820",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.79097,-73.98019",
-              "location": "Riverside Park: 111th St-Basketball-05",
-              "source_event_id": "909820",
-              "title": "Basketball"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-02",
-              "end_date": "2026-07-02",
-              "event_type": "Sport - Youth",
-              "latlng": "40.79097,-73.98019",
-              "location": "Riverside Park: 111th St-Basketball-05",
-              "source_event_id": "909820",
               "title": "Basketball"
             }
           ],
@@ -15783,9 +15114,10 @@
           "severity": "high"
         },
         {
-          "count": 2,
+          "count": 3,
           "dates": [
-            "2026-06-29",
+            "2026-07-03",
+            "2026-07-10",
             "2026-07-15"
           ],
           "feed": "staged",
@@ -15795,8 +15127,18 @@
           "samples": [
             {
               "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "date": "2026-07-03",
+              "end_date": "2026-07-03",
+              "event_type": "Sport - Youth",
+              "latlng": "40.83344,-73.92381",
+              "location": "Reverend T. Wendell Foster Park: Baseball-01",
+              "source_event_id": "910161",
+              "title": "Baseball - 13 and Older (Little League)"
+            },
+            {
+              "borough": "Bronx",
+              "date": "2026-07-10",
+              "end_date": "2026-07-10",
               "event_type": "Sport - Youth",
               "latlng": "40.83344,-73.92381",
               "location": "Reverend T. Wendell Foster Park: Baseball-01",
@@ -15885,9 +15227,8 @@
           "severity": "high"
         },
         {
-          "count": 3,
+          "count": 2,
           "dates": [
-            "2026-06-30",
             "2026-07-09",
             "2026-07-12"
           ],
@@ -15896,16 +15237,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.82701,-73.92779",
-              "location": "Macombs Dam Park: Basketball-03",
-              "source_event_id": "910637",
-              "title": "Basketball"
-            },
             {
               "borough": "Bronx",
               "date": "2026-07-09",
@@ -15925,74 +15256,6 @@
               "location": "Macombs Dam Park: Basketball-03",
               "source_event_id": "910637",
               "title": "Basketball"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-14"
-          ],
-          "feed": "staged",
-          "key": "910859",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Adult",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: North Meadow-Softball-09",
-              "source_event_id": "910859",
-              "title": "Softball - Adults"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-14",
-              "end_date": "2026-07-14",
-              "event_type": "Sport - Adult",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: North Meadow-Softball-09",
-              "source_event_id": "910859",
-              "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-22"
-          ],
-          "feed": "staged",
-          "key": "910942",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Adult",
-              "latlng": "40.71514,-74.00000",
-              "location": "Columbus Park: Soccer-01",
-              "source_event_id": "910942",
-              "title": "Soccer - Non Regulation"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-22",
-              "end_date": "2026-07-22",
-              "event_type": "Sport - Adult",
-              "latlng": "40.71514,-74.00000",
-              "location": "Columbus Park: Soccer-01",
-              "source_event_id": "910942",
-              "title": "Soccer - Non Regulation"
             }
           ],
           "severity": "high"
@@ -16027,176 +15290,6 @@
               "location": "P.S. 29 Ball Field: Softball-01",
               "source_event_id": "910954",
               "title": "Baseball - 13 and Older (Little League)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-01"
-          ],
-          "feed": "staged",
-          "key": "911706",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.81691,-73.87101",
-              "location": "Soundview Park: Track-01",
-              "source_event_id": "911706",
-              "title": "Track and Field"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-07-01",
-              "end_date": "2026-07-01",
-              "event_type": "Sport - Youth",
-              "latlng": "40.81691,-73.87101",
-              "location": "Soundview Park: Track-01",
-              "source_event_id": "911706",
-              "title": "Track and Field"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-06"
-          ],
-          "feed": "staged",
-          "key": "912027",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.64798,-74.00374",
-              "location": "Sunset Park: Soccer-01B",
-              "source_event_id": "912027",
-              "title": "Soccer - Non Regulation"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-06",
-              "end_date": "2026-07-06",
-              "event_type": "Sport - Youth",
-              "latlng": "40.64798,-74.00374",
-              "location": "Sunset Park: Soccer-01B",
-              "source_event_id": "912027",
-              "title": "Soccer - Non Regulation"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-20"
-          ],
-          "feed": "staged",
-          "key": "912143",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Adult",
-              "latlng": "40.67157,-74.00510",
-              "location": "Red Hook Recreation Area: Softball-08",
-              "source_event_id": "912143",
-              "title": "Softball - Adults"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-20",
-              "end_date": "2026-07-20",
-              "event_type": "Sport - Adult",
-              "latlng": "40.67157,-74.00510",
-              "location": "Red Hook Recreation Area: Softball-08",
-              "source_event_id": "912143",
-              "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-16"
-          ],
-          "feed": "staged",
-          "key": "912385",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.66138,-73.96963",
-              "location": "Prospect Park: Baseball-02",
-              "source_event_id": "912385",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-16",
-              "end_date": "2026-07-16",
-              "event_type": "Sport - Youth",
-              "latlng": "40.66138,-73.96963",
-              "location": "Prospect Park: Baseball-02",
-              "source_event_id": "912385",
-              "title": "Baseball - 12 and Under (Little League)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-08"
-          ],
-          "feed": "staged",
-          "key": "912534",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.84158,-73.83934",
-              "location": "Pelham Bay Little League: Softball-03",
-              "source_event_id": "912534",
-              "title": "Softball (Little league)"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-07-08",
-              "end_date": "2026-07-08",
-              "event_type": "Sport - Youth",
-              "latlng": "40.84158,-73.83934",
-              "location": "Pelham Bay Little League: Softball-03",
-              "source_event_id": "912534",
-              "title": "Softball (Little league)"
             }
           ],
           "severity": "high"
@@ -16272,33 +15365,33 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-02"
+            "2026-07-03",
+            "2026-07-18"
           ],
           "feed": "staged",
-          "key": "912938",
+          "key": "912857",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "borough": "Brooklyn",
+              "date": "2026-07-03",
+              "end_date": "2026-07-03",
               "event_type": "Sport - Youth",
-              "latlng": "40.90000,-73.89222",
-              "location": "Van Cortlandt Park: Stadium-Baseball-01",
-              "source_event_id": "912938",
-              "title": "Baseball - 13 and Older (Little League)"
+              "latlng": "40.68157,-73.95917",
+              "location": "Crispus Attucks Playground: Basketball-01",
+              "source_event_id": "912857",
+              "title": "Basketball"
             },
             {
-              "borough": "Bronx",
-              "date": "2026-07-02",
-              "end_date": "2026-07-02",
+              "borough": "Brooklyn",
+              "date": "2026-07-18",
+              "end_date": "2026-07-18",
               "event_type": "Sport - Youth",
-              "latlng": "40.90000,-73.89222",
-              "location": "Van Cortlandt Park: Stadium-Baseball-01",
-              "source_event_id": "912938",
-              "title": "Baseball - 13 and Older (Little League)"
+              "latlng": "40.68157,-73.95917",
+              "location": "Crispus Attucks Playground: Basketball-01",
+              "source_event_id": "912857",
+              "title": "Basketball"
             }
           ],
           "severity": "high"
@@ -16306,24 +15399,14 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-10"
+            "2026-07-10",
+            "2026-07-12"
           ],
           "feed": "staged",
           "key": "913273",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.88591,-73.91700",
-              "location": "Seton Park: Softball-02",
-              "source_event_id": "913273",
-              "title": "Softball (Little league)"
-            },
             {
               "borough": "Bronx",
               "date": "2026-07-10",
@@ -16333,6 +15416,16 @@
               "location": "Seton Park: Softball-02",
               "source_event_id": "913273",
               "title": "Softball (Little league)"
+            },
+            {
+              "borough": "Bronx",
+              "date": "2026-07-12",
+              "end_date": "2026-07-12",
+              "event_type": "Sport - Youth",
+              "latlng": "40.88591,-73.91700",
+              "location": "Seton Park: Softball-02",
+              "source_event_id": "913273",
+              "title": "Softball (Little league)"
             }
           ],
           "severity": "high"
@@ -16340,33 +15433,33 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-08"
+            "2026-07-01",
+            "2026-07-20"
           ],
           "feed": "staged",
-          "key": "913285",
+          "key": "914215",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
-              "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "borough": "Staten Island",
+              "date": "2026-07-01",
+              "end_date": "2026-07-01",
               "event_type": "Sport - Youth",
-              "latlng": "40.62734,-73.89570",
-              "location": "Canarsie Park: Monroe Cohen-Baseball-02",
-              "source_event_id": "913285",
-              "title": "Baseball - 13 and Older (Little League)"
+              "latlng": "40.58658,-74.10023",
+              "location": "Gen. Douglas MacArthur Park: Basketball-01",
+              "source_event_id": "914215",
+              "title": "Basketball"
             },
             {
-              "borough": "Brooklyn",
-              "date": "2026-07-08",
-              "end_date": "2026-07-08",
+              "borough": "Staten Island",
+              "date": "2026-07-20",
+              "end_date": "2026-07-20",
               "event_type": "Sport - Youth",
-              "latlng": "40.62734,-73.89570",
-              "location": "Canarsie Park: Monroe Cohen-Baseball-02",
-              "source_event_id": "913285",
-              "title": "Baseball - 13 and Older (Little League)"
+              "latlng": "40.58658,-74.10023",
+              "location": "Gen. Douglas MacArthur Park: Basketball-01",
+              "source_event_id": "914215",
+              "title": "Basketball"
             }
           ],
           "severity": "high"
@@ -16374,33 +15467,33 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-06-30"
+            "2026-07-10",
+            "2026-07-20"
           ],
           "feed": "staged",
-          "key": "913877",
+          "key": "914955",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.80071,-73.96327",
-              "location": "Booker T. Washington Playground: Soccer-01",
-              "source_event_id": "913877",
-              "title": "Soccer - Non Regulation"
+              "borough": "Bronx",
+              "date": "2026-07-10",
+              "end_date": "2026-07-10",
+              "event_type": "Sport - Adult",
+              "latlng": "40.81691,-73.87101",
+              "location": "Soundview Park: Softball-02",
+              "source_event_id": "914955",
+              "title": "Softball - Adults"
             },
             {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.80071,-73.96327",
-              "location": "Booker T. Washington Playground: Soccer-01",
-              "source_event_id": "913877",
-              "title": "Soccer - Non Regulation"
+              "borough": "Bronx",
+              "date": "2026-07-20",
+              "end_date": "2026-07-20",
+              "event_type": "Sport - Adult",
+              "latlng": "40.81691,-73.87101",
+              "location": "Soundview Park: Softball-02",
+              "source_event_id": "914955",
+              "title": "Softball - Adults"
             }
           ],
           "severity": "high"
@@ -16442,40 +15535,6 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-07-06"
-          ],
-          "feed": "staged",
-          "key": "916079",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Adult",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: Great Lawn-Softball-07",
-              "source_event_id": "916079",
-              "title": "Softball - Adults"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-06",
-              "end_date": "2026-07-06",
-              "event_type": "Sport - Adult",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: Great Lawn-Softball-07",
-              "source_event_id": "916079",
-              "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
             "2026-07-16",
             "2026-07-22"
           ],
@@ -16510,67 +15569,33 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-30",
-            "2026-07-15"
+            "2026-07-15",
+            "2026-07-23"
           ],
           "feed": "staged",
-          "key": "924157",
+          "key": "917231",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.67157,-74.00510",
-              "location": "Red Hook Recreation Area: Softball-08",
-              "source_event_id": "924157",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
             {
               "borough": "Brooklyn",
               "date": "2026-07-15",
               "end_date": "2026-07-15",
-              "event_type": "Sport - Youth",
-              "latlng": "40.67157,-74.00510",
-              "location": "Red Hook Recreation Area: Softball-08",
-              "source_event_id": "924157",
-              "title": "Baseball - 12 and Under (Little League)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-06"
-          ],
-          "feed": "staged",
-          "key": "924641",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.69043,-73.99929",
-              "location": "Van Voorhees Playground: Softball-01",
-              "source_event_id": "924641",
-              "title": "Baseball - 12 and Under (Little League)"
+              "event_type": "Special Event",
+              "latlng": "40.66138,-73.96963",
+              "location": "Prospect Park: Sugar Bowl",
+              "source_event_id": "917231",
+              "title": "Oasis Day Camp (July)"
             },
             {
               "borough": "Brooklyn",
-              "date": "2026-07-06",
-              "end_date": "2026-07-06",
-              "event_type": "Sport - Youth",
-              "latlng": "40.69043,-73.99929",
-              "location": "Van Voorhees Playground: Softball-01",
-              "source_event_id": "924641",
-              "title": "Baseball - 12 and Under (Little League)"
+              "date": "2026-07-23",
+              "end_date": "2026-07-23",
+              "event_type": "Special Event",
+              "latlng": "40.66138,-73.96963",
+              "location": "Prospect Park: Sugar Bowl",
+              "source_event_id": "917231",
+              "title": "Oasis Day Camp (July)"
             }
           ],
           "severity": "high"
@@ -16605,6 +15630,40 @@
               "location": "Annunciation Park: Softball-01",
               "source_event_id": "924649",
               "title": "Baseball - 12 and Under (Little League)"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-10",
+            "2026-07-17"
+          ],
+          "feed": "staged",
+          "key": "925028",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Queens",
+              "date": "2026-07-10",
+              "end_date": "2026-07-10",
+              "event_type": "Sport - Youth",
+              "latlng": "40.67313,-73.85403",
+              "location": "Addabbo Park: Pals Oval-Baseball-02",
+              "source_event_id": "925028",
+              "title": "Baseball - 13 and Older (Little League)"
+            },
+            {
+              "borough": "Queens",
+              "date": "2026-07-17",
+              "end_date": "2026-07-17",
+              "event_type": "Sport - Youth",
+              "latlng": "40.67313,-73.85403",
+              "location": "Addabbo Park: Pals Oval-Baseball-02",
+              "source_event_id": "925028",
+              "title": "Baseball - 13 and Older (Little League)"
             }
           ],
           "severity": "high"
@@ -16678,40 +15737,6 @@
           "severity": "high"
         },
         {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-23"
-          ],
-          "feed": "staged",
-          "key": "925347",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.68795,-73.92572",
-              "location": "P.O. Reinaldo Salgado Playground (PS 309): Basketball-01",
-              "source_event_id": "925347",
-              "title": "Basketball"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-23",
-              "end_date": "2026-07-23",
-              "event_type": "Sport - Youth",
-              "latlng": "40.68795,-73.92572",
-              "location": "P.O. Reinaldo Salgado Playground (PS 309): Basketball-01",
-              "source_event_id": "925347",
-              "title": "Basketball"
-            }
-          ],
-          "severity": "high"
-        },
-        {
           "count": 4,
           "dates": [
             "2026-07-02",
@@ -16768,43 +15793,9 @@
           "severity": "high"
         },
         {
-          "count": 2,
-          "dates": [
-            "2026-06-30",
-            "2026-07-21"
-          ],
-          "feed": "staged",
-          "key": "926473",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Queens",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Adult",
-              "latlng": "40.72902,-73.76467",
-              "location": "Cunningham Park: Softball-12",
-              "source_event_id": "926473",
-              "title": "Softball - Adults"
-            },
-            {
-              "borough": "Queens",
-              "date": "2026-07-21",
-              "end_date": "2026-07-21",
-              "event_type": "Sport - Adult",
-              "latlng": "40.72902,-73.76467",
-              "location": "Cunningham Park: Softball-12",
-              "source_event_id": "926473",
-              "title": "Softball - Adults"
-            }
-          ],
-          "severity": "high"
-        },
-        {
           "count": 3,
           "dates": [
-            "2026-06-29",
+            "2026-07-01",
             "2026-07-13",
             "2026-07-17"
           ],
@@ -16815,8 +15806,8 @@
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "date": "2026-07-01",
+              "end_date": "2026-07-01",
               "event_type": "Sport - Youth",
               "latlng": "40.63830,-73.94787",
               "location": "Nostrand Playground (PS 269): Basketball-01",
@@ -16849,66 +15840,32 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-29",
-            "2026-06-30"
+            "2026-07-21",
+            "2026-07-24"
           ],
           "feed": "staged",
-          "key": "926796",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.86226,-73.87300",
-              "location": "Bronx Park: Frisch Field-Baseball-01",
-              "source_event_id": "926796",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.86226,-73.87300",
-              "location": "Bronx Park: Frisch Field-Baseball-01",
-              "source_event_id": "926796",
-              "title": "Baseball - 12 and Under (Little League)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-06-30"
-          ],
-          "feed": "staged",
-          "key": "927214",
+          "key": "927218",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
               "borough": "Staten Island",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
+              "date": "2026-07-21",
+              "end_date": "2026-07-21",
               "event_type": "Sport - Adult",
               "latlng": "40.60128,-74.15834",
-              "location": "Willowbrook Park: Softball-02",
-              "source_event_id": "927214",
+              "location": "Willowbrook Park: Softball-03",
+              "source_event_id": "927218",
               "title": "Softball - Adults"
             },
             {
               "borough": "Staten Island",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
+              "date": "2026-07-24",
+              "end_date": "2026-07-24",
               "event_type": "Sport - Adult",
               "latlng": "40.60128,-74.15834",
-              "location": "Willowbrook Park: Softball-02",
-              "source_event_id": "927214",
+              "location": "Willowbrook Park: Softball-03",
+              "source_event_id": "927218",
               "title": "Softball - Adults"
             }
           ],
@@ -16943,6 +15900,85 @@
               "latlng": "40.81556,-73.88924",
               "location": "Julio Carballo Fields: Softball-01",
               "source_event_id": "929104",
+              "title": "Baseball - 12 and Under (Little League)"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-02",
+            "2026-07-09"
+          ],
+          "feed": "staged",
+          "key": "929374",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-02",
+              "end_date": "2026-07-02",
+              "event_type": "Sport - Adult",
+              "latlng": "40.79553,-73.92176",
+              "location": "Randall's Island Park: Sunken Meadow Fields-Softball-25",
+              "source_event_id": "929374",
+              "title": "Softball - Adults"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-09",
+              "end_date": "2026-07-09",
+              "event_type": "Sport - Adult",
+              "latlng": "40.79553,-73.92176",
+              "location": "Randall's Island Park: Sunken Meadow Fields-Softball-25",
+              "source_event_id": "929374",
+              "title": "Softball - Adults"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 3,
+          "dates": [
+            "2026-07-13",
+            "2026-07-21",
+            "2026-07-24"
+          ],
+          "feed": "staged",
+          "key": "929791",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Queens",
+              "date": "2026-07-13",
+              "end_date": "2026-07-13",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72007,-73.88114",
+              "location": "Juniper Valley Park: Softball-06",
+              "source_event_id": "929791",
+              "title": "Baseball - 12 and Under (Little League)"
+            },
+            {
+              "borough": "Queens",
+              "date": "2026-07-21",
+              "end_date": "2026-07-21",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72007,-73.88114",
+              "location": "Juniper Valley Park: Softball-06",
+              "source_event_id": "929791",
+              "title": "Baseball - 12 and Under (Little League)"
+            },
+            {
+              "borough": "Queens",
+              "date": "2026-07-24",
+              "end_date": "2026-07-24",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72007,-73.88114",
+              "location": "Juniper Valley Park: Softball-06",
+              "source_event_id": "929791",
               "title": "Baseball - 12 and Under (Little League)"
             }
           ],
@@ -17030,101 +16066,33 @@
         {
           "count": 2,
           "dates": [
-            "2026-06-30",
-            "2026-07-07"
+            "2026-07-19",
+            "2026-07-23"
           ],
           "feed": "staged",
-          "key": "933591",
+          "key": "932802",
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
             {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
+              "borough": "Queens",
+              "date": "2026-07-19",
+              "end_date": "2026-07-19",
               "event_type": "Sport - Youth",
-              "latlng": "40.79320,-73.93559",
-              "location": "Thomas Jefferson Park: Softball-01",
-              "source_event_id": "933591",
-              "title": "Baseball - T-ball"
+              "latlng": "40.67603,-73.78544",
+              "location": "Baisley Pond Park: Football-01",
+              "source_event_id": "932802",
+              "title": "Football - Youth"
             },
             {
-              "borough": "Manhattan",
-              "date": "2026-07-07",
-              "end_date": "2026-07-07",
+              "borough": "Queens",
+              "date": "2026-07-23",
+              "end_date": "2026-07-23",
               "event_type": "Sport - Youth",
-              "latlng": "40.79320,-73.93559",
-              "location": "Thomas Jefferson Park: Softball-01",
-              "source_event_id": "933591",
-              "title": "Baseball - T-ball"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-17"
-          ],
-          "feed": "staged",
-          "key": "935373",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.86932,-73.80036",
-              "location": "Pelham Bay Park: Softball-04",
-              "source_event_id": "935373",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-07-17",
-              "end_date": "2026-07-17",
-              "event_type": "Sport - Youth",
-              "latlng": "40.86932,-73.80036",
-              "location": "Pelham Bay Park: Softball-04",
-              "source_event_id": "935373",
-              "title": "Baseball - 12 and Under (Little League)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-12"
-          ],
-          "feed": "staged",
-          "key": "943203",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.78249,-73.96554",
-              "location": "Heckscher Playground: Soccer-01",
-              "source_event_id": "943203",
-              "title": "Soccer - Non Regulation"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-12",
-              "end_date": "2026-07-12",
-              "event_type": "Sport - Youth",
-              "latlng": "40.78249,-73.96554",
-              "location": "Heckscher Playground: Soccer-01",
-              "source_event_id": "943203",
-              "title": "Soccer - Non Regulation"
+              "latlng": "40.67603,-73.78544",
+              "location": "Baisley Pond Park: Football-01",
+              "source_event_id": "932802",
+              "title": "Football - Youth"
             }
           ],
           "severity": "high"
@@ -17170,119 +16138,6 @@
               "location": "Eugene McCabe Field: Soccer-01",
               "source_event_id": "943990",
               "title": "Miscellaneous"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 3,
-          "dates": [
-            "2026-06-29",
-            "2026-06-30",
-            "2026-07-02"
-          ],
-          "feed": "staged",
-          "key": "944013",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.86438,-73.90979",
-              "location": "Fordham Landing Playground: Softball-01",
-              "source_event_id": "944013",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Youth",
-              "latlng": "40.86438,-73.90979",
-              "location": "Fordham Landing Playground: Softball-01",
-              "source_event_id": "944013",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-07-02",
-              "end_date": "2026-07-02",
-              "event_type": "Sport - Youth",
-              "latlng": "40.86438,-73.90979",
-              "location": "Fordham Landing Playground: Softball-01",
-              "source_event_id": "944013",
-              "title": "Baseball - 12 and Under (Little League)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-07-10"
-          ],
-          "feed": "staged",
-          "key": "944968",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Bronx",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Youth",
-              "latlng": "40.90000,-73.89222",
-              "location": "Van Cortlandt Park: Parade Ground-Baseball-03",
-              "source_event_id": "944968",
-              "title": "Baseball - 13 and Older (Little League)"
-            },
-            {
-              "borough": "Bronx",
-              "date": "2026-07-10",
-              "end_date": "2026-07-10",
-              "event_type": "Sport - Youth",
-              "latlng": "40.90000,-73.89222",
-              "location": "Van Cortlandt Park: Parade Ground-Baseball-03",
-              "source_event_id": "944968",
-              "title": "Baseball - 13 and Older (Little League)"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-29",
-            "2026-06-30"
-          ],
-          "feed": "staged",
-          "key": "946348",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Sport - Adult",
-              "latlng": "40.72171,-73.99155",
-              "location": "Sara D. Roosevelt Park: Nike Field-Soccer-02",
-              "source_event_id": "946348",
-              "title": "Soccer - Non Regulation"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-30",
-              "end_date": "2026-06-30",
-              "event_type": "Sport - Adult",
-              "latlng": "40.72171,-73.99155",
-              "location": "Sara D. Roosevelt Park: Nike Field-Soccer-02",
-              "source_event_id": "946348",
-              "title": "Soccer - Non Regulation"
             }
           ],
           "severity": "high"
@@ -17399,20 +16254,54 @@
             }
           ],
           "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-07-16",
+            "2026-07-24"
+          ],
+          "feed": "staged",
+          "key": "952596",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-16",
+              "end_date": "2026-07-16",
+              "event_type": "Sport - Youth",
+              "latlng": "40.81727,-73.94882",
+              "location": "St Nicholas Park: Arlington Edinboro Playground-Basketball-01",
+              "source_event_id": "952596",
+              "title": "Basketball"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-24",
+              "end_date": "2026-07-24",
+              "event_type": "Sport - Youth",
+              "latlng": "40.81727,-73.94882",
+              "location": "St Nicholas Park: Arlington Edinboro Playground-Basketball-01",
+              "source_event_id": "952596",
+              "title": "Basketball"
+            }
+          ],
+          "severity": "high"
         }
       ],
-      "issues_total": 88,
+      "issues_total": 68,
       "medium_issues": 0,
-      "rows_loaded": 881
+      "rows_loaded": 843
     }
   ],
-  "generated_at_utc": "2026-06-27T18:26:31.839330+00:00",
+  "generated_at_utc": "2026-06-27T19:43:21.372580+00:00",
   "production_feeds_modified": false,
   "summary": {
     "feeds_checked": 4,
-    "high_issues": 1116,
-    "issues_total": 3561,
+    "high_issues": 1083,
+    "issues_total": 3528,
     "medium_issues": 2445,
-    "rows_checked": 14613
+    "rows_checked": 14555
   }
 }
