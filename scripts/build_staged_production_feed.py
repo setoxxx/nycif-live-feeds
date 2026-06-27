@@ -14,6 +14,7 @@ Outputs:
 from __future__ import annotations
 
 import json
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -60,6 +61,127 @@ def valid_lat_lng(row: dict[str, Any]) -> bool:
     return 40.0 <= lat <= 41.0 and -75.0 <= lng <= -73.0
 
 
+def norm(value: Any) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
+
+
+def date_key(row: dict[str, Any]) -> str:
+    for key in ("start_date_time", "start", "date"):
+        raw = str(row.get(key) or "")
+        match = re.match(r"^\d{4}-\d{2}-\d{2}", raw)
+        if match:
+            return match.group(0)
+    return ""
+
+
+def street_text(row: dict[str, Any]) -> str:
+    return " ".join(
+        str(row.get(key) or "")
+        for key in (
+            "title",
+            "event_name",
+            "event_type",
+            "street_closure_type",
+            "location",
+            "display_location",
+            "major_reason",
+            "source_file",
+        )
+    )
+
+
+def is_one_day_street_event(row: dict[str, Any]) -> bool:
+    text = norm(street_text(row))
+    return bool(
+        re.search(
+            r"\b(block party|street activity|street event|street fair|street closure|sidewalk closure|plaza event|festival)\b",
+            text,
+        )
+    )
+
+
+def one_day_street_key(row: dict[str, Any]) -> str:
+    try:
+        lat = f"{float(row.get('lat')):.5f}"
+        lng = f"{float(row.get('lng')):.5f}"
+    except Exception:
+        lat = ""
+        lng = ""
+    return "|".join(
+        [
+            norm(row.get("title") or row.get("event_name")),
+            norm(row.get("borough") or row.get("event_borough")),
+            norm(row.get("display_location") or row.get("location") or row.get("address")),
+            lat,
+            lng,
+        ]
+    )
+
+
+def priority_score(row: dict[str, Any]) -> int:
+    score = 0
+    for key in ("expected_crowd_score", "priority_score", "priority"):
+        try:
+            score += int(row.get(key) or 0)
+        except Exception:
+            pass
+    if row.get("field_default"):
+        score += 100
+    if row.get("photo_pick") or row.get("photoPick"):
+        score += 50
+    if row.get("match_type") == "event_id":
+        score += 25
+    return score
+
+
+def choose_street_keeper(a: dict[str, Any], b: dict[str, Any]) -> dict[str, Any]:
+    # For one-day street-style events, keep the earliest source date. If dates tie, keep the stronger row.
+    da = date_key(a)
+    db = date_key(b)
+    if da and db and da != db:
+        return a if da < db else b
+    return b if priority_score(b) > priority_score(a) else a
+
+
+def reject_sample(row: dict[str, Any], reason: str, kept: dict[str, Any] | None = None) -> dict[str, Any]:
+    return {
+        "reason": reason,
+        "title": row.get("title") or row.get("event_name"),
+        "date": date_key(row),
+        "borough": row.get("borough") or row.get("event_borough"),
+        "display_location": row.get("display_location") or row.get("location"),
+        "source_event_id": row.get("source_event_id") or row.get("event_id"),
+        "source_cemsid": row.get("source_cemsid") or [],
+        "kept_date": date_key(kept) if kept else None,
+        "kept_source_event_id": (kept or {}).get("source_event_id") if kept else None,
+    }
+
+
+def apply_one_day_street_dedupe(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    keyed: dict[str, dict[str, Any]] = {}
+    passthrough: list[dict[str, Any]] = []
+    rejected: list[dict[str, Any]] = []
+
+    for row in rows:
+        if not is_one_day_street_event(row):
+            passthrough.append(row)
+            continue
+        key = one_day_street_key(row)
+        if not key.strip("|"):
+            passthrough.append(row)
+            continue
+        if key not in keyed:
+            keyed[key] = row
+            continue
+        existing = keyed[key]
+        kept = choose_street_keeper(existing, row)
+        removed = row if kept is existing else existing
+        keyed[key] = kept
+        rejected.append(reject_sample(removed, "one_day_street_duplicate_suppressed", kept))
+
+    return [*passthrough, *keyed.values()], rejected
+
+
 def staged_event(row: dict[str, Any]) -> dict[str, Any]:
     # Keep production app-friendly fields while retaining source keys for QA traceability.
     return {
@@ -94,7 +216,9 @@ def staged_event(row: dict[str, Any]) -> dict[str, Any]:
 def main() -> int:
     source_payload = load_json_file(TEST_FEED_PATH, {})
     rows = rows_from_test_feed(source_payload)
-    staged_rows = [staged_event(row) for row in rows if row.get("needs_review") is False and valid_lat_lng(row)]
+    eligible_rows = [row for row in rows if row.get("needs_review") is False and valid_lat_lng(row)]
+    staged_source_rows, one_day_street_rejected_rows = apply_one_day_street_dedupe(eligible_rows)
+    staged_rows = [staged_event(row) for row in staged_source_rows]
     skipped_rows = [row for row in rows if not (row.get("needs_review") is False and valid_lat_lng(row))]
     staged_rows.sort(key=lambda row: (row.get("date") or "9999-99-99", row.get("start_date_time") or "", row.get("borough") or "", row.get("title") or ""))
 
@@ -125,11 +249,18 @@ def main() -> int:
         "staged_feed": True,
         "production_ready": True,
         "test_feed_rows_loaded": len(rows),
+        "eligible_rows_before_one_day_street_dedupe": len(eligible_rows),
         "staged_feed_events": len(staged_rows),
         "skipped_needs_review_or_bad_gps": len(skipped_rows),
+        "one_day_street_duplicates_suppressed": len(one_day_street_rejected_rows),
+        "duplicate_policy": {
+            "one_day_street_events": "dedupe by title + borough + location + coordinate; keep earliest source date; recurring sports and park events are not deduped by this rule",
+            "production_feeds_modified": False,
+        },
         "match_counts": match_counts,
         "borough_counts": borough_counts,
         "category_counts": category_counts,
+        "sample_one_day_street_rejected_rows": one_day_street_rejected_rows[:25],
         "sample_skipped_rows": [
             {
                 "title": row.get("title"),
