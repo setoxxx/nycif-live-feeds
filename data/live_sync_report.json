@@ -1,17 +1,17 @@
 {
-  "current_future_rows": 940,
-  "current_future_rows_with_cemsid": 929,
+  "current_future_rows": 920,
+  "current_future_rows_with_cemsid": 907,
   "enriched_rows_loaded": 12210,
-  "generated_at_utc": "2026-06-27T18:07:54.938260+00:00",
+  "generated_at_utc": "2026-06-27T18:26:30.450510+00:00",
   "location_cache_entries_loaded": 9761,
   "match_counts": {
     "cemsid": 0,
-    "event_id": 763,
-    "location_cache": 120,
-    "none": 56,
-    "text_date_location": 1
+    "event_id": 697,
+    "location_cache": 147,
+    "none": 74,
+    "text_date_location": 2
   },
-  "matched_with_gps": 884,
+  "matched_with_gps": 846,
   "matched_without_gps_sample": [],
   "needs_enrichment_sample": [
     {
@@ -480,6 +480,27 @@
     },
     {
       "community_board": [
+        "02"
+      ],
+      "end_date_time": "2026-06-30T20:00:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Brooklyn",
+      "event_location": "Edmonds Playground (IS 113): Basketball-01",
+      "event_name": "Basketball",
+      "event_type": "Sport - Adult",
+      "police_precinct": [
+        "88"
+      ],
+      "source_cemsid": [
+        "5427"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "954123",
+      "start_date_time": "2026-06-30T18:00:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
         "18"
       ],
       "end_date_time": "2026-07-17T16:00:00.000",
@@ -520,33 +541,11 @@
       "source_event_id": "945495",
       "start_date_time": "2026-07-10T09:00:00.000",
       "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "12"
-      ],
-      "end_date_time": "2026-07-23T17:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Brooklyn",
-      "event_location": "Rappaport Playground: Rappaport Playground   ,Rappaport Playground: Handball-01",
-      "event_name": "Miscellaneous",
-      "event_type": "Special Event",
-      "police_precinct": [
-        "66"
-      ],
-      "source_cemsid": [
-        "1837",
-        "8015"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "931000",
-      "start_date_time": "2026-07-23T09:00:00.000",
-      "street_closure_type": "N/A"
     }
   ],
   "production_feeds_modified": false,
   "raw_rows_loaded": 1000,
-  "raw_rows_with_cemsid": 987,
+  "raw_rows_with_cemsid": 985,
   "raw_url": "https://data.cityofnewyork.us/resource/tvpp-9vvx.json",
   "today_utc": "2026-06-27"
 }

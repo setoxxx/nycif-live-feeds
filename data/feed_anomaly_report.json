@@ -14219,7 +14219,7 @@
     },
     {
       "feed": "staged",
-      "high_issues": 89,
+      "high_issues": 88,
       "issues": [
         {
           "count": 2,
@@ -17062,62 +17062,6 @@
           "severity": "high"
         },
         {
-          "count": 4,
-          "dates": [
-            "2026-06-29",
-            "2026-07-07",
-            "2026-07-08",
-            "2026-07-18"
-          ],
-          "feed": "staged",
-          "key": "934014",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Queens",
-              "date": "2026-06-29",
-              "end_date": "2026-06-29",
-              "event_type": "Open Street Partner Event",
-              "latlng": "40.76213,-73.86826",
-              "location": "34 AVENUE between 93 STREET and 94 STREET",
-              "source_event_id": "934014",
-              "title": "Afterschool Fun"
-            },
-            {
-              "borough": "Queens",
-              "date": "2026-07-07",
-              "end_date": "2026-07-07",
-              "event_type": "Open Street Partner Event",
-              "latlng": "40.76213,-73.86826",
-              "location": "34 AVENUE between 93 STREET and 94 STREET",
-              "source_event_id": "934014",
-              "title": "Afterschool Fun"
-            },
-            {
-              "borough": "Queens",
-              "date": "2026-07-08",
-              "end_date": "2026-07-08",
-              "event_type": "Open Street Partner Event",
-              "latlng": "40.76213,-73.86826",
-              "location": "34 AVENUE between 93 STREET and 94 STREET",
-              "source_event_id": "934014",
-              "title": "Afterschool Fun"
-            },
-            {
-              "borough": "Queens",
-              "date": "2026-07-18",
-              "end_date": "2026-07-18",
-              "event_type": "Open Street Partner Event",
-              "latlng": "40.76213,-73.86826",
-              "location": "34 AVENUE between 93 STREET and 94 STREET",
-              "source_event_id": "934014",
-              "title": "Afterschool Fun"
-            }
-          ],
-          "severity": "high"
-        },
-        {
           "count": 2,
           "dates": [
             "2026-06-29",
@@ -17457,18 +17401,18 @@
           "severity": "high"
         }
       ],
-      "issues_total": 89,
+      "issues_total": 88,
       "medium_issues": 0,
-      "rows_loaded": 884
+      "rows_loaded": 881
     }
   ],
-  "generated_at_utc": "2026-06-27T18:07:56.373256+00:00",
+  "generated_at_utc": "2026-06-27T18:26:31.839330+00:00",
   "production_feeds_modified": false,
   "summary": {
     "feeds_checked": 4,
-    "high_issues": 1117,
-    "issues_total": 3562,
+    "high_issues": 1116,
+    "issues_total": 3561,
     "medium_issues": 2445,
-    "rows_checked": 14616
+    "rows_checked": 14613
   }
 }
