@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """NYCIF backend QA sync for NYC Open Data event feed.
 
-This script is intentionally report-only for the first backend pass.
+This script is intentionally report-only.
 It does not overwrite production map feeds.
 
 Outputs:
@@ -25,6 +25,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 RAW_SNAPSHOT_PATH = DATA_DIR / "raw_nyc_open_data_snapshot.json"
 REPORT_PATH = DATA_DIR / "live_sync_report.json"
+LOCATION_CACHE_PATH = DATA_DIR / "location_cache.json"
 ENRICHED_PATH = ROOT / "nycif_all_radar_map_events.json"
 TODAY_UTC = datetime.now(timezone.utc).date().isoformat()
 
@@ -61,6 +62,8 @@ def date_key(value: Any) -> str:
 
 
 def split_ids(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [str(item).strip() for item in value if str(item).strip()]
     return [item.strip() for item in str(value or "").split(",") if item.strip()]
 
 
@@ -68,7 +71,9 @@ def norm(value: Any) -> str:
     return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
 
 
-def has_gps(row: dict[str, Any]) -> bool:
+def has_gps(row: dict[str, Any] | None) -> bool:
+    if not row:
+        return False
     try:
         lat = float(row.get("lat"))
         lng = float(row.get("lng"))
@@ -83,6 +88,13 @@ def enriched_rows(payload: Any) -> list[dict[str, Any]]:
     if isinstance(payload, dict) and isinstance(payload.get("events"), list):
         return [row for row in payload["events"] if isinstance(row, dict)]
     return []
+
+
+def load_location_cache() -> dict[str, dict[str, Any]]:
+    payload = load_json_file(LOCATION_CACHE_PATH, {})
+    if isinstance(payload, dict) and isinstance(payload.get("entries"), dict):
+        return {str(k): v for k, v in payload["entries"].items() if isinstance(v, dict)}
+    return {}
 
 
 @dataclass
@@ -114,7 +126,20 @@ def build_enriched_index(rows: list[dict[str, Any]]) -> EnrichedIndex:
     return EnrichedIndex(by_event_id, by_cemsid, by_text)
 
 
-def classify_raw_row(row: dict[str, Any], index: EnrichedIndex) -> tuple[str, dict[str, Any] | None]:
+def cache_lookup_keys(row: dict[str, Any]) -> list[str]:
+    borough = row.get("event_borough") or row.get("borough") or ""
+    location = row.get("event_location") or row.get("location") or row.get("display_location") or ""
+    keys: list[str] = []
+    event_id = str(row.get("event_id") or row.get("source_event_id") or "").strip()
+    if event_id:
+        keys.append(f"event_id:{event_id}")
+    for cemsid in split_ids(row.get("cemsid") or row.get("source_cemsid")):
+        keys.append(f"cemsid:{norm(borough)}:{cemsid}")
+    keys.append(f"location:{norm(borough)}:{norm(location)}")
+    return keys
+
+
+def classify_raw_row(row: dict[str, Any], index: EnrichedIndex, location_cache: dict[str, dict[str, Any]]) -> tuple[str, dict[str, Any] | None]:
     event_id = str(row.get("event_id") or "").strip()
     if event_id and event_id in index.by_event_id:
         return "event_id", index.by_event_id[event_id]
@@ -131,6 +156,10 @@ def classify_raw_row(row: dict[str, Any], index: EnrichedIndex) -> tuple[str, di
     ])
     if text_key in index.by_text:
         return "text_date_location", index.by_text[text_key]
+    for key in cache_lookup_keys(row):
+        cached = location_cache.get(key)
+        if cached:
+            return "location_cache", cached
     return "none", None
 
 
@@ -155,16 +184,17 @@ def normalize_raw(row: dict[str, Any]) -> dict[str, Any]:
 def main() -> int:
     raw_rows = fetch_raw_rows()
     enriched = enriched_rows(load_json_file(ENRICHED_PATH, []))
+    location_cache = load_location_cache()
     index = build_enriched_index(enriched)
     current_future = [row for row in raw_rows if date_key(row.get("start_date_time")) >= TODAY_UTC]
 
-    match_counts = {"event_id": 0, "cemsid": 0, "text_date_location": 0, "none": 0}
+    match_counts = {"event_id": 0, "cemsid": 0, "text_date_location": 0, "location_cache": 0, "none": 0}
     matched_with_gps = 0
     matched_without_gps = []
     needs_enrichment = []
 
     for row in current_future:
-        match_type, match = classify_raw_row(row, index)
+        match_type, match = classify_raw_row(row, index, location_cache)
         match_counts[match_type] += 1
         if match is None:
             if len(needs_enrichment) < 25:
@@ -183,6 +213,7 @@ def main() -> int:
         "raw_rows_with_cemsid": sum(1 for row in raw_rows if split_ids(row.get("cemsid"))),
         "current_future_rows_with_cemsid": sum(1 for row in current_future if split_ids(row.get("cemsid"))),
         "enriched_rows_loaded": len(enriched),
+        "location_cache_entries_loaded": len(location_cache),
         "match_counts": match_counts,
         "matched_with_gps": matched_with_gps,
         "matched_without_gps_sample": matched_without_gps,
