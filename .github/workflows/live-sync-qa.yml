@@ -20,6 +20,9 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Build location cache
+        run: python scripts/build_location_cache.py
+
       - name: Run backend QA sync
         run: python scripts/sync_nyc_open_data.py
 
@@ -27,7 +30,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/raw_nyc_open_data_snapshot.json data/live_sync_report.json
+          git add data/location_cache.json data/raw_nyc_open_data_snapshot.json data/live_sync_report.json
           if git diff --cached --quiet; then
             echo "No QA artifact changes to commit."
           else
