@@ -35,6 +35,17 @@ jobs:
       - name: Build live delta report
         run: python scripts/build_live_delta_report.py
 
+      - name: Email live delta report
+        run: python scripts/send_live_delta_email.py
+        env:
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USERNAME: ${{ secrets.SMTP_USERNAME }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          REPORT_TO_EMAIL: ${{ secrets.REPORT_TO_EMAIL }}
+          REPORT_FROM_EMAIL: ${{ secrets.REPORT_FROM_EMAIL }}
+          REPORT_MAX_EVENTS: ${{ secrets.REPORT_MAX_EVENTS }}
+
       - name: Audit feed anomalies
         run: python scripts/audit_feed_anomalies.py
 
