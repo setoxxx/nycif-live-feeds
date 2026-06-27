@@ -32,14 +32,16 @@ jobs:
       - name: Build staged production feed
         run: python scripts/build_staged_production_feed.py
 
+      - name: Build live delta report
+        run: python scripts/build_live_delta_report.py
+
       - name: Audit feed anomalies
         run: python scripts/audit_feed_anomalies.py
 
       - name: Commit QA artifacts
         run: |
           git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/location_cache.json data/raw_nyc_open_data_snapshot.json data/live_sync_report.json data/nycif_live_test_enriched_events.json data/test_enriched_feed_manifest.json data/nycif_staged_live_events.json data/staged_live_manifest.json data/feed_anomaly_report.json
+          git add data/location_cache.json data/raw_nyc_open_data_snapshot.json data/live_sync_report.json data/nycif_live_test_enriched_events.json data/test_enriched_feed_manifest.json data/nycif_staged_live_events.json data/staged_live_manifest.json data/live_delta_report.json data/previous_staged_live_events_snapshot.json data/feed_anomaly_report.json
           if git diff --cached --quiet; then
             echo "No QA artifact changes to commit."
           else
