@@ -35,6 +35,9 @@ jobs:
       - name: Build live delta report
         run: python scripts/build_live_delta_report.py
 
+      - name: Build remainder-year coverage report
+        run: python scripts/audit_remainder_year_coverage.py
+
       - name: Email live delta report
         run: python scripts/send_live_delta_email.py
         env:
@@ -52,7 +55,7 @@ jobs:
       - name: Commit QA artifacts
         run: |
           git config user.name "github-actions[bot]"
-          git add data/location_cache.json data/raw_nyc_open_data_snapshot.json data/live_sync_report.json data/nycif_live_test_enriched_events.json data/test_enriched_feed_manifest.json data/nycif_staged_live_events.json data/staged_live_manifest.json data/live_delta_report.json data/previous_staged_live_events_snapshot.json data/feed_anomaly_report.json
+          git add data/location_cache.json data/raw_nyc_open_data_snapshot.json data/live_sync_report.json data/nycif_live_test_enriched_events.json data/test_enriched_feed_manifest.json data/nycif_staged_live_events.json data/staged_live_manifest.json data/live_delta_report.json data/previous_staged_live_events_snapshot.json data/feed_anomaly_report.json data/remainder_year_coverage_report.json
           if git diff --cached --quiet; then
             echo "No QA artifact changes to commit."
           else
