@@ -19,8 +19,11 @@ from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlencode
 
 RAW_URL = "https://data.cityofnewyork.us/resource/tvpp-9vvx.json"
+RAW_PAGE_LIMIT = 50000
+MAX_RAW_ROWS = 300000
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 RAW_SNAPSHOT_PATH = DATA_DIR / "raw_nyc_open_data_snapshot.json"
@@ -48,12 +51,34 @@ def save_json_file(path: Path, payload: Any) -> None:
 
 
 def fetch_raw_rows() -> list[dict[str, Any]]:
-    request = urllib.request.Request(RAW_URL, headers={"Accept": "application/json", "User-Agent": "NYCIF-live-feed-QA/1.0"})
-    with urllib.request.urlopen(request, timeout=45) as response:
-        payload = json.loads(response.read().decode("utf-8"))
-    if not isinstance(payload, list):
-        raise RuntimeError("NYC Open Data response was not a list")
-    return [row for row in payload if isinstance(row, dict)]
+    """Fetch all available NYC Open Data rows instead of Socrata's default first page.
+
+    Socrata returns only a limited page when no $limit/$offset is supplied. The map QA
+    needs the complete future-event dataset, so page through the endpoint in stable
+    start-time order until an empty/short page is returned.
+    """
+    rows: list[dict[str, Any]] = []
+    offset = 0
+    while True:
+        params = {
+            "$limit": RAW_PAGE_LIMIT,
+            "$offset": offset,
+            "$order": "start_date_time,event_id",
+        }
+        url = f"{RAW_URL}?{urlencode(params)}"
+        request = urllib.request.Request(url, headers={"Accept": "application/json", "User-Agent": "NYCIF-live-feed-QA/1.1"})
+        with urllib.request.urlopen(request, timeout=90) as response:
+            payload = json.loads(response.read().decode("utf-8"))
+        if not isinstance(payload, list):
+            raise RuntimeError("NYC Open Data response was not a list")
+        page_rows = [row for row in payload if isinstance(row, dict)]
+        rows.extend(page_rows)
+        if len(page_rows) < RAW_PAGE_LIMIT:
+            break
+        offset += RAW_PAGE_LIMIT
+        if offset >= MAX_RAW_ROWS:
+            raise RuntimeError(f"NYC Open Data pagination exceeded safety cap: {MAX_RAW_ROWS}")
+    return rows
 
 
 def date_key(value: Any) -> str:
@@ -207,6 +232,7 @@ def main() -> int:
     report = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "raw_url": RAW_URL,
+        "raw_page_limit": RAW_PAGE_LIMIT,
         "today_utc": TODAY_UTC,
         "raw_rows_loaded": len(raw_rows),
         "current_future_rows": len(current_future),
