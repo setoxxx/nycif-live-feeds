@@ -1,30 +1,30 @@
 {
   "borough_counts": {
-    "Bronx": 3873,
-    "Brooklyn": 6997,
-    "Manhattan": 9526,
-    "Queens": 6395,
-    "Staten Island": 1257
+    "Bronx": 4154,
+    "Brooklyn": 7552,
+    "Manhattan": 10127,
+    "Queens": 6850,
+    "Staten Island": 1359
   },
   "category_counts": {
-    "arts": 201,
+    "arts": 208,
     "general": 12,
-    "market": 297,
-    "parks": 4620,
-    "sports": 22918
+    "market": 310,
+    "parks": 4825,
+    "sports": 24687
   },
   "duplicate_policy": {
     "one_day_street_events": "dedupe by title + borough + location + coordinate; keep earliest source date; recurring sports and park events are not deduped by this rule",
     "production_feeds_modified": false
   },
-  "eligible_rows_before_one_day_street_dedupe": 28190,
-  "generated_at_utc": "2026-06-28T18:17:22.245981+00:00",
+  "eligible_rows_before_one_day_street_dedupe": 30193,
+  "generated_at_utc": "2026-06-28T20:36:45.524841+00:00",
   "match_counts": {
-    "event_id": 22883,
-    "location_cache": 5079,
-    "text_date_location": 86
+    "event_id": 24398,
+    "location_cache": 5543,
+    "text_date_location": 101
   },
-  "one_day_street_duplicates_suppressed": 142,
+  "one_day_street_duplicates_suppressed": 151,
   "production_feed": false,
   "production_ready": true,
   "sample_one_day_street_rejected_rows": [
@@ -329,6 +329,16 @@
     },
     {
       "borough": "Manhattan",
+      "display_location": "Worth Square: Worth Square",
+      "display_time": "7:00 AM",
+      "source_cemsid": [
+        "995"
+      ],
+      "source_event_id": "897884",
+      "title": "2026 NYC Pride March Grandstand"
+    },
+    {
+      "borough": "Manhattan",
       "display_location": "WEST   13 STREET between 10 AVENUE and WASHINGTON STREET",
       "display_time": "7:00 AM",
       "source_cemsid": [],
@@ -352,12 +362,32 @@
       "title": "Pompeii Flea Market"
     },
     {
+      "borough": "Bronx",
+      "display_location": "Parque De Los Ninos: Parque De Los Ninos-Basketball-02",
+      "display_time": "10:00 AM",
+      "source_cemsid": [
+        "6868"
+      ],
+      "source_event_id": "953412",
+      "title": "Basketball"
+    },
+    {
       "borough": "Manhattan",
       "display_location": "THOMPSON STREET between WASHINGTON SQUARE SOUTH and WEST    3 STREET",
       "display_time": "10:00 AM",
       "source_cemsid": [],
       "source_event_id": "933776",
       "title": "NYC Pride Health Fair"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "EAST   11 STREET between 3 AVENUE and 4 AVENUE,  EAST    9 STREET between 4 AVENUE and BROADWAY,  COOPER SQUARE between 3 AVENUE and EAST 8 STREET,  EAST   10 STREET between 4 AVENUE and 3 AVENUE",
+      "display_time": "10:00 AM",
+      "source_cemsid": [
+        "0"
+      ],
+      "source_event_id": "897903",
+      "title": "Production Parking for PrideFest 2026"
     },
     {
       "borough": "Bronx",
@@ -399,11 +429,49 @@
     },
     {
       "borough": "Brooklyn",
+      "display_location": "Carroll Park: Park House Plaza",
+      "display_time": "11:00 AM",
+      "source_cemsid": [
+        "4393"
+      ],
+      "source_event_id": "932331",
+      "title": "New York Nature Mobile Pop-Up Science Program"
+    },
+    {
+      "borough": "Brooklyn",
       "display_location": "WEST    7 STREET between AVENUE S and HIGHLAWN AVENUE",
       "display_time": "11:00 AM",
       "source_cemsid": [],
       "source_event_id": "928929",
       "title": "Summer beginning block party"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "St. Vincent's Triangle: St. Vincent's Triangle",
+      "display_time": "11:00 AM",
+      "source_cemsid": [
+        "11768"
+      ],
+      "source_event_id": "897885",
+      "title": "2026 NYC Pride March ADA"
+    },
+    {
+      "borough": "Queens",
+      "display_location": "61 STREET between WOODSIDE AVENUE and ROOSEVELT AVENUE",
+      "display_time": "11:30 AM",
+      "source_cemsid": [],
+      "source_event_id": "951584",
+      "title": "Open Streets"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "Herbert Von King Park: Lawn Behind Childresn Play Area",
+      "display_time": "12:00 PM",
+      "source_cemsid": [
+        "4522"
+      ],
+      "source_event_id": "952423",
+      "title": "Celebration"
     },
     {
       "borough": "Brooklyn",
@@ -414,89 +482,27 @@
       "title": "Saint Charles  Block Party"
     },
     {
+      "borough": "Manhattan",
+      "display_location": "Central Park: East 102nd St Landscape A",
+      "display_time": "12:00 PM",
+      "source_cemsid": [
+        "11762"
+      ],
+      "source_event_id": "950274",
+      "title": "Party"
+    },
+    {
       "borough": "Brooklyn",
       "display_location": "TROUTMAN STREET between IRVING AVENUE and WYCKOFF AVENUE",
       "display_time": "1:00 PM",
       "source_cemsid": [],
       "source_event_id": "929582",
       "title": "The Bush LGBTQ Bushwick Pride Celebration"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "FORSYTH STREET between DIVISION STREET and EAST BROADWAY",
-      "display_time": "1:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "951846",
-      "title": "Fuzhou America Open Mics"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
-      "display_time": "3:57 PM",
-      "source_cemsid": [
-        "8461",
-        "8462"
-      ],
-      "source_event_id": "955891",
-      "title": "Construction"
-    },
-    {
-      "borough": "Queens",
-      "display_location": "BARTON AVENUE between 149 PLACE and 150 STREET",
-      "display_time": "4:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "955144",
-      "title": "Murray Hill Lights: Performances II"
-    },
-    {
-      "borough": "Bronx",
-      "display_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
-      "display_time": "12:00 AM",
-      "source_cemsid": [
-        "13142"
-      ],
-      "source_event_id": "949110",
-      "title": "FLAGS FOR HEROS"
-    },
-    {
-      "borough": "Bronx",
-      "display_location": "EAST  161 STREET between WALTON AVENUE and GERARD AVENUE",
-      "display_time": "7:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "948703",
-      "title": "Project Street Beat - Keith Haring Foundation Mobile Health Center Community Event"
-    },
-    {
-      "borough": "Bronx",
-      "display_location": "HALL PLACE between EAST  167 STREET and ROGERS PLACE",
-      "display_time": "11:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "932757",
-      "title": "Hall Place Family Day"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "BRISTOL STREET between BLAKE AVENUE and DUMONT AVENUE",
-      "display_time": "1:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "928693",
-      "title": "Jump into Summer"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
-      "display_time": "3:57 PM",
-      "source_cemsid": [
-        "8461",
-        "8462"
-      ],
-      "source_event_id": "955891",
-      "title": "Construction"
     }
   ],
-  "skipped_needs_review_or_bad_gps": 1827,
+  "skipped_needs_review_or_bad_gps": 2060,
   "source": "nycif_live_test_enriched_events.json",
   "staged_feed": true,
-  "staged_feed_events": 28048,
-  "test_feed_rows_loaded": 30017
+  "staged_feed_events": 30042,
+  "test_feed_rows_loaded": 32253
 }

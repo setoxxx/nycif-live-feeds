@@ -10771,7 +10771,7 @@
     },
     {
       "feed": "test_enriched",
-      "high_issues": 4003,
+      "high_issues": 4051,
       "issues": [
         {
           "count": 2,
@@ -10864,12 +10864,13 @@
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 5,
           "dates": [
             "2026-06-28",
             "2026-07-11",
             "2026-07-12",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-26"
           ],
           "feed": "test_enriched",
           "key": "881295",
@@ -10915,17 +10916,28 @@
               "location": "Marcus Garvey Park: Amphitheater",
               "source_event_id": "881295",
               "title": "2026 No Amplified Sound"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
+              "event_type": "Special Event",
+              "latlng": "40.80449,-73.94367",
+              "location": "Marcus Garvey Park: Amphitheater",
+              "source_event_id": "881295",
+              "title": "2026 No Amplified Sound"
             }
           ],
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 5,
           "dates": [
             "2026-06-28",
             "2026-07-11",
             "2026-07-12",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-26"
           ],
           "feed": "test_enriched",
           "key": "881297",
@@ -10966,6 +10978,16 @@
               "borough": "Manhattan",
               "date": "2026-07-25",
               "end_date": "2026-07-25",
+              "event_type": "Special Event",
+              "latlng": "40.82659,-73.94113",
+              "location": "Jackie Robinson Park: Bandshell",
+              "source_event_id": "881297",
+              "title": "2026 No Amplified Sound"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
               "event_type": "Special Event",
               "latlng": "40.82659,-73.94113",
               "location": "Jackie Robinson Park: Bandshell",
@@ -11302,12 +11324,13 @@
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 5,
           "dates": [
             "2026-06-28",
             "2026-07-05",
             "2026-07-12",
-            "2026-07-19"
+            "2026-07-19",
+            "2026-07-26"
           ],
           "feed": "test_enriched",
           "key": "886820",
@@ -11353,6 +11376,50 @@
               "location": "Riverside Park: Soliders & Sailors Monument",
               "source_event_id": "886820",
               "title": "Summer on the Hudson Tai Chi"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
+              "event_type": "Special Event",
+              "latlng": "40.79097,-73.98019",
+              "location": "Riverside Park: Soliders & Sailors Monument",
+              "source_event_id": "886820",
+              "title": "Summer on the Hudson Tai Chi"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-06-28",
+            "2026-07-26"
+          ],
+          "feed": "test_enriched",
+          "key": "886839",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Manhattan",
+              "date": "2026-06-28",
+              "end_date": "2026-06-28",
+              "event_type": "Special Event",
+              "latlng": "40.77947,-73.98899",
+              "location": "Riverside Park South: 70th Street Pier Plaza",
+              "source_event_id": "886839",
+              "title": "Summer on the Hudson Sun Gaze"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
+              "event_type": "Special Event",
+              "latlng": "40.77947,-73.98899",
+              "location": "Riverside Park South: 70th Street Pier Plaza",
+              "source_event_id": "886839",
+              "title": "Summer on the Hudson Sun Gaze"
             }
           ],
           "severity": "high"
@@ -11695,11 +11762,12 @@
           "severity": "high"
         },
         {
-          "count": 3,
+          "count": 4,
           "dates": [
             "2026-07-05",
             "2026-07-12",
-            "2026-07-19"
+            "2026-07-19",
+            "2026-07-26"
           ],
           "feed": "test_enriched",
           "key": "886890",
@@ -11735,12 +11803,22 @@
               "location": "Riverside Park South: 70th Street Pier Plaza",
               "source_event_id": "886890",
               "title": "Summer on the Hudson Amplified Sundays"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
+              "event_type": "Special Event",
+              "latlng": "40.77947,-73.98899",
+              "location": "Riverside Park South: 70th Street Pier Plaza",
+              "source_event_id": "886890",
+              "title": "Summer on the Hudson Amplified Sundays"
             }
           ],
           "severity": "high"
         },
         {
-          "count": 20,
+          "count": 21,
           "dates": [
             "2026-06-29",
             "2026-06-30",
@@ -11761,7 +11839,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "886894",
@@ -12222,7 +12301,7 @@
           "severity": "high"
         },
         {
-          "count": 20,
+          "count": 21,
           "dates": [
             "2026-06-29",
             "2026-06-30",
@@ -12243,7 +12322,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "887088",
@@ -12424,7 +12504,7 @@
           "severity": "high"
         },
         {
-          "count": 8,
+          "count": 9,
           "dates": [
             "2026-06-30",
             "2026-07-02",
@@ -12433,7 +12513,8 @@
             "2026-07-14",
             "2026-07-16",
             "2026-07-21",
-            "2026-07-23"
+            "2026-07-23",
+            "2026-07-28"
           ],
           "feed": "test_enriched",
           "key": "887399",
@@ -12524,7 +12605,7 @@
           "severity": "high"
         },
         {
-          "count": 16,
+          "count": 17,
           "dates": [
             "2026-06-29",
             "2026-07-01",
@@ -12541,7 +12622,8 @@
             "2026-07-20",
             "2026-07-22",
             "2026-07-24",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "887418",
@@ -12677,7 +12759,7 @@
           "severity": "high"
         },
         {
-          "count": 25,
+          "count": 27,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -12703,7 +12785,9 @@
             "2026-07-22",
             "2026-07-23",
             "2026-07-24",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-26",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "887877",
@@ -12794,7 +12878,7 @@
           "severity": "high"
         },
         {
-          "count": 20,
+          "count": 21,
           "dates": [
             "2026-06-29",
             "2026-06-30",
@@ -12815,7 +12899,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "888022",
@@ -13052,11 +13137,12 @@
           "severity": "high"
         },
         {
-          "count": 3,
+          "count": 4,
           "dates": [
             "2026-07-05",
             "2026-07-12",
-            "2026-07-19"
+            "2026-07-19",
+            "2026-07-26"
           ],
           "feed": "test_enriched",
           "key": "889211",
@@ -13087,6 +13173,16 @@
               "borough": "Manhattan",
               "date": "2026-07-19",
               "end_date": "2026-07-19",
+              "event_type": "Special Event",
+              "latlng": "40.77215,-73.97778",
+              "location": "Central Park: King Jagiallo Plaza",
+              "source_event_id": "889211",
+              "title": "Central Park international folkdancers"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
               "event_type": "Special Event",
               "latlng": "40.77215,-73.97778",
               "location": "Central Park: King Jagiallo Plaza",
@@ -13456,7 +13552,7 @@
           "severity": "high"
         },
         {
-          "count": 28,
+          "count": 30,
           "dates": [
             "2026-06-28",
             "2026-06-29",
@@ -13485,7 +13581,9 @@
             "2026-07-22",
             "2026-07-23",
             "2026-07-24",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-26",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "890793",
@@ -13946,7 +14044,7 @@
           "severity": "high"
         },
         {
-          "count": 20,
+          "count": 21,
           "dates": [
             "2026-06-29",
             "2026-06-30",
@@ -13967,7 +14065,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "891505",
@@ -14058,7 +14157,7 @@
           "severity": "high"
         },
         {
-          "count": 16,
+          "count": 17,
           "dates": [
             "2026-06-30",
             "2026-07-01",
@@ -14075,7 +14174,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-28"
           ],
           "feed": "test_enriched",
           "key": "891690",
@@ -14166,7 +14266,7 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 19,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -14185,7 +14285,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "891890",
@@ -14276,7 +14377,7 @@
           "severity": "high"
         },
         {
-          "count": 15,
+          "count": 16,
           "dates": [
             "2026-07-06",
             "2026-07-07",
@@ -14292,7 +14393,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "892062",
@@ -14618,7 +14720,7 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 19,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -14637,7 +14739,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "892706",
@@ -14796,7 +14899,7 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 19,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -14815,7 +14918,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "892776",
@@ -14940,7 +15044,7 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 19,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -14959,7 +15063,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "892781",
@@ -15050,7 +15155,7 @@
           "severity": "high"
         },
         {
-          "count": 19,
+          "count": 20,
           "dates": [
             "2026-06-30",
             "2026-07-01",
@@ -15070,7 +15175,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "892787",
@@ -15161,7 +15267,7 @@
           "severity": "high"
         },
         {
-          "count": 19,
+          "count": 20,
           "dates": [
             "2026-06-30",
             "2026-07-01",
@@ -15181,7 +15287,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "892792",
@@ -15272,7 +15379,7 @@
           "severity": "high"
         },
         {
-          "count": 28,
+          "count": 30,
           "dates": [
             "2026-06-28",
             "2026-06-29",
@@ -15301,7 +15408,9 @@
             "2026-07-22",
             "2026-07-23",
             "2026-07-24",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-26",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "893090",
@@ -15392,7 +15501,7 @@
           "severity": "high"
         },
         {
-          "count": 28,
+          "count": 30,
           "dates": [
             "2026-06-28",
             "2026-06-29",
@@ -15421,7 +15530,9 @@
             "2026-07-22",
             "2026-07-23",
             "2026-07-24",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-26",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "893103",
@@ -15580,7 +15691,7 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 19,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -15599,7 +15710,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "893475",
@@ -15758,7 +15870,7 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 19,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -15777,7 +15889,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "893500",
@@ -15913,12 +16026,13 @@
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 5,
           "dates": [
             "2026-06-28",
             "2026-07-05",
             "2026-07-12",
-            "2026-07-19"
+            "2026-07-19",
+            "2026-07-26"
           ],
           "feed": "test_enriched",
           "key": "893705",
@@ -15959,6 +16073,16 @@
               "borough": "Brooklyn",
               "date": "2026-07-19",
               "end_date": "2026-07-19",
+              "event_type": "Farmers Market",
+              "latlng": "40.66991,-73.97907",
+              "location": "4 STREET between 5 AVENUE and DEAD END",
+              "source_event_id": "893705",
+              "title": "Down to Earth Park Slope Farmers Market"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
               "event_type": "Farmers Market",
               "latlng": "40.66991,-73.97907",
               "location": "4 STREET between 5 AVENUE and DEAD END",
@@ -16025,7 +16149,7 @@
           "severity": "high"
         },
         {
-          "count": 29,
+          "count": 31,
           "dates": [
             "2026-06-28",
             "2026-06-29",
@@ -16055,7 +16179,9 @@
             "2026-07-23",
             "2026-07-24",
             "2026-07-25",
-            "2026-07-26"
+            "2026-07-26",
+            "2026-07-27",
+            "2026-07-28"
           ],
           "feed": "test_enriched",
           "key": "895600",
@@ -16281,7 +16407,7 @@
           "severity": "high"
         },
         {
-          "count": 24,
+          "count": 26,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -16306,7 +16432,9 @@
             "2026-07-22",
             "2026-07-23",
             "2026-07-24",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-26",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "898285",
@@ -16521,7 +16649,7 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 19,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -16540,7 +16668,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "898444",
@@ -16631,7 +16760,7 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 19,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -16650,7 +16779,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "test_enriched",
           "key": "898448",
@@ -16849,12 +16979,13 @@
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 5,
           "dates": [
             "2026-06-28",
             "2026-07-05",
             "2026-07-12",
-            "2026-07-19"
+            "2026-07-19",
+            "2026-07-26"
           ],
           "feed": "test_enriched",
           "key": "898910",
@@ -16895,6 +17026,16 @@
               "borough": "Queens",
               "date": "2026-07-19",
               "end_date": "2026-07-19",
+              "event_type": "Farmers Market",
+              "latlng": "40.71893,-73.87561",
+              "location": "79 STREET between NORTHERN BOULEVARD and 34 AVENUE",
+              "source_event_id": "898910",
+              "title": "Jackson Heights Greenmarket Sunday"
+            },
+            {
+              "borough": "Queens",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
               "event_type": "Farmers Market",
               "latlng": "40.71893,-73.87561",
               "location": "79 STREET between NORTHERN BOULEVARD and 34 AVENUE",
@@ -16961,12 +17102,13 @@
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 5,
           "dates": [
             "2026-06-28",
             "2026-07-05",
             "2026-07-12",
-            "2026-07-19"
+            "2026-07-19",
+            "2026-07-26"
           ],
           "feed": "test_enriched",
           "key": "898918",
@@ -17012,12 +17154,22 @@
               "location": "QUEENS BOULEVARD between 69 ROAD and 70 AVENUE",
               "source_event_id": "898918",
               "title": "Forest Hills Greenmarket Sunday"
+            },
+            {
+              "borough": "Queens",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
+              "event_type": "Farmers Market",
+              "latlng": "40.72708,-73.85515",
+              "location": "QUEENS BOULEVARD between 69 ROAD and 70 AVENUE",
+              "source_event_id": "898918",
+              "title": "Forest Hills Greenmarket Sunday"
             }
           ],
           "severity": "high"
         },
         {
-          "count": 8,
+          "count": 9,
           "dates": [
             "2026-06-28",
             "2026-07-02",
@@ -17026,7 +17178,8 @@
             "2026-07-12",
             "2026-07-16",
             "2026-07-19",
-            "2026-07-23"
+            "2026-07-23",
+            "2026-07-26"
           ],
           "feed": "test_enriched",
           "key": "898922",
@@ -17229,12 +17382,13 @@
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 5,
           "dates": [
             "2026-06-28",
             "2026-07-05",
             "2026-07-12",
-            "2026-07-19"
+            "2026-07-19",
+            "2026-07-26"
           ],
           "feed": "test_enriched",
           "key": "898937",
@@ -17280,74 +17434,28 @@
               "location": "CORTELYOU ROAD between RUGBY ROAD and ARGYLE ROAD",
               "source_event_id": "898937",
               "title": "Cortelyou Greenmarket Sunday"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 4,
-          "dates": [
-            "2026-06-28",
-            "2026-07-05",
-            "2026-07-12",
-            "2026-07-19"
-          ],
-          "feed": "test_enriched",
-          "key": "898942",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Farmers Market",
-              "latlng": "40.68107,-73.99551",
-              "location": "CARROLL STREET between SMITH STREET and COURT STREET",
-              "source_event_id": "898942",
-              "title": "Carroll Gardens Greenmarket Sunday"
             },
             {
               "borough": "Brooklyn",
-              "date": "2026-07-05",
-              "end_date": "2026-07-05",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
               "event_type": "Farmers Market",
-              "latlng": "40.68107,-73.99551",
-              "location": "CARROLL STREET between SMITH STREET and COURT STREET",
-              "source_event_id": "898942",
-              "title": "Carroll Gardens Greenmarket Sunday"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-12",
-              "end_date": "2026-07-12",
-              "event_type": "Farmers Market",
-              "latlng": "40.68107,-73.99551",
-              "location": "CARROLL STREET between SMITH STREET and COURT STREET",
-              "source_event_id": "898942",
-              "title": "Carroll Gardens Greenmarket Sunday"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-19",
-              "end_date": "2026-07-19",
-              "event_type": "Farmers Market",
-              "latlng": "40.68107,-73.99551",
-              "location": "CARROLL STREET between SMITH STREET and COURT STREET",
-              "source_event_id": "898942",
-              "title": "Carroll Gardens Greenmarket Sunday"
+              "latlng": "40.64035,-73.96603",
+              "location": "CORTELYOU ROAD between RUGBY ROAD and ARGYLE ROAD",
+              "source_event_id": "898937",
+              "title": "Cortelyou Greenmarket Sunday"
             }
           ],
           "severity": "high"
         }
       ],
-      "issues_total": 4004,
+      "issues_total": 4052,
       "medium_issues": 1,
-      "rows_loaded": 30017
+      "rows_loaded": 32253
     },
     {
       "feed": "staged",
-      "high_issues": 3724,
+      "high_issues": 3766,
       "issues": [
         {
           "count": 2,
@@ -17384,12 +17492,13 @@
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 5,
           "dates": [
             "2026-06-28",
             "2026-07-11",
             "2026-07-12",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-26"
           ],
           "feed": "staged",
           "key": "881295",
@@ -17435,17 +17544,28 @@
               "location": "Marcus Garvey Park: Amphitheater",
               "source_event_id": "881295",
               "title": "2026 No Amplified Sound"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
+              "event_type": "Special Event",
+              "latlng": "40.80449,-73.94367",
+              "location": "Marcus Garvey Park: Amphitheater",
+              "source_event_id": "881295",
+              "title": "2026 No Amplified Sound"
             }
           ],
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 5,
           "dates": [
             "2026-06-28",
             "2026-07-11",
             "2026-07-12",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-26"
           ],
           "feed": "staged",
           "key": "881297",
@@ -17486,6 +17606,16 @@
               "borough": "Manhattan",
               "date": "2026-07-25",
               "end_date": "2026-07-25",
+              "event_type": "Special Event",
+              "latlng": "40.82659,-73.94113",
+              "location": "Jackie Robinson Park: Bandshell",
+              "source_event_id": "881297",
+              "title": "2026 No Amplified Sound"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
               "event_type": "Special Event",
               "latlng": "40.82659,-73.94113",
               "location": "Jackie Robinson Park: Bandshell",
@@ -17788,12 +17918,13 @@
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 5,
           "dates": [
             "2026-06-28",
             "2026-07-05",
             "2026-07-12",
-            "2026-07-19"
+            "2026-07-19",
+            "2026-07-26"
           ],
           "feed": "staged",
           "key": "886820",
@@ -17839,6 +17970,50 @@
               "location": "Riverside Park: Soliders & Sailors Monument",
               "source_event_id": "886820",
               "title": "Summer on the Hudson Tai Chi"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
+              "event_type": "Special Event",
+              "latlng": "40.79097,-73.98019",
+              "location": "Riverside Park: Soliders & Sailors Monument",
+              "source_event_id": "886820",
+              "title": "Summer on the Hudson Tai Chi"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 2,
+          "dates": [
+            "2026-06-28",
+            "2026-07-26"
+          ],
+          "feed": "staged",
+          "key": "886839",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Manhattan",
+              "date": "2026-06-28",
+              "end_date": "2026-06-28",
+              "event_type": "Special Event",
+              "latlng": "40.77947,-73.98899",
+              "location": "Riverside Park South: 70th Street Pier Plaza",
+              "source_event_id": "886839",
+              "title": "Summer on the Hudson Sun Gaze"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
+              "event_type": "Special Event",
+              "latlng": "40.77947,-73.98899",
+              "location": "Riverside Park South: 70th Street Pier Plaza",
+              "source_event_id": "886839",
+              "title": "Summer on the Hudson Sun Gaze"
             }
           ],
           "severity": "high"
@@ -18181,11 +18356,12 @@
           "severity": "high"
         },
         {
-          "count": 3,
+          "count": 4,
           "dates": [
             "2026-07-05",
             "2026-07-12",
-            "2026-07-19"
+            "2026-07-19",
+            "2026-07-26"
           ],
           "feed": "staged",
           "key": "886890",
@@ -18221,12 +18397,22 @@
               "location": "Riverside Park South: 70th Street Pier Plaza",
               "source_event_id": "886890",
               "title": "Summer on the Hudson Amplified Sundays"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
+              "event_type": "Special Event",
+              "latlng": "40.77947,-73.98899",
+              "location": "Riverside Park South: 70th Street Pier Plaza",
+              "source_event_id": "886890",
+              "title": "Summer on the Hudson Amplified Sundays"
             }
           ],
           "severity": "high"
         },
         {
-          "count": 20,
+          "count": 21,
           "dates": [
             "2026-06-29",
             "2026-06-30",
@@ -18247,7 +18433,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "886894",
@@ -18652,7 +18839,7 @@
           "severity": "high"
         },
         {
-          "count": 20,
+          "count": 21,
           "dates": [
             "2026-06-29",
             "2026-06-30",
@@ -18673,7 +18860,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "887088",
@@ -18854,7 +19042,7 @@
           "severity": "high"
         },
         {
-          "count": 8,
+          "count": 9,
           "dates": [
             "2026-06-30",
             "2026-07-02",
@@ -18863,7 +19051,8 @@
             "2026-07-14",
             "2026-07-16",
             "2026-07-21",
-            "2026-07-23"
+            "2026-07-23",
+            "2026-07-28"
           ],
           "feed": "staged",
           "key": "887399",
@@ -18954,7 +19143,7 @@
           "severity": "high"
         },
         {
-          "count": 16,
+          "count": 17,
           "dates": [
             "2026-06-29",
             "2026-07-01",
@@ -18971,7 +19160,8 @@
             "2026-07-20",
             "2026-07-22",
             "2026-07-24",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "887418",
@@ -19107,7 +19297,7 @@
           "severity": "high"
         },
         {
-          "count": 25,
+          "count": 27,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -19133,7 +19323,9 @@
             "2026-07-22",
             "2026-07-23",
             "2026-07-24",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-26",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "887877",
@@ -19224,7 +19416,7 @@
           "severity": "high"
         },
         {
-          "count": 20,
+          "count": 21,
           "dates": [
             "2026-06-29",
             "2026-06-30",
@@ -19245,7 +19437,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "888022",
@@ -19482,11 +19675,12 @@
           "severity": "high"
         },
         {
-          "count": 3,
+          "count": 4,
           "dates": [
             "2026-07-05",
             "2026-07-12",
-            "2026-07-19"
+            "2026-07-19",
+            "2026-07-26"
           ],
           "feed": "staged",
           "key": "889211",
@@ -19517,6 +19711,16 @@
               "borough": "Manhattan",
               "date": "2026-07-19",
               "end_date": "2026-07-19",
+              "event_type": "Special Event",
+              "latlng": "40.77215,-73.97778",
+              "location": "Central Park: King Jagiallo Plaza",
+              "source_event_id": "889211",
+              "title": "Central Park international folkdancers"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
               "event_type": "Special Event",
               "latlng": "40.77215,-73.97778",
               "location": "Central Park: King Jagiallo Plaza",
@@ -19785,7 +19989,7 @@
           "severity": "high"
         },
         {
-          "count": 28,
+          "count": 30,
           "dates": [
             "2026-06-28",
             "2026-06-29",
@@ -19814,7 +20018,9 @@
             "2026-07-22",
             "2026-07-23",
             "2026-07-24",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-26",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "890793",
@@ -20219,7 +20425,7 @@
           "severity": "high"
         },
         {
-          "count": 20,
+          "count": 21,
           "dates": [
             "2026-06-29",
             "2026-06-30",
@@ -20240,7 +20446,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "891505",
@@ -20331,7 +20538,7 @@
           "severity": "high"
         },
         {
-          "count": 16,
+          "count": 17,
           "dates": [
             "2026-06-30",
             "2026-07-01",
@@ -20348,7 +20555,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-28"
           ],
           "feed": "staged",
           "key": "891690",
@@ -20439,7 +20647,7 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 19,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -20458,7 +20666,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "891890",
@@ -20672,7 +20881,7 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 19,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -20691,7 +20900,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "892706",
@@ -20850,7 +21060,7 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 19,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -20869,7 +21079,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "892776",
@@ -20994,7 +21205,7 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 19,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -21013,7 +21224,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "892781",
@@ -21104,7 +21316,7 @@
           "severity": "high"
         },
         {
-          "count": 19,
+          "count": 20,
           "dates": [
             "2026-06-30",
             "2026-07-01",
@@ -21124,7 +21336,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "892787",
@@ -21215,7 +21428,7 @@
           "severity": "high"
         },
         {
-          "count": 19,
+          "count": 20,
           "dates": [
             "2026-06-30",
             "2026-07-01",
@@ -21235,7 +21448,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "892792",
@@ -21326,7 +21540,7 @@
           "severity": "high"
         },
         {
-          "count": 28,
+          "count": 30,
           "dates": [
             "2026-06-28",
             "2026-06-29",
@@ -21355,7 +21569,9 @@
             "2026-07-22",
             "2026-07-23",
             "2026-07-24",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-26",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "893090",
@@ -21446,7 +21662,7 @@
           "severity": "high"
         },
         {
-          "count": 28,
+          "count": 30,
           "dates": [
             "2026-06-28",
             "2026-06-29",
@@ -21475,7 +21691,9 @@
             "2026-07-22",
             "2026-07-23",
             "2026-07-24",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-26",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "893103",
@@ -21634,7 +21852,7 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 19,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -21653,7 +21871,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "893475",
@@ -21778,7 +21997,7 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 19,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -21797,7 +22016,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "893500",
@@ -21933,7 +22153,7 @@
           "severity": "high"
         },
         {
-          "count": 29,
+          "count": 31,
           "dates": [
             "2026-06-28",
             "2026-06-29",
@@ -21963,7 +22183,9 @@
             "2026-07-23",
             "2026-07-24",
             "2026-07-25",
-            "2026-07-26"
+            "2026-07-26",
+            "2026-07-27",
+            "2026-07-28"
           ],
           "feed": "staged",
           "key": "895600",
@@ -22189,7 +22411,7 @@
           "severity": "high"
         },
         {
-          "count": 24,
+          "count": 26,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -22214,7 +22436,9 @@
             "2026-07-22",
             "2026-07-23",
             "2026-07-24",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-26",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "898285",
@@ -22429,7 +22653,7 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 19,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -22448,7 +22672,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "898444",
@@ -22539,7 +22764,7 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 19,
           "dates": [
             "2026-07-01",
             "2026-07-02",
@@ -22558,7 +22783,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "898448",
@@ -22757,12 +22983,13 @@
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 5,
           "dates": [
             "2026-06-28",
             "2026-07-05",
             "2026-07-12",
-            "2026-07-19"
+            "2026-07-19",
+            "2026-07-26"
           ],
           "feed": "staged",
           "key": "898910",
@@ -22808,17 +23035,28 @@
               "location": "79 STREET between NORTHERN BOULEVARD and 34 AVENUE",
               "source_event_id": "898910",
               "title": "Jackson Heights Greenmarket Sunday"
+            },
+            {
+              "borough": "Queens",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
+              "event_type": "Farmers Market",
+              "latlng": "40.71893,-73.87561",
+              "location": "79 STREET between NORTHERN BOULEVARD and 34 AVENUE",
+              "source_event_id": "898910",
+              "title": "Jackson Heights Greenmarket Sunday"
             }
           ],
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 5,
           "dates": [
             "2026-06-28",
             "2026-07-05",
             "2026-07-12",
-            "2026-07-19"
+            "2026-07-19",
+            "2026-07-26"
           ],
           "feed": "staged",
           "key": "898918",
@@ -22864,12 +23102,22 @@
               "location": "QUEENS BOULEVARD between 69 ROAD and 70 AVENUE",
               "source_event_id": "898918",
               "title": "Forest Hills Greenmarket Sunday"
+            },
+            {
+              "borough": "Queens",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
+              "event_type": "Farmers Market",
+              "latlng": "40.72708,-73.85515",
+              "location": "QUEENS BOULEVARD between 69 ROAD and 70 AVENUE",
+              "source_event_id": "898918",
+              "title": "Forest Hills Greenmarket Sunday"
             }
           ],
           "severity": "high"
         },
         {
-          "count": 8,
+          "count": 9,
           "dates": [
             "2026-06-28",
             "2026-07-02",
@@ -22878,7 +23126,8 @@
             "2026-07-12",
             "2026-07-16",
             "2026-07-19",
-            "2026-07-23"
+            "2026-07-23",
+            "2026-07-26"
           ],
           "feed": "staged",
           "key": "898922",
@@ -23081,12 +23330,13 @@
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 5,
           "dates": [
             "2026-06-28",
             "2026-07-05",
             "2026-07-12",
-            "2026-07-19"
+            "2026-07-19",
+            "2026-07-26"
           ],
           "feed": "staged",
           "key": "898937",
@@ -23132,17 +23382,28 @@
               "location": "CORTELYOU ROAD between RUGBY ROAD and ARGYLE ROAD",
               "source_event_id": "898937",
               "title": "Cortelyou Greenmarket Sunday"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
+              "event_type": "Farmers Market",
+              "latlng": "40.64035,-73.96603",
+              "location": "CORTELYOU ROAD between RUGBY ROAD and ARGYLE ROAD",
+              "source_event_id": "898937",
+              "title": "Cortelyou Greenmarket Sunday"
             }
           ],
           "severity": "high"
         },
         {
-          "count": 4,
+          "count": 5,
           "dates": [
             "2026-06-28",
             "2026-07-05",
             "2026-07-12",
-            "2026-07-19"
+            "2026-07-19",
+            "2026-07-26"
           ],
           "feed": "staged",
           "key": "898942",
@@ -23188,12 +23449,22 @@
               "location": "CARROLL STREET between SMITH STREET and COURT STREET",
               "source_event_id": "898942",
               "title": "Carroll Gardens Greenmarket Sunday"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
+              "event_type": "Farmers Market",
+              "latlng": "40.68107,-73.99551",
+              "location": "CARROLL STREET between SMITH STREET and COURT STREET",
+              "source_event_id": "898942",
+              "title": "Carroll Gardens Greenmarket Sunday"
             }
           ],
           "severity": "high"
         },
         {
-          "count": 20,
+          "count": 21,
           "dates": [
             "2026-06-29",
             "2026-06-30",
@@ -23214,7 +23485,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "899368",
@@ -23305,7 +23577,7 @@
           "severity": "high"
         },
         {
-          "count": 19,
+          "count": 20,
           "dates": [
             "2026-06-29",
             "2026-06-30",
@@ -23325,7 +23597,8 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-24"
+            "2026-07-24",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "899369",
@@ -23495,7 +23768,41 @@
           "severity": "high"
         },
         {
-          "count": 8,
+          "count": 2,
+          "dates": [
+            "2026-07-19",
+            "2026-07-26"
+          ],
+          "feed": "staged",
+          "key": "899923",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-19",
+              "end_date": "2026-07-19",
+              "event_type": "Sport - Adult",
+              "latlng": "40.79553,-73.92176",
+              "location": "Randall's Island Park: Wards Meadow Fields-Soccer-74",
+              "source_event_id": "899923",
+              "title": "Soccer -Regulation"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
+              "event_type": "Sport - Adult",
+              "latlng": "40.79553,-73.92176",
+              "location": "Randall's Island Park: Wards Meadow Fields-Soccer-74",
+              "source_event_id": "899923",
+              "title": "Soccer -Regulation"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 9,
           "dates": [
             "2026-06-29",
             "2026-07-01",
@@ -23504,7 +23811,8 @@
             "2026-07-13",
             "2026-07-15",
             "2026-07-20",
-            "2026-07-22"
+            "2026-07-22",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "899927",
@@ -23852,7 +24160,7 @@
           "severity": "high"
         },
         {
-          "count": 16,
+          "count": 18,
           "dates": [
             "2026-06-28",
             "2026-06-29",
@@ -23869,7 +24177,9 @@
             "2026-07-19",
             "2026-07-20",
             "2026-07-21",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-26",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "899937",
@@ -23960,7 +24270,7 @@
           "severity": "high"
         },
         {
-          "count": 24,
+          "count": 26,
           "dates": [
             "2026-06-28",
             "2026-06-29",
@@ -23985,7 +24295,9 @@
             "2026-07-21",
             "2026-07-22",
             "2026-07-23",
-            "2026-07-25"
+            "2026-07-25",
+            "2026-07-26",
+            "2026-07-27"
           ],
           "feed": "staged",
           "key": "899938",
@@ -24074,132 +24386,20 @@
             }
           ],
           "severity": "high"
-        },
-        {
-          "count": 4,
-          "dates": [
-            "2026-07-04",
-            "2026-07-11",
-            "2026-07-18",
-            "2026-07-25"
-          ],
-          "feed": "staged",
-          "key": "899940",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-04",
-              "end_date": "2026-07-04",
-              "event_type": "Sport - Adult",
-              "latlng": "40.58470,-73.93854",
-              "location": "Lincoln Terrace / (Arthur S. Somers Park): Tennis-11",
-              "source_event_id": "899940",
-              "title": "Tennis"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-11",
-              "end_date": "2026-07-11",
-              "event_type": "Sport - Adult",
-              "latlng": "40.58470,-73.93854",
-              "location": "Lincoln Terrace / (Arthur S. Somers Park): Tennis-11",
-              "source_event_id": "899940",
-              "title": "Tennis"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-18",
-              "end_date": "2026-07-18",
-              "event_type": "Sport - Adult",
-              "latlng": "40.58470,-73.93854",
-              "location": "Lincoln Terrace / (Arthur S. Somers Park): Tennis-11",
-              "source_event_id": "899940",
-              "title": "Tennis"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-25",
-              "end_date": "2026-07-25",
-              "event_type": "Sport - Adult",
-              "latlng": "40.58470,-73.93854",
-              "location": "Lincoln Terrace / (Arthur S. Somers Park): Tennis-11",
-              "source_event_id": "899940",
-              "title": "Tennis"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 4,
-          "dates": [
-            "2026-07-04",
-            "2026-07-11",
-            "2026-07-18",
-            "2026-07-25"
-          ],
-          "feed": "staged",
-          "key": "899941",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-04",
-              "end_date": "2026-07-04",
-              "event_type": "Sport - Youth",
-              "latlng": "40.72022,-73.95065",
-              "location": "McCarren Park: PO Gilroy Field-Baseball-03",
-              "source_event_id": "899941",
-              "title": "Baseball - 13 and Older (Little League)"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-11",
-              "end_date": "2026-07-11",
-              "event_type": "Sport - Youth",
-              "latlng": "40.72022,-73.95065",
-              "location": "McCarren Park: PO Gilroy Field-Baseball-03",
-              "source_event_id": "899941",
-              "title": "Baseball - 13 and Older (Little League)"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-18",
-              "end_date": "2026-07-18",
-              "event_type": "Sport - Youth",
-              "latlng": "40.72022,-73.95065",
-              "location": "McCarren Park: PO Gilroy Field-Baseball-03",
-              "source_event_id": "899941",
-              "title": "Baseball - 13 and Older (Little League)"
-            },
-            {
-              "borough": "Brooklyn",
-              "date": "2026-07-25",
-              "end_date": "2026-07-25",
-              "event_type": "Sport - Youth",
-              "latlng": "40.72022,-73.95065",
-              "location": "McCarren Park: PO Gilroy Field-Baseball-03",
-              "source_event_id": "899941",
-              "title": "Baseball - 13 and Older (Little League)"
-            }
-          ],
-          "severity": "high"
         }
       ],
-      "issues_total": 3725,
+      "issues_total": 3767,
       "medium_issues": 1,
-      "rows_loaded": 28048
+      "rows_loaded": 30042
     }
   ],
-  "generated_at_utc": "2026-06-28T18:17:28.067230+00:00",
+  "generated_at_utc": "2026-06-28T20:36:51.918019+00:00",
   "production_feeds_modified": false,
   "summary": {
     "feeds_checked": 4,
-    "high_issues": 8660,
-    "issues_total": 11107,
+    "high_issues": 8750,
+    "issues_total": 11197,
     "medium_issues": 2447,
-    "rows_checked": 70857
+    "rows_checked": 75087
   }
 }
