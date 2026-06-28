@@ -1,25 +1,25 @@
 {
   "borough_counts": {
-    "Bronx": 123,
-    "Brooklyn": 222,
-    "Manhattan": 308,
-    "Queens": 193,
+    "Bronx": 121,
+    "Brooklyn": 220,
+    "Manhattan": 303,
+    "Queens": 191,
     "Staten Island": 35
   },
   "category_counts": {
     "arts": 12,
-    "market": 9,
-    "parks": 180,
-    "sports": 680
+    "market": 7,
+    "parks": 174,
+    "sports": 677
   },
   "duplicate_policy": {
     "one_day_street_events": "dedupe by title + borough + location + coordinate; keep earliest source date; recurring sports and park events are not deduped by this rule",
     "production_feeds_modified": false
   },
-  "eligible_rows_before_one_day_street_dedupe": 884,
-  "generated_at_utc": "2026-06-27T23:15:54.545956+00:00",
+  "eligible_rows_before_one_day_street_dedupe": 873,
+  "generated_at_utc": "2026-06-28T00:15:33.699772+00:00",
   "match_counts": {
-    "event_id": 760,
+    "event_id": 749,
     "location_cache": 120,
     "text_date_location": 1
   },
@@ -267,6 +267,6 @@
   "skipped_needs_review_or_bad_gps": 56,
   "source": "nycif_live_test_enriched_events.json",
   "staged_feed": true,
-  "staged_feed_events": 881,
-  "test_feed_rows_loaded": 940
+  "staged_feed_events": 870,
+  "test_feed_rows_loaded": 929
 }
