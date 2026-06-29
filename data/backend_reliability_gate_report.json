@@ -1,0 +1,96 @@
+{
+  "fail_count": 0,
+  "files": {
+    "feed_anomaly_report": {
+      "exists": true,
+      "path": "data/feed_anomaly_report.json",
+      "size_bytes": 874586
+    },
+    "gps_needs_review_events": {
+      "exists": true,
+      "path": "data/gps_needs_review_events.json",
+      "size_bytes": 895280
+    },
+    "gps_repository_report": {
+      "exists": true,
+      "path": "data/gps_repository_report.json",
+      "size_bytes": 23067
+    },
+    "live_delta_report": {
+      "exists": true,
+      "path": "data/live_delta_report.json",
+      "size_bytes": 961
+    },
+    "live_sync_report": {
+      "exists": true,
+      "path": "data/live_sync_report.json",
+      "size_bytes": 16352
+    },
+    "location_cache": {
+      "exists": true,
+      "path": "data/location_cache.json",
+      "size_bytes": 25491266
+    },
+    "raw_snapshot": {
+      "exists": true,
+      "path": "data/raw_nyc_open_data_snapshot.json",
+      "size_bytes": 17880999
+    },
+    "remainder_year_coverage_report": {
+      "exists": true,
+      "path": "data/remainder_year_coverage_report.json",
+      "size_bytes": 50226
+    },
+    "row_disposition_events": {
+      "exists": true,
+      "path": "data/row_disposition_events.json",
+      "size_bytes": 19501657
+    },
+    "row_disposition_report": {
+      "exists": true,
+      "path": "data/row_disposition_report.json",
+      "size_bytes": 29791
+    },
+    "staged_feed": {
+      "exists": true,
+      "path": "data/nycif_staged_live_events.json",
+      "size_bytes": 28262818
+    },
+    "staged_manifest": {
+      "exists": true,
+      "path": "data/staged_live_manifest.json",
+      "size_bytes": 20945
+    },
+    "test_feed": {
+      "exists": true,
+      "path": "data/nycif_live_test_enriched_events.json",
+      "size_bytes": 29642224
+    },
+    "test_manifest": {
+      "exists": true,
+      "path": "data/test_enriched_feed_manifest.json",
+      "size_bytes": 513
+    }
+  },
+  "gate_pass": true,
+  "generated_at_utc": "2026-06-29T14:49:52.170659+00:00",
+  "issues": [
+    {
+      "code": "gps_review_queue_not_empty",
+      "details": 2037,
+      "message": "Some events still require GPS review; this is expected and not a pipeline failure.",
+      "severity": "warn"
+    }
+  ],
+  "phase": "phase_1_backend_reliability",
+  "summary": {
+    "gps_cache_entry_count": 44146,
+    "gps_needs_review_count": 2037,
+    "raw_rows_loaded": 32289,
+    "row_disposition_qa_pass": true,
+    "staged_feed_events": 28662,
+    "test_feed_events": 30841,
+    "unclassified_rows": 0
+  },
+  "warn_count": 1
+}
