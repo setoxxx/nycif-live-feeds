@@ -4,6 +4,9 @@
 This script reads Claude/Howard reviewed GPS findings and the manual review
 sheet, then creates a staging-only approval-candidate artifact.
 
+It uses stable identity matching. Rank-only findings are not trusted because
+review_rank can shift when the review sheet regenerates.
+
 It does not approve rows, does not set promotion_allowed true, does not update
 location_cache.json, does not update the staged feed, and does not publish to
 the public map.
@@ -20,6 +23,7 @@ Outputs:
 from __future__ import annotations
 
 import json
+import re
 import sys
 from collections import Counter
 from datetime import datetime, timezone
@@ -59,6 +63,20 @@ def rows_from_payload(payload: Any, key: str) -> list[dict[str, Any]]:
     return []
 
 
+def norm_text(value: Any) -> str:
+    text = str(value or "").lower()
+    text = text.replace("&", " and ")
+    text = re.sub(r"[^a-z0-9]+", " ", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def stable_key(row: dict[str, Any]) -> str:
+    group_key = str(row.get("group_key") or "").strip().lower()
+    if group_key:
+        return f"group:{group_key}"
+    return f"display:{norm_text(row.get('display_location'))}"
+
+
 def valid_nyc_lat_lng(lat: Any, lng: Any) -> bool:
     try:
         lat_f = float(lat)
@@ -68,20 +86,42 @@ def valid_nyc_lat_lng(lat: Any, lng: Any) -> bool:
     return 40.0 <= lat_f <= 41.0 and -75.0 <= lng_f <= -73.0
 
 
-def finding_lookup(items: list[dict[str, Any]]) -> dict[int, dict[str, Any]]:
-    output: dict[int, dict[str, Any]] = {}
-    for item in items:
-        try:
-            rank = int(item.get("review_rank"))
-        except Exception:
+def build_finding_exclusions(findings: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return Claude-reviewed rows that must not become approval candidates.
+
+    The reviewed findings file records all 17 rejected/correction-needed rows
+    in corrections_needed, with the two hard errors also duplicated in
+    hard_errors. Use these stable display locations as the source of truth.
+    """
+    output: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for item in rows_from_payload(findings, "corrections_needed"):
+        display_key = norm_text(item.get("display_location"))
+        if not display_key or display_key in seen:
             continue
-        output[rank] = item
+        seen.add(display_key)
+        merged = dict(item)
+        merged["stable_display_key"] = display_key
+        merged["finding_source_section"] = "corrections_needed"
+        output.append(merged)
     return output
+
+
+def match_exclusion(row: dict[str, Any], exclusions: list[dict[str, Any]]) -> dict[str, Any] | None:
+    row_display_key = norm_text(row.get("display_location"))
+    for item in exclusions:
+        item_display_key = item.get("stable_display_key") or norm_text(item.get("display_location"))
+        if not item_display_key:
+            continue
+        if row_display_key == item_display_key:
+            return item
+    return None
 
 
 def make_candidate(row: dict[str, Any], review_source: str) -> dict[str, Any]:
     return {
-        "review_rank": row.get("review_rank"),
+        "review_rank_current": row.get("review_rank"),
+        "stable_identity_key": stable_key(row),
         "group_key": row.get("group_key"),
         "display_location": row.get("display_location"),
         "borough": row.get("borough"),
@@ -95,11 +135,11 @@ def make_candidate(row: dict[str, Any], review_source: str) -> dict[str, Any]:
         "review_source": review_source,
         "reviewer_source": review_source,
         "recommended_action": "approval_candidate_pending_human_confirmation",
-        "candidate_reason": "Claude manual GPS review recommended this row for approval. Human approval still required before any promotion.",
+        "candidate_reason": "Not present in Claude's stable correction/reject list. Human approval still required before any promotion.",
         "manual_review_status": "pending",
         "manual_reviewer": "",
         "manual_reviewed_at_utc": "",
-        "manual_review_notes": "Recommended approval candidate from reviewed findings; not approved in Phase 2D staging.",
+        "manual_review_notes": "Approval candidate by stable identity matching; not approved in Phase 2D staging.",
         "approval_decision_reason": "",
         "approval_candidate": True,
         "promotion_allowed": False,
@@ -109,9 +149,11 @@ def make_candidate(row: dict[str, Any], review_source: str) -> dict[str, Any]:
     }
 
 
-def make_excluded(row: dict[str, Any], reason: str, correction: dict[str, Any] | None, hard_error: dict[str, Any] | None) -> dict[str, Any]:
+def make_excluded(row: dict[str, Any], finding: dict[str, Any], reason: str) -> dict[str, Any]:
     return {
-        "review_rank": row.get("review_rank"),
+        "review_rank_current": row.get("review_rank"),
+        "review_rank_original_from_findings": finding.get("review_rank"),
+        "stable_identity_key": stable_key(row),
         "group_key": row.get("group_key"),
         "display_location": row.get("display_location"),
         "borough": row.get("borough"),
@@ -119,11 +161,10 @@ def make_excluded(row: dict[str, Any], reason: str, correction: dict[str, Any] |
         "current_lat": row.get("proposed_lat"),
         "current_lng": row.get("proposed_lng"),
         "excluded_reason": reason,
-        "correction_issue": (correction or {}).get("issue"),
-        "corrected_lat": (correction or {}).get("corrected_lat"),
-        "corrected_lng": (correction or {}).get("corrected_lng"),
-        "hard_error_issue": (hard_error or {}).get("issue"),
-        "recommended_action": (correction or hard_error or {}).get("recommended_action") or "do_not_approve_in_current_staging",
+        "correction_issue": finding.get("issue"),
+        "corrected_lat": finding.get("corrected_lat"),
+        "corrected_lng": finding.get("corrected_lng"),
+        "recommended_action": finding.get("recommended_action") or "do_not_approve_in_current_staging",
         "manual_review_status": "pending",
         "approval_candidate": False,
         "promotion_allowed": False,
@@ -137,58 +178,67 @@ def main() -> int:
     review_sheet_payload = load_json_file(REVIEW_SHEET_PATH, {})
     findings = load_json_file(FINDINGS_PATH, {})
     review_rows = rows_from_payload(review_sheet_payload, "review_sheet")
-
-    rows_by_rank: dict[int, dict[str, Any]] = {}
-    for row in review_rows:
-        try:
-            rank = int(row.get("review_rank"))
-        except Exception:
-            continue
-        rows_by_rank[rank] = row
-
-    approve_ranks = [int(rank) for rank in findings.get("recommended_approve_rows", [])]
-    reject_ranks = [int(rank) for rank in findings.get("do_not_approve_rows", [])]
-    correction_by_rank = finding_lookup(rows_from_payload(findings, "corrections_needed"))
-    hard_error_by_rank = finding_lookup(rows_from_payload(findings, "hard_errors"))
     review_source = findings.get("review_source") or "manual GPS review findings"
+    exclusions_from_findings = build_finding_exclusions(findings)
 
     candidates: list[dict[str, Any]] = []
     excluded: list[dict[str, Any]] = []
-    missing_approve_rows: list[int] = []
-    missing_reject_rows: list[int] = []
+    invalid_coordinate_rows: list[dict[str, Any]] = []
 
-    for rank in approve_ranks:
-        row = rows_by_rank.get(rank)
-        if not row:
-            missing_approve_rows.append(rank)
+    for row in review_rows:
+        finding = match_exclusion(row, exclusions_from_findings)
+        if finding:
+            reason = "stable_finding_exclusion"
+            if finding.get("recommended_action", "").startswith("replace_with_correct"):
+                reason = "stable_hard_or_correction_exclusion"
+            excluded.append(make_excluded(row, finding, reason))
             continue
+
         candidate = make_candidate(row, review_source)
         if not valid_nyc_lat_lng(candidate.get("proposed_lat"), candidate.get("proposed_lng")):
-            excluded.append(make_excluded(row, "invalid_nyc_coordinates", None, None))
+            invalid_coordinate_rows.append(candidate)
+            excluded.append(
+                {
+                    **candidate,
+                    "excluded_reason": "invalid_nyc_coordinates",
+                    "approval_candidate": False,
+                }
+            )
             continue
         candidates.append(candidate)
 
-    for rank in reject_ranks:
-        row = rows_by_rank.get(rank)
-        if not row:
-            missing_reject_rows.append(rank)
-            continue
-        correction = correction_by_rank.get(rank)
-        hard_error = hard_error_by_rank.get(rank)
-        reason = "do_not_approve_from_reviewed_findings"
-        if hard_error:
-            reason = "hard_error_excluded_from_approval_staging"
-        elif correction:
-            reason = "correction_needed_excluded_from_approval_staging"
-        excluded.append(make_excluded(row, reason, correction, hard_error))
-
+    excluded_display_keys = {norm_text(row.get("display_location")) for row in excluded}
+    missing_stable_exclusions = [
+        {
+            "review_rank_original_from_findings": item.get("review_rank"),
+            "display_location": item.get("display_location"),
+            "stable_display_key": item.get("stable_display_key"),
+        }
+        for item in exclusions_from_findings
+        if item.get("stable_display_key") not in excluded_display_keys
+    ]
+    baisley_in_candidates = any("baisley pond park" in norm_text(row.get("display_location")) for row in candidates)
+    baisley_in_excluded = any("baisley pond park" in norm_text(row.get("display_location")) for row in excluded)
     generated_at = datetime.now(timezone.utc).isoformat()
     borough_counts = Counter(row.get("borough") or "unknown" for row in candidates)
     confidence_counts = Counter(row.get("geocoder_confidence") or "unknown" for row in candidates)
+
+    qa_pass = (
+        len(review_rows) == 42
+        and len(candidates) == 25
+        and len(excluded) == 17
+        and len(exclusions_from_findings) == 17
+        and not missing_stable_exclusions
+        and not invalid_coordinate_rows
+        and not baisley_in_candidates
+        and baisley_in_excluded
+    )
+
     staging_payload = {
         "generated_at_utc": generated_at,
-        "phase": "phase_2d_approval_staging",
+        "phase": "phase_2d_approval_staging_stable_identity",
         "review_source": review_source,
+        "identity_matching": "stable_display_location_from_review_findings; review_rank_current is informational only",
         "approval_candidates": candidates,
         "excluded_rows": excluded,
         "safety_contract": {
@@ -202,17 +252,17 @@ def main() -> int:
     }
     report = {
         "generated_at_utc": generated_at,
-        "phase": "phase_2d_approval_staging",
+        "phase": "phase_2d_approval_staging_stable_identity",
         "review_source": review_source,
+        "identity_matching": "stable_display_location_from_review_findings; review_rank_current is informational only",
         "review_sheet_rows_loaded": len(review_rows),
-        "recommended_approve_rows_from_findings": len(approve_ranks),
-        "do_not_approve_rows_from_findings": len(reject_ranks),
+        "stable_exclusions_from_findings": len(exclusions_from_findings),
         "approval_candidate_count": len(candidates),
         "excluded_row_count": len(excluded),
-        "hard_error_excluded_count": len(hard_error_by_rank),
-        "correction_needed_excluded_count": len(correction_by_rank),
-        "missing_approve_rows": missing_approve_rows,
-        "missing_reject_rows": missing_reject_rows,
+        "missing_stable_exclusions": missing_stable_exclusions,
+        "invalid_coordinate_count": len(invalid_coordinate_rows),
+        "baisley_in_candidates": baisley_in_candidates,
+        "baisley_in_excluded": baisley_in_excluded,
         "candidate_borough_counts": dict(borough_counts),
         "candidate_confidence_counts": dict(confidence_counts),
         "manual_review_status_set_to_approved": False,
@@ -222,14 +272,14 @@ def main() -> int:
         "public_map_modified": False,
         "promotion_performed": False,
         "ready_for_phase_2e_promotion_count": 0,
-        "qa_pass": len(candidates) == 25 and len(excluded) == 17 and not missing_approve_rows and not missing_reject_rows,
-        "next_required_step": "Inspect this staging artifact. Only after human confirmation should a separate approval patch mark selected rows approved; do not run Phase 2E promotion yet.",
+        "qa_pass": qa_pass,
+        "next_required_step": "Inspect this stable-identity staging artifact. Only after human confirmation should a separate approval patch mark selected rows approved; do not run Phase 2E promotion yet.",
     }
 
     save_json_file(STAGING_PATH, staging_payload)
     save_json_file(REPORT_PATH, report)
     print(json.dumps(report, indent=2, ensure_ascii=False))
-    return 0 if report["qa_pass"] else 1
+    return 0 if qa_pass else 1
 
 
 if __name__ == "__main__":
