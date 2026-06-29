@@ -1,32 +1,32 @@
 {
   "approval_candidate_count": 25,
+  "baisley_in_candidates": false,
+  "baisley_in_excluded": true,
   "candidate_borough_counts": {
     "Bronx": 3,
     "Brooklyn": 13,
-    "Manhattan": 4,
-    "Queens": 5
+    "Manhattan": 5,
+    "Queens": 4
   },
   "candidate_confidence_counts": {
     "medium": 25
   },
-  "correction_needed_excluded_count": 17,
-  "do_not_approve_rows_from_findings": 17,
   "excluded_row_count": 17,
-  "generated_at_utc": "2026-06-29T21:29:03.626534+00:00",
-  "hard_error_excluded_count": 2,
+  "generated_at_utc": "2026-06-29T21:43:11.469931+00:00",
+  "identity_matching": "stable_display_location_from_review_findings; review_rank_current is informational only",
+  "invalid_coordinate_count": 0,
   "location_cache_modified": false,
   "manual_review_status_set_to_approved": false,
-  "missing_approve_rows": [],
-  "missing_reject_rows": [],
-  "next_required_step": "Inspect this staging artifact. Only after human confirmation should a separate approval patch mark selected rows approved; do not run Phase 2E promotion yet.",
-  "phase": "phase_2d_approval_staging",
+  "missing_stable_exclusions": [],
+  "next_required_step": "Inspect this stable-identity staging artifact. Only after human confirmation should a separate approval patch mark selected rows approved; do not run Phase 2E promotion yet.",
+  "phase": "phase_2d_approval_staging_stable_identity",
   "promotion_allowed_count": 0,
   "promotion_performed": false,
   "public_map_modified": false,
   "qa_pass": true,
   "ready_for_phase_2e_promotion_count": 0,
-  "recommended_approve_rows_from_findings": 25,
   "review_sheet_rows_loaded": 42,
   "review_source": "Claude manual GPS review supplied by Howard Weiss",
+  "stable_exclusions_from_findings": 17,
   "staged_feed_modified": false
 }
