@@ -110,6 +110,36 @@ The following rows must remain excluded from immediate promotion:
 
 A future correction pipeline may create new approved rows for corrected coordinates, but that must be a separate phase.
 
+## Design-only readiness validator
+
+Validator script:
+
+- `scripts/validate_gps_phase2e_promotion_readiness.py`
+
+Validator output:
+
+- `data/gps_phase2e_promotion_readiness_report.json`
+
+This validator is not a promotion script.
+
+The validator must:
+
+1. read `data/gps_reviewed_approval_artifact.json`
+2. read `data/gps_reviewed_approval_artifact_report.json`
+3. confirm the reviewed approval artifact passed QA
+4. confirm exactly 25 approved rows
+5. confirm 17 exclusions are carried forward
+6. confirm no overlap between approved and excluded stable identity keys
+7. validate all approved coordinates
+8. validate all required approval metadata
+9. confirm `promotion_allowed` is true only in approved rows
+10. confirm `location_cache_modified`, `staged_feed_modified`, and `public_map_modified` are false
+11. write a readiness report only
+
+The validator must not modify `data/location_cache.json`.
+
+The validator must not be treated as permission to promote.
+
 ## Proposed future promotion output
 
 When Phase 2E is explicitly authorized, the promotion script should write:
@@ -159,23 +189,13 @@ If a target cache key already exists:
 3. Write the row to a conflict section in the promotion report.
 4. Require human decision before overwrite.
 
-## Phase 2E readiness validator
+## Workflow status
 
-The readiness validator should:
+The readiness validator is design-only and should not be automatically wired into the live QA workflow until Howard asks for it.
 
-1. read `data/gps_reviewed_approval_artifact.json`
-2. read `data/gps_reviewed_approval_artifact_report.json`
-3. confirm the reviewed approval artifact passed QA
-4. confirm exactly 25 approved rows
-5. confirm 17 exclusions are carried forward
-6. confirm no overlap between approved and excluded stable identity keys
-7. validate all approved coordinates
-8. validate all required approval metadata
-9. confirm `promotion_allowed` is true only in approved rows
-10. confirm `location_cache_modified`, `staged_feed_modified`, and `public_map_modified` are false
-11. write a readiness report only
+Do not add a promotion script to the workflow.
 
-The validator must not modify `data/location_cache.json`.
+Do not add `data/gps_phase2e_promotion_readiness_report.json` to automated public-feed publishing.
 
 ## Required human gate before promotion
 
@@ -187,6 +207,8 @@ Anything less specific, including `inspect`, `validate`, `design`, `prepare`, `s
 
 ## Recommended next step
 
-Run the readiness validator manually or wire it into QA only after this design is inspected.
+Inspect this design and the readiness validator.
+
+After inspection, the validator may be run manually to produce a readiness report.
 
 Do not create or run the actual promotion script until the readiness validator passes and Howard explicitly authorizes promotion.
