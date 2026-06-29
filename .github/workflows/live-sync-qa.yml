@@ -50,6 +50,9 @@ jobs:
       - name: Build GPS repository
         run: python scripts/build_gps_repository.py
 
+      - name: Build GPS review groups
+        run: python scripts/build_gps_review_groups.py
+
       - name: Build live delta report
         run: python scripts/build_live_delta_report.py
 
@@ -81,7 +84,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/location_cache.json data/gps_repository_report.json data/gps_needs_review_events.json data/raw_nyc_open_data_snapshot.json data/live_sync_report.json data/nycif_live_test_enriched_events.json data/test_enriched_feed_manifest.json data/nycif_staged_live_events.json data/staged_live_manifest.json data/live_delta_report.json data/previous_staged_live_events_snapshot.json data/feed_anomaly_report.json data/remainder_year_coverage_report.json data/row_disposition_report.json data/row_disposition_events.json data/backend_reliability_gate_report.json
+          git add data/location_cache.json data/gps_repository_report.json data/gps_needs_review_events.json data/gps_review_group_report.json data/gps_review_location_groups.json data/gps_review_geocoding_queue.json data/raw_nyc_open_data_snapshot.json data/live_sync_report.json data/nycif_live_test_enriched_events.json data/test_enriched_feed_manifest.json data/nycif_staged_live_events.json data/staged_live_manifest.json data/live_delta_report.json data/previous_staged_live_events_snapshot.json data/feed_anomaly_report.json data/remainder_year_coverage_report.json data/row_disposition_report.json data/row_disposition_events.json data/backend_reliability_gate_report.json
           if git diff --cached --quiet; then
             echo "No QA artifact changes to commit."
           else
