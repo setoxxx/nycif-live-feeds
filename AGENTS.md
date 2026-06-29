@@ -4,6 +4,22 @@ This repository powers NYC In Focus live-event feed generation and GPS review wo
 
 These instructions apply to Cursor, GitHub Copilot, Claude Code, Codex, ChatGPT, and any other coding agent or automated assistant working in this repository.
 
+## Related repositories
+
+Primary backend/feed repo:
+
+- `setoxxx/nycif-live-feeds`
+
+Frontend/map repo:
+
+- `setoxxx/nycif-field-desk`
+
+The backend repo is the source of truth for generated event feeds, GPS staging artifacts, manual approval queues, GPS review findings, and GPS promotion controls.
+
+The frontend repo consumes backend feed outputs for the NYC In Focus field desk and public map. Frontend agents must read the frontend repo `AGENTS.md` before changing map behavior.
+
+A frontend change must not treat backend GPS review artifacts as public-ready data unless the backend promotion pipeline has explicitly published them into the approved public feed.
+
 ## Prime directive
 
 Do not publish bad data.
@@ -160,6 +176,22 @@ A row may be promoted only if all of the following are true:
 
 Promotion must write a report showing exactly what changed.
 
+## Cross-repo coordination
+
+When backend changes affect frontend/map behavior:
+
+1. Confirm the backend artifact is intended for public or frontend consumption.
+2. Review `setoxxx/nycif-field-desk/AGENTS.md` before asking a frontend agent to change the map.
+3. Never ask the frontend to load GPS review/proposal/approval artifacts as live public event data.
+4. Keep public map behavior separate from admin/test/review behavior.
+5. If a backend public feed path changes, update the frontend repo only after QA confirms the new feed is public-ready.
+
+When frontend changes depend on backend data:
+
+1. Confirm the backend artifact exists.
+2. Confirm the artifact is public-ready, not just staged/review-only.
+3. Cite or inspect the backend QA report before making public-map claims.
+
 ## QA requirements
 
 Before claiming success, inspect the generated artifacts.
@@ -248,6 +280,7 @@ Examples:
 - `Add GPS manual review sheet generator`
 - `Wire GPS manual review sheet into QA workflow`
 - `Add Phase 2D reviewed GPS findings artifact`
+- `Coordinate backend and frontend agent rules`
 
 Final responses should include:
 
