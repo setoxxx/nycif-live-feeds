@@ -1,30 +1,30 @@
 {
   "borough_counts": {
-    "Bronx": 3965,
-    "Brooklyn": 7170,
-    "Manhattan": 9753,
-    "Queens": 6487,
-    "Staten Island": 1287
+    "Bronx": 4098,
+    "Brooklyn": 7371,
+    "Manhattan": 10126,
+    "Queens": 6662,
+    "Staten Island": 1336
   },
   "category_counts": {
-    "arts": 198,
+    "arts": 201,
     "general": 5,
-    "market": 281,
-    "parks": 4612,
-    "sports": 23566
+    "market": 293,
+    "parks": 4704,
+    "sports": 24390
   },
   "duplicate_policy": {
     "one_day_street_events": "dedupe by title + borough + location + coordinate; keep earliest source date; recurring sports and park events are not deduped by this rule",
     "production_feeds_modified": false
   },
-  "eligible_rows_before_one_day_street_dedupe": 28804,
-  "generated_at_utc": "2026-06-29T18:06:15.099810+00:00",
+  "eligible_rows_before_one_day_street_dedupe": 29737,
+  "generated_at_utc": "2026-06-29T20:14:56.705162+00:00",
   "match_counts": {
-    "event_id": 23031,
-    "location_cache": 5530,
-    "text_date_location": 101
+    "event_id": 23694,
+    "location_cache": 5792,
+    "text_date_location": 107
   },
-  "one_day_street_duplicates_suppressed": 142,
+  "one_day_street_duplicates_suppressed": 144,
   "production_feed": false,
   "production_ready": true,
   "sample_one_day_street_rejected_rows": [
@@ -506,9 +506,9 @@
       "title": "HHFM Hunts Point Market"
     }
   ],
-  "skipped_needs_review_or_bad_gps": 2037,
+  "skipped_needs_review_or_bad_gps": 2172,
   "source": "nycif_live_test_enriched_events.json",
   "staged_feed": true,
-  "staged_feed_events": 28662,
-  "test_feed_rows_loaded": 30841
+  "staged_feed_events": 29593,
+  "test_feed_rows_loaded": 31909
 }

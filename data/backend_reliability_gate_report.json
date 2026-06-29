@@ -9,7 +9,7 @@
     "gps_needs_review_events": {
       "exists": true,
       "path": "data/gps_needs_review_events.json",
-      "size_bytes": 895280
+      "size_bytes": 953908
     },
     "gps_repository_report": {
       "exists": true,
@@ -19,7 +19,7 @@
     "live_delta_report": {
       "exists": true,
       "path": "data/live_delta_report.json",
-      "size_bytes": 961
+      "size_bytes": 316681
     },
     "live_sync_report": {
       "exists": true,
@@ -29,42 +29,42 @@
     "location_cache": {
       "exists": true,
       "path": "data/location_cache.json",
-      "size_bytes": 25491266
+      "size_bytes": 25956935
     },
     "raw_snapshot": {
       "exists": true,
       "path": "data/raw_nyc_open_data_snapshot.json",
-      "size_bytes": 17880999
+      "size_bytes": 17681610
     },
     "remainder_year_coverage_report": {
       "exists": true,
       "path": "data/remainder_year_coverage_report.json",
-      "size_bytes": 50226
+      "size_bytes": 50225
     },
     "row_disposition_events": {
       "exists": true,
       "path": "data/row_disposition_events.json",
-      "size_bytes": 19501019
+      "size_bytes": 20168571
     },
     "row_disposition_report": {
       "exists": true,
       "path": "data/row_disposition_report.json",
-      "size_bytes": 29791
+      "size_bytes": 29790
     },
     "staged_feed": {
       "exists": true,
       "path": "data/nycif_staged_live_events.json",
-      "size_bytes": 28262818
+      "size_bytes": 29181211
     },
     "staged_manifest": {
       "exists": true,
       "path": "data/staged_live_manifest.json",
-      "size_bytes": 20945
+      "size_bytes": 20946
     },
     "test_feed": {
       "exists": true,
       "path": "data/nycif_live_test_enriched_events.json",
-      "size_bytes": 29642224
+      "size_bytes": 30667540
     },
     "test_manifest": {
       "exists": true,
@@ -73,23 +73,23 @@
     }
   },
   "gate_pass": true,
-  "generated_at_utc": "2026-06-29T18:06:25.682882+00:00",
+  "generated_at_utc": "2026-06-29T20:15:07.650254+00:00",
   "issues": [
     {
       "code": "gps_review_queue_not_empty",
-      "details": 2037,
+      "details": 2172,
       "message": "Some events still require GPS review; this is expected and not a pipeline failure.",
       "severity": "warn"
     }
   ],
   "phase": "phase_1_backend_reliability",
   "summary": {
-    "gps_cache_entry_count": 44146,
-    "gps_needs_review_count": 2037,
-    "raw_rows_loaded": 32289,
+    "gps_cache_entry_count": 44886,
+    "gps_needs_review_count": 2172,
+    "raw_rows_loaded": 31939,
     "row_disposition_qa_pass": true,
-    "staged_feed_events": 28662,
-    "test_feed_events": 30841,
+    "staged_feed_events": 29593,
+    "test_feed_events": 31909,
     "unclassified_rows": 0
   },
   "warn_count": 1
