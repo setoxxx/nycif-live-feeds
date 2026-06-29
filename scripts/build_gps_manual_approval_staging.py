@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """Build Phase 2D GPS manual approval staging candidates.
 
-This script reads Claude/Howard reviewed GPS findings and the manual approval
-queue, then creates a staging-only approval-candidate artifact.
+This script reads Claude/Howard reviewed GPS findings and the manual review
+sheet, then creates a staging-only approval-candidate artifact.
 
 It does not approve rows, does not set promotion_allowed true, does not update
 location_cache.json, does not update the staged feed, and does not publish to
 the public map.
 
 Inputs:
-- data/gps_manual_approval_queue.json
+- data/gps_manual_approval_review_sheet.json
 - data/gps_manual_approval_review_findings.json
 
 Outputs:
@@ -28,7 +28,7 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
-QUEUE_PATH = DATA_DIR / "gps_manual_approval_queue.json"
+REVIEW_SHEET_PATH = DATA_DIR / "gps_manual_approval_review_sheet.json"
 FINDINGS_PATH = DATA_DIR / "gps_manual_approval_review_findings.json"
 STAGING_PATH = DATA_DIR / "gps_manual_approval_staging_candidates.json"
 REPORT_PATH = DATA_DIR / "gps_manual_approval_staging_report.json"
@@ -134,12 +134,12 @@ def make_excluded(row: dict[str, Any], reason: str, correction: dict[str, Any] |
 
 
 def main() -> int:
-    queue_payload = load_json_file(QUEUE_PATH, {})
+    review_sheet_payload = load_json_file(REVIEW_SHEET_PATH, {})
     findings = load_json_file(FINDINGS_PATH, {})
-    queue = rows_from_payload(queue_payload, "approval_queue")
+    review_rows = rows_from_payload(review_sheet_payload, "review_sheet")
 
     rows_by_rank: dict[int, dict[str, Any]] = {}
-    for row in queue:
+    for row in review_rows:
         try:
             rank = int(row.get("review_rank"))
         except Exception:
@@ -164,8 +164,6 @@ def main() -> int:
             continue
         candidate = make_candidate(row, review_source)
         if not valid_nyc_lat_lng(candidate.get("proposed_lat"), candidate.get("proposed_lng")):
-            candidate["approval_candidate"] = False
-            candidate["candidate_reason"] = "Rejected by staging generator because coordinates are outside NYC bounds."
             excluded.append(make_excluded(row, "invalid_nyc_coordinates", None, None))
             continue
         candidates.append(candidate)
@@ -206,7 +204,7 @@ def main() -> int:
         "generated_at_utc": generated_at,
         "phase": "phase_2d_approval_staging",
         "review_source": review_source,
-        "queue_rows_loaded": len(queue),
+        "review_sheet_rows_loaded": len(review_rows),
         "recommended_approve_rows_from_findings": len(approve_ranks),
         "do_not_approve_rows_from_findings": len(reject_ranks),
         "approval_candidate_count": len(candidates),
