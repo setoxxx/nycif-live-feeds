@@ -1,482 +1,19 @@
 {
-  "current_future_rows": 32253,
-  "current_future_rows_with_cemsid": 31894,
+  "current_future_rows": 30841,
+  "current_future_rows_with_cemsid": 30522,
   "enriched_rows_loaded": 12210,
-  "generated_at_utc": "2026-06-28T23:18:58.130263+00:00",
+  "generated_at_utc": "2026-06-29T04:58:44.386566+00:00",
   "location_cache_entries_loaded": 9761,
   "match_counts": {
     "cemsid": 0,
-    "event_id": 24533,
-    "location_cache": 5559,
-    "none": 2060,
+    "event_id": 23157,
+    "location_cache": 5546,
+    "none": 2037,
     "text_date_location": 101
   },
-  "matched_with_gps": 30193,
+  "matched_with_gps": 28804,
   "matched_without_gps_sample": [],
   "needs_enrichment_sample": [
-    {
-      "community_board": [
-        "10"
-      ],
-      "end_date_time": "2026-06-28T17:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Bronx",
-      "event_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
-      "event_name": "FLAGS FOR HEROS",
-      "event_type": "Special Event",
-      "police_precinct": [
-        "45"
-      ],
-      "source_cemsid": [
-        "13142"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "949110",
-      "start_date_time": "2026-06-28T00:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "5"
-      ],
-      "end_date_time": "2026-06-28T23:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Manhattan",
-      "event_location": "Worth Square: Worth Square",
-      "event_name": "2026 NYC Pride March Grandstand",
-      "event_type": "Special Event",
-      "police_precinct": [
-        "13"
-      ],
-      "source_cemsid": [
-        "995"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "897884",
-      "start_date_time": "2026-06-28T07:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "2"
-      ],
-      "end_date_time": "2026-06-28T18:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "WEST   13 STREET between 10 AVENUE and WASHINGTON STREET",
-      "event_name": "Genesis Concept",
-      "event_type": "Production Event",
-      "police_precinct": [
-        "6"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "957151",
-      "start_date_time": "2026-06-28T07:00:00.000",
-      "street_closure_type": "Curb Lane Only"
-    },
-    {
-      "community_board": [
-        "2"
-      ],
-      "end_date_time": "2026-06-28T20:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "BLEECKER STREET between LEROY STREET and CARMINE STREET",
-      "event_name": "Pompeii Flea Market",
-      "event_type": "Sidewalk Sale",
-      "police_precinct": [
-        "6"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "899565",
-      "start_date_time": "2026-06-28T08:00:00.000",
-      "street_closure_type": "Partial Sidewalk Closure"
-    },
-    {
-      "community_board": [
-        "9"
-      ],
-      "end_date_time": "2026-06-28T08:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Bronx",
-      "event_location": "STICKBALL BOULEVARD between RANDALL AVENUE and SEWARD AVENUE",
-      "event_name": "Stickball League",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "43"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "913375",
-      "start_date_time": "2026-06-28T08:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "2",
-        "3"
-      ],
-      "end_date_time": "2026-06-28T18:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "EAST   11 STREET between 3 AVENUE and 4 AVENUE,  EAST    9 STREET between 4 AVENUE and BROADWAY,  COOPER SQUARE between 3 AVENUE and EAST 8 STREET,  EAST   10 STREET between 4 AVENUE and 3 AVENUE",
-      "event_name": "Production Parking for PrideFest 2026",
-      "event_type": "Production Event",
-      "police_precinct": [
-        "9"
-      ],
-      "source_cemsid": [
-        "0"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "897903",
-      "start_date_time": "2026-06-28T10:00:00.000",
-      "street_closure_type": "Curb Lane Only"
-    },
-    {
-      "community_board": [
-        "2"
-      ],
-      "end_date_time": "2026-06-28T17:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "THOMPSON STREET between WASHINGTON SQUARE SOUTH and WEST    3 STREET",
-      "event_name": "NYC Pride Health Fair",
-      "event_type": "Health Fair",
-      "police_precinct": [
-        "6"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "933776",
-      "start_date_time": "2026-06-28T10:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "09"
-      ],
-      "end_date_time": "2026-06-28T18:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Bronx",
-      "event_location": "Parque De Los Ninos: Parque De Los Ninos-Basketball-02",
-      "event_name": "Basketball",
-      "event_type": "Sport - Youth",
-      "police_precinct": [
-        "43"
-      ],
-      "source_cemsid": [
-        "6868"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "953412",
-      "start_date_time": "2026-06-28T10:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "2"
-      ],
-      "end_date_time": "2026-06-28T20:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Manhattan",
-      "event_location": "St. Vincent's Triangle: St. Vincent's Triangle",
-      "event_name": "2026 NYC Pride March ADA",
-      "event_type": "Special Event",
-      "police_precinct": [
-        "6"
-      ],
-      "source_cemsid": [
-        "11768"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "897885",
-      "start_date_time": "2026-06-28T11:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "11"
-      ],
-      "end_date_time": "2026-06-28T18:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "WEST    7 STREET between AVENUE S and HIGHLAWN AVENUE",
-      "event_name": "Summer beginning block party",
-      "event_type": "Block Party",
-      "police_precinct": [
-        "62"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "928929",
-      "start_date_time": "2026-06-28T11:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "55"
-      ],
-      "end_date_time": "2026-06-28T20:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Brooklyn",
-      "event_location": "Prospect Park: Drummer's Grove Market Place",
-      "event_name": "Congo Square Vendor's Market",
-      "event_type": "Special Event",
-      "police_precinct": [
-        "78"
-      ],
-      "source_cemsid": [
-        "11390"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "932282",
-      "start_date_time": "2026-06-28T11:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "55"
-      ],
-      "end_date_time": "2026-06-28T20:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Brooklyn",
-      "event_location": "Prospect Park: Drummer's Grove",
-      "event_name": "Congo Square Drummers Circle",
-      "event_type": "Special Event",
-      "police_precinct": [
-        "78"
-      ],
-      "source_cemsid": [
-        "3244"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "932289",
-      "start_date_time": "2026-06-28T11:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "6"
-      ],
-      "end_date_time": "2026-06-28T13:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Brooklyn",
-      "event_location": "Carroll Park: Park House Plaza",
-      "event_name": "New York Nature Mobile Pop-Up Science Program",
-      "event_type": "Special Event",
-      "police_precinct": [
-        "76"
-      ],
-      "source_cemsid": [
-        "4393"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "932331",
-      "start_date_time": "2026-06-28T11:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "5"
-      ],
-      "end_date_time": "2026-06-28T17:01:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Bronx",
-      "event_location": "TOPPING AVENUE between EAST  175 STREET and EAST  176 STREET",
-      "event_name": "Free Community Health Fair",
-      "event_type": "Health Fair",
-      "police_precinct": [
-        "46"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "933220",
-      "start_date_time": "2026-06-28T11:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "26"
-      ],
-      "end_date_time": "2026-06-28T19:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Bronx",
-      "event_location": "Van Cortlandt Park: Picnic Area 5- 30 ppl max",
-      "event_name": "my Daughter 11th birthday party",
-      "event_type": "Special Event",
-      "police_precinct": [
-        "50"
-      ],
-      "source_cemsid": [
-        "12370"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "958066",
-      "start_date_time": "2026-06-28T11:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "2"
-      ],
-      "end_date_time": "2026-06-28T17:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Queens",
-      "event_location": "61 STREET between WOODSIDE AVENUE and ROOSEVELT AVENUE",
-      "event_name": "Open Streets",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "108"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "951584",
-      "start_date_time": "2026-06-28T11:30:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "8"
-      ],
-      "end_date_time": "2026-06-28T19:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "SAINT CHARLES PLACE between SAINT JOHNS PLACE and LINCOLN PLACE",
-      "event_name": "Saint Charles  Block Party",
-      "event_type": "Block Party",
-      "police_precinct": [
-        "77"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "940030",
-      "start_date_time": "2026-06-28T12:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "64"
-      ],
-      "end_date_time": "2026-06-28T14:30:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Manhattan",
-      "event_location": "Central Park: East 102nd St Landscape A",
-      "event_name": "Party",
-      "event_type": "Special Event",
-      "police_precinct": [
-        "22"
-      ],
-      "source_cemsid": [
-        "11762"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "950274",
-      "start_date_time": "2026-06-28T12:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "3"
-      ],
-      "end_date_time": "2026-06-28T19:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Brooklyn",
-      "event_location": "Herbert Von King Park: Lawn Behind Childresn Play Area",
-      "event_name": "Celebration",
-      "event_type": "Special Event",
-      "police_precinct": [
-        "79"
-      ],
-      "source_cemsid": [
-        "4522"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "952423",
-      "start_date_time": "2026-06-28T12:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "4"
-      ],
-      "end_date_time": "2026-06-28T19:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "TROUTMAN STREET between IRVING AVENUE and WYCKOFF AVENUE",
-      "event_name": "The Bush LGBTQ Bushwick Pride Celebration",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "83"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "929582",
-      "start_date_time": "2026-06-28T13:00:00.000",
-      "street_closure_type": "Curb Lane Only"
-    },
-    {
-      "community_board": [
-        "3"
-      ],
-      "end_date_time": "2026-06-28T16:30:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "FORSYTH STREET between DIVISION STREET and EAST BROADWAY",
-      "event_name": "Fuzhou America Open Mics",
-      "event_type": "Open Street Partner Event",
-      "police_precinct": [
-        "5"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "951846",
-      "start_date_time": "2026-06-28T13:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "10"
-      ],
-      "end_date_time": "2026-06-28T23:59:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Manhattan",
-      "event_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
-      "event_name": "Construction",
-      "event_type": "Special Event",
-      "police_precinct": [
-        "32"
-      ],
-      "source_cemsid": [
-        "8461",
-        "8462"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "955891",
-      "start_date_time": "2026-06-28T15:57:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "7"
-      ],
-      "end_date_time": "2026-06-28T18:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Queens",
-      "event_location": "BARTON AVENUE between 149 PLACE and 150 STREET",
-      "event_name": "Murray Hill Lights: Performances II",
-      "event_type": "Open Culture",
-      "police_precinct": [
-        "109"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "955144",
-      "start_date_time": "2026-06-28T16:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
     {
       "community_board": [
         "10"
@@ -516,6 +53,477 @@
       "source_event_id": "948703",
       "start_date_time": "2026-06-29T07:00:00.000",
       "street_closure_type": "Sidewalk and Curb Lane Closure"
+    },
+    {
+      "community_board": [
+        "6"
+      ],
+      "end_date_time": "2026-06-29T13:30:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Brooklyn",
+      "event_location": "Washington Park (MS 51): Playground B",
+      "event_name": "Miscellaneous",
+      "event_type": "Special Event",
+      "police_precinct": [
+        "78"
+      ],
+      "source_cemsid": [
+        "4592"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "941733",
+      "start_date_time": "2026-06-29T09:30:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "04"
+      ],
+      "end_date_time": "2026-06-29T18:00:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Bronx",
+      "event_location": "Macombs Dam Park: Basketball-04",
+      "event_name": "Basketball",
+      "event_type": "Sport - Youth",
+      "police_precinct": [
+        "44"
+      ],
+      "source_cemsid": [
+        "10755"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "910621",
+      "start_date_time": "2026-06-29T10:00:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "2"
+      ],
+      "end_date_time": "2026-06-29T16:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Bronx",
+      "event_location": "HALL PLACE between EAST  167 STREET and ROGERS PLACE",
+      "event_name": "Hall Place Family Day",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "41"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "932757",
+      "start_date_time": "2026-06-29T11:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "16"
+      ],
+      "end_date_time": "2026-06-29T17:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "BRISTOL STREET between BLAKE AVENUE and DUMONT AVENUE",
+      "event_name": "Jump into Summer",
+      "event_type": "Health Fair",
+      "police_precinct": [
+        "73"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "928693",
+      "start_date_time": "2026-06-29T13:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "10"
+      ],
+      "end_date_time": "2026-06-29T23:59:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Manhattan",
+      "event_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
+      "event_name": "Construction",
+      "event_type": "Special Event",
+      "police_precinct": [
+        "32"
+      ],
+      "source_cemsid": [
+        "8461",
+        "8462"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "955891",
+      "start_date_time": "2026-06-29T15:57:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "10"
+      ],
+      "end_date_time": "2026-06-30T17:00:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Bronx",
+      "event_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
+      "event_name": "FLAGS FOR HEROS",
+      "event_type": "Special Event",
+      "police_precinct": [
+        "45"
+      ],
+      "source_cemsid": [
+        "13142"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "949110",
+      "start_date_time": "2026-06-30T00:00:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "18"
+      ],
+      "end_date_time": "2026-06-30T16:00:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Brooklyn",
+      "event_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
+      "event_name": "Miscellaneous",
+      "event_type": "Special Event",
+      "police_precinct": [
+        "69"
+      ],
+      "source_cemsid": [
+        "5010",
+        "5016"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "917705",
+      "start_date_time": "2026-06-30T09:00:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "18"
+      ],
+      "end_date_time": "2026-06-30T17:00:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Brooklyn",
+      "event_location": "Marine Park: Softball-03   ,Marine Park: Softball-04",
+      "event_name": "Miscellaneous",
+      "event_type": "Special Event",
+      "police_precinct": [
+        "63"
+      ],
+      "source_cemsid": [
+        "7856",
+        "7857"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "917832",
+      "start_date_time": "2026-06-30T09:00:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "04"
+      ],
+      "end_date_time": "2026-06-30T18:00:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Bronx",
+      "event_location": "Macombs Dam Park: Basketball-04",
+      "event_name": "Basketball",
+      "event_type": "Sport - Youth",
+      "police_precinct": [
+        "44"
+      ],
+      "source_cemsid": [
+        "10755"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "910621",
+      "start_date_time": "2026-06-30T10:00:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "3"
+      ],
+      "end_date_time": "2026-06-30T15:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "EAST    2 STREET between AVENUE A and 1 AVENUE",
+      "event_name": "Spellman Center Event",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "9"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "939378",
+      "start_date_time": "2026-06-30T10:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "4"
+      ],
+      "end_date_time": "2026-06-30T17:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Bronx",
+      "event_location": "ROCKWOOD STREET Open Street 2026: ROCKWOOD STREET Open Street 2026",
+      "event_name": "New Settlement Open Streets",
+      "event_type": "Open Street Partner Event",
+      "police_precinct": [
+        "44"
+      ],
+      "source_cemsid": [
+        "13560"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "949163",
+      "start_date_time": "2026-06-30T11:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "10"
+      ],
+      "end_date_time": "2026-06-30T23:59:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Manhattan",
+      "event_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
+      "event_name": "Construction",
+      "event_type": "Special Event",
+      "police_precinct": [
+        "32"
+      ],
+      "source_cemsid": [
+        "8461",
+        "8462"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "955891",
+      "start_date_time": "2026-06-30T15:57:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "02"
+      ],
+      "end_date_time": "2026-06-30T20:00:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Brooklyn",
+      "event_location": "Edmonds Playground (IS 113): Basketball-01",
+      "event_name": "Basketball",
+      "event_type": "Sport - Adult",
+      "police_precinct": [
+        "88"
+      ],
+      "source_cemsid": [
+        "5427"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "954123",
+      "start_date_time": "2026-06-30T18:00:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "10"
+      ],
+      "end_date_time": "2026-07-01T17:00:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Bronx",
+      "event_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
+      "event_name": "FLAGS FOR HEROS",
+      "event_type": "Special Event",
+      "police_precinct": [
+        "45"
+      ],
+      "source_cemsid": [
+        "13142"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "949110",
+      "start_date_time": "2026-07-01T00:00:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "8"
+      ],
+      "end_date_time": "2026-07-01T23:59:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "PACIFIC STREET between BEDFORD AVENUE and FRANKLIN AVENUE",
+      "event_name": "Mobile X-Ray DHS Atlantic Assessment",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "77"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "952470",
+      "start_date_time": "2026-07-01T00:00:00.000",
+      "street_closure_type": "Sidewalk and Curb Lane Closure"
+    },
+    {
+      "community_board": [
+        "2"
+      ],
+      "end_date_time": "2026-07-01T23:30:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "WASHINGTON STREET between WEST   13 STREET and LITTLE WEST   12 STREET",
+      "event_name": "BILT EVENT",
+      "event_type": "Production Event",
+      "police_precinct": [
+        "6"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "956955",
+      "start_date_time": "2026-07-01T00:00:00.000",
+      "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "5"
+      ],
+      "end_date_time": "2026-07-01T23:30:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "EAST   42 STREET between LEXINGTON AVENUE and PARK AVENUE",
+      "event_name": "U.S. Soccer Pop-Up Store",
+      "event_type": "Production Event",
+      "police_precinct": [
+        "14"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "957001",
+      "start_date_time": "2026-07-01T00:01:00.000",
+      "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "2"
+      ],
+      "end_date_time": "2026-07-01T16:00:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Bronx",
+      "event_location": "Monsignor Raul Del Valle Square: Whole Park",
+      "event_name": "HHFM Hunts Point Market",
+      "event_type": "Special Event",
+      "police_precinct": [
+        "41"
+      ],
+      "source_cemsid": [
+        "1211"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "919369",
+      "start_date_time": "2026-07-01T07:00:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "11"
+      ],
+      "end_date_time": "2026-07-01T17:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "MADISON AVENUE between EAST   98 STREET and EAST   99 STREET",
+      "event_name": "Mount Sinai Greenmarket Wednesday",
+      "event_type": "Farmers Market",
+      "police_precinct": [
+        "23"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "911512",
+      "start_date_time": "2026-07-01T08:00:00.000",
+      "street_closure_type": "Sidewalk and Curb Lane Closure"
+    },
+    {
+      "community_board": [
+        "12"
+      ],
+      "end_date_time": "2026-07-01T18:00:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Queens",
+      "event_location": "Baisley Pond Park: Cricket-04",
+      "event_name": "Cricket",
+      "event_type": "Sport - Youth",
+      "police_precinct": [
+        "113"
+      ],
+      "source_cemsid": [
+        "11886"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "912982",
+      "start_date_time": "2026-07-01T08:00:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "2"
+      ],
+      "end_date_time": "2026-07-01T15:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Bronx",
+      "event_location": "EAST  163 STREET between BRUCKNER BOULEVARD and SOUTHERN BOULEVARD",
+      "event_name": "HHFM Hunts Point Market",
+      "event_type": "Farmers Market",
+      "police_precinct": [
+        "41"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "914346",
+      "start_date_time": "2026-07-01T08:00:00.000",
+      "street_closure_type": "Full Sidewalk Closure"
+    },
+    {
+      "community_board": [
+        "17",
+        "9"
+      ],
+      "end_date_time": "2026-07-01T15:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "CLARKSON AVENUE between EAST   37 STREET and EAST   38 STREET",
+      "event_name": "HHFM Kings County Hospital Market",
+      "event_type": "Farmers Market",
+      "police_precinct": [
+        "67",
+        "71"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "930126",
+      "start_date_time": "2026-07-01T08:00:00.000",
+      "street_closure_type": "Full Sidewalk Closure"
+    },
+    {
+      "community_board": [
+        "10"
+      ],
+      "end_date_time": "2026-07-01T12:00:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Manhattan",
+      "event_location": "Frederick Johnson Playground: Tennis-01",
+      "event_name": "Tennis",
+      "event_type": "Sport - Youth",
+      "police_precinct": [
+        "32"
+      ],
+      "source_cemsid": [
+        "5818"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "904220",
+      "start_date_time": "2026-07-01T09:00:00.000",
+      "street_closure_type": "N/A"
     }
   ],
   "production_feeds_modified": false,
@@ -523,5 +531,5 @@
   "raw_rows_loaded": 32289,
   "raw_rows_with_cemsid": 31904,
   "raw_url": "https://data.cityofnewyork.us/resource/tvpp-9vvx.json",
-  "today_utc": "2026-06-28"
+  "today_utc": "2026-06-29"
 }

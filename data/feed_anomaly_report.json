@@ -10771,7 +10771,7 @@
     },
     {
       "feed": "test_enriched",
-      "high_issues": 4051,
+      "high_issues": 4018,
       "issues": [
         {
           "count": 2,
@@ -10864,9 +10864,8 @@
           "severity": "high"
         },
         {
-          "count": 5,
+          "count": 4,
           "dates": [
-            "2026-06-28",
             "2026-07-11",
             "2026-07-12",
             "2026-07-25",
@@ -10879,16 +10878,6 @@
           "samples": [
             {
               "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.80449,-73.94367",
-              "location": "Marcus Garvey Park: Amphitheater",
-              "source_event_id": "881295",
-              "title": "2026 No Amplified Sound"
-            },
-            {
-              "borough": "Manhattan",
               "date": "2026-07-11",
               "end_date": "2026-07-11",
               "event_type": "Special Event",
@@ -10931,9 +10920,8 @@
           "severity": "high"
         },
         {
-          "count": 5,
+          "count": 4,
           "dates": [
-            "2026-06-28",
             "2026-07-11",
             "2026-07-12",
             "2026-07-25",
@@ -10946,16 +10934,6 @@
           "samples": [
             {
               "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.82659,-73.94113",
-              "location": "Jackie Robinson Park: Bandshell",
-              "source_event_id": "881297",
-              "title": "2026 No Amplified Sound"
-            },
-            {
-              "borough": "Manhattan",
               "date": "2026-07-11",
               "end_date": "2026-07-11",
               "event_type": "Special Event",
@@ -10998,9 +10976,8 @@
           "severity": "high"
         },
         {
-          "count": 3,
+          "count": 2,
           "dates": [
-            "2026-06-28",
             "2026-06-29",
             "2026-06-30"
           ],
@@ -11009,16 +10986,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Sport - Youth",
-              "latlng": "40.62681,-74.03808",
-              "location": "Fort Hamilton Athletic Field (Ft. Hamilton HS): Football-01 ,Fort Hamilton Athletic Field (Ft. Hamilton HS): Softball-02 ,Fort Hamilton Athletic Field (Ft. Hamilton HS): Baseball-01",
-              "source_event_id": "884586",
-              "title": "Football - Youth"
-            },
             {
               "borough": "Brooklyn",
               "date": "2026-06-29",
@@ -11099,9 +11066,8 @@
           "severity": "high"
         },
         {
-          "count": 9,
+          "count": 8,
           "dates": [
-            "2026-06-28",
             "2026-07-04",
             "2026-07-05",
             "2026-07-11",
@@ -11116,16 +11082,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: East Meadow ,Central Park: East Meadow Picnic Zone ,Central Park: East Meadow Clay Area ,Central Park: East Meadow North Lawn ,Central Park: Lawn Outside E 96th St Playground(Margaret Kempner",
-              "source_event_id": "884734",
-              "title": "East Meadow Closure"
-            },
             {
               "borough": "Manhattan",
               "date": "2026-07-04",
@@ -11190,6 +11146,16 @@
               "borough": "Manhattan",
               "date": "2026-07-25",
               "end_date": "2026-07-25",
+              "event_type": "Special Event",
+              "latlng": "40.77215,-73.97778",
+              "location": "Central Park: East Meadow ,Central Park: East Meadow Picnic Zone ,Central Park: East Meadow Clay Area ,Central Park: East Meadow North Lawn ,Central Park: Lawn Outside E 96th St Playground(Margaret Kempner",
+              "source_event_id": "884734",
+              "title": "East Meadow Closure"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
               "event_type": "Special Event",
               "latlng": "40.77215,-73.97778",
               "location": "Central Park: East Meadow ,Central Park: East Meadow Picnic Zone ,Central Park: East Meadow Clay Area ,Central Park: East Meadow North Lawn ,Central Park: Lawn Outside E 96th St Playground(Margaret Kempner",
@@ -11324,9 +11290,8 @@
           "severity": "high"
         },
         {
-          "count": 5,
+          "count": 4,
           "dates": [
-            "2026-06-28",
             "2026-07-05",
             "2026-07-12",
             "2026-07-19",
@@ -11337,16 +11302,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.79097,-73.98019",
-              "location": "Riverside Park: Soliders & Sailors Monument",
-              "source_event_id": "886820",
-              "title": "Summer on the Hudson Tai Chi"
-            },
             {
               "borough": "Manhattan",
               "date": "2026-07-05",
@@ -11386,40 +11341,6 @@
               "location": "Riverside Park: Soliders & Sailors Monument",
               "source_event_id": "886820",
               "title": "Summer on the Hudson Tai Chi"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-28",
-            "2026-07-26"
-          ],
-          "feed": "test_enriched",
-          "key": "886839",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.77947,-73.98899",
-              "location": "Riverside Park South: 70th Street Pier Plaza",
-              "source_event_id": "886839",
-              "title": "Summer on the Hudson Sun Gaze"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-26",
-              "end_date": "2026-07-26",
-              "event_type": "Special Event",
-              "latlng": "40.77947,-73.98899",
-              "location": "Riverside Park South: 70th Street Pier Plaza",
-              "source_event_id": "886839",
-              "title": "Summer on the Hudson Sun Gaze"
             }
           ],
           "severity": "high"
@@ -12714,9 +12635,8 @@
           "severity": "high"
         },
         {
-          "count": 3,
+          "count": 2,
           "dates": [
-            "2026-06-28",
             "2026-06-29",
             "2026-06-30"
           ],
@@ -12725,16 +12645,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.79097,-73.98019",
-              "location": "Riverside Park: Soliders & Sailors North Overlook",
-              "source_event_id": "887872",
-              "title": "Hudson Classical Theater Comapny"
-            },
             {
               "borough": "Manhattan",
               "date": "2026-06-29",
@@ -13552,9 +13462,8 @@
           "severity": "high"
         },
         {
-          "count": 30,
+          "count": 29,
           "dates": [
-            "2026-06-28",
             "2026-06-29",
             "2026-06-30",
             "2026-07-01",
@@ -13590,16 +13499,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.80449,-73.94367",
-              "location": "Marcus Garvey Park: Amphitheater",
-              "source_event_id": "890793",
-              "title": "Classical Theatre of Harlem"
-            },
             {
               "borough": "Manhattan",
               "date": "2026-06-29",
@@ -13664,6 +13563,16 @@
               "borough": "Manhattan",
               "date": "2026-07-05",
               "end_date": "2026-07-05",
+              "event_type": "Special Event",
+              "latlng": "40.80449,-73.94367",
+              "location": "Marcus Garvey Park: Amphitheater",
+              "source_event_id": "890793",
+              "title": "Classical Theatre of Harlem"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-06",
+              "end_date": "2026-07-06",
               "event_type": "Special Event",
               "latlng": "40.80449,-73.94367",
               "location": "Marcus Garvey Park: Amphitheater",
@@ -15379,9 +15288,8 @@
           "severity": "high"
         },
         {
-          "count": 30,
+          "count": 29,
           "dates": [
-            "2026-06-28",
             "2026-06-29",
             "2026-06-30",
             "2026-07-01",
@@ -15419,16 +15327,6 @@
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.66138,-73.96963",
-              "location": "Prospect Park: 15th Street Lawn South",
-              "source_event_id": "893090",
-              "title": "SSS PPP Summer 2026"
-            },
-            {
-              "borough": "Brooklyn",
               "date": "2026-06-29",
               "end_date": "2026-06-29",
               "event_type": "Special Event",
@@ -15496,14 +15394,23 @@
               "location": "Prospect Park: 15th Street Lawn South",
               "source_event_id": "893090",
               "title": "SSS PPP Summer 2026"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-06",
+              "end_date": "2026-07-06",
+              "event_type": "Special Event",
+              "latlng": "40.66138,-73.96963",
+              "location": "Prospect Park: 15th Street Lawn South",
+              "source_event_id": "893090",
+              "title": "SSS PPP Summer 2026"
             }
           ],
           "severity": "high"
         },
         {
-          "count": 30,
+          "count": 29,
           "dates": [
-            "2026-06-28",
             "2026-06-29",
             "2026-06-30",
             "2026-07-01",
@@ -15541,16 +15448,6 @@
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.66138,-73.96963",
-              "location": "Prospect Park: Nellie's Lawn",
-              "source_event_id": "893103",
-              "title": "SSS PNL Summer 2026"
-            },
-            {
-              "borough": "Brooklyn",
               "date": "2026-06-29",
               "end_date": "2026-06-29",
               "event_type": "Special Event",
@@ -15613,6 +15510,16 @@
               "borough": "Brooklyn",
               "date": "2026-07-05",
               "end_date": "2026-07-05",
+              "event_type": "Special Event",
+              "latlng": "40.66138,-73.96963",
+              "location": "Prospect Park: Nellie's Lawn",
+              "source_event_id": "893103",
+              "title": "SSS PNL Summer 2026"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-06",
+              "end_date": "2026-07-06",
               "event_type": "Special Event",
               "latlng": "40.66138,-73.96963",
               "location": "Prospect Park: Nellie's Lawn",
@@ -16026,9 +15933,8 @@
           "severity": "high"
         },
         {
-          "count": 5,
+          "count": 4,
           "dates": [
-            "2026-06-28",
             "2026-07-05",
             "2026-07-12",
             "2026-07-19",
@@ -16039,16 +15945,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Farmers Market",
-              "latlng": "40.66991,-73.97907",
-              "location": "4 STREET between 5 AVENUE and DEAD END",
-              "source_event_id": "893705",
-              "title": "Down to Earth Park Slope Farmers Market"
-            },
             {
               "borough": "Brooklyn",
               "date": "2026-07-05",
@@ -16149,9 +16045,8 @@
           "severity": "high"
         },
         {
-          "count": 31,
+          "count": 30,
           "dates": [
-            "2026-06-28",
             "2026-06-29",
             "2026-06-30",
             "2026-07-01",
@@ -16188,16 +16083,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: Bethesda Fountain Terrace",
-              "source_event_id": "895600",
-              "title": "closed"
-            },
             {
               "borough": "Manhattan",
               "date": "2026-06-29",
@@ -16262,6 +16147,16 @@
               "borough": "Manhattan",
               "date": "2026-07-05",
               "end_date": "2026-07-05",
+              "event_type": "Special Event",
+              "latlng": "40.77215,-73.97778",
+              "location": "Central Park: Bethesda Fountain Terrace",
+              "source_event_id": "895600",
+              "title": "closed"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-06",
+              "end_date": "2026-07-06",
               "event_type": "Special Event",
               "latlng": "40.77215,-73.97778",
               "location": "Central Park: Bethesda Fountain Terrace",
@@ -16362,9 +16257,8 @@
           "severity": "high"
         },
         {
-          "count": 3,
+          "count": 2,
           "dates": [
-            "2026-06-28",
             "2026-06-29",
             "2026-06-30"
           ],
@@ -16373,16 +16267,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.58469,-73.99516",
-              "location": "Calvert Vaux Park: Hobby Field",
-              "source_event_id": "898284",
-              "title": "Model Helicopter Flying"
-            },
             {
               "borough": "Brooklyn",
               "date": "2026-06-29",
@@ -16979,9 +16863,8 @@
           "severity": "high"
         },
         {
-          "count": 5,
+          "count": 4,
           "dates": [
-            "2026-06-28",
             "2026-07-05",
             "2026-07-12",
             "2026-07-19",
@@ -16992,16 +16875,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Queens",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Farmers Market",
-              "latlng": "40.71893,-73.87561",
-              "location": "79 STREET between NORTHERN BOULEVARD and 34 AVENUE",
-              "source_event_id": "898910",
-              "title": "Jackson Heights Greenmarket Sunday"
-            },
             {
               "borough": "Queens",
               "date": "2026-07-05",
@@ -17102,9 +16975,8 @@
           "severity": "high"
         },
         {
-          "count": 5,
+          "count": 4,
           "dates": [
-            "2026-06-28",
             "2026-07-05",
             "2026-07-12",
             "2026-07-19",
@@ -17115,16 +16987,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Queens",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Farmers Market",
-              "latlng": "40.72708,-73.85515",
-              "location": "QUEENS BOULEVARD between 69 ROAD and 70 AVENUE",
-              "source_event_id": "898918",
-              "title": "Forest Hills Greenmarket Sunday"
-            },
             {
               "borough": "Queens",
               "date": "2026-07-05",
@@ -17169,9 +17031,8 @@
           "severity": "high"
         },
         {
-          "count": 9,
+          "count": 8,
           "dates": [
-            "2026-06-28",
             "2026-07-02",
             "2026-07-05",
             "2026-07-09",
@@ -17186,16 +17047,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Farmers Market",
-              "latlng": "40.80250,-73.95005",
-              "location": "BROADWAY between WEST  113 STREET and WEST  116 STREET",
-              "source_event_id": "898922",
-              "title": "Columbia Thursday Sunday Greenmarket"
-            },
             {
               "borough": "Manhattan",
               "date": "2026-07-02",
@@ -17260,6 +17111,16 @@
               "borough": "Manhattan",
               "date": "2026-07-23",
               "end_date": "2026-07-23",
+              "event_type": "Farmers Market",
+              "latlng": "40.80250,-73.95005",
+              "location": "BROADWAY between WEST  113 STREET and WEST  116 STREET",
+              "source_event_id": "898922",
+              "title": "Columbia Thursday Sunday Greenmarket"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
               "event_type": "Farmers Market",
               "latlng": "40.80250,-73.95005",
               "location": "BROADWAY between WEST  113 STREET and WEST  116 STREET",
@@ -17382,9 +17243,8 @@
           "severity": "high"
         },
         {
-          "count": 5,
+          "count": 4,
           "dates": [
-            "2026-06-28",
             "2026-07-05",
             "2026-07-12",
             "2026-07-19",
@@ -17395,16 +17255,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Farmers Market",
-              "latlng": "40.64035,-73.96603",
-              "location": "CORTELYOU ROAD between RUGBY ROAD and ARGYLE ROAD",
-              "source_event_id": "898937",
-              "title": "Cortelyou Greenmarket Sunday"
-            },
             {
               "borough": "Brooklyn",
               "date": "2026-07-05",
@@ -17447,15 +17297,71 @@
             }
           ],
           "severity": "high"
+        },
+        {
+          "count": 4,
+          "dates": [
+            "2026-07-05",
+            "2026-07-12",
+            "2026-07-19",
+            "2026-07-26"
+          ],
+          "feed": "test_enriched",
+          "key": "898942",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-05",
+              "end_date": "2026-07-05",
+              "event_type": "Farmers Market",
+              "latlng": "40.68107,-73.99551",
+              "location": "CARROLL STREET between SMITH STREET and COURT STREET",
+              "source_event_id": "898942",
+              "title": "Carroll Gardens Greenmarket Sunday"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-12",
+              "end_date": "2026-07-12",
+              "event_type": "Farmers Market",
+              "latlng": "40.68107,-73.99551",
+              "location": "CARROLL STREET between SMITH STREET and COURT STREET",
+              "source_event_id": "898942",
+              "title": "Carroll Gardens Greenmarket Sunday"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-19",
+              "end_date": "2026-07-19",
+              "event_type": "Farmers Market",
+              "latlng": "40.68107,-73.99551",
+              "location": "CARROLL STREET between SMITH STREET and COURT STREET",
+              "source_event_id": "898942",
+              "title": "Carroll Gardens Greenmarket Sunday"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
+              "event_type": "Farmers Market",
+              "latlng": "40.68107,-73.99551",
+              "location": "CARROLL STREET between SMITH STREET and COURT STREET",
+              "source_event_id": "898942",
+              "title": "Carroll Gardens Greenmarket Sunday"
+            }
+          ],
+          "severity": "high"
         }
       ],
-      "issues_total": 4052,
+      "issues_total": 4019,
       "medium_issues": 1,
-      "rows_loaded": 32253
+      "rows_loaded": 30841
     },
     {
       "feed": "staged",
-      "high_issues": 3766,
+      "high_issues": 3733,
       "issues": [
         {
           "count": 2,
@@ -17492,9 +17398,8 @@
           "severity": "high"
         },
         {
-          "count": 5,
+          "count": 4,
           "dates": [
-            "2026-06-28",
             "2026-07-11",
             "2026-07-12",
             "2026-07-25",
@@ -17507,16 +17412,6 @@
           "samples": [
             {
               "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.80449,-73.94367",
-              "location": "Marcus Garvey Park: Amphitheater",
-              "source_event_id": "881295",
-              "title": "2026 No Amplified Sound"
-            },
-            {
-              "borough": "Manhattan",
               "date": "2026-07-11",
               "end_date": "2026-07-11",
               "event_type": "Special Event",
@@ -17559,9 +17454,8 @@
           "severity": "high"
         },
         {
-          "count": 5,
+          "count": 4,
           "dates": [
-            "2026-06-28",
             "2026-07-11",
             "2026-07-12",
             "2026-07-25",
@@ -17574,16 +17468,6 @@
           "samples": [
             {
               "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.82659,-73.94113",
-              "location": "Jackie Robinson Park: Bandshell",
-              "source_event_id": "881297",
-              "title": "2026 No Amplified Sound"
-            },
-            {
-              "borough": "Manhattan",
               "date": "2026-07-11",
               "end_date": "2026-07-11",
               "event_type": "Special Event",
@@ -17626,9 +17510,8 @@
           "severity": "high"
         },
         {
-          "count": 3,
+          "count": 2,
           "dates": [
-            "2026-06-28",
             "2026-06-29",
             "2026-06-30"
           ],
@@ -17637,16 +17520,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Sport - Youth",
-              "latlng": "40.62681,-74.03808",
-              "location": "Fort Hamilton Athletic Field (Ft. Hamilton HS): Football-01 ,Fort Hamilton Athletic Field (Ft. Hamilton HS): Softball-02 ,Fort Hamilton Athletic Field (Ft. Hamilton HS): Baseball-01",
-              "source_event_id": "884586",
-              "title": "Football - Youth"
-            },
             {
               "borough": "Brooklyn",
               "date": "2026-06-29",
@@ -17727,9 +17600,8 @@
           "severity": "high"
         },
         {
-          "count": 9,
+          "count": 8,
           "dates": [
-            "2026-06-28",
             "2026-07-04",
             "2026-07-05",
             "2026-07-11",
@@ -17744,16 +17616,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: East Meadow ,Central Park: East Meadow Picnic Zone ,Central Park: East Meadow Clay Area ,Central Park: East Meadow North Lawn ,Central Park: Lawn Outside E 96th St Playground(Margaret Kempner",
-              "source_event_id": "884734",
-              "title": "East Meadow Closure"
-            },
             {
               "borough": "Manhattan",
               "date": "2026-07-04",
@@ -17818,6 +17680,16 @@
               "borough": "Manhattan",
               "date": "2026-07-25",
               "end_date": "2026-07-25",
+              "event_type": "Special Event",
+              "latlng": "40.77215,-73.97778",
+              "location": "Central Park: East Meadow ,Central Park: East Meadow Picnic Zone ,Central Park: East Meadow Clay Area ,Central Park: East Meadow North Lawn ,Central Park: Lawn Outside E 96th St Playground(Margaret Kempner",
+              "source_event_id": "884734",
+              "title": "East Meadow Closure"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
               "event_type": "Special Event",
               "latlng": "40.77215,-73.97778",
               "location": "Central Park: East Meadow ,Central Park: East Meadow Picnic Zone ,Central Park: East Meadow Clay Area ,Central Park: East Meadow North Lawn ,Central Park: Lawn Outside E 96th St Playground(Margaret Kempner",
@@ -17918,9 +17790,8 @@
           "severity": "high"
         },
         {
-          "count": 5,
+          "count": 4,
           "dates": [
-            "2026-06-28",
             "2026-07-05",
             "2026-07-12",
             "2026-07-19",
@@ -17931,16 +17802,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.79097,-73.98019",
-              "location": "Riverside Park: Soliders & Sailors Monument",
-              "source_event_id": "886820",
-              "title": "Summer on the Hudson Tai Chi"
-            },
             {
               "borough": "Manhattan",
               "date": "2026-07-05",
@@ -17980,40 +17841,6 @@
               "location": "Riverside Park: Soliders & Sailors Monument",
               "source_event_id": "886820",
               "title": "Summer on the Hudson Tai Chi"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-28",
-            "2026-07-26"
-          ],
-          "feed": "staged",
-          "key": "886839",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.77947,-73.98899",
-              "location": "Riverside Park South: 70th Street Pier Plaza",
-              "source_event_id": "886839",
-              "title": "Summer on the Hudson Sun Gaze"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-26",
-              "end_date": "2026-07-26",
-              "event_type": "Special Event",
-              "latlng": "40.77947,-73.98899",
-              "location": "Riverside Park South: 70th Street Pier Plaza",
-              "source_event_id": "886839",
-              "title": "Summer on the Hudson Sun Gaze"
             }
           ],
           "severity": "high"
@@ -19252,9 +19079,8 @@
           "severity": "high"
         },
         {
-          "count": 3,
+          "count": 2,
           "dates": [
-            "2026-06-28",
             "2026-06-29",
             "2026-06-30"
           ],
@@ -19263,16 +19089,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.79097,-73.98019",
-              "location": "Riverside Park: Soliders & Sailors North Overlook",
-              "source_event_id": "887872",
-              "title": "Hudson Classical Theater Comapny"
-            },
             {
               "borough": "Manhattan",
               "date": "2026-06-29",
@@ -19989,9 +19805,8 @@
           "severity": "high"
         },
         {
-          "count": 30,
+          "count": 29,
           "dates": [
-            "2026-06-28",
             "2026-06-29",
             "2026-06-30",
             "2026-07-01",
@@ -20027,16 +19842,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.80449,-73.94367",
-              "location": "Marcus Garvey Park: Amphitheater",
-              "source_event_id": "890793",
-              "title": "Classical Theatre of Harlem"
-            },
             {
               "borough": "Manhattan",
               "date": "2026-06-29",
@@ -20101,6 +19906,16 @@
               "borough": "Manhattan",
               "date": "2026-07-05",
               "end_date": "2026-07-05",
+              "event_type": "Special Event",
+              "latlng": "40.80449,-73.94367",
+              "location": "Marcus Garvey Park: Amphitheater",
+              "source_event_id": "890793",
+              "title": "Classical Theatre of Harlem"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-06",
+              "end_date": "2026-07-06",
               "event_type": "Special Event",
               "latlng": "40.80449,-73.94367",
               "location": "Marcus Garvey Park: Amphitheater",
@@ -21540,9 +21355,8 @@
           "severity": "high"
         },
         {
-          "count": 30,
+          "count": 29,
           "dates": [
-            "2026-06-28",
             "2026-06-29",
             "2026-06-30",
             "2026-07-01",
@@ -21580,16 +21394,6 @@
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.66138,-73.96963",
-              "location": "Prospect Park: 15th Street Lawn South",
-              "source_event_id": "893090",
-              "title": "SSS PPP Summer 2026"
-            },
-            {
-              "borough": "Brooklyn",
               "date": "2026-06-29",
               "end_date": "2026-06-29",
               "event_type": "Special Event",
@@ -21657,14 +21461,23 @@
               "location": "Prospect Park: 15th Street Lawn South",
               "source_event_id": "893090",
               "title": "SSS PPP Summer 2026"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-06",
+              "end_date": "2026-07-06",
+              "event_type": "Special Event",
+              "latlng": "40.66138,-73.96963",
+              "location": "Prospect Park: 15th Street Lawn South",
+              "source_event_id": "893090",
+              "title": "SSS PPP Summer 2026"
             }
           ],
           "severity": "high"
         },
         {
-          "count": 30,
+          "count": 29,
           "dates": [
-            "2026-06-28",
             "2026-06-29",
             "2026-06-30",
             "2026-07-01",
@@ -21702,16 +21515,6 @@
           "samples": [
             {
               "borough": "Brooklyn",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.66138,-73.96963",
-              "location": "Prospect Park: Nellie's Lawn",
-              "source_event_id": "893103",
-              "title": "SSS PNL Summer 2026"
-            },
-            {
-              "borough": "Brooklyn",
               "date": "2026-06-29",
               "end_date": "2026-06-29",
               "event_type": "Special Event",
@@ -21774,6 +21577,16 @@
               "borough": "Brooklyn",
               "date": "2026-07-05",
               "end_date": "2026-07-05",
+              "event_type": "Special Event",
+              "latlng": "40.66138,-73.96963",
+              "location": "Prospect Park: Nellie's Lawn",
+              "source_event_id": "893103",
+              "title": "SSS PNL Summer 2026"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-06",
+              "end_date": "2026-07-06",
               "event_type": "Special Event",
               "latlng": "40.66138,-73.96963",
               "location": "Prospect Park: Nellie's Lawn",
@@ -22153,9 +21966,8 @@
           "severity": "high"
         },
         {
-          "count": 31,
+          "count": 30,
           "dates": [
-            "2026-06-28",
             "2026-06-29",
             "2026-06-30",
             "2026-07-01",
@@ -22192,16 +22004,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.77215,-73.97778",
-              "location": "Central Park: Bethesda Fountain Terrace",
-              "source_event_id": "895600",
-              "title": "closed"
-            },
             {
               "borough": "Manhattan",
               "date": "2026-06-29",
@@ -22266,6 +22068,16 @@
               "borough": "Manhattan",
               "date": "2026-07-05",
               "end_date": "2026-07-05",
+              "event_type": "Special Event",
+              "latlng": "40.77215,-73.97778",
+              "location": "Central Park: Bethesda Fountain Terrace",
+              "source_event_id": "895600",
+              "title": "closed"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-06",
+              "end_date": "2026-07-06",
               "event_type": "Special Event",
               "latlng": "40.77215,-73.97778",
               "location": "Central Park: Bethesda Fountain Terrace",
@@ -22366,9 +22178,8 @@
           "severity": "high"
         },
         {
-          "count": 3,
+          "count": 2,
           "dates": [
-            "2026-06-28",
             "2026-06-29",
             "2026-06-30"
           ],
@@ -22377,16 +22188,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Special Event",
-              "latlng": "40.58469,-73.99516",
-              "location": "Calvert Vaux Park: Hobby Field",
-              "source_event_id": "898284",
-              "title": "Model Helicopter Flying"
-            },
             {
               "borough": "Brooklyn",
               "date": "2026-06-29",
@@ -22983,9 +22784,8 @@
           "severity": "high"
         },
         {
-          "count": 5,
+          "count": 4,
           "dates": [
-            "2026-06-28",
             "2026-07-05",
             "2026-07-12",
             "2026-07-19",
@@ -22998,16 +22798,6 @@
           "samples": [
             {
               "borough": "Queens",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Farmers Market",
-              "latlng": "40.71893,-73.87561",
-              "location": "79 STREET between NORTHERN BOULEVARD and 34 AVENUE",
-              "source_event_id": "898910",
-              "title": "Jackson Heights Greenmarket Sunday"
-            },
-            {
-              "borough": "Queens",
               "date": "2026-07-05",
               "end_date": "2026-07-05",
               "event_type": "Farmers Market",
@@ -23050,9 +22840,8 @@
           "severity": "high"
         },
         {
-          "count": 5,
+          "count": 4,
           "dates": [
-            "2026-06-28",
             "2026-07-05",
             "2026-07-12",
             "2026-07-19",
@@ -23065,16 +22854,6 @@
           "samples": [
             {
               "borough": "Queens",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Farmers Market",
-              "latlng": "40.72708,-73.85515",
-              "location": "QUEENS BOULEVARD between 69 ROAD and 70 AVENUE",
-              "source_event_id": "898918",
-              "title": "Forest Hills Greenmarket Sunday"
-            },
-            {
-              "borough": "Queens",
               "date": "2026-07-05",
               "end_date": "2026-07-05",
               "event_type": "Farmers Market",
@@ -23117,9 +22896,8 @@
           "severity": "high"
         },
         {
-          "count": 9,
+          "count": 8,
           "dates": [
-            "2026-06-28",
             "2026-07-02",
             "2026-07-05",
             "2026-07-09",
@@ -23134,16 +22912,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Farmers Market",
-              "latlng": "40.80250,-73.95005",
-              "location": "BROADWAY between WEST  113 STREET and WEST  116 STREET",
-              "source_event_id": "898922",
-              "title": "Columbia Thursday Sunday Greenmarket"
-            },
             {
               "borough": "Manhattan",
               "date": "2026-07-02",
@@ -23208,6 +22976,16 @@
               "borough": "Manhattan",
               "date": "2026-07-23",
               "end_date": "2026-07-23",
+              "event_type": "Farmers Market",
+              "latlng": "40.80250,-73.95005",
+              "location": "BROADWAY between WEST  113 STREET and WEST  116 STREET",
+              "source_event_id": "898922",
+              "title": "Columbia Thursday Sunday Greenmarket"
+            },
+            {
+              "borough": "Manhattan",
+              "date": "2026-07-26",
+              "end_date": "2026-07-26",
               "event_type": "Farmers Market",
               "latlng": "40.80250,-73.95005",
               "location": "BROADWAY between WEST  113 STREET and WEST  116 STREET",
@@ -23330,9 +23108,8 @@
           "severity": "high"
         },
         {
-          "count": 5,
+          "count": 4,
           "dates": [
-            "2026-06-28",
             "2026-07-05",
             "2026-07-12",
             "2026-07-19",
@@ -23343,16 +23120,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Farmers Market",
-              "latlng": "40.64035,-73.96603",
-              "location": "CORTELYOU ROAD between RUGBY ROAD and ARGYLE ROAD",
-              "source_event_id": "898937",
-              "title": "Cortelyou Greenmarket Sunday"
-            },
             {
               "borough": "Brooklyn",
               "date": "2026-07-05",
@@ -23397,9 +23164,8 @@
           "severity": "high"
         },
         {
-          "count": 5,
+          "count": 4,
           "dates": [
-            "2026-06-28",
             "2026-07-05",
             "2026-07-12",
             "2026-07-19",
@@ -23410,16 +23176,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Farmers Market",
-              "latlng": "40.68107,-73.99551",
-              "location": "CARROLL STREET between SMITH STREET and COURT STREET",
-              "source_event_id": "898942",
-              "title": "Carroll Gardens Greenmarket Sunday"
-            },
             {
               "borough": "Brooklyn",
               "date": "2026-07-05",
@@ -23729,40 +23485,6 @@
               "location": "Crotona Park: Amphitheater",
               "source_event_id": "899568",
               "title": "Crotona Park Jams"
-            }
-          ],
-          "severity": "high"
-        },
-        {
-          "count": 2,
-          "dates": [
-            "2026-06-28",
-            "2026-07-18"
-          ],
-          "feed": "staged",
-          "key": "899921",
-          "kind": "same_source_event_id_multiple_dates",
-          "note": "Same source event ID appears on more than one date.",
-          "samples": [
-            {
-              "borough": "Manhattan",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Sport - Adult",
-              "latlng": "40.79553,-73.92176",
-              "location": "Randall's Island Park: Wards Meadow Fields-Soccer-73",
-              "source_event_id": "899921",
-              "title": "Soccer -Regulation"
-            },
-            {
-              "borough": "Manhattan",
-              "date": "2026-07-18",
-              "end_date": "2026-07-18",
-              "event_type": "Sport - Adult",
-              "latlng": "40.79553,-73.92176",
-              "location": "Randall's Island Park: Wards Meadow Fields-Soccer-73",
-              "source_event_id": "899921",
-              "title": "Soccer -Regulation"
             }
           ],
           "severity": "high"
@@ -24160,9 +23882,8 @@
           "severity": "high"
         },
         {
-          "count": 18,
+          "count": 17,
           "dates": [
-            "2026-06-28",
             "2026-06-29",
             "2026-06-30",
             "2026-07-04",
@@ -24186,16 +23907,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Sport - Youth",
-              "latlng": "40.70165,-73.93293",
-              "location": "Green Central Knoll: Softball-01",
-              "source_event_id": "899937",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
             {
               "borough": "Brooklyn",
               "date": "2026-06-29",
@@ -24265,14 +23976,23 @@
               "location": "Green Central Knoll: Softball-01",
               "source_event_id": "899937",
               "title": "Baseball - 12 and Under (Little League)"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-12",
+              "end_date": "2026-07-12",
+              "event_type": "Sport - Youth",
+              "latlng": "40.70165,-73.93293",
+              "location": "Green Central Knoll: Softball-01",
+              "source_event_id": "899937",
+              "title": "Baseball - 12 and Under (Little League)"
             }
           ],
           "severity": "high"
         },
         {
-          "count": 26,
+          "count": 25,
           "dates": [
-            "2026-06-28",
             "2026-06-29",
             "2026-06-30",
             "2026-07-01",
@@ -24304,16 +24024,6 @@
           "kind": "same_source_event_id_multiple_dates",
           "note": "Same source event ID appears on more than one date.",
           "samples": [
-            {
-              "borough": "Brooklyn",
-              "date": "2026-06-28",
-              "end_date": "2026-06-28",
-              "event_type": "Sport - Youth",
-              "latlng": "40.69757,-73.91678",
-              "location": "Hope Ballfields: Softball-01",
-              "source_event_id": "899938",
-              "title": "Baseball - 12 and Under (Little League)"
-            },
             {
               "borough": "Brooklyn",
               "date": "2026-06-29",
@@ -24383,23 +24093,145 @@
               "location": "Hope Ballfields: Softball-01",
               "source_event_id": "899938",
               "title": "Baseball - 12 and Under (Little League)"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-07",
+              "end_date": "2026-07-07",
+              "event_type": "Sport - Youth",
+              "latlng": "40.69757,-73.91678",
+              "location": "Hope Ballfields: Softball-01",
+              "source_event_id": "899938",
+              "title": "Baseball - 12 and Under (Little League)"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 4,
+          "dates": [
+            "2026-07-04",
+            "2026-07-11",
+            "2026-07-18",
+            "2026-07-25"
+          ],
+          "feed": "staged",
+          "key": "899940",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-04",
+              "end_date": "2026-07-04",
+              "event_type": "Sport - Adult",
+              "latlng": "40.58470,-73.93854",
+              "location": "Lincoln Terrace / (Arthur S. Somers Park): Tennis-11",
+              "source_event_id": "899940",
+              "title": "Tennis"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-11",
+              "end_date": "2026-07-11",
+              "event_type": "Sport - Adult",
+              "latlng": "40.58470,-73.93854",
+              "location": "Lincoln Terrace / (Arthur S. Somers Park): Tennis-11",
+              "source_event_id": "899940",
+              "title": "Tennis"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-18",
+              "end_date": "2026-07-18",
+              "event_type": "Sport - Adult",
+              "latlng": "40.58470,-73.93854",
+              "location": "Lincoln Terrace / (Arthur S. Somers Park): Tennis-11",
+              "source_event_id": "899940",
+              "title": "Tennis"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-25",
+              "end_date": "2026-07-25",
+              "event_type": "Sport - Adult",
+              "latlng": "40.58470,-73.93854",
+              "location": "Lincoln Terrace / (Arthur S. Somers Park): Tennis-11",
+              "source_event_id": "899940",
+              "title": "Tennis"
+            }
+          ],
+          "severity": "high"
+        },
+        {
+          "count": 4,
+          "dates": [
+            "2026-07-04",
+            "2026-07-11",
+            "2026-07-18",
+            "2026-07-25"
+          ],
+          "feed": "staged",
+          "key": "899941",
+          "kind": "same_source_event_id_multiple_dates",
+          "note": "Same source event ID appears on more than one date.",
+          "samples": [
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-04",
+              "end_date": "2026-07-04",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72022,-73.95065",
+              "location": "McCarren Park: PO Gilroy Field-Baseball-03",
+              "source_event_id": "899941",
+              "title": "Baseball - 13 and Older (Little League)"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-11",
+              "end_date": "2026-07-11",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72022,-73.95065",
+              "location": "McCarren Park: PO Gilroy Field-Baseball-03",
+              "source_event_id": "899941",
+              "title": "Baseball - 13 and Older (Little League)"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-18",
+              "end_date": "2026-07-18",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72022,-73.95065",
+              "location": "McCarren Park: PO Gilroy Field-Baseball-03",
+              "source_event_id": "899941",
+              "title": "Baseball - 13 and Older (Little League)"
+            },
+            {
+              "borough": "Brooklyn",
+              "date": "2026-07-25",
+              "end_date": "2026-07-25",
+              "event_type": "Sport - Youth",
+              "latlng": "40.72022,-73.95065",
+              "location": "McCarren Park: PO Gilroy Field-Baseball-03",
+              "source_event_id": "899941",
+              "title": "Baseball - 13 and Older (Little League)"
             }
           ],
           "severity": "high"
         }
       ],
-      "issues_total": 3767,
+      "issues_total": 3734,
       "medium_issues": 1,
-      "rows_loaded": 30042
+      "rows_loaded": 28662
     }
   ],
-  "generated_at_utc": "2026-06-28T23:19:10.485412+00:00",
+  "generated_at_utc": "2026-06-29T04:58:54.689421+00:00",
   "production_feeds_modified": false,
   "summary": {
     "feeds_checked": 4,
-    "high_issues": 8750,
-    "issues_total": 11197,
+    "high_issues": 8684,
+    "issues_total": 11131,
     "medium_issues": 2447,
-    "rows_checked": 75087
+    "rows_checked": 72295
   }
 }
