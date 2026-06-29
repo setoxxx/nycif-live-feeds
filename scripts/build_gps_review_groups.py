@@ -8,6 +8,7 @@ Purpose:
 - Read data/gps_needs_review_events.json.
 - Group repeated unresolved locations.
 - Identify high-impact location groups worth geocoding first.
+- Produce readable, compact grouping artifacts for QA.
 - Produce a safe proposal queue for manual/API geocoding.
 
 Outputs:
@@ -32,6 +33,7 @@ GPS_REVIEW_PATH = DATA_DIR / "gps_needs_review_events.json"
 GROUP_REPORT_PATH = DATA_DIR / "gps_review_group_report.json"
 LOCATION_GROUPS_PATH = DATA_DIR / "gps_review_location_groups.json"
 GEOCODING_QUEUE_PATH = DATA_DIR / "gps_review_geocoding_queue.json"
+MAX_SAMPLE_EVENTS_PER_GROUP = 3
 
 
 def load_json_file(path: Path, default: Any) -> Any:
@@ -112,6 +114,21 @@ def likely_geocoder_query(row: dict[str, Any]) -> str:
     return f"{loc}, {b}, New York, NY" if b else f"{loc}, New York, NY"
 
 
+def simplified_place_name(text: str) -> str:
+    first = text.split(",")[0].strip()
+    if ":" in first:
+        first = first.split(":", 1)[0].strip()
+    return first
+
+
+def simplified_geocoder_query(row: dict[str, Any]) -> str:
+    place = simplified_place_name(location(row))
+    b = borough(row)
+    if not place:
+        return ""
+    return f"{place}, {b}, New York, NY" if b else f"{place}, New York, NY"
+
+
 def location_complexity(text: str) -> str:
     if not text:
         return "missing_location"
@@ -152,46 +169,47 @@ def compact_event(row: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def build_group_record(key: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
+    example = rows[0]
+    titles = Counter(title(row) for row in rows if title(row))
+    event_types = Counter(event_type(row) for row in rows if event_type(row))
+    agencies = Counter(event_agency(row) for row in rows if event_agency(row))
+    dates = sorted({date_key(row.get("date") or row.get("start_date_time")) for row in rows if date_key(row.get("date") or row.get("start_date_time"))})
+    source_ids = sorted({source_event_id(row) for row in rows if source_event_id(row)})
+    cemsid_values = sorted({cid for row in rows for cid in cemsids(row)})
+    complexity = location_complexity(location(example))
+    hint = confidence_hint(example)
+    return {
+        "group_key": key,
+        "event_count": len(rows),
+        "unique_source_event_ids": len(source_ids),
+        "borough": borough(example),
+        "display_location": location(example),
+        "location_complexity": complexity,
+        "confidence_hint": hint,
+        "geocoder_query": likely_geocoder_query(example),
+        "simplified_geocoder_query": simplified_geocoder_query(example),
+        "top_titles": titles.most_common(5),
+        "event_types": event_types.most_common(5),
+        "event_agencies": agencies.most_common(5),
+        "first_date": dates[0] if dates else "",
+        "last_date": dates[-1] if dates else "",
+        "date_count": len(dates),
+        "source_event_ids_sample": source_ids[:10],
+        "source_cemsid_sample": cemsid_values[:10],
+        "sample_events": [compact_event(row) for row in rows[:MAX_SAMPLE_EVENTS_PER_GROUP]],
+        "sample_events_truncated": len(rows) > MAX_SAMPLE_EVENTS_PER_GROUP,
+        "publish_status": "not_geocoded_not_public",
+    }
+
+
 def main() -> int:
     review_rows = rows_from_payload(load_json_file(GPS_REVIEW_PATH, {}))
     groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in review_rows:
         groups[group_key(row)].append(row)
 
-    grouped_rows: list[dict[str, Any]] = []
-    for key, rows in groups.items():
-        example = rows[0]
-        titles = Counter(title(row) for row in rows if title(row))
-        event_types = Counter(event_type(row) for row in rows if event_type(row))
-        agencies = Counter(event_agency(row) for row in rows if event_agency(row))
-        dates = sorted({date_key(row.get("date") or row.get("start_date_time")) for row in rows if date_key(row.get("date") or row.get("start_date_time"))})
-        source_ids = sorted({source_event_id(row) for row in rows if source_event_id(row)})
-        cemsid_values = sorted({cid for row in rows for cid in cemsids(row)})
-        sample = [compact_event(row) for row in rows[:10]]
-        query = likely_geocoder_query(example)
-        complexity = location_complexity(location(example))
-        hint = confidence_hint(example)
-        grouped_rows.append({
-            "group_key": key,
-            "event_count": len(rows),
-            "unique_source_event_ids": len(source_ids),
-            "borough": borough(example),
-            "display_location": location(example),
-            "location_complexity": complexity,
-            "confidence_hint": hint,
-            "geocoder_query": query,
-            "top_titles": titles.most_common(8),
-            "event_types": event_types.most_common(8),
-            "event_agencies": agencies.most_common(8),
-            "first_date": dates[0] if dates else "",
-            "last_date": dates[-1] if dates else "",
-            "date_count": len(dates),
-            "source_event_ids_sample": source_ids[:20],
-            "source_cemsid_sample": cemsid_values[:20],
-            "sample_events": sample,
-            "publish_status": "not_geocoded_not_public",
-        })
-
+    grouped_rows = [build_group_record(key, rows) for key, rows in groups.items()]
     grouped_rows.sort(key=lambda row: (row["event_count"], row["unique_source_event_ids"]), reverse=True)
 
     queue = []
@@ -204,6 +222,7 @@ def main() -> int:
                 "borough": row["borough"],
                 "display_location": row["display_location"],
                 "geocoder_query": row["geocoder_query"],
+                "simplified_geocoder_query": row["simplified_geocoder_query"],
                 "confidence_hint": row["confidence_hint"],
                 "location_complexity": row["location_complexity"],
                 "proposed_lat": None,
@@ -218,8 +237,9 @@ def main() -> int:
     complexity_counts = Counter(row["location_complexity"] for row in grouped_rows)
     confidence_counts = Counter(row["confidence_hint"] for row in grouped_rows)
     borough_counts = Counter(row["borough"] for row in grouped_rows)
+    generated_at = datetime.now(timezone.utc).isoformat()
     report = {
-        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "generated_at_utc": generated_at,
         "phase": "phase_2_controlled_gps_review",
         "input_review_events": len(review_rows),
         "unique_location_groups": len(grouped_rows),
@@ -230,12 +250,14 @@ def main() -> int:
         "borough_group_counts": dict(borough_counts),
         "public_map_modified": False,
         "location_cache_modified": False,
+        "location_groups_readable_compact": True,
+        "sample_events_per_group_limit": MAX_SAMPLE_EVENTS_PER_GROUP,
         "promotion_rule": "Only rows with proposed coordinates, named geocoder source, confidence score, and manual_review_status=approved may be promoted by a separate promotion script.",
     }
 
     save_json_file(GROUP_REPORT_PATH, report)
-    save_json_file(LOCATION_GROUPS_PATH, {"generated_at_utc": report["generated_at_utc"], "groups": grouped_rows})
-    save_json_file(GEOCODING_QUEUE_PATH, {"generated_at_utc": report["generated_at_utc"], "queue": queue})
+    save_json_file(LOCATION_GROUPS_PATH, {"generated_at_utc": generated_at, "groups": grouped_rows})
+    save_json_file(GEOCODING_QUEUE_PATH, {"generated_at_utc": generated_at, "queue": queue})
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0
 
