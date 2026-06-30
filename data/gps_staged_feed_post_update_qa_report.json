@@ -1,23 +1,25 @@
 {
   "blocking_issues": [
-    "Post-update QA cannot pass because data/gps_staged_feed_integration_update_report.json still shows update_performed false and updated_staged_event_count 0. The required 430 staged-event update has not completed."
+    "Post-update QA cannot pass because data/gps_staged_feed_integration_update_report.json still shows update_performed false and updated_staged_event_count 0 after the workflow rerun trigger. The required 430 staged-event update has not completed."
   ],
   "conflict_count": 0,
-  "generated_at_utc": "2026-06-30T01:55:00+00:00",
+  "generated_at_utc": "2026-06-30T02:05:00+00:00",
   "input_staged_feed": "data/nycif_staged_live_events.json",
   "input_update_report": "data/gps_staged_feed_integration_update_report.json",
   "location_cache_modified": false,
-  "next_required_step": "Run or rerun the GitHub Actions workflow named GPS Staged Feed Integration Update until data/gps_staged_feed_integration_update_report.json shows qa_pass true and updated_staged_event_count 430. Then rerun post-update QA. Do not publish to the public map and do not run Phase 3A.",
-  "phase": "gps_staged_feed_post_update_qa",
+  "next_required_step": "Open GitHub Actions and confirm whether the workflow named GPS Staged Feed Integration Update ran, failed, or was skipped. If it did not run, trigger it manually from the Actions tab. If it failed, inspect the job log and patch the workflow/script. Do not publish to the public map and do not run Phase 3A.",
+  "phase": "gps_staged_feed_post_update_qa_after_rerun_trigger",
   "phase_3a_run": false,
   "promoted_cache_key_count": 25,
   "public_map_modified": false,
   "qa_pass": false,
+  "rerun_trigger_commit": "46681a7e6aa84d7ddb035e1fc088926dd0ace387",
   "skipped_count": 430,
   "staged_feed_modified": false,
   "unmatched_promoted_cache_key_count": 0,
   "update_performed": false,
   "updated_staged_event_count": 0,
+  "workflow_output_commit_observed": false,
   "validated_conditions": {
     "conflict_count_is_0": true,
     "location_cache_modified_false": true,
@@ -29,6 +31,7 @@
     "staged_feed_modified_true": false,
     "unmatched_promoted_cache_key_count_is_0": true,
     "update_performed_true": false,
-    "updated_staged_event_count_is_430": false
+    "updated_staged_event_count_is_430": false,
+    "workflow_output_commit_observed_true": false
   }
 }
