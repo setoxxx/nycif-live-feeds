@@ -47,7 +47,6 @@ def normalize(value: Any) -> str:
 
 def canonical_facility(value: Any) -> str:
     text = normalize(value)
-    # Treat Soccer-01A and Soccer-01 as the same facility family, but do not collapse 01/02/03.
     text = re.sub(r"\b(\d+)[a-z]\b", r"\1", text)
     return text
 
@@ -73,6 +72,20 @@ def row_location(row: dict[str, Any]) -> str:
     return str(row.get("display_location") or row.get("location") or row.get("event_location") or "")
 
 
+def all_event_locations(row: dict[str, Any]) -> list[str]:
+    values: list[str] = []
+    seen: set[str] = set()
+    for field in ("display_location", "location", "event_location"):
+        value = row.get(field)
+        if value:
+            text = str(value)
+            key = normalize(text)
+            if key and key not in seen:
+                values.append(text)
+                seen.add(key)
+    return values
+
+
 def unwrap_location_cache(payload: Any) -> dict[str, Any]:
     if isinstance(payload, dict) and isinstance(payload.get("entries"), dict):
         return payload["entries"]
@@ -93,31 +106,59 @@ def promoted_rows_from_report(promotion_report: dict[str, Any]) -> dict[str, dic
     return promoted
 
 
+def location_components(location: Any) -> set[str]:
+    """Extract exact facility-level components, never just the whole park/site name.
+
+    Examples:
+      St. John's Park: Buddy Keaton-Softball-01 ,St. John's Park: Buddy Keaton-Softball-02
+      -> {st john s park buddy keaton softball 01, st john s park buddy keaton softball 02}
+    """
+    text = str(location or "")
+    components: set[str] = set()
+    for part in re.split(r"\s*,\s*", text):
+        part = part.strip()
+        if not part:
+            continue
+        norm_full = canonical_facility(part)
+        if ":" in part:
+            site, facility = part.split(":", 1)
+            site_norm = normalize(site)
+            facility_norm = canonical_facility(facility)
+            if site_norm and facility_norm:
+                components.add(f"{site_norm} {facility_norm}")
+            if facility_norm:
+                components.add(facility_norm)
+        # Only allow full component if it contains a facility delimiter or an explicit non-site keyword.
+        if ":" in part or any(word in norm_full.split() for word in ("basketball", "softball", "soccer", "tennis", "handball", "track", "lawn", "lawns", "field", "area")):
+            components.add(norm_full)
+    return {component for component in components if component}
+
+
+def exact_facility_match(promoted_row: dict[str, Any], event_row: dict[str, Any]) -> bool:
+    if borough_of(promoted_row) != borough_of(event_row):
+        return False
+    promoted_components = location_components(row_location(promoted_row))
+    if not promoted_components:
+        return False
+    event_components: set[str] = set()
+    for location in all_event_locations(event_row):
+        event_components.update(location_components(location))
+    if not event_components:
+        return False
+    return bool(promoted_components & event_components)
+
+
 def cache_entry_matches_promoted(cache_row: dict[str, Any], promoted_row: dict[str, Any], promoted_key: str) -> bool:
     if borough_of(cache_row) != borough_of(promoted_row):
         return False
     cache_location = row_location(cache_row)
     promoted_location = row_location(promoted_row)
-    cache_norm = normalize(cache_location)
-    promoted_norm = normalize(promoted_location)
-    cache_canon = canonical_facility(cache_location)
-    promoted_canon = canonical_facility(promoted_location)
-    if not cache_norm or not promoted_norm:
-        return False
-
-    # Exact identity or exact promoted component match. This handles combined approved rows
-    # such as Softball-01 + Softball-02 without matching the whole park.
-    if cache_norm == promoted_norm or cache_canon == promoted_canon:
+    cache_components = location_components(cache_location)
+    promoted_components = location_components(promoted_location)
+    if cache_components and promoted_components and (cache_components & promoted_components):
         return True
-    if cache_norm in promoted_norm or promoted_norm in cache_norm:
-        return True
-    if cache_canon in promoted_canon or promoted_canon in cache_canon:
-        return True
-
-    # Stable key rebuilt from the cache entry may equal the promoted stable key.
     if stable_key(cache_row.get("borough"), cache_location) == promoted_key:
         return True
-
     return False
 
 
@@ -221,7 +262,7 @@ def main() -> int:
             return 1
 
         location_entries = unwrap_location_cache(location_cache)
-        key_to_cemsids, key_to_entries = cemsids_for_promoted_rows(location_entries, promoted)
+        key_to_cemsids, _ = cemsids_for_promoted_rows(location_entries, promoted)
         cemsid_to_keys: dict[str, set[str]] = defaultdict(set)
         for key, ids in key_to_cemsids.items():
             for cemsid in ids:
@@ -231,55 +272,65 @@ def main() -> int:
         conflicts: list[dict[str, Any]] = []
         matched_keys: set[str] = set()
         update_counts_by_key: Counter[str] = Counter()
+        match_mode_counts: Counter[str] = Counter()
 
         for event_row in staged_payload["events"]:
             if not isinstance(event_row, dict):
                 continue
-            matched_keys_for_event: set[str] = set()
+            matched_by_key: dict[str, str] = {}
+
             for cemsid in event_cemsids(event_row):
-                matched_keys_for_event.update(cemsid_to_keys.get(cemsid, set()))
-            if not matched_keys_for_event:
+                for key in cemsid_to_keys.get(cemsid, set()):
+                    matched_by_key[key] = "source_cemsid"
+
+            for key, promoted_row in promoted.items():
+                if exact_facility_match(promoted_row, event_row):
+                    matched_by_key.setdefault(key, "exact_facility")
+
+            if not matched_by_key:
                 continue
 
             coord_pairs = set()
-            for key in matched_keys_for_event:
+            for key in matched_by_key:
                 promoted_row = promoted[key]
                 if valid_nyc_lat_lng(promoted_row.get("lat"), promoted_row.get("lng")):
                     coord_pairs.add((round(float(promoted_row["lat"]), 6), round(float(promoted_row["lng"]), 6)))
             if len(coord_pairs) != 1:
                 conflicts.append({
                     "display_location": row_location(event_row),
-                    "matched_promoted_cache_keys": sorted(matched_keys_for_event),
-                    "reason": "source_cemsid_matched_multiple_coordinate_sets_or_invalid_coordinates",
+                    "matched_promoted_cache_keys": sorted(matched_by_key),
+                    "reason": "matched_promoted_keys_have_conflicting_or_invalid_coordinates",
                     "source_cemsid": sorted(event_cemsids(event_row)),
                     "source_event_id": event_row.get("source_event_id"),
                 })
                 continue
 
             lat, lng = next(iter(coord_pairs))
-            primary_key = sorted(matched_keys_for_event)[0]
+            primary_key = sorted(matched_by_key)[0]
             primary_row = promoted[primary_key]
             event_row["lat"] = lat
             event_row["lng"] = lng
             event_row["stable_identity_key"] = primary_key
-            event_row["matched_promoted_cache_keys"] = sorted(matched_keys_for_event)
+            event_row["matched_promoted_cache_keys"] = sorted(matched_by_key)
             event_row["group_key"] = primary_row.get("group_key") or primary_key.removeprefix("group:")
             event_row["gps_integration_phase"] = "gps_staged_feed_integration_update"
-            event_row["gps_integration_source"] = "phase_2e_promotion_report_plus_location_cache_cemsid"
+            event_row["gps_integration_source"] = "source_cemsid_or_exact_facility"
             event_row["gps_integration_updated_at_utc"] = utc_now()
             event_row["location_source"] = "phase_2e_promoted_location_cache"
             event_row["phase_2e_promotion_applied_to_staged_feed"] = True
             event_row["public_map_modified"] = False
             event_row["phase_3a_run"] = False
 
-            for key in matched_keys_for_event:
+            for key, mode in matched_by_key.items():
                 matched_keys.add(key)
                 update_counts_by_key[key] += 1
+                match_mode_counts[mode] += 1
             updated_rows.append({
                 "display_location": row_location(event_row),
                 "lat": lat,
                 "lng": lng,
-                "matched_promoted_cache_keys": sorted(matched_keys_for_event),
+                "matched_promoted_cache_keys": sorted(matched_by_key),
+                "match_modes": dict(sorted(matched_by_key.items())),
                 "source_cemsid": sorted(event_cemsids(event_row)),
                 "source_event_id": event_row.get("source_event_id"),
                 "stable_identity_key": primary_key,
@@ -307,7 +358,7 @@ def main() -> int:
             "input_promotion_report": str(PROMOTION_REPORT_PATH.relative_to(ROOT)),
             "input_staged_feed": str(STAGED_FEED_PATH.relative_to(ROOT)),
             "location_cache_modified": False,
-            "match_mode_counts": {"source_cemsid": updated_count},
+            "match_mode_counts": dict(sorted(match_mode_counts.items())),
             "next_required_step": "Run staged-feed GPS integration post-update QA, then decide whether to run a public-map dry-run validation gate. Do not publish to the public map until that gate passes.",
             "phase": "gps_staged_feed_integration_update",
             "phase_3a_run": False,
