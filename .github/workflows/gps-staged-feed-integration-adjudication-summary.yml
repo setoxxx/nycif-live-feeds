@@ -1,0 +1,53 @@
+name: GPS Staged Feed Integration Adjudication Summary
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/gps-staged-feed-integration-adjudication-summary.yml'
+      - 'scripts/generate_gps_staged_feed_integration_adjudication_summary.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gps-staged-feed-integration-adjudication-summary
+  cancel-in-progress: false
+
+jobs:
+  adjudication-summary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Sync latest main before adjudication summary
+        run: |
+          git fetch origin main
+          git checkout main
+          git reset --hard origin/main
+
+      - name: Generate GPS staged feed adjudication summary
+        run: python scripts/generate_gps_staged_feed_integration_adjudication_summary.py
+
+      - name: Commit GPS adjudication summary artifact
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/gps_staged_feed_integration_adjudication_summary.json
+          if git diff --cached --quiet; then
+            echo "No GPS adjudication summary changes to commit."
+          else
+            git commit -m "Generate GPS staged feed adjudication summary"
+            git push origin HEAD:main
+          fi
