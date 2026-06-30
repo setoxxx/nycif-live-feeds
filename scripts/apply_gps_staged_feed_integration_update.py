@@ -27,6 +27,7 @@ EXPECTED_PROMOTED_CACHE_KEYS = 25
 EXPECTED_UPDATED_STAGED_EVENTS = 430
 FACILITY_TYPES = {"basketball", "softball", "soccer", "tennis", "handball", "track", "lawn", "lawns"}
 RAPIDFUZZ_THRESHOLD = 92.0
+SITE_FUZZ_THRESHOLD = 96.0
 
 
 def utc_now() -> str:
@@ -114,27 +115,6 @@ def promoted_rows_from_report(promotion_report: dict[str, Any]) -> dict[str, dic
     return promoted
 
 
-def location_components(location: Any) -> set[str]:
-    text = str(location or "")
-    components: set[str] = set()
-    for part in re.split(r"\s*,\s*", text):
-        part = part.strip()
-        if not part:
-            continue
-        norm_full = canonical_facility(part)
-        if ":" in part:
-            site, facility = part.split(":", 1)
-            site_norm = normalize(site)
-            facility_norm = canonical_facility(facility)
-            if site_norm and facility_norm:
-                components.add(f"{site_norm} {facility_norm}")
-            if facility_norm:
-                components.add(facility_norm)
-        if ":" in part or any(word in norm_full.split() for word in FACILITY_TYPES | {"field", "area"}):
-            components.add(norm_full)
-    return {component for component in components if component}
-
-
 def facility_type(component: str) -> str | None:
     words = set(component.split())
     for kind in FACILITY_TYPES:
@@ -155,22 +135,75 @@ def facility_numbers(component: str) -> set[int]:
     return numbers
 
 
-def guarded_fuzzy_component_match(promoted_component: str, event_component: str) -> tuple[bool, float]:
+def split_site_facility(part: str) -> tuple[str, str] | None:
+    part = str(part or "").strip()
+    if not part:
+        return None
+    if ":" in part:
+        site_raw, facility_raw = part.split(":", 1)
+        site = normalize(site_raw)
+        facility = canonical_facility(facility_raw)
+        if site and facility_type(facility):
+            return site, facility
+    text = canonical_facility(part)
+    words = text.split()
+    facility_idx: int | None = None
+    for idx, word in enumerate(words):
+        if word in FACILITY_TYPES:
+            facility_idx = idx
+            break
+    if facility_idx is None:
+        return None
+    site = " ".join(words[:facility_idx]).strip()
+    facility = " ".join(words[facility_idx:]).strip()
+    if site and facility and facility_type(facility):
+        return site, facility
+    return None
+
+
+def site_facility_pairs(location: Any) -> set[tuple[str, str]]:
+    text = str(location or "")
+    pairs: set[tuple[str, str]] = set()
+    for part in re.split(r"\s*,\s*", text):
+        parsed = split_site_facility(part)
+        if parsed:
+            pairs.add(parsed)
+    return pairs
+
+
+def site_names(location: Any) -> set[str]:
+    names: set[str] = set()
+    for site, _facility in site_facility_pairs(location):
+        if site:
+            names.add(site)
+    return names
+
+
+def same_site(promoted_site: str, event_site: str) -> bool:
+    if promoted_site == event_site:
+        return True
+    if fuzz is None or utils is None:
+        return False
+    score = fuzz.token_sort_ratio(promoted_site, event_site, processor=utils.default_process)
+    return score >= SITE_FUZZ_THRESHOLD
+
+
+def guarded_fuzzy_facility_match(promoted_facility: str, event_facility: str) -> tuple[bool, float]:
     if fuzz is None or utils is None:
         return False, 0.0
-    promoted_kind = facility_type(promoted_component)
-    event_kind = facility_type(event_component)
+    promoted_kind = facility_type(promoted_facility)
+    event_kind = facility_type(event_facility)
     if promoted_kind and event_kind and promoted_kind != event_kind:
         return False, 0.0
     if promoted_kind and not event_kind:
         return False, 0.0
-    promoted_numbers = facility_numbers(promoted_component)
-    event_numbers = facility_numbers(event_component)
+    promoted_numbers = facility_numbers(promoted_facility)
+    event_numbers = facility_numbers(event_facility)
     if promoted_numbers and event_numbers and not (promoted_numbers & event_numbers):
         return False, 0.0
     score = max(
-        fuzz.token_sort_ratio(promoted_component, event_component, processor=utils.default_process),
-        fuzz.WRatio(promoted_component, event_component, processor=utils.default_process),
+        fuzz.token_sort_ratio(promoted_facility, event_facility, processor=utils.default_process),
+        fuzz.WRatio(promoted_facility, event_facility, processor=utils.default_process),
     )
     return score >= RAPIDFUZZ_THRESHOLD, float(score)
 
@@ -178,36 +211,39 @@ def guarded_fuzzy_component_match(promoted_component: str, event_component: str)
 def exact_or_fuzzy_facility_match(promoted_row: dict[str, Any], event_row: dict[str, Any]) -> tuple[bool, str | None, float]:
     if borough_of(promoted_row) != borough_of(event_row):
         return False, None, 0.0
-    promoted_components = location_components(row_location(promoted_row))
-    if not promoted_components:
+    promoted_pairs = site_facility_pairs(row_location(promoted_row))
+    if not promoted_pairs:
         return False, None, 0.0
-    event_components: set[str] = set()
+    event_pairs: set[tuple[str, str]] = set()
     for location in all_event_locations(event_row):
-        event_components.update(location_components(location))
-    if not event_components:
+        event_pairs.update(site_facility_pairs(location))
+    if not event_pairs:
         return False, None, 0.0
-    if promoted_components & event_components:
-        return True, "exact_facility", 100.0
+
     best_score = 0.0
-    for promoted_component in promoted_components:
-        for event_component in event_components:
-            matched, score = guarded_fuzzy_component_match(promoted_component, event_component)
+    for promoted_site, promoted_facility in promoted_pairs:
+        for event_site, event_facility in event_pairs:
+            if not same_site(promoted_site, event_site):
+                continue
+            if promoted_facility == event_facility:
+                return True, "exact_site_facility", 100.0
+            matched, score = guarded_fuzzy_facility_match(promoted_facility, event_facility)
             best_score = max(best_score, score)
             if matched:
-                return True, "rapidfuzz_facility", score
+                return True, "rapidfuzz_site_facility", score
     return False, None, best_score
 
 
 def cache_entry_matches_promoted(cache_row: dict[str, Any], promoted_row: dict[str, Any], promoted_key: str) -> bool:
     if borough_of(cache_row) != borough_of(promoted_row):
         return False
-    cache_location = row_location(cache_row)
-    promoted_location = row_location(promoted_row)
-    cache_components = location_components(cache_location)
-    promoted_components = location_components(promoted_location)
-    if cache_components and promoted_components and (cache_components & promoted_components):
-        return True
-    if stable_key(cache_row.get("borough"), cache_location) == promoted_key:
+    cache_pairs = site_facility_pairs(row_location(cache_row))
+    promoted_pairs = site_facility_pairs(row_location(promoted_row))
+    for promoted_site, promoted_facility in promoted_pairs:
+        for cache_site, cache_facility in cache_pairs:
+            if same_site(promoted_site, cache_site) and promoted_facility == cache_facility:
+                return True
+    if stable_key(cache_row.get("borough"), row_location(cache_row)) == promoted_key:
         return True
     return False
 
@@ -345,7 +381,7 @@ def main() -> int:
                 if matched and mode:
                     matched_by_key.setdefault(key, mode)
                     matched_scores[key] = max(matched_scores.get(key, 0.0), score)
-                    if mode == "rapidfuzz_facility":
+                    if mode == "rapidfuzz_site_facility":
                         fuzzy_scores.append(score)
 
             if not matched_by_key:
@@ -375,7 +411,7 @@ def main() -> int:
             event_row["matched_promoted_cache_keys"] = sorted(matched_by_key)
             event_row["group_key"] = primary_row.get("group_key") or primary_key.removeprefix("group:")
             event_row["gps_integration_phase"] = "gps_staged_feed_integration_update"
-            event_row["gps_integration_source"] = "source_cemsid_exact_or_rapidfuzz_facility"
+            event_row["gps_integration_source"] = "source_cemsid_exact_or_rapidfuzz_site_facility"
             event_row["gps_integration_updated_at_utc"] = utc_now()
             event_row["location_source"] = "phase_2e_promoted_location_cache"
             event_row["phase_2e_promotion_applied_to_staged_feed"] = True
@@ -432,6 +468,7 @@ def main() -> int:
             "qa_pass": qa_pass,
             "rapidfuzz_enabled": True,
             "rapidfuzz_threshold": RAPIDFUZZ_THRESHOLD,
+            "site_fuzz_threshold": SITE_FUZZ_THRESHOLD,
             "rapidfuzz_score_sample": [round(score, 2) for score in sorted(fuzzy_scores, reverse=True)[:25]],
             "skipped_count": skipped,
             "staged_feed_modified": qa_pass,
