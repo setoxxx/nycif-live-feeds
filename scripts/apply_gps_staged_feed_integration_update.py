@@ -19,6 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 LOCATION_CACHE_PATH = DATA_DIR / "location_cache.json"
 PROMOTION_REPORT_PATH = DATA_DIR / "gps_phase2e_promotion_report.json"
+POST_PROMOTION_QA_REPORT_PATH = DATA_DIR / "gps_phase2e_post_promotion_qa_report.json"
 DRY_RUN_REPORT_PATH = DATA_DIR / "gps_staged_feed_integration_dry_run_report.json"
 STAGED_FEED_PATH = DATA_DIR / "nycif_staged_live_events.json"
 UPDATE_REPORT_PATH = DATA_DIR / "gps_staged_feed_integration_update_report.json"
@@ -122,6 +123,51 @@ def promoted_rows_from_report(promotion_report: dict[str, Any]) -> dict[str, dic
     return promoted
 
 
+def add_group_alias(out: set[str], value: Any) -> None:
+    text = str(value or "").strip()
+    if not text:
+        return
+    out.add(text)
+    if text.startswith("group:"):
+        out.add(text.removeprefix("group:"))
+    else:
+        out.add(f"group:{text}")
+
+
+def aliases_for_row(row: dict[str, Any]) -> set[str]:
+    aliases: set[str] = set()
+    for field in (
+        "stable_identity_key",
+        "group_key",
+        "cache_key",
+        "gps_cache_key",
+        "gps_group_key",
+        "review_group_key",
+        "matched_promoted_cache_keys",
+    ):
+        value = row.get(field)
+        if isinstance(value, list):
+            for item in value:
+                add_group_alias(aliases, item)
+        else:
+            add_group_alias(aliases, value)
+
+    borough = row.get("borough") or row.get("event_borough")
+    if borough:
+        for location in all_event_locations(row) or [row_location(row)]:
+            if location:
+                add_group_alias(aliases, stable_key(borough, location))
+    return aliases
+
+
+def aliases_for_promoted(key: str, row: dict[str, Any]) -> set[str]:
+    aliases = aliases_for_row(row)
+    add_group_alias(aliases, key)
+    add_group_alias(aliases, row.get("group_key"))
+    add_group_alias(aliases, stable_key(row.get("borough"), row.get("display_location")))
+    return aliases
+
+
 def facility_type(component: str) -> str | None:
     words = set(component.split())
     for kind in FACILITY_TYPES:
@@ -176,14 +222,6 @@ def site_facility_pairs(location: Any) -> set[tuple[str, str]]:
         if parsed:
             pairs.add(parsed)
     return pairs
-
-
-def site_names(location: Any) -> set[str]:
-    names: set[str] = set()
-    for site, _facility in site_facility_pairs(location):
-        if site:
-            names.add(site)
-    return names
 
 
 def same_site(promoted_site: str, event_site: str) -> bool:
@@ -299,6 +337,7 @@ def failure_report(message: str, **extra: Any) -> dict[str, Any]:
         "dry_run_report": str(DRY_RUN_REPORT_PATH.relative_to(ROOT)),
         "generated_at_utc": utc_now(),
         "input_location_cache": str(LOCATION_CACHE_PATH.relative_to(ROOT)),
+        "input_post_promotion_qa_report": str(POST_PROMOTION_QA_REPORT_PATH.relative_to(ROOT)),
         "input_promotion_report": str(PROMOTION_REPORT_PATH.relative_to(ROOT)),
         "input_staged_feed": str(STAGED_FEED_PATH.relative_to(ROOT)),
         "location_cache_modified": False,
@@ -340,11 +379,15 @@ def main() -> int:
 
         location_cache = load_json(LOCATION_CACHE_PATH, {})
         promotion_report = load_json(PROMOTION_REPORT_PATH, {})
+        post_promotion_qa = load_json(POST_PROMOTION_QA_REPORT_PATH, {})
         dry_run = load_json(DRY_RUN_REPORT_PATH, {})
         staged_payload = load_json(STAGED_FEED_PATH, {})
 
         if not isinstance(promotion_report, dict) or promotion_report.get("qa_pass") is not True:
             save_json(UPDATE_REPORT_PATH, failure_report("Phase 2E promotion report must exist and have qa_pass true"))
+            return 1
+        if not isinstance(post_promotion_qa, dict) or post_promotion_qa.get("qa_pass") is not True:
+            save_json(UPDATE_REPORT_PATH, failure_report("Phase 2E post-promotion QA report must exist and have qa_pass true"))
             return 1
         if dry_run.get("qa_pass") is not True or int(dry_run.get("matched_staged_event_count") or 0) != EXPECTED_UPDATED_STAGED_EVENTS:
             save_json(UPDATE_REPORT_PATH, failure_report("Dry-run report must have qa_pass true and matched_staged_event_count 430"))
@@ -356,6 +399,39 @@ def main() -> int:
         promoted = promoted_rows_from_report(promotion_report)
         if len(promoted) != EXPECTED_PROMOTED_CACHE_KEYS:
             save_json(UPDATE_REPORT_PATH, failure_report(f"Expected 25 promoted rows, found {len(promoted)}", promoted_cache_key_count=len(promoted)))
+            return 1
+
+        qa_keys = set(post_promotion_qa.get("promoted_stable_keys_checked") or [])
+        missing_from_post_qa = sorted(set(promoted) - qa_keys)
+        if missing_from_post_qa or post_promotion_qa.get("all_25_promoted_stable_keys_exist_in_location_cache") is not True:
+            save_json(
+                UPDATE_REPORT_PATH,
+                failure_report(
+                    "Post-promotion QA does not validate all promoted keys used by the update step",
+                    promoted_cache_key_count=len(promoted),
+                    missing_from_post_promotion_qa=missing_from_post_qa,
+                ),
+            )
+            return 1
+
+        alias_to_key: dict[str, str] = {}
+        alias_collisions: dict[str, sorted] = {}
+        for key, row in promoted.items():
+            for alias in aliases_for_promoted(key, row):
+                existing = alias_to_key.get(alias)
+                if existing and existing != key:
+                    alias_collisions.setdefault(alias, set()).update({existing, key})
+                else:
+                    alias_to_key[alias] = key
+        if alias_collisions:
+            save_json(
+                UPDATE_REPORT_PATH,
+                failure_report(
+                    "Promoted stable-key aliases are not unique",
+                    promoted_cache_key_count=len(promoted),
+                    alias_collisions={alias: sorted(keys) for alias, keys in sorted(alias_collisions.items())},
+                ),
+            )
             return 1
 
         location_entries = unwrap_location_cache(location_cache)
@@ -378,15 +454,23 @@ def main() -> int:
             matched_by_key: dict[str, str] = {}
             matched_scores: dict[str, float] = {}
 
-            for cemsid in event_cemsids(event_row):
-                for key in cemsid_to_keys.get(cemsid, set()):
-                    matched_by_key[key] = "source_cemsid"
+            for alias in aliases_for_row(event_row):
+                key = alias_to_key.get(alias)
+                if key:
+                    matched_by_key[key] = "stable_identity_alias"
                     matched_scores[key] = 100.0
 
+            for cemsid in event_cemsids(event_row):
+                for key in cemsid_to_keys.get(cemsid, set()):
+                    matched_by_key.setdefault(key, "source_cemsid")
+                    matched_scores[key] = max(matched_scores.get(key, 0.0), 100.0)
+
             for key, promoted_row in promoted.items():
+                if key in matched_by_key:
+                    continue
                 matched, mode, score = exact_or_fuzzy_facility_match(promoted_row, event_row)
                 if matched and mode:
-                    matched_by_key.setdefault(key, mode)
+                    matched_by_key[key] = mode
                     matched_scores[key] = max(matched_scores.get(key, 0.0), score)
                     if mode == "rapidfuzz_site_facility":
                         fuzzy_scores.append(score)
@@ -418,7 +502,7 @@ def main() -> int:
             event_row["matched_promoted_cache_keys"] = sorted(matched_by_key)
             event_row["group_key"] = primary_row.get("group_key") or primary_key.removeprefix("group:")
             event_row["gps_integration_phase"] = "gps_staged_feed_integration_update"
-            event_row["gps_integration_source"] = "source_cemsid_exact_or_rapidfuzz_site_facility"
+            event_row["gps_integration_source"] = "post_promotion_qa_validated_stable_identity_or_cemsid_or_facility_match"
             event_row["gps_integration_updated_at_utc"] = utc_now()
             event_row["location_source"] = "phase_2e_promoted_location_cache"
             event_row["phase_2e_promotion_applied_to_staged_feed"] = True
@@ -460,6 +544,7 @@ def main() -> int:
             "dry_run_report": str(DRY_RUN_REPORT_PATH.relative_to(ROOT)),
             "generated_at_utc": utc_now(),
             "input_location_cache": str(LOCATION_CACHE_PATH.relative_to(ROOT)),
+            "input_post_promotion_qa_report": str(POST_PROMOTION_QA_REPORT_PATH.relative_to(ROOT)),
             "input_promotion_report": str(PROMOTION_REPORT_PATH.relative_to(ROOT)),
             "input_staged_feed": str(STAGED_FEED_PATH.relative_to(ROOT)),
             "location_cache_modified": False,
@@ -468,7 +553,7 @@ def main() -> int:
             "phase": "gps_staged_feed_integration_update",
             "phase_3a_run": False,
             "promoted_cache_key_count": len(promoted),
-            "promoted_source": "phase_2e_promotion_report_promoted_rows",
+            "promoted_source": "phase_2e_promotion_report_rows_validated_by_post_promotion_qa",
             "promoted_source_cemsid_counts": {key: len(ids) for key, ids in sorted(key_to_cemsids.items())},
             "promoted_source_cemsid_sample": {key: sorted(ids)[:10] for key, ids in sorted(key_to_cemsids.items())},
             "public_map_modified": False,
