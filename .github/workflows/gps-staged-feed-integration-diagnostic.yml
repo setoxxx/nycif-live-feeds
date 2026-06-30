@@ -1,0 +1,62 @@
+name: GPS Staged Feed Integration Match Diagnostic
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/gps-staged-feed-integration-diagnostic.yml'
+      - 'scripts/generate_gps_staged_feed_integration_match_diagnostic.py'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gps-staged-feed-integration-match-diagnostic
+  cancel-in-progress: false
+
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Sync latest main before diagnostic
+        run: |
+          git fetch origin main
+          git checkout main
+          git reset --hard origin/main
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install 'rapidfuzz==3.*'
+          python - <<'PY'
+          from rapidfuzz import fuzz, utils
+          print('RapidFuzz import check passed')
+          PY
+
+      - name: Generate staged feed GPS match diagnostic
+        run: python scripts/generate_gps_staged_feed_integration_match_diagnostic.py
+
+      - name: Commit GPS match diagnostic artifact
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/gps_staged_feed_integration_match_diagnostic.json
+          if git diff --cached --quiet; then
+            echo "No GPS match diagnostic changes to commit."
+          else
+            git commit -m "Generate GPS staged feed match diagnostic"
+            git push origin HEAD:main
+          fi
