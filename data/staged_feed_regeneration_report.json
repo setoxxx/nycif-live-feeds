@@ -1,0 +1,31 @@
+{
+  "blocking_issues": [],
+  "existing_build_process": {
+    "builder_script": "scripts/build_staged_production_feed.py",
+    "input": "data/nycif_live_test_enriched_events.json",
+    "workflow": ".github/workflows/live-sync-qa.yml"
+  },
+  "generated_at_utc": "2026-06-30T01:25:00+00:00",
+  "gps_candidate_event_count": 28947,
+  "location_cache_promoted_count": 25,
+  "phase": "staged_live_events_feed_regeneration_report",
+  "phase_3a_run": false,
+  "production_feed_modified": false,
+  "public_map_modified": false,
+  "source_manifest": "data/staged_live_manifest.json",
+  "source_manifest_generated_at_utc": "2026-06-30T00:58:50.427817+00:00",
+  "staged_event_count": 28807,
+  "staged_feed_created": true,
+  "staged_feed_path": "data/nycif_staged_live_events.json",
+  "staged_feed_status": "present_large_artifact_generated_by_existing_build_process",
+  "staged_live_manifest_summary": {
+    "eligible_rows_before_one_day_street_dedupe": 28947,
+    "match_counts": {
+      "event_id": 22914,
+      "location_cache": 5788,
+      "text_date_location": 105
+    },
+    "one_day_street_duplicates_suppressed": 140,
+    "staged_feed_events": 28807
+  }
+}
