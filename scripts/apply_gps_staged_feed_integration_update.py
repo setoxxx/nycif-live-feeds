@@ -46,6 +46,10 @@ def normalize(text: Any) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
+def tokens(text: Any) -> list[str]:
+    return normalize(text).split()
+
+
 def stable_key(borough: Any, location: Any) -> str:
     return f"group:{normalize(borough)}|{normalize(location)}"
 
@@ -67,6 +71,19 @@ def unwrap_location_cache(payload: Any) -> dict[str, Any]:
     return {}
 
 
+def event_locations(row: dict[str, Any]) -> list[str]:
+    seen: set[str] = set()
+    values: list[str] = []
+    for field in ("display_location", "location", "event_location"):
+        value = row.get(field)
+        if value:
+            norm = normalize(value)
+            if norm and norm not in seen:
+                seen.add(norm)
+                values.append(str(value))
+    return values
+
+
 def event_aliases(row: dict[str, Any]) -> set[str]:
     aliases: set[str] = set()
     for field in (
@@ -80,10 +97,11 @@ def event_aliases(row: dict[str, Any]) -> set[str]:
         value = row.get(field)
         if value:
             aliases.add(str(value))
+            if not str(value).startswith("group:"):
+                aliases.add(f"group:{value}")
 
     borough = row.get("borough") or row.get("event_borough")
-    for field in ("display_location", "location", "event_location"):
-        value = row.get(field)
+    for value in event_locations(row):
         if borough and value:
             aliases.add(stable_key(borough, value))
     return aliases
@@ -95,8 +113,8 @@ def cache_aliases(key: str, row: dict[str, Any]) -> set[str]:
         value = row.get(field)
         if value:
             aliases.add(str(value))
-        if field == "group_key" and value and not str(value).startswith("group:"):
-            aliases.add(f"group:{value}")
+            if not str(value).startswith("group:"):
+                aliases.add(f"group:{value}")
 
     borough = row.get("borough") or row.get("event_borough")
     for field in ("display_location", "location", "event_location"):
@@ -106,13 +124,35 @@ def cache_aliases(key: str, row: dict[str, Any]) -> set[str]:
     return aliases
 
 
-def extract_promoted_cache(location_cache_payload: Any, promotion_report: dict[str, Any]) -> tuple[dict[str, dict[str, Any]], str]:
-    """Return exactly the 25 Phase 2E promoted rows.
+def borough_of(row: dict[str, Any]) -> str:
+    return normalize(row.get("borough") or row.get("event_borough"))
 
-    Newer location_cache.json is a wrapper object with entries and may be regenerated without
-    phase_2e_promotion_performed flags. The promotion report is therefore the stable source of
-    the approved 25 identities; location_cache is still loaded/read and used when flags exist.
-    """
+
+def component_location_match(cache_row: dict[str, Any], event_row: dict[str, Any]) -> bool:
+    if borough_of(cache_row) != borough_of(event_row):
+        return False
+    cache_location = cache_row.get("display_location") or cache_row.get("location") or cache_row.get("event_location")
+    cache_norm = normalize(cache_location)
+    if not cache_norm:
+        return False
+
+    cache_tokens = tokens(cache_location)
+    if not cache_tokens:
+        return False
+
+    for event_location in event_locations(event_row):
+        event_norm = normalize(event_location)
+        if not event_norm:
+            continue
+        if cache_norm in event_norm or event_norm in cache_norm:
+            return True
+        event_token_set = set(tokens(event_location))
+        if all(token in event_token_set for token in cache_tokens):
+            return True
+    return False
+
+
+def extract_promoted_cache(location_cache_payload: Any, promotion_report: dict[str, Any]) -> tuple[dict[str, dict[str, Any]], str]:
     location_entries = unwrap_location_cache(location_cache_payload)
 
     flagged = {
@@ -255,36 +295,44 @@ def main() -> int:
         conflicts: list[dict[str, Any]] = []
         matched_keys: set[str] = set()
         update_counts_by_cache_key: Counter[str] = Counter()
+        match_mode_counts: Counter[str] = Counter()
 
         for row in staged_payload["events"]:
             if not isinstance(row, dict):
                 continue
-            matched_cache_keys = sorted({alias_to_cache_key[alias] for alias in event_aliases(row) if alias in alias_to_cache_key})
+
+            exact_matches = {alias_to_cache_key[alias] for alias in event_aliases(row) if alias in alias_to_cache_key}
+            component_matches = {
+                cache_key
+                for cache_key, cache_row in promoted_cache.items()
+                if component_location_match(cache_row, row)
+            }
+            matched_cache_keys = sorted(exact_matches | component_matches)
             if not matched_cache_keys:
                 continue
-            if len(matched_cache_keys) > 1:
+
+            coord_pairs = {
+                (round(float(promoted_cache[key]["lat"]), 6), round(float(promoted_cache[key]["lng"]), 6))
+                for key in matched_cache_keys
+                if valid_nyc_lat_lng(promoted_cache[key].get("lat"), promoted_cache[key].get("lng"))
+            }
+            if len(coord_pairs) != 1:
                 conflicts.append({
                     "display_location": row.get("display_location") or row.get("location"),
                     "matched_cache_keys": matched_cache_keys,
-                    "reason": "staged_event_matched_multiple_promoted_cache_keys",
+                    "reason": "staged_event_matched_multiple_coordinate_sets_or_invalid_coordinates",
                     "source_event_id": row.get("source_event_id"),
                 })
                 continue
 
             cache_key = matched_cache_keys[0]
             cache_row = promoted_cache[cache_key]
-            if not valid_nyc_lat_lng(cache_row.get("lat"), cache_row.get("lng")):
-                conflicts.append({
-                    "display_location": row.get("display_location") or row.get("location"),
-                    "reason": "promoted_cache_coordinates_invalid",
-                    "source_event_id": row.get("source_event_id"),
-                    "stable_identity_key": cache_key,
-                })
-                continue
+            lat, lng = next(iter(coord_pairs))
 
-            row["lat"] = float(cache_row["lat"])
-            row["lng"] = float(cache_row["lng"])
+            row["lat"] = lat
+            row["lng"] = lng
             row["stable_identity_key"] = cache_key
+            row["matched_promoted_cache_keys"] = matched_cache_keys
             row["group_key"] = cache_row.get("group_key") or cache_key.removeprefix("group:")
             row["gps_integration_phase"] = "gps_staged_feed_integration_update"
             row["gps_integration_source"] = promoted_source
@@ -294,12 +342,15 @@ def main() -> int:
             row["public_map_modified"] = False
             row["phase_3a_run"] = False
 
-            matched_keys.add(cache_key)
-            update_counts_by_cache_key[cache_key] += 1
+            for key in matched_cache_keys:
+                matched_keys.add(key)
+                update_counts_by_cache_key[key] += 1
+            match_mode_counts["exact_alias" if exact_matches else "borough_component"] += 1
             updated_rows.append({
                 "display_location": row.get("display_location") or row.get("location"),
                 "lat": row.get("lat"),
                 "lng": row.get("lng"),
+                "matched_promoted_cache_keys": matched_cache_keys,
                 "source_event_id": row.get("source_event_id"),
                 "stable_identity_key": cache_key,
             })
@@ -327,6 +378,7 @@ def main() -> int:
             "input_promotion_report": str(PROMOTION_REPORT_PATH.relative_to(ROOT)),
             "input_staged_feed": str(STAGED_FEED_PATH.relative_to(ROOT)),
             "location_cache_modified": False,
+            "match_mode_counts": dict(sorted(match_mode_counts.items())),
             "next_required_step": "Run staged-feed GPS integration post-update QA, then decide whether to run a public-map dry-run validation gate. Do not publish to the public map until that gate passes.",
             "phase": "gps_staged_feed_integration_update",
             "phase_3a_run": False,
