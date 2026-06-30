@@ -5,13 +5,14 @@
   "conflict_count": 0,
   "conflicts": [],
   "dry_run_report": "data/gps_staged_feed_integration_dry_run_report.json",
-  "generated_at_utc": "2026-06-30T01:44:36.849222+00:00",
+  "generated_at_utc": "2026-06-30T01:46:25.806466+00:00",
   "input_location_cache": "data/location_cache.json",
   "input_promotion_report": "data/gps_phase2e_promotion_report.json",
   "input_staged_feed": "data/nycif_staged_live_events.json",
   "location_cache_modified": false,
   "match_mode_counts": {
-    "borough_component": 181
+    "full_location_component": 2,
+    "site_component": 1996
   },
   "next_required_step": "Run staged-feed GPS integration post-update QA, then decide whether to run a public-map dry-run validation gate. Do not publish to the public map until that gate passes.",
   "phase": "gps_staged_feed_integration_update",
@@ -20,191 +21,292 @@
   "promoted_source": "phase_2e_promotion_report_promoted_rows",
   "public_map_modified": false,
   "qa_pass": false,
-  "skipped_count": 249,
+  "skipped_count": 0,
   "staged_feed_modified": false,
-  "unmatched_promoted_cache_key_count": 20,
+  "unmatched_promoted_cache_key_count": 2,
   "unmatched_promoted_cache_keys": [
-    "group:bronx|macombs dam park basketball 04",
-    "group:brooklyn|friends field lawn area",
-    "group:brooklyn|gravesend park lawn area",
-    "group:brooklyn|linden park gershwin park jhs 166 track 01",
-    "group:brooklyn|martin luther king jr playground basketball 02",
-    "group:brooklyn|mccarren park bayard union lawns",
-    "group:brooklyn|mcdonald playground tennis 01",
-    "group:brooklyn|mcdonald playground tennis 02",
-    "group:brooklyn|mcdonald playground tennis 03",
-    "group:brooklyn|owl s head park owls head park basketball 01",
     "group:brooklyn|pratt playground basketball 02",
-    "group:brooklyn|rappaport playground rappaport playground rappaport playground handball 01",
-    "group:manhattan|de witt clinton park basketball 01",
-    "group:manhattan|j hood wright park softball 01",
-    "group:manhattan|riverside park south 71st st south basketball 14",
-    "group:manhattan|washington market park tennis 01",
-    "group:queens|broad channel park tennis 01",
-    "group:queens|clintonville playground tennis 01",
-    "group:queens|clintonville playground tennis 02",
-    "group:queens|hoffman park softball 01"
+    "group:queens|broad channel park tennis 01"
   ],
   "update_counts_by_cache_key": {
-    "group:bronx|st mary s park st mary s playground west tennis 01": 6,
-    "group:bronx|st mary s park st mary s playground west tennis 02": 6,
+    "group:bronx|macombs dam park basketball 04": 318,
+    "group:bronx|st mary s park st mary s playground west tennis 01": 111,
+    "group:bronx|st mary s park st mary s playground west tennis 02": 111,
+    "group:brooklyn|friends field lawn area": 26,
     "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": 29,
-    "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": 54,
-    "group:manhattan|de witt clinton park soccer 01a": 91
+    "group:brooklyn|gravesend park lawn area": 5,
+    "group:brooklyn|linden park gershwin park jhs 166 track 01": 40,
+    "group:brooklyn|martin luther king jr playground basketball 02": 17,
+    "group:brooklyn|mccarren park bayard union lawns": 385,
+    "group:brooklyn|mcdonald playground tennis 01": 9,
+    "group:brooklyn|mcdonald playground tennis 02": 9,
+    "group:brooklyn|mcdonald playground tennis 03": 9,
+    "group:brooklyn|owl s head park owls head park basketball 01": 23,
+    "group:brooklyn|rappaport playground rappaport playground rappaport playground handball 01": 1,
+    "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": 105,
+    "group:manhattan|de witt clinton park basketball 01": 271,
+    "group:manhattan|de witt clinton park soccer 01a": 271,
+    "group:manhattan|j hood wright park softball 01": 2,
+    "group:manhattan|riverside park south 71st st south basketball 14": 179,
+    "group:manhattan|washington market park tennis 01": 30,
+    "group:queens|clintonville playground tennis 01": 17,
+    "group:queens|clintonville playground tennis 02": 17,
+    "group:queens|hoffman park softball 01": 13
   },
   "update_performed": false,
-  "updated_staged_event_count": 181,
+  "updated_staged_event_count": 1581,
   "updated_staged_event_sample": [
     {
-      "display_location": "De Witt Clinton Park: Soccer-01",
+      "display_location": "Macombs Dam Park: Soccer-01",
+      "lat": 40.82701,
+      "lng": -73.92779,
+      "matched_promoted_cache_keys": [
+        "group:bronx|macombs dam park basketball 04"
+      ],
+      "source_event_id": "900738",
+      "stable_identity_key": "group:bronx|macombs dam park basketball 04"
+    },
+    {
+      "display_location": "Friends Field: Softball-01   ,Friends Field: Softball-02",
+      "lat": 40.61873,
+      "lng": -73.9729,
+      "matched_promoted_cache_keys": [
+        "group:brooklyn|friends field lawn area"
+      ],
+      "source_event_id": "899368",
+      "stable_identity_key": "group:brooklyn|friends field lawn area"
+    },
+    {
+      "display_location": "Macombs Dam Park: Track-01",
+      "lat": 40.82701,
+      "lng": -73.92779,
+      "matched_promoted_cache_keys": [
+        "group:bronx|macombs dam park basketball 04"
+      ],
+      "source_event_id": "911659",
+      "stable_identity_key": "group:bronx|macombs dam park basketball 04"
+    },
+    {
+      "display_location": "De Witt Clinton Park: Soccer-01B",
       "lat": 40.76819,
       "lng": -73.99429,
       "matched_promoted_cache_keys": [
+        "group:manhattan|de witt clinton park basketball 01",
         "group:manhattan|de witt clinton park soccer 01a"
       ],
-      "source_event_id": "901600",
-      "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
+      "source_event_id": "909376",
+      "stable_identity_key": "group:manhattan|de witt clinton park basketball 01"
     },
     {
-      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
-      "lat": 40.65259,
-      "lng": -74.00842,
-      "matched_promoted_cache_keys": [
-        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
-      ],
-      "source_event_id": "900086",
-      "stable_identity_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
-    },
-    {
-      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
-      "lat": 40.67437,
-      "lng": -73.93475,
-      "matched_promoted_cache_keys": [
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
-      ],
-      "source_event_id": "904904",
-      "stable_identity_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
-    },
-    {
-      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
-      "lat": 40.67437,
-      "lng": -73.93475,
-      "matched_promoted_cache_keys": [
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
-      ],
-      "source_event_id": "905105",
-      "stable_identity_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
-    },
-    {
-      "display_location": "De Witt Clinton Park: Soccer-01",
+      "display_location": "De Witt Clinton Park: Soccer-01B",
       "lat": 40.76819,
       "lng": -73.99429,
       "matched_promoted_cache_keys": [
+        "group:manhattan|de witt clinton park basketball 01",
         "group:manhattan|de witt clinton park soccer 01a"
       ],
-      "source_event_id": "935681",
-      "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
+      "source_event_id": "930589",
+      "stable_identity_key": "group:manhattan|de witt clinton park basketball 01"
     },
     {
-      "display_location": "De Witt Clinton Park: Soccer-01",
-      "lat": 40.76819,
-      "lng": -73.99429,
+      "display_location": "Macombs Dam Park: Basketball-03",
+      "lat": 40.82701,
+      "lng": -73.92779,
       "matched_promoted_cache_keys": [
-        "group:manhattan|de witt clinton park soccer 01a"
+        "group:bronx|macombs dam park basketball 04"
       ],
-      "source_event_id": "901600",
-      "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
+      "source_event_id": "910637",
+      "stable_identity_key": "group:bronx|macombs dam park basketball 04"
     },
     {
-      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
-      "lat": 40.67437,
-      "lng": -73.93475,
+      "display_location": "McCarren Park: Softball-01",
+      "lat": 40.72022,
+      "lng": -73.95065,
       "matched_promoted_cache_keys": [
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
+        "group:brooklyn|mccarren park bayard union lawns"
       ],
-      "source_event_id": "909984",
-      "stable_identity_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
+      "source_event_id": "892792",
+      "stable_identity_key": "group:brooklyn|mccarren park bayard union lawns"
     },
     {
-      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
-      "lat": 40.65259,
-      "lng": -74.00842,
+      "display_location": "McCarren Park: Soccer-01",
+      "lat": 40.72022,
+      "lng": -73.95065,
       "matched_promoted_cache_keys": [
-        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
+        "group:brooklyn|mccarren park bayard union lawns"
       ],
-      "source_event_id": "900086",
-      "stable_identity_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
+      "source_event_id": "925239",
+      "stable_identity_key": "group:brooklyn|mccarren park bayard union lawns"
     },
     {
-      "display_location": "De Witt Clinton Park: Soccer-01",
-      "lat": 40.76819,
-      "lng": -73.99429,
+      "display_location": "Washington Market Park: Center Lawn",
+      "lat": 40.71709,
+      "lng": -74.01155,
       "matched_promoted_cache_keys": [
-        "group:manhattan|de witt clinton park soccer 01a"
+        "group:manhattan|washington market park tennis 01"
       ],
-      "source_event_id": "906982",
-      "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
+      "source_event_id": "947643",
+      "stable_identity_key": "group:manhattan|washington market park tennis 01"
     },
     {
-      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
-      "lat": 40.67437,
-      "lng": -73.93475,
-      "matched_promoted_cache_keys": [
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
-      ],
-      "source_event_id": "907927",
-      "stable_identity_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
-    },
-    {
-      "display_location": "De Witt Clinton Park: Soccer-01",
-      "lat": 40.76819,
-      "lng": -73.99429,
-      "matched_promoted_cache_keys": [
-        "group:manhattan|de witt clinton park soccer 01a"
-      ],
-      "source_event_id": "907118",
-      "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
-    },
-    {
-      "display_location": "St. Mary's Park: St Mary's Playground West",
+      "display_location": "St. Mary's Park: Baseball-01",
       "lat": 40.81151,
       "lng": -73.91227,
       "matched_promoted_cache_keys": [
         "group:bronx|st mary s park st mary s playground west tennis 01",
         "group:bronx|st mary s park st mary s playground west tennis 02"
       ],
-      "source_event_id": "915986",
+      "source_event_id": "907415",
       "stable_identity_key": "group:bronx|st mary s park st mary s playground west tennis 01"
     },
     {
-      "display_location": "De Witt Clinton Park: Soccer-01",
-      "lat": 40.76819,
-      "lng": -73.99429,
+      "display_location": "St. Mary's Park: Softball-02",
+      "lat": 40.81151,
+      "lng": -73.91227,
       "matched_promoted_cache_keys": [
-        "group:manhattan|de witt clinton park soccer 01a"
+        "group:bronx|st mary s park st mary s playground west tennis 01",
+        "group:bronx|st mary s park st mary s playground west tennis 02"
       ],
-      "source_event_id": "935681",
-      "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
+      "source_event_id": "907435",
+      "stable_identity_key": "group:bronx|st mary s park st mary s playground west tennis 01"
+    },
+    {
+      "display_location": "Macombs Dam Park: Elston Gene Howard Field-Softball-02",
+      "lat": 40.82701,
+      "lng": -73.92779,
+      "matched_promoted_cache_keys": [
+        "group:bronx|macombs dam park basketball 04"
+      ],
+      "source_event_id": "916076",
+      "stable_identity_key": "group:bronx|macombs dam park basketball 04"
     },
     {
       "display_location": "De Witt Clinton Park: Soccer-01",
       "lat": 40.76819,
       "lng": -73.99429,
       "matched_promoted_cache_keys": [
-        "group:manhattan|de witt clinton park soccer 01a"
-      ],
-      "source_event_id": "939610",
-      "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
-    },
-    {
-      "display_location": "De Witt Clinton Park: Soccer-01",
-      "lat": 40.76819,
-      "lng": -73.99429,
-      "matched_promoted_cache_keys": [
+        "group:manhattan|de witt clinton park basketball 01",
         "group:manhattan|de witt clinton park soccer 01a"
       ],
       "source_event_id": "901600",
-      "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
+      "stable_identity_key": "group:manhattan|de witt clinton park basketball 01"
+    },
+    {
+      "display_location": "McCarren Park: Vincent V Abate Plgd-Basketball-01",
+      "lat": 40.72022,
+      "lng": -73.95065,
+      "matched_promoted_cache_keys": [
+        "group:brooklyn|mccarren park bayard union lawns"
+      ],
+      "source_event_id": "926241",
+      "stable_identity_key": "group:brooklyn|mccarren park bayard union lawns"
+    },
+    {
+      "display_location": "McCarren Park: Soccer-01",
+      "lat": 40.72022,
+      "lng": -73.95065,
+      "matched_promoted_cache_keys": [
+        "group:brooklyn|mccarren park bayard union lawns"
+      ],
+      "source_event_id": "908069",
+      "stable_identity_key": "group:brooklyn|mccarren park bayard union lawns"
+    },
+    {
+      "display_location": "De Witt Clinton Park: Softball-02",
+      "lat": 40.76819,
+      "lng": -73.99429,
+      "matched_promoted_cache_keys": [
+        "group:manhattan|de witt clinton park basketball 01",
+        "group:manhattan|de witt clinton park soccer 01a"
+      ],
+      "source_event_id": "900416",
+      "stable_identity_key": "group:manhattan|de witt clinton park basketball 01"
+    },
+    {
+      "display_location": "Clintonville Playground: Basketball-01",
+      "lat": 40.78323,
+      "lng": -73.80698,
+      "matched_promoted_cache_keys": [
+        "group:queens|clintonville playground tennis 01",
+        "group:queens|clintonville playground tennis 02"
+      ],
+      "source_event_id": "927237",
+      "stable_identity_key": "group:queens|clintonville playground tennis 01"
+    },
+    {
+      "display_location": "De Witt Clinton Park: Softball-02",
+      "lat": 40.76819,
+      "lng": -73.99429,
+      "matched_promoted_cache_keys": [
+        "group:manhattan|de witt clinton park basketball 01",
+        "group:manhattan|de witt clinton park soccer 01a"
+      ],
+      "source_event_id": "917354",
+      "stable_identity_key": "group:manhattan|de witt clinton park basketball 01"
+    },
+    {
+      "display_location": "De Witt Clinton Park: Baseball-03",
+      "lat": 40.76819,
+      "lng": -73.99429,
+      "matched_promoted_cache_keys": [
+        "group:manhattan|de witt clinton park basketball 01",
+        "group:manhattan|de witt clinton park soccer 01a"
+      ],
+      "source_event_id": "917372",
+      "stable_identity_key": "group:manhattan|de witt clinton park basketball 01"
+    },
+    {
+      "display_location": "De Witt Clinton Park: Softball-01",
+      "lat": 40.76819,
+      "lng": -73.99429,
+      "matched_promoted_cache_keys": [
+        "group:manhattan|de witt clinton park basketball 01",
+        "group:manhattan|de witt clinton park soccer 01a"
+      ],
+      "source_event_id": "917375",
+      "stable_identity_key": "group:manhattan|de witt clinton park basketball 01"
+    },
+    {
+      "display_location": "Macombs Dam Park: Elston Gene Howard Field-Little League-03",
+      "lat": 40.82701,
+      "lng": -73.92779,
+      "matched_promoted_cache_keys": [
+        "group:bronx|macombs dam park basketball 04"
+      ],
+      "source_event_id": "910213",
+      "stable_identity_key": "group:bronx|macombs dam park basketball 04"
+    },
+    {
+      "display_location": "St. Mary's Park: Baseball-01",
+      "lat": 40.81151,
+      "lng": -73.91227,
+      "matched_promoted_cache_keys": [
+        "group:bronx|st mary s park st mary s playground west tennis 01",
+        "group:bronx|st mary s park st mary s playground west tennis 02"
+      ],
+      "source_event_id": "904050",
+      "stable_identity_key": "group:bronx|st mary s park st mary s playground west tennis 01"
+    },
+    {
+      "display_location": "St. Mary's Park: Soccer/Football-01",
+      "lat": 40.81151,
+      "lng": -73.91227,
+      "matched_promoted_cache_keys": [
+        "group:bronx|st mary s park st mary s playground west tennis 01",
+        "group:bronx|st mary s park st mary s playground west tennis 02"
+      ],
+      "source_event_id": "924803",
+      "stable_identity_key": "group:bronx|st mary s park st mary s playground west tennis 01"
+    },
+    {
+      "display_location": "Macombs Dam Park: Soccer-01",
+      "lat": 40.82701,
+      "lng": -73.92779,
+      "matched_promoted_cache_keys": [
+        "group:bronx|macombs dam park basketball 04"
+      ],
+      "source_event_id": "900732",
+      "stable_identity_key": "group:bronx|macombs dam park basketball 04"
     },
     {
       "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
@@ -215,96 +317,6 @@
       ],
       "source_event_id": "900086",
       "stable_identity_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
-    },
-    {
-      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
-      "lat": 40.67437,
-      "lng": -73.93475,
-      "matched_promoted_cache_keys": [
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
-      ],
-      "source_event_id": "915086",
-      "stable_identity_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
-    },
-    {
-      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
-      "lat": 40.67437,
-      "lng": -73.93475,
-      "matched_promoted_cache_keys": [
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
-      ],
-      "source_event_id": "930649",
-      "stable_identity_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
-    },
-    {
-      "display_location": "De Witt Clinton Park: Soccer-01",
-      "lat": 40.76819,
-      "lng": -73.99429,
-      "matched_promoted_cache_keys": [
-        "group:manhattan|de witt clinton park soccer 01a"
-      ],
-      "source_event_id": "939610",
-      "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
-    },
-    {
-      "display_location": "De Witt Clinton Park: Soccer-01",
-      "lat": 40.76819,
-      "lng": -73.99429,
-      "matched_promoted_cache_keys": [
-        "group:manhattan|de witt clinton park soccer 01a"
-      ],
-      "source_event_id": "901600",
-      "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
-    },
-    {
-      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
-      "lat": 40.65259,
-      "lng": -74.00842,
-      "matched_promoted_cache_keys": [
-        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
-      ],
-      "source_event_id": "900086",
-      "stable_identity_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
-    },
-    {
-      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
-      "lat": 40.67437,
-      "lng": -73.93475,
-      "matched_promoted_cache_keys": [
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
-      ],
-      "source_event_id": "901975",
-      "stable_identity_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
-    },
-    {
-      "display_location": "De Witt Clinton Park: Soccer-01",
-      "lat": 40.76819,
-      "lng": -73.99429,
-      "matched_promoted_cache_keys": [
-        "group:manhattan|de witt clinton park soccer 01a"
-      ],
-      "source_event_id": "907118",
-      "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
-    },
-    {
-      "display_location": "De Witt Clinton Park: Soccer-01",
-      "lat": 40.76819,
-      "lng": -73.99429,
-      "matched_promoted_cache_keys": [
-        "group:manhattan|de witt clinton park soccer 01a"
-      ],
-      "source_event_id": "955922",
-      "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
-    },
-    {
-      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
-      "lat": 40.67437,
-      "lng": -73.93475,
-      "matched_promoted_cache_keys": [
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
-      ],
-      "source_event_id": "935867",
-      "stable_identity_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
     }
   ],
   "validated_conditions": {
@@ -314,7 +326,7 @@
     "promoted_cache_key_count_is_25": true,
     "public_map_modified_false": true,
     "qa_pass_true": false,
-    "skipped_count_is_0": false,
+    "skipped_count_is_0": true,
     "staged_feed_modified_true": false,
     "unmatched_promoted_cache_key_count_is_0": false,
     "update_performed_true": false,
