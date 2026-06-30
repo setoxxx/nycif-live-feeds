@@ -9,6 +9,12 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+try:
+    from rapidfuzz import fuzz, utils
+except Exception:  # pragma: no cover - reported by runtime QA below
+    fuzz = None
+    utils = None
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 LOCATION_CACHE_PATH = DATA_DIR / "location_cache.json"
@@ -19,6 +25,8 @@ UPDATE_REPORT_PATH = DATA_DIR / "gps_staged_feed_integration_update_report.json"
 
 EXPECTED_PROMOTED_CACHE_KEYS = 25
 EXPECTED_UPDATED_STAGED_EVENTS = 430
+FACILITY_TYPES = {"basketball", "softball", "soccer", "tennis", "handball", "track", "lawn", "lawns"}
+RAPIDFUZZ_THRESHOLD = 92.0
 
 
 def utc_now() -> str:
@@ -107,12 +115,6 @@ def promoted_rows_from_report(promotion_report: dict[str, Any]) -> dict[str, dic
 
 
 def location_components(location: Any) -> set[str]:
-    """Extract exact facility-level components, never just the whole park/site name.
-
-    Examples:
-      St. John's Park: Buddy Keaton-Softball-01 ,St. John's Park: Buddy Keaton-Softball-02
-      -> {st john s park buddy keaton softball 01, st john s park buddy keaton softball 02}
-    """
     text = str(location or "")
     components: set[str] = set()
     for part in re.split(r"\s*,\s*", text):
@@ -128,24 +130,72 @@ def location_components(location: Any) -> set[str]:
                 components.add(f"{site_norm} {facility_norm}")
             if facility_norm:
                 components.add(facility_norm)
-        # Only allow full component if it contains a facility delimiter or an explicit non-site keyword.
-        if ":" in part or any(word in norm_full.split() for word in ("basketball", "softball", "soccer", "tennis", "handball", "track", "lawn", "lawns", "field", "area")):
+        if ":" in part or any(word in norm_full.split() for word in FACILITY_TYPES | {"field", "area"}):
             components.add(norm_full)
     return {component for component in components if component}
 
 
-def exact_facility_match(promoted_row: dict[str, Any], event_row: dict[str, Any]) -> bool:
+def facility_type(component: str) -> str | None:
+    words = set(component.split())
+    for kind in FACILITY_TYPES:
+        if kind in words:
+            return "lawn" if kind == "lawns" else kind
+    return None
+
+
+def facility_numbers(component: str) -> set[int]:
+    words = component.split()
+    numbers: set[int] = set()
+    for idx, word in enumerate(words):
+        if word not in FACILITY_TYPES:
+            continue
+        for next_word in words[idx + 1 : idx + 4]:
+            if next_word.isdigit():
+                numbers.add(int(next_word))
+    return numbers
+
+
+def guarded_fuzzy_component_match(promoted_component: str, event_component: str) -> tuple[bool, float]:
+    if fuzz is None or utils is None:
+        return False, 0.0
+    promoted_kind = facility_type(promoted_component)
+    event_kind = facility_type(event_component)
+    if promoted_kind and event_kind and promoted_kind != event_kind:
+        return False, 0.0
+    if promoted_kind and not event_kind:
+        return False, 0.0
+    promoted_numbers = facility_numbers(promoted_component)
+    event_numbers = facility_numbers(event_component)
+    if promoted_numbers and event_numbers and not (promoted_numbers & event_numbers):
+        return False, 0.0
+    score = max(
+        fuzz.token_sort_ratio(promoted_component, event_component, processor=utils.default_process),
+        fuzz.WRatio(promoted_component, event_component, processor=utils.default_process),
+    )
+    return score >= RAPIDFUZZ_THRESHOLD, float(score)
+
+
+def exact_or_fuzzy_facility_match(promoted_row: dict[str, Any], event_row: dict[str, Any]) -> tuple[bool, str | None, float]:
     if borough_of(promoted_row) != borough_of(event_row):
-        return False
+        return False, None, 0.0
     promoted_components = location_components(row_location(promoted_row))
     if not promoted_components:
-        return False
+        return False, None, 0.0
     event_components: set[str] = set()
     for location in all_event_locations(event_row):
         event_components.update(location_components(location))
     if not event_components:
-        return False
-    return bool(promoted_components & event_components)
+        return False, None, 0.0
+    if promoted_components & event_components:
+        return True, "exact_facility", 100.0
+    best_score = 0.0
+    for promoted_component in promoted_components:
+        for event_component in event_components:
+            matched, score = guarded_fuzzy_component_match(promoted_component, event_component)
+            best_score = max(best_score, score)
+            if matched:
+                return True, "rapidfuzz_facility", score
+    return False, None, best_score
 
 
 def cache_entry_matches_promoted(cache_row: dict[str, Any], promoted_row: dict[str, Any], promoted_key: str) -> bool:
@@ -241,6 +291,10 @@ def failure_report(message: str, **extra: Any) -> dict[str, Any]:
 
 def main() -> int:
     try:
+        if fuzz is None or utils is None:
+            save_json(UPDATE_REPORT_PATH, failure_report("RapidFuzz dependency is not installed; workflow must install rapidfuzz==3.*"))
+            return 1
+
         location_cache = load_json(LOCATION_CACHE_PATH, {})
         promotion_report = load_json(PROMOTION_REPORT_PATH, {})
         dry_run = load_json(DRY_RUN_REPORT_PATH, {})
@@ -273,19 +327,26 @@ def main() -> int:
         matched_keys: set[str] = set()
         update_counts_by_key: Counter[str] = Counter()
         match_mode_counts: Counter[str] = Counter()
+        fuzzy_scores: list[float] = []
 
         for event_row in staged_payload["events"]:
             if not isinstance(event_row, dict):
                 continue
             matched_by_key: dict[str, str] = {}
+            matched_scores: dict[str, float] = {}
 
             for cemsid in event_cemsids(event_row):
                 for key in cemsid_to_keys.get(cemsid, set()):
                     matched_by_key[key] = "source_cemsid"
+                    matched_scores[key] = 100.0
 
             for key, promoted_row in promoted.items():
-                if exact_facility_match(promoted_row, event_row):
-                    matched_by_key.setdefault(key, "exact_facility")
+                matched, mode, score = exact_or_fuzzy_facility_match(promoted_row, event_row)
+                if matched and mode:
+                    matched_by_key.setdefault(key, mode)
+                    matched_scores[key] = max(matched_scores.get(key, 0.0), score)
+                    if mode == "rapidfuzz_facility":
+                        fuzzy_scores.append(score)
 
             if not matched_by_key:
                 continue
@@ -314,7 +375,7 @@ def main() -> int:
             event_row["matched_promoted_cache_keys"] = sorted(matched_by_key)
             event_row["group_key"] = primary_row.get("group_key") or primary_key.removeprefix("group:")
             event_row["gps_integration_phase"] = "gps_staged_feed_integration_update"
-            event_row["gps_integration_source"] = "source_cemsid_or_exact_facility"
+            event_row["gps_integration_source"] = "source_cemsid_exact_or_rapidfuzz_facility"
             event_row["gps_integration_updated_at_utc"] = utc_now()
             event_row["location_source"] = "phase_2e_promoted_location_cache"
             event_row["phase_2e_promotion_applied_to_staged_feed"] = True
@@ -331,6 +392,7 @@ def main() -> int:
                 "lng": lng,
                 "matched_promoted_cache_keys": sorted(matched_by_key),
                 "match_modes": dict(sorted(matched_by_key.items())),
+                "match_scores": {key: round(score, 2) for key, score in sorted(matched_scores.items())},
                 "source_cemsid": sorted(event_cemsids(event_row)),
                 "source_event_id": event_row.get("source_event_id"),
                 "stable_identity_key": primary_key,
@@ -368,6 +430,9 @@ def main() -> int:
             "promoted_source_cemsid_sample": {key: sorted(ids)[:10] for key, ids in sorted(key_to_cemsids.items())},
             "public_map_modified": False,
             "qa_pass": qa_pass,
+            "rapidfuzz_enabled": True,
+            "rapidfuzz_threshold": RAPIDFUZZ_THRESHOLD,
+            "rapidfuzz_score_sample": [round(score, 2) for score in sorted(fuzzy_scores, reverse=True)[:25]],
             "skipped_count": skipped,
             "staged_feed_modified": qa_pass,
             "unmatched_promoted_cache_key_count": len(unmatched),
