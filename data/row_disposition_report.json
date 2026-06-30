@@ -1,13 +1,13 @@
 {
-  "classified_rows": 31909,
-  "current_future_raw_rows": 31909,
+  "classified_rows": 31112,
+  "current_future_raw_rows": 31112,
   "disposition_counts": {
-    "gps_review_queue": 1873,
-    "staged_with_valid_gps": 30036
+    "gps_review_queue": 1868,
+    "staged_with_valid_gps": 29244
   },
-  "generated_at_utc": "2026-06-29T23:15:58.912500+00:00",
-  "gps_ready_or_known_count": 30036,
-  "gps_ready_or_known_pct": 94.13,
+  "generated_at_utc": "2026-06-30T00:20:39.281533+00:00",
+  "gps_ready_or_known_count": 29244,
+  "gps_ready_or_known_pct": 93.996,
   "qa_contract": [
     "staged_with_valid_gps",
     "matched_known_gps_memory",
@@ -17,118 +17,11 @@
   "qa_pass": true,
   "raw_rows_loaded": 31939,
   "reason_counts": {
-    "listed_in_gps_needs_review_queue": 1873,
-    "present_in_staged_feed_with_valid_nyc_coordinates": 30036
+    "listed_in_gps_needs_review_queue": 1868,
+    "present_in_staged_feed_with_valid_nyc_coordinates": 29244
   },
   "samples": {
     "gps_review_queue": [
-      {
-        "borough": "Bronx",
-        "date": "2026-06-29",
-        "display_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
-        "disposition": "gps_review_queue",
-        "end_date_time": "2026-06-29T17:00:00.000",
-        "event_agency": "Parks Department",
-        "event_type": "Special Event",
-        "reason": "listed_in_gps_needs_review_queue",
-        "source_cemsid": [
-          "13142"
-        ],
-        "source_event_id": "949110",
-        "start_date_time": "2026-06-29T00:00:00.000",
-        "title": "FLAGS FOR HEROS"
-      },
-      {
-        "borough": "Bronx",
-        "date": "2026-06-29",
-        "display_location": "EAST  161 STREET between WALTON AVENUE and GERARD AVENUE",
-        "disposition": "gps_review_queue",
-        "end_date_time": "2026-06-29T18:00:00.000",
-        "event_agency": "Street Activity Permit Office",
-        "event_type": "Street Event",
-        "reason": "listed_in_gps_needs_review_queue",
-        "source_cemsid": [],
-        "source_event_id": "948703",
-        "start_date_time": "2026-06-29T07:00:00.000",
-        "title": "Project Street Beat - Keith Haring Foundation Mobile Health Center Community Event"
-      },
-      {
-        "borough": "Brooklyn",
-        "date": "2026-06-29",
-        "display_location": "Washington Park (MS 51): Playground B",
-        "disposition": "gps_review_queue",
-        "end_date_time": "2026-06-29T13:30:00.000",
-        "event_agency": "Parks Department",
-        "event_type": "Special Event",
-        "reason": "listed_in_gps_needs_review_queue",
-        "source_cemsid": [
-          "4592"
-        ],
-        "source_event_id": "941733",
-        "start_date_time": "2026-06-29T09:30:00.000",
-        "title": "Miscellaneous"
-      },
-      {
-        "borough": "Bronx",
-        "date": "2026-06-29",
-        "display_location": "Macombs Dam Park: Basketball-04",
-        "disposition": "gps_review_queue",
-        "end_date_time": "2026-06-29T18:00:00.000",
-        "event_agency": "Parks Department",
-        "event_type": "Sport - Youth",
-        "reason": "listed_in_gps_needs_review_queue",
-        "source_cemsid": [
-          "10755"
-        ],
-        "source_event_id": "910621",
-        "start_date_time": "2026-06-29T10:00:00.000",
-        "title": "Basketball"
-      },
-      {
-        "borough": "Bronx",
-        "date": "2026-06-29",
-        "display_location": "HALL PLACE between EAST  167 STREET and ROGERS PLACE",
-        "disposition": "gps_review_queue",
-        "end_date_time": "2026-06-29T16:00:00.000",
-        "event_agency": "Street Activity Permit Office",
-        "event_type": "Street Event",
-        "reason": "listed_in_gps_needs_review_queue",
-        "source_cemsid": [],
-        "source_event_id": "932757",
-        "start_date_time": "2026-06-29T11:00:00.000",
-        "title": "Hall Place Family Day"
-      },
-      {
-        "borough": "Brooklyn",
-        "date": "2026-06-29",
-        "display_location": "BRISTOL STREET between BLAKE AVENUE and DUMONT AVENUE",
-        "disposition": "gps_review_queue",
-        "end_date_time": "2026-06-29T17:00:00.000",
-        "event_agency": "Street Activity Permit Office",
-        "event_type": "Health Fair",
-        "reason": "listed_in_gps_needs_review_queue",
-        "source_cemsid": [],
-        "source_event_id": "928693",
-        "start_date_time": "2026-06-29T13:00:00.000",
-        "title": "Jump into Summer"
-      },
-      {
-        "borough": "Manhattan",
-        "date": "2026-06-29",
-        "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
-        "disposition": "gps_review_queue",
-        "end_date_time": "2026-06-29T23:59:00.000",
-        "event_agency": "Parks Department",
-        "event_type": "Special Event",
-        "reason": "listed_in_gps_needs_review_queue",
-        "source_cemsid": [
-          "8461",
-          "8462"
-        ],
-        "source_event_id": "955891",
-        "start_date_time": "2026-06-29T15:57:00.000",
-        "title": "Construction"
-      },
       {
         "borough": "Bronx",
         "date": "2026-06-30",
@@ -800,10 +693,122 @@
         "source_event_id": "928183",
         "start_date_time": "2026-07-01T17:00:00.000",
         "title": "Soccer - Non Regulation"
+      },
+      {
+        "borough": "Queens",
+        "date": "2026-07-01",
+        "display_location": "Forest Park: Sgt. Schaefer Oval Lawn",
+        "disposition": "gps_review_queue",
+        "end_date_time": "2026-07-01T18:30:00.000",
+        "event_agency": "Parks Department",
+        "event_type": "Special Event",
+        "reason": "listed_in_gps_needs_review_queue",
+        "source_cemsid": [
+          "4982"
+        ],
+        "source_event_id": "920269",
+        "start_date_time": "2026-07-01T17:30:00.000",
+        "title": "Shape Up NYC: intenSati"
+      },
+      {
+        "borough": "Staten Island",
+        "date": "2026-07-01",
+        "display_location": "Harris Brother Park: Soccer-01",
+        "disposition": "gps_review_queue",
+        "end_date_time": "2026-07-01T20:30:00.000",
+        "event_agency": "Parks Department",
+        "event_type": "Sport - Youth",
+        "reason": "listed_in_gps_needs_review_queue",
+        "source_cemsid": [
+          "10681"
+        ],
+        "source_event_id": "939206",
+        "start_date_time": "2026-07-01T17:30:00.000",
+        "title": "Soccer - Non Regulation"
+      },
+      {
+        "borough": "Staten Island",
+        "date": "2026-07-01",
+        "display_location": "Franklin D Roosevelt Boardwalk and Beach: South Beach-Bocce-01",
+        "disposition": "gps_review_queue",
+        "end_date_time": "2026-07-01T20:00:00.000",
+        "event_agency": "Parks Department",
+        "event_type": "Sport - Adult",
+        "reason": "listed_in_gps_needs_review_queue",
+        "source_cemsid": [
+          "10658"
+        ],
+        "source_event_id": "953216",
+        "start_date_time": "2026-07-01T18:00:00.000",
+        "title": "Bocce"
+      },
+      {
+        "borough": "Manhattan",
+        "date": "2026-07-01",
+        "display_location": "Marx Brothers Playground: Softball-01",
+        "disposition": "gps_review_queue",
+        "end_date_time": "2026-07-01T20:00:00.000",
+        "event_agency": "Parks Department",
+        "event_type": "Sport - Adult",
+        "reason": "listed_in_gps_needs_review_queue",
+        "source_cemsid": [
+          "8431"
+        ],
+        "source_event_id": "905363",
+        "start_date_time": "2026-07-01T18:30:00.000",
+        "title": "Softball - Adults"
+      },
+      {
+        "borough": "Brooklyn",
+        "date": "2026-07-01",
+        "display_location": "Greenwood Playground (PS 88): Softball-01",
+        "disposition": "gps_review_queue",
+        "end_date_time": "2026-07-01T20:00:00.000",
+        "event_agency": "Parks Department",
+        "event_type": "Sport - Adult",
+        "reason": "listed_in_gps_needs_review_queue",
+        "source_cemsid": [
+          "5181"
+        ],
+        "source_event_id": "951295",
+        "start_date_time": "2026-07-01T19:00:00.000",
+        "title": "Softball - Adults"
+      },
+      {
+        "borough": "Bronx",
+        "date": "2026-07-02",
+        "display_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
+        "disposition": "gps_review_queue",
+        "end_date_time": "2026-07-02T17:00:00.000",
+        "event_agency": "Parks Department",
+        "event_type": "Special Event",
+        "reason": "listed_in_gps_needs_review_queue",
+        "source_cemsid": [
+          "13142"
+        ],
+        "source_event_id": "949110",
+        "start_date_time": "2026-07-02T00:00:00.000",
+        "title": "FLAGS FOR HEROS"
+      },
+      {
+        "borough": "Brooklyn",
+        "date": "2026-07-02",
+        "display_location": "Brower Park (PS 289 - Playground Only): Brower Park",
+        "disposition": "gps_review_queue",
+        "end_date_time": "2026-07-02T16:00:00.000",
+        "event_agency": "Parks Department",
+        "event_type": "Special Event",
+        "reason": "listed_in_gps_needs_review_queue",
+        "source_cemsid": [
+          "1450"
+        ],
+        "source_event_id": "916009",
+        "start_date_time": "2026-07-02T07:00:00.000",
+        "title": "HHFM Brower Park Market"
       }
     ],
     "rejected_with_reason": []
   },
-  "today_utc": "2026-06-29",
+  "today_utc": "2026-06-30",
   "unclassified_rows": 0
 }

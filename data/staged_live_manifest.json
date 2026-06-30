@@ -1,73 +1,38 @@
 {
   "borough_counts": {
-    "Bronx": 4098,
-    "Brooklyn": 7371,
-    "Manhattan": 10126,
-    "Queens": 6662,
-    "Staten Island": 1336
+    "Bronx": 3994,
+    "Brooklyn": 7168,
+    "Manhattan": 9832,
+    "Queens": 6508,
+    "Staten Island": 1305
   },
   "category_counts": {
-    "arts": 201,
-    "general": 5,
-    "market": 293,
-    "parks": 4704,
-    "sports": 24390
+    "arts": 196,
+    "general": 2,
+    "market": 284,
+    "parks": 4617,
+    "sports": 23708
   },
   "duplicate_policy": {
     "one_day_street_events": "dedupe by title + borough + location + coordinate; keep earliest source date; recurring sports and park events are not deduped by this rule",
     "production_feeds_modified": false
   },
-  "eligible_rows_before_one_day_street_dedupe": 29737,
-  "generated_at_utc": "2026-06-29T23:15:49.599918+00:00",
+  "eligible_rows_before_one_day_street_dedupe": 28947,
+  "generated_at_utc": "2026-06-30T00:20:30.135715+00:00",
   "match_counts": {
-    "event_id": 23694,
-    "location_cache": 5792,
-    "text_date_location": 107
+    "event_id": 22914,
+    "location_cache": 5788,
+    "text_date_location": 105
   },
-  "one_day_street_duplicates_suppressed": 144,
+  "one_day_street_duplicates_suppressed": 140,
   "production_feed": false,
   "production_ready": true,
   "sample_one_day_street_rejected_rows": [
     {
       "borough": "Manhattan",
-      "date": "2026-06-30",
-      "display_location": "MADISON AVENUE between EAST   51 STREET and EAST   50 STREET,  MADISON AVENUE between EAST   48 STREET and EAST   49 STREET,  EAST   50 STREET between MADISON AVENUE and PARK AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  LEXINGTON AVENUE between EAST   49 STREET and EAST   50 STREET,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between 3 AVENUE and 2 AVENUE,  WEST   35 STREET between 8 AVENUE and 9 AVENUE",
-      "kept_date": "2026-06-29",
-      "kept_source_event_id": "947413",
-      "reason": "one_day_street_duplicate_suppressed",
-      "source_cemsid": [],
-      "source_event_id": "947413",
-      "title": "FWC2026"
-    },
-    {
-      "borough": "Queens",
-      "date": "2026-06-30",
-      "display_location": "34 AVENUE between 93 STREET and 94 STREET",
-      "kept_date": "2026-06-29",
-      "kept_source_event_id": "934014",
-      "reason": "one_day_street_duplicate_suppressed",
-      "source_cemsid": [],
-      "source_event_id": "934014",
-      "title": "Afterschool Fun"
-    },
-    {
-      "borough": "Brooklyn",
-      "date": "2026-06-30",
-      "display_location": "Avenue C Plaza: Avenue C Plaza MCDONALD AVENUE between AVENUE C and CHURCH AVENUE",
-      "kept_date": "2026-06-29",
-      "kept_source_event_id": "943856",
-      "reason": "one_day_street_duplicate_suppressed",
-      "source_cemsid": [
-        "11694"
-      ],
-      "source_event_id": "943856",
-      "title": "Immigrant Culture Month at Avenue C Plaza Extension - June"
-    },
-    {
-      "borough": "Manhattan",
       "date": "2026-07-01",
       "display_location": "MADISON AVENUE between EAST   51 STREET and EAST   50 STREET,  MADISON AVENUE between EAST   48 STREET and EAST   49 STREET,  EAST   50 STREET between MADISON AVENUE and PARK AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  LEXINGTON AVENUE between EAST   49 STREET and EAST   50 STREET,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between 3 AVENUE and 2 AVENUE,  WEST   35 STREET between 8 AVENUE and 9 AVENUE",
-      "kept_date": "2026-06-29",
+      "kept_date": "2026-06-30",
       "kept_source_event_id": "947413",
       "reason": "one_day_street_duplicate_suppressed",
       "source_cemsid": [],
@@ -78,7 +43,7 @@
       "borough": "Queens",
       "date": "2026-07-01",
       "display_location": "34 AVENUE between 93 STREET and 94 STREET",
-      "kept_date": "2026-06-29",
+      "kept_date": "2026-06-30",
       "kept_source_event_id": "934014",
       "reason": "one_day_street_duplicate_suppressed",
       "source_cemsid": [],
@@ -89,7 +54,7 @@
       "borough": "Manhattan",
       "date": "2026-07-02",
       "display_location": "MADISON AVENUE between EAST   51 STREET and EAST   50 STREET,  MADISON AVENUE between EAST   48 STREET and EAST   49 STREET,  EAST   50 STREET between MADISON AVENUE and PARK AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  LEXINGTON AVENUE between EAST   49 STREET and EAST   50 STREET,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between 3 AVENUE and 2 AVENUE,  WEST   35 STREET between 8 AVENUE and 9 AVENUE",
-      "kept_date": "2026-06-29",
+      "kept_date": "2026-06-30",
       "kept_source_event_id": "947413",
       "reason": "one_day_street_duplicate_suppressed",
       "source_cemsid": [],
@@ -100,7 +65,7 @@
       "borough": "Queens",
       "date": "2026-07-02",
       "display_location": "34 AVENUE between 93 STREET and 94 STREET",
-      "kept_date": "2026-06-29",
+      "kept_date": "2026-06-30",
       "kept_source_event_id": "934014",
       "reason": "one_day_street_duplicate_suppressed",
       "source_cemsid": [],
@@ -124,7 +89,7 @@
       "borough": "Manhattan",
       "date": "2026-07-03",
       "display_location": "MADISON AVENUE between EAST   51 STREET and EAST   50 STREET,  MADISON AVENUE between EAST   48 STREET and EAST   49 STREET,  EAST   50 STREET between MADISON AVENUE and PARK AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  LEXINGTON AVENUE between EAST   49 STREET and EAST   50 STREET,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between 3 AVENUE and 2 AVENUE,  WEST   35 STREET between 8 AVENUE and 9 AVENUE",
-      "kept_date": "2026-06-29",
+      "kept_date": "2026-06-30",
       "kept_source_event_id": "947413",
       "reason": "one_day_street_duplicate_suppressed",
       "source_cemsid": [],
@@ -135,7 +100,7 @@
       "borough": "Queens",
       "date": "2026-07-03",
       "display_location": "34 AVENUE between 93 STREET and 94 STREET",
-      "kept_date": "2026-06-29",
+      "kept_date": "2026-06-30",
       "kept_source_event_id": "934014",
       "reason": "one_day_street_duplicate_suppressed",
       "source_cemsid": [],
@@ -157,7 +122,7 @@
       "borough": "Manhattan",
       "date": "2026-07-04",
       "display_location": "MADISON AVENUE between EAST   51 STREET and EAST   50 STREET,  MADISON AVENUE between EAST   48 STREET and EAST   49 STREET,  EAST   50 STREET between MADISON AVENUE and PARK AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  LEXINGTON AVENUE between EAST   49 STREET and EAST   50 STREET,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between 3 AVENUE and 2 AVENUE,  WEST   35 STREET between 8 AVENUE and 9 AVENUE",
-      "kept_date": "2026-06-29",
+      "kept_date": "2026-06-30",
       "kept_source_event_id": "947413",
       "reason": "one_day_street_duplicate_suppressed",
       "source_cemsid": [],
@@ -179,7 +144,7 @@
       "borough": "Queens",
       "date": "2026-07-04",
       "display_location": "34 AVENUE between 93 STREET and 94 STREET",
-      "kept_date": "2026-06-29",
+      "kept_date": "2026-06-30",
       "kept_source_event_id": "934014",
       "reason": "one_day_street_duplicate_suppressed",
       "source_cemsid": [],
@@ -251,7 +216,7 @@
       "borough": "Manhattan",
       "date": "2026-07-05",
       "display_location": "MADISON AVENUE between EAST   51 STREET and EAST   50 STREET,  MADISON AVENUE between EAST   48 STREET and EAST   49 STREET,  EAST   50 STREET between MADISON AVENUE and PARK AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  LEXINGTON AVENUE between EAST   49 STREET and EAST   50 STREET,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between 3 AVENUE and 2 AVENUE,  WEST   35 STREET between 8 AVENUE and 9 AVENUE",
-      "kept_date": "2026-06-29",
+      "kept_date": "2026-06-30",
       "kept_source_event_id": "947413",
       "reason": "one_day_street_duplicate_suppressed",
       "source_cemsid": [],
@@ -273,7 +238,7 @@
       "borough": "Queens",
       "date": "2026-07-05",
       "display_location": "34 AVENUE between 93 STREET and 94 STREET",
-      "kept_date": "2026-06-29",
+      "kept_date": "2026-06-30",
       "kept_source_event_id": "934014",
       "reason": "one_day_street_duplicate_suppressed",
       "source_cemsid": [],
@@ -306,80 +271,48 @@
       "borough": "Manhattan",
       "date": "2026-07-06",
       "display_location": "MADISON AVENUE between EAST   51 STREET and EAST   50 STREET,  MADISON AVENUE between EAST   48 STREET and EAST   49 STREET,  EAST   50 STREET between MADISON AVENUE and PARK AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  LEXINGTON AVENUE between EAST   49 STREET and EAST   50 STREET,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between 3 AVENUE and 2 AVENUE,  WEST   35 STREET between 8 AVENUE and 9 AVENUE",
-      "kept_date": "2026-06-29",
+      "kept_date": "2026-06-30",
       "kept_source_event_id": "947413",
       "reason": "one_day_street_duplicate_suppressed",
       "source_cemsid": [],
       "source_event_id": "947413",
       "title": "FWC2026"
-    }
-  ],
-  "sample_skipped_rows": [
-    {
-      "borough": "Bronx",
-      "display_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
-      "display_time": "12:00 AM",
-      "source_cemsid": [
-        "13142"
-      ],
-      "source_event_id": "949110",
-      "title": "FLAGS FOR HEROS"
     },
     {
-      "borough": "Bronx",
-      "display_location": "EAST  161 STREET between WALTON AVENUE and GERARD AVENUE",
-      "display_time": "7:00 AM",
+      "borough": "Queens",
+      "date": "2026-07-06",
+      "display_location": "34 AVENUE between 93 STREET and 94 STREET",
+      "kept_date": "2026-06-30",
+      "kept_source_event_id": "934014",
+      "reason": "one_day_street_duplicate_suppressed",
       "source_cemsid": [],
-      "source_event_id": "948703",
-      "title": "Project Street Beat - Keith Haring Foundation Mobile Health Center Community Event"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "Washington Park (MS 51): Playground B",
-      "display_time": "9:30 AM",
-      "source_cemsid": [
-        "4592"
-      ],
-      "source_event_id": "941733",
-      "title": "Miscellaneous"
-    },
-    {
-      "borough": "Bronx",
-      "display_location": "Macombs Dam Park: Basketball-04",
-      "display_time": "10:00 AM",
-      "source_cemsid": [
-        "10755"
-      ],
-      "source_event_id": "910621",
-      "title": "Basketball"
-    },
-    {
-      "borough": "Bronx",
-      "display_location": "HALL PLACE between EAST  167 STREET and ROGERS PLACE",
-      "display_time": "11:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "932757",
-      "title": "Hall Place Family Day"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "BRISTOL STREET between BLAKE AVENUE and DUMONT AVENUE",
-      "display_time": "1:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "928693",
-      "title": "Jump into Summer"
+      "source_event_id": "934014",
+      "title": "Afterschool Fun"
     },
     {
       "borough": "Manhattan",
-      "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
-      "display_time": "3:57 PM",
-      "source_cemsid": [
-        "8461",
-        "8462"
-      ],
-      "source_event_id": "955891",
-      "title": "Construction"
+      "date": "2026-07-07",
+      "display_location": "MADISON AVENUE between EAST   51 STREET and EAST   50 STREET,  MADISON AVENUE between EAST   48 STREET and EAST   49 STREET,  EAST   50 STREET between MADISON AVENUE and PARK AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  EAST   49 STREET between PARK AVENUE and LEXINGTON AVENUE,  LEXINGTON AVENUE between EAST   49 STREET and EAST   50 STREET,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between LEXINGTON AVENUE and 3 AVENUE,  EAST   49 STREET between 3 AVENUE and 2 AVENUE,  WEST   35 STREET between 8 AVENUE and 9 AVENUE",
+      "kept_date": "2026-06-30",
+      "kept_source_event_id": "947413",
+      "reason": "one_day_street_duplicate_suppressed",
+      "source_cemsid": [],
+      "source_event_id": "947413",
+      "title": "FWC2026"
     },
+    {
+      "borough": "Queens",
+      "date": "2026-07-07",
+      "display_location": "34 AVENUE between 93 STREET and 94 STREET",
+      "kept_date": "2026-06-30",
+      "kept_source_event_id": "934014",
+      "reason": "one_day_street_duplicate_suppressed",
+      "source_cemsid": [],
+      "source_event_id": "934014",
+      "title": "Afterschool Fun"
+    }
+  ],
+  "sample_skipped_rows": [
     {
       "borough": "Bronx",
       "display_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
@@ -504,11 +437,74 @@
       ],
       "source_event_id": "919369",
       "title": "HHFM Hunts Point Market"
+    },
+    {
+      "borough": "Bronx",
+      "display_location": "EAST  163 STREET between BRUCKNER BOULEVARD and SOUTHERN BOULEVARD",
+      "display_time": "8:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "914346",
+      "title": "HHFM Hunts Point Market"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "CLARKSON AVENUE between EAST   37 STREET and EAST   38 STREET",
+      "display_time": "8:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "930126",
+      "title": "HHFM Kings County Hospital Market"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "MADISON AVENUE between EAST   98 STREET and EAST   99 STREET",
+      "display_time": "8:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "911512",
+      "title": "Mount Sinai Greenmarket Wednesday"
+    },
+    {
+      "borough": "Queens",
+      "display_location": "Baisley Pond Park: Cricket-04",
+      "display_time": "8:00 AM",
+      "source_cemsid": [
+        "11886"
+      ],
+      "source_event_id": "912982",
+      "title": "Cricket"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
+      "display_time": "9:00 AM",
+      "source_cemsid": [
+        "5010",
+        "5016"
+      ],
+      "source_event_id": "917705",
+      "title": "Miscellaneous"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "KNICKERBOCKER AVENUE between MENAHAN STREET and GROVE STREET",
+      "display_time": "9:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "923927",
+      "title": "RiseBoro Farmers Markets at Hope Ballfield"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "Marine Park: Soccer-01",
+      "display_time": "9:00 AM",
+      "source_cemsid": [
+        "9018"
+      ],
+      "source_event_id": "904321",
+      "title": "Soccer - Non Regulation"
     }
   ],
-  "skipped_needs_review_or_bad_gps": 2172,
+  "skipped_needs_review_or_bad_gps": 2165,
   "source": "nycif_live_test_enriched_events.json",
   "staged_feed": true,
-  "staged_feed_events": 29593,
-  "test_feed_rows_loaded": 31909
+  "staged_feed_events": 28807,
+  "test_feed_rows_loaded": 31112
 }
