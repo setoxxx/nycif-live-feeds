@@ -1,0 +1,62 @@
+{
+  "blocking_issues": [
+    "data/nycif_staged_live_events.json is empty, so no staged events can be matched in this dry-run"
+  ],
+  "conflict_count": 0,
+  "dry_run_scope": "design_and_no_write_staged_feed_integration_dry_run_only",
+  "generated_at_utc": "2026-06-30T01:15:00+00:00",
+  "input_location_cache": "data/location_cache.json",
+  "input_post_promotion_qa_report": "data/gps_phase2e_post_promotion_qa_report.json",
+  "input_staged_feed": "data/nycif_staged_live_events.json",
+  "integration_ready": false,
+  "location_cache_promoted_count": 25,
+  "matched_staged_event_count": 0,
+  "next_required_step": "Populate or regenerate data/nycif_staged_live_events.json, then re-run staged feed GPS integration dry-run. Do not publish to the public map until a separate staged-feed update and public-map validation gate pass.",
+  "phase": "gps_staged_feed_integration_dry_run_only",
+  "phase_3a_run": false,
+  "proposed_staged_feed_update_count": 0,
+  "public_map_modified": false,
+  "qa_pass": true,
+  "skipped_count": 25,
+  "skipped_reason_counts": {
+    "staged_feed_empty_no_events_to_match": 25
+  },
+  "staged_feed_modified": false,
+  "staged_feed_source_status": "empty_file",
+  "unmatched_promoted_cache_key_count": 25,
+  "unmatched_promoted_cache_keys": [
+    "group:bronx|macombs dam park basketball 04",
+    "group:manhattan|riverside park south 71st st south basketball 14",
+    "group:brooklyn|martin luther king jr playground basketball 02",
+    "group:brooklyn|friends field lawn area",
+    "group:brooklyn|gravesend park lawn area",
+    "group:queens|hoffman park softball 01",
+    "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+    "group:brooklyn|rappaport playground rappaport playground rappaport playground handball 01",
+    "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+    "group:brooklyn|mcdonald playground tennis 01",
+    "group:brooklyn|mcdonald playground tennis 02",
+    "group:brooklyn|mcdonald playground tennis 03",
+    "group:manhattan|de witt clinton park soccer 01a",
+    "group:queens|clintonville playground tennis 01",
+    "group:queens|clintonville playground tennis 02",
+    "group:queens|broad channel park tennis 01",
+    "group:brooklyn|pratt playground basketball 02",
+    "group:brooklyn|linden park gershwin park jhs 166 track 01",
+    "group:manhattan|washington market park tennis 01",
+    "group:brooklyn|mccarren park bayard union lawns",
+    "group:bronx|st mary s park st mary s playground west tennis 02",
+    "group:bronx|st mary s park st mary s playground west tennis 01",
+    "group:brooklyn|owl s head park owls head park basketball 01",
+    "group:manhattan|j hood wright park softball 01",
+    "group:manhattan|de witt clinton park basketball 01"
+  ],
+  "validated_conditions": {
+    "conflict_count_is_0": true,
+    "location_cache_promoted_count_is_25": true,
+    "phase_3a_run_false": true,
+    "public_map_modified_false": true,
+    "qa_pass_true": true,
+    "staged_feed_modified_false": true
+  }
+}
