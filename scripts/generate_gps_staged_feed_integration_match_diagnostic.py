@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import math
 import re
 import sys
 from collections import Counter, defaultdict
@@ -27,6 +28,20 @@ EXPECTED_STAGED_MATCHES = 430
 FACILITY_TYPES = {"basketball", "softball", "soccer", "tennis", "handball", "track", "lawn", "lawns"}
 SITE_FUZZ_THRESHOLD = 96.0
 FACILITY_FUZZ_THRESHOLD = 92.0
+NEAR_MISS_LIMIT = 25
+SAME_SITE_NEAR_MISS_MIN_SCORE = 70.0
+SAME_COORDINATE_NEAR_METERS = 75.0
+
+REJECTION_REASONS = (
+    "site_name_below_threshold",
+    "facility_type_mismatch",
+    "facility_number_mismatch",
+    "no_site_facility_pair",
+    "borough_mismatch",
+    "coordinate_conflict",
+    "no_cemsid_overlap",
+    "no_candidate_rows_found",
+)
 
 
 def utc_now() -> str:
@@ -96,6 +111,27 @@ def valid_nyc_lat_lng(lat: Any, lng: Any) -> bool:
     return 40.0 <= lat_f <= 41.0 and -75.0 <= lng_f <= -73.0
 
 
+def lat_lng(row: dict[str, Any]) -> tuple[float, float] | None:
+    lat = row.get("lat")
+    lng = row.get("lng")
+    if not valid_nyc_lat_lng(lat, lng):
+        return None
+    return float(lat), float(lng)
+
+
+def distance_meters(a_lat: Any, a_lng: Any, b_lat: Any, b_lng: Any) -> float | None:
+    if not valid_nyc_lat_lng(a_lat, a_lng) or not valid_nyc_lat_lng(b_lat, b_lng):
+        return None
+    lat1 = math.radians(float(a_lat))
+    lon1 = math.radians(float(a_lng))
+    lat2 = math.radians(float(b_lat))
+    lon2 = math.radians(float(b_lng))
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    h = math.sin(dlat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(dlon / 2) ** 2
+    return 6371000.0 * 2.0 * math.asin(math.sqrt(h))
+
+
 def facility_type(component: str) -> str | None:
     words = set(component.split())
     for kind in FACILITY_TYPES:
@@ -160,6 +196,19 @@ def same_site(left: str, right: str) -> tuple[bool, float]:
     return score >= SITE_FUZZ_THRESHOLD, score
 
 
+def facility_score(left: str, right: str) -> float:
+    if left == right:
+        return 100.0
+    if fuzz is None or utils is None:
+        return 0.0
+    return float(
+        max(
+            fuzz.token_sort_ratio(left, right, processor=utils.default_process),
+            fuzz.WRatio(left, right, processor=utils.default_process),
+        )
+    )
+
+
 def same_facility(left: str, right: str) -> tuple[bool, str, float]:
     if left == right:
         return True, "exact_site_facility", 100.0
@@ -175,11 +224,20 @@ def same_facility(left: str, right: str) -> tuple[bool, str, float]:
     right_numbers = facility_numbers(right)
     if left_numbers and right_numbers and not (left_numbers & right_numbers):
         return False, "", 0.0
-    score = max(
-        fuzz.token_sort_ratio(left, right, processor=utils.default_process),
-        fuzz.WRatio(left, right, processor=utils.default_process),
-    )
-    return float(score) >= FACILITY_FUZZ_THRESHOLD, "rapidfuzz_site_facility", float(score)
+    score = facility_score(left, right)
+    return score >= FACILITY_FUZZ_THRESHOLD, "rapidfuzz_site_facility", float(score)
+
+
+def facility_type_number_compatible(left: str, right: str) -> bool:
+    left_type = facility_type(left)
+    right_type = facility_type(right)
+    if left_type != right_type or left_type is None:
+        return False
+    left_numbers = facility_numbers(left)
+    right_numbers = facility_numbers(right)
+    if left_numbers or right_numbers:
+        return bool(left_numbers & right_numbers)
+    return True
 
 
 def promoted_rows_from_report(payload: dict[str, Any]) -> dict[str, dict[str, Any]]:
@@ -259,6 +317,66 @@ def cemsids_for_promoted_rows(location_entries: dict[str, Any], promoted: dict[s
     return key_to_cemsids
 
 
+def pair_diagnostics(promoted_row: dict[str, Any], event_row: dict[str, Any]) -> dict[str, Any]:
+    promoted_pairs = site_facility_pairs(row_location(promoted_row))
+    event_pairs: set[tuple[str, str]] = set()
+    for location in all_locations(event_row):
+        event_pairs.update(site_facility_pairs(location))
+
+    result: dict[str, Any] = {
+        "best_event_facility": None,
+        "best_event_site": None,
+        "best_facility_score": 0.0,
+        "best_promoted_facility": None,
+        "best_promoted_site": None,
+        "best_site_score": 0.0,
+        "event_pair_count": len(event_pairs),
+        "facility_number_match": False,
+        "facility_type_match": False,
+        "promoted_pair_count": len(promoted_pairs),
+        "rejection_reasons": [],
+        "site_match": False,
+        "site_pair_present": bool(promoted_pairs and event_pairs),
+    }
+
+    if not promoted_pairs or not event_pairs:
+        result["rejection_reasons"].append("no_site_facility_pair")
+        return result
+
+    for promoted_site, promoted_facility in promoted_pairs:
+        for event_site, event_facility in event_pairs:
+            site_ok, site_score = same_site(promoted_site, event_site)
+            fac_score = facility_score(promoted_facility, event_facility)
+            if site_score > float(result["best_site_score"]):
+                result["best_site_score"] = round(site_score, 2)
+                result["best_event_site"] = event_site
+                result["best_promoted_site"] = promoted_site
+            if fac_score > float(result["best_facility_score"]):
+                result["best_facility_score"] = round(fac_score, 2)
+                result["best_event_facility"] = event_facility
+                result["best_promoted_facility"] = promoted_facility
+            if site_ok:
+                result["site_match"] = True
+            promoted_type = facility_type(promoted_facility)
+            event_type = facility_type(event_facility)
+            if promoted_type and promoted_type == event_type:
+                result["facility_type_match"] = True
+                promoted_numbers = facility_numbers(promoted_facility)
+                event_numbers = facility_numbers(event_facility)
+                if not promoted_numbers and not event_numbers:
+                    result["facility_number_match"] = True
+                elif promoted_numbers & event_numbers:
+                    result["facility_number_match"] = True
+
+    if not result["site_match"]:
+        result["rejection_reasons"].append("site_name_below_threshold")
+    if not result["facility_type_match"]:
+        result["rejection_reasons"].append("facility_type_mismatch")
+    elif not result["facility_number_match"]:
+        result["rejection_reasons"].append("facility_number_mismatch")
+    return result
+
+
 def row_match(promoted_key: str, promoted_row: dict[str, Any], event_row: dict[str, Any], key_to_cemsids: dict[str, set[str]]) -> dict[str, Any] | None:
     if not borough_compatible(promoted_row, event_row):
         return None
@@ -303,8 +421,84 @@ def row_match(promoted_key: str, promoted_row: dict[str, Any], event_row: dict[s
     }
 
 
+def near_miss_row(promoted_key: str, promoted_row: dict[str, Any], event_row: dict[str, Any], key_to_cemsids: dict[str, set[str]]) -> dict[str, Any]:
+    diagnostics = pair_diagnostics(promoted_row, event_row)
+    overlap = sorted(event_cemsids(event_row) & key_to_cemsids.get(promoted_key, set()))
+    distance = distance_meters(promoted_row.get("lat"), promoted_row.get("lng"), event_row.get("lat"), event_row.get("lng"))
+    reasons = list(diagnostics["rejection_reasons"])
+    if not borough_compatible(promoted_row, event_row):
+        reasons.append("borough_mismatch")
+    if not overlap:
+        reasons.append("no_cemsid_overlap")
+    if distance is not None and distance > SAME_COORDINATE_NEAR_METERS:
+        reasons.append("coordinate_conflict")
+    return {
+        "best_event_facility": diagnostics["best_event_facility"],
+        "best_event_site": diagnostics["best_event_site"],
+        "best_facility_score": diagnostics["best_facility_score"],
+        "best_promoted_facility": diagnostics["best_promoted_facility"],
+        "best_promoted_site": diagnostics["best_promoted_site"],
+        "best_site_score": diagnostics["best_site_score"],
+        "coordinate_distance_meters": round(distance, 2) if distance is not None else None,
+        "current_lat": event_row.get("lat"),
+        "current_lng": event_row.get("lng"),
+        "display_location": row_location(event_row),
+        "event_borough": event_row.get("borough") or event_row.get("event_borough"),
+        "exact_coordinate_match": bool(distance is not None and distance < 0.5),
+        "facility_number_match": diagnostics["facility_number_match"],
+        "facility_type_match": diagnostics["facility_type_match"],
+        "overlapping_cemsids": overlap,
+        "rejection_reasons": sorted(set(reasons)) or ["no_candidate_rows_found"],
+        "source_cemsid": sorted(event_cemsids(event_row)),
+        "source_event_id": event_row.get("source_event_id") or event_row.get("event_id") or event_row.get("id"),
+        "stable_event_identity": stable_event_identity(event_row),
+        "title": event_row.get("title") or event_row.get("event_name"),
+    }
+
+
+def near_miss_diagnostics(promoted_key: str, promoted_row: dict[str, Any], staged_rows: list[dict[str, Any]], key_to_cemsids: dict[str, set[str]]) -> dict[str, Any]:
+    same_site_candidates: list[dict[str, Any]] = []
+    same_facility_candidates: list[dict[str, Any]] = []
+    same_coordinate_candidates: list[dict[str, Any]] = []
+    same_cemsid_candidates: list[dict[str, Any]] = []
+    rejection_counts: Counter[str] = Counter()
+
+    for event_row in staged_rows:
+        row = near_miss_row(promoted_key, promoted_row, event_row, key_to_cemsids)
+        for reason in row["rejection_reasons"]:
+            if reason in REJECTION_REASONS:
+                rejection_counts[reason] += 1
+
+        if row["best_site_score"] >= SAME_SITE_NEAR_MISS_MIN_SCORE:
+            same_site_candidates.append(row)
+        if row["facility_type_match"] and row["facility_number_match"]:
+            same_facility_candidates.append(row)
+        if row["coordinate_distance_meters"] is not None and row["coordinate_distance_meters"] <= SAME_COORDINATE_NEAR_METERS:
+            same_coordinate_candidates.append(row)
+        if row["overlapping_cemsids"]:
+            same_cemsid_candidates.append(row)
+
+    if not staged_rows:
+        rejection_counts["no_candidate_rows_found"] += 1
+    if not any([same_site_candidates, same_facility_candidates, same_coordinate_candidates, same_cemsid_candidates]):
+        rejection_counts["no_candidate_rows_found"] += 1
+
+    same_site_candidates.sort(key=lambda row: (row["best_site_score"], row["best_facility_score"]), reverse=True)
+    same_facility_candidates.sort(key=lambda row: (row["best_facility_score"], row["best_site_score"]), reverse=True)
+    same_coordinate_candidates.sort(key=lambda row: row["coordinate_distance_meters"] if row["coordinate_distance_meters"] is not None else 999999999.0)
+    same_cemsid_candidates.sort(key=lambda row: (len(row["overlapping_cemsids"]), row["best_site_score"], row["best_facility_score"]), reverse=True)
+
+    return {
+        "closest_same_facility_candidates": same_facility_candidates[:NEAR_MISS_LIMIT],
+        "closest_same_site_candidates": same_site_candidates[:NEAR_MISS_LIMIT],
+        "rejection_reason_counts": {reason: int(rejection_counts.get(reason, 0)) for reason in REJECTION_REASONS},
+        "same_cemsid_candidates": same_cemsid_candidates[:NEAR_MISS_LIMIT],
+        "same_coordinate_candidates": same_coordinate_candidates[:NEAR_MISS_LIMIT],
+    }
+
+
 def rows_from_staged(payload: Any) -> list[dict[str, Any]]:
-    if isinstance(payload, dict) and isinstance(payload.get("events"), list):
+    if isinstance(payload, dict) and isinstance(payload.get("events", None), list):
         return [row for row in payload["events"] if isinstance(row, dict)]
     if isinstance(payload, list):
         return [row for row in payload if isinstance(row, dict)]
@@ -379,6 +573,12 @@ def main() -> int:
                 continue
             selected_rows.append(row)
 
+    unmatched_keys = sorted(key for key in promoted if not candidates_by_key.get(key))
+    near_misses_by_key = {
+        key: near_miss_diagnostics(key, promoted[key], staged_rows, key_to_cemsids)
+        for key in unmatched_keys
+    }
+
     selected_identity_count = len({row["stable_event_identity"] for row in selected_rows})
     selected_count = len(selected_rows)
     all_keys_have_candidates = all(bool(candidates_by_key.get(key)) for key in promoted)
@@ -405,6 +605,7 @@ def main() -> int:
         "location_cache_modified": False,
         "multi_key_conflict_count": len(multi_key_conflicts),
         "multi_key_conflicts_sample": multi_key_conflicts[:50],
+        "near_miss_diagnostics_by_promoted_cache_key": near_misses_by_key,
         "phase": "gps_staged_feed_integration_match_diagnostic",
         "phase_3a_run": False,
         "promoted_cache_key_count": len(promoted),
@@ -417,12 +618,13 @@ def main() -> int:
         "staged_event_count": len(staged_rows),
         "staged_feed_modified": False,
         "stable_identity_ready_for_update": stable_identity_ready,
-        "unmatched_promoted_cache_key_count": sum(1 for key in promoted if not candidates_by_key.get(key)),
-        "unmatched_promoted_cache_keys": sorted(key for key in promoted if not candidates_by_key.get(key)),
+        "unmatched_promoted_cache_key_count": len(unmatched_keys),
+        "unmatched_promoted_cache_keys": unmatched_keys,
         "validated_conditions": {
             "all_promoted_keys_have_candidates": all_keys_have_candidates,
             "candidate_count_matches_dry_run_430": selected_count == expected_count,
             "location_cache_modified_false": True,
+            "near_miss_diagnostics_present_for_unmatched_keys": set(near_misses_by_key) == set(unmatched_keys),
             "no_multi_key_conflicts": not multi_key_conflicts,
             "phase_3a_run_false": True,
             "promoted_cache_key_count_is_25": len(promoted) == EXPECTED_PROMOTED_CACHE_KEYS,
@@ -433,7 +635,9 @@ def main() -> int:
     }
 
     save_json(DIAGNOSTIC_PATH, report)
-    print(json.dumps({k: v for k, v in report.items() if k != "selected_stable_identity_rows"}, indent=2, ensure_ascii=False))
+    printable = {k: v for k, v in report.items() if k not in {"selected_stable_identity_rows", "near_miss_diagnostics_by_promoted_cache_key"}}
+    printable["near_miss_diagnostics_by_promoted_cache_key_count"] = len(near_misses_by_key)
+    print(json.dumps(printable, indent=2, ensure_ascii=False))
     return 0
 
 
