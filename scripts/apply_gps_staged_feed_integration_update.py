@@ -4,31 +4,18 @@ import json
 import re
 import sys
 import traceback
-from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-try:
-    from rapidfuzz import fuzz, utils
-except Exception:  # pragma: no cover - reported by runtime QA below
-    fuzz = None
-    utils = None
-
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
-LOCATION_CACHE_PATH = DATA_DIR / "location_cache.json"
-PROMOTION_REPORT_PATH = DATA_DIR / "gps_phase2e_promotion_report.json"
-POST_PROMOTION_QA_REPORT_PATH = DATA_DIR / "gps_phase2e_post_promotion_qa_report.json"
-DRY_RUN_REPORT_PATH = DATA_DIR / "gps_staged_feed_integration_dry_run_report.json"
+ADJUDICATION_SUMMARY_PATH = DATA_DIR / "gps_staged_feed_integration_adjudication_summary.json"
 STAGED_FEED_PATH = DATA_DIR / "nycif_staged_live_events.json"
 UPDATE_REPORT_PATH = DATA_DIR / "gps_staged_feed_integration_update_report.json"
 
-EXPECTED_PROMOTED_CACHE_KEYS = 25
-EXPECTED_UPDATED_STAGED_EVENTS = 430
-FACILITY_TYPES = {"basketball", "softball", "soccer", "tennis", "handball", "track", "lawn", "lawns"}
-RAPIDFUZZ_THRESHOLD = 92.0
-SITE_FUZZ_THRESHOLD = 96.0
+EXPECTED_SAFE_UPDATE_READY_COUNT = 204
+EXPECTED_NO_SAFE_MATCH_PROMOTED_KEY_COUNT = 20
 
 
 def utc_now() -> str:
@@ -55,16 +42,6 @@ def normalize(value: Any) -> str:
     return re.sub(r"\s+", " ", text).strip()
 
 
-def canonical_facility(value: Any) -> str:
-    text = normalize(value)
-    text = re.sub(r"\b(\d+)[a-z]\b", r"\1", text)
-    return text
-
-
-def stable_key(borough: Any, location: Any) -> str:
-    return f"group:{normalize(borough)}|{normalize(location)}"
-
-
 def valid_nyc_lat_lng(lat: Any, lng: Any) -> bool:
     try:
         lat_f = float(lat)
@@ -74,255 +51,12 @@ def valid_nyc_lat_lng(lat: Any, lng: Any) -> bool:
     return 40.0 <= lat_f <= 41.0 and -75.0 <= lng_f <= -73.0
 
 
-def borough_of(row: dict[str, Any]) -> str:
-    return normalize(row.get("borough") or row.get("event_borough"))
-
-
-def borough_compatible(left: dict[str, Any], right: dict[str, Any]) -> bool:
-    """Require equal boroughs only when both rows actually carry borough data."""
-    left_borough = borough_of(left)
-    right_borough = borough_of(right)
-    return not left_borough or not right_borough or left_borough == right_borough
-
-
 def row_location(row: dict[str, Any]) -> str:
     return str(row.get("display_location") or row.get("location") or row.get("event_location") or "")
 
 
-def all_event_locations(row: dict[str, Any]) -> list[str]:
-    values: list[str] = []
-    seen: set[str] = set()
-    for field in ("display_location", "location", "event_location"):
-        value = row.get(field)
-        if value:
-            text = str(value)
-            key = normalize(text)
-            if key and key not in seen:
-                values.append(text)
-                seen.add(key)
-    return values
-
-
-def unwrap_location_cache(payload: Any) -> dict[str, Any]:
-    if isinstance(payload, dict) and isinstance(payload.get("entries"), dict):
-        return payload["entries"]
-    if isinstance(payload, dict):
-        return payload
-    return {}
-
-
-def promoted_rows_from_report(promotion_report: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    promoted_rows = promotion_report.get("promoted_rows")
-    promoted: dict[str, dict[str, Any]] = {}
-    if isinstance(promoted_rows, list):
-        for row in promoted_rows:
-            if not isinstance(row, dict):
-                continue
-            key = row.get("stable_identity_key") or stable_key(row.get("borough"), row.get("display_location"))
-            promoted[str(key)] = dict(row)
-    return promoted
-
-
-def add_group_alias(out: set[str], value: Any) -> None:
-    text = str(value or "").strip()
-    if not text:
-        return
-    out.add(text)
-    if text.startswith("group:"):
-        out.add(text.removeprefix("group:"))
-    else:
-        out.add(f"group:{text}")
-
-
-def aliases_for_row(row: dict[str, Any]) -> set[str]:
-    aliases: set[str] = set()
-    for field in (
-        "stable_identity_key",
-        "group_key",
-        "cache_key",
-        "gps_cache_key",
-        "gps_group_key",
-        "review_group_key",
-        "matched_promoted_cache_keys",
-    ):
-        value = row.get(field)
-        if isinstance(value, list):
-            for item in value:
-                add_group_alias(aliases, item)
-        else:
-            add_group_alias(aliases, value)
-
-    borough = row.get("borough") or row.get("event_borough")
-    if borough:
-        for location in all_event_locations(row) or [row_location(row)]:
-            if location:
-                add_group_alias(aliases, stable_key(borough, location))
-    return aliases
-
-
-def aliases_for_promoted(key: str, row: dict[str, Any]) -> set[str]:
-    aliases = aliases_for_row(row)
-    add_group_alias(aliases, key)
-    add_group_alias(aliases, row.get("group_key"))
-    add_group_alias(aliases, stable_key(row.get("borough"), row.get("display_location")))
-    return aliases
-
-
-def facility_type(component: str) -> str | None:
-    words = set(component.split())
-    for kind in FACILITY_TYPES:
-        if kind in words:
-            return "lawn" if kind == "lawns" else kind
-    return None
-
-
-def facility_numbers(component: str) -> set[int]:
-    words = component.split()
-    numbers: set[int] = set()
-    for idx, word in enumerate(words):
-        if word not in FACILITY_TYPES:
-            continue
-        for next_word in words[idx + 1 : idx + 4]:
-            if next_word.isdigit():
-                numbers.add(int(next_word))
-    return numbers
-
-
-def split_site_facility(part: str) -> tuple[str, str] | None:
-    part = str(part or "").strip()
-    if not part:
-        return None
-    if ":" in part:
-        site_raw, facility_raw = part.split(":", 1)
-        site = normalize(site_raw)
-        facility = canonical_facility(facility_raw)
-        if site and facility_type(facility):
-            return site, facility
-    text = canonical_facility(part)
-    words = text.split()
-    facility_idx: int | None = None
-    for idx, word in enumerate(words):
-        if word in FACILITY_TYPES:
-            facility_idx = idx
-            break
-    if facility_idx is None:
-        return None
-    site = " ".join(words[:facility_idx]).strip()
-    facility = " ".join(words[facility_idx:]).strip()
-    if site and facility and facility_type(facility):
-        return site, facility
-    return None
-
-
-def site_facility_pairs(location: Any) -> set[tuple[str, str]]:
-    text = str(location or "")
-    pairs: set[tuple[str, str]] = set()
-    for part in re.split(r"\s*,\s*", text):
-        parsed = split_site_facility(part)
-        if parsed:
-            pairs.add(parsed)
-    return pairs
-
-
-def same_site(promoted_site: str, event_site: str) -> bool:
-    if promoted_site == event_site:
-        return True
-    if fuzz is None or utils is None:
-        return False
-    score = fuzz.token_sort_ratio(promoted_site, event_site, processor=utils.default_process)
-    return score >= SITE_FUZZ_THRESHOLD
-
-
-def guarded_fuzzy_facility_match(promoted_facility: str, event_facility: str) -> tuple[bool, float]:
-    if fuzz is None or utils is None:
-        return False, 0.0
-    promoted_kind = facility_type(promoted_facility)
-    event_kind = facility_type(event_facility)
-    if promoted_kind and event_kind and promoted_kind != event_kind:
-        return False, 0.0
-    if promoted_kind and not event_kind:
-        return False, 0.0
-    promoted_numbers = facility_numbers(promoted_facility)
-    event_numbers = facility_numbers(event_facility)
-    if promoted_numbers and event_numbers and not (promoted_numbers & event_numbers):
-        return False, 0.0
-    score = max(
-        fuzz.token_sort_ratio(promoted_facility, event_facility, processor=utils.default_process),
-        fuzz.WRatio(promoted_facility, event_facility, processor=utils.default_process),
-    )
-    return score >= RAPIDFUZZ_THRESHOLD, float(score)
-
-
-def exact_or_fuzzy_facility_match(promoted_row: dict[str, Any], event_row: dict[str, Any]) -> tuple[bool, str | None, float]:
-    if not borough_compatible(promoted_row, event_row):
-        return False, None, 0.0
-    promoted_pairs = site_facility_pairs(row_location(promoted_row))
-    if not promoted_pairs:
-        return False, None, 0.0
-    event_pairs: set[tuple[str, str]] = set()
-    for location in all_event_locations(event_row):
-        event_pairs.update(site_facility_pairs(location))
-    if not event_pairs:
-        return False, None, 0.0
-
-    best_score = 0.0
-    for promoted_site, promoted_facility in promoted_pairs:
-        for event_site, event_facility in event_pairs:
-            if not same_site(promoted_site, event_site):
-                continue
-            if promoted_facility == event_facility:
-                return True, "exact_site_facility", 100.0
-            matched, score = guarded_fuzzy_facility_match(promoted_facility, event_facility)
-            best_score = max(best_score, score)
-            if matched:
-                return True, "rapidfuzz_site_facility", score
-    return False, None, best_score
-
-
-def cache_entry_matches_promoted(cache_row: dict[str, Any], promoted_row: dict[str, Any], promoted_key: str) -> bool:
-    if borough_of(cache_row) != borough_of(promoted_row):
-        return False
-    cache_pairs = site_facility_pairs(row_location(cache_row))
-    promoted_pairs = site_facility_pairs(row_location(promoted_row))
-    for promoted_site, promoted_facility in promoted_pairs:
-        for cache_site, cache_facility in cache_pairs:
-            if same_site(promoted_site, cache_site) and promoted_facility == cache_facility:
-                return True
-    if stable_key(cache_row.get("borough"), row_location(cache_row)) == promoted_key:
-        return True
-    return False
-
-
-def cemsids_for_promoted_rows(location_entries: dict[str, Any], promoted: dict[str, dict[str, Any]]) -> tuple[dict[str, set[str]], dict[str, list[dict[str, Any]]]]:
-    key_to_cemsids: dict[str, set[str]] = {key: set() for key in promoted}
-    key_to_entries: dict[str, list[dict[str, Any]]] = {key: [] for key in promoted}
-
-    for entry_key, cache_row in location_entries.items():
-        if not isinstance(cache_row, dict):
-            continue
-        key_type = str(cache_row.get("key_type") or "")
-        key_value = str(cache_row.get("key_value") or entry_key)
-        if key_type != "cemsid" and not key_value.startswith("cemsid:"):
-            continue
-        cemsid = key_value.split(":")[-1]
-        if not cemsid:
-            continue
-        for promoted_key, promoted_row in promoted.items():
-            if cache_entry_matches_promoted(cache_row, promoted_row, promoted_key):
-                key_to_cemsids[promoted_key].add(cemsid)
-                key_to_entries[promoted_key].append({
-                    "cache_key": entry_key,
-                    "cemsid": cemsid,
-                    "display_location": cache_row.get("display_location"),
-                    "lat": cache_row.get("lat"),
-                    "lng": cache_row.get("lng"),
-                })
-
-    return key_to_cemsids, key_to_entries
-
-
-def event_cemsids(event_row: dict[str, Any]) -> set[str]:
-    raw = event_row.get("source_cemsid") or event_row.get("cemsid") or []
+def event_cemsids(row: dict[str, Any]) -> set[str]:
+    raw = row.get("source_cemsid") or row.get("cemsid") or []
     if isinstance(raw, list):
         return {str(item) for item in raw if str(item)}
     if raw:
@@ -330,258 +64,273 @@ def event_cemsids(event_row: dict[str, Any]) -> set[str]:
     return set()
 
 
+def stable_event_identity(row: dict[str, Any]) -> str:
+    return "|".join(
+        [
+            str(row.get("source_event_id") or row.get("event_id") or row.get("id") or ""),
+            normalize(row_location(row)),
+            ",".join(sorted(event_cemsids(row))),
+            str(row.get("date") or ""),
+            str(row.get("start_date_time") or ""),
+        ]
+    )
+
+
 def failure_report(message: str, **extra: Any) -> dict[str, Any]:
     report = {
         "blocking_issues": [message],
         "conflict_count": int(extra.get("conflict_count", 0) or 0),
-        "dry_run_report": str(DRY_RUN_REPORT_PATH.relative_to(ROOT)),
         "generated_at_utc": utc_now(),
-        "input_location_cache": str(LOCATION_CACHE_PATH.relative_to(ROOT)),
-        "input_post_promotion_qa_report": str(POST_PROMOTION_QA_REPORT_PATH.relative_to(ROOT)),
-        "input_promotion_report": str(PROMOTION_REPORT_PATH.relative_to(ROOT)),
+        "input_adjudication_summary": str(ADJUDICATION_SUMMARY_PATH.relative_to(ROOT)),
         "input_staged_feed": str(STAGED_FEED_PATH.relative_to(ROOT)),
         "location_cache_modified": False,
-        "next_required_step": "Inspect this report, fix only the staged-feed integration workflow/script, then rerun GPS Staged Feed Integration Update. Do not publish to the public map and do not run Phase 3A.",
+        "next_required_step": "Inspect this report and fix only the adjudicated staged-feed update contract. Do not publish to the public map and do not run Phase 3A.",
         "phase": "gps_staged_feed_integration_update",
         "phase_3a_run": False,
-        "promoted_cache_key_count": int(extra.get("promoted_cache_key_count", 0) or 0),
         "public_map_modified": False,
         "qa_pass": False,
-        "skipped_count": int(extra.get("skipped_count", EXPECTED_UPDATED_STAGED_EVENTS) or 0),
+        "safe_update_contract_count": int(extra.get("safe_update_contract_count", 0) or 0),
+        "safe_update_ready_identity_count": int(extra.get("safe_update_ready_identity_count", 0) or 0),
+        "skipped_count": int(extra.get("skipped_count", EXPECTED_SAFE_UPDATE_READY_COUNT) or 0),
         "staged_feed_modified": False,
-        "unmatched_promoted_cache_key_count": int(extra.get("unmatched_promoted_cache_key_count", 0) or 0),
-        "unmatched_promoted_cache_keys": extra.get("unmatched_promoted_cache_keys", []),
         "update_performed": False,
         "updated_staged_event_count": int(extra.get("updated_staged_event_count", 0) or 0),
     }
     report.update(extra)
     report["validated_conditions"] = {
+        "adjudication_summary_qa_pass_true": bool(extra.get("adjudication_summary_qa_pass") is True),
         "conflict_count_is_0": report["conflict_count"] == 0,
         "location_cache_modified_false": True,
+        "no_safe_staged_match_promoted_key_count_is_20": int(extra.get("no_safe_staged_match_promoted_key_count", 0) or 0) == EXPECTED_NO_SAFE_MATCH_PROMOTED_KEY_COUNT,
         "phase_3a_run_false": True,
-        "promoted_cache_key_count_is_25": report["promoted_cache_key_count"] == EXPECTED_PROMOTED_CACHE_KEYS,
         "public_map_modified_false": True,
         "qa_pass_true": False,
+        "safe_update_contract_count_is_204": report["safe_update_contract_count"] == EXPECTED_SAFE_UPDATE_READY_COUNT,
+        "safe_update_ready_identity_count_is_204": report["safe_update_ready_identity_count"] == EXPECTED_SAFE_UPDATE_READY_COUNT,
         "skipped_count_is_0": report["skipped_count"] == 0,
         "staged_feed_modified_true": False,
-        "unmatched_promoted_cache_key_count_is_0": report["unmatched_promoted_cache_key_count"] == 0,
         "update_performed_true": False,
-        "updated_staged_event_count_is_430": report["updated_staged_event_count"] == EXPECTED_UPDATED_STAGED_EVENTS,
+        "updated_staged_event_count_is_204": report["updated_staged_event_count"] == EXPECTED_SAFE_UPDATE_READY_COUNT,
     }
     return report
 
 
+def safe_contract_rows(summary: dict[str, Any]) -> list[dict[str, Any]]:
+    rows = summary.get("safe_update_ready_rows")
+    if not isinstance(rows, list):
+        return []
+    return [row for row in rows if isinstance(row, dict)]
+
+
+def build_safe_identity_map(rows: list[dict[str, Any]]) -> tuple[dict[str, dict[str, Any]], list[dict[str, Any]]]:
+    identity_map: dict[str, dict[str, Any]] = {}
+    conflicts: list[dict[str, Any]] = []
+    for row in rows:
+        identity = str(row.get("stable_event_identity") or "")
+        if not identity:
+            conflicts.append({"reason": "safe_row_missing_stable_event_identity", "row": row})
+            continue
+        existing = identity_map.get(identity)
+        if existing is not None and existing != row:
+            conflicts.append({
+                "reason": "duplicate_safe_stable_event_identity_in_adjudication_summary",
+                "stable_event_identity": identity,
+            })
+            continue
+        identity_map[identity] = row
+    return identity_map, conflicts
+
+
 def main() -> int:
     try:
-        if fuzz is None or utils is None:
-            save_json(UPDATE_REPORT_PATH, failure_report("RapidFuzz dependency is not installed; workflow must install rapidfuzz==3.*"))
-            return 1
-
-        location_cache = load_json(LOCATION_CACHE_PATH, {})
-        promotion_report = load_json(PROMOTION_REPORT_PATH, {})
-        post_promotion_qa = load_json(POST_PROMOTION_QA_REPORT_PATH, {})
-        dry_run = load_json(DRY_RUN_REPORT_PATH, {})
+        summary = load_json(ADJUDICATION_SUMMARY_PATH, {})
         staged_payload = load_json(STAGED_FEED_PATH, {})
 
-        if not isinstance(promotion_report, dict) or promotion_report.get("qa_pass") is not True:
-            save_json(UPDATE_REPORT_PATH, failure_report("Phase 2E promotion report must exist and have qa_pass true"))
-            return 1
-        if not isinstance(post_promotion_qa, dict) or post_promotion_qa.get("qa_pass") is not True:
-            save_json(UPDATE_REPORT_PATH, failure_report("Phase 2E post-promotion QA report must exist and have qa_pass true"))
-            return 1
-        if dry_run.get("qa_pass") is not True or int(dry_run.get("matched_staged_event_count") or 0) != EXPECTED_UPDATED_STAGED_EVENTS:
-            save_json(UPDATE_REPORT_PATH, failure_report("Dry-run report must have qa_pass true and matched_staged_event_count 430"))
+        if not isinstance(summary, dict) or summary.get("qa_pass") is not True:
+            save_json(UPDATE_REPORT_PATH, failure_report("Adjudication summary must exist and have qa_pass true", adjudication_summary_qa_pass=summary.get("qa_pass") if isinstance(summary, dict) else None))
             return 1
         if not isinstance(staged_payload, dict) or not isinstance(staged_payload.get("events"), list):
-            save_json(UPDATE_REPORT_PATH, failure_report("nycif_staged_live_events.json must be an object with an events list"))
+            save_json(UPDATE_REPORT_PATH, failure_report("nycif_staged_live_events.json must be an object with an events list", adjudication_summary_qa_pass=True))
             return 1
 
-        promoted = promoted_rows_from_report(promotion_report)
-        if len(promoted) != EXPECTED_PROMOTED_CACHE_KEYS:
-            save_json(UPDATE_REPORT_PATH, failure_report(f"Expected 25 promoted rows, found {len(promoted)}", promoted_cache_key_count=len(promoted)))
-            return 1
+        safe_rows = safe_contract_rows(summary)
+        safe_identity_count = int(summary.get("safe_update_ready_identity_count") or 0)
+        safe_count = int(summary.get("safe_update_ready_count") or 0)
+        no_safe_match_count = int(summary.get("no_safe_staged_match_promoted_key_count") or 0)
+        multi_key_conflict_count = int(summary.get("multi_key_conflict_count") or 0)
+        old_dry_run_target_count = int(summary.get("old_dry_run_target_count") or 0)
 
-        qa_keys = set(post_promotion_qa.get("promoted_stable_keys_checked") or [])
-        missing_from_post_qa = sorted(set(promoted) - qa_keys)
-        if missing_from_post_qa or post_promotion_qa.get("all_25_promoted_stable_keys_exist_in_location_cache") is not True:
+        if safe_count != EXPECTED_SAFE_UPDATE_READY_COUNT or safe_identity_count != EXPECTED_SAFE_UPDATE_READY_COUNT or len(safe_rows) != EXPECTED_SAFE_UPDATE_READY_COUNT:
             save_json(
                 UPDATE_REPORT_PATH,
                 failure_report(
-                    "Post-promotion QA does not validate all promoted keys used by the update step",
-                    promoted_cache_key_count=len(promoted),
-                    missing_from_post_promotion_qa=missing_from_post_qa,
+                    "Adjudication summary does not contain exactly 204 safe update rows and identities",
+                    adjudication_summary_qa_pass=True,
+                    old_dry_run_target_count=old_dry_run_target_count,
+                    safe_update_contract_count=safe_count,
+                    safe_update_ready_identity_count=safe_identity_count,
+                    safe_update_ready_rows_length=len(safe_rows),
+                    no_safe_staged_match_promoted_key_count=no_safe_match_count,
+                    multi_key_conflict_count=multi_key_conflict_count,
+                ),
+            )
+            return 1
+        if no_safe_match_count != EXPECTED_NO_SAFE_MATCH_PROMOTED_KEY_COUNT or multi_key_conflict_count != 0:
+            save_json(
+                UPDATE_REPORT_PATH,
+                failure_report(
+                    "Adjudication summary no-safe-match or conflict counts do not match the 204-safe contract",
+                    adjudication_summary_qa_pass=True,
+                    old_dry_run_target_count=old_dry_run_target_count,
+                    safe_update_contract_count=safe_count,
+                    safe_update_ready_identity_count=safe_identity_count,
+                    no_safe_staged_match_promoted_key_count=no_safe_match_count,
+                    multi_key_conflict_count=multi_key_conflict_count,
                 ),
             )
             return 1
 
-        alias_to_key: dict[str, str] = {}
-        alias_collisions: dict[str, sorted] = {}
-        for key, row in promoted.items():
-            for alias in aliases_for_promoted(key, row):
-                existing = alias_to_key.get(alias)
-                if existing and existing != key:
-                    alias_collisions.setdefault(alias, set()).update({existing, key})
-                else:
-                    alias_to_key[alias] = key
-        if alias_collisions:
+        safe_by_identity, contract_conflicts = build_safe_identity_map(safe_rows)
+        if contract_conflicts or len(safe_by_identity) != EXPECTED_SAFE_UPDATE_READY_COUNT:
             save_json(
                 UPDATE_REPORT_PATH,
                 failure_report(
-                    "Promoted stable-key aliases are not unique",
-                    promoted_cache_key_count=len(promoted),
-                    alias_collisions={alias: sorted(keys) for alias, keys in sorted(alias_collisions.items())},
+                    "Adjudicated safe identity contract is not unique and complete",
+                    adjudication_summary_qa_pass=True,
+                    conflict_count=len(contract_conflicts),
+                    conflicts=contract_conflicts[:50],
+                    old_dry_run_target_count=old_dry_run_target_count,
+                    safe_update_contract_count=len(safe_by_identity),
+                    safe_update_ready_identity_count=safe_identity_count,
+                    no_safe_staged_match_promoted_key_count=no_safe_match_count,
+                    multi_key_conflict_count=multi_key_conflict_count,
                 ),
             )
             return 1
 
-        location_entries = unwrap_location_cache(location_cache)
-        key_to_cemsids, _ = cemsids_for_promoted_rows(location_entries, promoted)
-        cemsid_to_keys: dict[str, set[str]] = defaultdict(set)
-        for key, ids in key_to_cemsids.items():
-            for cemsid in ids:
-                cemsid_to_keys[cemsid].add(key)
-
+        matched_identities: set[str] = set()
+        duplicate_identity_hits: list[dict[str, Any]] = []
+        invalid_coordinate_rows: list[dict[str, Any]] = []
         updated_rows: list[dict[str, Any]] = []
-        conflicts: list[dict[str, Any]] = []
-        matched_keys: set[str] = set()
-        update_counts_by_key: Counter[str] = Counter()
-        match_mode_counts: Counter[str] = Counter()
-        fuzzy_scores: list[float] = []
+        now = utc_now()
 
         for event_row in staged_payload["events"]:
             if not isinstance(event_row, dict):
                 continue
-            matched_by_key: dict[str, str] = {}
-            matched_scores: dict[str, float] = {}
-
-            for alias in aliases_for_row(event_row):
-                key = alias_to_key.get(alias)
-                if key:
-                    matched_by_key[key] = "stable_identity_alias"
-                    matched_scores[key] = 100.0
-
-            for cemsid in event_cemsids(event_row):
-                for key in cemsid_to_keys.get(cemsid, set()):
-                    matched_by_key.setdefault(key, "source_cemsid")
-                    matched_scores[key] = max(matched_scores.get(key, 0.0), 100.0)
-
-            for key, promoted_row in promoted.items():
-                if key in matched_by_key:
-                    continue
-                matched, mode, score = exact_or_fuzzy_facility_match(promoted_row, event_row)
-                if matched and mode:
-                    matched_by_key[key] = mode
-                    matched_scores[key] = max(matched_scores.get(key, 0.0), score)
-                    if mode == "rapidfuzz_site_facility":
-                        fuzzy_scores.append(score)
-
-            if not matched_by_key:
+            identity = stable_event_identity(event_row)
+            safe_row = safe_by_identity.get(identity)
+            if safe_row is None:
                 continue
-
-            coord_pairs = set()
-            for key in matched_by_key:
-                promoted_row = promoted[key]
-                if valid_nyc_lat_lng(promoted_row.get("lat"), promoted_row.get("lng")):
-                    coord_pairs.add((round(float(promoted_row["lat"]), 6), round(float(promoted_row["lng"]), 6)))
-            if len(coord_pairs) != 1:
-                conflicts.append({
+            if identity in matched_identities:
+                duplicate_identity_hits.append({
                     "display_location": row_location(event_row),
-                    "matched_promoted_cache_keys": sorted(matched_by_key),
-                    "reason": "matched_promoted_keys_have_conflicting_or_invalid_coordinates",
+                    "reason": "staged_feed_contains_duplicate_safe_stable_event_identity",
                     "source_cemsid": sorted(event_cemsids(event_row)),
-                    "source_event_id": event_row.get("source_event_id"),
+                    "source_event_id": event_row.get("source_event_id") or event_row.get("event_id") or event_row.get("id"),
+                    "stable_event_identity": identity,
                 })
                 continue
 
-            lat, lng = next(iter(coord_pairs))
-            primary_key = sorted(matched_by_key)[0]
-            primary_row = promoted[primary_key]
-            event_row["lat"] = lat
-            event_row["lng"] = lng
-            event_row["stable_identity_key"] = primary_key
-            event_row["matched_promoted_cache_keys"] = sorted(matched_by_key)
-            event_row["group_key"] = primary_row.get("group_key") or primary_key.removeprefix("group:")
+            lat = safe_row.get("promoted_lat")
+            lng = safe_row.get("promoted_lng")
+            promoted_cache_key = str(safe_row.get("promoted_cache_key") or "")
+            if not promoted_cache_key or not valid_nyc_lat_lng(lat, lng):
+                invalid_coordinate_rows.append({
+                    "promoted_cache_key": promoted_cache_key,
+                    "promoted_lat": lat,
+                    "promoted_lng": lng,
+                    "reason": "safe_row_missing_valid_promoted_coordinate_or_key",
+                    "stable_event_identity": identity,
+                })
+                continue
+
+            lat_f = float(lat)
+            lng_f = float(lng)
+            event_row["lat"] = lat_f
+            event_row["lng"] = lng_f
+            event_row["stable_identity_key"] = promoted_cache_key
+            event_row["matched_promoted_cache_keys"] = [promoted_cache_key]
+            event_row["group_key"] = promoted_cache_key.removeprefix("group:")
             event_row["gps_integration_phase"] = "gps_staged_feed_integration_update"
-            event_row["gps_integration_source"] = "post_promotion_qa_validated_stable_identity_or_cemsid_or_facility_match"
-            event_row["gps_integration_updated_at_utc"] = utc_now()
+            event_row["gps_integration_contract"] = "adjudicated_204_safe_identity_contract"
+            event_row["gps_integration_source"] = str(ADJUDICATION_SUMMARY_PATH.relative_to(ROOT))
+            event_row["gps_integration_updated_at_utc"] = now
             event_row["location_source"] = "phase_2e_promoted_location_cache"
             event_row["phase_2e_promotion_applied_to_staged_feed"] = True
             event_row["public_map_modified"] = False
             event_row["phase_3a_run"] = False
 
-            for key, mode in matched_by_key.items():
-                matched_keys.add(key)
-                update_counts_by_key[key] += 1
-                match_mode_counts[mode] += 1
+            matched_identities.add(identity)
             updated_rows.append({
+                "current_lat_before_update": safe_row.get("current_lat"),
+                "current_lng_before_update": safe_row.get("current_lng"),
                 "display_location": row_location(event_row),
-                "lat": lat,
-                "lng": lng,
-                "matched_promoted_cache_keys": sorted(matched_by_key),
-                "match_modes": dict(sorted(matched_by_key.items())),
-                "match_scores": {key: round(score, 2) for key, score in sorted(matched_scores.items())},
+                "lat": lat_f,
+                "lng": lng_f,
+                "match_modes": safe_row.get("match_modes") or {},
+                "matched_promoted_cache_keys": [promoted_cache_key],
+                "promoted_display_location": safe_row.get("promoted_display_location"),
                 "source_cemsid": sorted(event_cemsids(event_row)),
-                "source_event_id": event_row.get("source_event_id"),
-                "stable_identity_key": primary_key,
+                "source_event_id": event_row.get("source_event_id") or event_row.get("event_id") or event_row.get("id"),
+                "stable_event_identity": identity,
+                "stable_identity_key": promoted_cache_key,
             })
 
+        unmatched_safe_identities = sorted(set(safe_by_identity) - matched_identities)
         updated_count = len(updated_rows)
-        unmatched = sorted(set(promoted) - matched_keys)
-        skipped = max(EXPECTED_UPDATED_STAGED_EVENTS - updated_count, 0)
-        conflict_count = len(conflicts)
+        skipped = max(EXPECTED_SAFE_UPDATE_READY_COUNT - updated_count, 0)
+        conflict_count = len(duplicate_identity_hits) + len(invalid_coordinate_rows)
         qa_pass = (
-            updated_count == EXPECTED_UPDATED_STAGED_EVENTS
-            and len(promoted) == EXPECTED_PROMOTED_CACHE_KEYS
-            and not unmatched
+            updated_count == EXPECTED_SAFE_UPDATE_READY_COUNT
+            and not unmatched_safe_identities
             and skipped == 0
             and conflict_count == 0
         )
 
         report = {
-            "blocking_issues": [] if qa_pass else ["Staged feed GPS integration update did not meet one or more required counts"],
+            "adjudication_count_by_type": summary.get("adjudication_count_by_type") or {},
+            "adjudication_summary_qa_pass": summary.get("qa_pass") is True,
+            "blocking_issues": [] if qa_pass else ["Adjudicated 204-safe staged-feed update did not meet one or more required counts"],
             "conflict_count": conflict_count,
-            "conflicts": conflicts[:50],
-            "dry_run_report": str(DRY_RUN_REPORT_PATH.relative_to(ROOT)),
-            "generated_at_utc": utc_now(),
-            "input_location_cache": str(LOCATION_CACHE_PATH.relative_to(ROOT)),
-            "input_post_promotion_qa_report": str(POST_PROMOTION_QA_REPORT_PATH.relative_to(ROOT)),
-            "input_promotion_report": str(PROMOTION_REPORT_PATH.relative_to(ROOT)),
+            "conflicts": (duplicate_identity_hits + invalid_coordinate_rows)[:50],
+            "excluded_no_safe_match_promoted_key_count": no_safe_match_count,
+            "excluded_no_safe_match_promoted_keys": summary.get("no_safe_staged_match_promoted_keys") or [],
+            "generated_at_utc": now,
+            "input_adjudication_summary": str(ADJUDICATION_SUMMARY_PATH.relative_to(ROOT)),
             "input_staged_feed": str(STAGED_FEED_PATH.relative_to(ROOT)),
             "location_cache_modified": False,
-            "match_mode_counts": dict(sorted(match_mode_counts.items())),
             "next_required_step": "Run staged-feed GPS integration post-update QA, then decide whether to run a public-map dry-run validation gate. Do not publish to the public map until that gate passes.",
+            "old_dry_run_target_count": old_dry_run_target_count,
             "phase": "gps_staged_feed_integration_update",
             "phase_3a_run": False,
-            "promoted_cache_key_count": len(promoted),
-            "promoted_source": "phase_2e_promotion_report_rows_validated_by_post_promotion_qa",
-            "promoted_source_cemsid_counts": {key: len(ids) for key, ids in sorted(key_to_cemsids.items())},
-            "promoted_source_cemsid_sample": {key: sorted(ids)[:10] for key, ids in sorted(key_to_cemsids.items())},
             "public_map_modified": False,
             "qa_pass": qa_pass,
-            "rapidfuzz_enabled": True,
-            "rapidfuzz_threshold": RAPIDFUZZ_THRESHOLD,
-            "site_fuzz_threshold": SITE_FUZZ_THRESHOLD,
-            "rapidfuzz_score_sample": [round(score, 2) for score in sorted(fuzzy_scores, reverse=True)[:25]],
+            "safe_update_contract_count": len(safe_by_identity),
+            "safe_update_ready_identity_count": safe_identity_count,
+            "safe_update_source": "gps_staged_feed_integration_adjudication_summary_204_safe_identity_contract",
             "skipped_count": skipped,
             "staged_feed_modified": qa_pass,
-            "unmatched_promoted_cache_key_count": len(unmatched),
-            "unmatched_promoted_cache_keys": unmatched,
-            "update_counts_by_cache_key": dict(sorted(update_counts_by_key.items())),
+            "unmatched_safe_identity_count": len(unmatched_safe_identities),
+            "unmatched_safe_identities": unmatched_safe_identities[:50],
             "update_performed": qa_pass,
             "updated_staged_event_count": updated_count,
             "updated_staged_event_sample": updated_rows[:25],
             "validated_conditions": {
+                "adjudication_summary_qa_pass_true": summary.get("qa_pass") is True,
                 "conflict_count_is_0": conflict_count == 0,
+                "excluded_no_safe_match_promoted_key_count_is_20": no_safe_match_count == EXPECTED_NO_SAFE_MATCH_PROMOTED_KEY_COUNT,
                 "location_cache_modified_false": True,
+                "old_dry_run_target_430_not_required": old_dry_run_target_count != EXPECTED_SAFE_UPDATE_READY_COUNT,
                 "phase_3a_run_false": True,
-                "promoted_cache_key_count_is_25": len(promoted) == EXPECTED_PROMOTED_CACHE_KEYS,
                 "public_map_modified_false": True,
                 "qa_pass_true": qa_pass,
+                "safe_update_contract_count_is_204": len(safe_by_identity) == EXPECTED_SAFE_UPDATE_READY_COUNT,
+                "safe_update_ready_identity_count_is_204": safe_identity_count == EXPECTED_SAFE_UPDATE_READY_COUNT,
                 "skipped_count_is_0": skipped == 0,
                 "staged_feed_modified_true": qa_pass,
-                "unmatched_promoted_cache_key_count_is_0": len(unmatched) == 0,
+                "unmatched_safe_identity_count_is_0": len(unmatched_safe_identities) == 0,
                 "update_performed_true": qa_pass,
-                "updated_staged_event_count_is_430": updated_count == EXPECTED_UPDATED_STAGED_EVENTS,
+                "updated_staged_event_count_is_204": updated_count == EXPECTED_SAFE_UPDATE_READY_COUNT,
             },
         }
 
