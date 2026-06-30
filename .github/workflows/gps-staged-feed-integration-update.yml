@@ -30,6 +30,12 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Sync latest main before generating GPS update
+        run: |
+          git fetch origin main
+          git checkout main
+          git reset --hard origin/main
+
       - name: Apply promoted GPS records to staged feed only
         run: python scripts/apply_gps_staged_feed_integration_update.py
 
@@ -43,6 +49,5 @@ jobs:
             echo "No staged feed GPS integration changes to commit."
           else
             git commit -m "Run staged feed GPS integration update"
-            git pull --rebase --autostash origin main
             git push origin HEAD:main
           fi
