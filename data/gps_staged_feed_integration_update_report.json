@@ -1,100 +1,14 @@
 {
-  "blocking_issues": [
-    "Staged feed GPS integration update did not meet one or more required counts"
-  ],
+  "adjudication_count_by_type": {
+    "review_required_possible_old_dry_run_overmatch": 2,
+    "review_required_same_site_wrong_facility": 18
+  },
+  "adjudication_summary_qa_pass": true,
+  "blocking_issues": [],
   "conflict_count": 0,
   "conflicts": [],
-  "dry_run_report": "data/gps_staged_feed_integration_dry_run_report.json",
-  "generated_at_utc": "2026-06-30T03:14:02.267735+00:00",
-  "input_location_cache": "data/location_cache.json",
-  "input_post_promotion_qa_report": "data/gps_phase2e_post_promotion_qa_report.json",
-  "input_promotion_report": "data/gps_phase2e_promotion_report.json",
-  "input_staged_feed": "data/nycif_staged_live_events.json",
-  "location_cache_modified": false,
-  "match_mode_counts": {
-    "source_cemsid": 204
-  },
-  "next_required_step": "Run staged-feed GPS integration post-update QA, then decide whether to run a public-map dry-run validation gate. Do not publish to the public map until that gate passes.",
-  "phase": "gps_staged_feed_integration_update",
-  "phase_3a_run": false,
-  "promoted_cache_key_count": 25,
-  "promoted_source": "phase_2e_promotion_report_rows_validated_by_post_promotion_qa",
-  "promoted_source_cemsid_counts": {
-    "group:bronx|macombs dam park basketball 04": 0,
-    "group:bronx|st mary s park st mary s playground west tennis 01": 1,
-    "group:bronx|st mary s park st mary s playground west tennis 02": 1,
-    "group:brooklyn|friends field lawn area": 0,
-    "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": 1,
-    "group:brooklyn|gravesend park lawn area": 0,
-    "group:brooklyn|linden park gershwin park jhs 166 track 01": 0,
-    "group:brooklyn|martin luther king jr playground basketball 02": 0,
-    "group:brooklyn|mccarren park bayard union lawns": 0,
-    "group:brooklyn|mcdonald playground tennis 01": 0,
-    "group:brooklyn|mcdonald playground tennis 02": 0,
-    "group:brooklyn|mcdonald playground tennis 03": 0,
-    "group:brooklyn|owl s head park owls head park basketball 01": 0,
-    "group:brooklyn|pratt playground basketball 02": 0,
-    "group:brooklyn|rappaport playground rappaport playground rappaport playground handball 01": 0,
-    "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": 2,
-    "group:manhattan|de witt clinton park basketball 01": 0,
-    "group:manhattan|de witt clinton park soccer 01a": 2,
-    "group:manhattan|j hood wright park softball 01": 0,
-    "group:manhattan|riverside park south 71st st south basketball 14": 0,
-    "group:manhattan|washington market park tennis 01": 0,
-    "group:queens|broad channel park tennis 01": 0,
-    "group:queens|clintonville playground tennis 01": 0,
-    "group:queens|clintonville playground tennis 02": 0,
-    "group:queens|hoffman park softball 01": 0
-  },
-  "promoted_source_cemsid_sample": {
-    "group:bronx|macombs dam park basketball 04": [],
-    "group:bronx|st mary s park st mary s playground west tennis 01": [
-      "7016"
-    ],
-    "group:bronx|st mary s park st mary s playground west tennis 02": [
-      "7015"
-    ],
-    "group:brooklyn|friends field lawn area": [],
-    "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": [
-      "5219"
-    ],
-    "group:brooklyn|gravesend park lawn area": [],
-    "group:brooklyn|linden park gershwin park jhs 166 track 01": [],
-    "group:brooklyn|martin luther king jr playground basketball 02": [],
-    "group:brooklyn|mccarren park bayard union lawns": [],
-    "group:brooklyn|mcdonald playground tennis 01": [],
-    "group:brooklyn|mcdonald playground tennis 02": [],
-    "group:brooklyn|mcdonald playground tennis 03": [],
-    "group:brooklyn|owl s head park owls head park basketball 01": [],
-    "group:brooklyn|pratt playground basketball 02": [],
-    "group:brooklyn|rappaport playground rappaport playground rappaport playground handball 01": [],
-    "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": [
-      "9686",
-      "9687"
-    ],
-    "group:manhattan|de witt clinton park basketball 01": [],
-    "group:manhattan|de witt clinton park soccer 01a": [
-      "12275",
-      "9325"
-    ],
-    "group:manhattan|j hood wright park softball 01": [],
-    "group:manhattan|riverside park south 71st st south basketball 14": [],
-    "group:manhattan|washington market park tennis 01": [],
-    "group:queens|broad channel park tennis 01": [],
-    "group:queens|clintonville playground tennis 01": [],
-    "group:queens|clintonville playground tennis 02": [],
-    "group:queens|hoffman park softball 01": []
-  },
-  "public_map_modified": false,
-  "qa_pass": false,
-  "rapidfuzz_enabled": true,
-  "rapidfuzz_score_sample": [],
-  "rapidfuzz_threshold": 92.0,
-  "site_fuzz_threshold": 96.0,
-  "skipped_count": 226,
-  "staged_feed_modified": false,
-  "unmatched_promoted_cache_key_count": 20,
-  "unmatched_promoted_cache_keys": [
+  "excluded_no_safe_match_promoted_key_count": 20,
+  "excluded_no_safe_match_promoted_keys": [
     "group:bronx|macombs dam park basketball 04",
     "group:brooklyn|friends field lawn area",
     "group:brooklyn|gravesend park lawn area",
@@ -116,503 +30,567 @@
     "group:queens|clintonville playground tennis 02",
     "group:queens|hoffman park softball 01"
   ],
-  "update_counts_by_cache_key": {
-    "group:bronx|st mary s park st mary s playground west tennis 01": 1,
-    "group:bronx|st mary s park st mary s playground west tennis 02": 1,
-    "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": 29,
-    "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": 54,
-    "group:manhattan|de witt clinton park soccer 01a": 119
-  },
-  "update_performed": false,
+  "generated_at_utc": "2026-06-30T03:45:22.386984+00:00",
+  "input_adjudication_summary": "data/gps_staged_feed_integration_adjudication_summary.json",
+  "input_staged_feed": "data/nycif_staged_live_events.json",
+  "location_cache_modified": false,
+  "next_required_step": "Run staged-feed GPS integration post-update QA, then decide whether to run a public-map dry-run validation gate. Do not publish to the public map until that gate passes.",
+  "old_dry_run_target_count": 430,
+  "phase": "gps_staged_feed_integration_update",
+  "phase_3a_run": false,
+  "public_map_modified": false,
+  "qa_pass": true,
+  "safe_update_contract_count": 204,
+  "safe_update_ready_identity_count": 204,
+  "safe_update_source": "gps_staged_feed_integration_adjudication_summary_204_safe_identity_contract",
+  "skipped_count": 0,
+  "staged_feed_modified": true,
+  "unmatched_safe_identities": [],
+  "unmatched_safe_identity_count": 0,
+  "update_performed": true,
   "updated_staged_event_count": 204,
   "updated_staged_event_sample": [
     {
+      "current_lat_before_update": 40.76819,
+      "current_lng_before_update": -73.99429,
       "display_location": "De Witt Clinton Park: Soccer-01B",
       "lat": 40.76819,
       "lng": -73.99429,
       "match_modes": {
-        "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
-      },
-      "match_scores": {
-        "group:manhattan|de witt clinton park soccer 01a": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
       "source_cemsid": [
         "12275"
       ],
       "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-06-30|2026-06-30T09:00:00.000",
       "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
     },
     {
+      "current_lat_before_update": 40.76819,
+      "current_lng_before_update": -73.99429,
       "display_location": "De Witt Clinton Park: Soccer-01B",
       "lat": 40.76819,
       "lng": -73.99429,
       "match_modes": {
-        "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
-      },
-      "match_scores": {
-        "group:manhattan|de witt clinton park soccer 01a": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
       "source_cemsid": [
         "12275"
       ],
       "source_event_id": "930589",
+      "stable_event_identity": "930589|de witt clinton park soccer 01b|12275|2026-06-30|2026-06-30T09:00:00.000",
       "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
     },
     {
+      "current_lat_before_update": 40.76819,
+      "current_lng_before_update": -73.99429,
       "display_location": "De Witt Clinton Park: Soccer-01",
       "lat": 40.76819,
       "lng": -73.99429,
       "match_modes": {
-        "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
-      },
-      "match_scores": {
-        "group:manhattan|de witt clinton park soccer 01a": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
       "source_cemsid": [
         "9325"
       ],
       "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-06-30|2026-06-30T14:30:00.000",
       "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
     },
     {
+      "current_lat_before_update": 40.65259,
+      "current_lng_before_update": -74.00842,
       "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
       "lat": 40.65259,
       "lng": -74.00842,
       "match_modes": {
-        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": "source_cemsid"
-      },
-      "match_scores": {
-        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
       ],
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
       "source_cemsid": [
         "5219"
       ],
       "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-06-30|2026-06-30T18:00:00.000",
       "stable_identity_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
     },
     {
+      "current_lat_before_update": 40.67437,
+      "current_lng_before_update": -73.93475,
       "display_location": "St. John's Park: Buddy Keaton-Softball-01",
       "lat": 40.67437,
       "lng": -73.93475,
       "match_modes": {
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": "source_cemsid"
-      },
-      "match_scores": {
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
       ],
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
       "source_cemsid": [
         "9686"
       ],
       "source_event_id": "904904",
+      "stable_event_identity": "904904|st john s park buddy keaton softball 01|9686|2026-06-30|2026-06-30T18:00:00.000",
       "stable_identity_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
     },
     {
+      "current_lat_before_update": 40.67437,
+      "current_lng_before_update": -73.93475,
       "display_location": "St. John's Park: Buddy Keaton-Softball-02",
       "lat": 40.67437,
       "lng": -73.93475,
       "match_modes": {
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": "source_cemsid"
-      },
-      "match_scores": {
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
       ],
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
       "source_cemsid": [
         "9687"
       ],
       "source_event_id": "905105",
+      "stable_event_identity": "905105|st john s park buddy keaton softball 02|9687|2026-06-30|2026-06-30T18:00:00.000",
       "stable_identity_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
     },
     {
+      "current_lat_before_update": 40.76819,
+      "current_lng_before_update": -73.99429,
       "display_location": "De Witt Clinton Park: Soccer-01B",
       "lat": 40.76819,
       "lng": -73.99429,
       "match_modes": {
-        "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
-      },
-      "match_scores": {
-        "group:manhattan|de witt clinton park soccer 01a": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
       "source_cemsid": [
         "12275"
       ],
       "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-01|2026-07-01T09:00:00.000",
       "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
     },
     {
+      "current_lat_before_update": 40.76819,
+      "current_lng_before_update": -73.99429,
       "display_location": "De Witt Clinton Park: Soccer-01",
       "lat": 40.76819,
       "lng": -73.99429,
       "match_modes": {
-        "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
-      },
-      "match_scores": {
-        "group:manhattan|de witt clinton park soccer 01a": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
       "source_cemsid": [
         "9325"
       ],
       "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-01|2026-07-01T13:00:00.000",
       "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
     },
     {
+      "current_lat_before_update": 40.76819,
+      "current_lng_before_update": -73.99429,
       "display_location": "De Witt Clinton Park: Soccer-01",
       "lat": 40.76819,
       "lng": -73.99429,
       "match_modes": {
-        "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
-      },
-      "match_scores": {
-        "group:manhattan|de witt clinton park soccer 01a": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
       "source_cemsid": [
         "9325"
       ],
       "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-01|2026-07-01T14:30:00.000",
       "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
     },
     {
+      "current_lat_before_update": 40.67437,
+      "current_lng_before_update": -73.93475,
       "display_location": "St. John's Park: Buddy Keaton-Softball-02",
       "lat": 40.67437,
       "lng": -73.93475,
       "match_modes": {
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": "source_cemsid"
-      },
-      "match_scores": {
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
       ],
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
       "source_cemsid": [
         "9687"
       ],
       "source_event_id": "909984",
+      "stable_event_identity": "909984|st john s park buddy keaton softball 02|9687|2026-07-01|2026-07-01T17:00:00.000",
       "stable_identity_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
     },
     {
+      "current_lat_before_update": 40.65259,
+      "current_lng_before_update": -74.00842,
       "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
       "lat": 40.65259,
       "lng": -74.00842,
       "match_modes": {
-        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": "source_cemsid"
-      },
-      "match_scores": {
-        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
       ],
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
       "source_cemsid": [
         "5219"
       ],
       "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-01|2026-07-01T18:00:00.000",
       "stable_identity_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
     },
     {
+      "current_lat_before_update": 40.76819,
+      "current_lng_before_update": -73.99429,
       "display_location": "De Witt Clinton Park: Soccer-01",
       "lat": 40.76819,
       "lng": -73.99429,
       "match_modes": {
-        "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
-      },
-      "match_scores": {
-        "group:manhattan|de witt clinton park soccer 01a": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
       "source_cemsid": [
         "9325"
       ],
       "source_event_id": "906982",
+      "stable_event_identity": "906982|de witt clinton park soccer 01|9325|2026-07-01|2026-07-01T18:00:00.000",
       "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
     },
     {
+      "current_lat_before_update": 40.67437,
+      "current_lng_before_update": -73.93475,
       "display_location": "St. John's Park: Buddy Keaton-Softball-01",
       "lat": 40.67437,
       "lng": -73.93475,
       "match_modes": {
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": "source_cemsid"
-      },
-      "match_scores": {
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
       ],
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
       "source_cemsid": [
         "9686"
       ],
       "source_event_id": "907927",
+      "stable_event_identity": "907927|st john s park buddy keaton softball 01|9686|2026-07-01|2026-07-01T18:30:00.000",
       "stable_identity_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
     },
     {
+      "current_lat_before_update": 40.76819,
+      "current_lng_before_update": -73.99429,
       "display_location": "De Witt Clinton Park: Soccer-01",
       "lat": 40.76819,
       "lng": -73.99429,
       "match_modes": {
-        "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
-      },
-      "match_scores": {
-        "group:manhattan|de witt clinton park soccer 01a": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
       "source_cemsid": [
         "9325"
       ],
       "source_event_id": "907118",
+      "stable_event_identity": "907118|de witt clinton park soccer 01|9325|2026-07-01|2026-07-01T18:30:00.000",
       "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
     },
     {
+      "current_lat_before_update": 40.76819,
+      "current_lng_before_update": -73.99429,
       "display_location": "De Witt Clinton Park: Soccer-01B",
       "lat": 40.76819,
       "lng": -73.99429,
       "match_modes": {
-        "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
-      },
-      "match_scores": {
-        "group:manhattan|de witt clinton park soccer 01a": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
       "source_cemsid": [
         "12275"
       ],
       "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-02|2026-07-02T09:00:00.000",
       "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
     },
     {
+      "current_lat_before_update": 40.76819,
+      "current_lng_before_update": -73.99429,
       "display_location": "De Witt Clinton Park: Soccer-01",
       "lat": 40.76819,
       "lng": -73.99429,
       "match_modes": {
-        "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
-      },
-      "match_scores": {
-        "group:manhattan|de witt clinton park soccer 01a": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
       "source_cemsid": [
         "9325"
       ],
       "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-02|2026-07-02T13:00:00.000",
       "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
     },
     {
+      "current_lat_before_update": 40.76819,
+      "current_lng_before_update": -73.99429,
       "display_location": "De Witt Clinton Park: Soccer-01",
       "lat": 40.76819,
       "lng": -73.99429,
       "match_modes": {
-        "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
-      },
-      "match_scores": {
-        "group:manhattan|de witt clinton park soccer 01a": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
       "source_cemsid": [
         "9325"
       ],
       "source_event_id": "939610",
+      "stable_event_identity": "939610|de witt clinton park soccer 01|9325|2026-07-02|2026-07-02T14:00:00.000",
       "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
     },
     {
+      "current_lat_before_update": 40.76819,
+      "current_lng_before_update": -73.99429,
       "display_location": "De Witt Clinton Park: Soccer-01",
       "lat": 40.76819,
       "lng": -73.99429,
       "match_modes": {
-        "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
-      },
-      "match_scores": {
-        "group:manhattan|de witt clinton park soccer 01a": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
       "source_cemsid": [
         "9325"
       ],
       "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-02|2026-07-02T14:30:00.000",
       "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
     },
     {
+      "current_lat_before_update": 40.65259,
+      "current_lng_before_update": -74.00842,
       "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
       "lat": 40.65259,
       "lng": -74.00842,
       "match_modes": {
-        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": "source_cemsid"
-      },
-      "match_scores": {
-        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
       ],
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
       "source_cemsid": [
         "5219"
       ],
       "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-02|2026-07-02T18:00:00.000",
       "stable_identity_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
     },
     {
+      "current_lat_before_update": 40.67437,
+      "current_lng_before_update": -73.93475,
       "display_location": "St. John's Park: Buddy Keaton-Softball-01",
       "lat": 40.67437,
       "lng": -73.93475,
       "match_modes": {
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": "source_cemsid"
-      },
-      "match_scores": {
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
       ],
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
       "source_cemsid": [
         "9686"
       ],
       "source_event_id": "915086",
+      "stable_event_identity": "915086|st john s park buddy keaton softball 01|9686|2026-07-02|2026-07-02T18:30:00.000",
       "stable_identity_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
     },
     {
+      "current_lat_before_update": 40.67437,
+      "current_lng_before_update": -73.93475,
       "display_location": "St. John's Park: Buddy Keaton-Softball-02",
       "lat": 40.67437,
       "lng": -73.93475,
       "match_modes": {
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": "source_cemsid"
-      },
-      "match_scores": {
-        "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
       ],
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
       "source_cemsid": [
         "9687"
       ],
       "source_event_id": "930649",
+      "stable_event_identity": "930649|st john s park buddy keaton softball 02|9687|2026-07-02|2026-07-02T18:30:00.000",
       "stable_identity_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
     },
     {
+      "current_lat_before_update": 40.76819,
+      "current_lng_before_update": -73.99429,
       "display_location": "De Witt Clinton Park: Soccer-01B",
       "lat": 40.76819,
       "lng": -73.99429,
       "match_modes": {
-        "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
-      },
-      "match_scores": {
-        "group:manhattan|de witt clinton park soccer 01a": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
       "source_cemsid": [
         "12275"
       ],
       "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-03|2026-07-03T09:00:00.000",
       "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
     },
     {
+      "current_lat_before_update": 40.76819,
+      "current_lng_before_update": -73.99429,
       "display_location": "De Witt Clinton Park: Soccer-01",
       "lat": 40.76819,
       "lng": -73.99429,
       "match_modes": {
-        "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
-      },
-      "match_scores": {
-        "group:manhattan|de witt clinton park soccer 01a": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
       "source_cemsid": [
         "9325"
       ],
       "source_event_id": "939610",
+      "stable_event_identity": "939610|de witt clinton park soccer 01|9325|2026-07-03|2026-07-03T14:00:00.000",
       "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
     },
     {
+      "current_lat_before_update": 40.76819,
+      "current_lng_before_update": -73.99429,
       "display_location": "De Witt Clinton Park: Soccer-01",
       "lat": 40.76819,
       "lng": -73.99429,
       "match_modes": {
-        "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
-      },
-      "match_scores": {
-        "group:manhattan|de witt clinton park soccer 01a": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
       "source_cemsid": [
         "9325"
       ],
       "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-03|2026-07-03T14:30:00.000",
       "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
     },
     {
+      "current_lat_before_update": 40.65259,
+      "current_lng_before_update": -74.00842,
       "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
       "lat": 40.65259,
       "lng": -74.00842,
       "match_modes": {
-        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": "source_cemsid"
-      },
-      "match_scores": {
-        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": 100.0
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
       ],
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
       "source_cemsid": [
         "5219"
       ],
       "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-03|2026-07-03T18:00:00.000",
       "stable_identity_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
     }
   ],
   "validated_conditions": {
+    "adjudication_summary_qa_pass_true": true,
     "conflict_count_is_0": true,
+    "excluded_no_safe_match_promoted_key_count_is_20": true,
     "location_cache_modified_false": true,
+    "old_dry_run_target_430_not_required": true,
     "phase_3a_run_false": true,
-    "promoted_cache_key_count_is_25": true,
     "public_map_modified_false": true,
-    "qa_pass_true": false,
-    "skipped_count_is_0": false,
-    "staged_feed_modified_true": false,
-    "unmatched_promoted_cache_key_count_is_0": false,
-    "update_performed_true": false,
-    "updated_staged_event_count_is_430": false
+    "qa_pass_true": true,
+    "safe_update_contract_count_is_204": true,
+    "safe_update_ready_identity_count_is_204": true,
+    "skipped_count_is_0": true,
+    "staged_feed_modified_true": true,
+    "unmatched_safe_identity_count_is_0": true,
+    "update_performed_true": true,
+    "updated_staged_event_count_is_204": true
   }
 }
