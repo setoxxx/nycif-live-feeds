@@ -1,37 +1,42 @@
 {
   "blocking_issues": [
-    "Blocked before write: GitHub connector could not read the full contents of data/nycif_staged_live_events.json, so applying the 430 matched staged-event updates would risk overwriting or truncating the large staged feed artifact."
+    "Runtime workflow was prepared, but no completed runtime commit was observed for the staged feed GPS integration update. The large staged feed was not rewritten through the connector to avoid truncation risk."
   ],
   "conflict_count": 0,
   "dry_run_matched_staged_event_count": 430,
   "dry_run_report": "data/gps_staged_feed_integration_dry_run_report.json",
-  "generated_at_utc": "2026-06-30T01:35:00+00:00",
+  "generated_at_utc": "2026-06-30T01:45:00+00:00",
   "input_location_cache": "data/location_cache.json",
   "input_staged_feed": "data/nycif_staged_live_events.json",
   "location_cache_modified": false,
-  "next_required_step": "Run the staged-feed integration update inside the repo runtime or GitHub Actions using the existing full staged feed artifact, then regenerate this report and run post-update QA. Do not publish to the public map and do not run Phase 3A.",
-  "phase": "gps_staged_feed_integration_update_attempt",
+  "next_required_step": "Manually run the GitHub Actions workflow named GPS Staged Feed Integration Update, then inspect data/gps_staged_feed_integration_update_report.json and run post-update QA. Do not publish to the public map and do not run Phase 3A.",
+  "phase": "gps_staged_feed_integration_update_runtime_prepared_not_completed",
   "phase_3a_run": false,
   "promoted_cache_key_count": 25,
   "public_map_modified": false,
   "qa_pass": false,
+  "runtime_workflow_commit": "24983e4eac30f1e649ed436a8b09dad050dcc39f",
+  "runtime_workflow_path": ".github/workflows/gps-staged-feed-integration-update.yml",
   "skipped_count": 430,
   "skipped_reason_counts": {
-    "blocked_full_staged_feed_content_unavailable_to_connector": 430
+    "runtime_commit_not_observed": 430
   },
   "staged_feed_modified": false,
   "staged_feed_sha_observed": "dab77f42bfc4dcc2370061f02d57732eae310c0c",
   "unmatched_promoted_cache_key_count": 0,
   "update_performed": false,
   "updated_staged_event_count": 0,
+  "workflow_prepared": true,
   "validated_conditions": {
     "conflict_count_is_0": true,
     "location_cache_modified_false": true,
     "phase_3a_run_false": true,
     "promoted_cache_key_count_is_25": true,
     "public_map_modified_false": true,
-    "staged_feed_modified_false": true,
+    "qa_pass_true": false,
+    "staged_feed_modified_true": false,
     "unmatched_promoted_cache_key_count_is_0": true,
-    "updated_staged_event_count_is_430": false
+    "updated_staged_event_count_is_430": false,
+    "workflow_prepared_true": true
   }
 }
