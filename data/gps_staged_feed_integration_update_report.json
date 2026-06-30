@@ -628,12 +628,13 @@
     }
   ],
   "dry_run_report": "data/gps_staged_feed_integration_dry_run_report.json",
-  "generated_at_utc": "2026-06-30T02:07:17.972066+00:00",
+  "generated_at_utc": "2026-06-30T02:09:54.215806+00:00",
   "input_location_cache": "data/location_cache.json",
   "input_promotion_report": "data/gps_phase2e_promotion_report.json",
   "input_staged_feed": "data/nycif_staged_live_events.json",
   "location_cache_modified": false,
   "match_mode_counts": {
+    "rapidfuzz_facility": 2,
     "source_cemsid": 3587
   },
   "next_required_step": "Run staged-feed GPS integration post-update QA, then decide whether to run a public-map dry-run validation gate. Do not publish to the public map until that gate passes.",
@@ -811,9 +812,15 @@
   },
   "public_map_modified": false,
   "qa_pass": false,
+  "rapidfuzz_enabled": true,
+  "rapidfuzz_score_sample": [
+    95.65,
+    95.0
+  ],
+  "rapidfuzz_threshold": 92.0,
   "skipped_count": 0,
   "staged_feed_modified": false,
-  "unmatched_promoted_cache_key_count": 10,
+  "unmatched_promoted_cache_key_count": 9,
   "unmatched_promoted_cache_keys": [
     "group:brooklyn|friends field lawn area",
     "group:brooklyn|gravesend park lawn area",
@@ -821,7 +828,6 @@
     "group:brooklyn|mccarren park bayard union lawns",
     "group:brooklyn|owl s head park owls head park basketball 01",
     "group:brooklyn|pratt playground basketball 02",
-    "group:brooklyn|rappaport playground rappaport playground rappaport playground handball 01",
     "group:manhattan|riverside park south 71st st south basketball 14",
     "group:queens|broad channel park tennis 01",
     "group:queens|clintonville playground tennis 01"
@@ -835,16 +841,17 @@
     "group:brooklyn|mcdonald playground tennis 01": 36,
     "group:brooklyn|mcdonald playground tennis 02": 36,
     "group:brooklyn|mcdonald playground tennis 03": 36,
+    "group:brooklyn|rappaport playground rappaport playground rappaport playground handball 01": 1,
     "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": 54,
     "group:manhattan|de witt clinton park basketball 01": 260,
     "group:manhattan|de witt clinton park soccer 01a": 1594,
     "group:manhattan|j hood wright park softball 01": 562,
     "group:manhattan|washington market park tennis 01": 38,
     "group:queens|clintonville playground tennis 02": 23,
-    "group:queens|hoffman park softball 01": 214
+    "group:queens|hoffman park softball 01": 215
   },
   "update_performed": false,
-  "updated_staged_event_count": 3587,
+  "updated_staged_event_count": 3589,
   "updated_staged_event_sample": [
     {
       "display_location": "Green Central Knoll: Softball-01",
@@ -852,6 +859,9 @@
       "lng": -74.00842,
       "match_modes": {
         "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": "source_cemsid"
+      },
+      "match_scores": {
+        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
@@ -869,6 +879,9 @@
       "match_modes": {
         "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": "source_cemsid"
       },
+      "match_scores": {
+        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": 100.0
+      },
       "matched_promoted_cache_keys": [
         "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
       ],
@@ -884,6 +897,9 @@
       "lng": -74.00842,
       "match_modes": {
         "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": "source_cemsid"
+      },
+      "match_scores": {
+        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
@@ -902,6 +918,9 @@
       "match_modes": {
         "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
       },
+      "match_scores": {
+        "group:manhattan|de witt clinton park soccer 01a": 100.0
+      },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
@@ -917,6 +936,9 @@
       "lng": -73.99429,
       "match_modes": {
         "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
+      },
+      "match_scores": {
+        "group:manhattan|de witt clinton park soccer 01a": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
@@ -934,6 +956,9 @@
       "match_modes": {
         "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
       },
+      "match_scores": {
+        "group:manhattan|de witt clinton park soccer 01a": 100.0
+      },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
@@ -949,6 +974,9 @@
       "lng": -73.94125,
       "match_modes": {
         "group:manhattan|j hood wright park softball 01": "source_cemsid"
+      },
+      "match_scores": {
+        "group:manhattan|j hood wright park softball 01": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|j hood wright park softball 01"
@@ -966,6 +994,9 @@
       "match_modes": {
         "group:manhattan|de witt clinton park basketball 01": "source_cemsid"
       },
+      "match_scores": {
+        "group:manhattan|de witt clinton park basketball 01": 100.0
+      },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park basketball 01"
       ],
@@ -981,6 +1012,9 @@
       "lng": -73.99429,
       "match_modes": {
         "group:manhattan|de witt clinton park basketball 01": "source_cemsid"
+      },
+      "match_scores": {
+        "group:manhattan|de witt clinton park basketball 01": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park basketball 01"
@@ -998,6 +1032,9 @@
       "match_modes": {
         "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
       },
+      "match_scores": {
+        "group:manhattan|de witt clinton park soccer 01a": 100.0
+      },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
@@ -1013,6 +1050,9 @@
       "lng": -73.99429,
       "match_modes": {
         "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
+      },
+      "match_scores": {
+        "group:manhattan|de witt clinton park soccer 01a": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
@@ -1030,6 +1070,9 @@
       "match_modes": {
         "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
       },
+      "match_scores": {
+        "group:manhattan|de witt clinton park soccer 01a": 100.0
+      },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
@@ -1045,6 +1088,9 @@
       "lng": -73.99429,
       "match_modes": {
         "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
+      },
+      "match_scores": {
+        "group:manhattan|de witt clinton park soccer 01a": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
@@ -1062,6 +1108,9 @@
       "match_modes": {
         "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
       },
+      "match_scores": {
+        "group:manhattan|de witt clinton park soccer 01a": 100.0
+      },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
@@ -1077,6 +1126,9 @@
       "lng": -73.99429,
       "match_modes": {
         "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
+      },
+      "match_scores": {
+        "group:manhattan|de witt clinton park soccer 01a": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
@@ -1094,6 +1146,9 @@
       "match_modes": {
         "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
       },
+      "match_scores": {
+        "group:manhattan|de witt clinton park soccer 01a": 100.0
+      },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
@@ -1109,6 +1164,9 @@
       "lng": -74.01155,
       "match_modes": {
         "group:manhattan|washington market park tennis 01": "source_cemsid"
+      },
+      "match_scores": {
+        "group:manhattan|washington market park tennis 01": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|washington market park tennis 01"
@@ -1126,6 +1184,9 @@
       "match_modes": {
         "group:manhattan|washington market park tennis 01": "source_cemsid"
       },
+      "match_scores": {
+        "group:manhattan|washington market park tennis 01": 100.0
+      },
       "matched_promoted_cache_keys": [
         "group:manhattan|washington market park tennis 01"
       ],
@@ -1141,6 +1202,9 @@
       "lng": -73.99429,
       "match_modes": {
         "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
+      },
+      "match_scores": {
+        "group:manhattan|de witt clinton park soccer 01a": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
@@ -1158,6 +1222,9 @@
       "match_modes": {
         "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": "source_cemsid"
       },
+      "match_scores": {
+        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": 100.0
+      },
       "matched_promoted_cache_keys": [
         "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
       ],
@@ -1173,6 +1240,9 @@
       "lng": -74.00842,
       "match_modes": {
         "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": "source_cemsid"
+      },
+      "match_scores": {
+        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
@@ -1190,6 +1260,9 @@
       "match_modes": {
         "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": "source_cemsid"
       },
+      "match_scores": {
+        "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": 100.0
+      },
       "matched_promoted_cache_keys": [
         "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
       ],
@@ -1205,6 +1278,9 @@
       "lng": -73.99429,
       "match_modes": {
         "group:manhattan|de witt clinton park basketball 01": "source_cemsid"
+      },
+      "match_scores": {
+        "group:manhattan|de witt clinton park basketball 01": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park basketball 01"
@@ -1222,6 +1298,9 @@
       "match_modes": {
         "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
       },
+      "match_scores": {
+        "group:manhattan|de witt clinton park soccer 01a": 100.0
+      },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
       ],
@@ -1237,6 +1316,9 @@
       "lng": -73.99429,
       "match_modes": {
         "group:manhattan|de witt clinton park soccer 01a": "source_cemsid"
+      },
+      "match_scores": {
+        "group:manhattan|de witt clinton park soccer 01a": 100.0
       },
       "matched_promoted_cache_keys": [
         "group:manhattan|de witt clinton park soccer 01a"
