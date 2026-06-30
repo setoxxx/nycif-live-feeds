@@ -77,6 +77,13 @@ def borough_of(row: dict[str, Any]) -> str:
     return normalize(row.get("borough") or row.get("event_borough"))
 
 
+def borough_compatible(left: dict[str, Any], right: dict[str, Any]) -> bool:
+    """Require equal boroughs only when both rows actually carry borough data."""
+    left_borough = borough_of(left)
+    right_borough = borough_of(right)
+    return not left_borough or not right_borough or left_borough == right_borough
+
+
 def row_location(row: dict[str, Any]) -> str:
     return str(row.get("display_location") or row.get("location") or row.get("event_location") or "")
 
@@ -209,7 +216,7 @@ def guarded_fuzzy_facility_match(promoted_facility: str, event_facility: str) ->
 
 
 def exact_or_fuzzy_facility_match(promoted_row: dict[str, Any], event_row: dict[str, Any]) -> tuple[bool, str | None, float]:
-    if borough_of(promoted_row) != borough_of(event_row):
+    if not borough_compatible(promoted_row, event_row):
         return False, None, 0.0
     promoted_pairs = site_facility_pairs(row_location(promoted_row))
     if not promoted_pairs:
