@@ -1,0 +1,4207 @@
+{
+  "blocking_issues": [
+    "Diagnostic candidate identities do not yet equal the dry-run 430-row contract"
+  ],
+  "candidate_count_by_promoted_cache_key": {
+    "group:bronx|macombs dam park basketball 04": 0,
+    "group:bronx|st mary s park st mary s playground west tennis 01": 1,
+    "group:bronx|st mary s park st mary s playground west tennis 02": 1,
+    "group:brooklyn|friends field lawn area": 0,
+    "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": 29,
+    "group:brooklyn|gravesend park lawn area": 0,
+    "group:brooklyn|linden park gershwin park jhs 166 track 01": 0,
+    "group:brooklyn|martin luther king jr playground basketball 02": 0,
+    "group:brooklyn|mccarren park bayard union lawns": 0,
+    "group:brooklyn|mcdonald playground tennis 01": 0,
+    "group:brooklyn|mcdonald playground tennis 02": 0,
+    "group:brooklyn|mcdonald playground tennis 03": 0,
+    "group:brooklyn|owl s head park owls head park basketball 01": 0,
+    "group:brooklyn|pratt playground basketball 02": 0,
+    "group:brooklyn|rappaport playground rappaport playground rappaport playground handball 01": 0,
+    "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": 54,
+    "group:manhattan|de witt clinton park basketball 01": 0,
+    "group:manhattan|de witt clinton park soccer 01a": 119,
+    "group:manhattan|j hood wright park softball 01": 0,
+    "group:manhattan|riverside park south 71st st south basketball 14": 0,
+    "group:manhattan|washington market park tennis 01": 0,
+    "group:queens|broad channel park tennis 01": 0,
+    "group:queens|clintonville playground tennis 01": 0,
+    "group:queens|clintonville playground tennis 02": 0,
+    "group:queens|hoffman park softball 01": 0
+  },
+  "candidate_match_mode_counts": {
+    "exact_site_facility": 204,
+    "source_cemsid": 204
+  },
+  "diagnostic_scope": "row_identity_capture_only_no_staged_feed_write_no_public_map_no_phase_3a",
+  "dry_run_expected_matched_staged_event_count": 430,
+  "generated_at_utc": "2026-06-30T02:34:21.320417+00:00",
+  "input_dry_run_report": "data/gps_staged_feed_integration_dry_run_report.json",
+  "input_location_cache": "data/location_cache.json",
+  "input_promotion_report": "data/gps_phase2e_promotion_report.json",
+  "input_staged_feed": "data/nycif_staged_live_events.json",
+  "location_cache_modified": false,
+  "multi_key_conflict_count": 0,
+  "multi_key_conflicts_sample": [],
+  "phase": "gps_staged_feed_integration_match_diagnostic",
+  "phase_3a_run": false,
+  "promoted_cache_key_count": 25,
+  "promoted_source_cemsid_counts": {
+    "group:bronx|macombs dam park basketball 04": 0,
+    "group:bronx|st mary s park st mary s playground west tennis 01": 1,
+    "group:bronx|st mary s park st mary s playground west tennis 02": 1,
+    "group:brooklyn|friends field lawn area": 0,
+    "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01": 1,
+    "group:brooklyn|gravesend park lawn area": 0,
+    "group:brooklyn|linden park gershwin park jhs 166 track 01": 0,
+    "group:brooklyn|martin luther king jr playground basketball 02": 0,
+    "group:brooklyn|mccarren park bayard union lawns": 0,
+    "group:brooklyn|mcdonald playground tennis 01": 0,
+    "group:brooklyn|mcdonald playground tennis 02": 0,
+    "group:brooklyn|mcdonald playground tennis 03": 0,
+    "group:brooklyn|owl s head park owls head park basketball 01": 0,
+    "group:brooklyn|pratt playground basketball 02": 0,
+    "group:brooklyn|rappaport playground rappaport playground rappaport playground handball 01": 0,
+    "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02": 2,
+    "group:manhattan|de witt clinton park basketball 01": 0,
+    "group:manhattan|de witt clinton park soccer 01a": 2,
+    "group:manhattan|j hood wright park softball 01": 0,
+    "group:manhattan|riverside park south 71st st south basketball 14": 0,
+    "group:manhattan|washington market park tennis 01": 0,
+    "group:queens|broad channel park tennis 01": 0,
+    "group:queens|clintonville playground tennis 01": 0,
+    "group:queens|clintonville playground tennis 02": 0,
+    "group:queens|hoffman park softball 01": 0
+  },
+  "public_map_modified": false,
+  "qa_pass": false,
+  "selected_candidate_count": 204,
+  "selected_stable_event_identity_count": 204,
+  "selected_stable_identity_rows": [
+    {
+      "current_lat": 40.81151,
+      "current_lng": -73.91227,
+      "display_location": "St. Mary's Park: St Mary's Playground West ,St. Mary's Park: St Mary's Playground West-Tennis-01",
+      "event_borough": "Bronx",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:bronx|st mary s park st mary s playground west tennis 01",
+      "promoted_display_location": "St. Mary's Park: St Mary's Playground West-Tennis-01",
+      "promoted_lat": 40.81151,
+      "promoted_lng": -73.91227,
+      "source_cemsid": [
+        "1323",
+        "7016"
+      ],
+      "source_event_id": "905138",
+      "stable_event_identity": "905138|st mary s park st mary s playground west st mary s park st mary s playground west tennis 01|1323,7016|2026-07-24|2026-07-24T18:00:00.000",
+      "title": "NYC Parks KIM/MUTS Event?"
+    },
+    {
+      "current_lat": 40.81151,
+      "current_lng": -73.91227,
+      "display_location": "St. Mary's Park: St Mary's Playground West ,St. Mary's Park: St Mary's Playground West-Tennis-02",
+      "event_borough": "Bronx",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:bronx|st mary s park st mary s playground west tennis 02",
+      "promoted_display_location": "St. Mary's Park: St Mary's Playground West-Tennis-02",
+      "promoted_lat": 40.81151,
+      "promoted_lng": -73.91227,
+      "source_cemsid": [
+        "1323",
+        "7015"
+      ],
+      "source_event_id": "905140",
+      "stable_event_identity": "905140|st mary s park st mary s playground west st mary s park st mary s playground west tennis 02|1323,7015|2026-07-24|2026-07-24T17:00:00.000",
+      "title": "NYC Parks KIM/MUTS Event?"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-06-30|2026-06-30T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-01|2026-07-01T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-02|2026-07-02T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-03|2026-07-03T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-04|2026-07-04T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-05|2026-07-05T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-06|2026-07-06T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-07|2026-07-07T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-08|2026-07-08T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-09|2026-07-09T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-10|2026-07-10T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-11|2026-07-11T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-12|2026-07-12T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-13|2026-07-13T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-14|2026-07-14T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-15|2026-07-15T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-16|2026-07-16T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-17|2026-07-17T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-18|2026-07-18T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-19|2026-07-19T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-20|2026-07-20T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-21|2026-07-21T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-22|2026-07-22T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-23|2026-07-23T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-24|2026-07-24T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-25|2026-07-25T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-26|2026-07-26T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-27|2026-07-27T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.65259,
+      "current_lng": -74.00842,
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "promoted_display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "promoted_lat": 40.65259,
+      "promoted_lng": -74.00842,
+      "source_cemsid": [
+        "5219"
+      ],
+      "source_event_id": "900086",
+      "stable_event_identity": "900086|gonzalo plasencia playground jhs 136 softball 01|5219|2026-07-28|2026-07-28T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "904904",
+      "stable_event_identity": "904904|st john s park buddy keaton softball 01|9686|2026-06-30|2026-06-30T18:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "905105",
+      "stable_event_identity": "905105|st john s park buddy keaton softball 02|9687|2026-06-30|2026-06-30T18:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "909984",
+      "stable_event_identity": "909984|st john s park buddy keaton softball 02|9687|2026-07-01|2026-07-01T17:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "907927",
+      "stable_event_identity": "907927|st john s park buddy keaton softball 01|9686|2026-07-01|2026-07-01T18:30:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "915086",
+      "stable_event_identity": "915086|st john s park buddy keaton softball 01|9686|2026-07-02|2026-07-02T18:30:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "930649",
+      "stable_event_identity": "930649|st john s park buddy keaton softball 02|9687|2026-07-02|2026-07-02T18:30:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "901975",
+      "stable_event_identity": "901975|st john s park buddy keaton softball 01|9686|2026-07-03|2026-07-03T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "935867",
+      "stable_event_identity": "935867|st john s park buddy keaton softball 01|9686|2026-07-04|2026-07-04T10:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "909984",
+      "stable_event_identity": "909984|st john s park buddy keaton softball 02|9687|2026-07-04|2026-07-04T17:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "900291",
+      "stable_event_identity": "900291|st john s park buddy keaton softball 01|9686|2026-07-05|2026-07-05T09:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "900294",
+      "stable_event_identity": "900294|st john s park buddy keaton softball 02|9687|2026-07-05|2026-07-05T09:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "909984",
+      "stable_event_identity": "909984|st john s park buddy keaton softball 02|9687|2026-07-06|2026-07-06T17:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "935131",
+      "stable_event_identity": "935131|st john s park buddy keaton softball 01|9686|2026-07-06|2026-07-06T17:30:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "904904",
+      "stable_event_identity": "904904|st john s park buddy keaton softball 01|9686|2026-07-07|2026-07-07T18:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "905105",
+      "stable_event_identity": "905105|st john s park buddy keaton softball 02|9687|2026-07-07|2026-07-07T18:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "909984",
+      "stable_event_identity": "909984|st john s park buddy keaton softball 02|9687|2026-07-08|2026-07-08T17:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "907927",
+      "stable_event_identity": "907927|st john s park buddy keaton softball 01|9686|2026-07-08|2026-07-08T18:30:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "915086",
+      "stable_event_identity": "915086|st john s park buddy keaton softball 01|9686|2026-07-09|2026-07-09T18:30:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "931262",
+      "stable_event_identity": "931262|st john s park buddy keaton softball 02|9687|2026-07-09|2026-07-09T18:30:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "901975",
+      "stable_event_identity": "901975|st john s park buddy keaton softball 01|9686|2026-07-10|2026-07-10T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "933762",
+      "stable_event_identity": "933762|st john s park buddy keaton softball 01|9686|2026-07-11|2026-07-11T10:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "931430",
+      "stable_event_identity": "931430|st john s park buddy keaton softball 01|9686|2026-07-11|2026-07-11T12:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "909984",
+      "stable_event_identity": "909984|st john s park buddy keaton softball 02|9687|2026-07-11|2026-07-11T17:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "900291",
+      "stable_event_identity": "900291|st john s park buddy keaton softball 01|9686|2026-07-12|2026-07-12T09:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "900294",
+      "stable_event_identity": "900294|st john s park buddy keaton softball 02|9687|2026-07-12|2026-07-12T09:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "909984",
+      "stable_event_identity": "909984|st john s park buddy keaton softball 02|9687|2026-07-13|2026-07-13T17:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "935131",
+      "stable_event_identity": "935131|st john s park buddy keaton softball 01|9686|2026-07-13|2026-07-13T17:30:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "904904",
+      "stable_event_identity": "904904|st john s park buddy keaton softball 01|9686|2026-07-14|2026-07-14T18:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "905105",
+      "stable_event_identity": "905105|st john s park buddy keaton softball 02|9687|2026-07-14|2026-07-14T18:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "909984",
+      "stable_event_identity": "909984|st john s park buddy keaton softball 02|9687|2026-07-15|2026-07-15T17:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "907927",
+      "stable_event_identity": "907927|st john s park buddy keaton softball 01|9686|2026-07-15|2026-07-15T18:30:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "915086",
+      "stable_event_identity": "915086|st john s park buddy keaton softball 01|9686|2026-07-16|2026-07-16T18:30:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "931262",
+      "stable_event_identity": "931262|st john s park buddy keaton softball 02|9687|2026-07-16|2026-07-16T18:30:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "901975",
+      "stable_event_identity": "901975|st john s park buddy keaton softball 01|9686|2026-07-17|2026-07-17T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "909984",
+      "stable_event_identity": "909984|st john s park buddy keaton softball 02|9687|2026-07-18|2026-07-18T17:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "900291",
+      "stable_event_identity": "900291|st john s park buddy keaton softball 01|9686|2026-07-19|2026-07-19T09:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "900294",
+      "stable_event_identity": "900294|st john s park buddy keaton softball 02|9687|2026-07-19|2026-07-19T09:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "909984",
+      "stable_event_identity": "909984|st john s park buddy keaton softball 02|9687|2026-07-20|2026-07-20T17:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "935131",
+      "stable_event_identity": "935131|st john s park buddy keaton softball 01|9686|2026-07-20|2026-07-20T17:30:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "904904",
+      "stable_event_identity": "904904|st john s park buddy keaton softball 01|9686|2026-07-21|2026-07-21T18:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "905105",
+      "stable_event_identity": "905105|st john s park buddy keaton softball 02|9687|2026-07-21|2026-07-21T18:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "909984",
+      "stable_event_identity": "909984|st john s park buddy keaton softball 02|9687|2026-07-22|2026-07-22T17:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "907927",
+      "stable_event_identity": "907927|st john s park buddy keaton softball 01|9686|2026-07-22|2026-07-22T18:30:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "915086",
+      "stable_event_identity": "915086|st john s park buddy keaton softball 01|9686|2026-07-23|2026-07-23T18:30:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "931262",
+      "stable_event_identity": "931262|st john s park buddy keaton softball 02|9687|2026-07-23|2026-07-23T18:30:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "901975",
+      "stable_event_identity": "901975|st john s park buddy keaton softball 01|9686|2026-07-24|2026-07-24T18:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "931430",
+      "stable_event_identity": "931430|st john s park buddy keaton softball 01|9686|2026-07-25|2026-07-25T12:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "909984",
+      "stable_event_identity": "909984|st john s park buddy keaton softball 02|9687|2026-07-25|2026-07-25T17:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "900291",
+      "stable_event_identity": "900291|st john s park buddy keaton softball 01|9686|2026-07-26|2026-07-26T09:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "900294",
+      "stable_event_identity": "900294|st john s park buddy keaton softball 02|9687|2026-07-26|2026-07-26T09:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "909984",
+      "stable_event_identity": "909984|st john s park buddy keaton softball 02|9687|2026-07-27|2026-07-27T17:00:00.000",
+      "title": "Baseball - 12 and Under (Little League)"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "935131",
+      "stable_event_identity": "935131|st john s park buddy keaton softball 01|9686|2026-07-27|2026-07-27T17:30:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9686"
+      ],
+      "source_event_id": "904904",
+      "stable_event_identity": "904904|st john s park buddy keaton softball 01|9686|2026-07-28|2026-07-28T18:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.67437,
+      "current_lng": -73.93475,
+      "display_location": "St. John's Park: Buddy Keaton-Softball-02",
+      "event_borough": "Brooklyn",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "promoted_display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "promoted_lat": 40.67437,
+      "promoted_lng": -73.93475,
+      "source_cemsid": [
+        "9687"
+      ],
+      "source_event_id": "905105",
+      "stable_event_identity": "905105|st john s park buddy keaton softball 02|9687|2026-07-28|2026-07-28T18:00:00.000",
+      "title": "Softball - Adults"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-06-30|2026-06-30T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "930589",
+      "stable_event_identity": "930589|de witt clinton park soccer 01b|12275|2026-06-30|2026-06-30T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-06-30|2026-06-30T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-01|2026-07-01T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-01|2026-07-01T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-01|2026-07-01T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "906982",
+      "stable_event_identity": "906982|de witt clinton park soccer 01|9325|2026-07-01|2026-07-01T18:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "907118",
+      "stable_event_identity": "907118|de witt clinton park soccer 01|9325|2026-07-01|2026-07-01T18:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-02|2026-07-02T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-02|2026-07-02T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "939610",
+      "stable_event_identity": "939610|de witt clinton park soccer 01|9325|2026-07-02|2026-07-02T14:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-02|2026-07-02T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-03|2026-07-03T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "939610",
+      "stable_event_identity": "939610|de witt clinton park soccer 01|9325|2026-07-03|2026-07-03T14:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-03|2026-07-03T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "907118",
+      "stable_event_identity": "907118|de witt clinton park soccer 01|9325|2026-07-03|2026-07-03T18:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "955922",
+      "stable_event_identity": "955922|de witt clinton park soccer 01|9325|2026-07-03|2026-07-03T20:30:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "926579",
+      "stable_event_identity": "926579|de witt clinton park soccer 01|9325|2026-07-04|2026-07-04T13:30:00.000",
+      "title": "Frisbee"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "907306",
+      "stable_event_identity": "907306|de witt clinton park soccer 01|9325|2026-07-04|2026-07-04T16:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "925417",
+      "stable_event_identity": "925417|de witt clinton park soccer 01|9325|2026-07-04|2026-07-04T18:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "955922",
+      "stable_event_identity": "955922|de witt clinton park soccer 01|9325|2026-07-04|2026-07-04T20:30:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "928322",
+      "stable_event_identity": "928322|de witt clinton park soccer 01b|12275|2026-07-05|2026-07-05T08:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "915905",
+      "stable_event_identity": "915905|de witt clinton park soccer 01|9325|2026-07-05|2026-07-05T10:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "954862",
+      "stable_event_identity": "954862|de witt clinton park soccer 01|9325|2026-07-05|2026-07-05T16:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "947638",
+      "stable_event_identity": "947638|de witt clinton park soccer 01|9325|2026-07-05|2026-07-05T18:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "955922",
+      "stable_event_identity": "955922|de witt clinton park soccer 01|9325|2026-07-05|2026-07-05T20:30:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-06|2026-07-06T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-06|2026-07-06T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-06|2026-07-06T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-07|2026-07-07T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-07|2026-07-07T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-07|2026-07-07T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-08|2026-07-08T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-08|2026-07-08T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-08|2026-07-08T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "906982",
+      "stable_event_identity": "906982|de witt clinton park soccer 01|9325|2026-07-08|2026-07-08T18:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "907118",
+      "stable_event_identity": "907118|de witt clinton park soccer 01|9325|2026-07-08|2026-07-08T18:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-09|2026-07-09T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-09|2026-07-09T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-09|2026-07-09T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-10|2026-07-10T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-10|2026-07-10T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-10|2026-07-10T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "907118",
+      "stable_event_identity": "907118|de witt clinton park soccer 01|9325|2026-07-10|2026-07-10T18:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "926579",
+      "stable_event_identity": "926579|de witt clinton park soccer 01|9325|2026-07-11|2026-07-11T13:30:00.000",
+      "title": "Frisbee"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "907306",
+      "stable_event_identity": "907306|de witt clinton park soccer 01|9325|2026-07-11|2026-07-11T16:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "925417",
+      "stable_event_identity": "925417|de witt clinton park soccer 01|9325|2026-07-11|2026-07-11T18:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "940326",
+      "stable_event_identity": "940326|de witt clinton park soccer 01|9325|2026-07-11|2026-07-11T20:00:00.000",
+      "title": "Football ? Flag Football"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "955922",
+      "stable_event_identity": "955922|de witt clinton park soccer 01|9325|2026-07-11|2026-07-11T20:30:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "928322",
+      "stable_event_identity": "928322|de witt clinton park soccer 01b|12275|2026-07-12|2026-07-12T08:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "915905",
+      "stable_event_identity": "915905|de witt clinton park soccer 01|9325|2026-07-12|2026-07-12T10:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "954862",
+      "stable_event_identity": "954862|de witt clinton park soccer 01|9325|2026-07-12|2026-07-12T16:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "947638",
+      "stable_event_identity": "947638|de witt clinton park soccer 01|9325|2026-07-12|2026-07-12T18:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "955922",
+      "stable_event_identity": "955922|de witt clinton park soccer 01|9325|2026-07-12|2026-07-12T20:30:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-13|2026-07-13T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-13|2026-07-13T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-13|2026-07-13T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-14|2026-07-14T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-14|2026-07-14T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-14|2026-07-14T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-15|2026-07-15T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-15|2026-07-15T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-15|2026-07-15T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "906982",
+      "stable_event_identity": "906982|de witt clinton park soccer 01|9325|2026-07-15|2026-07-15T18:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "907118",
+      "stable_event_identity": "907118|de witt clinton park soccer 01|9325|2026-07-15|2026-07-15T18:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-16|2026-07-16T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-16|2026-07-16T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-17|2026-07-17T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-17|2026-07-17T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-17|2026-07-17T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "907118",
+      "stable_event_identity": "907118|de witt clinton park soccer 01|9325|2026-07-17|2026-07-17T18:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "926579",
+      "stable_event_identity": "926579|de witt clinton park soccer 01|9325|2026-07-18|2026-07-18T13:30:00.000",
+      "title": "Frisbee"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "907306",
+      "stable_event_identity": "907306|de witt clinton park soccer 01|9325|2026-07-18|2026-07-18T16:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "925417",
+      "stable_event_identity": "925417|de witt clinton park soccer 01|9325|2026-07-18|2026-07-18T18:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "940326",
+      "stable_event_identity": "940326|de witt clinton park soccer 01|9325|2026-07-18|2026-07-18T20:00:00.000",
+      "title": "Football ? Flag Football"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "955922",
+      "stable_event_identity": "955922|de witt clinton park soccer 01|9325|2026-07-18|2026-07-18T20:30:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "928322",
+      "stable_event_identity": "928322|de witt clinton park soccer 01b|12275|2026-07-19|2026-07-19T08:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "915905",
+      "stable_event_identity": "915905|de witt clinton park soccer 01|9325|2026-07-19|2026-07-19T10:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "954862",
+      "stable_event_identity": "954862|de witt clinton park soccer 01|9325|2026-07-19|2026-07-19T16:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "947638",
+      "stable_event_identity": "947638|de witt clinton park soccer 01|9325|2026-07-19|2026-07-19T18:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-20|2026-07-20T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-20|2026-07-20T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-20|2026-07-20T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-21|2026-07-21T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-21|2026-07-21T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-21|2026-07-21T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-22|2026-07-22T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-22|2026-07-22T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-22|2026-07-22T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "906982",
+      "stable_event_identity": "906982|de witt clinton park soccer 01|9325|2026-07-22|2026-07-22T18:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "907118",
+      "stable_event_identity": "907118|de witt clinton park soccer 01|9325|2026-07-22|2026-07-22T18:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-23|2026-07-23T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-23|2026-07-23T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-23|2026-07-23T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-24|2026-07-24T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-24|2026-07-24T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "907118",
+      "stable_event_identity": "907118|de witt clinton park soccer 01|9325|2026-07-24|2026-07-24T18:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "926579",
+      "stable_event_identity": "926579|de witt clinton park soccer 01|9325|2026-07-25|2026-07-25T13:30:00.000",
+      "title": "Frisbee"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "907306",
+      "stable_event_identity": "907306|de witt clinton park soccer 01|9325|2026-07-25|2026-07-25T16:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "925417",
+      "stable_event_identity": "925417|de witt clinton park soccer 01|9325|2026-07-25|2026-07-25T18:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "940326",
+      "stable_event_identity": "940326|de witt clinton park soccer 01|9325|2026-07-25|2026-07-25T20:00:00.000",
+      "title": "Football ? Flag Football"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "955922",
+      "stable_event_identity": "955922|de witt clinton park soccer 01|9325|2026-07-25|2026-07-25T20:30:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "928322",
+      "stable_event_identity": "928322|de witt clinton park soccer 01b|12275|2026-07-26|2026-07-26T08:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "915905",
+      "stable_event_identity": "915905|de witt clinton park soccer 01|9325|2026-07-26|2026-07-26T10:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "954862",
+      "stable_event_identity": "954862|de witt clinton park soccer 01|9325|2026-07-26|2026-07-26T16:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "947638",
+      "stable_event_identity": "947638|de witt clinton park soccer 01|9325|2026-07-26|2026-07-26T18:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-27|2026-07-27T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-27|2026-07-27T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-27|2026-07-27T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01B",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "12275"
+      ],
+      "source_event_id": "909376",
+      "stable_event_identity": "909376|de witt clinton park soccer 01b|12275|2026-07-28|2026-07-28T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "935681",
+      "stable_event_identity": "935681|de witt clinton park soccer 01|9325|2026-07-28|2026-07-28T13:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "901600",
+      "stable_event_identity": "901600|de witt clinton park soccer 01|9325|2026-07-28|2026-07-28T14:30:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "945704",
+      "stable_event_identity": "945704|de witt clinton park soccer 01|9325|2026-08-24|2026-08-24T10:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "941400",
+      "stable_event_identity": "941400|de witt clinton park soccer 01|9325|2026-08-28|2026-08-28T09:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "940408",
+      "stable_event_identity": "940408|de witt clinton park soccer 01|9325|2026-08-29|2026-08-29T09:00:00.000",
+      "title": "Soccer - Non Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "925182",
+      "stable_event_identity": "925182|de witt clinton park soccer 01|9325|2026-08-29|2026-08-29T18:00:00.000",
+      "title": "Football ? Flag Football"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Soccer-01",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "9325"
+      ],
+      "source_event_id": "949254",
+      "stable_event_identity": "949254|de witt clinton park soccer 01|9325|2026-08-30|2026-08-30T10:00:00.000",
+      "title": "Soccer -Regulation"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Baseball-03   ,De Witt Clinton Park: Soccer-01 ,De Witt Clinton Park: Softball-01 ,De Witt Clinton Park: Softball-02",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "5529",
+        "5530",
+        "5533",
+        "9325"
+      ],
+      "source_event_id": "910351",
+      "stable_event_identity": "910351|de witt clinton park baseball 03 de witt clinton park soccer 01 de witt clinton park softball 01 de witt clinton park softball 02|5529,5530,5533,9325|2026-09-25|2026-09-25T09:00:00.000",
+      "title": "Miscellaneous"
+    },
+    {
+      "current_lat": 40.76819,
+      "current_lng": -73.99429,
+      "display_location": "De Witt Clinton Park: Baseball-03   ,De Witt Clinton Park: Soccer-01 ,De Witt Clinton Park: Softball-01 ,De Witt Clinton Park: Softball-02",
+      "event_borough": "Manhattan",
+      "match_modes": {
+        "exact_site_facility": 100.0,
+        "source_cemsid": 100.0
+      },
+      "promoted_cache_key": "group:manhattan|de witt clinton park soccer 01a",
+      "promoted_display_location": "De Witt Clinton Park: Soccer-01A",
+      "promoted_lat": 40.76819,
+      "promoted_lng": -73.99429,
+      "source_cemsid": [
+        "5529",
+        "5530",
+        "5533",
+        "9325"
+      ],
+      "source_event_id": "912136",
+      "stable_event_identity": "912136|de witt clinton park baseball 03 de witt clinton park soccer 01 de witt clinton park softball 01 de witt clinton park softball 02|5529,5530,5533,9325|2026-10-02|2026-10-02T09:00:00.000",
+      "title": "Miscellaneous"
+    }
+  ],
+  "stable_identity_ready_for_update": false,
+  "staged_event_count": 28807,
+  "staged_feed_modified": false,
+  "unmatched_promoted_cache_key_count": 20,
+  "unmatched_promoted_cache_keys": [
+    "group:bronx|macombs dam park basketball 04",
+    "group:brooklyn|friends field lawn area",
+    "group:brooklyn|gravesend park lawn area",
+    "group:brooklyn|linden park gershwin park jhs 166 track 01",
+    "group:brooklyn|martin luther king jr playground basketball 02",
+    "group:brooklyn|mccarren park bayard union lawns",
+    "group:brooklyn|mcdonald playground tennis 01",
+    "group:brooklyn|mcdonald playground tennis 02",
+    "group:brooklyn|mcdonald playground tennis 03",
+    "group:brooklyn|owl s head park owls head park basketball 01",
+    "group:brooklyn|pratt playground basketball 02",
+    "group:brooklyn|rappaport playground rappaport playground rappaport playground handball 01",
+    "group:manhattan|de witt clinton park basketball 01",
+    "group:manhattan|j hood wright park softball 01",
+    "group:manhattan|riverside park south 71st st south basketball 14",
+    "group:manhattan|washington market park tennis 01",
+    "group:queens|broad channel park tennis 01",
+    "group:queens|clintonville playground tennis 01",
+    "group:queens|clintonville playground tennis 02",
+    "group:queens|hoffman park softball 01"
+  ],
+  "validated_conditions": {
+    "all_promoted_keys_have_candidates": false,
+    "candidate_count_matches_dry_run_430": false,
+    "location_cache_modified_false": true,
+    "no_multi_key_conflicts": true,
+    "phase_3a_run_false": true,
+    "promoted_cache_key_count_is_25": true,
+    "public_map_modified_false": true,
+    "selected_identities_are_unique": true,
+    "staged_feed_modified_false": true
+  }
+}
