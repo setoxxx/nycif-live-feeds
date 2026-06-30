@@ -1,14 +1,22 @@
 {
   "blocking_issues": [
-    "Post-update QA cannot pass because data/gps_staged_feed_integration_update_report.json still shows update_performed false and updated_staged_event_count 0 after the workflow rerun trigger. The required 430 staged-event update has not completed."
+    "Post-update QA cannot pass because data/gps_staged_feed_integration_update_report.json still shows update_performed false and updated_staged_event_count 0 after the workflow rerun trigger. No workflow run was visible for the trigger commit through the connector, so no job log or first failing line was available."
   ],
   "conflict_count": 0,
-  "generated_at_utc": "2026-06-30T02:05:00+00:00",
+  "diagnosis": {
+    "first_failing_line": null,
+    "job_log_available": false,
+    "latest_trigger_commit": "46681a7e6aa84d7ddb035e1fc088926dd0ace387",
+    "observed_status": "did_not_start_or_not_visible_to_connector",
+    "output_commit_observed": false,
+    "workflow_runs_for_trigger_commit": 0
+  },
+  "generated_at_utc": "2026-06-30T02:15:00+00:00",
   "input_staged_feed": "data/nycif_staged_live_events.json",
   "input_update_report": "data/gps_staged_feed_integration_update_report.json",
   "location_cache_modified": false,
-  "next_required_step": "Open GitHub Actions and confirm whether the workflow named GPS Staged Feed Integration Update ran, failed, or was skipped. If it did not run, trigger it manually from the Actions tab. If it failed, inspect the job log and patch the workflow/script. Do not publish to the public map and do not run Phase 3A.",
-  "phase": "gps_staged_feed_post_update_qa_after_rerun_trigger",
+  "next_required_step": "Open GitHub Actions and manually run the workflow named GPS Staged Feed Integration Update from the Actions tab. If a run appears and fails, inspect the first failed step log. If it does not appear, verify repository Actions settings and workflow enablement. Do not publish to the public map and do not run Phase 3A.",
+  "phase": "gps_staged_feed_post_update_qa_workflow_diagnosis",
   "phase_3a_run": false,
   "promoted_cache_key_count": 25,
   "public_map_modified": false,
