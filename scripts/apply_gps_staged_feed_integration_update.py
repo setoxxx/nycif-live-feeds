@@ -12,6 +12,7 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 LOCATION_CACHE_PATH = DATA_DIR / "location_cache.json"
+PROMOTION_REPORT_PATH = DATA_DIR / "gps_phase2e_promotion_report.json"
 DRY_RUN_REPORT_PATH = DATA_DIR / "gps_staged_feed_integration_dry_run_report.json"
 STAGED_FEED_PATH = DATA_DIR / "nycif_staged_live_events.json"
 UPDATE_REPORT_PATH = DATA_DIR / "gps_staged_feed_integration_update_report.json"
@@ -58,6 +59,14 @@ def valid_nyc_lat_lng(lat: Any, lng: Any) -> bool:
     return 40.0 <= lat_f <= 41.0 and -75.0 <= lng_f <= -73.0
 
 
+def unwrap_location_cache(payload: Any) -> dict[str, Any]:
+    if isinstance(payload, dict) and isinstance(payload.get("entries"), dict):
+        return payload["entries"]
+    if isinstance(payload, dict):
+        return payload
+    return {}
+
+
 def event_aliases(row: dict[str, Any]) -> set[str]:
     aliases: set[str] = set()
     for field in (
@@ -82,10 +91,12 @@ def event_aliases(row: dict[str, Any]) -> set[str]:
 
 def cache_aliases(key: str, row: dict[str, Any]) -> set[str]:
     aliases = {key}
-    for field in ("stable_identity_key", "group_key", "cache_key", "gps_cache_key"):
+    for field in ("stable_identity_key", "group_key", "cache_key", "gps_cache_key", "key_value"):
         value = row.get(field)
         if value:
             aliases.add(str(value))
+        if field == "group_key" and value and not str(value).startswith("group:"):
+            aliases.add(f"group:{value}")
 
     borough = row.get("borough") or row.get("event_borough")
     for field in ("display_location", "location", "event_location"):
@@ -95,6 +106,47 @@ def cache_aliases(key: str, row: dict[str, Any]) -> set[str]:
     return aliases
 
 
+def extract_promoted_cache(location_cache_payload: Any, promotion_report: dict[str, Any]) -> tuple[dict[str, dict[str, Any]], str]:
+    """Return exactly the 25 Phase 2E promoted rows.
+
+    Newer location_cache.json is a wrapper object with entries and may be regenerated without
+    phase_2e_promotion_performed flags. The promotion report is therefore the stable source of
+    the approved 25 identities; location_cache is still loaded/read and used when flags exist.
+    """
+    location_entries = unwrap_location_cache(location_cache_payload)
+
+    flagged = {
+        key: value
+        for key, value in location_entries.items()
+        if isinstance(value, dict) and value.get("phase_2e_promotion_performed") is True
+    }
+    if flagged:
+        return flagged, "location_cache_phase_2e_flags"
+
+    promoted_rows = promotion_report.get("promoted_rows")
+    if isinstance(promoted_rows, list):
+        promoted: dict[str, dict[str, Any]] = {}
+        for row in promoted_rows:
+            if not isinstance(row, dict):
+                continue
+            key = row.get("stable_identity_key") or row.get("key_value")
+            if not key:
+                key = stable_key(row.get("borough"), row.get("display_location"))
+            promoted[str(key)] = dict(row)
+        return promoted, "phase_2e_promotion_report_promoted_rows"
+
+    promoted_stable_keys = promotion_report.get("promoted_stable_keys")
+    if isinstance(promoted_stable_keys, list):
+        promoted = {}
+        for key in promoted_stable_keys:
+            cache_row = location_entries.get(str(key))
+            if isinstance(cache_row, dict):
+                promoted[str(key)] = cache_row
+        return promoted, "phase_2e_promotion_report_keys_plus_location_cache_entries"
+
+    return {}, "none"
+
+
 def build_failure_report(message: str, **extra: Any) -> dict[str, Any]:
     report: dict[str, Any] = {
         "blocking_issues": [message],
@@ -102,6 +154,7 @@ def build_failure_report(message: str, **extra: Any) -> dict[str, Any]:
         "dry_run_report": str(DRY_RUN_REPORT_PATH.relative_to(ROOT)),
         "generated_at_utc": utc_now(),
         "input_location_cache": str(LOCATION_CACHE_PATH.relative_to(ROOT)),
+        "input_promotion_report": str(PROMOTION_REPORT_PATH.relative_to(ROOT)),
         "input_staged_feed": str(STAGED_FEED_PATH.relative_to(ROOT)),
         "location_cache_modified": False,
         "next_required_step": "Inspect this report, fix only the staged-feed integration workflow/script, then rerun GPS Staged Feed Integration Update. Do not publish to the public map and do not run Phase 3A.",
@@ -136,12 +189,16 @@ def build_failure_report(message: str, **extra: Any) -> dict[str, Any]:
 
 def main() -> int:
     try:
-        location_cache = load_json(LOCATION_CACHE_PATH, {})
+        location_cache_payload = load_json(LOCATION_CACHE_PATH, {})
+        promotion_report = load_json(PROMOTION_REPORT_PATH, {})
         dry_run = load_json(DRY_RUN_REPORT_PATH, {})
         staged_payload = load_json(STAGED_FEED_PATH, {})
 
-        if not isinstance(location_cache, dict):
-            save_json(UPDATE_REPORT_PATH, build_failure_report("location_cache.json must be an object keyed by stable identity key"))
+        if not isinstance(location_cache_payload, dict):
+            save_json(UPDATE_REPORT_PATH, build_failure_report("location_cache.json must be an object"))
+            return 1
+        if not isinstance(promotion_report, dict) or promotion_report.get("qa_pass") is not True:
+            save_json(UPDATE_REPORT_PATH, build_failure_report("Phase 2E promotion report must exist and have qa_pass true"))
             return 1
         if dry_run.get("qa_pass") is not True:
             save_json(UPDATE_REPORT_PATH, build_failure_report("Dry-run report qa_pass must be true before staged-feed integration update"))
@@ -159,17 +216,14 @@ def main() -> int:
             save_json(UPDATE_REPORT_PATH, build_failure_report("nycif_staged_live_events.json must be an object with an events list"))
             return 1
 
-        promoted_cache: dict[str, dict[str, Any]] = {
-            key: value
-            for key, value in location_cache.items()
-            if isinstance(value, dict) and value.get("phase_2e_promotion_performed") is True
-        }
+        promoted_cache, promoted_source = extract_promoted_cache(location_cache_payload, promotion_report)
         if len(promoted_cache) != EXPECTED_PROMOTED_CACHE_KEYS:
             save_json(
                 UPDATE_REPORT_PATH,
                 build_failure_report(
                     f"Expected 25 promoted cache keys, found {len(promoted_cache)}",
                     promoted_cache_key_count=len(promoted_cache),
+                    promoted_source=promoted_source,
                 ),
             )
             return 1
@@ -190,6 +244,7 @@ def main() -> int:
                 build_failure_report(
                     "Promoted cache aliases are not unique",
                     promoted_cache_key_count=len(promoted_cache),
+                    promoted_source=promoted_source,
                     conflict_count=len(alias_collisions),
                     alias_collisions={k: sorted(set(v)) for k, v in alias_collisions.items()},
                 ),
@@ -230,9 +285,9 @@ def main() -> int:
             row["lat"] = float(cache_row["lat"])
             row["lng"] = float(cache_row["lng"])
             row["stable_identity_key"] = cache_key
-            row["group_key"] = cache_row.get("group_key") or cache_key
+            row["group_key"] = cache_row.get("group_key") or cache_key.removeprefix("group:")
             row["gps_integration_phase"] = "gps_staged_feed_integration_update"
-            row["gps_integration_source"] = "phase_2e_promoted_location_cache"
+            row["gps_integration_source"] = promoted_source
             row["gps_integration_updated_at_utc"] = utc_now()
             row["location_source"] = "phase_2e_promoted_location_cache"
             row["phase_2e_promotion_applied_to_staged_feed"] = True
@@ -269,12 +324,14 @@ def main() -> int:
             "dry_run_report": str(DRY_RUN_REPORT_PATH.relative_to(ROOT)),
             "generated_at_utc": utc_now(),
             "input_location_cache": str(LOCATION_CACHE_PATH.relative_to(ROOT)),
+            "input_promotion_report": str(PROMOTION_REPORT_PATH.relative_to(ROOT)),
             "input_staged_feed": str(STAGED_FEED_PATH.relative_to(ROOT)),
             "location_cache_modified": False,
             "next_required_step": "Run staged-feed GPS integration post-update QA, then decide whether to run a public-map dry-run validation gate. Do not publish to the public map until that gate passes.",
             "phase": "gps_staged_feed_integration_update",
             "phase_3a_run": False,
             "promoted_cache_key_count": len(promoted_cache),
+            "promoted_source": promoted_source,
             "public_map_modified": False,
             "qa_pass": qa_pass,
             "skipped_count": skipped_count,
