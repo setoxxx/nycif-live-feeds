@@ -1,0 +1,289 @@
+{
+  "approved_input_count": 25,
+  "cache_key_conflicts_requiring_human_review": [],
+  "conflict_count": 0,
+  "dry_run_conflict_count": 0,
+  "dry_run_qa_pass": true,
+  "duplicate_stable_key_count": 0,
+  "excluded_promoted_count": 0,
+  "excluded_rows_promoted": [],
+  "generated_at_utc": "2026-06-30T00:55:00+00:00",
+  "input_artifact": "data/gps_reviewed_approval_artifact.json",
+  "input_dry_run_report": "data/gps_phase2e_promotion_dry_run_report.json",
+  "invalid_coordinate_count": 0,
+  "location_cache_modified": true,
+  "missing_required_metadata_count": 0,
+  "next_required_step": "Run post-promotion QA only. Validate location_cache.json and gps_phase2e_promotion_report.json; do not modify the staged feed, do not publish to the public map, and do not run Phase 3A.",
+  "phase": "phase_2e_gps_promotion",
+  "phase_2e_promotion_performed": true,
+  "promoted_count": 25,
+  "promoted_rows": [
+    {
+      "action": "add",
+      "borough": "Bronx",
+      "display_location": "Macombs Dam Park: Basketball-04",
+      "group_key": "bronx|macombs dam park basketball 04",
+      "lat": 40.82701,
+      "lng": -73.92779,
+      "stable_identity_key": "group:bronx|macombs dam park basketball 04"
+    },
+    {
+      "action": "add",
+      "borough": "Manhattan",
+      "display_location": "Riverside Park South: 71st St South-Basketball-14",
+      "group_key": "manhattan|riverside park south 71st st south basketball 14",
+      "lat": 40.77947,
+      "lng": -73.98899,
+      "stable_identity_key": "group:manhattan|riverside park south 71st st south basketball 14"
+    },
+    {
+      "action": "add",
+      "borough": "Brooklyn",
+      "display_location": "Martin Luther King Jr. Playground: Basketball-02",
+      "group_key": "brooklyn|martin luther king jr playground basketball 02",
+      "lat": 40.66769,
+      "lng": -73.89043,
+      "stable_identity_key": "group:brooklyn|martin luther king jr playground basketball 02"
+    },
+    {
+      "action": "add",
+      "borough": "Brooklyn",
+      "display_location": "Friends Field: Lawn Area",
+      "group_key": "brooklyn|friends field lawn area",
+      "lat": 40.61873,
+      "lng": -73.9729,
+      "stable_identity_key": "group:brooklyn|friends field lawn area"
+    },
+    {
+      "action": "add",
+      "borough": "Brooklyn",
+      "display_location": "Gravesend Park: Lawn Area",
+      "group_key": "brooklyn|gravesend park lawn area",
+      "lat": 40.62356,
+      "lng": -73.98434,
+      "stable_identity_key": "group:brooklyn|gravesend park lawn area"
+    },
+    {
+      "action": "add",
+      "borough": "Queens",
+      "display_location": "Hoffman Park: Softball-01",
+      "group_key": "queens|hoffman park softball 01",
+      "lat": 40.73275,
+      "lng": -73.87217,
+      "stable_identity_key": "group:queens|hoffman park softball 01"
+    },
+    {
+      "action": "add",
+      "borough": "Brooklyn",
+      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
+      "group_key": "brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+      "lat": 40.65259,
+      "lng": -74.00842,
+      "stable_identity_key": "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
+    },
+    {
+      "action": "add",
+      "borough": "Brooklyn",
+      "display_location": "Rappaport Playground: Rappaport Playground   ,Rappaport Playground: Handball-01",
+      "group_key": "brooklyn|rappaport playground rappaport playground rappaport playground handball 01",
+      "lat": 40.63697,
+      "lng": -74.00069,
+      "stable_identity_key": "group:brooklyn|rappaport playground rappaport playground rappaport playground handball 01"
+    },
+    {
+      "action": "add",
+      "borough": "Brooklyn",
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "group_key": "brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "lat": 40.67437,
+      "lng": -73.93475,
+      "stable_identity_key": "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
+    },
+    {
+      "action": "add",
+      "borough": "Brooklyn",
+      "display_location": "McDonald Playground: Tennis-01",
+      "group_key": "brooklyn|mcdonald playground tennis 01",
+      "lat": 40.60056,
+      "lng": -73.9721,
+      "stable_identity_key": "group:brooklyn|mcdonald playground tennis 01"
+    },
+    {
+      "action": "add",
+      "borough": "Brooklyn",
+      "display_location": "McDonald Playground: Tennis-02",
+      "group_key": "brooklyn|mcdonald playground tennis 02",
+      "lat": 40.60056,
+      "lng": -73.9721,
+      "stable_identity_key": "group:brooklyn|mcdonald playground tennis 02"
+    },
+    {
+      "action": "add",
+      "borough": "Brooklyn",
+      "display_location": "McDonald Playground: Tennis-03",
+      "group_key": "brooklyn|mcdonald playground tennis 03",
+      "lat": 40.60056,
+      "lng": -73.9721,
+      "stable_identity_key": "group:brooklyn|mcdonald playground tennis 03"
+    },
+    {
+      "action": "add",
+      "borough": "Manhattan",
+      "display_location": "De Witt Clinton Park: Soccer-01A",
+      "group_key": "manhattan|de witt clinton park soccer 01a",
+      "lat": 40.76819,
+      "lng": -73.99429,
+      "stable_identity_key": "group:manhattan|de witt clinton park soccer 01a"
+    },
+    {
+      "action": "add",
+      "borough": "Queens",
+      "display_location": "Clintonville Playground: Tennis-01",
+      "group_key": "queens|clintonville playground tennis 01",
+      "lat": 40.78323,
+      "lng": -73.80698,
+      "stable_identity_key": "group:queens|clintonville playground tennis 01"
+    },
+    {
+      "action": "add",
+      "borough": "Queens",
+      "display_location": "Clintonville Playground: Tennis-02",
+      "group_key": "queens|clintonville playground tennis 02",
+      "lat": 40.78323,
+      "lng": -73.80698,
+      "stable_identity_key": "group:queens|clintonville playground tennis 02"
+    },
+    {
+      "action": "add",
+      "borough": "Queens",
+      "display_location": "Broad Channel Park: Tennis-01",
+      "group_key": "queens|broad channel park tennis 01",
+      "lat": 40.60098,
+      "lng": -73.81981,
+      "stable_identity_key": "group:queens|broad channel park tennis 01"
+    },
+    {
+      "action": "add",
+      "borough": "Brooklyn",
+      "display_location": "Pratt Playground: Basketball-02",
+      "group_key": "brooklyn|pratt playground basketball 02",
+      "lat": 40.69264,
+      "lng": -73.96253,
+      "stable_identity_key": "group:brooklyn|pratt playground basketball 02"
+    },
+    {
+      "action": "add",
+      "borough": "Brooklyn",
+      "display_location": "Linden Park (Gershwin Park - JHS 166): Track-01",
+      "group_key": "brooklyn|linden park gershwin park jhs 166 track 01",
+      "lat": 40.65895,
+      "lng": -73.887,
+      "stable_identity_key": "group:brooklyn|linden park gershwin park jhs 166 track 01"
+    },
+    {
+      "action": "add",
+      "borough": "Manhattan",
+      "display_location": "Washington Market Park: Tennis-01",
+      "group_key": "manhattan|washington market park tennis 01",
+      "lat": 40.71709,
+      "lng": -74.01155,
+      "stable_identity_key": "group:manhattan|washington market park tennis 01"
+    },
+    {
+      "action": "add",
+      "borough": "Brooklyn",
+      "display_location": "McCarren Park: Bayard/Union Lawns",
+      "group_key": "brooklyn|mccarren park bayard union lawns",
+      "lat": 40.72022,
+      "lng": -73.95065,
+      "stable_identity_key": "group:brooklyn|mccarren park bayard union lawns"
+    },
+    {
+      "action": "add",
+      "borough": "Bronx",
+      "display_location": "St. Mary's Park: St Mary's Playground West-Tennis-02",
+      "group_key": "bronx|st mary s park st mary s playground west tennis 02",
+      "lat": 40.81151,
+      "lng": -73.91227,
+      "stable_identity_key": "group:bronx|st mary s park st mary s playground west tennis 02"
+    },
+    {
+      "action": "add",
+      "borough": "Bronx",
+      "display_location": "St. Mary's Park: St Mary's Playground West-Tennis-01",
+      "group_key": "bronx|st mary s park st mary s playground west tennis 01",
+      "lat": 40.81151,
+      "lng": -73.91227,
+      "stable_identity_key": "group:bronx|st mary s park st mary s playground west tennis 01"
+    },
+    {
+      "action": "add",
+      "borough": "Brooklyn",
+      "display_location": "Owl's Head Park: Owls Head Park-Basketball-01",
+      "group_key": "brooklyn|owl s head park owls head park basketball 01",
+      "lat": 40.64018,
+      "lng": -74.03222,
+      "stable_identity_key": "group:brooklyn|owl s head park owls head park basketball 01"
+    },
+    {
+      "action": "add",
+      "borough": "Manhattan",
+      "display_location": "J. Hood Wright Park: Softball-01",
+      "group_key": "manhattan|j hood wright park softball 01",
+      "lat": 40.84653,
+      "lng": -73.94125,
+      "stable_identity_key": "group:manhattan|j hood wright park softball 01"
+    },
+    {
+      "action": "add",
+      "borough": "Manhattan",
+      "display_location": "De Witt Clinton Park: Basketball-01",
+      "group_key": "manhattan|de witt clinton park basketball 01",
+      "lat": 40.76819,
+      "lng": -73.99429,
+      "stable_identity_key": "group:manhattan|de witt clinton park basketball 01"
+    }
+  ],
+  "promoted_stable_keys": [
+    "group:bronx|macombs dam park basketball 04",
+    "group:manhattan|riverside park south 71st st south basketball 14",
+    "group:brooklyn|martin luther king jr playground basketball 02",
+    "group:brooklyn|friends field lawn area",
+    "group:brooklyn|gravesend park lawn area",
+    "group:queens|hoffman park softball 01",
+    "group:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
+    "group:brooklyn|rappaport playground rappaport playground rappaport playground handball 01",
+    "group:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+    "group:brooklyn|mcdonald playground tennis 01",
+    "group:brooklyn|mcdonald playground tennis 02",
+    "group:brooklyn|mcdonald playground tennis 03",
+    "group:manhattan|de witt clinton park soccer 01a",
+    "group:queens|clintonville playground tennis 01",
+    "group:queens|clintonville playground tennis 02",
+    "group:queens|broad channel park tennis 01",
+    "group:brooklyn|pratt playground basketball 02",
+    "group:brooklyn|linden park gershwin park jhs 166 track 01",
+    "group:manhattan|washington market park tennis 01",
+    "group:brooklyn|mccarren park bayard union lawns",
+    "group:bronx|st mary s park st mary s playground west tennis 02",
+    "group:bronx|st mary s park st mary s playground west tennis 01",
+    "group:brooklyn|owl s head park owls head park basketball 01",
+    "group:manhattan|j hood wright park softball 01",
+    "group:manhattan|de witt clinton park basketball 01"
+  ],
+  "public_map_modified": false,
+  "qa_pass": true,
+  "safety_contract": {
+    "modified_files": [
+      "data/location_cache.json",
+      "data/gps_phase2e_promotion_report.json"
+    ],
+    "phase_3a_run": false,
+    "public_map_modified": false,
+    "staged_feed_modified": false
+  },
+  "skipped_count": 0,
+  "skipped_rows": [],
+  "staged_feed_modified": false,
+  "updated_location_cache": "data/location_cache.json"
+}
