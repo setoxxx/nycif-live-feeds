@@ -1,0 +1,218 @@
+name: GPS Staged Feed Integration Update
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/gps-staged-feed-integration-update.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gps-staged-feed-integration-update
+  cancel-in-progress: false
+
+jobs:
+  update-staged-feed-gps:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Apply promoted GPS records to staged feed only
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import json
+          import re
+          import sys
+          from collections import Counter
+          from datetime import datetime, timezone
+          from pathlib import Path
+          from typing import Any
+
+          ROOT = Path.cwd()
+          DATA_DIR = ROOT / "data"
+          LOCATION_CACHE_PATH = DATA_DIR / "location_cache.json"
+          DRY_RUN_REPORT_PATH = DATA_DIR / "gps_staged_feed_integration_dry_run_report.json"
+          STAGED_FEED_PATH = DATA_DIR / "nycif_staged_live_events.json"
+          UPDATE_REPORT_PATH = DATA_DIR / "gps_staged_feed_integration_update_report.json"
+
+          EXPECTED_PROMOTED_CACHE_KEYS = 25
+          EXPECTED_UPDATED_STAGED_EVENTS = 430
+
+          def load_json(path: Path, default: Any) -> Any:
+              if not path.exists() or path.stat().st_size == 0:
+                  return default
+              with path.open("r", encoding="utf-8") as handle:
+                  return json.load(handle)
+
+          def save_json(path: Path, payload: Any) -> None:
+              path.parent.mkdir(parents=True, exist_ok=True)
+              with path.open("w", encoding="utf-8") as handle:
+                  json.dump(payload, handle, indent=2, ensure_ascii=False, sort_keys=True)
+                  handle.write("\n")
+
+          def normalize(text: Any) -> str:
+              text = str(text or "").lower()
+              text = re.sub(r"[^a-z0-9]+", " ", text)
+              return re.sub(r"\s+", " ", text).strip()
+
+          def stable_key_for_event(row: dict[str, Any]) -> str:
+              borough = normalize(row.get("borough") or row.get("event_borough"))
+              location = normalize(row.get("display_location") or row.get("location") or row.get("event_location"))
+              return f"group:{borough}|{location}"
+
+          def valid_nyc_lat_lng(lat: Any, lng: Any) -> bool:
+              try:
+                  lat_f = float(lat)
+                  lng_f = float(lng)
+              except Exception:
+                  return False
+              return 40.0 <= lat_f <= 41.0 and -75.0 <= lng_f <= -73.0
+
+          location_cache = load_json(LOCATION_CACHE_PATH, {})
+          dry_run = load_json(DRY_RUN_REPORT_PATH, {})
+          staged_payload = load_json(STAGED_FEED_PATH, {})
+
+          if not isinstance(location_cache, dict):
+              raise RuntimeError("location_cache.json must be an object keyed by stable identity key")
+          if dry_run.get("qa_pass") is not True:
+              raise RuntimeError("Dry-run report qa_pass must be true before staged-feed integration update")
+          if int(dry_run.get("matched_staged_event_count") or 0) != EXPECTED_UPDATED_STAGED_EVENTS:
+              raise RuntimeError("Dry-run matched_staged_event_count must be 430 before update")
+          if not isinstance(staged_payload, dict) or not isinstance(staged_payload.get("events"), list):
+              raise RuntimeError("nycif_staged_live_events.json must be an object with an events list")
+
+          promoted_cache = {
+              key: value
+              for key, value in location_cache.items()
+              if isinstance(value, dict) and value.get("phase_2e_promotion_performed") is True
+          }
+          if len(promoted_cache) != EXPECTED_PROMOTED_CACHE_KEYS:
+              raise RuntimeError(f"Expected 25 promoted cache keys, found {len(promoted_cache)}")
+
+          duplicate_event_keys = Counter()
+          updated_rows: list[dict[str, Any]] = []
+          conflicts: list[dict[str, Any]] = []
+          skipped_rows: list[dict[str, Any]] = []
+          matched_keys: set[str] = set()
+
+          for row in staged_payload["events"]:
+              if not isinstance(row, dict):
+                  continue
+              stable_key = stable_key_for_event(row)
+              cache_row = promoted_cache.get(stable_key)
+              if cache_row is None:
+                  continue
+
+              duplicate_event_keys[stable_key] += 1
+              if not valid_nyc_lat_lng(cache_row.get("lat"), cache_row.get("lng")):
+                  conflicts.append({
+                      "stable_identity_key": stable_key,
+                      "display_location": row.get("display_location") or row.get("location"),
+                      "reason": "promoted_cache_coordinates_invalid",
+                  })
+                  continue
+
+              row["lat"] = float(cache_row["lat"])
+              row["lng"] = float(cache_row["lng"])
+              row["stable_identity_key"] = stable_key
+              row["group_key"] = cache_row.get("group_key")
+              row["gps_integration_phase"] = "gps_staged_feed_integration_update"
+              row["gps_integration_source"] = "phase_2e_promoted_location_cache"
+              row["gps_integration_updated_at_utc"] = datetime.now(timezone.utc).isoformat()
+              row["location_source"] = "phase_2e_promoted_location_cache"
+              row["phase_2e_promotion_applied_to_staged_feed"] = True
+              row["public_map_modified"] = False
+              row["phase_3a_run"] = False
+              matched_keys.add(stable_key)
+              updated_rows.append({
+                  "stable_identity_key": stable_key,
+                  "display_location": row.get("display_location") or row.get("location"),
+                  "source_event_id": row.get("source_event_id"),
+                  "lat": row.get("lat"),
+                  "lng": row.get("lng"),
+              })
+
+          unmatched_promoted_cache_keys = sorted(set(promoted_cache) - matched_keys)
+          updated_staged_event_count = len(updated_rows)
+          skipped_count = len(skipped_rows)
+          conflict_count = len(conflicts)
+
+          qa_pass = (
+              updated_staged_event_count == EXPECTED_UPDATED_STAGED_EVENTS
+              and len(promoted_cache) == EXPECTED_PROMOTED_CACHE_KEYS
+              and not unmatched_promoted_cache_keys
+              and skipped_count == 0
+              and conflict_count == 0
+          )
+
+          report = {
+              "blocking_issues": [] if qa_pass else ["Staged feed GPS integration update did not meet one or more required counts"],
+              "conflict_count": conflict_count,
+              "conflicts": conflicts,
+              "dry_run_report": str(DRY_RUN_REPORT_PATH.relative_to(ROOT)),
+              "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+              "input_location_cache": str(LOCATION_CACHE_PATH.relative_to(ROOT)),
+              "input_staged_feed": str(STAGED_FEED_PATH.relative_to(ROOT)),
+              "location_cache_modified": False,
+              "next_required_step": "Run staged-feed GPS integration post-update QA, then decide whether to run a public-map dry-run validation gate. Do not publish to the public map until that gate passes.",
+              "phase": "gps_staged_feed_integration_update",
+              "phase_3a_run": False,
+              "promoted_cache_key_count": len(promoted_cache),
+              "public_map_modified": False,
+              "qa_pass": qa_pass,
+              "skipped_count": skipped_count,
+              "skipped_rows": skipped_rows,
+              "staged_feed_modified": True,
+              "unmatched_promoted_cache_key_count": len(unmatched_promoted_cache_keys),
+              "unmatched_promoted_cache_keys": unmatched_promoted_cache_keys,
+              "update_performed": qa_pass,
+              "updated_staged_event_count": updated_staged_event_count,
+              "updated_staged_event_sample": updated_rows[:25],
+              "validated_conditions": {
+                  "conflict_count_is_0": conflict_count == 0,
+                  "location_cache_modified_false": True,
+                  "phase_3a_run_false": True,
+                  "promoted_cache_key_count_is_25": len(promoted_cache) == EXPECTED_PROMOTED_CACHE_KEYS,
+                  "public_map_modified_false": True,
+                  "qa_pass_true": qa_pass,
+                  "skipped_count_is_0": skipped_count == 0,
+                  "staged_feed_modified_true": True,
+                  "unmatched_promoted_cache_key_count_is_0": len(unmatched_promoted_cache_keys) == 0,
+                  "updated_staged_event_count_is_430": updated_staged_event_count == EXPECTED_UPDATED_STAGED_EVENTS,
+              },
+          }
+
+          save_json(UPDATE_REPORT_PATH, report)
+          if qa_pass:
+              save_json(STAGED_FEED_PATH, staged_payload)
+          print(json.dumps(report, indent=2, ensure_ascii=False))
+          sys.exit(0 if qa_pass else 1)
+          PY
+
+      - name: Commit staged feed GPS integration update
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/nycif_staged_live_events.json data/gps_staged_feed_integration_update_report.json
+          if git diff --cached --quiet; then
+            echo "No staged feed GPS integration changes to commit."
+          else
+            git commit -m "Run staged feed GPS integration update"
+            git pull --rebase --autostash origin main
+            git push origin HEAD:main
+          fi
