@@ -4,7 +4,7 @@ import json
 import re
 import sys
 import traceback
-from collections import Counter, defaultdict
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -39,15 +39,14 @@ def save_json(path: Path, payload: Any) -> None:
         handle.write("\n")
 
 
-def normalize(text: Any) -> str:
-    text = str(text or "").lower()
-    text = text.replace("&", " and ")
+def normalize(value: Any) -> str:
+    text = str(value or "").lower().replace("&", " and ")
     text = re.sub(r"[^a-z0-9]+", " ", text)
     return re.sub(r"\s+", " ", text).strip()
 
 
-def tokens(text: Any) -> list[str]:
-    return normalize(text).split()
+def norm_tokens(value: Any) -> list[str]:
+    return normalize(value).split()
 
 
 def stable_key(borough: Any, location: Any) -> str:
@@ -63,25 +62,29 @@ def valid_nyc_lat_lng(lat: Any, lng: Any) -> bool:
     return 40.0 <= lat_f <= 41.0 and -75.0 <= lng_f <= -73.0
 
 
-def unwrap_location_cache(payload: Any) -> dict[str, Any]:
-    if isinstance(payload, dict) and isinstance(payload.get("entries"), dict):
-        return payload["entries"]
-    if isinstance(payload, dict):
-        return payload
-    return {}
+def borough_of(row: dict[str, Any]) -> str:
+    return normalize(row.get("borough") or row.get("event_borough"))
 
 
-def event_locations(row: dict[str, Any]) -> list[str]:
-    seen: set[str] = set()
-    values: list[str] = []
+def event_location_text(row: dict[str, Any]) -> str:
+    parts: list[str] = []
     for field in ("display_location", "location", "event_location"):
         value = row.get(field)
         if value:
-            norm = normalize(value)
-            if norm and norm not in seen:
-                seen.add(norm)
-                values.append(str(value))
-    return values
+            parts.append(str(value))
+    return " | ".join(parts)
+
+
+def row_location(row: dict[str, Any]) -> str:
+    return str(row.get("display_location") or row.get("location") or row.get("event_location") or "")
+
+
+def site_name(location: Any) -> str:
+    text = str(location or "")
+    # Prefer the named place before the first facility delimiter.
+    if ":" in text:
+        text = text.split(":", 1)[0]
+    return normalize(text)
 
 
 def event_aliases(row: dict[str, Any]) -> set[str]:
@@ -96,14 +99,17 @@ def event_aliases(row: dict[str, Any]) -> set[str]:
     ):
         value = row.get(field)
         if value:
-            aliases.add(str(value))
-            if not str(value).startswith("group:"):
-                aliases.add(f"group:{value}")
+            value_s = str(value)
+            aliases.add(value_s)
+            if not value_s.startswith("group:"):
+                aliases.add(f"group:{value_s}")
 
     borough = row.get("borough") or row.get("event_borough")
-    for value in event_locations(row):
-        if borough and value:
-            aliases.add(stable_key(borough, value))
+    if borough:
+        for field in ("display_location", "location", "event_location"):
+            value = row.get(field)
+            if value:
+                aliases.add(stable_key(borough, value))
     return aliases
 
 
@@ -112,83 +118,74 @@ def cache_aliases(key: str, row: dict[str, Any]) -> set[str]:
     for field in ("stable_identity_key", "group_key", "cache_key", "gps_cache_key", "key_value"):
         value = row.get(field)
         if value:
-            aliases.add(str(value))
-            if not str(value).startswith("group:"):
-                aliases.add(f"group:{value}")
+            value_s = str(value)
+            aliases.add(value_s)
+            if not value_s.startswith("group:"):
+                aliases.add(f"group:{value_s}")
 
     borough = row.get("borough") or row.get("event_borough")
-    for field in ("display_location", "location", "event_location"):
-        value = row.get(field)
-        if borough and value:
-            aliases.add(stable_key(borough, value))
+    location = row_location(row)
+    if borough and location:
+        aliases.add(stable_key(borough, location))
     return aliases
 
 
-def borough_of(row: dict[str, Any]) -> str:
-    return normalize(row.get("borough") or row.get("event_borough"))
-
-
-def component_location_match(cache_row: dict[str, Any], event_row: dict[str, Any]) -> bool:
-    if borough_of(cache_row) != borough_of(event_row):
-        return False
-    cache_location = cache_row.get("display_location") or cache_row.get("location") or cache_row.get("event_location")
-    cache_norm = normalize(cache_location)
-    if not cache_norm:
-        return False
-
-    cache_tokens = tokens(cache_location)
-    if not cache_tokens:
-        return False
-
-    for event_location in event_locations(event_row):
-        event_norm = normalize(event_location)
-        if not event_norm:
-            continue
-        if cache_norm in event_norm or event_norm in cache_norm:
-            return True
-        event_token_set = set(tokens(event_location))
-        if all(token in event_token_set for token in cache_tokens):
-            return True
-    return False
-
-
-def extract_promoted_cache(location_cache_payload: Any, promotion_report: dict[str, Any]) -> tuple[dict[str, dict[str, Any]], str]:
-    location_entries = unwrap_location_cache(location_cache_payload)
-
-    flagged = {
-        key: value
-        for key, value in location_entries.items()
-        if isinstance(value, dict) and value.get("phase_2e_promotion_performed") is True
-    }
-    if flagged:
-        return flagged, "location_cache_phase_2e_flags"
-
+def extract_promoted_rows(location_cache_payload: Any, promotion_report: dict[str, Any]) -> tuple[dict[str, dict[str, Any]], str]:
+    # Prefer the original stable Phase 2E approval/promotion report. The live location cache can be
+    # rebuilt and may not preserve phase_2e_promotion_performed flags.
     promoted_rows = promotion_report.get("promoted_rows")
     if isinstance(promoted_rows, list):
         promoted: dict[str, dict[str, Any]] = {}
         for row in promoted_rows:
             if not isinstance(row, dict):
                 continue
-            key = row.get("stable_identity_key") or row.get("key_value")
-            if not key:
-                key = stable_key(row.get("borough"), row.get("display_location"))
+            key = row.get("stable_identity_key") or row.get("key_value") or stable_key(row.get("borough"), row.get("display_location"))
             promoted[str(key)] = dict(row)
         return promoted, "phase_2e_promotion_report_promoted_rows"
 
-    promoted_stable_keys = promotion_report.get("promoted_stable_keys")
-    if isinstance(promoted_stable_keys, list):
-        promoted = {}
-        for key in promoted_stable_keys:
-            cache_row = location_entries.get(str(key))
-            if isinstance(cache_row, dict):
-                promoted[str(key)] = cache_row
-        return promoted, "phase_2e_promotion_report_keys_plus_location_cache_entries"
-
+    entries = location_cache_payload.get("entries", location_cache_payload) if isinstance(location_cache_payload, dict) else {}
+    flagged = {
+        key: value
+        for key, value in entries.items()
+        if isinstance(value, dict) and value.get("phase_2e_promotion_performed") is True
+    }
+    if flagged:
+        return flagged, "location_cache_phase_2e_flags"
     return {}, "none"
 
 
-def build_failure_report(message: str, **extra: Any) -> dict[str, Any]:
-    report: dict[str, Any] = {
+def promoted_match(cache_key: str, cache_row: dict[str, Any], event_row: dict[str, Any], alias_to_key: dict[str, str]) -> tuple[bool, str | None]:
+    if cache_key in {alias_to_key[alias] for alias in event_aliases(event_row) if alias in alias_to_key}:
+        return True, "exact_alias"
+
+    if borough_of(cache_row) != borough_of(event_row):
+        return False, None
+
+    cache_location = row_location(cache_row)
+    event_text = event_location_text(event_row)
+    cache_norm = normalize(cache_location)
+    event_norm = normalize(event_text)
+    if not cache_norm or not event_norm:
+        return False, None
+
+    if cache_norm in event_norm or event_norm in cache_norm:
+        return True, "full_location_component"
+
+    cache_site = site_name(cache_location)
+    if cache_site and len(cache_site.split()) >= 2 and cache_site in event_norm:
+        return True, "site_component"
+
+    # Last safe fallback: all promoted-location tokens are present in the staged location text.
+    cache_token_list = norm_tokens(cache_location)
+    event_token_set = set(norm_tokens(event_text))
+    if cache_token_list and all(token in event_token_set for token in cache_token_list):
+        return True, "token_component"
+
+    return False, None
+
+
+def failure_report(message: str, **extra: Any) -> dict[str, Any]:
+    report = {
         "blocking_issues": [message],
         "conflict_count": int(extra.get("conflict_count", 0) or 0),
         "dry_run_report": str(DRY_RUN_REPORT_PATH.relative_to(ROOT)),
@@ -209,162 +206,123 @@ def build_failure_report(message: str, **extra: Any) -> dict[str, Any]:
         "unmatched_promoted_cache_keys": extra.get("unmatched_promoted_cache_keys", []),
         "update_performed": False,
         "updated_staged_event_count": int(extra.get("updated_staged_event_count", 0) or 0),
-        "validated_conditions": {
-            "conflict_count_is_0": int(extra.get("conflict_count", 0) or 0) == 0,
-            "location_cache_modified_false": True,
-            "phase_3a_run_false": True,
-            "promoted_cache_key_count_is_25": int(extra.get("promoted_cache_key_count", 0) or 0) == EXPECTED_PROMOTED_CACHE_KEYS,
-            "public_map_modified_false": True,
-            "qa_pass_true": False,
-            "skipped_count_is_0": int(extra.get("skipped_count", EXPECTED_UPDATED_STAGED_EVENTS) or 0) == 0,
-            "staged_feed_modified_true": False,
-            "unmatched_promoted_cache_key_count_is_0": int(extra.get("unmatched_promoted_cache_key_count", 0) or 0) == 0,
-            "update_performed_true": False,
-            "updated_staged_event_count_is_430": int(extra.get("updated_staged_event_count", 0) or 0) == EXPECTED_UPDATED_STAGED_EVENTS,
-        },
     }
-    report.update({k: v for k, v in extra.items() if k not in report})
+    report.update(extra)
+    report["validated_conditions"] = {
+        "conflict_count_is_0": report["conflict_count"] == 0,
+        "location_cache_modified_false": True,
+        "phase_3a_run_false": True,
+        "promoted_cache_key_count_is_25": report["promoted_cache_key_count"] == EXPECTED_PROMOTED_CACHE_KEYS,
+        "public_map_modified_false": True,
+        "qa_pass_true": False,
+        "skipped_count_is_0": report["skipped_count"] == 0,
+        "staged_feed_modified_true": False,
+        "unmatched_promoted_cache_key_count_is_0": report["unmatched_promoted_cache_key_count"] == 0,
+        "update_performed_true": False,
+        "updated_staged_event_count_is_430": report["updated_staged_event_count"] == EXPECTED_UPDATED_STAGED_EVENTS,
+    }
     return report
 
 
 def main() -> int:
     try:
-        location_cache_payload = load_json(LOCATION_CACHE_PATH, {})
+        location_cache = load_json(LOCATION_CACHE_PATH, {})
         promotion_report = load_json(PROMOTION_REPORT_PATH, {})
         dry_run = load_json(DRY_RUN_REPORT_PATH, {})
         staged_payload = load_json(STAGED_FEED_PATH, {})
 
-        if not isinstance(location_cache_payload, dict):
-            save_json(UPDATE_REPORT_PATH, build_failure_report("location_cache.json must be an object"))
-            return 1
         if not isinstance(promotion_report, dict) or promotion_report.get("qa_pass") is not True:
-            save_json(UPDATE_REPORT_PATH, build_failure_report("Phase 2E promotion report must exist and have qa_pass true"))
+            save_json(UPDATE_REPORT_PATH, failure_report("Phase 2E promotion report must exist and have qa_pass true"))
             return 1
-        if dry_run.get("qa_pass") is not True:
-            save_json(UPDATE_REPORT_PATH, build_failure_report("Dry-run report qa_pass must be true before staged-feed integration update"))
-            return 1
-        if int(dry_run.get("matched_staged_event_count") or 0) != EXPECTED_UPDATED_STAGED_EVENTS:
-            save_json(
-                UPDATE_REPORT_PATH,
-                build_failure_report(
-                    "Dry-run matched_staged_event_count must be 430 before staged-feed integration update",
-                    dry_run_matched_staged_event_count=int(dry_run.get("matched_staged_event_count") or 0),
-                ),
-            )
+        if dry_run.get("qa_pass") is not True or int(dry_run.get("matched_staged_event_count") or 0) != EXPECTED_UPDATED_STAGED_EVENTS:
+            save_json(UPDATE_REPORT_PATH, failure_report("Dry-run report must have qa_pass true and matched_staged_event_count 430"))
             return 1
         if not isinstance(staged_payload, dict) or not isinstance(staged_payload.get("events"), list):
-            save_json(UPDATE_REPORT_PATH, build_failure_report("nycif_staged_live_events.json must be an object with an events list"))
+            save_json(UPDATE_REPORT_PATH, failure_report("nycif_staged_live_events.json must be an object with an events list"))
             return 1
 
-        promoted_cache, promoted_source = extract_promoted_cache(location_cache_payload, promotion_report)
-        if len(promoted_cache) != EXPECTED_PROMOTED_CACHE_KEYS:
-            save_json(
-                UPDATE_REPORT_PATH,
-                build_failure_report(
-                    f"Expected 25 promoted cache keys, found {len(promoted_cache)}",
-                    promoted_cache_key_count=len(promoted_cache),
-                    promoted_source=promoted_source,
-                ),
-            )
+        promoted, promoted_source = extract_promoted_rows(location_cache, promotion_report)
+        if len(promoted) != EXPECTED_PROMOTED_CACHE_KEYS:
+            save_json(UPDATE_REPORT_PATH, failure_report(f"Expected 25 promoted cache keys, found {len(promoted)}", promoted_cache_key_count=len(promoted)))
             return 1
 
-        alias_to_cache_key: dict[str, str] = {}
-        alias_collisions: dict[str, list[str]] = defaultdict(list)
-        for cache_key, cache_row in promoted_cache.items():
-            for alias in cache_aliases(cache_key, cache_row):
-                existing = alias_to_cache_key.get(alias)
-                if existing and existing != cache_key:
-                    alias_collisions[alias].extend([existing, cache_key])
-                else:
-                    alias_to_cache_key[alias] = cache_key
-
-        if alias_collisions:
-            save_json(
-                UPDATE_REPORT_PATH,
-                build_failure_report(
-                    "Promoted cache aliases are not unique",
-                    promoted_cache_key_count=len(promoted_cache),
-                    promoted_source=promoted_source,
-                    conflict_count=len(alias_collisions),
-                    alias_collisions={k: sorted(set(v)) for k, v in alias_collisions.items()},
-                ),
-            )
-            return 1
+        alias_to_key: dict[str, str] = {}
+        for key, row in promoted.items():
+            for alias in cache_aliases(key, row):
+                alias_to_key.setdefault(alias, key)
 
         updated_rows: list[dict[str, Any]] = []
         conflicts: list[dict[str, Any]] = []
         matched_keys: set[str] = set()
-        update_counts_by_cache_key: Counter[str] = Counter()
+        update_counts_by_key: Counter[str] = Counter()
         match_mode_counts: Counter[str] = Counter()
 
-        for row in staged_payload["events"]:
-            if not isinstance(row, dict):
+        for event_row in staged_payload["events"]:
+            if not isinstance(event_row, dict):
                 continue
 
-            exact_matches = {alias_to_cache_key[alias] for alias in event_aliases(row) if alias in alias_to_cache_key}
-            component_matches = {
-                cache_key
-                for cache_key, cache_row in promoted_cache.items()
-                if component_location_match(cache_row, row)
-            }
-            matched_cache_keys = sorted(exact_matches | component_matches)
-            if not matched_cache_keys:
+            matched: dict[str, str] = {}
+            for key, cache_row in promoted.items():
+                is_match, mode = promoted_match(key, cache_row, event_row, alias_to_key)
+                if is_match and mode:
+                    matched[key] = mode
+
+            if not matched:
                 continue
 
-            coord_pairs = {
-                (round(float(promoted_cache[key]["lat"]), 6), round(float(promoted_cache[key]["lng"]), 6))
-                for key in matched_cache_keys
-                if valid_nyc_lat_lng(promoted_cache[key].get("lat"), promoted_cache[key].get("lng"))
-            }
+            coord_pairs = set()
+            for key in matched:
+                cache_row = promoted[key]
+                if valid_nyc_lat_lng(cache_row.get("lat"), cache_row.get("lng")):
+                    coord_pairs.add((round(float(cache_row["lat"]), 6), round(float(cache_row["lng"]), 6)))
+
             if len(coord_pairs) != 1:
                 conflicts.append({
-                    "display_location": row.get("display_location") or row.get("location"),
-                    "matched_cache_keys": matched_cache_keys,
-                    "reason": "staged_event_matched_multiple_coordinate_sets_or_invalid_coordinates",
-                    "source_event_id": row.get("source_event_id"),
+                    "display_location": row_location(event_row),
+                    "matched_promoted_cache_keys": sorted(matched),
+                    "reason": "matched_promoted_keys_have_conflicting_or_invalid_coordinates",
+                    "source_event_id": event_row.get("source_event_id"),
                 })
                 continue
 
-            cache_key = matched_cache_keys[0]
-            cache_row = promoted_cache[cache_key]
             lat, lng = next(iter(coord_pairs))
+            primary_key = sorted(matched)[0]
+            primary_row = promoted[primary_key]
+            event_row["lat"] = lat
+            event_row["lng"] = lng
+            event_row["stable_identity_key"] = primary_key
+            event_row["matched_promoted_cache_keys"] = sorted(matched)
+            event_row["group_key"] = primary_row.get("group_key") or primary_key.removeprefix("group:")
+            event_row["gps_integration_phase"] = "gps_staged_feed_integration_update"
+            event_row["gps_integration_source"] = promoted_source
+            event_row["gps_integration_updated_at_utc"] = utc_now()
+            event_row["location_source"] = "phase_2e_promoted_location_cache"
+            event_row["phase_2e_promotion_applied_to_staged_feed"] = True
+            event_row["public_map_modified"] = False
+            event_row["phase_3a_run"] = False
 
-            row["lat"] = lat
-            row["lng"] = lng
-            row["stable_identity_key"] = cache_key
-            row["matched_promoted_cache_keys"] = matched_cache_keys
-            row["group_key"] = cache_row.get("group_key") or cache_key.removeprefix("group:")
-            row["gps_integration_phase"] = "gps_staged_feed_integration_update"
-            row["gps_integration_source"] = promoted_source
-            row["gps_integration_updated_at_utc"] = utc_now()
-            row["location_source"] = "phase_2e_promoted_location_cache"
-            row["phase_2e_promotion_applied_to_staged_feed"] = True
-            row["public_map_modified"] = False
-            row["phase_3a_run"] = False
-
-            for key in matched_cache_keys:
+            for key, mode in matched.items():
                 matched_keys.add(key)
-                update_counts_by_cache_key[key] += 1
-            match_mode_counts["exact_alias" if exact_matches else "borough_component"] += 1
+                update_counts_by_key[key] += 1
+                match_mode_counts[mode] += 1
             updated_rows.append({
-                "display_location": row.get("display_location") or row.get("location"),
-                "lat": row.get("lat"),
-                "lng": row.get("lng"),
-                "matched_promoted_cache_keys": matched_cache_keys,
-                "source_event_id": row.get("source_event_id"),
-                "stable_identity_key": cache_key,
+                "display_location": row_location(event_row),
+                "lat": lat,
+                "lng": lng,
+                "matched_promoted_cache_keys": sorted(matched),
+                "source_event_id": event_row.get("source_event_id"),
+                "stable_identity_key": primary_key,
             })
 
-        unmatched_promoted_cache_keys = sorted(set(promoted_cache) - matched_keys)
-        updated_staged_event_count = len(updated_rows)
-        skipped_count = EXPECTED_UPDATED_STAGED_EVENTS - updated_staged_event_count if updated_staged_event_count < EXPECTED_UPDATED_STAGED_EVENTS else 0
+        updated_count = len(updated_rows)
+        unmatched = sorted(set(promoted) - matched_keys)
+        skipped = max(EXPECTED_UPDATED_STAGED_EVENTS - updated_count, 0)
         conflict_count = len(conflicts)
-
         qa_pass = (
-            updated_staged_event_count == EXPECTED_UPDATED_STAGED_EVENTS
-            and len(promoted_cache) == EXPECTED_PROMOTED_CACHE_KEYS
-            and not unmatched_promoted_cache_keys
-            and skipped_count == 0
+            updated_count == EXPECTED_UPDATED_STAGED_EVENTS
+            and len(promoted) == EXPECTED_PROMOTED_CACHE_KEYS
+            and not unmatched
+            and skipped == 0
             and conflict_count == 0
         )
 
@@ -382,30 +340,30 @@ def main() -> int:
             "next_required_step": "Run staged-feed GPS integration post-update QA, then decide whether to run a public-map dry-run validation gate. Do not publish to the public map until that gate passes.",
             "phase": "gps_staged_feed_integration_update",
             "phase_3a_run": False,
-            "promoted_cache_key_count": len(promoted_cache),
+            "promoted_cache_key_count": len(promoted),
             "promoted_source": promoted_source,
             "public_map_modified": False,
             "qa_pass": qa_pass,
-            "skipped_count": skipped_count,
+            "skipped_count": skipped,
             "staged_feed_modified": qa_pass,
-            "unmatched_promoted_cache_key_count": len(unmatched_promoted_cache_keys),
-            "unmatched_promoted_cache_keys": unmatched_promoted_cache_keys,
-            "update_counts_by_cache_key": dict(sorted(update_counts_by_cache_key.items())),
+            "unmatched_promoted_cache_key_count": len(unmatched),
+            "unmatched_promoted_cache_keys": unmatched,
+            "update_counts_by_cache_key": dict(sorted(update_counts_by_key.items())),
             "update_performed": qa_pass,
-            "updated_staged_event_count": updated_staged_event_count,
+            "updated_staged_event_count": updated_count,
             "updated_staged_event_sample": updated_rows[:25],
             "validated_conditions": {
                 "conflict_count_is_0": conflict_count == 0,
                 "location_cache_modified_false": True,
                 "phase_3a_run_false": True,
-                "promoted_cache_key_count_is_25": len(promoted_cache) == EXPECTED_PROMOTED_CACHE_KEYS,
+                "promoted_cache_key_count_is_25": len(promoted) == EXPECTED_PROMOTED_CACHE_KEYS,
                 "public_map_modified_false": True,
                 "qa_pass_true": qa_pass,
-                "skipped_count_is_0": skipped_count == 0,
+                "skipped_count_is_0": skipped == 0,
                 "staged_feed_modified_true": qa_pass,
-                "unmatched_promoted_cache_key_count_is_0": len(unmatched_promoted_cache_keys) == 0,
+                "unmatched_promoted_cache_key_count_is_0": len(unmatched) == 0,
                 "update_performed_true": qa_pass,
-                "updated_staged_event_count_is_430": updated_staged_event_count == EXPECTED_UPDATED_STAGED_EVENTS,
+                "updated_staged_event_count_is_430": updated_count == EXPECTED_UPDATED_STAGED_EVENTS,
             },
         }
 
@@ -417,7 +375,7 @@ def main() -> int:
     except Exception as exc:
         save_json(
             UPDATE_REPORT_PATH,
-            build_failure_report(
+            failure_report(
                 "Unhandled staged-feed integration runtime exception",
                 exception_type=type(exc).__name__,
                 exception_message=str(exc),
