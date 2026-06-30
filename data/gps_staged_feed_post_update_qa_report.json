@@ -1,36 +1,36 @@
 {
   "blocking_issues": [
-    "Post-update QA cannot pass yet because data/gps_staged_feed_integration_update_report.json still shows update_performed false and updated_staged_event_count 0. The workflow has now been patched to use a dedicated runtime script, but no successful output commit has been observed yet."
+    "Post-update QA cannot pass yet because the latest runtime output report still shows update_performed false and updated_staged_event_count 0. The first rerun found the 25 promoted rows but matched 0 staged events. The matcher has now been patched to use borough-scoped component matching, but no successful output commit after that matcher patch has been observed yet."
   ],
   "conflict_count": 0,
   "diagnosis": {
-    "first_failing_line": null,
-    "job_log_available": false,
-    "latest_trigger_commit": "46681a7e6aa84d7ddb035e1fc088926dd0ace387",
-    "observed_status": "no_successful_output_commit_observed",
-    "output_commit_observed": false,
-    "workflow_runs_for_trigger_commit": 0
+    "first_failing_condition": "promoted rows found, but staged event matcher returned 0 updated events",
+    "latest_output_commit_before_matcher_patch": "5ecb2941323102dad0fe89e4e84e0a35211665f9",
+    "latest_patch_commit": "735b20cd8065e7259db1dc0ea1f5915d0db95f35",
+    "output_commit_after_matcher_patch_observed": false
   },
-  "generated_at_utc": "2026-06-30T02:25:00+00:00",
+  "generated_at_utc": "2026-06-30T02:45:00+00:00",
   "input_staged_feed": "data/nycif_staged_live_events.json",
   "input_update_report": "data/gps_staged_feed_integration_update_report.json",
   "location_cache_modified": false,
-  "next_required_step": "Manually run the GitHub Actions workflow named GPS Staged Feed Integration Update from the Actions tab after commit cc7f24484d7f443e66bacf45301ec56f9b162510. If it fails, inspect the Apply promoted GPS records to staged feed only step and use the committed integration update report for the exact failure details. Do not publish to the public map and do not run Phase 3A.",
+  "next_required_step": "Run the GitHub Actions workflow named GPS Staged Feed Integration Update again after matcher patch commit 735b20cd8065e7259db1dc0ea1f5915d0db95f35. Then inspect data/gps_staged_feed_integration_update_report.json for qa_pass true and updated_staged_event_count 430. Do not publish to the public map and do not run Phase 3A.",
   "patch_commits": {
+    "component_matcher_patch": "735b20cd8065e7259db1dc0ea1f5915d0db95f35",
+    "promotion_report_source_patch": "a6eb2e976b7905935fb60e186687c0eda1a94501",
     "runtime_script_added": "af8a49971423f1098b94ff6892a5673349860352",
     "workflow_wrapper_updated": "cc7f24484d7f443e66bacf45301ec56f9b162510"
   },
-  "phase": "gps_staged_feed_post_update_qa_workflow_patched",
+  "phase": "gps_staged_feed_post_update_qa_matcher_patch_pending_rerun",
   "phase_3a_run": false,
   "promoted_cache_key_count": 25,
   "public_map_modified": false,
   "qa_pass": false,
   "skipped_count": 430,
   "staged_feed_modified": false,
-  "unmatched_promoted_cache_key_count": 0,
+  "unmatched_promoted_cache_key_count": 25,
   "update_performed": false,
   "updated_staged_event_count": 0,
-  "workflow_output_commit_observed": false,
+  "workflow_output_commit_observed": true,
   "validated_conditions": {
     "conflict_count_is_0": true,
     "location_cache_modified_false": true,
@@ -40,9 +40,8 @@
     "qa_pass_true": false,
     "skipped_count_is_0": false,
     "staged_feed_modified_true": false,
-    "unmatched_promoted_cache_key_count_is_0": true,
+    "unmatched_promoted_cache_key_count_is_0": false,
     "update_performed_true": false,
-    "updated_staged_event_count_is_430": false,
-    "workflow_output_commit_observed_true": false
+    "updated_staged_event_count_is_430": false
   }
 }
