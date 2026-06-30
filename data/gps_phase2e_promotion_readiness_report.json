@@ -1,0 +1,54 @@
+{
+  "approved_borough_counts": {
+    "Bronx": 3,
+    "Brooklyn": 13,
+    "Manhattan": 5,
+    "Queens": 4
+  },
+  "approved_confidence_counts": {
+    "medium": 25
+  },
+  "approved_count": 25,
+  "approved_source_counts": {
+    "existing_location_cache_place_memory": 25
+  },
+  "duplicate_approved_keys": [],
+  "duplicate_stable_key_count": 0,
+  "excluded_carried_forward_count": 17,
+  "generated_at_utc": "2026-06-30T00:20:34.106604+00:00",
+  "input_artifact": "data/gps_reviewed_approval_artifact.json",
+  "input_report": "data/gps_reviewed_approval_artifact_report.json",
+  "invalid_approved_count": 0,
+  "location_cache_modified": false,
+  "missing_required_metadata_count": 0,
+  "next_required_step": "If qa_pass is true, Phase 2E promotion may be designed or run only after Howard explicitly authorizes updating data/location_cache.json.",
+  "overlap_with_excluded": [],
+  "overlap_with_excluded_count": 0,
+  "phase": "phase_2e_promotion_readiness_validation",
+  "promotion_allowed_true_count": 25,
+  "promotion_already_performed": false,
+  "promotion_performed": false,
+  "promotion_script_executed": false,
+  "public_map_modified": false,
+  "qa_pass": true,
+  "readiness_pass": true,
+  "row_issue_count": 0,
+  "row_issues": [],
+  "staged_feed_modified": false,
+  "top_level_checks": {
+    "approved_count_ok": true,
+    "artifact_phase_ok": true,
+    "artifact_report_phase_ok": true,
+    "artifact_report_qa_pass": true,
+    "excluded_count_ok": true,
+    "invalid_approved_count_ok": true,
+    "location_cache_not_modified": true,
+    "no_duplicate_stable_keys": true,
+    "no_overlap_with_excluded": true,
+    "no_row_issues": true,
+    "promotion_allowed_true_count_ok": true,
+    "public_map_not_modified": true,
+    "source_not_marked_promoted": true,
+    "staged_feed_not_modified": true
+  }
+}
