@@ -1,0 +1,63 @@
+{
+  "phase": "C5P",
+  "mode": "production_publish_merge_not_replace",
+  "generated_at": "2026-07-01T19:55:07.881Z",
+  "howard_approval_phrase": "I approve creating a separate setoxxx/nycif-live-feeds production-publish PR that preserves the 11 manual/NYPD records, adds only the approved-geocode Queensboro Dance Festival row, keeps the 896 needs-review rows blocked, creates rollback snapshots first, and does not touch WordPress or public UI.",
+  "howard_approval_recorded": true,
+  "field_desk_readiness_report": "setoxxx/nycif-field-desk/data/reports/major_event_production_readiness_report.json",
+  "field_desk_preview_report": "setoxxx/nycif-field-desk/data/reports/preview_major_feed_report.json",
+  "preview_review_url": "https://setoxxx.github.io/nycif-field-desk/preview-major-feed-review.html?v=c5g4-01",
+  "approved_source_record_ids": [
+    "914695"
+  ],
+  "approved_rows_published": [
+    {
+      "source_record_id": "914695",
+      "title": "2026 Queensboro Dance Festival",
+      "date": "2026-07-02",
+      "borough": "Queens"
+    }
+  ],
+  "blocked_needs_review_rows_not_published": 896,
+  "preserved_manual_records_before": 11,
+  "preserved_manual_records_after": 11,
+  "manual_records_removed": 0,
+  "merge_strategy": "merge_not_replace",
+  "files_modified": [
+    "nycif_major_radar_map_events.json",
+    "nycif_all_radar_map_events.json"
+  ],
+  "files_not_modified": [
+    "data/nycif_staged_live_events.json",
+    "data/location_cache.json"
+  ],
+  "wordpress_modified": false,
+  "public_ui_modified": false,
+  "rollback_backups": {
+    "major": "data/backups/nycif_major_radar_map_events.2026-07-01T19-55-07-881Z.json",
+    "all": "data/backups/nycif_all_radar_map_events.2026-07-01T19-55-07-881Z.json"
+  },
+  "publish_action": {
+    "major": "updated_approved_geocode",
+    "all": "updated_approved_geocode"
+  },
+  "counts": {
+    "major_rows_before": 582,
+    "major_rows_after": 582,
+    "major_rows_added": 0,
+    "major_rows_updated": 1,
+    "all_rows_before": 12210,
+    "all_rows_after": 12210,
+    "all_rows_added": 0,
+    "all_rows_updated": 1
+  },
+  "production_feed_urls": [
+    "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/nycif_major_radar_map_events.json",
+    "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/nycif_all_radar_map_events.json"
+  ],
+  "post_merge_verification_required": [
+    "Verify raw GitHub URLs after merge",
+    "Browser-test public map default view",
+    "Do not touch WordPress until feed URLs verified good"
+  ]
+}
