@@ -19,7 +19,7 @@
     "live_delta_report": {
       "exists": true,
       "path": "data/live_delta_report.json",
-      "size_bytes": 961
+      "size_bytes": 2494
     },
     "live_sync_report": {
       "exists": true,
@@ -29,7 +29,7 @@
     "location_cache": {
       "exists": true,
       "path": "data/location_cache.json",
-      "size_bytes": 25091454
+      "size_bytes": 25090828
     },
     "raw_snapshot": {
       "exists": true,
@@ -44,7 +44,7 @@
     "row_disposition_events": {
       "exists": true,
       "path": "data/row_disposition_events.json",
-      "size_bytes": 19096218
+      "size_bytes": 19097592
     },
     "row_disposition_report": {
       "exists": true,
@@ -54,7 +54,7 @@
     "staged_feed": {
       "exists": true,
       "path": "data/nycif_staged_live_events.json",
-      "size_bytes": 27530745
+      "size_bytes": 27530747
     },
     "staged_manifest": {
       "exists": true,
@@ -64,7 +64,7 @@
     "test_feed": {
       "exists": true,
       "path": "data/nycif_live_test_enriched_events.json",
-      "size_bytes": 29034259
+      "size_bytes": 29034261
     },
     "test_manifest": {
       "exists": true,
@@ -73,7 +73,7 @@
     }
   },
   "gate_pass": true,
-  "generated_at_utc": "2026-07-01T18:16:26.319750+00:00",
+  "generated_at_utc": "2026-07-01T20:02:59.343326+00:00",
   "issues": [
     {
       "code": "gps_review_queue_not_empty",
@@ -84,7 +84,7 @@
   ],
   "phase": "phase_1_backend_reliability",
   "summary": {
-    "gps_cache_entry_count": 43522,
+    "gps_cache_entry_count": 43521,
     "gps_needs_review_count": 2157,
     "raw_rows_loaded": 31939,
     "row_disposition_qa_pass": true,
