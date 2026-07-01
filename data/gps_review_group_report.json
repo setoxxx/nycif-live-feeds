@@ -1,23 +1,23 @@
 {
   "borough_group_counts": {
     "Bronx": 40,
-    "Brooklyn": 89,
-    "Manhattan": 100,
+    "Brooklyn": 88,
+    "Manhattan": 99,
     "Queens": 92,
     "Staten Island": 24
   },
   "complexity_counts": {
     "multi_segment_corridor": 39,
-    "park_or_facility_subsite": 254,
-    "street_between_pair": 52
+    "park_or_facility_subsite": 253,
+    "street_between_pair": 51
   },
   "confidence_counts": {
     "manual_review_first": 39,
-    "review_candidate": 306
+    "review_candidate": 304
   },
-  "generated_at_utc": "2026-06-30T22:39:47.780509+00:00",
-  "geocoding_queue_count": 306,
-  "input_review_events": 2165,
+  "generated_at_utc": "2026-07-01T00:21:18.665721+00:00",
+  "geocoding_queue_count": 304,
+  "input_review_events": 2157,
   "location_cache_modified": false,
   "location_groups_readable_compact": true,
   "phase": "phase_2_controlled_gps_review",
@@ -28,42 +28,28 @@
     {
       "borough": "Manhattan",
       "confidence_hint": "review_candidate",
-      "date_count": 29,
+      "date_count": 28,
       "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
       "event_agencies": [
         [
           "Parks Department",
-          29
+          28
         ]
       ],
-      "event_count": 29,
+      "event_count": 28,
       "event_types": [
         [
           "Special Event",
-          29
+          28
         ]
       ],
-      "first_date": "2026-06-30",
+      "first_date": "2026-07-01",
       "geocoder_query": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02, Manhattan, New York, NY",
       "group_key": "manhattan|langston hughes playground st nicholas playground north langston hughes playground basketball 01 langston hughes playground st nicholas playground north langston hughes playground basketball 02",
       "last_date": "2026-07-28",
       "location_complexity": "park_or_facility_subsite",
       "publish_status": "not_geocoded_not_public",
       "sample_events": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-06-30",
-          "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "8461",
-            "8462"
-          ],
-          "source_event_id": "955891",
-          "start_date_time": "2026-06-30T15:57:00.000",
-          "title": "Construction"
-        },
         {
           "borough": "Manhattan",
           "date": "2026-07-01",
@@ -91,6 +77,20 @@
           "source_event_id": "955891",
           "start_date_time": "2026-07-02T15:57:00.000",
           "title": "Construction"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-03",
+          "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "8461",
+            "8462"
+          ],
+          "source_event_id": "955891",
+          "start_date_time": "2026-07-03T15:57:00.000",
+          "title": "Construction"
         }
       ],
       "sample_events_truncated": true,
@@ -105,7 +105,7 @@
       "top_titles": [
         [
           "Construction",
-          29
+          28
         ]
       ],
       "unique_source_event_ids": 1
@@ -113,41 +113,28 @@
     {
       "borough": "Bronx",
       "confidence_hint": "review_candidate",
-      "date_count": 26,
+      "date_count": 25,
       "display_location": "Macombs Dam Park: Basketball-04",
       "event_agencies": [
         [
           "Parks Department",
-          26
+          25
         ]
       ],
-      "event_count": 26,
+      "event_count": 25,
       "event_types": [
         [
           "Sport - Youth",
-          26
+          25
         ]
       ],
-      "first_date": "2026-06-30",
+      "first_date": "2026-07-01",
       "geocoder_query": "Macombs Dam Park: Basketball-04, Bronx, New York, NY",
       "group_key": "bronx|macombs dam park basketball 04",
       "last_date": "2026-07-28",
       "location_complexity": "park_or_facility_subsite",
       "publish_status": "not_geocoded_not_public",
       "sample_events": [
-        {
-          "borough": "Bronx",
-          "date": "2026-06-30",
-          "display_location": "Macombs Dam Park: Basketball-04",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "10755"
-          ],
-          "source_event_id": "910621",
-          "start_date_time": "2026-06-30T10:00:00.000",
-          "title": "Basketball"
-        },
         {
           "borough": "Bronx",
           "date": "2026-07-01",
@@ -173,6 +160,19 @@
           "source_event_id": "910621",
           "start_date_time": "2026-07-02T10:00:00.000",
           "title": "Basketball"
+        },
+        {
+          "borough": "Bronx",
+          "date": "2026-07-06",
+          "display_location": "Macombs Dam Park: Basketball-04",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "10755"
+          ],
+          "source_event_id": "910621",
+          "start_date_time": "2026-07-06T10:00:00.000",
+          "title": "Basketball"
         }
       ],
       "sample_events_truncated": true,
@@ -186,7 +186,7 @@
       "top_titles": [
         [
           "Basketball",
-          26
+          25
         ]
       ],
       "unique_source_event_ids": 1
@@ -360,91 +360,6 @@
       "unique_source_event_ids": 3
     },
     {
-      "borough": "Brooklyn",
-      "confidence_hint": "review_candidate",
-      "date_count": 20,
-      "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
-      "event_agencies": [
-        [
-          "Parks Department",
-          20
-        ]
-      ],
-      "event_count": 20,
-      "event_types": [
-        [
-          "Special Event",
-          20
-        ]
-      ],
-      "first_date": "2026-06-30",
-      "geocoder_query": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06, Brooklyn, New York, NY",
-      "group_key": "brooklyn|canarsie park softball 05 canarsie park softball 06",
-      "last_date": "2026-07-28",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Brooklyn",
-          "date": "2026-06-30",
-          "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "5010",
-            "5016"
-          ],
-          "source_event_id": "917705",
-          "start_date_time": "2026-06-30T09:00:00.000",
-          "title": "Miscellaneous"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-01",
-          "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "5010",
-            "5016"
-          ],
-          "source_event_id": "917705",
-          "start_date_time": "2026-07-01T09:00:00.000",
-          "title": "Miscellaneous"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-02",
-          "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "5010",
-            "5016"
-          ],
-          "source_event_id": "917705",
-          "start_date_time": "2026-07-02T09:00:00.000",
-          "title": "Miscellaneous"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Canarsie Park, Brooklyn, New York, NY",
-      "source_cemsid_sample": [
-        "5010",
-        "5016"
-      ],
-      "source_event_ids_sample": [
-        "917705"
-      ],
-      "top_titles": [
-        [
-          "Miscellaneous",
-          20
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
       "borough": "Manhattan",
       "confidence_hint": "review_candidate",
       "date_count": 20,
@@ -602,6 +517,91 @@
         [
           "Basketball",
           20
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
+      "borough": "Brooklyn",
+      "confidence_hint": "review_candidate",
+      "date_count": 19,
+      "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
+      "event_agencies": [
+        [
+          "Parks Department",
+          19
+        ]
+      ],
+      "event_count": 19,
+      "event_types": [
+        [
+          "Special Event",
+          19
+        ]
+      ],
+      "first_date": "2026-07-01",
+      "geocoder_query": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06, Brooklyn, New York, NY",
+      "group_key": "brooklyn|canarsie park softball 05 canarsie park softball 06",
+      "last_date": "2026-07-28",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-01",
+          "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "5010",
+            "5016"
+          ],
+          "source_event_id": "917705",
+          "start_date_time": "2026-07-01T09:00:00.000",
+          "title": "Miscellaneous"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-02",
+          "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "5010",
+            "5016"
+          ],
+          "source_event_id": "917705",
+          "start_date_time": "2026-07-02T09:00:00.000",
+          "title": "Miscellaneous"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-06",
+          "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "5010",
+            "5016"
+          ],
+          "source_event_id": "917705",
+          "start_date_time": "2026-07-06T09:00:00.000",
+          "title": "Miscellaneous"
+        }
+      ],
+      "sample_events_truncated": true,
+      "simplified_geocoder_query": "Canarsie Park, Brooklyn, New York, NY",
+      "source_cemsid_sample": [
+        "5010",
+        "5016"
+      ],
+      "source_event_ids_sample": [
+        "917705"
+      ],
+      "top_titles": [
+        [
+          "Miscellaneous",
+          19
         ]
       ],
       "unique_source_event_ids": 1
@@ -4157,5 +4157,5 @@
       "unique_source_event_ids": 1
     }
   ],
-  "unique_location_groups": 345
+  "unique_location_groups": 343
 }

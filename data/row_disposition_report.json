@@ -1,13 +1,13 @@
 {
-  "classified_rows": 31112,
-  "current_future_raw_rows": 31112,
+  "classified_rows": 30210,
+  "current_future_raw_rows": 30210,
   "disposition_counts": {
-    "gps_review_queue": 1868,
-    "staged_with_valid_gps": 29244
+    "gps_review_queue": 1862,
+    "staged_with_valid_gps": 28348
   },
-  "generated_at_utc": "2026-06-30T22:39:53.787894+00:00",
-  "gps_ready_or_known_count": 29244,
-  "gps_ready_or_known_pct": 93.996,
+  "generated_at_utc": "2026-07-01T00:21:24.419502+00:00",
+  "gps_ready_or_known_count": 28348,
+  "gps_ready_or_known_pct": 93.836,
   "qa_contract": [
     "staged_with_valid_gps",
     "matched_known_gps_memory",
@@ -17,106 +17,11 @@
   "qa_pass": true,
   "raw_rows_loaded": 31939,
   "reason_counts": {
-    "listed_in_gps_needs_review_queue": 1868,
-    "present_in_staged_feed_with_valid_nyc_coordinates": 29244
+    "listed_in_gps_needs_review_queue": 1862,
+    "present_in_staged_feed_with_valid_nyc_coordinates": 28348
   },
   "samples": {
     "gps_review_queue": [
-      {
-        "borough": "Bronx",
-        "date": "2026-06-30",
-        "display_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
-        "disposition": "gps_review_queue",
-        "end_date_time": "2026-06-30T17:00:00.000",
-        "event_agency": "Parks Department",
-        "event_type": "Special Event",
-        "reason": "listed_in_gps_needs_review_queue",
-        "source_cemsid": [
-          "13142"
-        ],
-        "source_event_id": "949110",
-        "start_date_time": "2026-06-30T00:00:00.000",
-        "title": "FLAGS FOR HEROS"
-      },
-      {
-        "borough": "Bronx",
-        "date": "2026-06-30",
-        "display_location": "Macombs Dam Park: Basketball-04",
-        "disposition": "gps_review_queue",
-        "end_date_time": "2026-06-30T18:00:00.000",
-        "event_agency": "Parks Department",
-        "event_type": "Sport - Youth",
-        "reason": "listed_in_gps_needs_review_queue",
-        "source_cemsid": [
-          "10755"
-        ],
-        "source_event_id": "910621",
-        "start_date_time": "2026-06-30T10:00:00.000",
-        "title": "Basketball"
-      },
-      {
-        "borough": "Manhattan",
-        "date": "2026-06-30",
-        "display_location": "EAST    2 STREET between AVENUE A and 1 AVENUE",
-        "disposition": "gps_review_queue",
-        "end_date_time": "2026-06-30T15:00:00.000",
-        "event_agency": "Street Activity Permit Office",
-        "event_type": "Street Event",
-        "reason": "listed_in_gps_needs_review_queue",
-        "source_cemsid": [],
-        "source_event_id": "939378",
-        "start_date_time": "2026-06-30T10:00:00.000",
-        "title": "Spellman Center Event"
-      },
-      {
-        "borough": "Bronx",
-        "date": "2026-06-30",
-        "display_location": "ROCKWOOD STREET Open Street 2026: ROCKWOOD STREET Open Street 2026",
-        "disposition": "gps_review_queue",
-        "end_date_time": "2026-06-30T17:00:00.000",
-        "event_agency": "Street Activity Permit Office",
-        "event_type": "Open Street Partner Event",
-        "reason": "listed_in_gps_needs_review_queue",
-        "source_cemsid": [
-          "13560"
-        ],
-        "source_event_id": "949163",
-        "start_date_time": "2026-06-30T11:00:00.000",
-        "title": "New Settlement Open Streets"
-      },
-      {
-        "borough": "Manhattan",
-        "date": "2026-06-30",
-        "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
-        "disposition": "gps_review_queue",
-        "end_date_time": "2026-06-30T23:59:00.000",
-        "event_agency": "Parks Department",
-        "event_type": "Special Event",
-        "reason": "listed_in_gps_needs_review_queue",
-        "source_cemsid": [
-          "8461",
-          "8462"
-        ],
-        "source_event_id": "955891",
-        "start_date_time": "2026-06-30T15:57:00.000",
-        "title": "Construction"
-      },
-      {
-        "borough": "Brooklyn",
-        "date": "2026-06-30",
-        "display_location": "Edmonds Playground (IS 113): Basketball-01",
-        "disposition": "gps_review_queue",
-        "end_date_time": "2026-06-30T20:00:00.000",
-        "event_agency": "Parks Department",
-        "event_type": "Sport - Adult",
-        "reason": "listed_in_gps_needs_review_queue",
-        "source_cemsid": [
-          "5427"
-        ],
-        "source_event_id": "954123",
-        "start_date_time": "2026-06-30T18:00:00.000",
-        "title": "Basketball"
-      },
       {
         "borough": "Bronx",
         "date": "2026-07-01",
@@ -805,10 +710,102 @@
         "source_event_id": "916009",
         "start_date_time": "2026-07-02T07:00:00.000",
         "title": "HHFM Brower Park Market"
+      },
+      {
+        "borough": "Manhattan",
+        "date": "2026-07-02",
+        "display_location": "WEST  175 STREET between BROADWAY and WADSWORTH AVENUE",
+        "disposition": "gps_review_queue",
+        "end_date_time": "2026-07-02T17:00:00.000",
+        "event_agency": "Street Activity Permit Office",
+        "event_type": "Farmers Market",
+        "reason": "listed_in_gps_needs_review_queue",
+        "source_cemsid": [],
+        "source_event_id": "911545",
+        "start_date_time": "2026-07-02T08:00:00.000",
+        "title": "175 street Greenmarket Thursday"
+      },
+      {
+        "borough": "Queens",
+        "date": "2026-07-02",
+        "display_location": "Baisley Pond Park: Cricket-04",
+        "disposition": "gps_review_queue",
+        "end_date_time": "2026-07-02T18:00:00.000",
+        "event_agency": "Parks Department",
+        "event_type": "Sport - Youth",
+        "reason": "listed_in_gps_needs_review_queue",
+        "source_cemsid": [
+          "11886"
+        ],
+        "source_event_id": "912982",
+        "start_date_time": "2026-07-02T08:00:00.000",
+        "title": "Cricket"
+      },
+      {
+        "borough": "Manhattan",
+        "date": "2026-07-02",
+        "display_location": "EAST  104 STREET between THIRD AVENUE and SECOND AVENUE",
+        "disposition": "gps_review_queue",
+        "end_date_time": "2026-07-02T15:00:00.000",
+        "event_agency": "Street Activity Permit Office",
+        "event_type": "Farmers Market",
+        "reason": "listed_in_gps_needs_review_queue",
+        "source_cemsid": [],
+        "source_event_id": "914367",
+        "start_date_time": "2026-07-02T08:00:00.000",
+        "title": "HHFM East Harlem Market"
+      },
+      {
+        "borough": "Brooklyn",
+        "date": "2026-07-02",
+        "display_location": "Marine Park: Soccer-01",
+        "disposition": "gps_review_queue",
+        "end_date_time": "2026-07-02T12:00:00.000",
+        "event_agency": "Parks Department",
+        "event_type": "Sport - Youth",
+        "reason": "listed_in_gps_needs_review_queue",
+        "source_cemsid": [
+          "9018"
+        ],
+        "source_event_id": "904321",
+        "start_date_time": "2026-07-02T09:00:00.000",
+        "title": "Soccer - Non Regulation"
+      },
+      {
+        "borough": "Brooklyn",
+        "date": "2026-07-02",
+        "display_location": "Linden Park (Gershwin Park - JHS 166): Track-01",
+        "disposition": "gps_review_queue",
+        "end_date_time": "2026-07-02T12:00:00.000",
+        "event_agency": "Parks Department",
+        "event_type": "Sport - Youth",
+        "reason": "listed_in_gps_needs_review_queue",
+        "source_cemsid": [
+          "5235"
+        ],
+        "source_event_id": "904322",
+        "start_date_time": "2026-07-02T09:00:00.000",
+        "title": "Track and Field"
+      },
+      {
+        "borough": "Manhattan",
+        "date": "2026-07-02",
+        "display_location": "Fort Washington Park: Volleyball-01",
+        "disposition": "gps_review_queue",
+        "end_date_time": "2026-07-02T15:30:00.000",
+        "event_agency": "Parks Department",
+        "event_type": "Sport - Youth",
+        "reason": "listed_in_gps_needs_review_queue",
+        "source_cemsid": [
+          "10985"
+        ],
+        "source_event_id": "909449",
+        "start_date_time": "2026-07-02T09:00:00.000",
+        "title": "Volleyball"
       }
     ],
     "rejected_with_reason": []
   },
-  "today_utc": "2026-06-30",
+  "today_utc": "2026-07-01",
   "unclassified_rows": 0
 }
