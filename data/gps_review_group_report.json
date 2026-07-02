@@ -1,23 +1,23 @@
 {
   "borough_group_counts": {
     "Bronx": 40,
-    "Brooklyn": 88,
-    "Manhattan": 99,
+    "Brooklyn": 87,
+    "Manhattan": 97,
     "Queens": 92,
     "Staten Island": 24
   },
   "complexity_counts": {
     "multi_segment_corridor": 39,
     "park_or_facility_subsite": 253,
-    "street_between_pair": 51
+    "street_between_pair": 48
   },
   "confidence_counts": {
     "manual_review_first": 39,
-    "review_candidate": 304
+    "review_candidate": 301
   },
-  "generated_at_utc": "2026-07-01T23:42:31.291391+00:00",
-  "geocoding_queue_count": 304,
-  "input_review_events": 2157,
+  "generated_at_utc": "2026-07-02T04:20:57.978697+00:00",
+  "geocoding_queue_count": 301,
+  "input_review_events": 2111,
   "location_cache_modified": false,
   "location_groups_readable_compact": true,
   "phase": "phase_2_controlled_gps_review",
@@ -28,42 +28,28 @@
     {
       "borough": "Manhattan",
       "confidence_hint": "review_candidate",
-      "date_count": 28,
+      "date_count": 27,
       "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
       "event_agencies": [
         [
           "Parks Department",
-          28
+          27
         ]
       ],
-      "event_count": 28,
+      "event_count": 27,
       "event_types": [
         [
           "Special Event",
-          28
+          27
         ]
       ],
-      "first_date": "2026-07-01",
+      "first_date": "2026-07-02",
       "geocoder_query": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02, Manhattan, New York, NY",
       "group_key": "manhattan|langston hughes playground st nicholas playground north langston hughes playground basketball 01 langston hughes playground st nicholas playground north langston hughes playground basketball 02",
       "last_date": "2026-07-28",
       "location_complexity": "park_or_facility_subsite",
       "publish_status": "not_geocoded_not_public",
       "sample_events": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-01",
-          "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "8461",
-            "8462"
-          ],
-          "source_event_id": "955891",
-          "start_date_time": "2026-07-01T15:57:00.000",
-          "title": "Construction"
-        },
         {
           "borough": "Manhattan",
           "date": "2026-07-02",
@@ -91,6 +77,20 @@
           "source_event_id": "955891",
           "start_date_time": "2026-07-03T15:57:00.000",
           "title": "Construction"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-04",
+          "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "8461",
+            "8462"
+          ],
+          "source_event_id": "955891",
+          "start_date_time": "2026-07-04T15:57:00.000",
+          "title": "Construction"
         }
       ],
       "sample_events_truncated": true,
@@ -105,7 +105,7 @@
       "top_titles": [
         [
           "Construction",
-          28
+          27
         ]
       ],
       "unique_source_event_ids": 1
@@ -113,41 +113,28 @@
     {
       "borough": "Bronx",
       "confidence_hint": "review_candidate",
-      "date_count": 25,
+      "date_count": 24,
       "display_location": "Macombs Dam Park: Basketball-04",
       "event_agencies": [
         [
           "Parks Department",
-          25
+          24
         ]
       ],
-      "event_count": 25,
+      "event_count": 24,
       "event_types": [
         [
           "Sport - Youth",
-          25
+          24
         ]
       ],
-      "first_date": "2026-07-01",
+      "first_date": "2026-07-02",
       "geocoder_query": "Macombs Dam Park: Basketball-04, Bronx, New York, NY",
       "group_key": "bronx|macombs dam park basketball 04",
       "last_date": "2026-07-28",
       "location_complexity": "park_or_facility_subsite",
       "publish_status": "not_geocoded_not_public",
       "sample_events": [
-        {
-          "borough": "Bronx",
-          "date": "2026-07-01",
-          "display_location": "Macombs Dam Park: Basketball-04",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "10755"
-          ],
-          "source_event_id": "910621",
-          "start_date_time": "2026-07-01T10:00:00.000",
-          "title": "Basketball"
-        },
         {
           "borough": "Bronx",
           "date": "2026-07-02",
@@ -173,6 +160,19 @@
           "source_event_id": "910621",
           "start_date_time": "2026-07-06T10:00:00.000",
           "title": "Basketball"
+        },
+        {
+          "borough": "Bronx",
+          "date": "2026-07-07",
+          "display_location": "Macombs Dam Park: Basketball-04",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "10755"
+          ],
+          "source_event_id": "910621",
+          "start_date_time": "2026-07-07T10:00:00.000",
+          "title": "Basketball"
         }
       ],
       "sample_events_truncated": true,
@@ -186,7 +186,7 @@
       "top_titles": [
         [
           "Basketball",
-          25
+          24
         ]
       ],
       "unique_source_event_ids": 1
@@ -273,174 +273,6 @@
       "unique_source_event_ids": 1
     },
     {
-      "borough": "Queens",
-      "confidence_hint": "review_candidate",
-      "date_count": 16,
-      "display_location": "Baisley Pond Park: Cricket-04",
-      "event_agencies": [
-        [
-          "Parks Department",
-          20
-        ]
-      ],
-      "event_count": 20,
-      "event_types": [
-        [
-          "Sport - Adult",
-          12
-        ],
-        [
-          "Sport - Youth",
-          8
-        ]
-      ],
-      "first_date": "2026-07-01",
-      "geocoder_query": "Baisley Pond Park: Cricket-04, Queens, New York, NY",
-      "group_key": "queens|baisley pond park cricket 04",
-      "last_date": "2026-07-26",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Queens",
-          "date": "2026-07-01",
-          "display_location": "Baisley Pond Park: Cricket-04",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "11886"
-          ],
-          "source_event_id": "912982",
-          "start_date_time": "2026-07-01T08:00:00.000",
-          "title": "Cricket"
-        },
-        {
-          "borough": "Queens",
-          "date": "2026-07-02",
-          "display_location": "Baisley Pond Park: Cricket-04",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "11886"
-          ],
-          "source_event_id": "912982",
-          "start_date_time": "2026-07-02T08:00:00.000",
-          "title": "Cricket"
-        },
-        {
-          "borough": "Queens",
-          "date": "2026-07-04",
-          "display_location": "Baisley Pond Park: Cricket-04",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Adult",
-          "source_cemsid": [
-            "11886"
-          ],
-          "source_event_id": "899948",
-          "start_date_time": "2026-07-04T10:00:00.000",
-          "title": "Cricket"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Baisley Pond Park, Queens, New York, NY",
-      "source_cemsid_sample": [
-        "11886"
-      ],
-      "source_event_ids_sample": [
-        "899948",
-        "900059",
-        "912982"
-      ],
-      "top_titles": [
-        [
-          "Cricket",
-          20
-        ]
-      ],
-      "unique_source_event_ids": 3
-    },
-    {
-      "borough": "Manhattan",
-      "confidence_hint": "review_candidate",
-      "date_count": 20,
-      "display_location": "Fort Washington Park: Volleyball-01",
-      "event_agencies": [
-        [
-          "Parks Department",
-          20
-        ]
-      ],
-      "event_count": 20,
-      "event_types": [
-        [
-          "Sport - Youth",
-          20
-        ]
-      ],
-      "first_date": "2026-07-01",
-      "geocoder_query": "Fort Washington Park: Volleyball-01, Manhattan, New York, NY",
-      "group_key": "manhattan|fort washington park volleyball 01",
-      "last_date": "2026-07-28",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-01",
-          "display_location": "Fort Washington Park: Volleyball-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "10985"
-          ],
-          "source_event_id": "909449",
-          "start_date_time": "2026-07-01T09:00:00.000",
-          "title": "Volleyball"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-02",
-          "display_location": "Fort Washington Park: Volleyball-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "10985"
-          ],
-          "source_event_id": "909449",
-          "start_date_time": "2026-07-02T09:00:00.000",
-          "title": "Volleyball"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-03",
-          "display_location": "Fort Washington Park: Volleyball-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "10985"
-          ],
-          "source_event_id": "909449",
-          "start_date_time": "2026-07-03T09:00:00.000",
-          "title": "Volleyball"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Fort Washington Park, Manhattan, New York, NY",
-      "source_cemsid_sample": [
-        "10985"
-      ],
-      "source_event_ids_sample": [
-        "909449"
-      ],
-      "top_titles": [
-        [
-          "Volleyball",
-          20
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
       "borough": "Brooklyn",
       "confidence_hint": "review_candidate",
       "date_count": 20,
@@ -522,10 +354,10 @@
       "unique_source_event_ids": 1
     },
     {
-      "borough": "Brooklyn",
+      "borough": "Queens",
       "confidence_hint": "review_candidate",
-      "date_count": 19,
-      "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
+      "date_count": 15,
+      "display_location": "Baisley Pond Park: Cricket-04",
       "event_agencies": [
         [
           "Parks Department",
@@ -535,76 +367,78 @@
       "event_count": 19,
       "event_types": [
         [
-          "Special Event",
-          19
+          "Sport - Adult",
+          12
+        ],
+        [
+          "Sport - Youth",
+          7
         ]
       ],
-      "first_date": "2026-07-01",
-      "geocoder_query": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06, Brooklyn, New York, NY",
-      "group_key": "brooklyn|canarsie park softball 05 canarsie park softball 06",
-      "last_date": "2026-07-28",
+      "first_date": "2026-07-02",
+      "geocoder_query": "Baisley Pond Park: Cricket-04, Queens, New York, NY",
+      "group_key": "queens|baisley pond park cricket 04",
+      "last_date": "2026-07-26",
       "location_complexity": "park_or_facility_subsite",
       "publish_status": "not_geocoded_not_public",
       "sample_events": [
         {
-          "borough": "Brooklyn",
-          "date": "2026-07-01",
-          "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "5010",
-            "5016"
-          ],
-          "source_event_id": "917705",
-          "start_date_time": "2026-07-01T09:00:00.000",
-          "title": "Miscellaneous"
-        },
-        {
-          "borough": "Brooklyn",
+          "borough": "Queens",
           "date": "2026-07-02",
-          "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
+          "display_location": "Baisley Pond Park: Cricket-04",
           "event_agency": "Parks Department",
-          "event_type": "Special Event",
+          "event_type": "Sport - Youth",
           "source_cemsid": [
-            "5010",
-            "5016"
+            "11886"
           ],
-          "source_event_id": "917705",
-          "start_date_time": "2026-07-02T09:00:00.000",
-          "title": "Miscellaneous"
+          "source_event_id": "912982",
+          "start_date_time": "2026-07-02T08:00:00.000",
+          "title": "Cricket"
         },
         {
-          "borough": "Brooklyn",
-          "date": "2026-07-06",
-          "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
+          "borough": "Queens",
+          "date": "2026-07-04",
+          "display_location": "Baisley Pond Park: Cricket-04",
           "event_agency": "Parks Department",
-          "event_type": "Special Event",
+          "event_type": "Sport - Adult",
           "source_cemsid": [
-            "5010",
-            "5016"
+            "11886"
           ],
-          "source_event_id": "917705",
-          "start_date_time": "2026-07-06T09:00:00.000",
-          "title": "Miscellaneous"
+          "source_event_id": "899948",
+          "start_date_time": "2026-07-04T10:00:00.000",
+          "title": "Cricket"
+        },
+        {
+          "borough": "Queens",
+          "date": "2026-07-05",
+          "display_location": "Baisley Pond Park: Cricket-04",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Adult",
+          "source_cemsid": [
+            "11886"
+          ],
+          "source_event_id": "899948",
+          "start_date_time": "2026-07-05T10:00:00.000",
+          "title": "Cricket"
         }
       ],
       "sample_events_truncated": true,
-      "simplified_geocoder_query": "Canarsie Park, Brooklyn, New York, NY",
+      "simplified_geocoder_query": "Baisley Pond Park, Queens, New York, NY",
       "source_cemsid_sample": [
-        "5010",
-        "5016"
+        "11886"
       ],
       "source_event_ids_sample": [
-        "917705"
+        "899948",
+        "900059",
+        "912982"
       ],
       "top_titles": [
         [
-          "Miscellaneous",
+          "Cricket",
           19
         ]
       ],
-      "unique_source_event_ids": 1
+      "unique_source_event_ids": 3
     },
     {
       "borough": "Brooklyn",
@@ -692,10 +526,91 @@
       "unique_source_event_ids": 1
     },
     {
+      "borough": "Manhattan",
+      "confidence_hint": "review_candidate",
+      "date_count": 19,
+      "display_location": "Fort Washington Park: Volleyball-01",
+      "event_agencies": [
+        [
+          "Parks Department",
+          19
+        ]
+      ],
+      "event_count": 19,
+      "event_types": [
+        [
+          "Sport - Youth",
+          19
+        ]
+      ],
+      "first_date": "2026-07-02",
+      "geocoder_query": "Fort Washington Park: Volleyball-01, Manhattan, New York, NY",
+      "group_key": "manhattan|fort washington park volleyball 01",
+      "last_date": "2026-07-28",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-02",
+          "display_location": "Fort Washington Park: Volleyball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "10985"
+          ],
+          "source_event_id": "909449",
+          "start_date_time": "2026-07-02T09:00:00.000",
+          "title": "Volleyball"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-03",
+          "display_location": "Fort Washington Park: Volleyball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "10985"
+          ],
+          "source_event_id": "909449",
+          "start_date_time": "2026-07-03T09:00:00.000",
+          "title": "Volleyball"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-06",
+          "display_location": "Fort Washington Park: Volleyball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "10985"
+          ],
+          "source_event_id": "909449",
+          "start_date_time": "2026-07-06T09:00:00.000",
+          "title": "Volleyball"
+        }
+      ],
+      "sample_events_truncated": true,
+      "simplified_geocoder_query": "Fort Washington Park, Manhattan, New York, NY",
+      "source_cemsid_sample": [
+        "10985"
+      ],
+      "source_event_ids_sample": [
+        "909449"
+      ],
+      "top_titles": [
+        [
+          "Volleyball",
+          19
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
       "borough": "Brooklyn",
       "confidence_hint": "review_candidate",
       "date_count": 18,
-      "display_location": "Friends Field: Lawn Area",
+      "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
       "event_agencies": [
         [
           "Parks Department",
@@ -709,60 +624,64 @@
           18
         ]
       ],
-      "first_date": "2026-07-01",
-      "geocoder_query": "Friends Field: Lawn Area, Brooklyn, New York, NY",
-      "group_key": "brooklyn|friends field lawn area",
+      "first_date": "2026-07-02",
+      "geocoder_query": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06, Brooklyn, New York, NY",
+      "group_key": "brooklyn|canarsie park softball 05 canarsie park softball 06",
       "last_date": "2026-07-28",
       "location_complexity": "park_or_facility_subsite",
       "publish_status": "not_geocoded_not_public",
       "sample_events": [
         {
           "borough": "Brooklyn",
-          "date": "2026-07-01",
-          "display_location": "Friends Field: Lawn Area",
+          "date": "2026-07-02",
+          "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
           "event_agency": "Parks Department",
           "event_type": "Special Event",
           "source_cemsid": [
-            "4251"
+            "5010",
+            "5016"
           ],
-          "source_event_id": "940431",
-          "start_date_time": "2026-07-01T10:00:00.000",
-          "title": "Miscellaneous"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-03",
-          "display_location": "Friends Field: Lawn Area",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "4251"
-          ],
-          "source_event_id": "940431",
-          "start_date_time": "2026-07-03T10:00:00.000",
+          "source_event_id": "917705",
+          "start_date_time": "2026-07-02T09:00:00.000",
           "title": "Miscellaneous"
         },
         {
           "borough": "Brooklyn",
           "date": "2026-07-06",
-          "display_location": "Friends Field: Lawn Area",
+          "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
           "event_agency": "Parks Department",
           "event_type": "Special Event",
           "source_cemsid": [
-            "4251"
+            "5010",
+            "5016"
           ],
-          "source_event_id": "940431",
-          "start_date_time": "2026-07-06T10:00:00.000",
+          "source_event_id": "917705",
+          "start_date_time": "2026-07-06T09:00:00.000",
+          "title": "Miscellaneous"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-07",
+          "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "5010",
+            "5016"
+          ],
+          "source_event_id": "917705",
+          "start_date_time": "2026-07-07T09:00:00.000",
           "title": "Miscellaneous"
         }
       ],
       "sample_events_truncated": true,
-      "simplified_geocoder_query": "Friends Field, Brooklyn, New York, NY",
+      "simplified_geocoder_query": "Canarsie Park, Brooklyn, New York, NY",
       "source_cemsid_sample": [
-        "4251"
+        "5010",
+        "5016"
       ],
       "source_event_ids_sample": [
-        "940431"
+        "917705"
       ],
       "top_titles": [
         [
@@ -1264,10 +1183,10 @@
       "unique_source_event_ids": 2
     },
     {
-      "borough": "Queens",
+      "borough": "Brooklyn",
       "confidence_hint": "review_candidate",
       "date_count": 17,
-      "display_location": "Hoffman Park: Softball-01",
+      "display_location": "Friends Field: Lawn Area",
       "event_agencies": [
         [
           "Parks Department",
@@ -1277,68 +1196,68 @@
       "event_count": 17,
       "event_types": [
         [
-          "Sport - Youth",
+          "Special Event",
           17
         ]
       ],
-      "first_date": "2026-07-01",
-      "geocoder_query": "Hoffman Park: Softball-01, Queens, New York, NY",
-      "group_key": "queens|hoffman park softball 01",
-      "last_date": "2026-07-24",
+      "first_date": "2026-07-03",
+      "geocoder_query": "Friends Field: Lawn Area, Brooklyn, New York, NY",
+      "group_key": "brooklyn|friends field lawn area",
+      "last_date": "2026-07-28",
       "location_complexity": "park_or_facility_subsite",
       "publish_status": "not_geocoded_not_public",
       "sample_events": [
         {
-          "borough": "Queens",
-          "date": "2026-07-01",
-          "display_location": "Hoffman Park: Softball-01",
+          "borough": "Brooklyn",
+          "date": "2026-07-03",
+          "display_location": "Friends Field: Lawn Area",
           "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
+          "event_type": "Special Event",
           "source_cemsid": [
-            "8772"
+            "4251"
           ],
-          "source_event_id": "957801",
-          "start_date_time": "2026-07-01T11:00:00.000",
-          "title": "Softball - Adults"
+          "source_event_id": "940431",
+          "start_date_time": "2026-07-03T10:00:00.000",
+          "title": "Miscellaneous"
         },
         {
-          "borough": "Queens",
-          "date": "2026-07-02",
-          "display_location": "Hoffman Park: Softball-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "8772"
-          ],
-          "source_event_id": "957801",
-          "start_date_time": "2026-07-02T11:00:00.000",
-          "title": "Softball - Adults"
-        },
-        {
-          "borough": "Queens",
+          "borough": "Brooklyn",
           "date": "2026-07-06",
-          "display_location": "Hoffman Park: Softball-01",
+          "display_location": "Friends Field: Lawn Area",
           "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
+          "event_type": "Special Event",
           "source_cemsid": [
-            "8772"
+            "4251"
           ],
-          "source_event_id": "957801",
-          "start_date_time": "2026-07-06T11:00:00.000",
-          "title": "Softball - Adults"
+          "source_event_id": "940431",
+          "start_date_time": "2026-07-06T10:00:00.000",
+          "title": "Miscellaneous"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-07",
+          "display_location": "Friends Field: Lawn Area",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "4251"
+          ],
+          "source_event_id": "940431",
+          "start_date_time": "2026-07-07T10:00:00.000",
+          "title": "Miscellaneous"
         }
       ],
       "sample_events_truncated": true,
-      "simplified_geocoder_query": "Hoffman Park, Queens, New York, NY",
+      "simplified_geocoder_query": "Friends Field, Brooklyn, New York, NY",
       "source_cemsid_sample": [
-        "8772"
+        "4251"
       ],
       "source_event_ids_sample": [
-        "957801"
+        "940431"
       ],
       "top_titles": [
         [
-          "Softball - Adults",
+          "Miscellaneous",
           17
         ]
       ],
@@ -3426,10 +3345,10 @@
       "unique_source_event_ids": 1
     },
     {
-      "borough": "Brooklyn",
+      "borough": "Queens",
       "confidence_hint": "review_candidate",
       "date_count": 16,
-      "display_location": "Pratt Playground: Basketball-02",
+      "display_location": "Hoffman Park: Softball-01",
       "event_agencies": [
         [
           "Parks Department",
@@ -3443,307 +3362,64 @@
           16
         ]
       ],
-      "first_date": "2026-07-01",
-      "geocoder_query": "Pratt Playground: Basketball-02, Brooklyn, New York, NY",
-      "group_key": "brooklyn|pratt playground basketball 02",
-      "last_date": "2026-07-28",
+      "first_date": "2026-07-02",
+      "geocoder_query": "Hoffman Park: Softball-01, Queens, New York, NY",
+      "group_key": "queens|hoffman park softball 01",
+      "last_date": "2026-07-24",
       "location_complexity": "park_or_facility_subsite",
       "publish_status": "not_geocoded_not_public",
       "sample_events": [
         {
-          "borough": "Brooklyn",
-          "date": "2026-07-01",
-          "display_location": "Pratt Playground: Basketball-02",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "5401"
-          ],
-          "source_event_id": "935709",
-          "start_date_time": "2026-07-01T12:00:00.000",
-          "title": "Basketball"
-        },
-        {
-          "borough": "Brooklyn",
+          "borough": "Queens",
           "date": "2026-07-02",
-          "display_location": "Pratt Playground: Basketball-02",
+          "display_location": "Hoffman Park: Softball-01",
           "event_agency": "Parks Department",
           "event_type": "Sport - Youth",
           "source_cemsid": [
-            "5401"
+            "8772"
           ],
-          "source_event_id": "935709",
-          "start_date_time": "2026-07-02T12:00:00.000",
-          "title": "Basketball"
+          "source_event_id": "957801",
+          "start_date_time": "2026-07-02T11:00:00.000",
+          "title": "Softball - Adults"
         },
         {
-          "borough": "Brooklyn",
+          "borough": "Queens",
           "date": "2026-07-06",
-          "display_location": "Pratt Playground: Basketball-02",
+          "display_location": "Hoffman Park: Softball-01",
           "event_agency": "Parks Department",
           "event_type": "Sport - Youth",
           "source_cemsid": [
-            "5401"
+            "8772"
           ],
-          "source_event_id": "935709",
-          "start_date_time": "2026-07-06T12:00:00.000",
-          "title": "Basketball"
+          "source_event_id": "957801",
+          "start_date_time": "2026-07-06T11:00:00.000",
+          "title": "Softball - Adults"
+        },
+        {
+          "borough": "Queens",
+          "date": "2026-07-07",
+          "display_location": "Hoffman Park: Softball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "8772"
+          ],
+          "source_event_id": "957801",
+          "start_date_time": "2026-07-07T11:00:00.000",
+          "title": "Softball - Adults"
         }
       ],
       "sample_events_truncated": true,
-      "simplified_geocoder_query": "Pratt Playground, Brooklyn, New York, NY",
+      "simplified_geocoder_query": "Hoffman Park, Queens, New York, NY",
       "source_cemsid_sample": [
-        "5401"
+        "8772"
       ],
       "source_event_ids_sample": [
-        "935709"
+        "957801"
       ],
       "top_titles": [
         [
-          "Basketball",
-          16
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Brooklyn",
-      "confidence_hint": "review_candidate",
-      "date_count": 16,
-      "display_location": "Marine Park: Soccer-01",
-      "event_agencies": [
-        [
-          "Parks Department",
-          16
-        ]
-      ],
-      "event_count": 16,
-      "event_types": [
-        [
-          "Sport - Youth",
-          16
-        ]
-      ],
-      "first_date": "2026-07-01",
-      "geocoder_query": "Marine Park: Soccer-01, Brooklyn, New York, NY",
-      "group_key": "brooklyn|marine park soccer 01",
-      "last_date": "2026-07-28",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-01",
-          "display_location": "Marine Park: Soccer-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "9018"
-          ],
-          "source_event_id": "904321",
-          "start_date_time": "2026-07-01T09:00:00.000",
-          "title": "Soccer - Non Regulation"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-02",
-          "display_location": "Marine Park: Soccer-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "9018"
-          ],
-          "source_event_id": "904321",
-          "start_date_time": "2026-07-02T09:00:00.000",
-          "title": "Soccer - Non Regulation"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-06",
-          "display_location": "Marine Park: Soccer-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "9018"
-          ],
-          "source_event_id": "904321",
-          "start_date_time": "2026-07-06T09:00:00.000",
-          "title": "Soccer - Non Regulation"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Marine Park, Brooklyn, New York, NY",
-      "source_cemsid_sample": [
-        "9018"
-      ],
-      "source_event_ids_sample": [
-        "904321"
-      ],
-      "top_titles": [
-        [
-          "Soccer - Non Regulation",
-          16
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Brooklyn",
-      "confidence_hint": "review_candidate",
-      "date_count": 16,
-      "display_location": "Linden Park (Gershwin Park - JHS 166): Track-01",
-      "event_agencies": [
-        [
-          "Parks Department",
-          16
-        ]
-      ],
-      "event_count": 16,
-      "event_types": [
-        [
-          "Sport - Youth",
-          16
-        ]
-      ],
-      "first_date": "2026-07-01",
-      "geocoder_query": "Linden Park (Gershwin Park - JHS 166): Track-01, Brooklyn, New York, NY",
-      "group_key": "brooklyn|linden park gershwin park jhs 166 track 01",
-      "last_date": "2026-07-28",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-01",
-          "display_location": "Linden Park (Gershwin Park - JHS 166): Track-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "5235"
-          ],
-          "source_event_id": "904322",
-          "start_date_time": "2026-07-01T09:00:00.000",
-          "title": "Track and Field"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-02",
-          "display_location": "Linden Park (Gershwin Park - JHS 166): Track-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "5235"
-          ],
-          "source_event_id": "904322",
-          "start_date_time": "2026-07-02T09:00:00.000",
-          "title": "Track and Field"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-06",
-          "display_location": "Linden Park (Gershwin Park - JHS 166): Track-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "5235"
-          ],
-          "source_event_id": "904322",
-          "start_date_time": "2026-07-06T09:00:00.000",
-          "title": "Track and Field"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Linden Park (Gershwin Park - JHS 166), Brooklyn, New York, NY",
-      "source_cemsid_sample": [
-        "5235"
-      ],
-      "source_event_ids_sample": [
-        "904322"
-      ],
-      "top_titles": [
-        [
-          "Track and Field",
-          16
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Manhattan",
-      "confidence_hint": "review_candidate",
-      "date_count": 16,
-      "display_location": "Washington Market Park: Tennis-01",
-      "event_agencies": [
-        [
-          "Parks Department",
-          16
-        ]
-      ],
-      "event_count": 16,
-      "event_types": [
-        [
-          "Sport - Youth",
-          16
-        ]
-      ],
-      "first_date": "2026-07-01",
-      "geocoder_query": "Washington Market Park: Tennis-01, Manhattan, New York, NY",
-      "group_key": "manhattan|washington market park tennis 01",
-      "last_date": "2026-07-28",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-01",
-          "display_location": "Washington Market Park: Tennis-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "5972"
-          ],
-          "source_event_id": "912526",
-          "start_date_time": "2026-07-01T09:00:00.000",
-          "title": "Tennis"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-02",
-          "display_location": "Washington Market Park: Tennis-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "5972"
-          ],
-          "source_event_id": "912526",
-          "start_date_time": "2026-07-02T09:00:00.000",
-          "title": "Tennis"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-06",
-          "display_location": "Washington Market Park: Tennis-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "5972"
-          ],
-          "source_event_id": "912526",
-          "start_date_time": "2026-07-06T09:00:00.000",
-          "title": "Tennis"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Washington Market Park, Manhattan, New York, NY",
-      "source_cemsid_sample": [
-        "5972"
-      ],
-      "source_event_ids_sample": [
-        "912526"
-      ],
-      "top_titles": [
-        [
-          "Tennis",
+          "Softball - Adults",
           16
         ]
       ],
@@ -3912,10 +3588,10 @@
       "unique_source_event_ids": 1
     },
     {
-      "borough": "Bronx",
+      "borough": "Brooklyn",
       "confidence_hint": "review_candidate",
       "date_count": 15,
-      "display_location": "St. Mary's Park: St Mary's Playground West-Tennis-02",
+      "display_location": "Pratt Playground: Basketball-02",
       "event_agencies": [
         [
           "Parks Department",
@@ -3929,75 +3605,74 @@
           15
         ]
       ],
-      "first_date": "2026-07-01",
-      "geocoder_query": "St. Mary's Park: St Mary's Playground West-Tennis-02, Bronx, New York, NY",
-      "group_key": "bronx|st mary s park st mary s playground west tennis 02",
+      "first_date": "2026-07-02",
+      "geocoder_query": "Pratt Playground: Basketball-02, Brooklyn, New York, NY",
+      "group_key": "brooklyn|pratt playground basketball 02",
       "last_date": "2026-07-28",
       "location_complexity": "park_or_facility_subsite",
       "publish_status": "not_geocoded_not_public",
       "sample_events": [
         {
-          "borough": "Bronx",
-          "date": "2026-07-01",
-          "display_location": "St. Mary's Park: St Mary's Playground West-Tennis-02",
+          "borough": "Brooklyn",
+          "date": "2026-07-02",
+          "display_location": "Pratt Playground: Basketball-02",
           "event_agency": "Parks Department",
           "event_type": "Sport - Youth",
           "source_cemsid": [
-            "7015"
+            "5401"
           ],
-          "source_event_id": "911703",
-          "start_date_time": "2026-07-01T13:00:00.000",
-          "title": "Tennis"
+          "source_event_id": "935709",
+          "start_date_time": "2026-07-02T12:00:00.000",
+          "title": "Basketball"
         },
         {
-          "borough": "Bronx",
+          "borough": "Brooklyn",
           "date": "2026-07-06",
-          "display_location": "St. Mary's Park: St Mary's Playground West-Tennis-02",
+          "display_location": "Pratt Playground: Basketball-02",
           "event_agency": "Parks Department",
           "event_type": "Sport - Youth",
           "source_cemsid": [
-            "7015"
+            "5401"
           ],
-          "source_event_id": "911703",
-          "start_date_time": "2026-07-06T13:00:00.000",
-          "title": "Tennis"
+          "source_event_id": "935709",
+          "start_date_time": "2026-07-06T12:00:00.000",
+          "title": "Basketball"
         },
         {
-          "borough": "Bronx",
+          "borough": "Brooklyn",
           "date": "2026-07-07",
-          "display_location": "St. Mary's Park: St Mary's Playground West-Tennis-02",
+          "display_location": "Pratt Playground: Basketball-02",
           "event_agency": "Parks Department",
           "event_type": "Sport - Youth",
           "source_cemsid": [
-            "7015"
+            "5401"
           ],
-          "source_event_id": "914323",
-          "start_date_time": "2026-07-07T09:30:00.000",
-          "title": "Tennis"
+          "source_event_id": "935709",
+          "start_date_time": "2026-07-07T12:00:00.000",
+          "title": "Basketball"
         }
       ],
       "sample_events_truncated": true,
-      "simplified_geocoder_query": "St. Mary's Park, Bronx, New York, NY",
+      "simplified_geocoder_query": "Pratt Playground, Brooklyn, New York, NY",
       "source_cemsid_sample": [
-        "7015"
+        "5401"
       ],
       "source_event_ids_sample": [
-        "911703",
-        "914323"
+        "935709"
       ],
       "top_titles": [
         [
-          "Tennis",
+          "Basketball",
           15
         ]
       ],
-      "unique_source_event_ids": 2
+      "unique_source_event_ids": 1
     },
     {
-      "borough": "Bronx",
+      "borough": "Brooklyn",
       "confidence_hint": "review_candidate",
       "date_count": 15,
-      "display_location": "St. Mary's Park: St Mary's Playground West-Tennis-01",
+      "display_location": "Marine Park: Soccer-01",
       "event_agencies": [
         [
           "Parks Department",
@@ -4011,61 +3686,222 @@
           15
         ]
       ],
-      "first_date": "2026-07-01",
-      "geocoder_query": "St. Mary's Park: St Mary's Playground West-Tennis-01, Bronx, New York, NY",
-      "group_key": "bronx|st mary s park st mary s playground west tennis 01",
+      "first_date": "2026-07-02",
+      "geocoder_query": "Marine Park: Soccer-01, Brooklyn, New York, NY",
+      "group_key": "brooklyn|marine park soccer 01",
       "last_date": "2026-07-28",
       "location_complexity": "park_or_facility_subsite",
       "publish_status": "not_geocoded_not_public",
       "sample_events": [
         {
-          "borough": "Bronx",
-          "date": "2026-07-01",
-          "display_location": "St. Mary's Park: St Mary's Playground West-Tennis-01",
+          "borough": "Brooklyn",
+          "date": "2026-07-02",
+          "display_location": "Marine Park: Soccer-01",
           "event_agency": "Parks Department",
           "event_type": "Sport - Youth",
           "source_cemsid": [
-            "7016"
+            "9018"
           ],
-          "source_event_id": "911704",
-          "start_date_time": "2026-07-01T13:00:00.000",
-          "title": "Tennis"
+          "source_event_id": "904321",
+          "start_date_time": "2026-07-02T09:00:00.000",
+          "title": "Soccer - Non Regulation"
         },
         {
-          "borough": "Bronx",
+          "borough": "Brooklyn",
           "date": "2026-07-06",
-          "display_location": "St. Mary's Park: St Mary's Playground West-Tennis-01",
+          "display_location": "Marine Park: Soccer-01",
           "event_agency": "Parks Department",
           "event_type": "Sport - Youth",
           "source_cemsid": [
-            "7016"
+            "9018"
           ],
-          "source_event_id": "911704",
-          "start_date_time": "2026-07-06T13:00:00.000",
+          "source_event_id": "904321",
+          "start_date_time": "2026-07-06T09:00:00.000",
+          "title": "Soccer - Non Regulation"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-07",
+          "display_location": "Marine Park: Soccer-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "9018"
+          ],
+          "source_event_id": "904321",
+          "start_date_time": "2026-07-07T09:00:00.000",
+          "title": "Soccer - Non Regulation"
+        }
+      ],
+      "sample_events_truncated": true,
+      "simplified_geocoder_query": "Marine Park, Brooklyn, New York, NY",
+      "source_cemsid_sample": [
+        "9018"
+      ],
+      "source_event_ids_sample": [
+        "904321"
+      ],
+      "top_titles": [
+        [
+          "Soccer - Non Regulation",
+          15
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
+      "borough": "Brooklyn",
+      "confidence_hint": "review_candidate",
+      "date_count": 15,
+      "display_location": "Linden Park (Gershwin Park - JHS 166): Track-01",
+      "event_agencies": [
+        [
+          "Parks Department",
+          15
+        ]
+      ],
+      "event_count": 15,
+      "event_types": [
+        [
+          "Sport - Youth",
+          15
+        ]
+      ],
+      "first_date": "2026-07-02",
+      "geocoder_query": "Linden Park (Gershwin Park - JHS 166): Track-01, Brooklyn, New York, NY",
+      "group_key": "brooklyn|linden park gershwin park jhs 166 track 01",
+      "last_date": "2026-07-28",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-02",
+          "display_location": "Linden Park (Gershwin Park - JHS 166): Track-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "5235"
+          ],
+          "source_event_id": "904322",
+          "start_date_time": "2026-07-02T09:00:00.000",
+          "title": "Track and Field"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-06",
+          "display_location": "Linden Park (Gershwin Park - JHS 166): Track-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "5235"
+          ],
+          "source_event_id": "904322",
+          "start_date_time": "2026-07-06T09:00:00.000",
+          "title": "Track and Field"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-07",
+          "display_location": "Linden Park (Gershwin Park - JHS 166): Track-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "5235"
+          ],
+          "source_event_id": "904322",
+          "start_date_time": "2026-07-07T09:00:00.000",
+          "title": "Track and Field"
+        }
+      ],
+      "sample_events_truncated": true,
+      "simplified_geocoder_query": "Linden Park (Gershwin Park - JHS 166), Brooklyn, New York, NY",
+      "source_cemsid_sample": [
+        "5235"
+      ],
+      "source_event_ids_sample": [
+        "904322"
+      ],
+      "top_titles": [
+        [
+          "Track and Field",
+          15
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
+      "borough": "Manhattan",
+      "confidence_hint": "review_candidate",
+      "date_count": 15,
+      "display_location": "Washington Market Park: Tennis-01",
+      "event_agencies": [
+        [
+          "Parks Department",
+          15
+        ]
+      ],
+      "event_count": 15,
+      "event_types": [
+        [
+          "Sport - Youth",
+          15
+        ]
+      ],
+      "first_date": "2026-07-02",
+      "geocoder_query": "Washington Market Park: Tennis-01, Manhattan, New York, NY",
+      "group_key": "manhattan|washington market park tennis 01",
+      "last_date": "2026-07-28",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-02",
+          "display_location": "Washington Market Park: Tennis-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "5972"
+          ],
+          "source_event_id": "912526",
+          "start_date_time": "2026-07-02T09:00:00.000",
           "title": "Tennis"
         },
         {
-          "borough": "Bronx",
-          "date": "2026-07-07",
-          "display_location": "St. Mary's Park: St Mary's Playground West-Tennis-01",
+          "borough": "Manhattan",
+          "date": "2026-07-06",
+          "display_location": "Washington Market Park: Tennis-01",
           "event_agency": "Parks Department",
           "event_type": "Sport - Youth",
           "source_cemsid": [
-            "7016"
+            "5972"
           ],
-          "source_event_id": "914321",
-          "start_date_time": "2026-07-07T09:30:00.000",
+          "source_event_id": "912526",
+          "start_date_time": "2026-07-06T09:00:00.000",
+          "title": "Tennis"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-07",
+          "display_location": "Washington Market Park: Tennis-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "5972"
+          ],
+          "source_event_id": "912526",
+          "start_date_time": "2026-07-07T09:00:00.000",
           "title": "Tennis"
         }
       ],
       "sample_events_truncated": true,
-      "simplified_geocoder_query": "St. Mary's Park, Bronx, New York, NY",
+      "simplified_geocoder_query": "Washington Market Park, Manhattan, New York, NY",
       "source_cemsid_sample": [
-        "7016"
+        "5972"
       ],
       "source_event_ids_sample": [
-        "911704",
-        "914321"
+        "912526"
       ],
       "top_titles": [
         [
@@ -4073,7 +3909,7 @@
           15
         ]
       ],
-      "unique_source_event_ids": 2
+      "unique_source_event_ids": 1
     },
     {
       "borough": "Brooklyn",
@@ -4155,7 +3991,169 @@
         ]
       ],
       "unique_source_event_ids": 1
+    },
+    {
+      "borough": "Manhattan",
+      "confidence_hint": "review_candidate",
+      "date_count": 15,
+      "display_location": "Inwood Hill Park: Dyckman-Hockey-01",
+      "event_agencies": [
+        [
+          "Parks Department",
+          15
+        ]
+      ],
+      "event_count": 15,
+      "event_types": [
+        [
+          "Special Event",
+          15
+        ]
+      ],
+      "first_date": "2026-07-07",
+      "geocoder_query": "Inwood Hill Park: Dyckman-Hockey-01, Manhattan, New York, NY",
+      "group_key": "manhattan|inwood hill park dyckman hockey 01",
+      "last_date": "2026-07-28",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-07",
+          "display_location": "Inwood Hill Park: Dyckman-Hockey-01",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "5580"
+          ],
+          "source_event_id": "952325",
+          "start_date_time": "2026-07-07T08:30:00.000",
+          "title": "Bike Safety Class - Inwood - July 2026"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-08",
+          "display_location": "Inwood Hill Park: Dyckman-Hockey-01",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "5580"
+          ],
+          "source_event_id": "952325",
+          "start_date_time": "2026-07-08T08:30:00.000",
+          "title": "Bike Safety Class - Inwood - July 2026"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-09",
+          "display_location": "Inwood Hill Park: Dyckman-Hockey-01",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "5580"
+          ],
+          "source_event_id": "952325",
+          "start_date_time": "2026-07-09T08:30:00.000",
+          "title": "Bike Safety Class - Inwood - July 2026"
+        }
+      ],
+      "sample_events_truncated": true,
+      "simplified_geocoder_query": "Inwood Hill Park, Manhattan, New York, NY",
+      "source_cemsid_sample": [
+        "5580"
+      ],
+      "source_event_ids_sample": [
+        "952325"
+      ],
+      "top_titles": [
+        [
+          "Bike Safety Class - Inwood - July 2026",
+          15
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
+      "borough": "Manhattan",
+      "confidence_hint": "review_candidate",
+      "date_count": 15,
+      "display_location": "J. Hood Wright Park: Softball-01",
+      "event_agencies": [
+        [
+          "Parks Department",
+          15
+        ]
+      ],
+      "event_count": 15,
+      "event_types": [
+        [
+          "Sport - Youth",
+          15
+        ]
+      ],
+      "first_date": "2026-07-08",
+      "geocoder_query": "J. Hood Wright Park: Softball-01, Manhattan, New York, NY",
+      "group_key": "manhattan|j hood wright park softball 01",
+      "last_date": "2026-07-28",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-08",
+          "display_location": "J. Hood Wright Park: Softball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "5679"
+          ],
+          "source_event_id": "926975",
+          "start_date_time": "2026-07-08T11:00:00.000",
+          "title": "Miscellaneous"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-09",
+          "display_location": "J. Hood Wright Park: Softball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "5679"
+          ],
+          "source_event_id": "926975",
+          "start_date_time": "2026-07-09T11:00:00.000",
+          "title": "Miscellaneous"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-10",
+          "display_location": "J. Hood Wright Park: Softball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "5679"
+          ],
+          "source_event_id": "926975",
+          "start_date_time": "2026-07-10T11:00:00.000",
+          "title": "Miscellaneous"
+        }
+      ],
+      "sample_events_truncated": true,
+      "simplified_geocoder_query": "J. Hood Wright Park, Manhattan, New York, NY",
+      "source_cemsid_sample": [
+        "5679"
+      ],
+      "source_event_ids_sample": [
+        "926975"
+      ],
+      "top_titles": [
+        [
+          "Miscellaneous",
+          15
+        ]
+      ],
+      "unique_source_event_ids": 1
     }
   ],
-  "unique_location_groups": 343
+  "unique_location_groups": 340
 }

@@ -9,27 +9,27 @@
     "gps_needs_review_events": {
       "exists": true,
       "path": "data/gps_needs_review_events.json",
-      "size_bytes": 946966
+      "size_bytes": 926687
     },
     "gps_repository_report": {
       "exists": true,
       "path": "data/gps_repository_report.json",
-      "size_bytes": 22657
+      "size_bytes": 23703
     },
     "live_delta_report": {
       "exists": true,
       "path": "data/live_delta_report.json",
-      "size_bytes": 961
+      "size_bytes": 36782
     },
     "live_sync_report": {
       "exists": true,
       "path": "data/live_sync_report.json",
-      "size_bytes": 15705
+      "size_bytes": 16009
     },
     "location_cache": {
       "exists": true,
       "path": "data/location_cache.json",
-      "size_bytes": 25090828
+      "size_bytes": 24665255
     },
     "raw_snapshot": {
       "exists": true,
@@ -39,57 +39,57 @@
     "remainder_year_coverage_report": {
       "exists": true,
       "path": "data/remainder_year_coverage_report.json",
-      "size_bytes": 49689
+      "size_bytes": 49421
     },
     "row_disposition_events": {
       "exists": true,
       "path": "data/row_disposition_events.json",
-      "size_bytes": 19095580
+      "size_bytes": 18548385
     },
     "row_disposition_report": {
       "exists": true,
       "path": "data/row_disposition_report.json",
-      "size_bytes": 29374
+      "size_bytes": 30353
     },
     "staged_feed": {
       "exists": true,
       "path": "data/nycif_staged_live_events.json",
-      "size_bytes": 27530747
+      "size_bytes": 26735103
     },
     "staged_manifest": {
       "exists": true,
       "path": "data/staged_live_manifest.json",
-      "size_bytes": 20123
+      "size_bytes": 20464
     },
     "test_feed": {
       "exists": true,
       "path": "data/nycif_live_test_enriched_events.json",
-      "size_bytes": 29034261
+      "size_bytes": 28211449
     },
     "test_manifest": {
       "exists": true,
       "path": "data/test_enriched_feed_manifest.json",
-      "size_bytes": 513
+      "size_bytes": 512
     }
   },
   "gate_pass": true,
-  "generated_at_utc": "2026-07-01T23:42:37.648863+00:00",
+  "generated_at_utc": "2026-07-02T04:21:04.484782+00:00",
   "issues": [
     {
       "code": "gps_review_queue_not_empty",
-      "details": 2157,
+      "details": 2111,
       "message": "Some events still require GPS review; this is expected and not a pipeline failure.",
       "severity": "warn"
     }
   ],
   "phase": "phase_1_backend_reliability",
   "summary": {
-    "gps_cache_entry_count": 43521,
-    "gps_needs_review_count": 2157,
+    "gps_cache_entry_count": 42848,
+    "gps_needs_review_count": 2111,
     "raw_rows_loaded": 31939,
     "row_disposition_qa_pass": true,
-    "staged_feed_events": 27918,
-    "test_feed_events": 30210,
+    "staged_feed_events": 27112,
+    "test_feed_events": 29355,
     "unclassified_rows": 0
   },
   "warn_count": 1
