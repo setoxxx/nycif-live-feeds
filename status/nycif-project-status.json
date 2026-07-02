@@ -1,0 +1,44 @@
+{
+  "artifact_type": "nycif_project_status",
+  "schema_version": "1.0.0",
+  "project": "nycif-live-feeds",
+  "repository": "setoxxx/nycif-live-feeds",
+  "visibility": "public",
+  "current_phase": "Public feed artifact governance",
+  "completion_percent": 28,
+  "health": "yellow",
+  "status_summary": "Live Feeds is the public repository for NYCIF live/public feed artifacts. This status artifact is static, public-safe, and does not change any production feed data.",
+  "active_prs": [],
+  "recent_prs": [
+    {
+      "number": 1,
+      "title": "Publish approved Queensboro Dance Festival geocode (C5P)",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/1",
+      "state": "unknown"
+    }
+  ],
+  "blockers": [
+    "Define feed freshness reporting without changing public feed data.",
+    "Define source ownership and approval-status reporting as public-safe summaries only."
+  ],
+  "next_action": "Add feed-status reporting fields in a later controlled phase without mutating production feed artifacts.",
+  "data_freshness": {
+    "source": "Manual ChatGPT/GitHub connector snapshot",
+    "last_verified_at": "2026-07-02T20:10:00.000Z",
+    "notes": "This file is a static status artifact. It does not poll GitHub from the browser and does not change feed payloads."
+  },
+  "safety": {
+    "safe_for_public_dashboard": true,
+    "contains_secrets": false,
+    "contains_private_repo_internals": false,
+    "contains_credentials": false,
+    "contains_tokens": false,
+    "browser_side_github_api_polling": false,
+    "write_controls": false,
+    "deploy_controls": false,
+    "public_map_runtime_change": false,
+    "production_feed_mutation": false,
+    "wordpress_change": false
+  },
+  "generated_at": "2026-07-02T20:10:00.000Z"
+}
