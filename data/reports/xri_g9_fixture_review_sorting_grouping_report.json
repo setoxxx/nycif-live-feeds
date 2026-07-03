@@ -1,0 +1,81 @@
+{
+  "schema": "nycif.xri_g9.fixture_review_sorting_grouping.v1",
+  "phase": "XRI-G9",
+  "mode": "fixture_only_review_sorting_grouping_rules",
+  "production_allowed": false,
+  "branch": "xri-g9",
+  "allowed_files": [
+    "docs/xri-g9-fixture-only-review-sorting-grouping-contract.md",
+    "tools/registry/xri_g9_fixture_review_sorting_grouping.py",
+    "data/reports/xri_g9_fixture_review_sorting_grouping_report.json"
+  ],
+  "sort_fields": [
+    "source_dataset_id",
+    "source_name",
+    "event_start",
+    "title",
+    "location_text",
+    "category_text",
+    "ambiguity_flags",
+    "supporting_reference_only",
+    "public_event_candidate",
+    "candidate_identity_key"
+  ],
+  "forbidden_sort_inputs": [
+    "review_rank",
+    "row_order",
+    "display_order",
+    "coordinates",
+    "geocoding",
+    "data/location_cache.json",
+    "production_feed_state"
+  ],
+  "groups": [
+    "public_event_candidate_previews",
+    "supporting_reference_only_rows",
+    "missing_or_context_location_rows",
+    "ambiguity_review_rows",
+    "source_dataset_groups"
+  ],
+  "blocked_statuses": {
+    "approval_status": "candidate_only",
+    "geocode_status": "not_geocoded",
+    "promotion_status": "blocked",
+    "reviewer_action_allowed": false
+  },
+  "supporting_reference_only_sources": ["cpcm-i88g", "xtsw-fqvh"],
+  "checks": {
+    "production_allowed_false": true,
+    "fixture_only": true,
+    "deterministic_sorting": true,
+    "safe_sort_fields_only": true,
+    "expected_groups_present": true,
+    "all_rows_blocked": true,
+    "supporting_references_review_only": true,
+    "no_coordinates_inferred": true,
+    "fail_closed_output_paths": true
+  },
+  "safety_confirmations": {
+    "network_calls": false,
+    "soda_live_fetch": false,
+    "geocoding_api": false,
+    "production_writes": false,
+    "production_feed_files_modified": false,
+    "public_map_runtime_modified": false,
+    "wordpress_modified": false,
+    "nycinfocus_map_modified": false,
+    "iframe_embed_settings_modified": false,
+    "scheduled_workflows_modified": false,
+    "location_cache_read_or_write": false,
+    "live_staging_run": false,
+    "candidate_approval": false,
+    "candidate_promotion": false,
+    "registry_database_created": false,
+    "registry_importer_created": false,
+    "xri_g12_started": false
+  },
+  "expected_runtime_command": "python tools/registry/xri_g9_fixture_review_sorting_grouping.py --pretty",
+  "expected_result": "pass",
+  "next_recommended_phase_gate": "XRI-G10 fixture-only grouped review export contract; no live fetch, geocoding, production writes, public map runtime changes, approvals, or location_cache access.",
+  "review_gate": "open PR only; do not merge until Howard and ChatGPT review"
+}
