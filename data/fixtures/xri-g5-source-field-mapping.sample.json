@@ -1,0 +1,67 @@
+{
+  "schema": "nycif.xri_g5.source_field_mapping.sample.v1",
+  "production_allowed": false,
+  "purpose": "planning_only_mapping_fixture",
+  "sources": [
+    {
+      "source_dataset_id": "tvpp-9vvx",
+      "source_name": "NYC Permitted Event Information",
+      "role": "primary_event_source",
+      "identity_basis": ["source_dataset_id", "source_record_id", "normalized_title", "normalized_event_start", "normalized_location_text"],
+      "required_targets": ["source_dataset_id", "source_name", "source_record_id", "title", "location_text", "event_start"],
+      "optional_targets": ["event_end", "borough", "category", "description", "source_url", "location_hint"],
+      "ambiguity_flags": ["route_or_intersection_location", "time_missing", "borough_uncertain"],
+      "geocoding_allowed": false
+    },
+    {
+      "source_dataset_id": "fudw-fgrp",
+      "source_name": "Parks Event Listing",
+      "role": "primary_parks_event_source",
+      "identity_basis": ["source_dataset_id", "source_record_id", "normalized_title", "normalized_event_start"],
+      "required_targets": ["source_dataset_id", "source_name", "source_record_id", "title", "event_start"],
+      "optional_targets": ["event_end", "description", "category", "borough", "location_text", "source_url", "location_hint"],
+      "ambiguity_flags": ["parks_location_reference_present", "location_missing"],
+      "geocoding_allowed": false
+    },
+    {
+      "source_dataset_id": "cpcm-i88g",
+      "source_name": "Parks Event Locations",
+      "role": "supporting_location_reference_only",
+      "identity_basis": ["source_dataset_id", "source_location_id"],
+      "required_targets": ["source_dataset_id", "source_name", "source_location_id", "location_display_name"],
+      "optional_targets": ["borough", "location_hint"],
+      "ambiguity_flags": ["parks_location_reference_only", "parks_location_join_required_future_phase", "location_geometry_not_authorized"],
+      "geocoding_allowed": false
+    },
+    {
+      "source_dataset_id": "xtsw-fqvh",
+      "source_name": "Parks Event Categories",
+      "role": "supporting_category_reference_only",
+      "identity_basis": ["source_dataset_id", "source_category_id"],
+      "required_targets": ["source_dataset_id", "source_name", "source_category_id", "category_display_name"],
+      "optional_targets": [],
+      "ambiguity_flags": ["parks_category_reference_only", "category_join_required_future_phase"],
+      "geocoding_allowed": false
+    },
+    {
+      "source_dataset_id": "6v4b-5gp4",
+      "source_name": "Public Programs Division Special Events",
+      "role": "primary_event_source",
+      "identity_basis": ["source_dataset_id", "source_record_id", "normalized_title", "normalized_event_start", "normalized_location_text"],
+      "required_targets": ["source_dataset_id", "source_name", "source_record_id", "title", "event_start"],
+      "optional_targets": ["event_end", "description", "borough", "category", "location_text", "source_url", "location_hint"],
+      "ambiguity_flags": ["agency_program_location_uncertain", "time_missing", "location_missing"],
+      "geocoding_allowed": false
+    },
+    {
+      "source_dataset_id": "3vyj-dkjt",
+      "source_name": "Safety Events",
+      "role": "primary_event_source",
+      "identity_basis": ["source_dataset_id", "source_record_id", "normalized_title", "normalized_event_start"],
+      "required_targets": ["source_dataset_id", "source_name", "source_record_id", "title", "event_start"],
+      "optional_targets": ["event_end", "description", "borough", "category", "location_text", "source_url"],
+      "ambiguity_flags": ["safety_event_context_required", "location_missing", "time_missing", "sensitive_context_review_required"],
+      "geocoding_allowed": false
+    }
+  ]
+}
