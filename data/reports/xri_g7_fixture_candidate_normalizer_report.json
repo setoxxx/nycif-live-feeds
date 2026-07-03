@@ -1,0 +1,75 @@
+{
+  "schema": "nycif.xri_g7.fixture_candidate_normalizer_report.v1",
+  "phase": "XRI-G7",
+  "mode": "fixture_only_candidate_normalizer",
+  "production_allowed": false,
+  "branch": "docs-g7",
+  "allowed_files": [
+    "docs/xri-g7-fixture-only-candidate-normalization-contract.md",
+    "tools/registry/xri_g7_fixture_candidate_normalizer.py",
+    "data/reports/xri_g7_fixture_candidate_normalizer_report.json",
+    "data/fixtures/xri-g7-candidate-normalizer.sample.json"
+  ],
+  "created_files": [
+    "docs/xri-g7-fixture-only-candidate-normalization-contract.md",
+    "tools/registry/xri_g7_fixture_candidate_normalizer.py",
+    "data/reports/xri_g7_fixture_candidate_normalizer_report.json",
+    "data/fixtures/xri-g7-candidate-normalizer.sample.json"
+  ],
+  "normalizer_contract": {
+    "fixture_only": true,
+    "embedded_sample_allowed": true,
+    "sample_fixture_allowed": true,
+    "blocked_candidate_previews": true,
+    "deterministic_candidate_identity_key": true,
+    "source_location_text_preserved_without_geocoding": true,
+    "ambiguity_flags_preserved": true,
+    "supporting_reference_only_sources_not_public_candidates": ["cpcm-i88g", "xtsw-fqvh"],
+    "fail_closed_input_paths": true,
+    "fail_closed_output_paths": true
+  },
+  "required_blocked_statuses": {
+    "production_allowed": false,
+    "approval_status": "candidate_only",
+    "geocode_status": "not_geocoded",
+    "promotion_status": "blocked"
+  },
+  "allowed_inputs": [
+    "embedded sample data",
+    "data/fixtures/xri-g7-candidate-normalizer.sample.json"
+  ],
+  "allowed_outputs": [
+    "data/reports/xri_g7_fixture_candidate_normalizer_report.json"
+  ],
+  "blocked_paths": [
+    "data/location_cache.json",
+    "production feed paths",
+    "public map paths",
+    "WordPress paths",
+    "workflow paths",
+    "arbitrary local JSON paths"
+  ],
+  "safety_confirmations": {
+    "network_calls": false,
+    "soda_live_fetch": false,
+    "geocoding_api": false,
+    "production_writes": false,
+    "production_feed_files_modified": false,
+    "public_map_runtime_modified": false,
+    "wordpress_modified": false,
+    "nycinfocus_map_modified": false,
+    "iframe_embed_settings_modified": false,
+    "scheduled_workflows_modified": false,
+    "location_cache_read_or_write": false,
+    "live_staging_run": false,
+    "candidate_approval": false,
+    "candidate_promotion": false,
+    "registry_database_created": false,
+    "registry_importer_created": false,
+    "xri_g12_started": false
+  },
+  "expected_runtime_command": "python tools/registry/xri_g7_fixture_candidate_normalizer.py --pretty",
+  "expected_result": "pass",
+  "next_recommended_phase_gate": "XRI-G8 fixture-only candidate preview review report formatting; no live fetch, no geocoding, no production writes, no public map runtime changes, and no location_cache access.",
+  "review_gate": "open PR only; do not merge until Howard and ChatGPT review"
+}
