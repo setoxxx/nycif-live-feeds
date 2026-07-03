@@ -32,7 +32,8 @@ The normalizer must:
   - `geocode_status: not_geocoded`
   - `promotion_status: blocked`
 - generate deterministic `candidate_identity_key` from fixture fields only
-- preserve source location text without geocoding
+- preserve source location text where present without geocoding
+- allow missing source location text only with a location/context ambiguity flag
 - preserve ambiguity flags
 - keep `cpcm-i88g` and `xtsw-fqvh` as supporting-reference-only records, not public event candidates
 - fail closed on prohibited input and output paths
@@ -56,6 +57,10 @@ Preview records must include source identity, normalized title/reference text, s
 ## Identity rule
 
 `candidate_identity_key` may use only fixture-safe fields: source dataset ID, source-owned key, title/reference text, event start when present, and source location/reference text. It must not use review rank, row order, display order, coordinates, geocoding, `data/location_cache.json`, or production feed state.
+
+## Location text rule
+
+Missing source location text is valid only when paired with one of these ambiguity flags: `location_missing`, `safety_event_context_required`, or `agency_program_location_uncertain`. These flags do not authorize geocoding, approval, promotion, or production publication.
 
 ## Fail-closed paths
 
