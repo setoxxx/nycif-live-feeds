@@ -16,9 +16,16 @@
     "data/reports/registry_candidate_extractor_prototype_report.json",
     "data/fixtures/registry-candidate-extractor.sample.json"
   ],
-  "reads": [
+  "allowed_inputs": [
     "embedded sample rows",
-    "optional data/fixtures/registry-candidate-extractor.sample.json"
+    "data/fixtures/registry-candidate-extractor.sample.json"
+  ],
+  "blocked_inputs": [
+    "data/location_cache.json",
+    "production feed artifacts",
+    "public map files",
+    "workflow files",
+    "arbitrary local JSON paths"
   ],
   "writes": [
     "data/reports/registry_candidate_extractor_prototype_report.json only when --write-report is used"
@@ -42,7 +49,14 @@
   "self_check": {
     "status": "designed_available_not_executed_by_github_connector",
     "command": "python tools/registry/registry_candidate_extractor_prototype.py --self-check",
-    "expected_result": "pass"
+    "expected_result": "pass",
+    "includes": [
+      "allowed input guard",
+      "unsafe location_cache input rejection",
+      "unsafe production feed input rejection",
+      "arbitrary JSON input rejection",
+      "allowed output guard"
+    ]
   },
   "review_gate": "open PR only; do not merge until Howard and ChatGPT review"
 }
