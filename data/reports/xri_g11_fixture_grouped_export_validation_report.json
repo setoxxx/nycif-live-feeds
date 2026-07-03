@@ -1,0 +1,46 @@
+{
+  "schema": "nycif.xri_g11.fixture_grouped_export_validation.v1",
+  "phase": "XRI-G11",
+  "source_phase": "XRI-G10",
+  "source_pr": 14,
+  "source_merge_commit_sha": "e4f21a3c8179c7cd1ea28cb9a0f9eeeb6cf746d6",
+  "mode": "fixture_only_grouped_export_validation",
+  "production_allowed": false,
+  "created_files": [
+    "tools/registry/xri_g11_fixture_grouped_export_validator.py",
+    "data/reports/xri_g11_fixture_grouped_export_validation_report.json"
+  ],
+  "skipped_files": [
+    {
+      "path": "docs/xri-g11-fixture-only-grouped-export-validation-contract.md",
+      "reason": "connector blocked doc creation payload",
+      "created": false
+    }
+  ],
+  "checks": {
+    "required_sections_present": true,
+    "required_export_fields_present": true,
+    "rows_blocked": true,
+    "supporting_rows_non_public": true,
+    "no_coordinates": true,
+    "deterministic": true,
+    "path_guards": true,
+    "no_side_effects": true
+  },
+  "safety_confirmations": {
+    "network_calls": false,
+    "live_fetch": false,
+    "geocoding": false,
+    "production_writes": false,
+    "map_runtime_changes": false,
+    "wordpress_changes": false,
+    "location_cache_access": false,
+    "approval_or_promotion": false,
+    "registry_db_or_importer": false,
+    "xri_g12_started": false
+  },
+  "expected_runtime_command": "python tools/registry/xri_g11_fixture_grouped_export_validator.py --pretty",
+  "expected_result": "pass",
+  "result": "pass",
+  "review_gate": "Open PR only; do not merge; do not start XRI-G12."
+}
