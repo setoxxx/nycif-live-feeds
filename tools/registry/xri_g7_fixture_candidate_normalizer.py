@@ -28,6 +28,11 @@ BLOCKED_PARTS = (
 )
 SUPPORTING_REFERENCE_ONLY = {"cpcm-i88g", "xtsw-fqvh"}
 PRIMARY_EVENT_SOURCES = {"tvpp-9vvx", "fudw-fgrp", "6v4b-5gp4", "3vyj-dkjt"}
+LOCATION_CONTEXT_FLAGS = {
+    "location_missing",
+    "safety_event_context_required",
+    "agency_program_location_uncertain",
+}
 
 EMBEDDED_SAMPLE = {
     "schema": "nycif.xri_g7.candidate_normalizer.sample.v1",
@@ -189,6 +194,14 @@ def normalize_candidate(record: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def has_location_text_or_context(preview: dict[str, Any]) -> bool:
+    if preview["source_dataset_id"] in SUPPORTING_REFERENCE_ONLY:
+        return True
+    if preview.get("location_text") is not None:
+        return True
+    return bool(set(preview.get("ambiguity_flags") or []) & LOCATION_CONTEXT_FLAGS)
+
+
 def build_report(payload: dict[str, Any], input_source: str) -> dict[str, Any]:
     records = list(payload.get("records", []))
     previews = [normalize_candidate(record) for record in records]
@@ -219,10 +232,7 @@ def build_report(payload: dict[str, Any], input_source: str) -> dict[str, Any]:
             for preview in previews
         ),
         "deterministic_identity_keys_present": all(preview["candidate_identity_key"] for preview in previews),
-        "source_location_text_preserved": all(
-            preview["source_dataset_id"] in SUPPORTING_REFERENCE_ONLY or preview.get("location_text") is not None
-            for preview in previews
-        ),
+        "source_location_text_preserved": all(has_location_text_or_context(preview) for preview in previews),
         "ambiguity_flags_preserved": all(isinstance(preview.get("ambiguity_flags"), list) for preview in previews),
         "supporting_references_not_public_candidates": all(
             preview["public_event_candidate"] is False and preview["preview_type"] == "supporting_reference_only"
