@@ -1,0 +1,25 @@
+{
+  "schema": "nycif.xri_g4.sample_candidate_fixture.v1",
+  "production_allowed": false,
+  "purpose": "sample_only_preview",
+  "items": [
+    {
+      "source_dataset_id": "tvpp-9vvx",
+      "source_record_id": "sample-001",
+      "title": "Sample Event One",
+      "borough": "Manhattan",
+      "location_text": "Sample location text",
+      "event_start": "2026-07-15T10:00:00-04:00",
+      "event_end": "2026-07-15T18:00:00-04:00"
+    },
+    {
+      "source_dataset_id": "fudw-fgrp",
+      "source_record_id": "sample-002",
+      "title": "Sample Event Two",
+      "borough": "Brooklyn",
+      "location_text": "Sample location text",
+      "event_start": "2026-07-16T19:00:00-04:00",
+      "event_end": "2026-07-16T21:00:00-04:00"
+    }
+  ]
+}
