@@ -15,6 +15,7 @@ from typing import Any
 SCHEMA = "nycif.xri_g4.registry_candidate_extractor_prototype.v1"
 DEFAULT_INPUT = Path("data/fixtures/registry-candidate-extractor.sample.json")
 DEFAULT_REPORT = Path("data/reports/registry_candidate_extractor_prototype_report.json")
+ALLOWED_INPUTS = {str(DEFAULT_INPUT)}
 ALLOWED_OUTPUTS = {str(DEFAULT_REPORT)}
 BLOCKED_PARTS = (
     "location_cache.json",
@@ -50,19 +51,46 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def repo_path(path: Path) -> str:
+    return str(path).replace("\\", "/").lstrip("./")
+
+
+def has_blocked_part(value: str) -> bool:
+    lowered = value.lower()
+    return any(part in lowered for part in BLOCKED_PARTS)
+
+
+def fail_closed_input(path: Path | None) -> None:
+    if path is None:
+        return
+    value = repo_path(path)
+    if value not in ALLOWED_INPUTS:
+        raise SystemExit(f"blocked input path: {value}")
+    if has_blocked_part(value):
+        raise SystemExit(f"blocked input path: {value}")
+
+
 def fail_closed_output(path: Path) -> None:
-    value = str(path).replace("\\", "/")
+    value = repo_path(path)
     if value not in ALLOWED_OUTPUTS:
         raise SystemExit(f"blocked output path: {value}")
-    lowered = value.lower()
-    if any(part in lowered for part in BLOCKED_PARTS):
+    if has_blocked_part(value):
         raise SystemExit(f"blocked output path: {value}")
+
+
+def path_is_rejected_as_input(path: Path) -> bool:
+    try:
+        fail_closed_input(path)
+    except SystemExit:
+        return True
+    return False
 
 
 def load_rows(path: Path | None) -> tuple[list[dict[str, Any]], str]:
+    fail_closed_input(path)
     if path and path.exists():
         payload = json.loads(path.read_text(encoding="utf-8"))
-        return list(payload.get("items", [])), str(path)
+        return list(payload.get("items", [])), repo_path(path)
     return list(EMBEDDED_SAMPLE), "embedded_sample"
 
 
@@ -115,6 +143,7 @@ def build_report(rows: list[dict[str, Any]], input_source: str) -> dict[str, Any
             "registry_database_created": False,
             "xri_g12_started": False,
         },
+        "allowed_inputs": sorted(ALLOWED_INPUTS),
         "allowed_outputs": sorted(ALLOWED_OUTPUTS),
         "candidates": candidates,
     }
@@ -129,7 +158,11 @@ def self_check() -> dict[str, Any]:
             item["production_allowed"] is False and item["promotion_status"] == "blocked"
             for item in report["candidates"]
         ),
+        "allowed_input_guard": sorted(ALLOWED_INPUTS) == [str(DEFAULT_INPUT)],
         "allowed_output_guard": sorted(ALLOWED_OUTPUTS) == [str(DEFAULT_REPORT)],
+        "rejects_location_cache_input": path_is_rejected_as_input(Path("data/location_cache.json")),
+        "rejects_production_feed_input": path_is_rejected_as_input(Path("data/production/events.json")),
+        "rejects_arbitrary_json_input": path_is_rejected_as_input(Path("data/other.json")),
         "no_network_or_geocode_flags": report["safety"]["network_calls"] is False
         and report["safety"]["geocoding_api"] is False,
     }
