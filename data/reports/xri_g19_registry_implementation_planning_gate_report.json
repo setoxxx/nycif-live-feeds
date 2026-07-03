@@ -1,0 +1,85 @@
+{
+  "schema": "nycif.xri_g19.registry_implementation_planning_gate.v1",
+  "phase": "XRI-G19",
+  "source_phase": "XRI-G18",
+  "source_pull_request": 27,
+  "source_merge_commit_sha": "d0ab68f2d507ed81665f7f5aeeb46df0b6d7967b",
+  "mode": "non_production_registry_implementation_planning_gate",
+  "production_allowed": false,
+  "planning_only": true,
+  "allowed_files": [
+    "docs/xri-g19-registry-implementation-planning-gate-contract.md",
+    "data/reports/xri_g19_registry_implementation_planning_gate_report.json"
+  ],
+  "summarized_source_chain": {
+    "XRI-G13": "manual-review schema prototype",
+    "XRI-G14": "fixture validator",
+    "XRI-G15": "validator execution gate",
+    "XRI-G16": "failure-case fixtures",
+    "XRI-G17": "failure-case validator execution",
+    "XRI-G18": "validator summary and handoff gate"
+  },
+  "planning_requirements": {
+    "future_work_requires_separate_explicit_prompt": true,
+    "future_implementation_begins_non_production_only": true,
+    "fixture_or_test_only_data_required_unless_later_authorized": true,
+    "stable_identity_matching_required": [
+      "group_key",
+      "display_location",
+      "candidate_identity"
+    ],
+    "review_rank_must_not_be_used_as_identity": true,
+    "fail_closed_missing_identity_fields": true,
+    "fail_closed_missing_source_fields": true,
+    "fail_closed_missing_display_location_text_fields": true,
+    "fail_closed_invalid_reviewer_decision_fields": true,
+    "fail_closed_forbidden_approval_promotion_publishing_geocoding_values": true
+  },
+  "future_implementation_boundaries": {
+    "production_blocked": true,
+    "geocoding_blocked": true,
+    "promotion_blocked": true,
+    "publishing_blocked": true,
+    "registry_import_blocked": true,
+    "fixture_report_artifacts_not_production_runtime_input": true,
+    "no_public_map_wordpress_feeds_scheduled_workflow_or_runtime_publication": true
+  },
+  "future_implementation_minimum_requirements": [
+    "registry_record_identity_model",
+    "manual_review_record_schema",
+    "stable_matching_strategy",
+    "reviewer_decision_lifecycle",
+    "audit_fields",
+    "blocking_fields",
+    "fail_closed_validator_requirements",
+    "non_production_fixture_test_strategy",
+    "explicit_promotion_gate_requirements",
+    "explicit_production_authorization_gate_requirements",
+    "rollback_stop_conditions",
+    "public_output_blocking_conditions",
+    "geocoding_blocking_conditions",
+    "publishing_blocking_conditions"
+  ],
+  "safety_confirmations": {
+    "production_feeds_modified": false,
+    "public_map_runtime_modified": false,
+    "wordpress_modified": false,
+    "nycinfocus_map_modified": false,
+    "iframe_embed_settings_modified": false,
+    "scheduled_workflows_modified": false,
+    "location_cache_access": false,
+    "live_staging_run": false,
+    "soda_live_fetch": false,
+    "geocoding_run": false,
+    "candidate_approval": false,
+    "candidate_promotion": false,
+    "registry_database_implemented": false,
+    "registry_importer_implemented": false,
+    "runtime_publishing_behavior": false,
+    "xri_g20_started": false
+  },
+  "expected_result": "pass",
+  "result": "pass",
+  "review_gate": "Open pull request only; do not merge; do not start XRI-G20.",
+  "next_recommended_phase_gate": "XRI-G20 non-production registry/manual-review prototype scaffold gate only, after explicit review and merge approval."
+}
