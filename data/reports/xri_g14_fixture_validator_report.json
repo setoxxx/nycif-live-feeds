@@ -1,0 +1,68 @@
+{
+  "schema": "nycif.xri_g14.fixture_validator.v1",
+  "phase": "XRI-G14",
+  "source_phase": "XRI-G13",
+  "source_pr": 18,
+  "source_merge_commit_sha": "10509fb463a18a3fadb0ba39f29857981543ecc1",
+  "mode": "non_production_fixture_validator",
+  "production_allowed": false,
+  "allowed_files": [
+    "docs/xri-g14-fixture-validator-contract.md",
+    "data/reports/xri_g14_fixture_validator_report.json"
+  ],
+  "checks": {
+    "validator_prototype_only": true,
+    "production_allowed_false": true,
+    "required_field_presence_defined": true,
+    "identity_fields_defined": true,
+    "source_fields_defined": true,
+    "display_location_text_fields_defined": true,
+    "reviewer_decision_fields_defined": true,
+    "audit_fields_defined": true,
+    "blocking_fields_defined": true,
+    "allowed_review_decisions_defined": true,
+    "forbidden_review_decisions_defined": true,
+    "blocking_fields_must_remain_true": true,
+    "coordinate_absence_defined": true,
+    "production_path_absence_defined": true,
+    "runtime_importer_database_absence_defined": true,
+    "deterministic_fixture_ordering_defined": true,
+    "fixture_only_input_output_defined": true,
+    "fail_closed_behavior_defined": true,
+    "xri_g15_not_started": true
+  },
+  "allowed_review_decisions": [
+    "hold",
+    "reject",
+    "needs_more_context",
+    "eligible_for_future_review"
+  ],
+  "forbidden_review_decisions": [
+    "approved",
+    "geocoded",
+    "promoted",
+    "published"
+  ],
+  "safety_confirmations": {
+    "production_feeds_modified": false,
+    "public_map_runtime_modified": false,
+    "wordpress_modified": false,
+    "nycinfocus_map_modified": false,
+    "iframe_embed_settings_modified": false,
+    "scheduled_workflows_modified": false,
+    "location_cache_access": false,
+    "live_staging_run": false,
+    "soda_live_fetch": false,
+    "geocoding_run": false,
+    "candidate_approval": false,
+    "candidate_promotion": false,
+    "registry_database_created": false,
+    "registry_importer_created": false,
+    "runtime_publishing_behavior": false,
+    "xri_g15_started": false
+  },
+  "expected_result": "pass",
+  "result": "pass",
+  "review_gate": "Open PR only; do not merge; do not start XRI-G15.",
+  "next_recommended_phase_gate": "XRI-G15 non-production validator execution against fixture examples only, after explicit review and merge approval."
+}
