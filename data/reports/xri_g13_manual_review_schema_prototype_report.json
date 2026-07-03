@@ -1,0 +1,58 @@
+{
+  "schema": "nycif.xri_g13.manual_review_schema_prototype.v1",
+  "phase": "XRI-G13",
+  "source_phase": "XRI-G12",
+  "source_pr": 16,
+  "source_merge_commit_sha": "dd8eb2ae1d782db33fbdbda36ed954343cdde1f1",
+  "mode": "non_production_manual_review_schema_prototype",
+  "production_allowed": false,
+  "allowed_files": [
+    "docs/xri-g13-manual-review-schema-prototype-contract.md",
+    "data/reports/xri_g13_manual_review_schema_prototype_report.json"
+  ],
+  "checks": {
+    "schema_prototype_only": true,
+    "production_allowed_false": true,
+    "source_phase_recorded": true,
+    "manual_review_fields_defined": true,
+    "identity_source_location_audit_blocking_fields_defined": true,
+    "allowed_decisions_defined": true,
+    "forbidden_decisions_defined": true,
+    "fixture_examples_defined": true,
+    "xri_g14_not_started": true
+  },
+  "allowed_future_review_decisions": [
+    "hold",
+    "reject",
+    "needs_more_context",
+    "eligible_for_future_review"
+  ],
+  "forbidden_decisions": [
+    "approved",
+    "geocoded",
+    "promoted",
+    "published"
+  ],
+  "safety_confirmations": {
+    "production_feeds_modified": false,
+    "public_map_runtime_modified": false,
+    "wordpress_modified": false,
+    "nycinfocus_map_modified": false,
+    "iframe_embed_settings_modified": false,
+    "scheduled_workflows_modified": false,
+    "location_cache_access": false,
+    "live_staging_run": false,
+    "soda_live_fetch": false,
+    "geocoding_run": false,
+    "candidate_approval": false,
+    "candidate_promotion": false,
+    "registry_database_created": false,
+    "registry_importer_created": false,
+    "runtime_publishing_behavior": false,
+    "xri_g14_started": false
+  },
+  "expected_result": "pass",
+  "result": "pass",
+  "review_gate": "Open PR only; do not merge; do not start XRI-G14.",
+  "next_recommended_phase_gate": "XRI-G14 non-production fixture validator for the manual-review schema prototype only, after explicit review and merge approval."
+}
