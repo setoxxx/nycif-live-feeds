@@ -1,0 +1,48 @@
+{
+  "schema": "nycif.xri_g4.registry_candidate_extractor_prototype_report.v1",
+  "phase": "XRI-G4",
+  "mode": "read_only_prototype",
+  "production_allowed": false,
+  "branch": "xri-g4-readonly-candidate-extractor",
+  "allowed_files": [
+    "docs/read-only-candidate-extractor-prototype.md",
+    "tools/registry/registry_candidate_extractor_prototype.py",
+    "data/reports/registry_candidate_extractor_prototype_report.json",
+    "data/fixtures/registry-candidate-extractor.sample.json"
+  ],
+  "created_files": [
+    "docs/read-only-candidate-extractor-prototype.md",
+    "tools/registry/registry_candidate_extractor_prototype.py",
+    "data/reports/registry_candidate_extractor_prototype_report.json",
+    "data/fixtures/registry-candidate-extractor.sample.json"
+  ],
+  "reads": [
+    "embedded sample rows",
+    "optional data/fixtures/registry-candidate-extractor.sample.json"
+  ],
+  "writes": [
+    "data/reports/registry_candidate_extractor_prototype_report.json only when --write-report is used"
+  ],
+  "safety_confirmations": {
+    "network_calls": false,
+    "soda_live_fetch": false,
+    "geocoding_api": false,
+    "production_feed_writes": false,
+    "public_map_runtime_changes": false,
+    "wordpress_changes": false,
+    "iframe_embed_changes": false,
+    "scheduled_workflow_changes": false,
+    "location_cache_read_or_write": false,
+    "candidate_approval": false,
+    "candidate_promotion": false,
+    "registry_database_created": false,
+    "registry_importer_created": false,
+    "xri_g12_started": false
+  },
+  "self_check": {
+    "status": "designed_available_not_executed_by_github_connector",
+    "command": "python tools/registry/registry_candidate_extractor_prototype.py --self-check",
+    "expected_result": "pass"
+  },
+  "review_gate": "open PR only; do not merge until Howard and ChatGPT review"
+}
