@@ -1,0 +1,66 @@
+{
+  "schema": "nycif.xri_g6.mapping_validator.sample.v1",
+  "production_allowed": false,
+  "purpose": "fixture_only_validator_sample",
+  "parks_relationship": {
+    "future_layer": "one enriched Parks Events layer",
+    "primary_event_source": "fudw-fgrp",
+    "location_reference_source": "cpcm-i88g",
+    "category_reference_source": "xtsw-fqvh",
+    "live_joiner_created": false
+  },
+  "records": [
+    {
+      "source_dataset_id": "tvpp-9vvx",
+      "source_name": "NYC Permitted Event Information",
+      "source_record_id": "sample-tvpp-001",
+      "title": "Sample Street Event",
+      "location_text": "Sample Avenue between Example Street and Demo Place",
+      "event_start": "2026-07-20T10:00:00-04:00",
+      "event_end": "2026-07-20T18:00:00-04:00",
+      "ambiguity_flags": ["route_or_intersection_location"]
+    },
+    {
+      "source_dataset_id": "fudw-fgrp",
+      "source_name": "Parks Event Listing",
+      "source_record_id": "sample-parks-001",
+      "title": "Sample Park Program",
+      "event_start": "2026-07-21T12:00:00-04:00",
+      "event_end": "2026-07-21T14:00:00-04:00",
+      "location_text": "Sample Park Lawn",
+      "ambiguity_flags": ["parks_location_reference_present"]
+    },
+    {
+      "source_dataset_id": "cpcm-i88g",
+      "source_name": "Parks Event Locations",
+      "source_location_id": "sample-location-001",
+      "location_display_name": "Sample Park Lawn",
+      "borough": "Brooklyn",
+      "ambiguity_flags": ["parks_location_reference_only"]
+    },
+    {
+      "source_dataset_id": "xtsw-fqvh",
+      "source_name": "Parks Event Categories",
+      "source_category_id": "sample-category-001",
+      "category_display_name": "Outdoor Fitness",
+      "ambiguity_flags": ["parks_category_reference_only"]
+    },
+    {
+      "source_dataset_id": "6v4b-5gp4",
+      "source_name": "Public Programs Division Special Events",
+      "source_record_id": "sample-ppd-001",
+      "title": "Sample Public Program",
+      "event_start": "2026-07-22T11:00:00-04:00",
+      "location_text": "Sample Plaza",
+      "ambiguity_flags": ["agency_program_location_uncertain"]
+    },
+    {
+      "source_dataset_id": "3vyj-dkjt",
+      "source_name": "Safety Events",
+      "source_record_id": "sample-safety-001",
+      "title": "Sample Safety Event",
+      "event_start": "2026-07-23T09:00:00-04:00",
+      "ambiguity_flags": ["safety_event_context_required"]
+    }
+  ]
+}

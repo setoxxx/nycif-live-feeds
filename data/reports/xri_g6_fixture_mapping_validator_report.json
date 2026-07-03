@@ -1,0 +1,70 @@
+{
+  "schema": "nycif.xri_g6.fixture_mapping_validator_report.v1",
+  "phase": "XRI-G6",
+  "mode": "fixture_only_mapping_validator",
+  "production_allowed": false,
+  "branch": "xri-g6-validator",
+  "allowed_files": [
+    "docs/xri-g6-fixture-only-mapping-validator-contract.md",
+    "tools/registry/xri_g6_fixture_mapping_validator.py",
+    "data/reports/xri_g6_fixture_mapping_validator_report.json",
+    "data/fixtures/xri-g6-mapping-validator.sample.json"
+  ],
+  "created_files": [
+    "docs/xri-g6-fixture-only-mapping-validator-contract.md",
+    "tools/registry/xri_g6_fixture_mapping_validator.py",
+    "data/reports/xri_g6_fixture_mapping_validator_report.json",
+    "data/fixtures/xri-g6-mapping-validator.sample.json"
+  ],
+  "validator_contract": {
+    "fixture_only": true,
+    "embedded_sample_allowed": true,
+    "sample_fixture_allowed": true,
+    "required_fields_per_source_validated": true,
+    "optional_fields_recognized": true,
+    "ambiguity_flags_recognized": true,
+    "supporting_reference_only_sources_validated": ["cpcm-i88g", "xtsw-fqvh"],
+    "parks_relationship_contract_only": true,
+    "live_joiner_created": false,
+    "fail_closed_input_paths": true,
+    "fail_closed_output_paths": true
+  },
+  "allowed_inputs": [
+    "embedded sample data",
+    "data/fixtures/xri-g6-mapping-validator.sample.json"
+  ],
+  "allowed_outputs": [
+    "data/reports/xri_g6_fixture_mapping_validator_report.json"
+  ],
+  "blocked_paths": [
+    "data/location_cache.json",
+    "production feed paths",
+    "public map paths",
+    "WordPress paths",
+    "workflow paths",
+    "arbitrary local JSON paths"
+  ],
+  "safety_confirmations": {
+    "network_calls": false,
+    "soda_live_fetch": false,
+    "geocoding_api": false,
+    "production_writes": false,
+    "production_feed_files_modified": false,
+    "public_map_runtime_modified": false,
+    "wordpress_modified": false,
+    "nycinfocus_map_modified": false,
+    "iframe_embed_settings_modified": false,
+    "scheduled_workflows_modified": false,
+    "location_cache_read_or_write": false,
+    "live_staging_run": false,
+    "candidate_approval": false,
+    "candidate_promotion": false,
+    "registry_database_created": false,
+    "registry_importer_created": false,
+    "xri_g12_started": false
+  },
+  "expected_runtime_command": "python tools/registry/xri_g6_fixture_mapping_validator.py --pretty",
+  "expected_result": "pass",
+  "next_recommended_phase_gate": "XRI-G7 fixture-only candidate normalization rules; no live fetch, no geocoding, no production writes, no public map runtime changes, and no location_cache access.",
+  "review_gate": "open PR only; do not merge until Howard and ChatGPT review"
+}
