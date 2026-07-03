@@ -1,0 +1,73 @@
+{
+  "schema": "nycif.xri_g18.validator_summary_handoff.v1",
+  "phase": "XRI-G18",
+  "source_phase": "XRI-G17",
+  "source_pull_request": 25,
+  "source_merge_commit_sha": "0e9db5255da676a64d17420ca2b418670ea7539b",
+  "mode": "non_production_validator_summary_handoff",
+  "production_allowed": false,
+  "summary_handoff_only": true,
+  "allowed_files": [
+    "docs/xri-g18-validator-summary-handoff-contract.md",
+    "data/reports/xri_g18_validator_summary_handoff_report.json"
+  ],
+  "summarized_phases": {
+    "XRI-G13": "manual-review schema prototype only",
+    "XRI-G14": "non-production fixture validator contract only",
+    "XRI-G15": "non-production validator execution only",
+    "XRI-G16": "non-production validator failure-case fixtures only",
+    "XRI-G17": "non-production failure-case validator execution only"
+  },
+  "checks": {
+    "all_phases_fixture_prototype_report_only": true,
+    "no_production_behavior_enabled": true,
+    "no_registry_database_or_importer_created": true,
+    "no_public_map_runtime_modified": true,
+    "no_wordpress_behavior_modified": true,
+    "no_scheduled_workflows_modified": true,
+    "no_location_cache_access": true,
+    "no_live_staging": true,
+    "no_soda_live_fetch": true,
+    "no_geocoding": true,
+    "no_candidate_approval": true,
+    "no_candidate_promotion": true,
+    "no_publishing": true,
+    "xri_g19_not_started": true
+  },
+  "handoff_requirements": {
+    "future_work_requires_separate_explicit_prompt": true,
+    "future_work_requires_new_non_production_contract": true,
+    "stable_identity_matching_required": [
+      "group_key",
+      "display_location",
+      "candidate_identity"
+    ],
+    "review_rank_must_not_be_used_as_identity": true,
+    "fail_closed_validation_must_continue": true,
+    "production_geocoding_promotion_publishing_registry_import_remain_blocked": true,
+    "fixture_report_artifacts_must_not_be_production_runtime_input": true,
+    "no_public_map_wordpress_feeds_or_scheduled_workflow_publishing_from_artifacts": true
+  },
+  "safety_confirmations": {
+    "production_feeds_modified": false,
+    "public_map_runtime_modified": false,
+    "wordpress_modified": false,
+    "nycinfocus_map_modified": false,
+    "iframe_embed_settings_modified": false,
+    "scheduled_workflows_modified": false,
+    "location_cache_access": false,
+    "live_staging_run": false,
+    "soda_live_fetch": false,
+    "geocoding_run": false,
+    "candidate_approval": false,
+    "candidate_promotion": false,
+    "registry_database_created": false,
+    "registry_importer_created": false,
+    "runtime_publishing_behavior": false,
+    "xri_g19_started": false
+  },
+  "expected_result": "pass",
+  "result": "pass",
+  "review_gate": "Open pull request only; do not merge; do not start XRI-G19.",
+  "next_recommended_phase_gate": "XRI-G19 non-production registry implementation planning gate only, after explicit review and merge approval."
+}
