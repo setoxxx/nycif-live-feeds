@@ -1,0 +1,64 @@
+{
+  "schema": "nycif.xri_g5.source_field_mapping_contract_report.v1",
+  "phase": "XRI-G5",
+  "mode": "planning_only_contract",
+  "production_allowed": false,
+  "branch": "xri-g5-mapping",
+  "allowed_files": [
+    "docs/xri-g5-source-field-mapping-contract.md",
+    "data/reports/xri_g5_source_field_mapping_contract_report.json",
+    "data/fixtures/xri-g5-source-field-mapping.sample.json"
+  ],
+  "created_files": [
+    "docs/xri-g5-source-field-mapping-contract.md",
+    "data/reports/xri_g5_source_field_mapping_contract_report.json",
+    "data/fixtures/xri-g5-source-field-mapping.sample.json"
+  ],
+  "mvp_sources": [
+    "tvpp-9vvx",
+    "fudw-fgrp",
+    "cpcm-i88g",
+    "xtsw-fqvh",
+    "6v4b-5gp4",
+    "3vyj-dkjt"
+  ],
+  "contract_outputs": {
+    "source_by_source_field_mapping": true,
+    "required_fields_identified": true,
+    "optional_fields_identified": true,
+    "missing_field_handling_defined": true,
+    "ambiguity_flags_defined": true,
+    "source_owned_ids_defined": true,
+    "candidate_identity_keys_defined": true,
+    "location_text_without_geocoding_defined": true,
+    "parks_relationship_contract_defined": true,
+    "live_joiner_created": false
+  },
+  "safety_confirmations": {
+    "production_feed_files_modified": false,
+    "public_map_runtime_modified": false,
+    "wordpress_modified": false,
+    "nycinfocus_map_modified": false,
+    "iframe_embed_settings_modified": false,
+    "scheduled_workflows_modified": false,
+    "location_cache_read_or_write": false,
+    "live_staging_run": false,
+    "soda_live_fetch": false,
+    "geocoding": false,
+    "candidate_approval": false,
+    "candidate_promotion": false,
+    "registry_database_created": false,
+    "registry_importer_created": false,
+    "xri_g12_started": false
+  },
+  "parks_contract": {
+    "future_layer": "one enriched Parks Events layer",
+    "primary_event_source": "fudw-fgrp",
+    "location_reference_source": "cpcm-i88g",
+    "category_reference_source": "xtsw-fqvh",
+    "live_joiner_created": false,
+    "future_join_authority": "stable Parks source-owned keys only"
+  },
+  "next_recommended_phase_gate": "XRI-G6 fixture-only mapping validator contract or prototype; still no live fetch, no geocoding, no production writes, no public map runtime changes, and no location_cache access.",
+  "review_gate": "open PR only; do not merge until Howard and ChatGPT review"
+}
