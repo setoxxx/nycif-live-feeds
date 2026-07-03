@@ -1,0 +1,44 @@
+{
+  "schema": "nycif.xri_g12.planning_gate.v1",
+  "phase": "XRI-G12",
+  "source_phase": "XRI-G11",
+  "source_pr": 15,
+  "source_merge_commit_sha": "1718a1d2e93eadbe71f498f050ec88cb272d4a3c",
+  "mode": "planning_gate_only",
+  "production_allowed": false,
+  "allowed_files": [
+    "docs/xri-g12-planning-gate-contract.md",
+    "data/reports/xri_g12_planning_gate_report.json"
+  ],
+  "checks": {
+    "planning_only": true,
+    "production_allowed_false": true,
+    "source_phase_recorded": true,
+    "manual_review_boundaries_defined": true,
+    "human_decision_points_defined": true,
+    "audit_fields_defined": true,
+    "xri_g13_not_started": true
+  },
+  "safety_confirmations": {
+    "production_feeds_modified": false,
+    "public_map_runtime_modified": false,
+    "wordpress_modified": false,
+    "nycinfocus_map_modified": false,
+    "iframe_embed_settings_modified": false,
+    "scheduled_workflows_modified": false,
+    "location_cache_access": false,
+    "live_staging_run": false,
+    "soda_live_fetch": false,
+    "geocoding_run": false,
+    "candidate_approval": false,
+    "candidate_promotion": false,
+    "registry_database_created": false,
+    "registry_importer_created": false,
+    "runtime_publishing_behavior": false,
+    "xri_g13_started": false
+  },
+  "expected_result": "pass",
+  "result": "pass",
+  "review_gate": "Open PR only; do not merge; do not start XRI-G13.",
+  "next_recommended_phase_gate": "XRI-G13 non-production manual-review schema prototype only, after explicit review and merge approval."
+}
