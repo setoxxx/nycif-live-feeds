@@ -1,23 +1,23 @@
 {
   "borough_group_counts": {
     "Bronx": 39,
-    "Brooklyn": 87,
+    "Brooklyn": 86,
     "Manhattan": 96,
     "Queens": 92,
-    "Staten Island": 24
+    "Staten Island": 23
   },
   "complexity_counts": {
-    "multi_segment_corridor": 39,
+    "multi_segment_corridor": 38,
     "park_or_facility_subsite": 253,
-    "street_between_pair": 46
+    "street_between_pair": 45
   },
   "confidence_counts": {
-    "manual_review_first": 39,
-    "review_candidate": 299
+    "manual_review_first": 38,
+    "review_candidate": 298
   },
-  "generated_at_utc": "2026-07-03T23:19:23.875565+00:00",
-  "geocoding_queue_count": 299,
-  "input_review_events": 2090,
+  "generated_at_utc": "2026-07-04T04:00:32.997579+00:00",
+  "geocoding_queue_count": 298,
+  "input_review_events": 2075,
   "location_cache_modified": false,
   "location_groups_readable_compact": true,
   "phase": "phase_2_controlled_gps_review",
@@ -28,42 +28,28 @@
     {
       "borough": "Manhattan",
       "confidence_hint": "review_candidate",
-      "date_count": 26,
+      "date_count": 25,
       "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
       "event_agencies": [
         [
           "Parks Department",
-          26
+          25
         ]
       ],
-      "event_count": 26,
+      "event_count": 25,
       "event_types": [
         [
           "Special Event",
-          26
+          25
         ]
       ],
-      "first_date": "2026-07-03",
+      "first_date": "2026-07-04",
       "geocoder_query": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02, Manhattan, New York, NY",
       "group_key": "manhattan|langston hughes playground st nicholas playground north langston hughes playground basketball 01 langston hughes playground st nicholas playground north langston hughes playground basketball 02",
       "last_date": "2026-07-28",
       "location_complexity": "park_or_facility_subsite",
       "publish_status": "not_geocoded_not_public",
       "sample_events": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-03",
-          "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "8461",
-            "8462"
-          ],
-          "source_event_id": "955891",
-          "start_date_time": "2026-07-03T15:57:00.000",
-          "title": "Construction"
-        },
         {
           "borough": "Manhattan",
           "date": "2026-07-04",
@@ -91,6 +77,20 @@
           "source_event_id": "955891",
           "start_date_time": "2026-07-05T15:57:00.000",
           "title": "Construction"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-06",
+          "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "8461",
+            "8462"
+          ],
+          "source_event_id": "955891",
+          "start_date_time": "2026-07-06T15:57:00.000",
+          "title": "Construction"
         }
       ],
       "sample_events_truncated": true,
@@ -105,7 +105,7 @@
       "top_titles": [
         [
           "Construction",
-          26
+          25
         ]
       ],
       "unique_source_event_ids": 1
@@ -194,41 +194,28 @@
     {
       "borough": "Manhattan",
       "confidence_hint": "review_candidate",
-      "date_count": 22,
+      "date_count": 21,
       "display_location": "Riverside Park South: 71st St South-Basketball-14",
       "event_agencies": [
         [
           "Parks Department",
-          22
+          21
         ]
       ],
-      "event_count": 22,
+      "event_count": 21,
       "event_types": [
         [
           "Sport - Youth",
-          22
+          21
         ]
       ],
-      "first_date": "2026-07-03",
+      "first_date": "2026-07-04",
       "geocoder_query": "Riverside Park South: 71st St South-Basketball-14, Manhattan, New York, NY",
       "group_key": "manhattan|riverside park south 71st st south basketball 14",
       "last_date": "2026-07-28",
       "location_complexity": "park_or_facility_subsite",
       "publish_status": "not_geocoded_not_public",
       "sample_events": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-03",
-          "display_location": "Riverside Park South: 71st St South-Basketball-14",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "10075"
-          ],
-          "source_event_id": "904748",
-          "start_date_time": "2026-07-03T15:00:00.000",
-          "title": "Basketball"
-        },
         {
           "borough": "Manhattan",
           "date": "2026-07-04",
@@ -254,6 +241,19 @@
           "source_event_id": "904748",
           "start_date_time": "2026-07-06T15:00:00.000",
           "title": "Basketball"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-07",
+          "display_location": "Riverside Park South: 71st St South-Basketball-14",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "10075"
+          ],
+          "source_event_id": "904748",
+          "start_date_time": "2026-07-07T15:00:00.000",
+          "title": "Basketball"
         }
       ],
       "sample_events_truncated": true,
@@ -267,7 +267,7 @@
       "top_titles": [
         [
           "Basketball",
-          22
+          21
         ]
       ],
       "unique_source_event_ids": 1
@@ -439,253 +439,6 @@
         ]
       ],
       "unique_source_event_ids": 3
-    },
-    {
-      "borough": "Brooklyn",
-      "confidence_hint": "review_candidate",
-      "date_count": 18,
-      "display_location": "Gravesend Park: Lawn Area",
-      "event_agencies": [
-        [
-          "Parks Department",
-          18
-        ]
-      ],
-      "event_count": 18,
-      "event_types": [
-        [
-          "Special Event",
-          18
-        ]
-      ],
-      "first_date": "2026-07-03",
-      "geocoder_query": "Gravesend Park: Lawn Area, Brooklyn, New York, NY",
-      "group_key": "brooklyn|gravesend park lawn area",
-      "last_date": "2026-07-28",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-03",
-          "display_location": "Gravesend Park: Lawn Area",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "4558"
-          ],
-          "source_event_id": "940445",
-          "start_date_time": "2026-07-03T10:00:00.000",
-          "title": "Miscellaneous"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-06",
-          "display_location": "Gravesend Park: Lawn Area",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "4558"
-          ],
-          "source_event_id": "940445",
-          "start_date_time": "2026-07-06T10:00:00.000",
-          "title": "Miscellaneous"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-07",
-          "display_location": "Gravesend Park: Lawn Area",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "4558"
-          ],
-          "source_event_id": "940445",
-          "start_date_time": "2026-07-07T10:00:00.000",
-          "title": "Miscellaneous"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Gravesend Park, Brooklyn, New York, NY",
-      "source_cemsid_sample": [
-        "4558"
-      ],
-      "source_event_ids_sample": [
-        "940445"
-      ],
-      "top_titles": [
-        [
-          "Miscellaneous",
-          18
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Brooklyn",
-      "confidence_hint": "review_candidate",
-      "date_count": 18,
-      "display_location": "Patrick O'Rourke Park (PS 201): Multi Purpose Play Area-01   ,Patrick O'Rourke Park (PS 201): Basketball-01",
-      "event_agencies": [
-        [
-          "Parks Department",
-          18
-        ]
-      ],
-      "event_count": 18,
-      "event_types": [
-        [
-          "Special Event",
-          18
-        ]
-      ],
-      "first_date": "2026-07-03",
-      "geocoder_query": "Patrick O'Rourke Park (PS 201): Multi Purpose Play Area-01   ,Patrick O'Rourke Park (PS 201): Basketball-01, Brooklyn, New York, NY",
-      "group_key": "brooklyn|patrick o rourke park ps 201 multi purpose play area 01 patrick o rourke park ps 201 basketball 01",
-      "last_date": "2026-07-28",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-03",
-          "display_location": "Patrick O'Rourke Park (PS 201): Multi Purpose Play Area-01   ,Patrick O'Rourke Park (PS 201): Basketball-01",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "10895",
-            "9743"
-          ],
-          "source_event_id": "944878",
-          "start_date_time": "2026-07-03T13:00:00.000",
-          "title": "Miscellaneous"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-06",
-          "display_location": "Patrick O'Rourke Park (PS 201): Multi Purpose Play Area-01   ,Patrick O'Rourke Park (PS 201): Basketball-01",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "10895",
-            "9743"
-          ],
-          "source_event_id": "944878",
-          "start_date_time": "2026-07-06T13:00:00.000",
-          "title": "Miscellaneous"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-07",
-          "display_location": "Patrick O'Rourke Park (PS 201): Multi Purpose Play Area-01   ,Patrick O'Rourke Park (PS 201): Basketball-01",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "10895",
-            "9743"
-          ],
-          "source_event_id": "944878",
-          "start_date_time": "2026-07-07T13:00:00.000",
-          "title": "Miscellaneous"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Patrick O'Rourke Park (PS 201), Brooklyn, New York, NY",
-      "source_cemsid_sample": [
-        "10895",
-        "9743"
-      ],
-      "source_event_ids_sample": [
-        "944878"
-      ],
-      "top_titles": [
-        [
-          "Miscellaneous",
-          18
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Manhattan",
-      "confidence_hint": "review_candidate",
-      "date_count": 18,
-      "display_location": "Fort Washington Park: Volleyball-01",
-      "event_agencies": [
-        [
-          "Parks Department",
-          18
-        ]
-      ],
-      "event_count": 18,
-      "event_types": [
-        [
-          "Sport - Youth",
-          18
-        ]
-      ],
-      "first_date": "2026-07-03",
-      "geocoder_query": "Fort Washington Park: Volleyball-01, Manhattan, New York, NY",
-      "group_key": "manhattan|fort washington park volleyball 01",
-      "last_date": "2026-07-28",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-03",
-          "display_location": "Fort Washington Park: Volleyball-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "10985"
-          ],
-          "source_event_id": "909449",
-          "start_date_time": "2026-07-03T09:00:00.000",
-          "title": "Volleyball"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-06",
-          "display_location": "Fort Washington Park: Volleyball-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "10985"
-          ],
-          "source_event_id": "909449",
-          "start_date_time": "2026-07-06T09:00:00.000",
-          "title": "Volleyball"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-07",
-          "display_location": "Fort Washington Park: Volleyball-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "10985"
-          ],
-          "source_event_id": "909449",
-          "start_date_time": "2026-07-07T09:00:00.000",
-          "title": "Volleyball"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Fort Washington Park, Manhattan, New York, NY",
-      "source_cemsid_sample": [
-        "10985"
-      ],
-      "source_event_ids_sample": [
-        "909449"
-      ],
-      "top_titles": [
-        [
-          "Volleyball",
-          18
-        ]
-      ],
-      "unique_source_event_ids": 1
     },
     {
       "borough": "Queens",
@@ -1096,87 +849,6 @@
         ]
       ],
       "unique_source_event_ids": 2
-    },
-    {
-      "borough": "Brooklyn",
-      "confidence_hint": "review_candidate",
-      "date_count": 17,
-      "display_location": "Friends Field: Lawn Area",
-      "event_agencies": [
-        [
-          "Parks Department",
-          17
-        ]
-      ],
-      "event_count": 17,
-      "event_types": [
-        [
-          "Special Event",
-          17
-        ]
-      ],
-      "first_date": "2026-07-03",
-      "geocoder_query": "Friends Field: Lawn Area, Brooklyn, New York, NY",
-      "group_key": "brooklyn|friends field lawn area",
-      "last_date": "2026-07-28",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-03",
-          "display_location": "Friends Field: Lawn Area",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "4251"
-          ],
-          "source_event_id": "940431",
-          "start_date_time": "2026-07-03T10:00:00.000",
-          "title": "Miscellaneous"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-06",
-          "display_location": "Friends Field: Lawn Area",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "4251"
-          ],
-          "source_event_id": "940431",
-          "start_date_time": "2026-07-06T10:00:00.000",
-          "title": "Miscellaneous"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-07",
-          "display_location": "Friends Field: Lawn Area",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "4251"
-          ],
-          "source_event_id": "940431",
-          "start_date_time": "2026-07-07T10:00:00.000",
-          "title": "Miscellaneous"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Friends Field, Brooklyn, New York, NY",
-      "source_cemsid_sample": [
-        "4251"
-      ],
-      "source_event_ids_sample": [
-        "940431"
-      ],
-      "top_titles": [
-        [
-          "Miscellaneous",
-          17
-        ]
-      ],
-      "unique_source_event_ids": 1
     },
     {
       "borough": "Bronx",
@@ -2109,6 +1781,172 @@
       "borough": "Brooklyn",
       "confidence_hint": "review_candidate",
       "date_count": 17,
+      "display_location": "Gravesend Park: Lawn Area",
+      "event_agencies": [
+        [
+          "Parks Department",
+          17
+        ]
+      ],
+      "event_count": 17,
+      "event_types": [
+        [
+          "Special Event",
+          17
+        ]
+      ],
+      "first_date": "2026-07-06",
+      "geocoder_query": "Gravesend Park: Lawn Area, Brooklyn, New York, NY",
+      "group_key": "brooklyn|gravesend park lawn area",
+      "last_date": "2026-07-28",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-06",
+          "display_location": "Gravesend Park: Lawn Area",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "4558"
+          ],
+          "source_event_id": "940445",
+          "start_date_time": "2026-07-06T10:00:00.000",
+          "title": "Miscellaneous"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-07",
+          "display_location": "Gravesend Park: Lawn Area",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "4558"
+          ],
+          "source_event_id": "940445",
+          "start_date_time": "2026-07-07T10:00:00.000",
+          "title": "Miscellaneous"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-08",
+          "display_location": "Gravesend Park: Lawn Area",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "4558"
+          ],
+          "source_event_id": "940445",
+          "start_date_time": "2026-07-08T10:00:00.000",
+          "title": "Miscellaneous"
+        }
+      ],
+      "sample_events_truncated": true,
+      "simplified_geocoder_query": "Gravesend Park, Brooklyn, New York, NY",
+      "source_cemsid_sample": [
+        "4558"
+      ],
+      "source_event_ids_sample": [
+        "940445"
+      ],
+      "top_titles": [
+        [
+          "Miscellaneous",
+          17
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
+      "borough": "Brooklyn",
+      "confidence_hint": "review_candidate",
+      "date_count": 17,
+      "display_location": "Patrick O'Rourke Park (PS 201): Multi Purpose Play Area-01   ,Patrick O'Rourke Park (PS 201): Basketball-01",
+      "event_agencies": [
+        [
+          "Parks Department",
+          17
+        ]
+      ],
+      "event_count": 17,
+      "event_types": [
+        [
+          "Special Event",
+          17
+        ]
+      ],
+      "first_date": "2026-07-06",
+      "geocoder_query": "Patrick O'Rourke Park (PS 201): Multi Purpose Play Area-01   ,Patrick O'Rourke Park (PS 201): Basketball-01, Brooklyn, New York, NY",
+      "group_key": "brooklyn|patrick o rourke park ps 201 multi purpose play area 01 patrick o rourke park ps 201 basketball 01",
+      "last_date": "2026-07-28",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-06",
+          "display_location": "Patrick O'Rourke Park (PS 201): Multi Purpose Play Area-01   ,Patrick O'Rourke Park (PS 201): Basketball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "10895",
+            "9743"
+          ],
+          "source_event_id": "944878",
+          "start_date_time": "2026-07-06T13:00:00.000",
+          "title": "Miscellaneous"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-07",
+          "display_location": "Patrick O'Rourke Park (PS 201): Multi Purpose Play Area-01   ,Patrick O'Rourke Park (PS 201): Basketball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "10895",
+            "9743"
+          ],
+          "source_event_id": "944878",
+          "start_date_time": "2026-07-07T13:00:00.000",
+          "title": "Miscellaneous"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-08",
+          "display_location": "Patrick O'Rourke Park (PS 201): Multi Purpose Play Area-01   ,Patrick O'Rourke Park (PS 201): Basketball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "10895",
+            "9743"
+          ],
+          "source_event_id": "944878",
+          "start_date_time": "2026-07-08T13:00:00.000",
+          "title": "Miscellaneous"
+        }
+      ],
+      "sample_events_truncated": true,
+      "simplified_geocoder_query": "Patrick O'Rourke Park (PS 201), Brooklyn, New York, NY",
+      "source_cemsid_sample": [
+        "10895",
+        "9743"
+      ],
+      "source_event_ids_sample": [
+        "944878"
+      ],
+      "top_titles": [
+        [
+          "Miscellaneous",
+          17
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
+      "borough": "Brooklyn",
+      "confidence_hint": "review_candidate",
+      "date_count": 17,
       "display_location": "McDonald Playground: Tennis-01",
       "event_agencies": [
         [
@@ -2748,6 +2586,87 @@
       "top_titles": [
         [
           "Tennis",
+          17
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
+      "borough": "Manhattan",
+      "confidence_hint": "review_candidate",
+      "date_count": 17,
+      "display_location": "Fort Washington Park: Volleyball-01",
+      "event_agencies": [
+        [
+          "Parks Department",
+          17
+        ]
+      ],
+      "event_count": 17,
+      "event_types": [
+        [
+          "Sport - Youth",
+          17
+        ]
+      ],
+      "first_date": "2026-07-06",
+      "geocoder_query": "Fort Washington Park: Volleyball-01, Manhattan, New York, NY",
+      "group_key": "manhattan|fort washington park volleyball 01",
+      "last_date": "2026-07-28",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-06",
+          "display_location": "Fort Washington Park: Volleyball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "10985"
+          ],
+          "source_event_id": "909449",
+          "start_date_time": "2026-07-06T09:00:00.000",
+          "title": "Volleyball"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-07",
+          "display_location": "Fort Washington Park: Volleyball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "10985"
+          ],
+          "source_event_id": "909449",
+          "start_date_time": "2026-07-07T09:00:00.000",
+          "title": "Volleyball"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-08",
+          "display_location": "Fort Washington Park: Volleyball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "10985"
+          ],
+          "source_event_id": "909449",
+          "start_date_time": "2026-07-08T09:00:00.000",
+          "title": "Volleyball"
+        }
+      ],
+      "sample_events_truncated": true,
+      "simplified_geocoder_query": "Fort Washington Park, Manhattan, New York, NY",
+      "source_cemsid_sample": [
+        "10985"
+      ],
+      "source_event_ids_sample": [
+        "909449"
+      ],
+      "top_titles": [
+        [
+          "Volleyball",
           17
         ]
       ],
@@ -3420,6 +3339,87 @@
       "top_titles": [
         [
           "Bike Safety Class - McCarren - July 2026",
+          16
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
+      "borough": "Brooklyn",
+      "confidence_hint": "review_candidate",
+      "date_count": 16,
+      "display_location": "Friends Field: Lawn Area",
+      "event_agencies": [
+        [
+          "Parks Department",
+          16
+        ]
+      ],
+      "event_count": 16,
+      "event_types": [
+        [
+          "Special Event",
+          16
+        ]
+      ],
+      "first_date": "2026-07-06",
+      "geocoder_query": "Friends Field: Lawn Area, Brooklyn, New York, NY",
+      "group_key": "brooklyn|friends field lawn area",
+      "last_date": "2026-07-28",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-06",
+          "display_location": "Friends Field: Lawn Area",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "4251"
+          ],
+          "source_event_id": "940431",
+          "start_date_time": "2026-07-06T10:00:00.000",
+          "title": "Miscellaneous"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-07",
+          "display_location": "Friends Field: Lawn Area",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "4251"
+          ],
+          "source_event_id": "940431",
+          "start_date_time": "2026-07-07T10:00:00.000",
+          "title": "Miscellaneous"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-08",
+          "display_location": "Friends Field: Lawn Area",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "4251"
+          ],
+          "source_event_id": "940431",
+          "start_date_time": "2026-07-08T10:00:00.000",
+          "title": "Miscellaneous"
+        }
+      ],
+      "sample_events_truncated": true,
+      "simplified_geocoder_query": "Friends Field, Brooklyn, New York, NY",
+      "source_cemsid_sample": [
+        "4251"
+      ],
+      "source_event_ids_sample": [
+        "940431"
+      ],
+      "top_titles": [
+        [
+          "Miscellaneous",
           16
         ]
       ],
@@ -4158,5 +4158,5 @@
       "unique_source_event_ids": 2
     }
   ],
-  "unique_location_groups": 338
+  "unique_location_groups": 336
 }
