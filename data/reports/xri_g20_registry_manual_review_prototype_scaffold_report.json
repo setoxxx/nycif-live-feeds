@@ -1,0 +1,70 @@
+{
+  "schema": "nycif.xri_g20.registry_manual_review_prototype_scaffold.v1",
+  "phase": "XRI-G20",
+  "source_phase": "XRI-G19",
+  "source_pull_request": 28,
+  "source_merge_commit_sha": "aea4976a75b60f45033690b725867d65f4c4636c",
+  "mode": "non_production_registry_manual_review_prototype_scaffold",
+  "production_allowed": false,
+  "prototype_scaffold_only": true,
+  "completion_map_at_junction": {
+    "completed_and_merged": "XRI-G10 through XRI-G19: 100%",
+    "current_next_phase": "XRI-G20: not started at gate entry; in progress only after branch/pull request creation",
+    "safe_non_production_registry_manual_review_prototype": "about 75% complete at gate entry",
+    "full_production_public_map_registry_use": "about 45-55% complete at gate entry"
+  },
+  "source_chain_summary": [
+    "XRI-G13 manual-review schema prototype",
+    "XRI-G14 fixture validator",
+    "XRI-G15 validator execution gate",
+    "XRI-G16 failure-case fixtures",
+    "XRI-G17 failure-case validator execution",
+    "XRI-G18 validator summary and handoff gate",
+    "XRI-G19 registry implementation planning gate"
+  ],
+  "allowed_files": [
+    "docs/xri-g20-registry-manual-review-prototype-scaffold-contract.md",
+    "data/reports/xri_g20_registry_manual_review_prototype_scaffold_report.json"
+  ],
+  "identity_model": {
+    "stable_identity_fields": ["group_key", "display_location", "candidate_identity"],
+    "review_rank_as_identity_forbidden": true
+  },
+  "allowed_decision_values": ["hold", "reject", "needs_more_context", "eligible_for_future_review"],
+  "forbidden_decision_values": ["approved", "geocoded", "promoted", "published"],
+  "required_blocking_fields": ["production_blocked", "geocode_blocked", "promotion_blocked", "publishing_blocked", "registry_import_blocked"],
+  "fail_closed_requirements": {
+    "blocking_fields_default_true": true,
+    "missing_blocking_field_fails_closed": true,
+    "false_blocking_field_fails_closed_unless_later_gate_authorizes": true,
+    "missing_identity_fields_fail_closed": true,
+    "forbidden_decision_values_fail_closed": true,
+    "coordinate_fields_fail_closed": true,
+    "public_output_targets_fail_closed": true
+  },
+  "must_not_include_fields_or_targets": ["latitude", "longitude", "lat", "lon", "lng", "coordinates", "geometry", "production_path", "wordpress_target", "public_map_target", "scheduled_workflow_target", "publishing_target"],
+  "safety_confirmations": {
+    "production_feeds_modified": false,
+    "public_map_runtime_modified": false,
+    "wordpress_modified": false,
+    "nycinfocus_map_modified": false,
+    "iframe_embed_settings_modified": false,
+    "scheduled_workflows_modified": false,
+    "location_cache_access": false,
+    "live_staging_run": false,
+    "soda_live_fetch": false,
+    "geocoding_run": false,
+    "candidate_approval": false,
+    "candidate_promotion": false,
+    "production_registry_database_implemented": false,
+    "production_registry_importer_implemented": false,
+    "runtime_publishing_behavior": false,
+    "production_runtime_input": false,
+    "public_output": false,
+    "xri_g21_started": false
+  },
+  "expected_result": "pass",
+  "result": "pass",
+  "review_gate": "Open pull request only; do not merge; do not start XRI-G21.",
+  "next_recommended_phase_gate": "XRI-G21 non-production prototype scaffold validator gate only, after explicit review and merge approval."
+}
