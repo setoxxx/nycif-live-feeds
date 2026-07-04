@@ -1,0 +1,54 @@
+{
+  "schema": "nycif.xri_g28.non_production_manual_review_export_sample.v1",
+  "phase": "XRI-G28",
+  "source_phase": "XRI-G27",
+  "source_pull_request": 37,
+  "source_merge_commit_sha": "f5c6a4a71063565f4b634e683e44c42fdabdf520",
+  "mode": "non_production_manual_review_export_sample",
+  "sample_only": true,
+  "production_artifact": false,
+  "export_mode": "non_production_manual_review_export_contract",
+  "records": [
+    {
+      "group_key": "sample-xri-g28-group-001",
+      "display_location": "Sample Only Location Alpha",
+      "candidate_identity": "sample-xri-g28-group-001::sample-only-location-alpha",
+      "review_status": "needs_review",
+      "review_reason": "Synthetic sample row for XRI-G28 contract shape.",
+      "review_notes": "Sample-only non-production row for field-shape demonstration.",
+      "review_rank": 1,
+      "source_phase": "XRI-G28",
+      "export_mode": "non_production_manual_review_export_contract",
+      "production_artifact": false
+    },
+    {
+      "group_key": "sample-xri-g28-group-002",
+      "display_location": "Sample Only Location Beta",
+      "candidate_identity": "sample-xri-g28-group-002::sample-only-location-beta",
+      "review_status": "correction_needed",
+      "review_reason": "Synthetic sample row for XRI-G28 correction-needed shape.",
+      "review_notes": "Sample-only non-production row for field-shape demonstration.",
+      "review_rank": 2,
+      "source_phase": "XRI-G28",
+      "export_mode": "non_production_manual_review_export_contract",
+      "production_artifact": false
+    }
+  ],
+  "safety_confirmations": {
+    "sample_only": true,
+    "production_artifact": false,
+    "production_export_behavior": false,
+    "registry_write_performed": false,
+    "registry_import_performed": false,
+    "public_runtime_output": false,
+    "public_map_output": false,
+    "wordpress_output": false,
+    "scheduled_workflow_change": false,
+    "location_cache_access": false,
+    "geocoding_run": false,
+    "candidate_approval": false,
+    "candidate_promotion": false,
+    "publishing_run": false,
+    "executable_production_behavior": false
+  }
+}
