@@ -1,45 +1,31 @@
 {
-  "generated_at_utc": "2026-07-04T23:12:45.246177+00:00",
+  "generated_at_utc": "2026-07-05T00:12:31.377093+00:00",
   "groups": [
     {
       "borough": "Manhattan",
       "confidence_hint": "review_candidate",
-      "date_count": 25,
+      "date_count": 24,
       "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
       "event_agencies": [
         [
           "Parks Department",
-          25
+          24
         ]
       ],
-      "event_count": 25,
+      "event_count": 24,
       "event_types": [
         [
           "Special Event",
-          25
+          24
         ]
       ],
-      "first_date": "2026-07-04",
+      "first_date": "2026-07-05",
       "geocoder_query": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02, Manhattan, New York, NY",
       "group_key": "manhattan|langston hughes playground st nicholas playground north langston hughes playground basketball 01 langston hughes playground st nicholas playground north langston hughes playground basketball 02",
       "last_date": "2026-07-28",
       "location_complexity": "park_or_facility_subsite",
       "publish_status": "not_geocoded_not_public",
       "sample_events": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-04",
-          "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "8461",
-            "8462"
-          ],
-          "source_event_id": "955891",
-          "start_date_time": "2026-07-04T15:57:00.000",
-          "title": "Construction"
-        },
         {
           "borough": "Manhattan",
           "date": "2026-07-05",
@@ -67,6 +53,20 @@
           "source_event_id": "955891",
           "start_date_time": "2026-07-06T15:57:00.000",
           "title": "Construction"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-07",
+          "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "8461",
+            "8462"
+          ],
+          "source_event_id": "955891",
+          "start_date_time": "2026-07-07T15:57:00.000",
+          "title": "Construction"
         }
       ],
       "sample_events_truncated": true,
@@ -81,7 +81,7 @@
       "top_titles": [
         [
           "Construction",
-          25
+          24
         ]
       ],
       "unique_source_event_ids": 1
@@ -168,87 +168,6 @@
       "unique_source_event_ids": 1
     },
     {
-      "borough": "Manhattan",
-      "confidence_hint": "review_candidate",
-      "date_count": 21,
-      "display_location": "Riverside Park South: 71st St South-Basketball-14",
-      "event_agencies": [
-        [
-          "Parks Department",
-          21
-        ]
-      ],
-      "event_count": 21,
-      "event_types": [
-        [
-          "Sport - Youth",
-          21
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "Riverside Park South: 71st St South-Basketball-14, Manhattan, New York, NY",
-      "group_key": "manhattan|riverside park south 71st st south basketball 14",
-      "last_date": "2026-07-28",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-04",
-          "display_location": "Riverside Park South: 71st St South-Basketball-14",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "10075"
-          ],
-          "source_event_id": "904748",
-          "start_date_time": "2026-07-04T15:00:00.000",
-          "title": "Basketball"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-06",
-          "display_location": "Riverside Park South: 71st St South-Basketball-14",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "10075"
-          ],
-          "source_event_id": "904748",
-          "start_date_time": "2026-07-06T15:00:00.000",
-          "title": "Basketball"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-07",
-          "display_location": "Riverside Park South: 71st St South-Basketball-14",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "10075"
-          ],
-          "source_event_id": "904748",
-          "start_date_time": "2026-07-07T15:00:00.000",
-          "title": "Basketball"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Riverside Park South, Manhattan, New York, NY",
-      "source_cemsid_sample": [
-        "10075"
-      ],
-      "source_event_ids_sample": [
-        "904748"
-      ],
-      "top_titles": [
-        [
-          "Basketball",
-          21
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
       "borough": "Brooklyn",
       "confidence_hint": "review_candidate",
       "date_count": 20,
@@ -330,47 +249,115 @@
       "unique_source_event_ids": 1
     },
     {
+      "borough": "Manhattan",
+      "confidence_hint": "review_candidate",
+      "date_count": 20,
+      "display_location": "Riverside Park South: 71st St South-Basketball-14",
+      "event_agencies": [
+        [
+          "Parks Department",
+          20
+        ]
+      ],
+      "event_count": 20,
+      "event_types": [
+        [
+          "Sport - Youth",
+          20
+        ]
+      ],
+      "first_date": "2026-07-06",
+      "geocoder_query": "Riverside Park South: 71st St South-Basketball-14, Manhattan, New York, NY",
+      "group_key": "manhattan|riverside park south 71st st south basketball 14",
+      "last_date": "2026-07-28",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-06",
+          "display_location": "Riverside Park South: 71st St South-Basketball-14",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "10075"
+          ],
+          "source_event_id": "904748",
+          "start_date_time": "2026-07-06T15:00:00.000",
+          "title": "Basketball"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-07",
+          "display_location": "Riverside Park South: 71st St South-Basketball-14",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "10075"
+          ],
+          "source_event_id": "904748",
+          "start_date_time": "2026-07-07T15:00:00.000",
+          "title": "Basketball"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-08",
+          "display_location": "Riverside Park South: 71st St South-Basketball-14",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "10075"
+          ],
+          "source_event_id": "904748",
+          "start_date_time": "2026-07-08T15:00:00.000",
+          "title": "Basketball"
+        }
+      ],
+      "sample_events_truncated": true,
+      "simplified_geocoder_query": "Riverside Park South, Manhattan, New York, NY",
+      "source_cemsid_sample": [
+        "10075"
+      ],
+      "source_event_ids_sample": [
+        "904748"
+      ],
+      "top_titles": [
+        [
+          "Basketball",
+          20
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
       "borough": "Queens",
       "confidence_hint": "review_candidate",
-      "date_count": 14,
+      "date_count": 13,
       "display_location": "Baisley Pond Park: Cricket-04",
       "event_agencies": [
         [
           "Parks Department",
-          18
+          17
         ]
       ],
-      "event_count": 18,
+      "event_count": 17,
       "event_types": [
         [
           "Sport - Adult",
-          12
+          11
         ],
         [
           "Sport - Youth",
           6
         ]
       ],
-      "first_date": "2026-07-04",
+      "first_date": "2026-07-05",
       "geocoder_query": "Baisley Pond Park: Cricket-04, Queens, New York, NY",
       "group_key": "queens|baisley pond park cricket 04",
       "last_date": "2026-07-26",
       "location_complexity": "park_or_facility_subsite",
       "publish_status": "not_geocoded_not_public",
       "sample_events": [
-        {
-          "borough": "Queens",
-          "date": "2026-07-04",
-          "display_location": "Baisley Pond Park: Cricket-04",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Adult",
-          "source_cemsid": [
-            "11886"
-          ],
-          "source_event_id": "899948",
-          "start_date_time": "2026-07-04T10:00:00.000",
-          "title": "Cricket"
-        },
         {
           "borough": "Queens",
           "date": "2026-07-05",
@@ -396,6 +383,19 @@
           "source_event_id": "900059",
           "start_date_time": "2026-07-05T14:00:00.000",
           "title": "Cricket"
+        },
+        {
+          "borough": "Queens",
+          "date": "2026-07-08",
+          "display_location": "Baisley Pond Park: Cricket-04",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "11886"
+          ],
+          "source_event_id": "912982",
+          "start_date_time": "2026-07-08T08:00:00.000",
+          "title": "Cricket"
         }
       ],
       "sample_events_truncated": true,
@@ -411,7 +411,7 @@
       "top_titles": [
         [
           "Cricket",
-          18
+          17
         ]
       ],
       "unique_source_event_ids": 3
@@ -4879,87 +4879,6 @@
       "borough": "Manhattan",
       "confidence_hint": "review_candidate",
       "date_count": 11,
-      "display_location": "Brigadier General Charles Young Playground: Lenox Ave-Basketball-01",
-      "event_agencies": [
-        [
-          "Parks Department",
-          11
-        ]
-      ],
-      "event_count": 11,
-      "event_types": [
-        [
-          "Sport - Adult",
-          11
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "Brigadier General Charles Young Playground: Lenox Ave-Basketball-01, Manhattan, New York, NY",
-      "group_key": "manhattan|brigadier general charles young playground lenox ave basketball 01",
-      "last_date": "2026-07-26",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-04",
-          "display_location": "Brigadier General Charles Young Playground: Lenox Ave-Basketball-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Adult",
-          "source_cemsid": [
-            "5837"
-          ],
-          "source_event_id": "938042",
-          "start_date_time": "2026-07-04T18:00:00.000",
-          "title": "Basketball"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-05",
-          "display_location": "Brigadier General Charles Young Playground: Lenox Ave-Basketball-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Adult",
-          "source_cemsid": [
-            "5837"
-          ],
-          "source_event_id": "938042",
-          "start_date_time": "2026-07-05T18:00:00.000",
-          "title": "Basketball"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-10",
-          "display_location": "Brigadier General Charles Young Playground: Lenox Ave-Basketball-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Adult",
-          "source_cemsid": [
-            "5837"
-          ],
-          "source_event_id": "938042",
-          "start_date_time": "2026-07-10T18:00:00.000",
-          "title": "Basketball"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Brigadier General Charles Young Playground, Manhattan, New York, NY",
-      "source_cemsid_sample": [
-        "5837"
-      ],
-      "source_event_ids_sample": [
-        "938042"
-      ],
-      "top_titles": [
-        [
-          "Basketball",
-          11
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Manhattan",
-      "confidence_hint": "review_candidate",
-      "date_count": 11,
       "display_location": "St Nicholas Park: St Nicholas-Basketball-05",
       "event_agencies": [
         [
@@ -5444,6 +5363,87 @@
         ]
       ],
       "unique_source_event_ids": 2
+    },
+    {
+      "borough": "Manhattan",
+      "confidence_hint": "review_candidate",
+      "date_count": 10,
+      "display_location": "Brigadier General Charles Young Playground: Lenox Ave-Basketball-01",
+      "event_agencies": [
+        [
+          "Parks Department",
+          10
+        ]
+      ],
+      "event_count": 10,
+      "event_types": [
+        [
+          "Sport - Adult",
+          10
+        ]
+      ],
+      "first_date": "2026-07-05",
+      "geocoder_query": "Brigadier General Charles Young Playground: Lenox Ave-Basketball-01, Manhattan, New York, NY",
+      "group_key": "manhattan|brigadier general charles young playground lenox ave basketball 01",
+      "last_date": "2026-07-26",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-05",
+          "display_location": "Brigadier General Charles Young Playground: Lenox Ave-Basketball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Adult",
+          "source_cemsid": [
+            "5837"
+          ],
+          "source_event_id": "938042",
+          "start_date_time": "2026-07-05T18:00:00.000",
+          "title": "Basketball"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-10",
+          "display_location": "Brigadier General Charles Young Playground: Lenox Ave-Basketball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Adult",
+          "source_cemsid": [
+            "5837"
+          ],
+          "source_event_id": "938042",
+          "start_date_time": "2026-07-10T18:00:00.000",
+          "title": "Basketball"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-11",
+          "display_location": "Brigadier General Charles Young Playground: Lenox Ave-Basketball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Adult",
+          "source_cemsid": [
+            "5837"
+          ],
+          "source_event_id": "938042",
+          "start_date_time": "2026-07-11T18:00:00.000",
+          "title": "Basketball"
+        }
+      ],
+      "sample_events_truncated": true,
+      "simplified_geocoder_query": "Brigadier General Charles Young Playground, Manhattan, New York, NY",
+      "source_cemsid_sample": [
+        "5837"
+      ],
+      "source_event_ids_sample": [
+        "938042"
+      ],
+      "top_titles": [
+        [
+          "Basketball",
+          10
+        ]
+      ],
+      "unique_source_event_ids": 1
     },
     {
       "borough": "Brooklyn",
@@ -7080,79 +7080,6 @@
       "unique_source_event_ids": 1
     },
     {
-      "borough": "Manhattan",
-      "confidence_hint": "review_candidate",
-      "date_count": 8,
-      "display_location": "BLEECKER STREET between LEROY STREET and CARMINE STREET",
-      "event_agencies": [
-        [
-          "Street Activity Permit Office",
-          8
-        ]
-      ],
-      "event_count": 8,
-      "event_types": [
-        [
-          "Sidewalk Sale",
-          8
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "BLEECKER STREET between LEROY STREET and CARMINE STREET, Manhattan, New York, NY",
-      "group_key": "manhattan|bleecker street between leroy street and carmine street",
-      "last_date": "2026-07-26",
-      "location_complexity": "street_between_pair",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-04",
-          "display_location": "BLEECKER STREET between LEROY STREET and CARMINE STREET",
-          "event_agency": "Street Activity Permit Office",
-          "event_type": "Sidewalk Sale",
-          "source_cemsid": [],
-          "source_event_id": "899565",
-          "start_date_time": "2026-07-04T08:00:00.000",
-          "title": "Pompeii Flea Market"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-05",
-          "display_location": "BLEECKER STREET between LEROY STREET and CARMINE STREET",
-          "event_agency": "Street Activity Permit Office",
-          "event_type": "Sidewalk Sale",
-          "source_cemsid": [],
-          "source_event_id": "899565",
-          "start_date_time": "2026-07-05T08:00:00.000",
-          "title": "Pompeii Flea Market"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-11",
-          "display_location": "BLEECKER STREET between LEROY STREET and CARMINE STREET",
-          "event_agency": "Street Activity Permit Office",
-          "event_type": "Sidewalk Sale",
-          "source_cemsid": [],
-          "source_event_id": "899565",
-          "start_date_time": "2026-07-11T08:00:00.000",
-          "title": "Pompeii Flea Market"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "BLEECKER STREET between LEROY STREET and CARMINE STREET, Manhattan, New York, NY",
-      "source_cemsid_sample": [],
-      "source_event_ids_sample": [
-        "899565"
-      ],
-      "top_titles": [
-        [
-          "Pompeii Flea Market",
-          8
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
       "borough": "Brooklyn",
       "confidence_hint": "review_candidate",
       "date_count": 7,
@@ -7233,6 +7160,79 @@
         ]
       ],
       "unique_source_event_ids": 2
+    },
+    {
+      "borough": "Manhattan",
+      "confidence_hint": "review_candidate",
+      "date_count": 7,
+      "display_location": "BLEECKER STREET between LEROY STREET and CARMINE STREET",
+      "event_agencies": [
+        [
+          "Street Activity Permit Office",
+          7
+        ]
+      ],
+      "event_count": 7,
+      "event_types": [
+        [
+          "Sidewalk Sale",
+          7
+        ]
+      ],
+      "first_date": "2026-07-05",
+      "geocoder_query": "BLEECKER STREET between LEROY STREET and CARMINE STREET, Manhattan, New York, NY",
+      "group_key": "manhattan|bleecker street between leroy street and carmine street",
+      "last_date": "2026-07-26",
+      "location_complexity": "street_between_pair",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-05",
+          "display_location": "BLEECKER STREET between LEROY STREET and CARMINE STREET",
+          "event_agency": "Street Activity Permit Office",
+          "event_type": "Sidewalk Sale",
+          "source_cemsid": [],
+          "source_event_id": "899565",
+          "start_date_time": "2026-07-05T08:00:00.000",
+          "title": "Pompeii Flea Market"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-11",
+          "display_location": "BLEECKER STREET between LEROY STREET and CARMINE STREET",
+          "event_agency": "Street Activity Permit Office",
+          "event_type": "Sidewalk Sale",
+          "source_cemsid": [],
+          "source_event_id": "899565",
+          "start_date_time": "2026-07-11T08:00:00.000",
+          "title": "Pompeii Flea Market"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-12",
+          "display_location": "BLEECKER STREET between LEROY STREET and CARMINE STREET",
+          "event_agency": "Street Activity Permit Office",
+          "event_type": "Sidewalk Sale",
+          "source_cemsid": [],
+          "source_event_id": "899565",
+          "start_date_time": "2026-07-12T08:00:00.000",
+          "title": "Pompeii Flea Market"
+        }
+      ],
+      "sample_events_truncated": true,
+      "simplified_geocoder_query": "BLEECKER STREET between LEROY STREET and CARMINE STREET, Manhattan, New York, NY",
+      "source_cemsid_sample": [],
+      "source_event_ids_sample": [
+        "899565"
+      ],
+      "top_titles": [
+        [
+          "Pompeii Flea Market",
+          7
+        ]
+      ],
+      "unique_source_event_ids": 1
     },
     {
       "borough": "Bronx",
@@ -13014,565 +13014,6 @@
       "borough": "Bronx",
       "confidence_hint": "review_candidate",
       "date_count": 4,
-      "display_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
-      "event_agencies": [
-        [
-          "Parks Department",
-          4
-        ]
-      ],
-      "event_count": 4,
-      "event_types": [
-        [
-          "Special Event",
-          4
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "Catherine Scott Promenade: Catherine Scott Promenade Event Area, Bronx, New York, NY",
-      "group_key": "bronx|catherine scott promenade catherine scott promenade event area",
-      "last_date": "2026-07-07",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Bronx",
-          "date": "2026-07-04",
-          "display_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "13142"
-          ],
-          "source_event_id": "949110",
-          "start_date_time": "2026-07-04T00:00:00.000",
-          "title": "FLAGS FOR HEROS"
-        },
-        {
-          "borough": "Bronx",
-          "date": "2026-07-05",
-          "display_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "13142"
-          ],
-          "source_event_id": "949110",
-          "start_date_time": "2026-07-05T00:00:00.000",
-          "title": "FLAGS FOR HEROS"
-        },
-        {
-          "borough": "Bronx",
-          "date": "2026-07-06",
-          "display_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "13142"
-          ],
-          "source_event_id": "949110",
-          "start_date_time": "2026-07-06T00:00:00.000",
-          "title": "FLAGS FOR HEROS"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Catherine Scott Promenade, Bronx, New York, NY",
-      "source_cemsid_sample": [
-        "13142"
-      ],
-      "source_event_ids_sample": [
-        "949110"
-      ],
-      "top_titles": [
-        [
-          "FLAGS FOR HEROS",
-          4
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Brooklyn",
-      "confidence_hint": "review_candidate",
-      "date_count": 4,
-      "display_location": "St. John's Park: Basketball-02",
-      "event_agencies": [
-        [
-          "Parks Department",
-          4
-        ]
-      ],
-      "event_count": 4,
-      "event_types": [
-        [
-          "Sport - Youth",
-          4
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "St. John's Park: Basketball-02, Brooklyn, New York, NY",
-      "group_key": "brooklyn|st john s park basketball 02",
-      "last_date": "2026-07-19",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-04",
-          "display_location": "St. John's Park: Basketball-02",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "9703"
-          ],
-          "source_event_id": "909919",
-          "start_date_time": "2026-07-04T12:00:00.000",
-          "title": "Basketball"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-05",
-          "display_location": "St. John's Park: Basketball-02",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "9703"
-          ],
-          "source_event_id": "909919",
-          "start_date_time": "2026-07-05T12:00:00.000",
-          "title": "Basketball"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-18",
-          "display_location": "St. John's Park: Basketball-02",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "9703"
-          ],
-          "source_event_id": "909919",
-          "start_date_time": "2026-07-18T12:00:00.000",
-          "title": "Basketball"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "St. John's Park, Brooklyn, New York, NY",
-      "source_cemsid_sample": [
-        "9703"
-      ],
-      "source_event_ids_sample": [
-        "909919"
-      ],
-      "top_titles": [
-        [
-          "Basketball",
-          4
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Brooklyn",
-      "confidence_hint": "review_candidate",
-      "date_count": 4,
-      "display_location": "Crispus Attucks Playground: Basketball-02",
-      "event_agencies": [
-        [
-          "Parks Department",
-          4
-        ]
-      ],
-      "event_count": 4,
-      "event_types": [
-        [
-          "Sport - Adult",
-          4
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "Crispus Attucks Playground: Basketball-02, Brooklyn, New York, NY",
-      "group_key": "brooklyn|crispus attucks playground basketball 02",
-      "last_date": "2026-07-25",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-04",
-          "display_location": "Crispus Attucks Playground: Basketball-02",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Adult",
-          "source_cemsid": [
-            "5166"
-          ],
-          "source_event_id": "946645",
-          "start_date_time": "2026-07-04T13:00:00.000",
-          "title": "Basketball"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-11",
-          "display_location": "Crispus Attucks Playground: Basketball-02",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Adult",
-          "source_cemsid": [
-            "5166"
-          ],
-          "source_event_id": "946645",
-          "start_date_time": "2026-07-11T13:00:00.000",
-          "title": "Basketball"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-18",
-          "display_location": "Crispus Attucks Playground: Basketball-02",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Adult",
-          "source_cemsid": [
-            "5166"
-          ],
-          "source_event_id": "946645",
-          "start_date_time": "2026-07-18T13:00:00.000",
-          "title": "Basketball"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Crispus Attucks Playground, Brooklyn, New York, NY",
-      "source_cemsid_sample": [
-        "5166"
-      ],
-      "source_event_ids_sample": [
-        "946645"
-      ],
-      "top_titles": [
-        [
-          "Basketball",
-          4
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Brooklyn",
-      "confidence_hint": "review_candidate",
-      "date_count": 4,
-      "display_location": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET",
-      "event_agencies": [
-        [
-          "Street Activity Permit Office",
-          4
-        ]
-      ],
-      "event_count": 4,
-      "event_types": [
-        [
-          "Farmers Market",
-          4
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET, Brooklyn, New York, NY",
-      "group_key": "brooklyn|knickerbocker avenue between starr street and suydam street",
-      "last_date": "2026-07-25",
-      "location_complexity": "street_between_pair",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-04",
-          "display_location": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET",
-          "event_agency": "Street Activity Permit Office",
-          "event_type": "Farmers Market",
-          "source_cemsid": [],
-          "source_event_id": "923923",
-          "start_date_time": "2026-07-04T08:00:00.000",
-          "title": "RiseBoro Farmers Markets at Maria Hernandez Park"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-11",
-          "display_location": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET",
-          "event_agency": "Street Activity Permit Office",
-          "event_type": "Farmers Market",
-          "source_cemsid": [],
-          "source_event_id": "923923",
-          "start_date_time": "2026-07-11T08:00:00.000",
-          "title": "RiseBoro Farmers Markets at Maria Hernandez Park"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-18",
-          "display_location": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET",
-          "event_agency": "Street Activity Permit Office",
-          "event_type": "Farmers Market",
-          "source_cemsid": [],
-          "source_event_id": "923923",
-          "start_date_time": "2026-07-18T08:00:00.000",
-          "title": "RiseBoro Farmers Markets at Maria Hernandez Park"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET, Brooklyn, New York, NY",
-      "source_cemsid_sample": [],
-      "source_event_ids_sample": [
-        "923923"
-      ],
-      "top_titles": [
-        [
-          "RiseBoro Farmers Markets at Maria Hernandez Park",
-          4
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Manhattan",
-      "confidence_hint": "manual_review_first",
-      "date_count": 4,
-      "display_location": "Washington Square Park: Fountain Plaza ,Washington Square Park: Garibaldi Plaza ,Washington Square Park: Holley Plaza",
-      "event_agencies": [
-        [
-          "Parks Department",
-          4
-        ]
-      ],
-      "event_count": 4,
-      "event_types": [
-        [
-          "Special Event",
-          4
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "Washington Square Park: Fountain Plaza ,Washington Square Park: Garibaldi Plaza ,Washington Square Park: Holley Plaza, Manhattan, New York, NY",
-      "group_key": "manhattan|washington square park fountain plaza washington square park garibaldi plaza washington square park holley plaza",
-      "last_date": "2026-07-19",
-      "location_complexity": "multi_segment_corridor",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-04",
-          "display_location": "Washington Square Park: Fountain Plaza ,Washington Square Park: Garibaldi Plaza ,Washington Square Park: Holley Plaza",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "450",
-            "451",
-            "449"
-          ],
-          "source_event_id": "880411",
-          "start_date_time": "2026-07-04T08:00:00.000",
-          "title": "2026 No Amplified Sound"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-05",
-          "display_location": "Washington Square Park: Fountain Plaza ,Washington Square Park: Garibaldi Plaza ,Washington Square Park: Holley Plaza",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "450",
-            "451",
-            "449"
-          ],
-          "source_event_id": "880411",
-          "start_date_time": "2026-07-05T08:00:00.000",
-          "title": "2026 No Amplified Sound"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-18",
-          "display_location": "Washington Square Park: Fountain Plaza ,Washington Square Park: Garibaldi Plaza ,Washington Square Park: Holley Plaza",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "450",
-            "451",
-            "449"
-          ],
-          "source_event_id": "880411",
-          "start_date_time": "2026-07-18T08:00:00.000",
-          "title": "2026 No Amplified Sound"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Washington Square Park, Manhattan, New York, NY",
-      "source_cemsid_sample": [
-        "449",
-        "450",
-        "451"
-      ],
-      "source_event_ids_sample": [
-        "880411"
-      ],
-      "top_titles": [
-        [
-          "2026 No Amplified Sound",
-          4
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Manhattan",
-      "confidence_hint": "review_candidate",
-      "date_count": 4,
-      "display_location": "ISHAM STREET between SEAMAN AVENUE and COOPER STREET",
-      "event_agencies": [
-        [
-          "Street Activity Permit Office",
-          4
-        ]
-      ],
-      "event_count": 4,
-      "event_types": [
-        [
-          "Farmers Market",
-          4
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "ISHAM STREET between SEAMAN AVENUE and COOPER STREET, Manhattan, New York, NY",
-      "group_key": "manhattan|isham street between seaman avenue and cooper street",
-      "last_date": "2026-07-25",
-      "location_complexity": "street_between_pair",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-04",
-          "display_location": "ISHAM STREET between SEAMAN AVENUE and COOPER STREET",
-          "event_agency": "Street Activity Permit Office",
-          "event_type": "Farmers Market",
-          "source_cemsid": [],
-          "source_event_id": "898914",
-          "start_date_time": "2026-07-04T06:00:00.000",
-          "title": "Inwood Greenmarket Saturday"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-11",
-          "display_location": "ISHAM STREET between SEAMAN AVENUE and COOPER STREET",
-          "event_agency": "Street Activity Permit Office",
-          "event_type": "Farmers Market",
-          "source_cemsid": [],
-          "source_event_id": "898914",
-          "start_date_time": "2026-07-11T06:00:00.000",
-          "title": "Inwood Greenmarket Saturday"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-18",
-          "display_location": "ISHAM STREET between SEAMAN AVENUE and COOPER STREET",
-          "event_agency": "Street Activity Permit Office",
-          "event_type": "Farmers Market",
-          "source_cemsid": [],
-          "source_event_id": "898914",
-          "start_date_time": "2026-07-18T06:00:00.000",
-          "title": "Inwood Greenmarket Saturday"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "ISHAM STREET between SEAMAN AVENUE and COOPER STREET, Manhattan, New York, NY",
-      "source_cemsid_sample": [],
-      "source_event_ids_sample": [
-        "898914"
-      ],
-      "top_titles": [
-        [
-          "Inwood Greenmarket Saturday",
-          4
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Staten Island",
-      "confidence_hint": "review_candidate",
-      "date_count": 4,
-      "display_location": "Faber Park: Basketball-01",
-      "event_agencies": [
-        [
-          "Parks Department",
-          4
-        ]
-      ],
-      "event_count": 4,
-      "event_types": [
-        [
-          "Sport - Youth",
-          4
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "Faber Park: Basketball-01, Staten Island, New York, NY",
-      "group_key": "staten island|faber park basketball 01",
-      "last_date": "2026-07-25",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Staten Island",
-          "date": "2026-07-04",
-          "display_location": "Faber Park: Basketball-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "13332"
-          ],
-          "source_event_id": "913162",
-          "start_date_time": "2026-07-04T10:00:00.000",
-          "title": "Basketball"
-        },
-        {
-          "borough": "Staten Island",
-          "date": "2026-07-05",
-          "display_location": "Faber Park: Basketball-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "13332"
-          ],
-          "source_event_id": "913162",
-          "start_date_time": "2026-07-05T10:00:00.000",
-          "title": "Basketball"
-        },
-        {
-          "borough": "Staten Island",
-          "date": "2026-07-18",
-          "display_location": "Faber Park: Basketball-01",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "13332"
-          ],
-          "source_event_id": "913162",
-          "start_date_time": "2026-07-18T10:00:00.000",
-          "title": "Basketball"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Faber Park, Staten Island, New York, NY",
-      "source_cemsid_sample": [
-        "13332"
-      ],
-      "source_event_ids_sample": [
-        "913162"
-      ],
-      "top_titles": [
-        [
-          "Basketball",
-          4
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Bronx",
-      "confidence_hint": "review_candidate",
-      "date_count": 4,
       "display_location": "STICKBALL BOULEVARD between RANDALL AVENUE and SEWARD AVENUE",
       "event_agencies": [
         [
@@ -14935,6 +14376,257 @@
       "unique_source_event_ids": 1
     },
     {
+      "borough": "Bronx",
+      "confidence_hint": "review_candidate",
+      "date_count": 3,
+      "display_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
+      "event_agencies": [
+        [
+          "Parks Department",
+          3
+        ]
+      ],
+      "event_count": 3,
+      "event_types": [
+        [
+          "Special Event",
+          3
+        ]
+      ],
+      "first_date": "2026-07-05",
+      "geocoder_query": "Catherine Scott Promenade: Catherine Scott Promenade Event Area, Bronx, New York, NY",
+      "group_key": "bronx|catherine scott promenade catherine scott promenade event area",
+      "last_date": "2026-07-07",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Bronx",
+          "date": "2026-07-05",
+          "display_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "13142"
+          ],
+          "source_event_id": "949110",
+          "start_date_time": "2026-07-05T00:00:00.000",
+          "title": "FLAGS FOR HEROS"
+        },
+        {
+          "borough": "Bronx",
+          "date": "2026-07-06",
+          "display_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "13142"
+          ],
+          "source_event_id": "949110",
+          "start_date_time": "2026-07-06T00:00:00.000",
+          "title": "FLAGS FOR HEROS"
+        },
+        {
+          "borough": "Bronx",
+          "date": "2026-07-07",
+          "display_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "13142"
+          ],
+          "source_event_id": "949110",
+          "start_date_time": "2026-07-07T00:00:00.000",
+          "title": "FLAGS FOR HEROS"
+        }
+      ],
+      "sample_events_truncated": false,
+      "simplified_geocoder_query": "Catherine Scott Promenade, Bronx, New York, NY",
+      "source_cemsid_sample": [
+        "13142"
+      ],
+      "source_event_ids_sample": [
+        "949110"
+      ],
+      "top_titles": [
+        [
+          "FLAGS FOR HEROS",
+          3
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
+      "borough": "Brooklyn",
+      "confidence_hint": "review_candidate",
+      "date_count": 3,
+      "display_location": "St. John's Park: Basketball-02",
+      "event_agencies": [
+        [
+          "Parks Department",
+          3
+        ]
+      ],
+      "event_count": 3,
+      "event_types": [
+        [
+          "Sport - Youth",
+          3
+        ]
+      ],
+      "first_date": "2026-07-05",
+      "geocoder_query": "St. John's Park: Basketball-02, Brooklyn, New York, NY",
+      "group_key": "brooklyn|st john s park basketball 02",
+      "last_date": "2026-07-19",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-05",
+          "display_location": "St. John's Park: Basketball-02",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "9703"
+          ],
+          "source_event_id": "909919",
+          "start_date_time": "2026-07-05T12:00:00.000",
+          "title": "Basketball"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-18",
+          "display_location": "St. John's Park: Basketball-02",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "9703"
+          ],
+          "source_event_id": "909919",
+          "start_date_time": "2026-07-18T12:00:00.000",
+          "title": "Basketball"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-19",
+          "display_location": "St. John's Park: Basketball-02",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "9703"
+          ],
+          "source_event_id": "909919",
+          "start_date_time": "2026-07-19T12:00:00.000",
+          "title": "Basketball"
+        }
+      ],
+      "sample_events_truncated": false,
+      "simplified_geocoder_query": "St. John's Park, Brooklyn, New York, NY",
+      "source_cemsid_sample": [
+        "9703"
+      ],
+      "source_event_ids_sample": [
+        "909919"
+      ],
+      "top_titles": [
+        [
+          "Basketball",
+          3
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
+      "borough": "Manhattan",
+      "confidence_hint": "manual_review_first",
+      "date_count": 3,
+      "display_location": "Washington Square Park: Fountain Plaza ,Washington Square Park: Garibaldi Plaza ,Washington Square Park: Holley Plaza",
+      "event_agencies": [
+        [
+          "Parks Department",
+          3
+        ]
+      ],
+      "event_count": 3,
+      "event_types": [
+        [
+          "Special Event",
+          3
+        ]
+      ],
+      "first_date": "2026-07-05",
+      "geocoder_query": "Washington Square Park: Fountain Plaza ,Washington Square Park: Garibaldi Plaza ,Washington Square Park: Holley Plaza, Manhattan, New York, NY",
+      "group_key": "manhattan|washington square park fountain plaza washington square park garibaldi plaza washington square park holley plaza",
+      "last_date": "2026-07-19",
+      "location_complexity": "multi_segment_corridor",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-05",
+          "display_location": "Washington Square Park: Fountain Plaza ,Washington Square Park: Garibaldi Plaza ,Washington Square Park: Holley Plaza",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "450",
+            "451",
+            "449"
+          ],
+          "source_event_id": "880411",
+          "start_date_time": "2026-07-05T08:00:00.000",
+          "title": "2026 No Amplified Sound"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-18",
+          "display_location": "Washington Square Park: Fountain Plaza ,Washington Square Park: Garibaldi Plaza ,Washington Square Park: Holley Plaza",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "450",
+            "451",
+            "449"
+          ],
+          "source_event_id": "880411",
+          "start_date_time": "2026-07-18T08:00:00.000",
+          "title": "2026 No Amplified Sound"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-19",
+          "display_location": "Washington Square Park: Fountain Plaza ,Washington Square Park: Garibaldi Plaza ,Washington Square Park: Holley Plaza",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "450",
+            "451",
+            "449"
+          ],
+          "source_event_id": "880411",
+          "start_date_time": "2026-07-19T08:00:00.000",
+          "title": "2026 No Amplified Sound"
+        }
+      ],
+      "sample_events_truncated": false,
+      "simplified_geocoder_query": "Washington Square Park, Manhattan, New York, NY",
+      "source_cemsid_sample": [
+        "449",
+        "450",
+        "451"
+      ],
+      "source_event_ids_sample": [
+        "880411"
+      ],
+      "top_titles": [
+        [
+          "2026 No Amplified Sound",
+          3
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
       "borough": "Manhattan",
       "confidence_hint": "review_candidate",
       "date_count": 3,
@@ -15006,6 +14698,87 @@
       ],
       "source_event_ids_sample": [
         "935921"
+      ],
+      "top_titles": [
+        [
+          "Basketball",
+          3
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
+      "borough": "Staten Island",
+      "confidence_hint": "review_candidate",
+      "date_count": 3,
+      "display_location": "Faber Park: Basketball-01",
+      "event_agencies": [
+        [
+          "Parks Department",
+          3
+        ]
+      ],
+      "event_count": 3,
+      "event_types": [
+        [
+          "Sport - Youth",
+          3
+        ]
+      ],
+      "first_date": "2026-07-05",
+      "geocoder_query": "Faber Park: Basketball-01, Staten Island, New York, NY",
+      "group_key": "staten island|faber park basketball 01",
+      "last_date": "2026-07-25",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Staten Island",
+          "date": "2026-07-05",
+          "display_location": "Faber Park: Basketball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "13332"
+          ],
+          "source_event_id": "913162",
+          "start_date_time": "2026-07-05T10:00:00.000",
+          "title": "Basketball"
+        },
+        {
+          "borough": "Staten Island",
+          "date": "2026-07-18",
+          "display_location": "Faber Park: Basketball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "13332"
+          ],
+          "source_event_id": "913162",
+          "start_date_time": "2026-07-18T10:00:00.000",
+          "title": "Basketball"
+        },
+        {
+          "borough": "Staten Island",
+          "date": "2026-07-25",
+          "display_location": "Faber Park: Basketball-01",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "13332"
+          ],
+          "source_event_id": "913162",
+          "start_date_time": "2026-07-25T10:00:00.000",
+          "title": "Basketball"
+        }
+      ],
+      "sample_events_truncated": false,
+      "simplified_geocoder_query": "Faber Park, Staten Island, New York, NY",
+      "source_cemsid_sample": [
+        "13332"
+      ],
+      "source_event_ids_sample": [
+        "913162"
       ],
       "top_titles": [
         [
@@ -17069,6 +16842,87 @@
       "borough": "Brooklyn",
       "confidence_hint": "review_candidate",
       "date_count": 3,
+      "display_location": "Crispus Attucks Playground: Basketball-02",
+      "event_agencies": [
+        [
+          "Parks Department",
+          3
+        ]
+      ],
+      "event_count": 3,
+      "event_types": [
+        [
+          "Sport - Adult",
+          3
+        ]
+      ],
+      "first_date": "2026-07-11",
+      "geocoder_query": "Crispus Attucks Playground: Basketball-02, Brooklyn, New York, NY",
+      "group_key": "brooklyn|crispus attucks playground basketball 02",
+      "last_date": "2026-07-25",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-11",
+          "display_location": "Crispus Attucks Playground: Basketball-02",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Adult",
+          "source_cemsid": [
+            "5166"
+          ],
+          "source_event_id": "946645",
+          "start_date_time": "2026-07-11T13:00:00.000",
+          "title": "Basketball"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-18",
+          "display_location": "Crispus Attucks Playground: Basketball-02",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Adult",
+          "source_cemsid": [
+            "5166"
+          ],
+          "source_event_id": "946645",
+          "start_date_time": "2026-07-18T13:00:00.000",
+          "title": "Basketball"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-25",
+          "display_location": "Crispus Attucks Playground: Basketball-02",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Adult",
+          "source_cemsid": [
+            "5166"
+          ],
+          "source_event_id": "946645",
+          "start_date_time": "2026-07-25T13:00:00.000",
+          "title": "Basketball"
+        }
+      ],
+      "sample_events_truncated": false,
+      "simplified_geocoder_query": "Crispus Attucks Playground, Brooklyn, New York, NY",
+      "source_cemsid_sample": [
+        "5166"
+      ],
+      "source_event_ids_sample": [
+        "946645"
+      ],
+      "top_titles": [
+        [
+          "Basketball",
+          3
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
+      "borough": "Brooklyn",
+      "confidence_hint": "review_candidate",
+      "date_count": 3,
       "display_location": "Martinez Playground: Basketball-01",
       "event_agencies": [
         [
@@ -17141,6 +16995,79 @@
       "top_titles": [
         [
           "Basketball",
+          3
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
+      "borough": "Brooklyn",
+      "confidence_hint": "review_candidate",
+      "date_count": 3,
+      "display_location": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET",
+      "event_agencies": [
+        [
+          "Street Activity Permit Office",
+          3
+        ]
+      ],
+      "event_count": 3,
+      "event_types": [
+        [
+          "Farmers Market",
+          3
+        ]
+      ],
+      "first_date": "2026-07-11",
+      "geocoder_query": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET, Brooklyn, New York, NY",
+      "group_key": "brooklyn|knickerbocker avenue between starr street and suydam street",
+      "last_date": "2026-07-25",
+      "location_complexity": "street_between_pair",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-11",
+          "display_location": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET",
+          "event_agency": "Street Activity Permit Office",
+          "event_type": "Farmers Market",
+          "source_cemsid": [],
+          "source_event_id": "923923",
+          "start_date_time": "2026-07-11T08:00:00.000",
+          "title": "RiseBoro Farmers Markets at Maria Hernandez Park"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-18",
+          "display_location": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET",
+          "event_agency": "Street Activity Permit Office",
+          "event_type": "Farmers Market",
+          "source_cemsid": [],
+          "source_event_id": "923923",
+          "start_date_time": "2026-07-18T08:00:00.000",
+          "title": "RiseBoro Farmers Markets at Maria Hernandez Park"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-25",
+          "display_location": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET",
+          "event_agency": "Street Activity Permit Office",
+          "event_type": "Farmers Market",
+          "source_cemsid": [],
+          "source_event_id": "923923",
+          "start_date_time": "2026-07-25T08:00:00.000",
+          "title": "RiseBoro Farmers Markets at Maria Hernandez Park"
+        }
+      ],
+      "sample_events_truncated": false,
+      "simplified_geocoder_query": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET, Brooklyn, New York, NY",
+      "source_cemsid_sample": [],
+      "source_event_ids_sample": [
+        "923923"
+      ],
+      "top_titles": [
+        [
+          "RiseBoro Farmers Markets at Maria Hernandez Park",
           3
         ]
       ],
@@ -17222,6 +17149,79 @@
       "top_titles": [
         [
           "Basketball",
+          3
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
+      "borough": "Manhattan",
+      "confidence_hint": "review_candidate",
+      "date_count": 3,
+      "display_location": "ISHAM STREET between SEAMAN AVENUE and COOPER STREET",
+      "event_agencies": [
+        [
+          "Street Activity Permit Office",
+          3
+        ]
+      ],
+      "event_count": 3,
+      "event_types": [
+        [
+          "Farmers Market",
+          3
+        ]
+      ],
+      "first_date": "2026-07-11",
+      "geocoder_query": "ISHAM STREET between SEAMAN AVENUE and COOPER STREET, Manhattan, New York, NY",
+      "group_key": "manhattan|isham street between seaman avenue and cooper street",
+      "last_date": "2026-07-25",
+      "location_complexity": "street_between_pair",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-11",
+          "display_location": "ISHAM STREET between SEAMAN AVENUE and COOPER STREET",
+          "event_agency": "Street Activity Permit Office",
+          "event_type": "Farmers Market",
+          "source_cemsid": [],
+          "source_event_id": "898914",
+          "start_date_time": "2026-07-11T06:00:00.000",
+          "title": "Inwood Greenmarket Saturday"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-18",
+          "display_location": "ISHAM STREET between SEAMAN AVENUE and COOPER STREET",
+          "event_agency": "Street Activity Permit Office",
+          "event_type": "Farmers Market",
+          "source_cemsid": [],
+          "source_event_id": "898914",
+          "start_date_time": "2026-07-18T06:00:00.000",
+          "title": "Inwood Greenmarket Saturday"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-25",
+          "display_location": "ISHAM STREET between SEAMAN AVENUE and COOPER STREET",
+          "event_agency": "Street Activity Permit Office",
+          "event_type": "Farmers Market",
+          "source_cemsid": [],
+          "source_event_id": "898914",
+          "start_date_time": "2026-07-25T06:00:00.000",
+          "title": "Inwood Greenmarket Saturday"
+        }
+      ],
+      "sample_events_truncated": false,
+      "simplified_geocoder_query": "ISHAM STREET between SEAMAN AVENUE and COOPER STREET, Manhattan, New York, NY",
+      "source_cemsid_sample": [],
+      "source_event_ids_sample": [
+        "898914"
+      ],
+      "top_titles": [
+        [
+          "Inwood Greenmarket Saturday",
           3
         ]
       ],
@@ -19374,380 +19374,6 @@
         [
           "Softball (Little league)",
           2
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Brooklyn",
-      "confidence_hint": "review_candidate",
-      "date_count": 1,
-      "display_location": "653 52 STREET between 6 AVENUE and 7 AVENUE",
-      "event_agencies": [
-        [
-          "Street Activity Permit Office",
-          1
-        ]
-      ],
-      "event_count": 1,
-      "event_types": [
-        [
-          "Block Party",
-          1
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "653 52 STREET between 6 AVENUE and 7 AVENUE, Brooklyn, New York, NY",
-      "group_key": "brooklyn|653 52 street between 6 avenue and 7 avenue",
-      "last_date": "2026-07-04",
-      "location_complexity": "street_between_pair",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-04",
-          "display_location": "653 52 STREET between 6 AVENUE and 7 AVENUE",
-          "event_agency": "Street Activity Permit Office",
-          "event_type": "Block Party",
-          "source_cemsid": [],
-          "source_event_id": "919357",
-          "start_date_time": "2026-07-04T11:00:00.000",
-          "title": "2025 52nd Street Block Party"
-        }
-      ],
-      "sample_events_truncated": false,
-      "simplified_geocoder_query": "653 52 STREET between 6 AVENUE and 7 AVENUE, Brooklyn, New York, NY",
-      "source_cemsid_sample": [],
-      "source_event_ids_sample": [
-        "919357"
-      ],
-      "top_titles": [
-        [
-          "2025 52nd Street Block Party",
-          1
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Brooklyn",
-      "confidence_hint": "review_candidate",
-      "date_count": 1,
-      "display_location": "54 STREET between 3 AVENUE and 2 AVENUE",
-      "event_agencies": [
-        [
-          "Street Activity Permit Office",
-          1
-        ]
-      ],
-      "event_count": 1,
-      "event_types": [
-        [
-          "Block Party",
-          1
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "54 STREET between 3 AVENUE and 2 AVENUE, Brooklyn, New York, NY",
-      "group_key": "brooklyn|54 street between 3 avenue and 2 avenue",
-      "last_date": "2026-07-04",
-      "location_complexity": "street_between_pair",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-04",
-          "display_location": "54 STREET between 3 AVENUE and 2 AVENUE",
-          "event_agency": "Street Activity Permit Office",
-          "event_type": "Block Party",
-          "source_cemsid": [],
-          "source_event_id": "923457",
-          "start_date_time": "2026-07-04T12:00:00.000",
-          "title": "54th street block party"
-        }
-      ],
-      "sample_events_truncated": false,
-      "simplified_geocoder_query": "54 STREET between 3 AVENUE and 2 AVENUE, Brooklyn, New York, NY",
-      "source_cemsid_sample": [],
-      "source_event_ids_sample": [
-        "923457"
-      ],
-      "top_titles": [
-        [
-          "54th street block party",
-          1
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Brooklyn",
-      "confidence_hint": "review_candidate",
-      "date_count": 1,
-      "display_location": "Coney Island Beach & Boardwalk: Bays 14 ? 16 (W 19 to W 25 St)",
-      "event_agencies": [
-        [
-          "Parks Department",
-          1
-        ]
-      ],
-      "event_count": 1,
-      "event_types": [
-        [
-          "Special Event",
-          1
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "Coney Island Beach & Boardwalk: Bays 14 ? 16 (W 19 to W 25 St), Brooklyn, New York, NY",
-      "group_key": "brooklyn|coney island beach boardwalk bays 14 16 w 19 to w 25 st",
-      "last_date": "2026-07-04",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-04",
-          "display_location": "Coney Island Beach & Boardwalk: Bays 14 ? 16 (W 19 to W 25 St)",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "4441"
-          ],
-          "source_event_id": "915235",
-          "start_date_time": "2026-07-04T18:00:00.000",
-          "title": "July 4th Fireworks"
-        }
-      ],
-      "sample_events_truncated": false,
-      "simplified_geocoder_query": "Coney Island Beach & Boardwalk, Brooklyn, New York, NY",
-      "source_cemsid_sample": [
-        "4441"
-      ],
-      "source_event_ids_sample": [
-        "915235"
-      ],
-      "top_titles": [
-        [
-          "July 4th Fireworks",
-          1
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Brooklyn",
-      "confidence_hint": "manual_review_first",
-      "date_count": 1,
-      "display_location": "STILLWELL AVENUE between BOWERY STREET and SURF AVENUE,  BOWERY STREET between WEST 15 STREET and STILLWELL AVENUE,  SURF AVENUE between WEST   15 STREET and WEST   12 STREET,  WEST   15 STREET between SURF AVENUE and BOWERY",
-      "event_agencies": [
-        [
-          "Street Activity Permit Office",
-          1
-        ]
-      ],
-      "event_count": 1,
-      "event_types": [
-        [
-          "Street Event",
-          1
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "STILLWELL AVENUE between BOWERY STREET and SURF AVENUE,  BOWERY STREET between WEST 15 STREET and STILLWELL AVENUE,  SURF AVENUE between WEST   15 STREET and WEST   12 STREET,  WEST   15 STREET between SURF AVENUE and BOWERY, Brooklyn, New York, NY",
-      "group_key": "brooklyn|stillwell avenue between bowery street and surf avenue bowery street between west 15 street and stillwell avenue surf avenue between west 15 street and west 12 street west 15 street between surf avenue and bowery",
-      "last_date": "2026-07-04",
-      "location_complexity": "multi_segment_corridor",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Brooklyn",
-          "date": "2026-07-04",
-          "display_location": "STILLWELL AVENUE between BOWERY STREET and SURF AVENUE,  BOWERY STREET between WEST 15 STREET and STILLWELL AVENUE,  SURF AVENUE between WEST   15 STREET and WEST   12 STREET,  WEST   15 STREET between SURF AVENUE and BOWERY",
-          "event_agency": "Street Activity Permit Office",
-          "event_type": "Street Event",
-          "source_cemsid": [
-            "0",
-            "0",
-            "0",
-            "0"
-          ],
-          "source_event_id": "910885",
-          "start_date_time": "2026-07-04T09:00:00.000",
-          "title": "Nathans Famous July 4th Hotdog Eating Contest"
-        }
-      ],
-      "sample_events_truncated": false,
-      "simplified_geocoder_query": "STILLWELL AVENUE between BOWERY STREET and SURF AVENUE, Brooklyn, New York, NY",
-      "source_cemsid_sample": [
-        "0"
-      ],
-      "source_event_ids_sample": [
-        "910885"
-      ],
-      "top_titles": [
-        [
-          "Nathans Famous July 4th Hotdog Eating Contest",
-          1
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Manhattan",
-      "confidence_hint": "manual_review_first",
-      "date_count": 1,
-      "display_location": "Battery Park: Castle Clinton (National Park Service) ,1 WHITEHALL STREET, STONE STREET between BROADWAY and BROAD STREET,  BROAD STREET between STONE STREET and WALL STREET,  WALL STREET between BROAD STREET and PEARL STREET,  PEARL STREET between WALL STREET and BROAD STREET, 54 PEARL STREET",
-      "event_agencies": [
-        [
-          "Police Department",
-          1
-        ]
-      ],
-      "event_count": 1,
-      "event_types": [
-        [
-          "Parade",
-          1
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "Battery Park: Castle Clinton (National Park Service) ,1 WHITEHALL STREET, STONE STREET between BROADWAY and BROAD STREET,  BROAD STREET between STONE STREET and WALL STREET,  WALL STREET between BROAD STREET and PEARL STREET,  PEARL STREET between WALL STREET and BROAD STREET, 54 PEARL STREET, Manhattan, New York, NY",
-      "group_key": "manhattan|battery park castle clinton national park service 1 whitehall street stone street between broadway and broad street broad street between stone street and wall street wall street between broad street and pearl street pearl street between wall street and broad street 54 pearl street",
-      "last_date": "2026-07-04",
-      "location_complexity": "multi_segment_corridor",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-04",
-          "display_location": "Battery Park: Castle Clinton (National Park Service) ,1 WHITEHALL STREET, STONE STREET between BROADWAY and BROAD STREET,  BROAD STREET between STONE STREET and WALL STREET,  WALL STREET between BROAD STREET and PEARL STREET,  PEARL STREET between WALL STREET and BROAD STREET, 54 PEARL STREET",
-          "event_agency": "Police Department",
-          "event_type": "Parade",
-          "source_cemsid": [
-            "156",
-            "0"
-          ],
-          "source_event_id": "930146",
-          "start_date_time": "2026-07-04T12:30:00.000",
-          "title": "Annual July 4 Parade"
-        }
-      ],
-      "sample_events_truncated": false,
-      "simplified_geocoder_query": "Battery Park, Manhattan, New York, NY",
-      "source_cemsid_sample": [
-        "0",
-        "156"
-      ],
-      "source_event_ids_sample": [
-        "930146"
-      ],
-      "top_titles": [
-        [
-          "Annual July 4 Parade",
-          1
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Manhattan",
-      "confidence_hint": "review_candidate",
-      "date_count": 1,
-      "display_location": "WEST   55 STREET between EIGHTH AVENUE and NINTH AVENUE",
-      "event_agencies": [
-        [
-          "Street Activity Permit Office",
-          1
-        ]
-      ],
-      "event_count": 1,
-      "event_types": [
-        [
-          "Block Party",
-          1
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "WEST   55 STREET between EIGHTH AVENUE and NINTH AVENUE, Manhattan, New York, NY",
-      "group_key": "manhattan|west 55 street between eighth avenue and ninth avenue",
-      "last_date": "2026-07-04",
-      "location_complexity": "street_between_pair",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-04",
-          "display_location": "WEST   55 STREET between EIGHTH AVENUE and NINTH AVENUE",
-          "event_agency": "Street Activity Permit Office",
-          "event_type": "Block Party",
-          "source_cemsid": [],
-          "source_event_id": "932345",
-          "start_date_time": "2026-07-04T12:00:00.000",
-          "title": "West 55 July 4 Independence Day Block Party"
-        }
-      ],
-      "sample_events_truncated": false,
-      "simplified_geocoder_query": "WEST   55 STREET between EIGHTH AVENUE and NINTH AVENUE, Manhattan, New York, NY",
-      "source_cemsid_sample": [],
-      "source_event_ids_sample": [
-        "932345"
-      ],
-      "top_titles": [
-        [
-          "West 55 July 4 Independence Day Block Party",
-          1
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Staten Island",
-      "confidence_hint": "manual_review_first",
-      "date_count": 1,
-      "display_location": "CANNON AVENUE between GLEN STREET and VICTORY BOULEVARD,  GLEN STREET between CANNON AVENUE and VICTORY BOULEVARD,  VICTORY BOULEVARD between CANNON AVENUE and GLEN STREET",
-      "event_agencies": [
-        [
-          "Police Department",
-          1
-        ]
-      ],
-      "event_count": 1,
-      "event_types": [
-        [
-          "Parade",
-          1
-        ]
-      ],
-      "first_date": "2026-07-04",
-      "geocoder_query": "CANNON AVENUE between GLEN STREET and VICTORY BOULEVARD,  GLEN STREET between CANNON AVENUE and VICTORY BOULEVARD,  VICTORY BOULEVARD between CANNON AVENUE and GLEN STREET, Staten Island, New York, NY",
-      "group_key": "staten island|cannon avenue between glen street and victory boulevard glen street between cannon avenue and victory boulevard victory boulevard between cannon avenue and glen street",
-      "last_date": "2026-07-04",
-      "location_complexity": "multi_segment_corridor",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Staten Island",
-          "date": "2026-07-04",
-          "display_location": "CANNON AVENUE between GLEN STREET and VICTORY BOULEVARD,  GLEN STREET between CANNON AVENUE and VICTORY BOULEVARD,  VICTORY BOULEVARD between CANNON AVENUE and GLEN STREET",
-          "event_agency": "Police Department",
-          "event_type": "Parade",
-          "source_cemsid": [],
-          "source_event_id": "933757",
-          "start_date_time": "2026-07-04T12:00:00.000",
-          "title": "Travis 4th of July Parade"
-        }
-      ],
-      "sample_events_truncated": false,
-      "simplified_geocoder_query": "CANNON AVENUE between GLEN STREET and VICTORY BOULEVARD, Staten Island, New York, NY",
-      "source_cemsid_sample": [],
-      "source_event_ids_sample": [
-        "933757"
-      ],
-      "top_titles": [
-        [
-          "Travis 4th of July Parade",
-          1
         ]
       ],
       "unique_source_event_ids": 1
