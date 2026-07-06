@@ -1,0 +1,53 @@
+{
+  "schema": "nycif.xri_g44.non_production_fixture_only_audit_reporting_gate.v1",
+  "phase": "XRI-G44",
+  "source_phase": "XRI-G43",
+  "source_pull_request": 53,
+  "source_merge_commit_sha": "dfb4048977edc20d2806f769aa609fae75a06463",
+  "mode": "non_production_fixture_only_audit_reporting_gate",
+  "audit_reporting_only": true,
+  "fixture_only": true,
+  "non_production_only": true,
+  "production_allowed": false,
+  "xri_g45_started": false,
+  "completion_map": {
+    "completed_merged": "XRI-G10 through XRI-G43",
+    "current_phase": "XRI-G44",
+    "safe_non_production_registry_manual_review_source_ingestion_prototype_percent": "about 99%",
+    "full_production_public_map_registry_source_ingestion_percent": "about 83-87%"
+  },
+  "allowed_files": [
+    "docs/xri-g44-non-production-fixture-only-audit-reporting-gate-contract.md",
+    "data/reports/xri_g44_non_production_fixture_only_audit_reporting_gate_report.json",
+    "tools/registry/xri_g44_fixture_only_audit_reporting.py",
+    "tests/registry/test_xri_g44_fixture_only_audit_reporting.py"
+  ],
+  "files_actually_created": [
+    "data/reports/xri_g44_non_production_fixture_only_audit_reporting_gate_report.json",
+    "tools/registry/xri_g44_fixture_only_audit_reporting.py",
+    "tests/registry/test_xri_g44_fixture_only_audit_reporting.py"
+  ],
+  "audit_reporting_behavior_summary": [
+    "fixture_only_audit_reporting_interface_defined",
+    "single_or_list_fixture_input_supported",
+    "stable_identity_fields_required",
+    "manual_review_handoff_output_shape_used",
+    "fixture_counts_reported",
+    "ready_for_manual_review_counts_reported",
+    "stable_identities_reported",
+    "final_states_rejected",
+    "deterministic_fixture_only_audit_output"
+  ],
+  "stable_identity_basis": ["group_key", "display_location", "candidate_identity"],
+  "forbidden_identity_basis": ["review_rank", "row_position", "array_index", "coordinates", "geometry", "production_targets"],
+  "safety_confirmations": {
+    "fixture_only_inputs": true,
+    "deterministic_output": true,
+    "production_allowed": false,
+    "xri_g45_started": false
+  },
+  "expected_result": "pass",
+  "result": "pass",
+  "review_gate": "Open pull request only; do not merge; do not start XRI-G45.",
+  "next_recommended_phase_gate": "XRI-G45 non-production source-adapter design proposal gate only, after explicit review and merge approval."
+}
