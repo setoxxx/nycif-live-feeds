@@ -1,0 +1,50 @@
+{
+  "schema": "nycif.xri_g42.non_production_fixture_only_validation_execution_gate.v1",
+  "phase": "XRI-G42",
+  "source_phase": "XRI-G41",
+  "source_pull_request": 51,
+  "source_merge_commit_sha": "c521b4cc2aa4db2fcab4bfe41b107bba156046f5",
+  "mode": "non_production_fixture_only_validation_execution_gate",
+  "validation_execution_only": true,
+  "fixture_only": true,
+  "non_production_only": true,
+  "production_allowed": false,
+  "xri_g43_started": false,
+  "completion_map": {
+    "completed_merged": "XRI-G10 through XRI-G41",
+    "current_phase": "XRI-G42",
+    "safe_non_production_registry_manual_review_source_ingestion_prototype_percent": "about 99%",
+    "full_production_public_map_registry_source_ingestion_percent": "about 81-85%"
+  },
+  "allowed_files": [
+    "docs/xri-g42-non-production-fixture-only-validation-execution-gate-contract.md",
+    "data/reports/xri_g42_non_production_fixture_only_validation_execution_gate_report.json",
+    "tools/registry/xri_g42_fixture_only_validation_execution.py",
+    "tests/registry/test_xri_g42_fixture_only_validation_execution.py"
+  ],
+  "files_actually_created": [
+    "data/reports/xri_g42_non_production_fixture_only_validation_execution_gate_report.json",
+    "tools/registry/xri_g42_fixture_only_validation_execution.py",
+    "tests/registry/test_xri_g42_fixture_only_validation_execution.py"
+  ],
+  "validation_execution_behavior_summary": [
+    "fixture_only_validation_execution_interface_defined",
+    "single_or_list_fixture_input_supported",
+    "stable_identity_fields_required",
+    "parser_normalizer_output_shape_validated",
+    "review_rank_display_only",
+    "deterministic_fixture_only_validation_output"
+  ],
+  "stable_identity_basis": ["group_key", "display_location", "candidate_identity"],
+  "forbidden_identity_basis": ["review_rank", "row_position", "array_index", "coordinates", "geometry", "production_targets"],
+  "safety_confirmations": {
+    "fixture_only_inputs": true,
+    "deterministic_output": true,
+    "production_allowed": false,
+    "xri_g43_started": false
+  },
+  "expected_result": "pass",
+  "result": "pass",
+  "review_gate": "Open pull request only; do not merge; do not start XRI-G43.",
+  "next_recommended_phase_gate": "XRI-G43 non-production fixture-only manual-review handoff gate only, after explicit review and merge approval."
+}
