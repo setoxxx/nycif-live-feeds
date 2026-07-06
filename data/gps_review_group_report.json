@@ -1,23 +1,23 @@
 {
   "borough_group_counts": {
-    "Bronx": 39,
-    "Brooklyn": 82,
+    "Bronx": 38,
+    "Brooklyn": 81,
     "Manhattan": 94,
     "Queens": 92,
-    "Staten Island": 22
+    "Staten Island": 21
   },
   "complexity_counts": {
-    "multi_segment_corridor": 35,
-    "park_or_facility_subsite": 252,
+    "multi_segment_corridor": 34,
+    "park_or_facility_subsite": 250,
     "street_between_pair": 42
   },
   "confidence_counts": {
-    "manual_review_first": 35,
-    "review_candidate": 294
+    "manual_review_first": 34,
+    "review_candidate": 292
   },
-  "generated_at_utc": "2026-07-05T23:17:00.941194+00:00",
-  "geocoding_queue_count": 294,
-  "input_review_events": 2056,
+  "generated_at_utc": "2026-07-06T00:18:03.011514+00:00",
+  "geocoding_queue_count": 292,
+  "input_review_events": 2034,
   "location_cache_modified": false,
   "location_groups_readable_compact": true,
   "phase": "phase_2_controlled_gps_review",
@@ -25,91 +25,6 @@
   "public_map_modified": false,
   "sample_events_per_group_limit": 3,
   "top_location_groups_sample": [
-    {
-      "borough": "Manhattan",
-      "confidence_hint": "review_candidate",
-      "date_count": 24,
-      "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
-      "event_agencies": [
-        [
-          "Parks Department",
-          24
-        ]
-      ],
-      "event_count": 24,
-      "event_types": [
-        [
-          "Special Event",
-          24
-        ]
-      ],
-      "first_date": "2026-07-05",
-      "geocoder_query": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02, Manhattan, New York, NY",
-      "group_key": "manhattan|langston hughes playground st nicholas playground north langston hughes playground basketball 01 langston hughes playground st nicholas playground north langston hughes playground basketball 02",
-      "last_date": "2026-07-28",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-05",
-          "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "8461",
-            "8462"
-          ],
-          "source_event_id": "955891",
-          "start_date_time": "2026-07-05T15:57:00.000",
-          "title": "Construction"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-06",
-          "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "8461",
-            "8462"
-          ],
-          "source_event_id": "955891",
-          "start_date_time": "2026-07-06T15:57:00.000",
-          "title": "Construction"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-07-07",
-          "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
-          "event_agency": "Parks Department",
-          "event_type": "Special Event",
-          "source_cemsid": [
-            "8461",
-            "8462"
-          ],
-          "source_event_id": "955891",
-          "start_date_time": "2026-07-07T15:57:00.000",
-          "title": "Construction"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Langston Hughes Playground (St. Nicholas Playground North), Manhattan, New York, NY",
-      "source_cemsid_sample": [
-        "8461",
-        "8462"
-      ],
-      "source_event_ids_sample": [
-        "955891"
-      ],
-      "top_titles": [
-        [
-          "Construction",
-          24
-        ]
-      ],
-      "unique_source_event_ids": 1
-    },
     {
       "borough": "Bronx",
       "confidence_hint": "review_candidate",
@@ -186,6 +101,91 @@
       "top_titles": [
         [
           "Basketball",
+          23
+        ]
+      ],
+      "unique_source_event_ids": 1
+    },
+    {
+      "borough": "Manhattan",
+      "confidence_hint": "review_candidate",
+      "date_count": 23,
+      "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
+      "event_agencies": [
+        [
+          "Parks Department",
+          23
+        ]
+      ],
+      "event_count": 23,
+      "event_types": [
+        [
+          "Special Event",
+          23
+        ]
+      ],
+      "first_date": "2026-07-06",
+      "geocoder_query": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02, Manhattan, New York, NY",
+      "group_key": "manhattan|langston hughes playground st nicholas playground north langston hughes playground basketball 01 langston hughes playground st nicholas playground north langston hughes playground basketball 02",
+      "last_date": "2026-07-28",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-06",
+          "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "8461",
+            "8462"
+          ],
+          "source_event_id": "955891",
+          "start_date_time": "2026-07-06T15:57:00.000",
+          "title": "Construction"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-07",
+          "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "8461",
+            "8462"
+          ],
+          "source_event_id": "955891",
+          "start_date_time": "2026-07-07T15:57:00.000",
+          "title": "Construction"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-08",
+          "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
+          "event_agency": "Parks Department",
+          "event_type": "Special Event",
+          "source_cemsid": [
+            "8461",
+            "8462"
+          ],
+          "source_event_id": "955891",
+          "start_date_time": "2026-07-08T15:57:00.000",
+          "title": "Construction"
+        }
+      ],
+      "sample_events_truncated": true,
+      "simplified_geocoder_query": "Langston Hughes Playground (St. Nicholas Playground North), Manhattan, New York, NY",
+      "source_cemsid_sample": [
+        "8461",
+        "8462"
+      ],
+      "source_event_ids_sample": [
+        "955891"
+      ],
+      "top_titles": [
+        [
+          "Construction",
           23
         ]
       ],
@@ -352,93 +352,6 @@
         ]
       ],
       "unique_source_event_ids": 1
-    },
-    {
-      "borough": "Queens",
-      "confidence_hint": "review_candidate",
-      "date_count": 13,
-      "display_location": "Baisley Pond Park: Cricket-04",
-      "event_agencies": [
-        [
-          "Parks Department",
-          17
-        ]
-      ],
-      "event_count": 17,
-      "event_types": [
-        [
-          "Sport - Adult",
-          11
-        ],
-        [
-          "Sport - Youth",
-          6
-        ]
-      ],
-      "first_date": "2026-07-05",
-      "geocoder_query": "Baisley Pond Park: Cricket-04, Queens, New York, NY",
-      "group_key": "queens|baisley pond park cricket 04",
-      "last_date": "2026-07-26",
-      "location_complexity": "park_or_facility_subsite",
-      "publish_status": "not_geocoded_not_public",
-      "sample_events": [
-        {
-          "borough": "Queens",
-          "date": "2026-07-05",
-          "display_location": "Baisley Pond Park: Cricket-04",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Adult",
-          "source_cemsid": [
-            "11886"
-          ],
-          "source_event_id": "899948",
-          "start_date_time": "2026-07-05T10:00:00.000",
-          "title": "Cricket"
-        },
-        {
-          "borough": "Queens",
-          "date": "2026-07-05",
-          "display_location": "Baisley Pond Park: Cricket-04",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Adult",
-          "source_cemsid": [
-            "11886"
-          ],
-          "source_event_id": "900059",
-          "start_date_time": "2026-07-05T14:00:00.000",
-          "title": "Cricket"
-        },
-        {
-          "borough": "Queens",
-          "date": "2026-07-08",
-          "display_location": "Baisley Pond Park: Cricket-04",
-          "event_agency": "Parks Department",
-          "event_type": "Sport - Youth",
-          "source_cemsid": [
-            "11886"
-          ],
-          "source_event_id": "912982",
-          "start_date_time": "2026-07-08T08:00:00.000",
-          "title": "Cricket"
-        }
-      ],
-      "sample_events_truncated": true,
-      "simplified_geocoder_query": "Baisley Pond Park, Queens, New York, NY",
-      "source_cemsid_sample": [
-        "11886"
-      ],
-      "source_event_ids_sample": [
-        "899948",
-        "900059",
-        "912982"
-      ],
-      "top_titles": [
-        [
-          "Cricket",
-          17
-        ]
-      ],
-      "unique_source_event_ids": 3
     },
     {
       "borough": "Queens",
@@ -3507,6 +3420,93 @@
       "unique_source_event_ids": 1
     },
     {
+      "borough": "Queens",
+      "confidence_hint": "review_candidate",
+      "date_count": 12,
+      "display_location": "Baisley Pond Park: Cricket-04",
+      "event_agencies": [
+        [
+          "Parks Department",
+          15
+        ]
+      ],
+      "event_count": 15,
+      "event_types": [
+        [
+          "Sport - Adult",
+          9
+        ],
+        [
+          "Sport - Youth",
+          6
+        ]
+      ],
+      "first_date": "2026-07-08",
+      "geocoder_query": "Baisley Pond Park: Cricket-04, Queens, New York, NY",
+      "group_key": "queens|baisley pond park cricket 04",
+      "last_date": "2026-07-26",
+      "location_complexity": "park_or_facility_subsite",
+      "publish_status": "not_geocoded_not_public",
+      "sample_events": [
+        {
+          "borough": "Queens",
+          "date": "2026-07-08",
+          "display_location": "Baisley Pond Park: Cricket-04",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "11886"
+          ],
+          "source_event_id": "912982",
+          "start_date_time": "2026-07-08T08:00:00.000",
+          "title": "Cricket"
+        },
+        {
+          "borough": "Queens",
+          "date": "2026-07-09",
+          "display_location": "Baisley Pond Park: Cricket-04",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Youth",
+          "source_cemsid": [
+            "11886"
+          ],
+          "source_event_id": "912982",
+          "start_date_time": "2026-07-09T08:00:00.000",
+          "title": "Cricket"
+        },
+        {
+          "borough": "Queens",
+          "date": "2026-07-11",
+          "display_location": "Baisley Pond Park: Cricket-04",
+          "event_agency": "Parks Department",
+          "event_type": "Sport - Adult",
+          "source_cemsid": [
+            "11886"
+          ],
+          "source_event_id": "899948",
+          "start_date_time": "2026-07-11T10:00:00.000",
+          "title": "Cricket"
+        }
+      ],
+      "sample_events_truncated": true,
+      "simplified_geocoder_query": "Baisley Pond Park, Queens, New York, NY",
+      "source_cemsid_sample": [
+        "11886"
+      ],
+      "source_event_ids_sample": [
+        "899948",
+        "900059",
+        "912982"
+      ],
+      "top_titles": [
+        [
+          "Cricket",
+          15
+        ]
+      ],
+      "unique_source_event_ids": 3
+    },
+    {
       "borough": "Brooklyn",
       "confidence_hint": "review_candidate",
       "date_count": 15,
@@ -4158,5 +4158,5 @@
       "unique_source_event_ids": 2
     }
   ],
-  "unique_location_groups": 329
+  "unique_location_groups": 326
 }
