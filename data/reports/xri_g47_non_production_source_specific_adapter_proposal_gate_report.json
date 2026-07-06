@@ -1,0 +1,51 @@
+{
+  "schema": "nycif.xri_g47.proposal_gate.v1",
+  "phase": "XRI-G47",
+  "source_phase": "XRI-G46",
+  "source_pull_request": 56,
+  "source_merge_commit_sha": "6635bad91e3d897661b9b44be00df9a327e0735b",
+  "mode": "non_production_source_specific_adapter_proposal_gate",
+  "proposal_only": true,
+  "executable_source_specific_adapter_code_added": false,
+  "executable_live_fetch_code_added": false,
+  "live_source_fetch_performed": false,
+  "nyc_open_data_call_performed": false,
+  "api_call_performed": false,
+  "website_scrape_performed": false,
+  "production_allowed": false,
+  "xri_g48_started": false,
+  "completion_map": {
+    "completed_merged": "XRI-G10 through XRI-G46",
+    "current_phase": "XRI-G47",
+    "safe_non_production_registry_manual_review_source_ingestion_prototype_percent": "about 99%",
+    "full_production_public_map_registry_source_ingestion_percent": "about 86-90%"
+  },
+  "allowed_files": [
+    "docs/xri-g47-non-production-source-specific-adapter-proposal-gate-contract.md",
+    "data/reports/xri_g47_non_production_source_specific_adapter_proposal_gate_report.json"
+  ],
+  "files_actually_created": [
+    "docs/xri-g47-non-production-source-specific-adapter-proposal-gate-contract.md",
+    "data/reports/xri_g47_non_production_source_specific_adapter_proposal_gate_report.json"
+  ],
+  "proposal_summary": [
+    "source_specific_adapter_boundary_proposed",
+    "adapter_family_categories_proposed",
+    "source_eligibility_gates_proposed",
+    "future_review_gates_required",
+    "stable_identity_preserved"
+  ],
+  "fixture_chain_reuse_proposal": ["XRI-G40", "XRI-G41", "XRI-G42", "XRI-G43", "XRI-G44", "XRI-G45", "XRI-G46"],
+  "stable_identity_basis": ["group_key", "display_location", "candidate_identity"],
+  "safety_confirmations": {
+    "proposal_only": true,
+    "executable_source_specific_adapter_code_added": false,
+    "executable_live_fetch_code_added": false,
+    "live_source_fetch_performed": false,
+    "production_allowed": false,
+    "xri_g48_started": false
+  },
+  "expected_result": "pass",
+  "result": "pass",
+  "review_gate": "Open pull request only; do not merge; do not start XRI-G48."
+}
