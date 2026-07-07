@@ -1,0 +1,67 @@
+{
+  "phase": "XRI-G74",
+  "title": "fixture-only validation scope and command gate",
+  "status": "gate_only",
+  "baseline_commit": "da8ecc1",
+  "baseline_description": "Merge pull request #86 from setoxxx/xri-g73-fixture-only-validation-authorization-gate",
+  "prior_authorization": "XRI-G73 fixture-only validation authorization",
+  "repository_search_result": {
+    "existing_fixture_or_validation_command_found": false,
+    "finding": "No committed fixture path or validation command evidence was identified by repository search."
+  },
+  "scope_decision": {
+    "fixture_validation_execution_authorized": false,
+    "validation_command_invented": false,
+    "next_authorized_activity": "future fixture inventory gate only"
+  },
+  "future_inventory_gate_may_identify": [
+    "exact_committed_fixture_file_paths",
+    "exact_existing_validation_command",
+    "expected_read_only_outputs",
+    "forbidden_file_paths",
+    "rollback_expectations"
+  ],
+  "explicit_non_authorizations": {
+    "live_fetch": false,
+    "dry_run_execution_against_live_sources": false,
+    "fixture_validation_execution": false,
+    "artifact_diff_review_against_generated_production_artifacts": false,
+    "cache_touch_work": false,
+    "location_cache_changes": false,
+    "generated_artifact_changes": false,
+    "workflow_changes": false,
+    "script_tool_test_implementation_changes": false,
+    "public_map_runtime_changes": false,
+    "nyc_open_data_soda_api_calls": false,
+    "scraping": false,
+    "geocoding": false,
+    "wordpress_actions": false,
+    "registry_writes_or_imports": false,
+    "production_writes": false,
+    "scheduled_workflow_enablement": false,
+    "generated_artifact_auto_commit_behavior": false
+  },
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "fixture_validation_performed": false,
+    "validation_command_invented": false,
+    "committed_fixture_path_identified": false,
+    "generated_data_artifacts_modified": false,
+    "location_cache_modified": false,
+    "scripts_modified": false,
+    "workflows_modified": false,
+    "tools_modified": false,
+    "tests_modified": false,
+    "public_map_runtime_modified": false,
+    "live_fetch_performed": false,
+    "dry_run_execution_performed": false,
+    "nyc_open_data_soda_api_call_performed": false,
+    "scraping_performed": false,
+    "geocoding_performed": false,
+    "wordpress_action_performed": false,
+    "registry_write_or_import_performed": false,
+    "production_write_performed": false
+  },
+  "verdict": "PASS",
+  "next_phase": "future XRI phase should be a fixture inventory gate that identifies exact committed fixture paths and existing validation commands before any validation execution"
+}
