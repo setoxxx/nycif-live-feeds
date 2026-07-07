@@ -1,0 +1,168 @@
+{
+  "phase": "XRI-G72",
+  "title": "review-only evidence requirements gate",
+  "status": "gate_only",
+  "baseline_commit": "2867401",
+  "baseline_description": "Merge pull request #84 from setoxxx/xri-g71-post-g70-review-only-next-step-planning-gate",
+  "selected_xri_g69_lane": {
+    "lane": 1,
+    "name": "review_only_planning",
+    "source_phase": "XRI-G70",
+    "retained_by": "XRI-G71",
+    "risk_level": "lowest"
+  },
+  "purpose": "Define evidence requirements that must be satisfied before any later XRI gate may leave Lane 1 review-only planning.",
+  "does_not_authorize": [
+    "implementation",
+    "validation",
+    "artifact_diffs",
+    "cache_touches",
+    "dry_runs",
+    "live_fetch",
+    "runtime_changes",
+    "production_writes"
+  ],
+  "evidence_requirements_before_leaving_lane_1": {
+    "stable_baseline_confirmation": [
+      "current_main_commit",
+      "prior_phase_merge_commit",
+      "branch_start_commit",
+      "local_main_matches_origin_main_before_branch_creation",
+      "working_tree_clean_before_branch_creation"
+    ],
+    "exact_lane_selection": [
+      "selected_xri_g69_lane_number",
+      "selected_lane_name",
+      "reason_for_lane_selection",
+      "explicit_statement_that_all_other_lanes_remain_unauthorized"
+    ],
+    "file_scope_constraints": [
+      "exact_files_allowed_to_change",
+      "exact_files_forbidden_from_changing",
+      "expected_changed_file_count",
+      "changed_files_match_authorized_scope_before_commit_and_merge"
+    ],
+    "generated_artifact_exclusion_or_authorization": [
+      "generated_artifacts_excluded_or_authorized",
+      "if_excluded_confirm_no_generated_artifact_paths_changed",
+      "if_authorized_list_exact_paths_and_rollback_expectations"
+    ],
+    "location_cache_exclusion_or_authorization": [
+      "data_location_cache_json_excluded_or_authorized",
+      "if_excluded_confirm_no_change",
+      "if_authorized_list_reason_expected_diff_class_and_rollback_expectations"
+    ],
+    "script_tool_test_workflow_runtime_exclusion_or_authorization": [
+      "scripts_excluded_or_authorized",
+      "tools_excluded_or_authorized",
+      "tests_excluded_or_authorized",
+      "workflows_excluded_or_authorized",
+      "runtime_files_excluded_or_authorized",
+      "if_authorized_list_exact_paths_and_purpose"
+    ],
+    "command_authorization_boundaries": [
+      "commands_allowed",
+      "commands_forbidden",
+      "confirmation_no_forbidden_command_was_run",
+      "confirmation_no_workflow_was_manually_triggered_unless_explicitly_authorized"
+    ],
+    "live_fetch_exclusion_or_authorization": [
+      "live_fetch_excluded_or_authorized",
+      "if_excluded_confirm_no_live_network_call",
+      "if_authorized_list_source_endpoint_family_dry_run_boundary_and_output_handling"
+    ],
+    "dry_run_exclusion_or_authorization": [
+      "dry_run_execution_excluded_or_authorized",
+      "if_excluded_confirm_no_dry_run",
+      "if_authorized_list_exact_command_fixture_live_boundary_and_output_file_handling"
+    ],
+    "production_write_exclusion_or_authorization": [
+      "production_writes_excluded_or_authorized",
+      "public_map_write_confirmation",
+      "wordpress_write_confirmation",
+      "registry_write_or_import_confirmation",
+      "scheduled_workflow_and_generated_artifact_auto_commit_confirmation"
+    ],
+    "rollback_expectations": [
+      "expected_rollback_method",
+      "files_requiring_rollback_if_gate_fails",
+      "confirmation_no_irreversible_production_action"
+    ],
+    "review_evidence_required_before_merge": [
+      "pre_commit_status_output",
+      "post_commit_status_output",
+      "pr_changed_file_list",
+      "pr_commit_count",
+      "pr_base_and_head_shas",
+      "explicit_merge_approval_phrase_from_howard",
+      "post_merge_sync_verification"
+    ]
+  },
+  "lane_1_permissions_retained": {
+    "may_authorize": [
+      "documentation",
+      "reports",
+      "evidence_requirements",
+      "scope_definitions",
+      "future_gate_review_criteria",
+      "review_only_planning_language"
+    ],
+    "may_not_authorize": [
+      "scripts",
+      "tools",
+      "tests",
+      "workflows",
+      "runtime_changes",
+      "generated_artifact_changes",
+      "cache_changes",
+      "fixture_validation",
+      "artifact_diff_review",
+      "dry_run_execution",
+      "live_network_calls",
+      "production_writes"
+    ]
+  },
+  "explicit_non_authorizations": {
+    "live_fetch": false,
+    "dry_run_execution": false,
+    "fixture_validation": false,
+    "artifact_diff_review": false,
+    "cache_touch_work": false,
+    "nyc_open_data_soda_api_calls": false,
+    "scraping": false,
+    "geocoding": false,
+    "wordpress_actions": false,
+    "production_writes": false,
+    "public_map_runtime_changes": false,
+    "workflow_changes": false,
+    "script_tool_test_changes": false,
+    "generated_artifact_changes": false,
+    "location_cache_changes": false,
+    "scheduled_workflow_enablement": false,
+    "generated_artifact_auto_commit_behavior": false
+  },
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "remains_inside_xri_g69_lane_1_selected_by_xri_g70_and_retained_by_xri_g71": true,
+    "generated_data_artifacts_modified": false,
+    "location_cache_modified": false,
+    "scripts_modified": false,
+    "workflows_modified": false,
+    "tools_modified": false,
+    "tests_modified": false,
+    "public_map_runtime_modified": false,
+    "fixture_validation_performed": false,
+    "artifact_diff_review_performed": false,
+    "live_fetch_performed": false,
+    "dry_run_execution_performed": false,
+    "nyc_open_data_soda_api_call_performed": false,
+    "scraping_performed": false,
+    "geocoding_performed": false,
+    "wordpress_action_performed": false,
+    "production_write_performed": false,
+    "scheduled_workflow_enabled": false,
+    "generated_artifact_auto_commit_enabled": false
+  },
+  "verdict": "PASS",
+  "next_phase": "future XRI work must cite the XRI-G72 merge commit; any future lane escalation must satisfy this gate's evidence requirements"
+}
