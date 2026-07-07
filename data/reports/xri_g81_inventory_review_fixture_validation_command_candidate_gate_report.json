@@ -1,0 +1,98 @@
+{
+  "phase": "XRI-G81",
+  "title": "inventory review and fixture-only validation command candidate gate",
+  "status": "gate_only_candidate_only",
+  "baseline_commit": "fd9d2de",
+  "baseline_description": "Merge pull request #93 from setoxxx/xri-g80-local-read-only-tree-inventory-capture",
+  "prior_gate": "XRI-G80 local read-only tree inventory capture",
+  "purpose": "Review the XRI-G80 local read-only inventory and identify exact fixture-only validation command candidates for a later authorization gate.",
+  "evidence_reviewed": {
+    "g80_total_committed_files": 269,
+    "g80_top_level_paths": [
+      ".github",
+      "AGENTS.md",
+      "data",
+      "docs",
+      "feed-metadata.json",
+      "major-feed-metadata.json",
+      "nycif_all_radar_map_events.json",
+      "nycif_major_radar_map_events.json",
+      "README.md",
+      "scripts",
+      "status",
+      "tests",
+      "tools"
+    ],
+    "fixture_like_paths_present": true,
+    "test_like_paths_present": true,
+    "manifest_like_paths_present": false,
+    "workflow_like_paths_present": true,
+    "reviewed_test_file": "tests/registry/test_xri_g42_fixture_only_validation_execution.py",
+    "reviewed_implementation_file": "tools/registry/xri_g42_fixture_only_validation_execution.py"
+  },
+  "primary_candidate_command": {
+    "command": "python3 -m pytest tests/registry/test_xri_g42_fixture_only_validation_execution.py",
+    "status": "candidate_only_not_authorized_for_execution",
+    "reason": "The command targets the exact fixture-only validation execution test file, but G80 found no manifest-like dependency path, so environment dependency state is not proven. A later gate must explicitly authorize execution."
+  },
+  "secondary_candidate_command": {
+    "command": "python3 -m pytest tests/registry/test_xri_g40_fixture_only_source_ingestion_scaffold.py tests/registry/test_xri_g41_fixture_only_parser_normalizer.py tests/registry/test_xri_g42_fixture_only_validation_execution.py tests/registry/test_xri_g43_fixture_only_manual_review_handoff.py tests/registry/test_xri_g44_fixture_only_audit_reporting.py",
+    "status": "candidate_only_not_authorized_for_execution",
+    "reason": "The command targets all currently inventoried fixture-only registry test files, but execution remains blocked until a later gate explicitly authorizes one exact command."
+  },
+  "candidate_limitation": {
+    "manifest_like_dependency_paths_found": false,
+    "dependency_state_proven": false,
+    "execution_safe_to_authorize_in_g81": false
+  },
+  "decision": {
+    "fixture_validation_execution_authorized": false,
+    "candidate_commands_identified": true,
+    "validation_command_executed": false,
+    "next_safe_step": "exact fixture-only validation execution authorization gate that may authorize one exact command if all boundaries are accepted"
+  },
+  "explicit_non_authorizations": {
+    "fixture_validation_execution": false,
+    "live_fetch": false,
+    "dry_run_execution_against_live_sources": false,
+    "artifact_diff_review_against_generated_production_artifacts": false,
+    "cache_touch_work": false,
+    "location_cache_changes": false,
+    "generated_artifact_changes": false,
+    "workflow_changes": false,
+    "script_tool_test_implementation_changes": false,
+    "public_map_runtime_changes": false,
+    "nyc_open_data_soda_api_calls": false,
+    "scraping": false,
+    "geocoding": false,
+    "wordpress_actions": false,
+    "registry_writes_or_imports": false,
+    "production_writes": false,
+    "scheduled_workflow_enablement": false,
+    "generated_artifact_auto_commit_behavior": false
+  },
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "inventory_review_and_command_candidate_gate_only": true,
+    "candidate_commands_identified_but_not_executed": true,
+    "fixture_validation_performed": false,
+    "validation_command_executed": false,
+    "generated_data_artifacts_modified": false,
+    "location_cache_modified": false,
+    "scripts_modified": false,
+    "workflows_modified": false,
+    "tools_modified": false,
+    "tests_modified": false,
+    "public_map_runtime_modified": false,
+    "live_fetch_performed": false,
+    "dry_run_execution_performed": false,
+    "nyc_open_data_soda_api_call_performed": false,
+    "scraping_performed": false,
+    "geocoding_performed": false,
+    "wordpress_action_performed": false,
+    "registry_write_or_import_performed": false,
+    "production_write_performed": false
+  },
+  "verdict": "PASS",
+  "next_phase": "future XRI phase may be an exact fixture-only validation execution authorization gate and must not execute validation unless that later gate explicitly authorizes one exact command"
+}
