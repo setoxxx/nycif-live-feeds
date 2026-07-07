@@ -1,0 +1,54 @@
+{
+  "phase": "XRI-G66",
+  "title": "post-recovery restart authorization gate",
+  "status": "gate_only",
+  "baseline_commit": "eeed92c",
+  "baseline_description": "Merge pull request #78 from setoxxx/xri-recovery-baseline-after-pr77",
+  "purpose": "Authorize future XRI work to resume only from the verified post-recovery baseline.",
+  "recovery_stack": [
+    {
+      "pr": 76,
+      "description": "restored generated artifacts to the verified XRI-G36 baseline"
+    },
+    {
+      "pr": 77,
+      "description": "gated live-sync QA auto-commit behavior"
+    },
+    {
+      "pr": 78,
+      "description": "documented the verified recovery restart baseline"
+    }
+  ],
+  "authorized_restart_baseline": {
+    "commit": "eeed92c",
+    "description": "Merge pull request #78 from setoxxx/xri-recovery-baseline-after-pr77"
+  },
+  "future_controls_required": {
+    "live_sync_qa_manual_only": true,
+    "live_sync_qa_contents_read_by_default": true,
+    "scheduled_generated_artifact_auto_commit_to_main_allowed": false,
+    "push_trigger_generated_artifact_auto_commit_to_main_allowed": false,
+    "location_cache_modification_requires_explicit_restore_or_audit_gate": true,
+    "generated_artifact_commit_requires_explicit_review_gate": true
+  },
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "generated_data_artifacts_modified": false,
+    "location_cache_modified": false,
+    "scripts_modified": false,
+    "workflows_modified": false,
+    "tools_modified": false,
+    "tests_modified": false,
+    "public_map_runtime_modified": false,
+    "live_fetch_performed": false,
+    "nyc_open_data_soda_api_call_performed": false,
+    "scraping_performed": false,
+    "geocoding_performed": false,
+    "wordpress_action_performed": false,
+    "production_write_performed": false,
+    "scheduled_workflow_enabled": false,
+    "generated_artifact_auto_commit_enabled": false
+  },
+  "verdict": "PASS",
+  "next_phase": "future XRI work may resume only after this gate is reviewed and merged"
+}
