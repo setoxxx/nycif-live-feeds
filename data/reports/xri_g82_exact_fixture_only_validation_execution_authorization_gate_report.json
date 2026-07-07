@@ -1,0 +1,63 @@
+{
+  "phase": "XRI-G82",
+  "title": "exact fixture-only validation execution authorization gate",
+  "status": "gate_only_exact_command_authorization",
+  "baseline_commit": "5863ebf",
+  "baseline_description": "Merge pull request #94 from setoxxx/xri-g81-inventory-review-fixture-validation-command-candidate-gate",
+  "prior_gate": "XRI-G81 inventory review and fixture-only validation command candidate gate",
+  "purpose": "Document one exact fixture-only command candidate for a later separately gated execution step.",
+  "selected_test_file": "tests/registry/test_xri_g42_fixture_only_validation_execution.py",
+  "reviewed_implementation_file": "tools/registry/xri_g42_fixture_only_validation_execution.py",
+  "exact_command_for_later_gate": "python3 -m pytest tests/registry/test_xri_g42_fixture_only_validation_execution.py",
+  "executed_in_g82": false,
+  "validation_authorized_inside_g82": false,
+  "next_phase_may_execute_exact_command_only_after_merge": true,
+  "later_execution_constraints": {
+    "allowed_result_capture": [
+      "exact command",
+      "exit code",
+      "stdout stderr summary",
+      "PASS FAIL result",
+      "documentation report-only result artifacts"
+    ],
+    "stop_on_missing_pytest_or_dependency": true,
+    "do_not_install_dependencies": true,
+    "do_not_modify_code_or_tests": true,
+    "do_not_broaden_command": true
+  },
+  "explicit_non_authorizations": {
+    "execution_inside_g82": false,
+    "other_commands": false,
+    "live_fetch": false,
+    "dry_run_execution_against_live_sources": false,
+    "location_cache_changes": false,
+    "generated_artifact_changes": false,
+    "workflow_changes": false,
+    "script_tool_test_implementation_changes": false,
+    "public_map_runtime_changes": false,
+    "nyc_open_data_soda_api_calls": false,
+    "scraping": false,
+    "geocoding": false,
+    "wordpress_actions": false,
+    "registry_writes_or_imports": false,
+    "production_writes": false
+  },
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "one_exact_command_selected": true,
+    "command_executed_in_g82": false,
+    "fixture_validation_performed_in_g82": false,
+    "validation_command_executed_in_g82": false,
+    "location_cache_modified": false,
+    "scripts_modified": false,
+    "workflows_modified": false,
+    "tools_modified": false,
+    "tests_modified": false,
+    "public_map_runtime_modified": false,
+    "live_fetch_performed": false,
+    "dry_run_execution_performed": false,
+    "production_write_performed": false
+  },
+  "verdict": "PASS",
+  "next_phase": "future XRI phase may execute only the documented exact command and must capture results in documentation/report-only artifacts"
+}
