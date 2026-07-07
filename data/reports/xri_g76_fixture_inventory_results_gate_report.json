@@ -1,0 +1,75 @@
+{
+  "phase": "XRI-G76",
+  "title": "fixture inventory results gate",
+  "status": "gate_only",
+  "baseline_commit": "babfdb2",
+  "baseline_description": "Merge pull request #88 from setoxxx/xri-g75-fixture-inventory-gate",
+  "prior_gate": "XRI-G75 fixture inventory gate",
+  "purpose": "Record the result of the read-only fixture inventory authorized by XRI-G75.",
+  "inventory_method": {
+    "method": "read_only_github_repository_search",
+    "search_groups": [
+      "fixture fixtures test tests validation validate validator package requirements pyproject pytest npm scripts",
+      "location_cache feed feeds geo geocode soda open data csv json python script",
+      "xri g75 g74 report contract data reports docs"
+    ]
+  },
+  "inventory_result": {
+    "github_search_returned_matching_results": false,
+    "exact_committed_fixture_path_proven": false,
+    "exact_committed_test_path_proven": false,
+    "exact_existing_fixture_only_validation_command_proven": false,
+    "safe_fixture_only_validation_command_authorizable": false
+  },
+  "decision": {
+    "fixture_validation_execution_authorized": false,
+    "reason": "No exact fixture path or exact existing validation command was proven by the available read-only inventory evidence.",
+    "next_safe_step": "fuller read-only repository tree inventory"
+  },
+  "explicit_non_authorizations": {
+    "fixture_validation_execution": false,
+    "live_fetch": false,
+    "dry_run_execution_against_live_sources": false,
+    "artifact_diff_review_against_generated_production_artifacts": false,
+    "cache_touch_work": false,
+    "location_cache_changes": false,
+    "generated_artifact_changes": false,
+    "workflow_changes": false,
+    "script_tool_test_implementation_changes": false,
+    "public_map_runtime_changes": false,
+    "nyc_open_data_soda_api_calls": false,
+    "scraping": false,
+    "geocoding": false,
+    "wordpress_actions": false,
+    "registry_writes_or_imports": false,
+    "production_writes": false,
+    "scheduled_workflow_enablement": false,
+    "generated_artifact_auto_commit_behavior": false
+  },
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "fixture_inventory_results_only": true,
+    "fixture_validation_performed": false,
+    "validation_command_executed": false,
+    "validation_command_invented": false,
+    "exact_fixture_path_proven": false,
+    "exact_validation_command_proven": false,
+    "generated_data_artifacts_modified": false,
+    "location_cache_modified": false,
+    "scripts_modified": false,
+    "workflows_modified": false,
+    "tools_modified": false,
+    "tests_modified": false,
+    "public_map_runtime_modified": false,
+    "live_fetch_performed": false,
+    "dry_run_execution_performed": false,
+    "nyc_open_data_soda_api_call_performed": false,
+    "scraping_performed": false,
+    "geocoding_performed": false,
+    "wordpress_action_performed": false,
+    "registry_write_or_import_performed": false,
+    "production_write_performed": false
+  },
+  "verdict": "PASS",
+  "next_phase": "future XRI phase should perform fuller read-only repository tree inventory and must not run validation unless a later gate authorizes an exact fixture-only command based on proven evidence"
+}
