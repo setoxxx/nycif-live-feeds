@@ -1,0 +1,36 @@
+{
+  "phase": "XRI-G83",
+  "title": "exact fixture-only validation execution result capture",
+  "status": "execution_result_capture",
+  "baseline_commit": "864d4b84d4b0dd07b3e2869627ecd00b496fa0f8",
+  "captured_head": "864d4b84d4b0dd07b3e2869627ecd00b496fa0f8",
+  "prior_gate": "XRI-G82 exact fixture-only validation execution authorization gate",
+  "authorized_command": "python3 -m pytest tests/registry/test_xri_g42_fixture_only_validation_execution.py",
+  "executed_command": "python3 -m pytest tests/registry/test_xri_g42_fixture_only_validation_execution.py",
+  "exit_code": 1,
+  "result": "FAIL",
+  "python_version": "Python 3.14.4",
+  "pytest_version": "/usr/local/bin/python3: No module named pytest",
+  "git_status_short_before_command": [
+    "?? tmp/"
+  ],
+  "git_status_short_after_command": [
+    "?? tmp/"
+  ],
+  "pytest_output": "/usr/local/bin/python3: No module named pytest\n",
+  "safety_confirmations": {
+    "exact_g82_authorized_command_only": true,
+    "live_fetch_performed": false,
+    "dry_run_execution_performed": false,
+    "nyc_open_data_soda_api_call_performed": false,
+    "scraping_performed": false,
+    "geocoding_performed": false,
+    "wordpress_action_performed": false,
+    "location_cache_change_intended": false,
+    "scripts_tools_tests_workflows_change_intended": false,
+    "generated_map_runtime_feed_change_intended": false,
+    "documentation_report_only_result_capture": true
+  },
+  "verdict": "FAIL",
+  "next_phase": "review captured execution result and decide whether any further fixture-only validation is warranted"
+}
