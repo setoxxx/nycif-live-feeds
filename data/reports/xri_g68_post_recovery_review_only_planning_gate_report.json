@@ -1,0 +1,70 @@
+{
+  "phase": "XRI-G68",
+  "title": "post-recovery review-only planning gate",
+  "status": "gate_only",
+  "baseline_commit": "f3dd246",
+  "baseline_description": "Merge pull request #80 from setoxxx/xri-g67-post-recovery-continuation-scope-gate",
+  "purpose": "Define the first post-G67 review-only planning lane for future XRI work.",
+  "authorized_baseline": {
+    "commit": "f3dd246",
+    "description": "Merge pull request #80 from setoxxx/xri-g67-post-recovery-continuation-scope-gate"
+  },
+  "planning_lane_requires_future_gates_to_identify": [
+    "exact_starting_baseline_commit",
+    "intended_xri_phase_number",
+    "allowed_file_paths",
+    "forbidden_file_paths",
+    "docs_report_only_status",
+    "fixture_only_validation_allowed",
+    "artifact_diff_review_allowed",
+    "location_cache_touch_allowed",
+    "generated_artifacts_change_allowed",
+    "scripts_tools_tests_workflows_runtime_change_allowed",
+    "production_write_possible"
+  ],
+  "explicit_non_authorizations": {
+    "live_fetch": false,
+    "dry_run_execution": false,
+    "nyc_open_data_soda_api_calls": false,
+    "scraping": false,
+    "geocoding": false,
+    "wordpress_actions": false,
+    "production_writes": false,
+    "public_map_runtime_changes": false,
+    "workflow_changes": false,
+    "script_tool_test_changes": false,
+    "generated_artifact_changes": false,
+    "location_cache_changes": false,
+    "scheduled_workflow_enablement": false,
+    "generated_artifact_auto_commit_behavior": false
+  },
+  "permissions_inherited_from_this_gate": {
+    "execution_permission_inherited": false,
+    "live_fetch_permission_inherited": false,
+    "generated_artifact_permission_inherited": false,
+    "location_cache_permission_inherited": false,
+    "workflow_permission_inherited": false,
+    "production_write_permission_inherited": false
+  },
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "generated_data_artifacts_modified": false,
+    "location_cache_modified": false,
+    "scripts_modified": false,
+    "workflows_modified": false,
+    "tools_modified": false,
+    "tests_modified": false,
+    "public_map_runtime_modified": false,
+    "live_fetch_performed": false,
+    "dry_run_execution_performed": false,
+    "nyc_open_data_soda_api_call_performed": false,
+    "scraping_performed": false,
+    "geocoding_performed": false,
+    "wordpress_action_performed": false,
+    "production_write_performed": false,
+    "scheduled_workflow_enabled": false,
+    "generated_artifact_auto_commit_enabled": false
+  },
+  "verdict": "PASS",
+  "next_phase": "future XRI work must cite the XRI-G68 merge commit and remain gate-only unless separately authorized"
+}
