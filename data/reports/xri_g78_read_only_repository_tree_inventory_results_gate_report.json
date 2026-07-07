@@ -1,0 +1,83 @@
+{
+  "phase": "XRI-G78",
+  "title": "read-only repository tree inventory results gate",
+  "status": "gate_only_inventory_incomplete",
+  "baseline_commit": "5f41f79",
+  "baseline_description": "Merge pull request #90 from setoxxx/xri-g77-read-only-repository-tree-inventory-gate",
+  "prior_gate": "XRI-G77 read-only repository tree inventory gate",
+  "purpose": "Record the result of the attempted read-only repository tree inventory authorized by XRI-G77.",
+  "inventory_attempts": [
+    {
+      "method": "github_repository_metadata_lookup",
+      "result": "confirmed repository metadata including default branch main, public visibility, and clone URL"
+    },
+    {
+      "method": "github_api_recursive_tree_fetch",
+      "result": "not completed because available connector supports repository contents file URLs, not recursive git tree URLs"
+    },
+    {
+      "method": "local_container_public_clone",
+      "result": "not completed because github.com DNS resolution failed in the execution environment"
+    }
+  ],
+  "inventory_result": {
+    "fuller_repository_tree_inventory_completed": false,
+    "exact_committed_fixture_path_proven": false,
+    "exact_committed_test_path_proven": false,
+    "exact_package_or_dependency_manifest_path_proven": false,
+    "exact_existing_fixture_only_validation_command_proven": false,
+    "safe_fixture_only_validation_command_authorizable": false
+  },
+  "decision": {
+    "fixture_validation_execution_authorized": false,
+    "reason": "The fuller repository tree inventory was not completed from the available assistant environment, so no exact fixture path or validation command was proven.",
+    "next_safe_step": "Howard-side local read-only tree inventory using commands authorized by XRI-G77"
+  },
+  "explicit_non_authorizations": {
+    "fixture_validation_execution": false,
+    "live_fetch": false,
+    "dry_run_execution_against_live_sources": false,
+    "artifact_diff_review_against_generated_production_artifacts": false,
+    "cache_touch_work": false,
+    "location_cache_changes": false,
+    "generated_artifact_changes": false,
+    "workflow_changes": false,
+    "script_tool_test_implementation_changes": false,
+    "public_map_runtime_changes": false,
+    "nyc_open_data_soda_api_calls": false,
+    "scraping": false,
+    "geocoding": false,
+    "wordpress_actions": false,
+    "registry_writes_or_imports": false,
+    "production_writes": false,
+    "scheduled_workflow_enablement": false,
+    "generated_artifact_auto_commit_behavior": false
+  },
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "read_only_repository_tree_inventory_results_gate_only": true,
+    "inventory_incomplete_due_environment_or_tool_limitations": true,
+    "fixture_validation_performed": false,
+    "validation_command_executed": false,
+    "validation_command_invented": false,
+    "exact_fixture_path_proven": false,
+    "exact_validation_command_proven": false,
+    "generated_data_artifacts_modified": false,
+    "location_cache_modified": false,
+    "scripts_modified": false,
+    "workflows_modified": false,
+    "tools_modified": false,
+    "tests_modified": false,
+    "public_map_runtime_modified": false,
+    "live_fetch_performed": false,
+    "dry_run_execution_performed": false,
+    "nyc_open_data_soda_api_call_performed": false,
+    "scraping_performed": false,
+    "geocoding_performed": false,
+    "wordpress_action_performed": false,
+    "registry_write_or_import_performed": false,
+    "production_write_performed": false
+  },
+  "verdict": "PASS",
+  "next_phase": "future XRI phase should capture Howard-side local read-only tree inventory output and must not run validation unless a later gate authorizes an exact fixture-only command based on proven evidence"
+}
