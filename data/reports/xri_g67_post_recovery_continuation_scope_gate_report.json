@@ -1,0 +1,61 @@
+{
+  "phase": "XRI-G67",
+  "title": "post-recovery continuation scope gate",
+  "status": "gate_only",
+  "baseline_commit": "4d5713a",
+  "baseline_description": "Merge pull request #79 from setoxxx/xri-g66-post-recovery-restart-authorization-gate",
+  "purpose": "Define controlled continuation scope for future XRI work after recovery.",
+  "authorized_baseline": {
+    "commit": "4d5713a",
+    "description": "Merge pull request #79 from setoxxx/xri-g66-post-recovery-restart-authorization-gate"
+  },
+  "continuation_scope_requires_explicit_gate_fields": [
+    "starting_baseline_commit",
+    "allowed_file_paths",
+    "forbidden_file_paths",
+    "live_fetch_allowed",
+    "generated_artifacts_change_allowed",
+    "location_cache_change_allowed",
+    "workflow_change_allowed",
+    "scripts_tools_tests_change_allowed",
+    "public_map_runtime_change_allowed",
+    "production_write_possible"
+  ],
+  "required_future_gate_order_before_live_fetch_or_dry_run": [
+    "review_only_planning",
+    "fixture_only_validation",
+    "artifact_diff_review",
+    "cache_touch_authorization_if_needed",
+    "controlled_execution_authorization_if_needed"
+  ],
+  "permissions_inherited_from_this_gate": {
+    "live_fetch_allowed": false,
+    "dry_run_execution_allowed": false,
+    "generated_artifact_changes_allowed": false,
+    "location_cache_changes_allowed": false,
+    "workflow_changes_allowed": false,
+    "scripts_tools_tests_changes_allowed": false,
+    "public_map_runtime_changes_allowed": false,
+    "production_writes_allowed": false
+  },
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "generated_data_artifacts_modified": false,
+    "location_cache_modified": false,
+    "scripts_modified": false,
+    "workflows_modified": false,
+    "tools_modified": false,
+    "tests_modified": false,
+    "public_map_runtime_modified": false,
+    "live_fetch_performed": false,
+    "nyc_open_data_soda_api_call_performed": false,
+    "scraping_performed": false,
+    "geocoding_performed": false,
+    "wordpress_action_performed": false,
+    "production_write_performed": false,
+    "scheduled_workflow_enabled": false,
+    "generated_artifact_auto_commit_enabled": false
+  },
+  "verdict": "PASS",
+  "next_phase": "future XRI work must cite the XRI-G67 merge commit and remain gate-only unless separately authorized"
+}
