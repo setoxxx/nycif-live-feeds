@@ -1,0 +1,119 @@
+{
+  "phase": "XRI-G69",
+  "title": "post-G68 next-workstream authorization map gate",
+  "status": "gate_only",
+  "baseline_commit": "de52212",
+  "baseline_description": "Merge pull request #81 from setoxxx/xri-g68-post-recovery-review-only-planning-gate",
+  "purpose": "Create a review-only authorization map for possible future XRI workstreams.",
+  "authorization_map": [
+    {
+      "lane": 1,
+      "name": "review_only_planning",
+      "risk_level": "lowest",
+      "execution_allowed_by_default": false,
+      "production_write_allowed_by_default": false
+    },
+    {
+      "lane": 2,
+      "name": "fixture_only_validation",
+      "risk_level": "low",
+      "execution_allowed_by_default": false,
+      "production_write_allowed_by_default": false
+    },
+    {
+      "lane": 3,
+      "name": "artifact_diff_only_review",
+      "risk_level": "moderate",
+      "execution_allowed_by_default": false,
+      "production_write_allowed_by_default": false
+    },
+    {
+      "lane": 4,
+      "name": "cache_touch_authorization",
+      "risk_level": "high",
+      "execution_allowed_by_default": false,
+      "production_write_allowed_by_default": false
+    },
+    {
+      "lane": 5,
+      "name": "controlled_dry_run_authorization",
+      "risk_level": "high",
+      "execution_allowed_by_default": false,
+      "production_write_allowed_by_default": false
+    },
+    {
+      "lane": 6,
+      "name": "controlled_live_fetch_authorization",
+      "risk_level": "very_high",
+      "execution_allowed_by_default": false,
+      "production_write_allowed_by_default": false
+    },
+    {
+      "lane": 7,
+      "name": "public_runtime_authorization",
+      "risk_level": "very_high",
+      "execution_allowed_by_default": false,
+      "production_write_allowed_by_default": false
+    },
+    {
+      "lane": 8,
+      "name": "production_write_authorization",
+      "risk_level": "maximum",
+      "execution_allowed_by_default": false,
+      "production_write_allowed_by_default": false
+    }
+  ],
+  "default_rule": "All future XRI work is denied unless explicitly authorized by a future gate.",
+  "future_gate_required_fields": [
+    "starting_baseline_commit",
+    "lane_classification",
+    "allowed_files",
+    "forbidden_files",
+    "allowed_commands_if_any",
+    "forbidden_commands",
+    "live_fetch_allowed",
+    "dry_run_execution_allowed",
+    "generated_artifact_changes_allowed",
+    "location_cache_changes_allowed",
+    "scripts_tools_tests_workflows_runtime_changes_allowed",
+    "production_writes_allowed",
+    "review_evidence_required_before_merge"
+  ],
+  "explicit_non_authorizations": {
+    "live_fetch": false,
+    "dry_run_execution": false,
+    "nyc_open_data_soda_api_calls": false,
+    "scraping": false,
+    "geocoding": false,
+    "wordpress_actions": false,
+    "production_writes": false,
+    "public_map_runtime_changes": false,
+    "workflow_changes": false,
+    "script_tool_test_changes": false,
+    "generated_artifact_changes": false,
+    "location_cache_changes": false,
+    "scheduled_workflow_enablement": false,
+    "generated_artifact_auto_commit_behavior": false
+  },
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "generated_data_artifacts_modified": false,
+    "location_cache_modified": false,
+    "scripts_modified": false,
+    "workflows_modified": false,
+    "tools_modified": false,
+    "tests_modified": false,
+    "public_map_runtime_modified": false,
+    "live_fetch_performed": false,
+    "dry_run_execution_performed": false,
+    "nyc_open_data_soda_api_call_performed": false,
+    "scraping_performed": false,
+    "geocoding_performed": false,
+    "wordpress_action_performed": false,
+    "production_write_performed": false,
+    "scheduled_workflow_enabled": false,
+    "generated_artifact_auto_commit_enabled": false
+  },
+  "verdict": "PASS",
+  "next_phase": "future XRI work must cite the XRI-G69 merge commit and select exactly one authorization-map lane"
+}
