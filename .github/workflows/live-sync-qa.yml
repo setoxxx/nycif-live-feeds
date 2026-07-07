@@ -2,20 +2,18 @@ name: NYCIF Live Sync QA
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/live-sync-qa.yml'
-      - 'scripts/**'
-      - 'data/location_cache.json'
-      - 'nycif_all_radar_map_events.json'
-      - 'nycif_major_radar_map_events.json'
-  schedule:
-    - cron: '17 * * * *'
+    inputs:
+      allow_live_fetch:
+        description: "Type yes to allow live NYC Open Data fetch and local QA artifact generation"
+        required: true
+        default: "no"
+      allow_email:
+        description: "Type yes to allow sending the live delta email"
+        required: true
+        default: "no"
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: nycif-live-sync-qa
@@ -23,6 +21,7 @@ concurrency:
 
 jobs:
   live-sync-qa:
+    if: github.event.inputs.allow_live_fetch == 'yes'
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -87,6 +86,7 @@ jobs:
         run: python scripts/backend_reliability_gate.py || echo "BACKEND_GATE_FAILED=true" >> "$GITHUB_ENV"
 
       - name: Email live delta report
+        if: github.event.inputs.allow_email == 'yes'
         run: python scripts/send_live_delta_email.py
         env:
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
@@ -99,20 +99,6 @@ jobs:
 
       - name: Audit feed anomalies
         run: python scripts/audit_feed_anomalies.py
-
-      - name: Commit QA artifacts
-        if: always()
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/location_cache.json data/gps_repository_report.json data/gps_needs_review_events.json data/gps_review_group_report.json data/gps_review_location_groups.json data/gps_review_geocoding_queue.json data/gps_review_geocoding_proposals.json data/gps_review_geocoding_proposal_report.json data/gps_review_geocoding_filled_proposals.json data/gps_review_geocoding_fill_report.json data/gps_manual_approval_queue.json data/gps_manual_approval_queue_report.json data/gps_manual_approval_validation_report.json data/gps_manual_approval_review_sheet.json data/gps_manual_approval_review_sheet.csv data/gps_manual_approval_review_sheet_report.json data/gps_manual_approval_staging_candidates.json data/gps_manual_approval_staging_report.json data/gps_reviewed_approval_artifact.json data/gps_reviewed_approval_artifact_report.json data/raw_nyc_open_data_snapshot.json data/live_sync_report.json data/nycif_live_test_enriched_events.json data/test_enriched_feed_manifest.json data/nycif_staged_live_events.json data/staged_live_manifest.json data/live_delta_report.json data/previous_staged_live_events_snapshot.json data/feed_anomaly_report.json data/remainder_year_coverage_report.json data/row_disposition_report.json data/row_disposition_events.json data/backend_reliability_gate_report.json
-          if git diff --cached --quiet; then
-            echo "No QA artifact changes to commit."
-          else
-            git commit -m "Update NYC Open Data live QA artifacts"
-            git pull --rebase --autostash origin main
-            git push origin HEAD:main
-          fi
 
       - name: Enforce backend reliability gate
         if: env.BACKEND_GATE_FAILED == 'true'
