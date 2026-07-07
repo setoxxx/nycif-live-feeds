@@ -1,0 +1,63 @@
+{
+  "phase": "XRI-G73",
+  "title": "fixture-only validation authorization gate",
+  "status": "gate_only",
+  "baseline_commit": "82ceaff",
+  "baseline_description": "Merge pull request #85 from setoxxx/xri-g72-review-only-evidence-requirements-gate",
+  "prior_lane": {
+    "lane": 1,
+    "name": "review_only_planning"
+  },
+  "selected_next_lane": {
+    "name": "fixture_only_validation_authorization",
+    "risk_level": "lowest_executable"
+  },
+  "purpose": "Authorize a future gate to define and run fixture-only validation under strict boundaries.",
+  "authorized_future_activity": [
+    "read_committed_fixture_files",
+    "run_explicitly_named_fixture_only_validation_commands",
+    "produce_validation_reports_without_runtime_data_changes",
+    "review_validation_output_before_any_later_lane_selection"
+  ],
+  "explicit_non_authorizations": {
+    "live_fetch": false,
+    "dry_run_execution_against_live_sources": false,
+    "artifact_diff_review_against_generated_production_artifacts": false,
+    "cache_touch_work": false,
+    "location_cache_changes": false,
+    "generated_artifact_changes": false,
+    "workflow_changes": false,
+    "script_tool_test_implementation_changes": false,
+    "public_map_runtime_changes": false,
+    "nyc_open_data_soda_api_calls": false,
+    "scraping": false,
+    "geocoding": false,
+    "wordpress_actions": false,
+    "registry_writes_or_imports": false,
+    "production_writes": false,
+    "scheduled_workflow_enablement": false,
+    "generated_artifact_auto_commit_behavior": false
+  },
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "xri_g72_evidence_requirements_applied": true,
+    "fixture_validation_performed": false,
+    "generated_data_artifacts_modified": false,
+    "location_cache_modified": false,
+    "scripts_modified": false,
+    "workflows_modified": false,
+    "tools_modified": false,
+    "tests_modified": false,
+    "public_map_runtime_modified": false,
+    "live_fetch_performed": false,
+    "dry_run_execution_performed": false,
+    "nyc_open_data_soda_api_call_performed": false,
+    "scraping_performed": false,
+    "geocoding_performed": false,
+    "wordpress_action_performed": false,
+    "registry_write_or_import_performed": false,
+    "production_write_performed": false
+  },
+  "verdict": "PASS",
+  "next_phase": "future XRI phase may define fixture-only validation scope and commands after XRI-G73 is reviewed and merged"
+}
