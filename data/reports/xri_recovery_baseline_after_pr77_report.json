@@ -1,0 +1,37 @@
+{
+  "phase": "xri_recovery_baseline_after_pr77",
+  "status": "checkpoint",
+  "baseline_commit": "365009b",
+  "baseline_description": "Merge pull request #77 from setoxxx/gate-live-sync-qa-autocommit-after-pr76",
+  "completed_recovery_gates": [
+    "PR #76 restored generated artifacts to the verified XRI-G36 baseline",
+    "PR #77 gated live-sync QA auto-commit behavior",
+    "local main fast-forwarded to origin/main at 365009b",
+    "local and remote recovery branches cleaned up",
+    "working tree verified clean"
+  ],
+  "restart_rule": {
+    "resume_from_baseline_only": "365009b",
+    "live_sync_qa_requires_manual_allow_live_fetch_yes": true,
+    "generated_artifact_auto_commit_to_main_allowed": false,
+    "location_cache_modification_allowed_only_under_explicit_restore_or_audit_gate": true
+  },
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "generated_data_artifacts_modified": false,
+    "location_cache_modified": false,
+    "scripts_modified": false,
+    "workflows_modified": false,
+    "tools_modified": false,
+    "tests_modified": false,
+    "public_map_runtime_modified": false,
+    "live_fetch_performed": false,
+    "nyc_open_data_soda_api_call_performed": false,
+    "scraping_performed": false,
+    "geocoding_performed": false,
+    "wordpress_action_performed": false,
+    "xri_g66_started": false
+  },
+  "verdict": "PASS",
+  "next_phase": "future XRI work may resume only after this checkpoint is reviewed and merged"
+}
