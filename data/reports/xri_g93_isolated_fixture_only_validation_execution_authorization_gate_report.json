@@ -1,0 +1,62 @@
+{
+  "phase": "XRI-G93",
+  "title": "isolated fixture-only validation execution authorization gate",
+  "status": "documentation_gate_only",
+  "baseline_commit": "75ca996",
+  "prior_gate": "XRI-G92 isolated fixture-only setup output capture results",
+  "purpose": "Record the authorization boundary for a later isolated fixture-only validation execution result capture.",
+  "authorization_decision": {
+    "g92_confirmed_local_pytest_available": true,
+    "later_fixture_only_validation_execution_authorized": true,
+    "validation_execution_authorized_in_g93": false,
+    "repository_behavior_changes_authorized": false
+  },
+  "authorized_later_command_identity": {
+    "python_executable": "tmp/xri-g92/venv/bin/python",
+    "module": "pytest",
+    "target": "tests/registry/test_xri_g42_fixture_only_validation_execution.py",
+    "full_command": "tmp/xri-g92/venv/bin/python -m pytest tests/registry/test_xri_g42_fixture_only_validation_execution.py",
+    "capture_required": ["stdout", "stderr", "exit_code"]
+  },
+  "boundaries": {
+    "documentation_report_only": true,
+    "validation_execution_in_g93": false,
+    "pytest_test_run_in_g93": false,
+    "dependency_file_changes": false,
+    "script_changes": false,
+    "tool_changes": false,
+    "test_changes": false,
+    "workflow_changes": false,
+    "cache_changes": false,
+    "runtime_feed_changes": false,
+    "generated_artifact_changes": false,
+    "production_changes": false,
+    "live_source_access": false
+  },
+  "next_safe_gate": "XRI-G94 isolated fixture-only validation execution result capture",
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "starts_from_xri_g92_merge_commit": "75ca996",
+    "authorization_boundary_only": true,
+    "fixture_validation_execution_in_g93": false,
+    "pytest_test_run_in_g93": false,
+    "dependency_file_changes": false,
+    "generated_data_artifact_change": false,
+    "location_cache_change": false,
+    "script_change": false,
+    "workflow_change": false,
+    "tool_change": false,
+    "test_change": false,
+    "public_map_runtime_change": false,
+    "live_fetch": false,
+    "dry_run_against_live_sources": false,
+    "nyc_open_data_soda_api_call": false,
+    "scraping": false,
+    "geocoding": false,
+    "wordpress_action": false,
+    "registry_write_or_import": false,
+    "production_write": false
+  },
+  "verdict": "PASS",
+  "next_phase": "XRI-G94 isolated fixture-only validation execution result capture"
+}
