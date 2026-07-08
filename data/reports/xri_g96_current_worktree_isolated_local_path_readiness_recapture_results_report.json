@@ -16,28 +16,23 @@
   "captured_local_readiness": {
     "system_python_version": "Python 3.14.4",
     "system_python_path": "/usr/local/bin/python3",
+    "venv_path": "tmp/xri-g96/venv",
     "venv_create_output": "",
-    "venv_pip_before": "pip 26.0.1 from tmp/xri-g96/venv/lib/python3.14/site-packages/pip",
-    "pytest_install_result": "success",
+    "venv_pip_before": "pip 26.0.1 from /Users/howardweiss/GitHub/nycif-live-feeds/tmp/xri-g96/venv/lib/python3.14/site-packages/pip (python 3.14)",
+    "pytest_install_succeeded": true,
     "venv_pytest_version": "pytest 9.1.1",
     "venv_python_executable": "/Users/howardweiss/GitHub/nycif-live-feeds/tmp/xri-g96/venv/bin/python",
-    "venv_python_executable_check": 0
-  },
-  "finding": {
-    "current_worktree_local_path_ready": true,
-    "pytest_available_in_current_worktree_local_environment": true,
-    "fixture_validation_execution_performed": false,
-    "pytest_test_run_performed": false
+    "venv_python_executable_check": 0,
+    "path_ready": true
   },
   "decision": {
-    "next_safe_gate": "XRI-G97 current-worktree fixture-only validation execution authorization gate",
-    "validation_execution_authorized_in_g96": false,
-    "repository_behavior_changes_authorized": false,
-    "dependency_file_edits_authorized": false
+    "current_worktree_local_path_readiness_restored": true,
+    "fixture_validation_execution_performed": false,
+    "pytest_test_run_performed": false,
+    "next_safe_gate": "XRI-G97 current-worktree fixture-only validation execution authorization gate"
   },
   "boundaries": {
     "documentation_report_only": true,
-    "readiness_recapture_only": true,
     "validation_execution_in_g96": false,
     "pytest_test_run_in_g96": false,
     "dependency_file_changes": false,
