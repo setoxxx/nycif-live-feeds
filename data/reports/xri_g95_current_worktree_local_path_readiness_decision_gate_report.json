@@ -1,0 +1,60 @@
+{
+  "phase": "XRI-G95",
+  "title": "current-worktree local path readiness decision gate",
+  "status": "documentation_gate_only",
+  "baseline_commit": "00dd804",
+  "prior_gate": "XRI-G94 local path audit status",
+  "purpose": "Record the decision after G94 showed the expected local path was unavailable in the current worktree.",
+  "g94_finding": {
+    "fixture_assertion_result": null,
+    "classification": "current_worktree_local_path_readiness_issue",
+    "validation_started": false
+  },
+  "decision": {
+    "next_safe_path": "current-worktree local readiness recapture",
+    "next_safe_gate": "XRI-G96 current-worktree isolated local path readiness recapture gate",
+    "validation_execution_authorized_in_g95": false,
+    "pytest_test_run_authorized_in_g95": false,
+    "repository_behavior_changes_authorized": false
+  },
+  "boundaries": {
+    "documentation_report_only": true,
+    "validation_execution_in_g95": false,
+    "pytest_test_run_in_g95": false,
+    "dependency_file_changes": false,
+    "script_changes": false,
+    "tool_changes": false,
+    "test_changes": false,
+    "workflow_changes": false,
+    "cache_changes": false,
+    "runtime_feed_changes": false,
+    "generated_artifact_changes": false,
+    "production_changes": false,
+    "live_source_access": false
+  },
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "starts_from_xri_g94_merge_commit": "00dd804",
+    "decision_boundary_only": true,
+    "fixture_validation_execution_in_g95": false,
+    "pytest_test_run_in_g95": false,
+    "dependency_file_changes": false,
+    "generated_data_artifact_change": false,
+    "location_cache_change": false,
+    "script_change": false,
+    "workflow_change": false,
+    "tool_change": false,
+    "test_change": false,
+    "public_map_runtime_change": false,
+    "live_fetch": false,
+    "dry_run_against_live_sources": false,
+    "nyc_open_data_soda_api_call": false,
+    "scraping": false,
+    "geocoding": false,
+    "wordpress_action": false,
+    "registry_write_or_import": false,
+    "production_write": false
+  },
+  "verdict": "PASS",
+  "next_phase": "XRI-G96 current-worktree isolated local path readiness recapture gate"
+}
