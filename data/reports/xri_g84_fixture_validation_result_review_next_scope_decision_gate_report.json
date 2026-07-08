@@ -1,0 +1,67 @@
+{
+  "phase": "XRI-G84",
+  "title": "fixture-only validation result review and next-scope decision gate",
+  "status": "review_and_decision_gate_only",
+  "baseline_commit": "fbfe29e",
+  "prior_gate": "XRI-G83 exact fixture-only validation execution result capture",
+  "g83_result_reviewed": {
+    "authorized_command": "python3 -m pytest tests/registry/test_xri_g42_fixture_only_validation_execution.py",
+    "exit_code": 1,
+    "result": "FAIL",
+    "python_version": "Python 3.14.4",
+    "pytest_version": "/usr/local/bin/python3: No module named pytest",
+    "pytest_output": "/usr/local/bin/python3: No module named pytest"
+  },
+  "finding": {
+    "classification": "environment_tooling_block",
+    "fixture_assertion_failure_found": false,
+    "test_collection_reached": false,
+    "reason": "The local Python environment reported that pytest was unavailable."
+  },
+  "decision": {
+    "rerun_authorized_in_g84": false,
+    "command_broadening_authorized": false,
+    "implementation_changes_authorized": false,
+    "next_safe_gate": "XRI-G85 fixture-only test environment readiness gate"
+  },
+  "explicit_non_authorizations": {
+    "validation_execution": false,
+    "pytest_rerun": false,
+    "dependency_changes": false,
+    "script_tool_test_workflow_changes": false,
+    "location_cache_changes": false,
+    "generated_runtime_artifact_changes": false,
+    "live_fetch": false,
+    "dry_run_execution_against_live_sources": false,
+    "nyc_open_data_soda_api_calls": false,
+    "scraping": false,
+    "geocoding": false,
+    "wordpress_actions": false,
+    "registry_writes_or_imports": false,
+    "production_writes": false
+  },
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "g83_result_reviewed_only": true,
+    "validation_command_executed_in_g84": false,
+    "pytest_rerun_in_g84": false,
+    "dependency_files_modified": false,
+    "generated_data_artifacts_modified": false,
+    "location_cache_modified": false,
+    "scripts_modified": false,
+    "workflows_modified": false,
+    "tools_modified": false,
+    "tests_modified": false,
+    "public_map_runtime_modified": false,
+    "live_fetch_performed": false,
+    "dry_run_execution_performed": false,
+    "nyc_open_data_soda_api_call_performed": false,
+    "scraping_performed": false,
+    "geocoding_performed": false,
+    "wordpress_action_performed": false,
+    "registry_write_or_import_performed": false,
+    "production_write_performed": false
+  },
+  "verdict": "PASS",
+  "next_phase": "XRI-G85 fixture-only test environment readiness gate"
+}
