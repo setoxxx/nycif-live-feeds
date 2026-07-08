@@ -1,0 +1,64 @@
+{
+  "phase": "XRI-G87",
+  "title": "fixture-only test environment readiness output capture results",
+  "status": "readiness_output_capture_results",
+  "baseline_commit": "1ed24ab",
+  "prior_gate": "XRI-G86 fixture-only test environment readiness output capture gate",
+  "captured_repository_identity": {
+    "branch": "xri-g87-fixture-only-test-environment-readiness-output-capture-results",
+    "head": "1ed24ab1d610189375bdf7034ec0d64932ab82da",
+    "upstream": "origin/xri-g87-fixture-only-test-environment-readiness-output-capture-results"
+  },
+  "captured_git_status": {
+    "status_before": ["?? tmp/"],
+    "status_after": ["?? tmp/"],
+    "note": "The tmp path was created for local output capture."
+  },
+  "captured_python_environment": {
+    "python_version": "Python 3.9.6",
+    "python_path": "/usr/bin/python3",
+    "python_executable": "/Library/Developer/CommandLineTools/usr/bin/python3",
+    "pip_version_summary": "pip 21.2.4, python 3.9 site-packages"
+  },
+  "captured_test_tool_availability": {
+    "package_status": "Package not found",
+    "module_status": "No module named pytest",
+    "pytest_available": false
+  },
+  "finding": {
+    "classification": "environment_readiness_block",
+    "fixture_assertion_failure_found": false,
+    "summary": "The local Command Line Tools Python 3.9.6 environment does not have pytest available."
+  },
+  "decision": {
+    "fixture_validation_rerun_authorized": false,
+    "dependency_installation_authorized": false,
+    "dependency_file_edits_authorized": false,
+    "next_safe_gate": "test environment availability decision gate"
+  },
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "starts_from_xri_g86_merge_commit": "1ed24ab",
+    "readiness_outputs_captured_only": true,
+    "validation_execution": false,
+    "dependency_installation": false,
+    "dependency_file_changes": false,
+    "generated_data_artifact_change": false,
+    "location_cache_change": false,
+    "script_change": false,
+    "workflow_change": false,
+    "tool_change": false,
+    "test_change": false,
+    "public_map_runtime_change": false,
+    "live_fetch": false,
+    "dry_run": false,
+    "nyc_open_data_soda_api_call": false,
+    "scraping": false,
+    "geocoding": false,
+    "wordpress_action": false,
+    "registry_write_or_import": false,
+    "production_write": false
+  },
+  "verdict": "PASS",
+  "next_phase": "XRI-G88 test environment availability decision gate"
+}
