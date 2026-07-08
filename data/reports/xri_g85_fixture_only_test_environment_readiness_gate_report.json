@@ -1,0 +1,53 @@
+{
+  "phase": "XRI-G85",
+  "title": "fixture-only test environment readiness gate",
+  "status": "documentation_gate_only",
+  "baseline_commit": "2c771d5",
+  "prior_gate": "XRI-G84 fixture-only validation result review and next-scope decision gate",
+  "purpose": "Record the next safe scope after G84 classified G83 as a local environment readiness issue.",
+  "finding_carried_forward": {
+    "g83_result_proved_fixture_assertion_failure": false,
+    "g83_result_classification": "environment_readiness_issue",
+    "summary": "The local test tool was unavailable in the Python environment used for the capture."
+  },
+  "decision": {
+    "next_safe_phase": "XRI-G86 fixture-only test environment readiness output capture gate",
+    "repository_behavior_changes_authorized": false
+  },
+  "boundaries": {
+    "documentation_report_only": true,
+    "dependency_file_changes": false,
+    "script_changes": false,
+    "tool_changes": false,
+    "test_changes": false,
+    "workflow_changes": false,
+    "cache_changes": false,
+    "runtime_feed_changes": false,
+    "production_changes": false,
+    "live_source_access": false
+  },
+  "safety_confirmations": {
+    "documentation_report_only": true,
+    "starts_from_xri_g84_merge_commit": "2c771d5",
+    "environment_readiness_decision_only": true,
+    "validation_execution": false,
+    "dependency_change": false,
+    "generated_data_artifact_change": false,
+    "location_cache_change": false,
+    "script_change": false,
+    "workflow_change": false,
+    "tool_change": false,
+    "test_change": false,
+    "public_map_runtime_change": false,
+    "live_fetch": false,
+    "dry_run": false,
+    "nyc_open_data_soda_api_call": false,
+    "scraping": false,
+    "geocoding": false,
+    "wordpress_action": false,
+    "registry_write_or_import": false,
+    "production_write": false
+  },
+  "verdict": "PASS",
+  "next_phase": "XRI-G86 fixture-only test environment readiness output capture gate"
+}
