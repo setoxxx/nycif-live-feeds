@@ -1,0 +1,21 @@
+{
+  "phase": "XRI-G92",
+  "title": "fixture-only local readiness output results",
+  "status": "documentation_report_only",
+  "baseline_commit": "d84efbc",
+  "branch": "xri-g92-isolated-fixture-only-test-environment-setup-output-capture-results",
+  "head": "d84efbcefae41dbbd96be901d250c207439ed0c6",
+  "status_before": ["?? tmp/"],
+  "status_after": ["?? tmp/"],
+  "system_python_version": "Python 3.9.6",
+  "system_python_path": "/usr/bin/python3",
+  "local_python_executable": "/Users/howardweiss/GitHub/nycif-live-feeds/tmp/xri-g92/venv/bin/python",
+  "local_pytest_version": "pytest 8.4.2",
+  "pytest_available": true,
+  "test_run_performed": false,
+  "validation_execution_performed": false,
+  "repository_behavior_changes_authorized": false,
+  "dependency_file_edits_authorized": false,
+  "verdict": "PASS",
+  "next_phase": "XRI-G93 isolated fixture-only validation execution authorization gate"
+}
