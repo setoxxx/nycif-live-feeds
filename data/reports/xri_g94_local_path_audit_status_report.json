@@ -1,0 +1,25 @@
+{
+  "phase": "XRI-G94",
+  "status": "captured",
+  "baseline": "117161e",
+  "branch": "xri-g94-isolated-fixture-only-validation-execution-result-capture",
+  "head": "117161e3ba46d80e168136a7dd1a795669ccaaa7",
+  "observed_result": "local_path_unavailable",
+  "classification": "environment_path_availability_issue",
+  "fixture_assertion_result": null,
+  "repository_effect": "documentation_only",
+  "next_safe_gate": "current-worktree local path readiness decision",
+  "safety": {
+    "live_fetch": false,
+    "source_api_call": false,
+    "scraping": false,
+    "geocoding": false,
+    "wordpress_action": false,
+    "production_write": false,
+    "dependency_file_change": false,
+    "source_file_change": false,
+    "generated_runtime_change": false,
+    "location_cache_change": false
+  },
+  "verdict": "PASS"
+}
