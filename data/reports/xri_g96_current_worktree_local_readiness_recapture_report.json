@@ -1,0 +1,30 @@
+{
+  "phase": "XRI-G96",
+  "status": "readiness_captured",
+  "baseline": "cb85991",
+  "prior_gate": "XRI-G95",
+  "branch": "xri-g96-current-worktree-isolated-local-path-readiness-recapture-gate",
+  "head": "f159e01217d8e81ddd9bab3f3f85d0c7cd5dbfbc",
+  "system_python_version": "Python 3.14.4",
+  "system_python_path": "/usr/local/bin/python3",
+  "local_readiness_path_available": true,
+  "readiness_check": 0,
+  "tool_availability": "pytest 9.1.1",
+  "validation_run": false,
+  "test_run": false,
+  "finding": "current_worktree_local_readiness_available",
+  "next_safe_gate": "renewed fixture-only execution authorization",
+  "safety": {
+    "live_fetch": false,
+    "source_api_call": false,
+    "scraping": false,
+    "geocoding": false,
+    "wordpress_action": false,
+    "production_write": false,
+    "dependency_file_change": false,
+    "source_file_change": false,
+    "generated_runtime_change": false,
+    "location_cache_change": false
+  },
+  "verdict": "PASS"
+}
