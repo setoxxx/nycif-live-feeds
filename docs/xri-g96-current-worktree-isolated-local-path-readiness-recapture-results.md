@@ -6,9 +6,9 @@ Prior gate: XRI-G95 current-worktree local path readiness decision gate
 
 ## Purpose
 
-Record current-worktree isolated local path readiness output after G95 selected readiness recapture as the next safe path.
+Capture current-worktree isolated local path readiness before any renewed fixture-only validation attempt.
 
-G96 makes no repository behavior changes.
+G96 does not run fixture validation.
 
 ## Captured repository identity
 
@@ -25,36 +25,45 @@ status_before: ?? tmp/
 status_after: ?? tmp/
 ```
 
-Only the local tmp path appeared as untracked in the capture.
+Only the local tmp output path appeared as untracked in the capture.
 
-## Captured local readiness output
+## Captured local Python environment
 
 ```text
 system_python_version: Python 3.14.4
 system_python_path: /usr/local/bin/python3
-venv_create_output: empty
-venv_pip_before: pip 26.0.1 from tmp/xri-g96/venv/lib/python3.14/site-packages/pip
-pytest_install_result: success
-venv_pytest_version: pytest 9.1.1
+venv_path: tmp/xri-g96/venv
 venv_python_executable: /Users/howardweiss/GitHub/nycif-live-feeds/tmp/xri-g96/venv/bin/python
 venv_python_executable_check: 0
+venv_pip_before: pip 26.0.1
+venv_pytest_version: pytest 9.1.1
 ```
 
-## Finding
+## Captured setup result
 
-The current worktree now has an available isolated local Python path under `tmp/xri-g96/venv/bin/python`.
+The current-worktree isolated local path was recreated successfully.
 
-Pytest is available in that isolated local environment as `pytest 9.1.1`.
+The local pytest installation completed successfully inside the isolated tmp/xri-g96 virtual environment.
 
-The executable check returned `0`.
+The executable check returned 0.
 
 ## Decision
 
-G96 confirms current-worktree local path readiness.
+Current-worktree isolated local path readiness is restored.
 
-G96 did not run fixture validation.
+A later gate may authorize an exact fixture-only validation execution attempt using the current-worktree G96 interpreter path.
 
-The next safe gate may authorize a renewed exact fixture-only validation execution using the G96 local Python path.
+## Not performed in G96
+
+- No fixture validation execution.
+- No pytest test run against the fixture validation target.
+- No live fetch.
+- No dry-run against live sources.
+- No production write.
+- No dependency file change.
+- No script, tool, test, or workflow change.
+- No generated runtime artifact change.
+- No data/location_cache.json change.
 
 ## Next safe gate
 
@@ -62,26 +71,4 @@ The next safe gate may authorize a renewed exact fixture-only validation executi
 XRI-G97 — current-worktree fixture-only validation execution authorization gate
 ```
 
-## Safety confirmations
-
-- Documentation/report only.
-- Starts from XRI-G95 merge commit cb85991.
-- Readiness recapture only.
-- No fixture validation execution in G96.
-- No pytest test run in G96.
-- No dependency file changes.
-- No generated data artifacts modified.
-- No data/location_cache.json modification.
-- No scripts modified.
-- No workflows modified.
-- No tools modified.
-- No tests modified.
-- No public map runtime files modified.
-- No live fetch performed.
-- No dry-run against live sources performed.
-- No NYC Open Data/SODA/API call performed.
-- No scraping performed.
-- No geocoding performed.
-- No WordPress action performed.
-- No registry write/import performed.
-- No production write performed.
+G97 may authorize a later fixture-only validation execution using the G96 interpreter path, but G97 itself should remain an authorization boundary unless explicitly scoped otherwise.
