@@ -1,0 +1,1249 @@
+{
+  "gate": "XRI-G101",
+  "title": "XRI-G101 Non-Production Controlled Live-Fetch Dry-Run Review Artifact Disposition Record Input Package and Stable Candidate Selection Boundary Gate",
+  "track_identifier": "controlled_live_fetch_review_artifact_track",
+  "status": "checkpoint_3_pre_write_validation_pass",
+  "documentation_report_only": true,
+  "contract_identity": {
+    "identifier": "xri_g101_disposition_record_input_package_candidate_selection_contract",
+    "version": "1.0.0",
+    "method_declaration": "xri_g101_disposition_record_input_package_candidate_selection_contract@1.0.0"
+  },
+  "baseline": {
+    "repository": "setoxxx/nycif-live-feeds",
+    "base_branch": "main",
+    "required_base_sha": "5a26d3aa16c21b01b4aea9831f07277f09dbe9ff",
+    "verified_main_sha": "5a26d3aa16c21b01b4aea9831f07277f09dbe9ff",
+    "checkpoint": 3,
+    "repository_write_performed": false
+  },
+  "phase_identity": {
+    "phase_number": "XRI-G101",
+    "phase_title": "XRI-G101 Non-Production Controlled Live-Fetch Dry-Run Review Artifact Disposition Record Input Package and Stable Candidate Selection Boundary Gate",
+    "track_identifier": "controlled_live_fetch_review_artifact_track",
+    "proposed_branch": "xri-g101-disposition-record-input-package-candidate-selection-boundary-gate",
+    "documentation_path": "docs/xri-g101-non-production-controlled-live-fetch-dry-run-review-artifact-disposition-record-input-package-stable-candidate-selection-boundary-gate.md",
+    "report_path": "data/reports/xri_g101_non_production_controlled_live_fetch_dry_run_review_artifact_disposition_record_input_package_stable_candidate_selection_boundary_gate_report.json",
+    "contract_identifier": "xri_g101_disposition_record_input_package_candidate_selection_contract",
+    "contract_version": "1.0.0"
+  },
+  "immediate_predecessor": {
+    "phase_number": "XRI-G100",
+    "pull_request": 131,
+    "head_sha": "f4dfda8f7dd9cc4b7a1b23333490a036a3e1a95c",
+    "merge_commit_sha": "5a26d3aa16c21b01b4aea9831f07277f09dbe9ff",
+    "artifacts": [
+      "docs/xri-g100-non-production-controlled-live-fetch-dry-run-review-artifact-purge-verification-attestation-validation-disposition-record-structural-validation-boundary-gate.md",
+      "data/reports/xri_g100_non_production_controlled_live_fetch_dry_run_review_artifact_purge_verification_attestation_validation_disposition_record_structural_validation_boundary_gate_report.json"
+    ]
+  },
+  "logical_lifecycle_predecessors": [
+    {
+      "phase_number": "XRI-G100",
+      "pull_request": 131,
+      "merge_commit_sha": "5a26d3aa16c21b01b4aea9831f07277f09dbe9ff",
+      "lifecycle_role": "disposition_record_structural_validation_boundary"
+    },
+    {
+      "phase_number": "XRI-G99",
+      "pull_request": 130,
+      "merge_commit_sha": "9a875e790c6a756503d6e9f741ab08488bdd2a8d",
+      "lifecycle_role": "disposition_contract_and_first_match_boundary"
+    },
+    {
+      "phase_number": "XRI-G82",
+      "pull_request": 128,
+      "merge_commit_sha": "1a5910896a855635941f81a6e60b7be351d7053f",
+      "lifecycle_role": "attestation_structural_validation_boundary"
+    },
+    {
+      "phase_number": "XRI-G81",
+      "pull_request": 127,
+      "merge_commit_sha": "b7997bef5caa68b4a0ccc662da2c58ae6ec9c298",
+      "lifecycle_role": "purge_verification_attestation_boundary"
+    }
+  ],
+  "allowed_files": [
+    "docs/xri-g101-non-production-controlled-live-fetch-dry-run-review-artifact-disposition-record-input-package-stable-candidate-selection-boundary-gate.md",
+    "data/reports/xri_g101_non_production_controlled_live_fetch_dry_run_review_artifact_disposition_record_input_package_stable_candidate_selection_boundary_gate_report.json"
+  ],
+  "readiness_vocabulary": [
+    "input_package_ready_for_disposition_record_creation_review_only",
+    "input_package_ready_for_audit_reference_only",
+    "input_package_ready_for_later_gate_review_only",
+    "input_package_structurally_invalid",
+    "input_package_incomplete",
+    "input_package_blocked"
+  ],
+  "readiness_purpose_vocabulary": [
+    "disposition_record_creation_review_only",
+    "audit_reference_only",
+    "later_gate_review_only",
+    "not_applicable"
+  ],
+  "readiness_meanings": {
+    "input_package_ready_for_disposition_record_creation_review_only": {
+      "purpose": "disposition_record_creation_review_only",
+      "meaning": "Complete, resolvable, internally consistent, correctly scoped, safely isolated, and suitable only for separate review of whether disposition-record creation should later be authorized.",
+      "authority_granted": false,
+      "processing_stop_required": true
+    },
+    "input_package_ready_for_audit_reference_only": {
+      "purpose": "audit_reference_only",
+      "meaning": "Structurally ready to be referenced by a controlled non-production audit record only.",
+      "authority_granted": false,
+      "processing_stop_required": true
+    },
+    "input_package_ready_for_later_gate_review_only": {
+      "purpose": "later_gate_review_only",
+      "meaning": "Structurally ready to be considered by a separately authorized later gate using a then-current baseline.",
+      "authority_granted": false,
+      "processing_stop_required": true
+    },
+    "input_package_structurally_invalid": {
+      "purpose": "not_applicable",
+      "meaning": "Required information is sufficiently available and safe to evaluate, but at least one supplied value or resolved relationship violates the contract without triggering a hard block.",
+      "authority_granted": false,
+      "processing_stop_required": true
+    },
+    "input_package_incomplete": {
+      "purpose": "not_applicable",
+      "meaning": "A conclusive readiness result cannot be reached because required information is absent, empty, ambiguous, or not yet supplied.",
+      "authority_granted": false,
+      "processing_stop_required": true
+    },
+    "input_package_blocked": {
+      "purpose": "not_applicable",
+      "meaning": "Readiness evaluation cannot safely proceed because a prohibited, unauthorized, confidential, unresolvable, or isolation-breaking condition exists.",
+      "authority_granted": false,
+      "processing_stop_required": true
+    }
+  },
+  "canonical_input_package_envelope": {
+    "field_count": 75,
+    "unique_field_count": 75,
+    "duplicate_fields": [],
+    "all_fields_always_present": true,
+    "omission_equals_controlled_unavailability": false,
+    "indexing": "one_based",
+    "fields": [
+      "input_package_identifier",
+      "input_package_version",
+      "input_package_readiness_status",
+      "input_package_readiness_purpose",
+      "input_package_reason_codes",
+      "input_package_timestamp_declaration",
+      "input_package_actor_declaration",
+      "input_package_actor_authority_declaration",
+      "input_package_method_declaration",
+      "contract_identifier",
+      "contract_version",
+      "track_identifier",
+      "phase_identity",
+      "repository",
+      "branch_name",
+      "head_sha",
+      "pull_request_number",
+      "predecessor_phase_identity",
+      "predecessor_pull_request",
+      "predecessor_head_sha",
+      "predecessor_merge_commit",
+      "logical_lifecycle_predecessor_identities",
+      "stable_candidate_identity",
+      "candidate_identity",
+      "group_key",
+      "display_location",
+      "source_identity_summary",
+      "validation_record_reference",
+      "validation_identifier",
+      "validation_version",
+      "validation_result",
+      "validation_scope",
+      "attestation_record_reference",
+      "attestation_identifier",
+      "attestation_version",
+      "attestation_scope",
+      "purge_verification_record_reference",
+      "purge_verification_scope_reference",
+      "disposition_purpose_request",
+      "required_field_completeness_summary",
+      "cross_reference_consistency_summary",
+      "scope_consistency_summary",
+      "identity_consistency_summary",
+      "version_consistency_summary",
+      "forbidden_anchor_rejection_summary",
+      "evidence_minimization_declaration",
+      "confidential_data_exclusion_declaration",
+      "forbidden_path_exclusion_declaration",
+      "artifact_isolation_summary",
+      "no_write_declaration",
+      "no_registry_write_declaration",
+      "no_production_write_declaration",
+      "no_public_map_write_declaration",
+      "no_wordpress_write_declaration",
+      "no_scheduled_workflow_write_declaration",
+      "no_location_cache_write_declaration",
+      "no_cache_write_declaration",
+      "non_authoritative_input_package_declaration",
+      "input_package_is_not_candidate_approval_declaration",
+      "input_package_is_not_disposition_creation_authorization_declaration",
+      "input_package_is_not_disposition_record_declaration",
+      "input_package_is_not_validation_result_declaration",
+      "input_package_is_not_execution_authorization_declaration",
+      "input_package_is_not_registry_input_declaration",
+      "input_package_is_not_production_input_declaration",
+      "input_package_is_not_public_map_input_declaration",
+      "input_package_is_not_wordpress_input_declaration",
+      "input_package_is_not_publishing_input_declaration",
+      "input_package_is_not_staging_input_declaration",
+      "input_package_is_not_promotion_input_declaration",
+      "later_review_allowed",
+      "processing_stop_required",
+      "authority_granted",
+      "failure_stop_summary",
+      "next_phase_boundary_declaration"
+    ]
+  },
+  "field_type_contract": {
+    "profile_count": 28,
+    "profiles": {
+      "immutable_identifier": {
+        "json_type": "string",
+        "required_keys": [],
+        "exact_controlled_values": [],
+        "format_or_invariants": [
+          "non-empty",
+          "immutable",
+          "controlled-character-set"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "fabricated identifier",
+          "substituted identifier",
+          "unauthorized identity claim"
+        ]
+      },
+      "semantic_version": {
+        "json_type": "string",
+        "required_keys": [],
+        "exact_controlled_values": [],
+        "format_or_invariants": [
+          "major.minor.patch"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "unauthorized contract-identifier replacement",
+          "unauthorized contract-version replacement"
+        ]
+      },
+      "controlled_enum": {
+        "json_type": "string",
+        "required_keys": [],
+        "exact_controlled_values": [],
+        "format_or_invariants": [
+          "exact member of the field vocabulary"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "authority-bearing value outside the vocabulary"
+        ]
+      },
+      "controlled_reason_code_array": {
+        "json_type": "array of strings",
+        "required_keys": [],
+        "exact_controlled_values": [],
+        "format_or_invariants": [
+          "non-empty",
+          "unique items",
+          "controlled values only"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "reason code implies unauthorized execution or write authority"
+        ]
+      },
+      "rfc3339_utc_timestamp": {
+        "json_type": "string",
+        "required_keys": [],
+        "exact_controlled_values": [],
+        "format_or_invariants": [
+          "RFC 3339 UTC timestamp"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "fabricated timestamp used to claim authorization or execution"
+        ]
+      },
+      "actor_declaration": {
+        "json_type": "object",
+        "required_keys": [
+          "actor_identifier",
+          "actor_role",
+          "personal_data_minimized"
+        ],
+        "exact_controlled_values": [
+          true
+        ],
+        "format_or_invariants": [
+          "personal_data_minimized must be true",
+          "actor data must be minimized"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "explicitly unauthorized actor",
+          "excess personal data",
+          "false authority claim"
+        ]
+      },
+      "exact_authority_string": {
+        "json_type": "string",
+        "required_keys": [],
+        "exact_controlled_values": [
+          "non_authoritative_input_package_review_only"
+        ],
+        "format_or_invariants": [],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "candidate approval authority",
+          "disposition-record creation authority",
+          "validation execution authority",
+          "result-recording authority",
+          "registry, production, publishing, staging, promotion, WordPress, or public-map authority"
+        ]
+      },
+      "method_declaration": {
+        "json_type": "string",
+        "required_keys": [],
+        "exact_controlled_values": [
+          "xri_g101_disposition_record_input_package_candidate_selection_contract@1.0.0"
+        ],
+        "format_or_invariants": [
+          "identifies the exact contract and contract version"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "method claims executable or operational authority"
+        ]
+      },
+      "phase_identity": {
+        "json_type": "object",
+        "required_keys": [
+          "phase_number",
+          "phase_title",
+          "track_identifier",
+          "repository",
+          "branch_name",
+          "head_sha",
+          "pull_request_number"
+        ],
+        "exact_controlled_values": [],
+        "format_or_invariants": [
+          "all identity members resolve to one phase"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "identity substitution",
+          "cross-track collision",
+          "unresolvable required immutable reference"
+        ]
+      },
+      "exact_repository_string": {
+        "json_type": "string",
+        "required_keys": [],
+        "exact_controlled_values": [
+          "setoxxx/nycif-live-feeds"
+        ],
+        "format_or_invariants": [],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "external production target",
+          "unauthorized repository target"
+        ]
+      },
+      "branch_name": {
+        "json_type": "string",
+        "required_keys": [],
+        "exact_controlled_values": [],
+        "format_or_invariants": [
+          "non-empty",
+          "valid Git ref component"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "protected or production branch used as a write destination"
+        ]
+      },
+      "commit_sha": {
+        "json_type": "string",
+        "required_keys": [],
+        "exact_controlled_values": [],
+        "format_or_invariants": [
+          "40 lowercase hexadecimal characters"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "mutable alias substituted for required immutable SHA"
+        ]
+      },
+      "positive_integer": {
+        "json_type": "integer",
+        "required_keys": [],
+        "exact_controlled_values": [],
+        "format_or_invariants": [
+          "minimum 1"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "pull-request reference outside the authorized repository or scope"
+        ]
+      },
+      "stable_phase_identity": {
+        "json_type": "object",
+        "required_keys": [
+          "phase_number",
+          "phase_title",
+          "track_identifier",
+          "repository",
+          "immutable_commit_sha"
+        ],
+        "exact_controlled_values": [],
+        "format_or_invariants": [
+          "phase number, title, track, repository, and immutable reference agree"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "phase-number collision",
+          "identity substitution"
+        ]
+      },
+      "stable_phase_identity_array": {
+        "json_type": "array of objects",
+        "required_keys": [],
+        "exact_controlled_values": [],
+        "format_or_invariants": [
+          "non-empty",
+          "unique entries",
+          "contains required logical predecessors"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "cross-track predecessor substitution",
+          "required predecessor unresolvable"
+        ]
+      },
+      "stable_reference": {
+        "json_type": "object",
+        "required_keys": [
+          "record_identifier",
+          "record_version",
+          "repository",
+          "immutable_commit_sha",
+          "path_or_record_locator",
+          "candidate_identity"
+        ],
+        "exact_controlled_values": [],
+        "format_or_invariants": [
+          "immutable and resolvable locator"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "forbidden path",
+          "mutable-only locator",
+          "confidential target",
+          "unauthorized write target"
+        ]
+      },
+      "scope_object": {
+        "json_type": "object",
+        "required_keys": [
+          "scope_identifier",
+          "scope_version",
+          "scope_boundaries",
+          "operational_authority",
+          "production_authority"
+        ],
+        "exact_controlled_values": [
+          false
+        ],
+        "format_or_invariants": [
+          "operational_authority must be false",
+          "production_authority must be false"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "scope requires forbidden execution or write activity"
+        ]
+      },
+      "stable_candidate_identity": {
+        "json_type": "object",
+        "required_keys": [
+          "candidate_identity"
+        ],
+        "exact_controlled_values": [],
+        "format_or_invariants": [
+          "at least one of group_key or display_location is concrete",
+          "all supplied values agree"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "forbidden identity anchor",
+          "present but unresolvable identity",
+          "fabricated identity"
+        ]
+      },
+      "candidate_identity": {
+        "json_type": "string",
+        "required_keys": [],
+        "exact_controlled_values": [],
+        "format_or_invariants": [
+          "non-empty",
+          "immutable",
+          "controlled-character-set"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "fabricated identity",
+          "identity derived from positional or mutable anchors"
+        ]
+      },
+      "optional_stable_corroborator": {
+        "json_type": "string or controlled-unavailable-value object",
+        "required_keys": [],
+        "exact_controlled_values": [],
+        "format_or_invariants": [
+          "concrete string is non-empty and stable",
+          "at least one corroborator remains concrete"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "ranking, position, mutable workflow state, coordinates, geometry, or runtime path used as corroboration"
+        ]
+      },
+      "minimized_summary": {
+        "json_type": "object",
+        "required_keys": [
+          "status",
+          "reason_codes",
+          "details"
+        ],
+        "exact_controlled_values": [
+          "pass",
+          "fail",
+          "incomplete",
+          "blocked"
+        ],
+        "format_or_invariants": [
+          "details contain only contract-relevant minimized information"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "sensitive or prohibited evidence exposure"
+        ]
+      },
+      "required_true_boolean": {
+        "json_type": "boolean",
+        "required_keys": [],
+        "exact_controlled_values": [
+          true
+        ],
+        "format_or_invariants": [],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "safety-critical declaration set to false"
+        ]
+      },
+      "required_false_boolean": {
+        "json_type": "boolean",
+        "required_keys": [],
+        "exact_controlled_values": [
+          false
+        ],
+        "format_or_invariants": [],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "authority, execution, production, or write declaration set to true"
+        ]
+      },
+      "later_review_boolean": {
+        "json_type": "boolean",
+        "required_keys": [],
+        "exact_controlled_values": [
+          true,
+          false
+        ],
+        "format_or_invariants": [
+          "true for ready, structurally invalid, and incomplete; false for blocked",
+          "never implies automatic continuation"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "value used to imply automatic continuation"
+        ]
+      },
+      "processing_stop_true": {
+        "json_type": "boolean",
+        "required_keys": [],
+        "exact_controlled_values": [
+          true
+        ],
+        "format_or_invariants": [],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "processing_stop_required is false"
+        ]
+      },
+      "authority_false": {
+        "json_type": "boolean",
+        "required_keys": [],
+        "exact_controlled_values": [
+          false
+        ],
+        "format_or_invariants": [],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "authority_granted is true"
+        ]
+      },
+      "controlled_unavailable_value": {
+        "json_type": "object",
+        "required_keys": [
+          "availability_status",
+          "reason_code",
+          "reason_summary",
+          "resolution_required",
+          "prohibited_assumption_declaration"
+        ],
+        "exact_controlled_values": [
+          true
+        ],
+        "format_or_invariants": [
+          "resolution_required must be true",
+          "prohibited_assumption_declaration must be true",
+          "status belongs to incomplete or blocked vocabulary"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "guessed, fabricated, defaulted, or authority-bearing replacement"
+        ]
+      },
+      "next_phase_boundary": {
+        "json_type": "object",
+        "required_keys": [
+          "automatic_continuation",
+          "next_phase_authorized",
+          "subsequent_phase_started",
+          "separate_explicit_authorization_required",
+          "then_current_baseline_required"
+        ],
+        "exact_controlled_values": [
+          false,
+          true
+        ],
+        "format_or_invariants": [
+          "automatic_continuation false",
+          "next_phase_authorized false",
+          "subsequent_phase_started false",
+          "separate_explicit_authorization_required true",
+          "then_current_baseline_required true"
+        ],
+        "missing_value_result": "input_package_incomplete",
+        "invalid_value_result": "input_package_structurally_invalid",
+        "unresolvable_value_result": "input_package_blocked",
+        "hard_block_conditions": [
+          "automatic continuation enabled",
+          "next-phase authority enabled"
+        ]
+      }
+    }
+  },
+  "semantic_version_rules": {
+    "format": "major.minor.patch",
+    "xri_g101_contract_version": "1.0.0",
+    "missing_required_version_result": "input_package_incomplete",
+    "invalid_version_syntax_result": "input_package_structurally_invalid",
+    "required_external_version_unresolvable_result": "input_package_blocked",
+    "unauthorized_contract_identity_or_version_result": "input_package_blocked",
+    "consistency_requirements": [
+      "every record version matches the resolved record",
+      "method declaration identifies xri_g101_disposition_record_input_package_candidate_selection_contract@1.0.0",
+      "phase, predecessor, package, validation, attestation, and purge-verification versions are not conflated"
+    ]
+  },
+  "stable_candidate_identity_contract": {
+    "required_keys": [
+      "candidate_identity"
+    ],
+    "required_concrete_corroborator_rule": "At least one of group_key or display_location is concrete.",
+    "candidate_identity_requirements": [
+      "non-empty",
+      "immutable",
+      "resolvable"
+    ],
+    "both_corroborators_rule": "When both are present, both agree with every referenced record.",
+    "missing_candidate_identity_result": "input_package_incomplete",
+    "missing_both_corroborators_result": "input_package_incomplete",
+    "conflicting_values_result": "input_package_structurally_invalid",
+    "unresolvable_identity_result": "input_package_blocked",
+    "forbidden_anchor_result": "input_package_blocked",
+    "actual_candidate_selected": false,
+    "actual_candidate_recorded": false
+  },
+  "forbidden_identity_anchors": [
+    "review_rank",
+    "row_position",
+    "array_index",
+    "source_row_order",
+    "source_sort_order",
+    "reviewer_sort_order",
+    "mutable_review_status",
+    "mutable_review_reason",
+    "mutable_review_notes",
+    "approval_state",
+    "promotion_state",
+    "publishing_state",
+    "geocoding_state",
+    "coordinates",
+    "geometry",
+    "production_path",
+    "public_runtime_path"
+  ],
+  "controlled_unavailable_value_contract": {
+    "required_keys": [
+      "availability_status",
+      "reason_code",
+      "reason_summary",
+      "resolution_required",
+      "prohibited_assumption_declaration"
+    ],
+    "required_values": {
+      "resolution_required": true,
+      "prohibited_assumption_declaration": true
+    },
+    "incomplete_statuses": [
+      "not_supplied",
+      "not_yet_available",
+      "ambiguous",
+      "pending_resolution"
+    ],
+    "blocked_statuses": [
+      "unresolvable",
+      "withheld_for_confidentiality",
+      "blocked_by_authority_boundary",
+      "blocked_by_forbidden_reference",
+      "blocked_by_artifact_isolation"
+    ],
+    "permitted_fields": [
+      "group_key",
+      "display_location",
+      "source_identity_summary",
+      "validation_record_reference",
+      "validation_identifier",
+      "validation_version",
+      "validation_result",
+      "validation_scope",
+      "attestation_record_reference",
+      "attestation_identifier",
+      "attestation_version",
+      "attestation_scope",
+      "purge_verification_record_reference",
+      "purge_verification_scope_reference",
+      "disposition_purpose_request",
+      "required_field_completeness_summary",
+      "cross_reference_consistency_summary",
+      "scope_consistency_summary",
+      "identity_consistency_summary",
+      "version_consistency_summary",
+      "forbidden_anchor_rejection_summary",
+      "artifact_isolation_summary",
+      "failure_stop_summary"
+    ],
+    "prohibited_fields": [
+      "input_package_identifier",
+      "input_package_version",
+      "input_package_readiness_status",
+      "contract_identifier",
+      "contract_version",
+      "track_identifier",
+      "phase_identity",
+      "repository",
+      "branch_name",
+      "head_sha",
+      "pull_request_number",
+      "predecessor_phase_identity",
+      "predecessor_pull_request",
+      "predecessor_head_sha",
+      "predecessor_merge_commit",
+      "stable_candidate_identity",
+      "candidate_identity",
+      "processing_stop_required",
+      "authority_granted",
+      "next_phase_boundary_declaration",
+      "mandatory no-authority declarations",
+      "mandatory no-write declarations"
+    ],
+    "prohibited_assumptions": [
+      "unexplained null",
+      "empty string",
+      "omitted mandatory field",
+      "guessed value",
+      "fabricated identifier",
+      "fabricated reference",
+      "inferred authorization",
+      "misleading default"
+    ],
+    "corroborator_rule": "At least one of group_key or display_location must remain a concrete stable value."
+  },
+  "reference_resolution_requirements": {
+    "rules": [
+      "input_package_identifier and input_package_version identify the same immutable package",
+      "contract_identifier equals xri_g101_disposition_record_input_package_candidate_selection_contract",
+      "contract_version equals 1.0.0",
+      "input_package_method_declaration identifies xri_g101_disposition_record_input_package_candidate_selection_contract@1.0.0",
+      "phase_identity resolves to XRI-G101 in controlled_live_fetch_review_artifact_track",
+      "predecessor identity, PR number, head SHA, and merge SHA resolve consistently to XRI-G100 and PR #131",
+      "logical lifecycle predecessors resolve consistently to XRI-G100, XRI-G99, XRI-G82, and XRI-G81",
+      "candidate identity agrees with validation, attestation, purge-verification, input-package, and later disposition references",
+      "validation reference, identifier, version, result, and scope describe one record",
+      "validation-to-attestation identifiers and versions resolve consistently",
+      "attestation-to-purge-verification references resolve consistently",
+      "requested disposition purpose agrees with readiness purpose",
+      "actor and authority declarations identify a non-authoritative review-only actor",
+      "timestamp and method declarations are internally consistent",
+      "evidence, confidentiality, forbidden-path, and isolation declarations agree with all references"
+    ],
+    "missing_reference_result": "input_package_incomplete",
+    "unresolvable_reference_result": "input_package_blocked",
+    "resolved_conflict_result": "input_package_structurally_invalid"
+  },
+  "scope_consistency_requirements": [
+    "validation_scope is equal to or narrower than attestation_scope",
+    "attestation_scope is equal to or narrower than purge_verification_scope_reference",
+    "input-package scope does not exceed validation_scope",
+    "requested disposition purpose does not expand input-package scope",
+    "no scope implies operational, production, registry, publishing, staging, promotion, WordPress, scheduled-workflow, or public-map authority",
+    "missing scope maps to input_package_incomplete",
+    "present but unresolvable scope maps to input_package_blocked",
+    "resolved scope conflict maps to input_package_structurally_invalid",
+    "scope requiring a forbidden action or write maps to input_package_blocked"
+  ],
+  "version_consistency_requirements": {
+    "format": "major.minor.patch",
+    "xri_g101_contract_version": "1.0.0",
+    "missing_required_version_result": "input_package_incomplete",
+    "invalid_version_syntax_result": "input_package_structurally_invalid",
+    "required_external_version_unresolvable_result": "input_package_blocked",
+    "unauthorized_contract_identity_or_version_result": "input_package_blocked",
+    "consistency_requirements": [
+      "every record version matches the resolved record",
+      "method declaration identifies xri_g101_disposition_record_input_package_candidate_selection_contract@1.0.0",
+      "phase, predecessor, package, validation, attestation, and purge-verification versions are not conflated"
+    ]
+  },
+  "evidence_minimization_rules": {
+    "permitted": "Only minimized contract-relevant summaries and immutable controlled references needed to associate the package, candidate, and upstream records.",
+    "non_sensitive_minimization_failure_result": "input_package_structurally_invalid",
+    "missing_metadata_result": "input_package_incomplete",
+    "sensitive_or_prohibited_exposure_result": "input_package_blocked"
+  },
+  "confidentiality_exclusions": [
+    "credentials",
+    "authentication tokens",
+    "API keys",
+    "production secrets",
+    "private runtime configuration",
+    "deployment credentials",
+    "WordPress credentials",
+    "workflow credentials",
+    "cryptographic keys",
+    "signatures",
+    "certificates",
+    "unrestricted filesystem paths",
+    "forbidden write paths",
+    "unnecessary personal information",
+    "unredacted confidential review content",
+    "raw evidence when controlled references are sufficient",
+    "unsupported purge or deletion claims",
+    "unsupported attestation-validation claims",
+    "unsupported legal-certification claims",
+    "unsupported signature-validity claims",
+    "unsupported cryptographic-validity claims"
+  ],
+  "artifact_isolation_requirements": {
+    "exactly_two_files_allowed": true,
+    "allowed_files": [
+      "docs/xri-g101-non-production-controlled-live-fetch-dry-run-review-artifact-disposition-record-input-package-stable-candidate-selection-boundary-gate.md",
+      "data/reports/xri_g101_non_production_controlled_live_fetch_dry_run_review_artifact_disposition_record_input_package_stable_candidate_selection_boundary_gate_report.json"
+    ],
+    "third_file_allowed": false,
+    "existing_file_modification_allowed": false,
+    "rename_move_delete_allowed": false,
+    "actual_input_package_artifact_allowed": false,
+    "candidate_selection_record_allowed": false,
+    "disposition_record_allowed": false,
+    "decision_trace_allowed": false
+  },
+  "deterministic_first_match_precedence": {
+    "method": "first_match_wins",
+    "priorities": [
+      {
+        "priority": 1,
+        "result": "input_package_blocked",
+        "condition_class": "hard block"
+      },
+      {
+        "priority": 2,
+        "result": "input_package_incomplete",
+        "condition_class": "missing or incomplete required information"
+      },
+      {
+        "priority": 3,
+        "result": "input_package_structurally_invalid",
+        "condition_class": "resolved structural violation without hard block"
+      },
+      {
+        "priority": 4,
+        "result": "input_package_ready_for_disposition_record_creation_review_only",
+        "condition_class": "all checks pass and purpose is disposition_record_creation_review_only"
+      },
+      {
+        "priority": 5,
+        "result": "input_package_ready_for_audit_reference_only",
+        "condition_class": "all checks pass and purpose is audit_reference_only"
+      },
+      {
+        "priority": 6,
+        "result": "input_package_ready_for_later_gate_review_only",
+        "condition_class": "all checks pass and purpose is later_gate_review_only"
+      },
+      {
+        "priority": 7,
+        "result": "input_package_incomplete",
+        "condition_class": "exclusive default fallback",
+        "no_earlier_rule_matches": true
+      }
+    ],
+    "evaluation_stop": "The first matching priority is final; no lower-priority rule may alter it."
+  },
+  "decision_matrix": [
+    {
+      "condition": "forbidden_identity_anchor_used",
+      "result": "input_package_blocked"
+    },
+    {
+      "condition": "missing_candidate_identity",
+      "result": "input_package_incomplete"
+    },
+    {
+      "condition": "both_corroborators_missing",
+      "result": "input_package_incomplete"
+    },
+    {
+      "condition": "conflicting_stable_identity",
+      "result": "input_package_structurally_invalid"
+    },
+    {
+      "condition": "unresolvable_stable_identity",
+      "result": "input_package_blocked"
+    },
+    {
+      "condition": "required_reference_missing",
+      "result": "input_package_incomplete"
+    },
+    {
+      "condition": "required_reference_unresolvable",
+      "result": "input_package_blocked"
+    },
+    {
+      "condition": "resolved_reference_conflict",
+      "result": "input_package_structurally_invalid"
+    },
+    {
+      "condition": "invalid_semantic_version",
+      "result": "input_package_structurally_invalid"
+    },
+    {
+      "condition": "unauthorized_contract_identity_or_version",
+      "result": "input_package_blocked"
+    },
+    {
+      "condition": "missing_scope",
+      "result": "input_package_incomplete"
+    },
+    {
+      "condition": "unresolvable_scope",
+      "result": "input_package_blocked"
+    },
+    {
+      "condition": "resolved_scope_conflict",
+      "result": "input_package_structurally_invalid"
+    },
+    {
+      "condition": "forbidden_action_or_write_required",
+      "result": "input_package_blocked"
+    },
+    {
+      "condition": "sensitive_evidence_exposure",
+      "result": "input_package_blocked"
+    },
+    {
+      "condition": "missing_evidence_metadata",
+      "result": "input_package_incomplete"
+    },
+    {
+      "condition": "non_sensitive_evidence_minimization_failure",
+      "result": "input_package_structurally_invalid"
+    },
+    {
+      "condition": "artifact_isolation_failure",
+      "result": "input_package_blocked"
+    },
+    {
+      "condition": "no_write_declaration_failure",
+      "result": "input_package_blocked"
+    },
+    {
+      "condition": "processing_stop_false",
+      "result": "input_package_blocked"
+    },
+    {
+      "condition": "authority_granted_true",
+      "result": "input_package_blocked"
+    },
+    {
+      "condition": "all_checks_pass_disposition_record_creation_review",
+      "result": "input_package_ready_for_disposition_record_creation_review_only"
+    },
+    {
+      "condition": "all_checks_pass_audit_reference",
+      "result": "input_package_ready_for_audit_reference_only"
+    },
+    {
+      "condition": "all_checks_pass_later_gate_review",
+      "result": "input_package_ready_for_later_gate_review_only"
+    },
+    {
+      "condition": "no_earlier_rule_matches",
+      "result": "input_package_incomplete"
+    }
+  ],
+  "failure_stop_rules": {
+    "blocked_conditions": [
+      "forbidden identity anchor used",
+      "required supplied reference unresolvable",
+      "stable candidate identity unresolvable",
+      "explicitly unauthorized actor or authority",
+      "sensitive or prohibited evidence included",
+      "forbidden write required",
+      "artifact isolation cannot be maintained",
+      "package claims disposition-record creation authority",
+      "package claims validation execution authority",
+      "package claims registry, production, public-map, WordPress, publishing, staging, or promotion authority",
+      "processing_stop_required is false",
+      "authority_granted is true",
+      "contract identity or version replaced with an unauthorized value"
+    ],
+    "incomplete_conditions": [
+      "required field absent, null, empty, or ambiguous",
+      "candidate_identity absent",
+      "both stable corroborators absent",
+      "required reference not supplied",
+      "actor, authority, timestamp, method, or purpose declaration absent",
+      "required evidence metadata absent",
+      "required scope absent",
+      "required version absent",
+      "upstream validation result incomplete",
+      "controlled unavailable-value object uses an incomplete status"
+    ],
+    "structurally_invalid_conditions": [
+      "supplied field has wrong JSON type",
+      "enum outside controlled vocabulary",
+      "semantic version syntax invalid",
+      "RFC 3339 timestamp invalid",
+      "supplied stable identity values conflict",
+      "resolved references conflict",
+      "scope relationships fail",
+      "version relationships fail",
+      "purpose conflicts with readiness status",
+      "complete but non-sensitive evidence-minimization failure",
+      "complete but non-sensitive isolation declaration failure",
+      "all required values are present but one or more violate the contract"
+    ]
+  },
+  "recording_and_later_review_limits": {
+    "input_package_ready_for_disposition_record_creation_review_only": "Later review is limited to deciding whether a separate disposition-record creation-authorization gate should be planned; no disposition record is created.",
+    "input_package_ready_for_audit_reference_only": "Later review is limited to controlled non-production audit inspection.",
+    "input_package_ready_for_later_gate_review_only": "Later review requires a separately authorized gate using a then-current baseline.",
+    "input_package_structurally_invalid": "Later review requires remediation and separate authorization.",
+    "input_package_incomplete": "Later review requires missing information to be supplied under separate authorization.",
+    "input_package_blocked": "Later review is not allowed until the blocking condition is resolved under separate authorization."
+  },
+  "no_source_call_boundary": {
+    "live_source_call_allowed": false,
+    "live_fetch_executed": false,
+    "dry_run_executed": false,
+    "purge_executed": false,
+    "purge_verification_executed": false,
+    "attestation_action_performed": false,
+    "certificate_signature_or_cryptographic_validation_performed": false
+  },
+  "no_write_boundary": {
+    "repository_write_allowed": false,
+    "registry_write_allowed": false,
+    "production_write_allowed": false,
+    "public_map_write_allowed": false,
+    "wordpress_write_allowed": false,
+    "publishing_write_allowed": false,
+    "staging_write_allowed": false,
+    "promotion_write_allowed": false,
+    "scheduled_workflow_write_allowed": false,
+    "cache_write_allowed": false,
+    "location_cache_write_allowed": false
+  },
+  "no_authority_boundary": {
+    "authority_granted": false,
+    "candidate_approval_authorized": false,
+    "disposition_record_creation_authorized": false,
+    "structural_validation_authorized": false,
+    "result_recording_authorized": false,
+    "automatic_continuation": false
+  },
+  "pr_110_boundary": {
+    "pull_request": 110,
+    "state": "open",
+    "merged": false,
+    "branch": "xri-g97-renewed-fixture-only-execution-authorization-gate",
+    "head_sha": "96ae993862bec9d6f1ee47200d13de1466283ea1",
+    "modified": false,
+    "status_decision_made": false
+  },
+  "no_production_boundary": {
+    "production_modified": false,
+    "registry_modified": false,
+    "public_map_modified": false,
+    "wordpress_modified": false,
+    "publishing_modified": false,
+    "staging_modified": false,
+    "promotion_modified": false,
+    "scheduled_workflow_modified": false,
+    "cache_modified": false,
+    "location_cache_touched": false
+  },
+  "required_safety_assertions": {
+    "documentation_report_only": true,
+    "exactly_two_files_allowed": true,
+    "existing_file_modified": false,
+    "third_file_created": false,
+    "actual_candidate_selected": false,
+    "actual_candidate_recorded": false,
+    "actual_input_package_created": false,
+    "actual_input_package_recorded": false,
+    "actual_disposition_record_created": false,
+    "actual_disposition_record_recorded": false,
+    "actual_disposition_changed": false,
+    "decision_trace_created": false,
+    "implementation_created": false,
+    "executable_behavior_created": false,
+    "structural_validation_authorized": false,
+    "actual_structural_validation_executed": false,
+    "actual_structural_validation_record_created": false,
+    "actual_structural_validation_result_created": false,
+    "result_recording_authorized": false,
+    "live_fetch_executed": false,
+    "dry_run_executed": false,
+    "purge_executed": false,
+    "purge_verification_executed": false,
+    "attestation_action_performed": false,
+    "certificate_signature_or_cryptographic_validation_performed": false,
+    "deletion_certified": false,
+    "registry_modified": false,
+    "production_modified": false,
+    "public_map_modified": false,
+    "wordpress_modified": false,
+    "publishing_modified": false,
+    "staging_modified": false,
+    "promotion_modified": false,
+    "scheduled_workflow_modified": false,
+    "cache_modified": false,
+    "location_cache_touched": false,
+    "pr_110_untouched": true,
+    "processing_stop_required": true,
+    "authority_granted": false,
+    "automatic_continuation": false,
+    "subsequent_phase_authorized": false,
+    "subsequent_phase_started": false
+  },
+  "files_actually_created": [],
+  "stop_condition": {
+    "processing_stop_required": true,
+    "stop_point": "after Checkpoint 3 response",
+    "repository_changes_permitted": false
+  },
+  "next_phase_boundary": {
+    "automatic_continuation": false,
+    "next_phase_authorized": false,
+    "subsequent_phase_started": false,
+    "separate_explicit_authorization_required": true,
+    "then_current_baseline_required": true,
+    "permitted_next_checkpoint": "XRI-G101 Checkpoint 4 only after explicit authorization"
+  },
+  "verdict": {
+    "value": "PASS",
+    "meaning": "The complete proposed Markdown and JSON artifacts pass pre-write validation and are ready only for a separately authorized Checkpoint 4.",
+    "authority_granted": false,
+    "processing_stop_required": true
+  }
+}
