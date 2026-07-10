@@ -1,0 +1,816 @@
+{
+  "gate": "XRI-G100",
+  "title": "XRI-G100 Non-Production Controlled Live-Fetch Dry-Run Review Artifact Purge Verification Attestation Validation Disposition Record Structural Validation Boundary Gate",
+  "track_identifier": "controlled_live_fetch_review_artifact_track",
+  "status": "PASS",
+  "documentation_report_only": true,
+  "actual_disposition_record_created": false,
+  "actual_disposition_record_recorded": false,
+  "actual_structural_validation_executed": false,
+  "actual_structural_validation_result_created": false,
+  "actual_disposition_changed": false,
+  "implementation_created": false,
+  "executable_behavior_created": false,
+  "baseline": {
+    "repository": "setoxxx/nycif-live-feeds",
+    "base_branch": "main",
+    "base_sha": "9a875e790c6a756503d6e9f741ab08488bdd2a8d"
+  },
+  "phase_identity": {
+    "phase_number": "XRI-G100",
+    "phase_title": "XRI-G100 Non-Production Controlled Live-Fetch Dry-Run Review Artifact Purge Verification Attestation Validation Disposition Record Structural Validation Boundary Gate",
+    "track_identifier": "controlled_live_fetch_review_artifact_track",
+    "branch_name": "xri-g100-disposition-record-structural-validation-boundary-gate",
+    "documentation_path": "docs/xri-g100-non-production-controlled-live-fetch-dry-run-review-artifact-purge-verification-attestation-validation-disposition-record-structural-validation-boundary-gate.md",
+    "report_path": "data/reports/xri_g100_non_production_controlled_live_fetch_dry_run_review_artifact_purge_verification_attestation_validation_disposition_record_structural_validation_boundary_gate_report.json",
+    "structural_validation_contract_identifier": "xri_g100_disposition_record_structural_validation_contract",
+    "structural_validation_contract_version": "1.0.0",
+    "disposition_decision_contract_identifier": "xri_g99_disposition_first_match_contract",
+    "disposition_decision_contract_version": "1.0.0"
+  },
+  "immediate_predecessor": {
+    "phase_number": "XRI-G99",
+    "phase_title": "XRI-G99 Non-Production Controlled Live-Fetch Dry-Run Review Artifact Purge Verification Attestation Validation Disposition Boundary Gate",
+    "pull_request": 130,
+    "merge_commit_sha": "9a875e790c6a756503d6e9f741ab08488bdd2a8d"
+  },
+  "logical_lifecycle_predecessors": [
+    {
+      "phase_number": "XRI-G99",
+      "pull_request": 130,
+      "merge_commit_sha": "9a875e790c6a756503d6e9f741ab08488bdd2a8d",
+      "lifecycle_role": "disposition_contract_and_first_match_boundary"
+    },
+    {
+      "phase_number": "XRI-G82",
+      "pull_request": 128,
+      "merge_commit_sha": "1a5910896a855635941f81a6e60b7be351d7053f",
+      "lifecycle_role": "attestation_structural_validation_boundary"
+    },
+    {
+      "phase_number": "XRI-G81",
+      "pull_request": 127,
+      "merge_commit_sha": "b7997bef5caa68b4a0ccc662da2c58ae6ec9c298",
+      "lifecycle_role": "purge_verification_attestation_boundary"
+    }
+  ],
+  "allowed_files": [
+    "docs/xri-g100-non-production-controlled-live-fetch-dry-run-review-artifact-purge-verification-attestation-validation-disposition-record-structural-validation-boundary-gate.md",
+    "data/reports/xri_g100_non_production_controlled_live_fetch_dry_run_review_artifact_purge_verification_attestation_validation_disposition_record_structural_validation_boundary_gate_report.json"
+  ],
+  "structural_validation_result_vocabulary": [
+    {
+      "value": "disposition_record_structurally_valid_for_review_storage_only",
+      "meaning": "Complete, type-correct, internally consistent, reproducible, isolated, and structurally valid for controlled non-production review storage only.",
+      "required_purpose": "review_storage_only",
+      "recording_allowed_only_with_separate_authorization": true,
+      "later_review_allowed": true,
+      "processing_stop_required": true,
+      "authority_granted": false,
+      "automatic_continuation": false
+    },
+    {
+      "value": "disposition_record_structurally_valid_for_audit_reference_only",
+      "meaning": "Passes all XRI-G100 structural checks and may be referenced by a controlled non-production audit record only.",
+      "required_purpose": "audit_reference_only",
+      "recording_allowed_only_with_separate_authorization": true,
+      "later_review_allowed": true,
+      "processing_stop_required": true,
+      "authority_granted": false,
+      "automatic_continuation": false
+    },
+    {
+      "value": "disposition_record_structurally_valid_for_later_gate_review_only",
+      "meaning": "Passes all XRI-G100 structural checks and may be considered by a separately authorized future gate only.",
+      "required_purpose": "later_gate_review_only",
+      "recording_allowed_only_with_separate_authorization": true,
+      "later_review_allowed": true,
+      "processing_stop_required": true,
+      "authority_granted": false,
+      "automatic_continuation": false
+    },
+    {
+      "value": "disposition_record_structurally_invalid_for_review",
+      "meaning": "Required information is sufficiently available and safe to evaluate, but a deterministic structural check fails.",
+      "recording_allowed_only_with_separate_authorization": true,
+      "later_review_allowed": true,
+      "processing_stop_required": true,
+      "authority_granted": false,
+      "automatic_continuation": false
+    },
+    {
+      "value": "disposition_record_validation_incomplete",
+      "meaning": "A conclusive structural result cannot be reached because required information is absent, blank, ambiguous, or not yet supplied.",
+      "recording_allowed_only_with_separate_authorization": true,
+      "later_review_allowed": true,
+      "processing_stop_required": true,
+      "authority_granted": false,
+      "automatic_continuation": false
+    },
+    {
+      "value": "disposition_record_validation_blocked",
+      "meaning": "Structural validation cannot safely proceed because a hard boundary or unsafe condition exists.",
+      "recording_allowed_only_with_separate_authorization": true,
+      "later_review_allowed": false,
+      "processing_stop_required": true,
+      "authority_granted": false,
+      "automatic_continuation": false
+    }
+  ],
+  "canonical_disposition_record_envelope": {
+    "field_count": 71,
+    "all_fields_always_present": true,
+    "fields": [
+      "disposition_identifier",
+      "disposition_version",
+      "disposition_status",
+      "disposition_purpose",
+      "disposition_reason_codes",
+      "disposition_timestamp_declaration",
+      "disposition_actor_declaration",
+      "disposition_actor_authority_declaration",
+      "disposition_method_declaration",
+      "track_identifier",
+      "phase_identity",
+      "repository",
+      "branch_name",
+      "head_sha",
+      "pull_request_number",
+      "predecessor_phase_identity",
+      "predecessor_pull_request",
+      "predecessor_merge_commit",
+      "logical_lifecycle_predecessor_phase_identity",
+      "logical_lifecycle_predecessor_pull_request",
+      "logical_lifecycle_predecessor_merge_commit",
+      "validation_record_reference",
+      "validation_identifier",
+      "validation_version",
+      "validation_result",
+      "validation_scope",
+      "attestation_record_reference",
+      "attestation_identifier",
+      "attestation_version",
+      "attestation_scope",
+      "purge_verification_record_reference",
+      "purge_verification_scope_reference",
+      "stable_candidate_identity",
+      "source_identity_summary",
+      "required_field_completeness_summary",
+      "cross_reference_consistency_summary",
+      "scope_consistency_summary",
+      "identity_consistency_summary",
+      "version_consistency_summary",
+      "forbidden_anchor_rejection_summary",
+      "artifact_isolation_summary",
+      "evidence_minimization_declaration",
+      "confidential_data_exclusion_declaration",
+      "forbidden_path_exclusion_declaration",
+      "no_write_declaration",
+      "no_registry_write_declaration",
+      "no_production_write_declaration",
+      "no_public_map_write_declaration",
+      "no_wordpress_write_declaration",
+      "no_scheduled_workflow_write_declaration",
+      "no_location_cache_write_declaration",
+      "no_cache_write_declaration",
+      "non_authoritative_disposition_declaration",
+      "disposition_is_not_acceptance_declaration",
+      "disposition_is_not_rejection_declaration",
+      "disposition_is_not_approval_declaration",
+      "disposition_is_not_promotion_declaration",
+      "disposition_is_not_publishing_declaration",
+      "disposition_is_not_staging_declaration",
+      "disposition_is_not_registry_import_declaration",
+      "disposition_is_not_production_export_declaration",
+      "disposition_is_not_public_map_release_declaration",
+      "disposition_is_not_legal_certification_declaration",
+      "disposition_is_not_cryptographic_verification_declaration",
+      "disposition_does_not_authorize_execution_declaration",
+      "result_artifact_recording_status",
+      "later_review_allowed",
+      "processing_stop_required",
+      "authority_granted",
+      "failure_stop_summary",
+      "next_phase_boundary_declaration"
+    ],
+    "controlled_unavailable_value_allowed_at_field_indices": [4, 6, 7, 8, 9, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41],
+    "indexing": "one_based"
+  },
+  "field_type_contract": {
+    "version_format": "major.minor.patch",
+    "timestamp_format": "RFC_3339_UTC",
+    "repository_value": "setoxxx/nycif-live-feeds",
+    "track_identifier_value": "controlled_live_fetch_review_artifact_track",
+    "profiles": {
+      "immutable_identifier": {
+        "type": "string",
+        "invariants": ["non_empty", "immutable", "controlled_character_set"]
+      },
+      "semantic_version": {
+        "type": "string",
+        "format": "major.minor.patch"
+      },
+      "controlled_enum": {
+        "type": "string",
+        "invariants": ["exact_controlled_value"]
+      },
+      "controlled_reason_code_array": {
+        "type": "array",
+        "item_type": "string",
+        "invariants": ["non_empty", "unique", "controlled_values_only"]
+      },
+      "rfc3339_utc_timestamp": {
+        "type": "string",
+        "format": "RFC_3339_UTC"
+      },
+      "actor_declaration": {
+        "type": "object",
+        "required_keys": ["actor_identifier", "actor_role", "personal_data_minimized"],
+        "personal_data_minimized": true
+      },
+      "exact_authority_string": {
+        "type": "string",
+        "authority_bearing_value_result": "disposition_record_validation_blocked"
+      },
+      "method_declaration": {
+        "type": "string",
+        "must_identify_contract_and_version": true
+      },
+      "phase_identity": {
+        "type": "object",
+        "required_keys": ["phase_number", "phase_title", "track_identifier", "repository", "branch_name", "head_sha", "pull_request_number"]
+      },
+      "exact_repository_string": {
+        "type": "string",
+        "exact_value": "setoxxx/nycif-live-feeds"
+      },
+      "branch_name": {
+        "type": "string",
+        "invariants": ["non_empty", "valid_git_ref_component"]
+      },
+      "commit_sha": {
+        "type": "string",
+        "invariants": ["40_character_lowercase_hexadecimal"]
+      },
+      "positive_integer": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "stable_phase_identity": {
+        "type": "object_or_controlled_string",
+        "invariants": ["phase_number_title_track_and_immutable_reference_consistent"]
+      },
+      "stable_phase_identity_array": {
+        "type": "array",
+        "invariants": ["non_empty", "unique", "contains_required_logical_predecessors"]
+      },
+      "stable_reference": {
+        "type": "object",
+        "required_keys": ["record_identifier", "record_version", "repository", "immutable_commit_sha", "path_or_record_locator"]
+      },
+      "scope_object": {
+        "type": "object",
+        "required_keys": ["scope_identifier", "scope_version", "scope_boundaries", "operational_authority", "production_authority"],
+        "operational_authority": false,
+        "production_authority": false
+      },
+      "stable_candidate_identity": {
+        "type": "object",
+        "required_keys": ["candidate_identity"],
+        "conditional_requirement": "at_least_one_of_group_key_or_display_location"
+      },
+      "minimized_summary": {
+        "type": "object",
+        "required_keys": ["status", "reason_codes", "details"],
+        "status_values": ["pass", "fail", "incomplete", "blocked"]
+      },
+      "required_true_boolean": {
+        "type": "boolean",
+        "exact_value": true
+      },
+      "recording_status": {
+        "type": "string",
+        "values": ["recorded_controlled_non_production", "permitted_but_not_recorded", "not_recorded_due_to_block"]
+      },
+      "later_review_boolean": {
+        "type": "boolean",
+        "automatic_continuation_allowed": false
+      },
+      "processing_stop_true": {
+        "type": "boolean",
+        "exact_value": true
+      },
+      "authority_false": {
+        "type": "boolean",
+        "exact_value": false
+      },
+      "next_phase_boundary": {
+        "type": "object",
+        "required_keys": ["automatic_continuation", "next_phase_authorized", "declaration"],
+        "automatic_continuation": false,
+        "next_phase_authorized": false
+      },
+      "decision_trace_summary": {
+        "type": "object",
+        "required_keys": ["decision_contract_identifier", "decision_contract_version", "evaluated_priority_sequence", "matched_priority", "matched_rule_identifier", "matched_condition_identifiers", "higher_priority_non_match_declarations"]
+      },
+      "matched_priority": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 7
+      },
+      "decision_rule_identifier": {
+        "type": "string",
+        "values": [
+          "xri_g99_p1_validation_blocked",
+          "xri_g99_p2_validation_incomplete",
+          "xri_g99_p3_structurally_invalid_for_review",
+          "xri_g99_p4_structurally_valid_for_review_storage_only",
+          "xri_g99_p5_structurally_valid_for_audit_reference_only",
+          "xri_g99_p6_structurally_valid_for_later_gate_review_only",
+          "xri_g99_p7_default_validation_incomplete"
+        ]
+      }
+    },
+    "shared_object_definitions": {
+      "stable_reference": {
+        "record_identifier": "non_empty_string",
+        "record_version": "semantic_version",
+        "repository": "setoxxx/nycif-live-feeds",
+        "immutable_commit_sha": "40_character_lowercase_sha",
+        "path_or_record_locator": "non_empty_controlled_locator"
+      },
+      "scope": {
+        "scope_identifier": "non_empty_string",
+        "scope_version": "semantic_version",
+        "scope_boundaries": "non_empty_unique_controlled_string_array",
+        "operational_authority": false,
+        "production_authority": false
+      },
+      "stable_candidate_identity": {
+        "candidate_identity": "non_empty_stable_string",
+        "group_key": "optional_non_empty_stable_string",
+        "display_location": "optional_non_empty_stable_string",
+        "minimum_corroborators": 1
+      },
+      "structural_summary": {
+        "status_values": ["pass", "fail", "incomplete", "blocked"],
+        "reason_codes": "unique_controlled_string_array",
+        "details": "minimized_string_or_minimized_string_array"
+      },
+      "actor_declaration": {
+        "actor_identifier": "non_empty_minimized_string",
+        "actor_role": "non_empty_minimized_string",
+        "personal_data_minimized": true
+      },
+      "next_phase_boundary": {
+        "automatic_continuation": false,
+        "next_phase_authorized": false,
+        "declaration": "non_empty_minimized_string"
+      }
+    },
+    "controlled_values": {
+      "xri_g99_disposition_statuses": [
+        "structurally_valid_for_review_storage_only",
+        "structurally_valid_for_audit_reference_only",
+        "structurally_valid_for_later_gate_review_only",
+        "structurally_invalid_for_review",
+        "validation_incomplete",
+        "validation_blocked"
+      ],
+      "xri_g100_structural_validation_results": [
+        "disposition_record_structurally_valid_for_review_storage_only",
+        "disposition_record_structurally_valid_for_audit_reference_only",
+        "disposition_record_structurally_valid_for_later_gate_review_only",
+        "disposition_record_structurally_invalid_for_review",
+        "disposition_record_validation_incomplete",
+        "disposition_record_validation_blocked"
+      ],
+      "upstream_validation_results": ["structurally_valid", "structurally_invalid", "incomplete", "blocked"],
+      "disposition_purposes": ["review_storage_only", "audit_reference_only", "later_gate_review_only", "not_applicable"],
+      "recording_statuses": ["recorded_controlled_non_production", "permitted_but_not_recorded", "not_recorded_due_to_block"]
+    },
+    "universal_failure_classification": {
+      "missing_blank_ambiguous_omitted_or_unexplained_null": "disposition_record_validation_incomplete",
+      "safe_malformed_type_invalid_enum_invalid_or_inconsistent": "disposition_record_structurally_invalid_for_review",
+      "required_reference_present_but_unresolvable": "disposition_record_validation_blocked",
+      "prohibited_identity_unsafe_evidence_authority_claim_manipulated_trace_forbidden_write_or_unsafe_isolation": "disposition_record_validation_blocked"
+    }
+  },
+  "controlled_unavailable_value_contract": {
+    "required_fields": ["availability_status", "reason_code", "reason_summary", "resolution_required", "prohibited_assumption_declaration"],
+    "invariants": {
+      "resolution_required": true,
+      "prohibited_assumption_declaration": true
+    },
+    "statuses_for_validation_incomplete": ["not_supplied", "not_yet_available", "ambiguous", "pending_resolution"],
+    "statuses_for_validation_blocked": ["unresolvable", "withheld_for_confidentiality", "blocked_by_authority_boundary", "blocked_by_forbidden_reference", "blocked_by_artifact_isolation"],
+    "prohibited_patterns": ["unexplained_null", "empty_string", "omitted_required_key", "guessed_value", "fabricated_value", "synthetic_identifier", "fabricated_reference", "misleading_default"],
+    "never_replaces": ["disposition_identity", "phase_identity", "repository_identity", "branch_commit_pull_request_or_predecessor_identity", "safety_declarations", "no_write_declarations", "result_artifact_recording_status", "processing_stop_required", "authority_granted", "failure_stop_summary", "next_phase_boundary_declaration"],
+    "classification": {
+      "missing_or_incomplete_object": "disposition_record_validation_incomplete",
+      "safe_malformed_object": "disposition_record_structurally_invalid_for_review",
+      "fabricated_unsafe_or_authority_bearing_object": "disposition_record_validation_blocked"
+    }
+  },
+  "required_structural_validation_fields": {
+    "field_count": 85,
+    "all_fields_always_present": true,
+    "fields": [
+      "disposition_record_validation_identifier",
+      "disposition_record_validation_version",
+      "disposition_record_validation_status",
+      "disposition_record_validation_reason_codes",
+      "disposition_record_validation_timestamp_declaration",
+      "disposition_record_validation_actor_declaration",
+      "disposition_record_validation_actor_authority_declaration",
+      "disposition_record_validation_method_declaration",
+      "structural_validation_contract_reference",
+      "structural_validation_contract_version",
+      "track_identifier",
+      "phase_identity",
+      "repository",
+      "branch_name",
+      "head_sha",
+      "pull_request_number",
+      "predecessor_phase_identity",
+      "predecessor_pull_request",
+      "predecessor_merge_commit",
+      "logical_lifecycle_predecessor_phase_identities",
+      "disposition_record_reference",
+      "disposition_identifier",
+      "disposition_version",
+      "disposition_status",
+      "disposition_purpose",
+      "disposition_contract_reference",
+      "disposition_contract_version",
+      "decision_trace_reference",
+      "decision_trace_summary",
+      "matched_decision_priority",
+      "matched_decision_rule_identifier",
+      "decision_reproducibility_summary",
+      "validation_record_reference",
+      "validation_identifier",
+      "validation_version",
+      "attestation_record_reference",
+      "attestation_identifier",
+      "attestation_version",
+      "purge_verification_record_reference",
+      "purge_verification_scope_reference",
+      "stable_candidate_identity",
+      "source_identity_summary",
+      "required_field_completeness_summary",
+      "field_type_consistency_summary",
+      "controlled_value_consistency_summary",
+      "cross_reference_consistency_summary",
+      "scope_consistency_summary",
+      "identity_consistency_summary",
+      "version_consistency_summary",
+      "decision_precedence_consistency_summary",
+      "forbidden_anchor_rejection_summary",
+      "unavailable_value_object_summary",
+      "artifact_isolation_summary",
+      "evidence_minimization_declaration",
+      "confidential_data_exclusion_declaration",
+      "forbidden_path_exclusion_declaration",
+      "no_write_declaration",
+      "no_registry_write_declaration",
+      "no_production_write_declaration",
+      "no_public_map_write_declaration",
+      "no_wordpress_write_declaration",
+      "no_scheduled_workflow_write_declaration",
+      "no_location_cache_write_declaration",
+      "no_cache_write_declaration",
+      "non_authoritative_structural_validation_declaration",
+      "validation_is_not_disposition_creation_declaration",
+      "validation_is_not_disposition_change_declaration",
+      "validation_is_not_acceptance_declaration",
+      "validation_is_not_rejection_declaration",
+      "validation_is_not_approval_declaration",
+      "validation_is_not_promotion_declaration",
+      "validation_is_not_publishing_declaration",
+      "validation_is_not_staging_declaration",
+      "validation_is_not_registry_import_declaration",
+      "validation_is_not_production_export_declaration",
+      "validation_is_not_public_map_release_declaration",
+      "validation_is_not_legal_certification_declaration",
+      "validation_is_not_cryptographic_verification_declaration",
+      "validation_does_not_authorize_execution_declaration",
+      "result_artifact_recording_status",
+      "later_review_allowed",
+      "processing_stop_required",
+      "authority_granted",
+      "failure_stop_summary",
+      "next_phase_boundary_declaration"
+    ],
+    "controlled_unavailable_value_allowed_at_field_indices": [21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53],
+    "indexing": "one_based"
+  },
+  "decision_trace_reproducibility_contract": {
+    "decision_contract_identifier": "xri_g99_disposition_first_match_contract",
+    "decision_contract_version": "1.0.0",
+    "evaluated_priority_sequence": [1, 2, 3, 4, 5, 6, 7],
+    "decision_rule_identifiers": [
+      "xri_g99_p1_validation_blocked",
+      "xri_g99_p2_validation_incomplete",
+      "xri_g99_p3_structurally_invalid_for_review",
+      "xri_g99_p4_structurally_valid_for_review_storage_only",
+      "xri_g99_p5_structurally_valid_for_audit_reference_only",
+      "xri_g99_p6_structurally_valid_for_later_gate_review_only",
+      "xri_g99_p7_default_validation_incomplete"
+    ],
+    "required_elements": ["decision_contract_identifier", "decision_contract_version", "evaluated_priority_sequence", "matched_priority", "matched_rule_identifier", "matched_condition_identifiers", "higher_priority_non_match_declarations", "disposition_purpose_consistency", "disposition_status_consistency", "validation_result_consistency", "reason_code_consistency", "result_artifact_recording_status_consistency", "later_review_consistency", "processing_stop_consistency", "authority_consistency"],
+    "prohibitions": ["make_new_disposition", "replace_recorded_disposition", "correct_recorded_disposition", "select_different_disposition", "infer_missing_inputs", "fabricate_non_match_declarations", "bypass_first_match_precedence", "modify_source_record"],
+    "classifications": {
+      "complete_trace_conflicts_with_record": "disposition_record_structurally_invalid_for_review",
+      "missing_trace": "disposition_record_validation_incomplete",
+      "present_but_unresolvable_trace": "disposition_record_validation_blocked",
+      "manipulated_unsafe_or_authority_bearing_trace": "disposition_record_validation_blocked",
+      "higher_priority_bypass_without_unsafe_manipulation": "disposition_record_structurally_invalid_for_review",
+      "higher_priority_bypass_with_unsafe_or_authority_bearing_manipulation": "disposition_record_validation_blocked"
+    }
+  },
+  "stable_candidate_identity_contract": {
+    "required_primary_field": "candidate_identity",
+    "required_corroborating_fields": ["group_key", "display_location"],
+    "minimum_corroborating_fields_required": 1,
+    "records_requiring_consistency": ["disposition_record", "upstream_structural_validation_record", "attestation_record", "purge_verification_record", "decision_trace", "future_disposition_record_structural_validation_record"],
+    "missing_identity_result": "disposition_record_validation_incomplete",
+    "present_but_unresolvable_identity_result": "disposition_record_validation_blocked",
+    "resolved_identity_conflict_result": "disposition_record_structurally_invalid_for_review",
+    "forbidden_anchor_use_result": "disposition_record_validation_blocked",
+    "record_identifier_may_not_replace_stable_candidate_identity": true
+  },
+  "forbidden_identity_anchors": [
+    "review_rank",
+    "row_position",
+    "array_index",
+    "source_row_order",
+    "source_sort_order",
+    "reviewer_sort_order",
+    "mutable_review_status",
+    "mutable_review_reason",
+    "mutable_review_notes",
+    "approval_state",
+    "promotion_state",
+    "publishing_state",
+    "geocoding_state",
+    "coordinates",
+    "geometry",
+    "production_path",
+    "public_runtime_path"
+  ],
+  "cross_reference_contract": {
+    "required_relationships": ["disposition_record_reference_to_disposition_identifier_and_version", "disposition_contract_reference_to_xri_g99_contract_1_0_0", "decision_trace_reference_to_trace_summary_priority_and_rule", "validation_record_reference_to_validation_identifier_and_version", "attestation_record_reference_to_attestation_identifier_and_version", "purge_verification_record_reference_to_scope_reference", "stable_candidate_identity_across_all_records_and_trace", "phase_identity_to_repository_branch_head_sha_and_pull_request", "predecessor_references_to_xri_g99_pr_130_and_merge_sha"],
+    "missing_reference_result": "disposition_record_validation_incomplete",
+    "present_but_unresolvable_reference_result": "disposition_record_validation_blocked",
+    "resolved_but_conflicting_reference_result": "disposition_record_structurally_invalid_for_review",
+    "live_source_resolution_authorized": false
+  },
+  "scope_consistency_contract": {
+    "scope_hierarchy": ["derived_disposition_review_scope <= validation_scope", "validation_scope <= attestation_scope", "attestation_scope <= resolved_purge_verification_scope", "xri_g100_structural_validation_scope <= controlled_disposition_record_review_scope"],
+    "disposition_scope_is_derived": true,
+    "new_disposition_scope_field_added": false,
+    "operational_authority_permitted": false,
+    "production_authority_permitted": false,
+    "missing_scope_result": "disposition_record_validation_incomplete",
+    "present_but_unresolvable_scope_result": "disposition_record_validation_blocked",
+    "resolved_but_conflicting_scope_result": "disposition_record_structurally_invalid_for_review",
+    "scope_requiring_forbidden_write_or_operational_action_result": "disposition_record_validation_blocked"
+  },
+  "version_consistency_contract": {
+    "structural_validation_contract_identifier": "xri_g100_disposition_record_structural_validation_contract",
+    "structural_validation_contract_version": "1.0.0",
+    "disposition_decision_contract_identifier": "xri_g99_disposition_first_match_contract",
+    "disposition_decision_contract_version": "1.0.0",
+    "versions_compared": ["xri_g100_structural_validation_contract_version", "disposition_record_validation_version", "xri_g99_disposition_contract_version", "disposition_record_version", "xri_g99_decision_contract_version", "upstream_validation_version", "attestation_version", "purge_verification_version_when_present", "referenced_schema_or_method_versions"],
+    "missing_version_result": "disposition_record_validation_incomplete",
+    "present_but_unresolvable_version_result": "disposition_record_validation_blocked",
+    "resolved_but_inconsistent_version_result": "disposition_record_structurally_invalid_for_review",
+    "does_not_establish": ["legal_validity", "cryptographic_validity", "signature_validity", "attestation_acceptance", "production_approval"]
+  },
+  "validation_precedence": {
+    "mode": "first_match_wins",
+    "priority_order": ["disposition_record_validation_blocked", "disposition_record_validation_incomplete", "disposition_record_structurally_invalid_for_review", "disposition_record_structurally_valid_for_review_storage_only", "disposition_record_structurally_valid_for_audit_reference_only", "disposition_record_structurally_valid_for_later_gate_review_only", "default_disposition_record_validation_incomplete"],
+    "lower_priority_may_override_match": false,
+    "default_fallback_exclusive_to_priority_7": true,
+    "priority_2_contains_default_fallback": false,
+    "structurally_valid_results_mutually_exclusive": true,
+    "mutual_exclusion_basis": "exactly_one_disposition_purpose_value"
+  },
+  "validation_matrix": [
+    {
+      "priority": 1,
+      "result": "disposition_record_validation_blocked",
+      "rule_identifier": "xri_g100_p1_disposition_record_validation_blocked",
+      "match_mode": "any",
+      "conditions": ["forbidden_identity_anchor_used", "stable_identity_present_but_unresolvable", "required_reference_present_but_unresolvable", "decision_trace_unresolvable_manipulated_unsafe_or_authority_bearing", "actor_authority_explicitly_unauthorized", "prohibited_sensitive_evidence_exposed", "validation_implies_disposition_change_or_operational_authority", "forbidden_write_required", "artifact_isolation_cannot_be_maintained_safely", "processing_stop_required_present_and_not_true", "authority_granted_present_and_not_false", "automatic_continuation_or_next_phase_authorization_enabled", "mandatory_safety_or_no_write_declaration_false_or_authority_bearing"]
+    },
+    {
+      "priority": 2,
+      "result": "disposition_record_validation_incomplete",
+      "rule_identifier": "xri_g100_p2_disposition_record_validation_incomplete",
+      "match_mode": "any_after_priority_1_non_match",
+      "conditions": ["required_field_absent_omitted_blank_ambiguous_or_unexplained_null", "incomplete_controlled_unavailable_value_object", "stable_identity_missing", "decision_trace_missing", "required_contract_reference_missing", "required_upstream_reference_missing_but_not_proven_unresolvable", "actor_authority_timestamp_method_purpose_scope_or_version_missing", "required_evidence_metadata_missing", "disposition_purpose_not_applicable_without_valid_routing_purpose"]
+    },
+    {
+      "priority": 3,
+      "result": "disposition_record_structurally_invalid_for_review",
+      "rule_identifier": "xri_g100_p3_disposition_record_structurally_invalid_for_review",
+      "match_mode": "any_after_priorities_1_and_2_non_match",
+      "conditions": ["safe_invalid_field_type", "safe_invalid_controlled_value", "safe_malformed_unavailable_value_object", "resolved_version_conflict", "resolved_scope_conflict", "resolved_identity_conflict", "resolved_cross_reference_conflict", "complete_trace_does_not_reproduce_recorded_disposition", "incorrect_matched_priority_or_rule", "higher_priority_condition_bypassed_without_unsafe_manipulation", "purpose_conflicts_with_status", "reason_codes_conflict_with_rule_or_conditions", "recording_or_later_review_value_conflicts_with_disposition", "non_sensitive_isolation_evidence_or_confidentiality_failure_without_forbidden_write"]
+    },
+    {
+      "priority": 4,
+      "result": "disposition_record_structurally_valid_for_review_storage_only",
+      "rule_identifier": "xri_g100_p4_disposition_record_structurally_valid_for_review_storage_only",
+      "match_mode": "all_after_priorities_1_through_3_non_match",
+      "conditions": ["all_structural_checks_pass", "disposition_purpose_is_review_storage_only"]
+    },
+    {
+      "priority": 5,
+      "result": "disposition_record_structurally_valid_for_audit_reference_only",
+      "rule_identifier": "xri_g100_p5_disposition_record_structurally_valid_for_audit_reference_only",
+      "match_mode": "all_after_priorities_1_through_4_non_match",
+      "conditions": ["all_structural_checks_pass", "disposition_purpose_is_audit_reference_only"]
+    },
+    {
+      "priority": 6,
+      "result": "disposition_record_structurally_valid_for_later_gate_review_only",
+      "rule_identifier": "xri_g100_p6_disposition_record_structurally_valid_for_later_gate_review_only",
+      "match_mode": "all_after_priorities_1_through_5_non_match",
+      "conditions": ["all_structural_checks_pass", "disposition_purpose_is_later_gate_review_only"]
+    },
+    {
+      "priority": 7,
+      "result": "disposition_record_validation_incomplete",
+      "rule_identifier": "xri_g100_p7_default_disposition_record_validation_incomplete",
+      "match_mode": "default",
+      "conditions": ["no_earlier_rule_matches"]
+    }
+  ],
+  "failure_stop_conditions": {
+    "disposition_record_validation_blocked": ["stable_identity_present_but_unresolvable", "forbidden_identity_anchor_used", "required_reference_unresolvable", "decision_trace_unresolvable_manipulated_unsafe_or_authority_bearing", "actor_authority_explicitly_unauthorized", "prohibited_sensitive_evidence", "disposition_change_or_operational_authority_implied", "forbidden_write_required", "artifact_isolation_cannot_be_maintained_safely", "processing_stop_required_present_and_not_true", "authority_granted_present_and_not_false", "automatic_continuation_or_next_phase_authorization_enabled", "mandatory_safety_or_no_write_declaration_false_or_authority_bearing"],
+    "disposition_record_validation_incomplete": ["stable_identity_missing", "required_field_missing_blank_ambiguous_or_unexplained_null", "decision_trace_missing", "required_contract_reference_missing", "required_upstream_reference_missing_but_not_proven_unresolvable", "actor_authority_timestamp_method_purpose_scope_or_version_missing", "required_evidence_metadata_missing", "incomplete_controlled_unavailable_value_object", "disposition_purpose_not_applicable_without_valid_routing_purpose"],
+    "disposition_record_structurally_invalid_for_review": ["safe_invalid_field_type", "safe_invalid_controlled_enum", "safe_malformed_unavailable_value_object", "recorded_disposition_not_reproducible", "purpose_conflicts_with_status", "incorrect_priority_or_rule", "higher_priority_condition_bypassed_without_unsafe_manipulation", "resolved_version_conflict", "resolved_cross_reference_conflict", "resolved_scope_conflict", "resolved_identity_conflict", "reason_codes_conflict_with_conditions", "recording_or_later_review_value_conflict", "non_sensitive_isolation_evidence_or_confidentiality_failure"]
+  },
+  "result_artifact_recording_contract": {
+    "permitted_status_values": ["recorded_controlled_non_production", "permitted_but_not_recorded", "not_recorded_due_to_block"],
+    "recording_optional": true,
+    "separate_authorization_required": true,
+    "controlled_non_production_location_required": true,
+    "evidence_minimization_required": true,
+    "prohibited_data_exposure_allowed": false,
+    "forbidden_write_allowed": false,
+    "forbidden_operational_inputs": ["registry", "production", "public_map", "wordpress", "workflow", "publishing", "staging", "promotion", "cache", "location_cache"],
+    "processing_stop_required_after_recording": true,
+    "authority_granted_after_recording": false,
+    "later_phase_authorized_by_recording": false
+  },
+  "later_review_contract": {
+    "separate_explicit_authorization_required": true,
+    "then_current_repository_baseline_required": true,
+    "automatic_continuation": false,
+    "structurally_valid_review_storage_later_review": "non_authoritative_stored_result_review_only",
+    "structurally_valid_audit_reference_later_review": "non_authoritative_audit_inspection_only",
+    "structurally_valid_later_gate_review": "separately_approved_future_gate_only",
+    "structurally_invalid_later_review": "after_remediation_and_separate_authorization_only",
+    "validation_incomplete_later_review": "after_missing_information_is_supplied_under_separate_authorization_only",
+    "validation_blocked_later_review": "prohibited_until_blocking_condition_is_resolved_under_separate_authorization"
+  },
+  "evidence_restrictions": {
+    "minimization_required": true,
+    "confidential_data_exclusion_required": true,
+    "forbidden_path_exclusion_required": true,
+    "prohibited_content": ["source_credentials", "authentication_tokens", "api_keys", "production_secrets", "private_runtime_configuration", "deployment_credentials", "wordpress_credentials", "scheduled_workflow_credentials", "cryptographic_keys", "cryptographic_signatures", "certificates", "unrestricted_filesystem_paths", "forbidden_write_paths", "unnecessary_personal_information", "unredacted_confidential_review_content", "raw_evidence_when_a_controlled_reference_is_sufficient", "unsupported_claims_of_purge_deletion_independent_verification_legal_certification_signature_or_cryptographic_validity"]
+  },
+  "artifact_isolation_contract": {
+    "required": true,
+    "allowed_artifact_count": 2,
+    "allowed_paths": ["docs/xri-g100-non-production-controlled-live-fetch-dry-run-review-artifact-purge-verification-attestation-validation-disposition-record-structural-validation-boundary-gate.md", "data/reports/xri_g100_non_production_controlled_live_fetch_dry_run_review_artifact_purge_verification_attestation_validation_disposition_record_structural_validation_boundary_gate_report.json"],
+    "exactly_two_files_created": true,
+    "existing_files_may_be_modified": false,
+    "third_file_allowed": false,
+    "standalone_schema_allowed": false,
+    "decision_trace_creation_allowed": false,
+    "actual_disposition_record_creation_allowed": false,
+    "actual_structural_validation_record_creation_allowed": false,
+    "executable_validator_allowed": false,
+    "tests_fixtures_tools_scripts_workflows_allowed": false,
+    "isolation_failure_result": "disposition_record_validation_blocked"
+  },
+  "no_source_call_boundary": {
+    "live_fetch_authorized": false,
+    "dry_run_authorized": false,
+    "nyc_open_data_call_authorized": false,
+    "soda_call_authorized": false,
+    "external_api_call_authorized": false,
+    "geocoding_call_authorized": false,
+    "scraping_authorized": false,
+    "website_query_authorized": false
+  },
+  "no_write_boundary": {
+    "registry_write_authorized": false,
+    "production_write_authorized": false,
+    "public_map_write_authorized": false,
+    "wordpress_write_authorized": false,
+    "scheduled_workflow_write_authorized": false,
+    "publishing_write_authorized": false,
+    "staging_write_authorized": false,
+    "promotion_write_authorized": false,
+    "cache_write_authorized": false,
+    "location_cache_write_authorized": false,
+    "test_write_authorized": false,
+    "fixture_write_authorized": false,
+    "tool_write_authorized": false,
+    "script_write_authorized": false,
+    "runtime_write_authorized": false
+  },
+  "authority_boundary": {
+    "authority_granted": false,
+    "actual_disposition_record_creation": false,
+    "actual_disposition_record_recording": false,
+    "actual_structural_validation_execution": false,
+    "actual_structural_validation_result_creation": false,
+    "decision_trace_creation": false,
+    "disposition_recalculation_correction_replacement_or_change": false,
+    "attestation_action": false,
+    "legal_or_deletion_certification": false,
+    "signature_certificate_or_cryptographic_validation": false,
+    "purge_or_purge_verification": false,
+    "registry_import": false,
+    "production_export": false,
+    "public_map_release": false,
+    "wordpress_workflow_publishing_staging_promotion_or_cache_input": false,
+    "automatic_continuation": false,
+    "later_phase_authorized": false,
+    "later_implementation_authorized": false,
+    "processing_stop_required": true
+  },
+  "pr_110_boundary": {
+    "pull_request": 110,
+    "state_observed": "open",
+    "merge_state_observed": "unmerged",
+    "modified": false,
+    "merged": false,
+    "closed": false,
+    "rebased": false,
+    "retargeted": false,
+    "reviewed": false,
+    "commented_on": false,
+    "branch_renamed_or_deleted": false,
+    "status_decision_made": false
+  },
+  "required_safety_assertions": {
+    "documentation_report_only": true,
+    "exactly_two_files_created": true,
+    "existing_file_modified": false,
+    "third_file_created": false,
+    "actual_disposition_record_created": false,
+    "actual_disposition_record_recorded": false,
+    "actual_disposition_created_or_changed": false,
+    "actual_structural_validation_executed": false,
+    "actual_structural_validation_record_created": false,
+    "actual_structural_validation_result_created": false,
+    "decision_trace_created": false,
+    "implementation_created": false,
+    "executable_behavior_created": false,
+    "standalone_schema_created": false,
+    "test_created": false,
+    "fixture_created": false,
+    "live_fetch_executed": false,
+    "dry_run_executed": false,
+    "purge_executed": false,
+    "purge_verification_executed": false,
+    "attestation_action_performed": false,
+    "certificate_signature_or_cryptographic_validation_performed": false,
+    "deletion_certified": false,
+    "registry_modified": false,
+    "production_modified": false,
+    "public_map_modified": false,
+    "wordpress_modified": false,
+    "scheduled_workflow_modified": false,
+    "publishing_modified": false,
+    "staging_modified": false,
+    "promotion_modified": false,
+    "cache_modified": false,
+    "location_cache_touched": false,
+    "pr_110_untouched": true,
+    "subsequent_phase_authorized": false,
+    "subsequent_phase_started": false,
+    "automatic_continuation": false
+  },
+  "files_actually_created": [
+    "docs/xri-g100-non-production-controlled-live-fetch-dry-run-review-artifact-purge-verification-attestation-validation-disposition-record-structural-validation-boundary-gate.md",
+    "data/reports/xri_g100_non_production_controlled_live_fetch_dry_run_review_artifact_purge_verification_attestation_validation_disposition_record_structural_validation_boundary_gate_report.json"
+  ],
+  "stop_condition": "Stop after creating the two approved files and opening and verifying the review-only XRI-G100 pull request. Do not merge, create additional artifacts, modify PR #110, or start a later phase.",
+  "next_phase_boundary": {
+    "automatic_continuation": false,
+    "next_phase_authorized": false,
+    "xri_g101_or_later_authorized": false,
+    "later_implementation_authorized": false,
+    "declaration": "Any future step requires separate explicit approval from Howard and a then-current repository baseline."
+  },
+  "verdict": "PASS"
+}
