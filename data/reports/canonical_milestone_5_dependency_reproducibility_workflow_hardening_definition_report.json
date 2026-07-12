@@ -1,0 +1,191 @@
+{
+  "milestone": "Canonical Milestone 5",
+  "baseline_sha": "09d3e88e2d4432b43b4a8f39595941fe68fc7068",
+  "baseline_tree_sha": "80d25e48404c1da42637f2cb02a95a29c0efc3c9",
+  "baseline_note": "checked-out session branch was one commit behind this baseline (parent of the CM4 merge); origin/main (fetched earlier, cached, not re-fetched for this gate) correctly matched this SHA; commit content verified via git cat-file/ls-tree without checkout",
+  "gate_type": "documentation_only_definition",
+  "repository_code_executed": false,
+  "workflows_executed": false,
+  "dependencies_installed": false,
+  "live_source_accessed": false,
+  "production_changed": false,
+  "dependency_manifest_present": false,
+  "rapidfuzz_available_in_audited_interpreter": false,
+  "rapidfuzz_required_by_tests": false,
+  "rapidfuzz_pinned_inline_in_workflows": true,
+  "rapidfuzz_inline_pin_locations": [
+    ".github/workflows/gps-staged-feed-integration-diagnostic.yml",
+    ".github/workflows/gps-staged-feed-integration-update.yml"
+  ],
+  "pytest_version_in_audited_interpreter": "9.0.2",
+  "python_version_in_audited_interpreter": "3.11.15",
+  "ci_python_version": "3.11",
+  "workflow_count": 4,
+  "scheduled_workflows": 0,
+  "workflows_with_contents_write": 3,
+  "workflows_with_contents_read_only": 1,
+  "workflows_with_always_guarded_commit_step": 3,
+  "third_party_dependency_count": 2,
+  "third_party_dependencies": ["pytest", "rapidfuzz"],
+  "python_file_count": 41,
+  "scripts_file_count": 24,
+  "tools_registry_file_count": 12,
+  "test_file_count": 5,
+  "tests_collected": 82,
+  "scripts_with_test_coverage": 0,
+  "tools_registry_files_with_test_coverage": 5,
+  "orphaned_tools_registry_modules": 7,
+  "orphaned_module_names": [
+    "tools/registry/xri_g6_fixture_mapping_validator.py",
+    "tools/registry/xri_g7_fixture_candidate_normalizer.py",
+    "tools/registry/xri_g8_fixture_candidate_preview_report.py",
+    "tools/registry/xri_g9_fixture_review_sorting_grouping.py",
+    "tools/registry/xri_g10_fixture_grouped_review_export.py",
+    "tools/registry/xri_g11_fixture_grouped_export_validator.py",
+    "tools/registry/registry_candidate_extractor_prototype.py"
+  ],
+  "files_with_broad_except_exception": 23,
+  "files_with_eval_or_exec": 0,
+  "files_with_os_system": 0,
+  "files_with_pickle": 0,
+  "files_with_subprocess_shell_true": 0,
+  "non_atomic_write_scripts_feeding_auto_commit": [
+    "scripts/generate_gps_staged_feed_integration_adjudication_summary.py",
+    "scripts/generate_gps_staged_feed_integration_match_diagnostic.py",
+    "scripts/apply_gps_staged_feed_integration_update.py"
+  ],
+  "github_actions_pinned_to_sha": false,
+  "github_actions_used": ["actions/checkout@v4", "actions/setup-python@v5"],
+  "email_step_conditioned_on_reliability_gate": false,
+  "risks": [
+    {
+      "id": "RISK-01",
+      "title": "No dependency manifest",
+      "severity": "medium",
+      "confidence": "high",
+      "affected_files": ["(repository root)"],
+      "separate_authorization_required": true,
+      "proposed_subphase": "M5-B"
+    },
+    {
+      "id": "RISK-02",
+      "title": "rapidfuzz unavailable in audited interpreter",
+      "severity": "medium",
+      "confidence": "high",
+      "affected_files": ["scripts/generate_gps_staged_feed_integration_match_diagnostic.py"],
+      "separate_authorization_required": true,
+      "proposed_subphase": "M5-B"
+    },
+    {
+      "id": "RISK-03",
+      "title": "contents: write plus if: always() unconditional commit-and-push",
+      "severity": "medium-high",
+      "confidence": "high",
+      "affected_files": [
+        ".github/workflows/gps-staged-feed-integration-adjudication-summary.yml",
+        ".github/workflows/gps-staged-feed-integration-diagnostic.yml",
+        ".github/workflows/gps-staged-feed-integration-update.yml"
+      ],
+      "separate_authorization_required": true,
+      "proposed_subphase": "M5-D"
+    },
+    {
+      "id": "RISK-04",
+      "title": "Reliability-gate failure does not gate the email notification step",
+      "severity": "medium",
+      "confidence": "high",
+      "affected_files": [".github/workflows/live-sync-qa.yml"],
+      "separate_authorization_required": true,
+      "proposed_subphase": "M5-D"
+    },
+    {
+      "id": "RISK-05",
+      "title": "Broad except Exception in 23 files",
+      "severity": "low",
+      "confidence": "high",
+      "affected_files": ["23 files across scripts/**"],
+      "separate_authorization_required": true,
+      "proposed_subphase": "optional"
+    },
+    {
+      "id": "RISK-06",
+      "title": "Non-atomic direct-overwrite writes on auto-committed files",
+      "severity": "medium",
+      "confidence": "medium",
+      "affected_files": [
+        "scripts/generate_gps_staged_feed_integration_adjudication_summary.py",
+        "scripts/generate_gps_staged_feed_integration_match_diagnostic.py",
+        "scripts/apply_gps_staged_feed_integration_update.py"
+      ],
+      "separate_authorization_required": true,
+      "proposed_subphase": "optional"
+    },
+    {
+      "id": "RISK-07",
+      "title": "Zero test coverage across all 24 scripts/** files, including the reliability gate itself",
+      "severity": "high",
+      "confidence": "high",
+      "affected_files": ["scripts/**"],
+      "separate_authorization_required": true,
+      "proposed_subphase": "M5-E"
+    },
+    {
+      "id": "RISK-08",
+      "title": "Seven orphaned tools/registry prototype modules",
+      "severity": "low",
+      "confidence": "high",
+      "affected_files": [
+        "tools/registry/xri_g6_fixture_mapping_validator.py",
+        "tools/registry/xri_g7_fixture_candidate_normalizer.py",
+        "tools/registry/xri_g8_fixture_candidate_preview_report.py",
+        "tools/registry/xri_g9_fixture_review_sorting_grouping.py",
+        "tools/registry/xri_g10_fixture_grouped_review_export.py",
+        "tools/registry/xri_g11_fixture_grouped_export_validator.py",
+        "tools/registry/registry_candidate_extractor_prototype.py"
+      ],
+      "separate_authorization_required": true,
+      "proposed_subphase": "optional"
+    },
+    {
+      "id": "RISK-09",
+      "title": "GitHub Actions pinned to mutable tags, not SHAs",
+      "severity": "low",
+      "confidence": "high",
+      "affected_files": [".github/workflows/*.yml"],
+      "separate_authorization_required": true,
+      "proposed_subphase": "optional"
+    },
+    {
+      "id": "RISK-10",
+      "title": "Positive control: no scheduled workflows, live pipeline requires dual manual opt-in",
+      "severity": "informational",
+      "confidence": "high",
+      "affected_files": [".github/workflows/*.yml"],
+      "separate_authorization_required": false,
+      "proposed_subphase": "none"
+    },
+    {
+      "id": "RISK-11",
+      "title": "Documentation gap: no Python version, dependency, or operational-readiness section",
+      "severity": "low",
+      "confidence": "medium",
+      "affected_files": ["README.md", "AGENTS.md"],
+      "separate_authorization_required": true,
+      "proposed_subphase": "M5-F"
+    }
+  ],
+  "proposed_subphases": [
+    "M5-A Dependency and Python-version contract",
+    "M5-B Dependency-manifest implementation",
+    "M5-C Workflow least-privilege hardening",
+    "M5-D Fail-closed reliability-gate correction",
+    "M5-E Offline tests and validation",
+    "M5-F Documentation and closure"
+  ],
+  "evidence_directory": "/tmp/nycif-cm5-definition-readiness-09d3e88e",
+  "pr_133_untouched": true,
+  "pr_136_untouched": true,
+  "implementation_authorized": false,
+  "next_step": "SEPARATE_M5_A_AUTHORIZATION_REQUIRED",
+  "verdict": "READY_FOR_SEPARATE_M5_A_AUTHORIZATION"
+}
