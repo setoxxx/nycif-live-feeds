@@ -86,7 +86,7 @@ jobs:
         run: python scripts/backend_reliability_gate.py || echo "BACKEND_GATE_FAILED=true" >> "$GITHUB_ENV"
 
       - name: Email live delta report
-        if: github.event.inputs.allow_email == 'yes'
+        if: github.event.inputs.allow_email == 'yes' && env.BACKEND_GATE_FAILED != 'true'
         run: python scripts/send_live_delta_email.py
         env:
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
