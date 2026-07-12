@@ -49,7 +49,7 @@ jobs:
         run: python scripts/generate_gps_staged_feed_integration_match_diagnostic.py
 
       - name: Commit GPS match diagnostic artifact
-        if: always()
+        if: success()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"

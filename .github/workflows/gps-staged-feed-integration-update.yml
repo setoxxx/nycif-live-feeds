@@ -49,7 +49,7 @@ jobs:
         run: python scripts/apply_gps_staged_feed_integration_update.py
 
       - name: Commit staged feed GPS integration update
-        if: always()
+        if: success()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
