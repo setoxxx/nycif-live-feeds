@@ -1,7 +1,7 @@
 {
   "approval_queue_count": 233,
   "fail_count": 0,
-  "generated_at_utc": "2026-07-13T22:26:29.214573+00:00",
+  "generated_at_utc": "2026-07-13T22:40:48.307951+00:00",
   "issues": [],
   "location_cache_modified": false,
   "phase": "phase_2d_manual_approval_validation",
@@ -10,7 +10,9 @@
   "qa_pass": true,
   "staged_feed_modified": false,
   "status_counts": {
-    "pending": 233
+    "approved": 174,
+    "pending": 52,
+    "rejected": 7
   },
   "validation_rule": "Pending rows are allowed. Approved/promotable rows must have valid NYC coordinates, documented source/confidence, reviewer, review timestamp, and decision reason."
 }
