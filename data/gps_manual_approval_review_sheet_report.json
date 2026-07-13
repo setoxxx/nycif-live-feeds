@@ -1,29 +1,30 @@
 {
   "borough_counts": {
-    "Bronx": 5,
-    "Brooklyn": 17,
-    "Manhattan": 13,
-    "Queens": 12
+    "Bronx": 24,
+    "Brooklyn": 64,
+    "Manhattan": 58,
+    "Queens": 74,
+    "Staten Island": 13
   },
   "confidence_counts": {
-    "high": 40,
-    "medium": 7
+    "high": 179,
+    "medium": 54
   },
   "csv_output": "data/gps_manual_approval_review_sheet.csv",
-  "generated_at_utc": "2026-07-13T22:17:12.741731+00:00",
+  "generated_at_utc": "2026-07-13T22:26:29.181931+00:00",
   "json_output": "data/gps_manual_approval_review_sheet.json",
   "location_cache_modified": false,
   "next_required_step": "Manually inspect search/pin URLs. Do not approve or promote from this sheet directly; update the approval queue in a separate reviewed commit when ready.",
   "phase": "phase_2d_manual_approval_review_sheet",
   "promotion_allowed_count": 0,
   "public_map_modified": false,
-  "review_sheet_count": 47,
+  "review_sheet_count": 233,
   "source_counts": {
-    "existing_location_cache_place_memory": 7,
-    "nyc_parks_bigapps": 40
+    "existing_location_cache_place_memory": 54,
+    "nyc_parks_bigapps": 179
   },
   "staged_feed_modified": false,
   "status_counts": {
-    "pending": 47
+    "pending": 233
   }
 }
