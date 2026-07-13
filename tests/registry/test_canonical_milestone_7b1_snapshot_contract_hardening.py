@@ -14,6 +14,13 @@ from typing import Any
 
 import pytest
 
+from scripts.generate_gps_staged_feed_integration_adjudication_summary import (
+    recommended_next_action_for_contract,
+)
+from scripts.gps_count_contract import (
+    build_count_contract,
+    finalize_count_contract_adjudication_hash,
+)
 from scripts.gps_identity import build_stable_event_identity
 from scripts.gps_snapshot_provenance import (
     DEFAULT_STAGED_FEED_RELATIVE_PATH,
@@ -25,13 +32,21 @@ from scripts.gps_snapshot_provenance import (
     validate_bound_snapshot,
 )
 
-PATCH_NEXT_ACTION = (
-    "Patch staged-feed update to apply only the 204 adjudicated safe identities, "
-    "with the old 430 dry-run target replaced by a new 204-row adjudicated-safe "
-    "contract. Keep the 20 unmatched promoted keys out of the staged-feed update "
-    "and carry them forward for human review."
-)
 INSPECT_NEXT_ACTION = "Do not patch update workflow; inspect adjudication summary first."
+
+
+def patch_next_action(
+    safe_count: int,
+    *,
+    no_safe_count: int = 20,
+    old_target: int = 430,
+) -> str:
+    return recommended_next_action_for_contract(
+        safe_identity_count=safe_count,
+        no_safe_match_count=no_safe_count,
+        old_target=old_target,
+        multi_key_conflict_count=0,
+    )
 
 
 def run_adjudication_fixture(tmp_path: Path, diagnostic_payload: dict[str, Any]) -> dict[str, Any]:
@@ -139,17 +154,22 @@ def build_contract_summary(
     *,
     repo_root: Path,
     include_provenance: bool = True,
+    include_count_contract: bool = True,
     provenance_override: dict[str, Any] | None = None,
+    diagnostic_artifact_sha256: str = "abc123def4567890123456789012345678901234567890123456789012345678",
 ) -> dict[str, Any]:
     safe_rows = [make_safe_row(row, index) for index, row in enumerate(events)]
+    no_safe_match_count = 20
+    adjudication_count_by_type: dict[str, int] = {}
     summary: dict[str, Any] = {
-        "adjudication_count_by_type": {},
+        "adjudication_count_by_type": adjudication_count_by_type,
+        "diagnostic_artifact_sha256": diagnostic_artifact_sha256,
         "generated_at_utc": "2026-07-13T12:00:00+00:00",
         "input_diagnostic": "data/gps_staged_feed_integration_match_diagnostic.json",
         "location_cache_modified": False,
         "multi_key_conflict_count": 0,
         "no_safe_staged_match_adjudication": [],
-        "no_safe_staged_match_promoted_key_count": 20,
+        "no_safe_staged_match_promoted_key_count": no_safe_match_count,
         "no_safe_staged_match_promoted_keys": [],
         "old_dry_run_target_count": 430,
         "phase": "gps_staged_feed_integration_adjudication_summary",
@@ -168,8 +188,19 @@ def build_contract_summary(
             repo_root=repo_root,
             staged_feed_path=DEFAULT_STAGED_FEED_RELATIVE_PATH,
             generated_at_utc="2026-07-13T12:00:00+00:00",
-            upstream_artifact_sha256="abc123",
+            upstream_artifact_sha256=diagnostic_artifact_sha256,
         )
+    if include_provenance and include_count_contract:
+        summary["safe_update_count_contract"] = build_count_contract(
+            staged_feed_provenance=summary["staged_feed_provenance"],
+            diagnostic_artifact_sha256=diagnostic_artifact_sha256,
+            selected_rows=safe_rows,
+            no_safe_match_count=no_safe_match_count,
+            multi_key_conflict_count=summary["multi_key_conflict_count"],
+            adjudication_count_by_type=adjudication_count_by_type,
+            generated_at_utc=summary["generated_at_utc"],
+        )
+        finalize_count_contract_adjudication_hash(summary)
     return summary
 
 
@@ -367,16 +398,26 @@ def test_adjudication_recommended_next_action_when_provenance_present_and_safe_c
     tmp_path: Path,
 ) -> None:
     summary = run_adjudication_fixture(tmp_path, build_diagnostic_fixture(tmp_path, include_provenance=True))
-    assert summary["recommended_next_action"] == PATCH_NEXT_ACTION
+    assert summary["recommended_next_action"] == patch_next_action(204)
+    assert summary["qa_pass"] is True
 
 
-def test_adjudication_recommended_next_action_when_provenance_present_but_wrong_safe_count(
-    tmp_path: Path,
-) -> None:
+def test_adjudication_155_passes_qa_when_counts_are_consistent(tmp_path: Path) -> None:
     summary = run_adjudication_fixture(
         tmp_path,
         build_diagnostic_fixture(tmp_path, include_provenance=True, selected_count=155),
     )
+    assert summary["qa_pass"] is True
+    assert summary["recommended_next_action"] == patch_next_action(155)
+
+
+def test_adjudication_recommended_next_action_when_provenance_present_but_inconsistent_counts(
+    tmp_path: Path,
+) -> None:
+    diagnostic = build_diagnostic_fixture(tmp_path, include_provenance=True, selected_count=155)
+    diagnostic["selected_stable_event_identity_count"] = 200
+    summary = run_adjudication_fixture(tmp_path, diagnostic)
+    assert summary["qa_pass"] is False
     assert summary["recommended_next_action"] == INSPECT_NEXT_ACTION
 
 
@@ -507,16 +548,17 @@ def test_byte_size_mismatch_fails_even_if_sha_matches_reported(tmp_path: Path) -
 def test_matching_hash_reaches_identity_matching_not_preflight(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     events = incident_window_events(204)
     feed_path = tmp_path / "data" / "nycif_staged_live_events.json"
-    write_json(feed_path, build_staged_feed(events))
+    staged_events = copy.deepcopy(events)
+    staged_events[-1]["source_event_id"] = "MUTATED-EV-9999"
+    write_json(feed_path, build_staged_feed(staged_events))
     contract = build_contract_summary(events, feed_path, repo_root=tmp_path)
-    contract["safe_update_ready_rows"] = contract["safe_update_ready_rows"][:-1]
-    contract["safe_update_ready_count"] = 204
-    contract["safe_update_ready_identity_count"] = 204
 
-    exit_code, report = run_apply_isolated(tmp_path, monkeypatch, staged_events=events, contract=contract)
+    exit_code, report = run_apply_isolated(tmp_path, monkeypatch, staged_events=staged_events, contract=contract)
     assert exit_code == 1
     assert report.get("failure_type") != "stale_staged_feed_contract"
     assert report.get("failure_type") != "legacy_contract_missing_snapshot_hash"
+    assert report.get("failure_type") != "legacy_contract_missing_count_contract"
+    assert report.get("count_contract_preflight_passed") is True
     assert report["updated_staged_event_count"] < 204
 
 
@@ -565,6 +607,8 @@ def test_changed_files_do_not_include_protected_data_paths() -> None:
         "scripts/generate_gps_staged_feed_integration_adjudication_summary.py",
         "scripts/apply_gps_staged_feed_integration_update.py",
         "tests/registry/test_canonical_milestone_7b1_snapshot_contract_hardening.py",
+        "tests/registry/test_canonical_milestone_7b2_snapshot_bound_count_contract.py",
+        "scripts/gps_count_contract.py",
         "docs/canonical_milestone_7b1_snapshot_contract_hardening.md",
         "nycif_m7b1_snapshot_contract_hardening_independent_review_prompt.txt",
     }

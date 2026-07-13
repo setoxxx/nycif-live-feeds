@@ -8,6 +8,11 @@ from pathlib import Path
 from typing import Any
 
 try:
+    from scripts.gps_count_contract import (
+        count_contract_failure_report,
+        derive_counts_from_adjudication_summary,
+        validate_count_contract_for_apply,
+    )
     from scripts.gps_identity import (
         build_stable_event_identity as stable_event_identity,
         event_cemsids,
@@ -18,6 +23,11 @@ try:
         validate_bound_snapshot,
     )
 except ModuleNotFoundError:  # pragma: no cover - direct script execution
+    from gps_count_contract import (
+        count_contract_failure_report,
+        derive_counts_from_adjudication_summary,
+        validate_count_contract_for_apply,
+    )
     from gps_identity import (
         build_stable_event_identity as stable_event_identity,
         event_cemsids,
@@ -33,9 +43,6 @@ DATA_DIR = ROOT / "data"
 ADJUDICATION_SUMMARY_PATH = DATA_DIR / "gps_staged_feed_integration_adjudication_summary.json"
 STAGED_FEED_PATH = DATA_DIR / "nycif_staged_live_events.json"
 UPDATE_REPORT_PATH = DATA_DIR / "gps_staged_feed_integration_update_report.json"
-
-EXPECTED_SAFE_UPDATE_READY_COUNT = 204
-EXPECTED_NO_SAFE_MATCH_PROMOTED_KEY_COUNT = 20
 
 
 def utc_now() -> str:
@@ -65,7 +72,25 @@ def valid_nyc_lat_lng(lat: Any, lng: Any) -> bool:
     return 40.0 <= lat_f <= 41.0 and -75.0 <= lng_f <= -73.0
 
 
+def contract_counts(summary: dict[str, Any]) -> dict[str, int]:
+    contract = summary.get("safe_update_count_contract") or {}
+    counts = contract.get("counts") if isinstance(contract, dict) else {}
+    if not isinstance(counts, dict):
+        counts = {}
+    derived = derive_counts_from_adjudication_summary(summary)
+    expected_safe = int(counts.get("safe_update_ready_identity_count") or derived["safe_update_ready_identity_count"])
+    expected_no_safe = int(counts.get("no_safe_match_promoted_key_count") or derived["no_safe_match_promoted_key_count"])
+    return {
+        "safe_update_ready_identity_count": expected_safe,
+        "no_safe_match_promoted_key_count": expected_no_safe,
+        "multi_key_conflict_count": int(counts.get("multi_key_conflict_count") or derived["multi_key_conflict_count"]),
+    }
+
+
 def failure_report(message: str, **extra: Any) -> dict[str, Any]:
+    counts = extra.get("contract_counts") or {}
+    expected_safe = int(counts.get("safe_update_ready_identity_count") or extra.get("safe_update_ready_identity_count") or 0)
+    expected_no_safe = int(counts.get("no_safe_match_promoted_key_count") or extra.get("no_safe_staged_match_promoted_key_count") or 0)
     report = {
         "blocking_issues": [message],
         "conflict_count": int(extra.get("conflict_count", 0) or 0),
@@ -78,9 +103,9 @@ def failure_report(message: str, **extra: Any) -> dict[str, Any]:
         "phase_3a_run": False,
         "public_map_modified": False,
         "qa_pass": False,
-        "safe_update_contract_count": int(extra.get("safe_update_contract_count", 0) or 0),
-        "safe_update_ready_identity_count": int(extra.get("safe_update_ready_identity_count", 0) or 0),
-        "skipped_count": int(extra.get("skipped_count", EXPECTED_SAFE_UPDATE_READY_COUNT) or 0),
+        "safe_update_contract_count": int(extra.get("safe_update_contract_count", expected_safe) or 0),
+        "safe_update_ready_identity_count": int(extra.get("safe_update_ready_identity_count", expected_safe) or 0),
+        "skipped_count": int(extra.get("skipped_count", expected_safe) or 0),
         "staged_feed_modified": False,
         "update_performed": False,
         "updated_staged_event_count": int(extra.get("updated_staged_event_count", 0) or 0),
@@ -89,17 +114,21 @@ def failure_report(message: str, **extra: Any) -> dict[str, Any]:
     report["validated_conditions"] = {
         "adjudication_summary_qa_pass_true": bool(extra.get("adjudication_summary_qa_pass") is True),
         "conflict_count_is_0": report["conflict_count"] == 0,
+        "count_contract_preflight_passed": bool(extra.get("count_contract_preflight_passed") is True),
         "location_cache_modified_false": True,
-        "no_safe_staged_match_promoted_key_count_is_20": int(extra.get("no_safe_staged_match_promoted_key_count", 0) or 0) == EXPECTED_NO_SAFE_MATCH_PROMOTED_KEY_COUNT,
+        "no_safe_staged_match_promoted_key_count_matches_contract": (
+            int(extra.get("no_safe_staged_match_promoted_key_count", expected_no_safe) or 0) == expected_no_safe
+        ),
         "phase_3a_run_false": True,
         "public_map_modified_false": True,
         "qa_pass_true": False,
-        "safe_update_contract_count_is_204": report["safe_update_contract_count"] == EXPECTED_SAFE_UPDATE_READY_COUNT,
-        "safe_update_ready_identity_count_is_204": report["safe_update_ready_identity_count"] == EXPECTED_SAFE_UPDATE_READY_COUNT,
+        "safe_update_contract_count_matches_contract": report["safe_update_contract_count"] == expected_safe,
+        "safe_update_ready_identity_count_matches_contract": report["safe_update_ready_identity_count"] == expected_safe,
         "skipped_count_is_0": report["skipped_count"] == 0,
+        "snapshot_contract_preflight_passed": bool(extra.get("snapshot_contract_preflight_passed") is True),
         "staged_feed_modified_true": False,
         "update_performed_true": False,
-        "updated_staged_event_count_is_204": report["updated_staged_event_count"] == EXPECTED_SAFE_UPDATE_READY_COUNT,
+        "updated_staged_event_count_matches_contract": report["updated_staged_event_count"] == expected_safe,
     }
     return report
 
@@ -134,7 +163,13 @@ def main() -> int:
     try:
         summary = load_json(ADJUDICATION_SUMMARY_PATH, {})
         if not isinstance(summary, dict) or summary.get("qa_pass") is not True:
-            save_json(UPDATE_REPORT_PATH, failure_report("Adjudication summary must exist and have qa_pass true", adjudication_summary_qa_pass=summary.get("qa_pass") if isinstance(summary, dict) else None))
+            save_json(
+                UPDATE_REPORT_PATH,
+                failure_report(
+                    "Adjudication summary must exist and have qa_pass true",
+                    adjudication_summary_qa_pass=summary.get("qa_pass") if isinstance(summary, dict) else None,
+                ),
+            )
             return 1
 
         snapshot_validation = validate_bound_snapshot(
@@ -154,9 +189,36 @@ def main() -> int:
             )
             return 1
 
+        count_validation = validate_count_contract_for_apply(summary)
+        if not count_validation.ok:
+            save_json(
+                UPDATE_REPORT_PATH,
+                count_contract_failure_report(
+                    count_validation,
+                    input_adjudication_summary=str(ADJUDICATION_SUMMARY_PATH.relative_to(ROOT)),
+                    input_staged_feed=str(STAGED_FEED_PATH.relative_to(ROOT)),
+                    snapshot_preflight_passed=True,
+                    generated_at_utc=utc_now(),
+                ),
+            )
+            return 1
+
+        counts = contract_counts(summary)
+        expected_safe_count = counts["safe_update_ready_identity_count"]
+        expected_no_safe_match = counts["no_safe_match_promoted_key_count"]
+
         staged_payload = load_json(STAGED_FEED_PATH, {})
         if not isinstance(staged_payload, dict) or not isinstance(staged_payload.get("events"), list):
-            save_json(UPDATE_REPORT_PATH, failure_report("nycif_staged_live_events.json must be an object with an events list", adjudication_summary_qa_pass=True))
+            save_json(
+                UPDATE_REPORT_PATH,
+                failure_report(
+                    "nycif_staged_live_events.json must be an object with an events list",
+                    adjudication_summary_qa_pass=True,
+                    snapshot_contract_preflight_passed=True,
+                    count_contract_preflight_passed=True,
+                    contract_counts=counts,
+                ),
+            )
             return 1
 
         safe_rows = safe_contract_rows(summary)
@@ -166,12 +228,20 @@ def main() -> int:
         multi_key_conflict_count = int(summary.get("multi_key_conflict_count") or 0)
         old_dry_run_target_count = int(summary.get("old_dry_run_target_count") or 0)
 
-        if safe_count != EXPECTED_SAFE_UPDATE_READY_COUNT or safe_identity_count != EXPECTED_SAFE_UPDATE_READY_COUNT or len(safe_rows) != EXPECTED_SAFE_UPDATE_READY_COUNT:
+        if (
+            safe_count != expected_safe_count
+            or safe_identity_count != expected_safe_count
+            or len(safe_rows) != expected_safe_count
+        ):
             save_json(
                 UPDATE_REPORT_PATH,
                 failure_report(
-                    "Adjudication summary does not contain exactly 204 safe update rows and identities",
+                    "Adjudication summary safe row and identity counts do not match bound count contract",
                     adjudication_summary_qa_pass=True,
+                    snapshot_contract_preflight_passed=True,
+                    count_contract_preflight_passed=True,
+                    contract_counts=counts,
+                    failure_type="count_contract_actual_count_mismatch",
                     old_dry_run_target_count=old_dry_run_target_count,
                     safe_update_contract_count=safe_count,
                     safe_update_ready_identity_count=safe_identity_count,
@@ -181,12 +251,16 @@ def main() -> int:
                 ),
             )
             return 1
-        if no_safe_match_count != EXPECTED_NO_SAFE_MATCH_PROMOTED_KEY_COUNT or multi_key_conflict_count != 0:
+        if no_safe_match_count != expected_no_safe_match or multi_key_conflict_count != 0:
             save_json(
                 UPDATE_REPORT_PATH,
                 failure_report(
-                    "Adjudication summary no-safe-match or conflict counts do not match the 204-safe contract",
+                    "Adjudication summary no-safe-match or conflict counts do not match bound count contract",
                     adjudication_summary_qa_pass=True,
+                    snapshot_contract_preflight_passed=True,
+                    count_contract_preflight_passed=True,
+                    contract_counts=counts,
+                    failure_type="count_contract_actual_count_mismatch",
                     old_dry_run_target_count=old_dry_run_target_count,
                     safe_update_contract_count=safe_count,
                     safe_update_ready_identity_count=safe_identity_count,
@@ -197,12 +271,15 @@ def main() -> int:
             return 1
 
         safe_by_identity, contract_conflicts = build_safe_identity_map(safe_rows)
-        if contract_conflicts or len(safe_by_identity) != EXPECTED_SAFE_UPDATE_READY_COUNT:
+        if contract_conflicts or len(safe_by_identity) != expected_safe_count:
             save_json(
                 UPDATE_REPORT_PATH,
                 failure_report(
                     "Adjudicated safe identity contract is not unique and complete",
                     adjudication_summary_qa_pass=True,
+                    snapshot_contract_preflight_passed=True,
+                    count_contract_preflight_passed=True,
+                    contract_counts=counts,
                     conflict_count=len(contract_conflicts),
                     conflicts=contract_conflicts[:50],
                     old_dry_run_target_count=old_dry_run_target_count,
@@ -258,7 +335,9 @@ def main() -> int:
             event_row["matched_promoted_cache_keys"] = [promoted_cache_key]
             event_row["group_key"] = promoted_cache_key.removeprefix("group:")
             event_row["gps_integration_phase"] = "gps_staged_feed_integration_update"
-            event_row["gps_integration_contract"] = "adjudicated_204_safe_identity_contract"
+            event_row["gps_integration_contract"] = (
+                f"adjudicated_{expected_safe_count}_safe_identity_snapshot_bound_count_contract"
+            )
             event_row["gps_integration_source"] = str(ADJUDICATION_SUMMARY_PATH.relative_to(ROOT))
             event_row["gps_integration_updated_at_utc"] = now
             event_row["location_source"] = "phase_2e_promoted_location_cache"
@@ -284,10 +363,10 @@ def main() -> int:
 
         unmatched_safe_identities = sorted(set(safe_by_identity) - matched_identities)
         updated_count = len(updated_rows)
-        skipped = max(EXPECTED_SAFE_UPDATE_READY_COUNT - updated_count, 0)
+        skipped = max(expected_safe_count - updated_count, 0)
         conflict_count = len(duplicate_identity_hits) + len(invalid_coordinate_rows)
         qa_pass = (
-            updated_count == EXPECTED_SAFE_UPDATE_READY_COUNT
+            updated_count == expected_safe_count
             and not unmatched_safe_identities
             and skipped == 0
             and conflict_count == 0
@@ -296,9 +375,12 @@ def main() -> int:
         report = {
             "adjudication_count_by_type": summary.get("adjudication_count_by_type") or {},
             "adjudication_summary_qa_pass": summary.get("qa_pass") is True,
-            "blocking_issues": [] if qa_pass else ["Adjudicated 204-safe staged-feed update did not meet one or more required counts"],
+            "blocking_issues": [] if qa_pass else [
+                f"Adjudicated {expected_safe_count}-safe staged-feed update did not meet one or more required counts"
+            ],
             "conflict_count": conflict_count,
             "conflicts": (duplicate_identity_hits + invalid_coordinate_rows)[:50],
+            "count_contract_preflight_passed": True,
             "excluded_no_safe_match_promoted_key_count": no_safe_match_count,
             "excluded_no_safe_match_promoted_keys": summary.get("no_safe_staged_match_promoted_keys") or [],
             "generated_at_utc": now,
@@ -312,8 +394,13 @@ def main() -> int:
             "public_map_modified": False,
             "qa_pass": qa_pass,
             "safe_update_contract_count": len(safe_by_identity),
+            "safe_update_count_contract_schema_version": (
+                (summary.get("safe_update_count_contract") or {}).get("schema_version")
+            ),
             "safe_update_ready_identity_count": safe_identity_count,
-            "safe_update_source": "gps_staged_feed_integration_adjudication_summary_204_safe_identity_contract",
+            "safe_update_source": (
+                f"gps_staged_feed_integration_adjudication_summary_{expected_safe_count}_safe_identity_snapshot_bound_count_contract"
+            ),
             "skipped_count": skipped,
             "staged_feed_modified": qa_pass,
             "unmatched_safe_identity_count": len(unmatched_safe_identities),
@@ -324,20 +411,21 @@ def main() -> int:
             "validated_conditions": {
                 "adjudication_summary_qa_pass_true": summary.get("qa_pass") is True,
                 "conflict_count_is_0": conflict_count == 0,
-                "excluded_no_safe_match_promoted_key_count_is_20": no_safe_match_count == EXPECTED_NO_SAFE_MATCH_PROMOTED_KEY_COUNT,
+                "count_contract_preflight_passed": True,
+                "excluded_no_safe_match_promoted_key_count_matches_contract": no_safe_match_count == expected_no_safe_match,
                 "location_cache_modified_false": True,
-                "old_dry_run_target_430_not_required": old_dry_run_target_count != EXPECTED_SAFE_UPDATE_READY_COUNT,
+                "old_dry_run_target_not_equal_to_contract_count": old_dry_run_target_count != expected_safe_count,
                 "phase_3a_run_false": True,
                 "public_map_modified_false": True,
                 "qa_pass_true": qa_pass,
-                "safe_update_contract_count_is_204": len(safe_by_identity) == EXPECTED_SAFE_UPDATE_READY_COUNT,
-                "safe_update_ready_identity_count_is_204": safe_identity_count == EXPECTED_SAFE_UPDATE_READY_COUNT,
+                "safe_update_contract_count_matches_contract": len(safe_by_identity) == expected_safe_count,
+                "safe_update_ready_identity_count_matches_contract": safe_identity_count == expected_safe_count,
                 "skipped_count_is_0": skipped == 0,
                 "snapshot_contract_preflight_passed": True,
                 "staged_feed_modified_true": qa_pass,
                 "unmatched_safe_identity_count_is_0": len(unmatched_safe_identities) == 0,
                 "update_performed_true": qa_pass,
-                "updated_staged_event_count_is_204": updated_count == EXPECTED_SAFE_UPDATE_READY_COUNT,
+                "updated_staged_event_count_matches_contract": updated_count == expected_safe_count,
             },
         }
 
