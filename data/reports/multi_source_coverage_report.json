@@ -1,0 +1,384 @@
+{
+  "coverage_assessment": {
+    "citywide_calendar_ingested_in_repo": true,
+    "multi_source_city_events_pct_estimate": 100.0,
+    "notes": [
+      "tvpp-9vvx is the authoritative permit registry export; E-Apply is the same CECM family via a different UI/API.",
+      "Citywide calendar is a separate curated multi-agency feed; overlap with permits is partial, not 1:1.",
+      "Full 'all city events' requires merging supplemental calendar-only rows through manual review, not auto-promotion."
+    ],
+    "permit_pipeline_ingestion_pct_estimate": 100.0,
+    "permit_pipeline_map_ready_pct_estimate": 93.776
+  },
+  "distribution": {
+    "calendar_category_counts": {
+      "Athletic": 9,
+      "City Government Office,HPD Outreach Event": 3,
+      "Cultural,Featured,General Events": 1,
+      "Environment,Free,Street and Neighborhood,Kids and Family,Featured,General Events": 7,
+      "Free,Benefits Access,General Events,Special Event": 30,
+      "Free,Holidays,Parks & Recreation,Featured,General Events": 1,
+      "Free,Kids and Family,Athletic,Featured,General Events": 1,
+      "Free,Parks & Recreation,Athletic,General Events": 2,
+      "Free,Parks & Recreation,Education,General Events": 2,
+      "Free,Parks & Recreation,Featured": 1,
+      "Free,Parks & Recreation,General Events": 3,
+      "Free,Parks & Recreation,Kids and Family,Athletic,General Events": 2,
+      "Free,Parks & Recreation,Kids and Family,Education,General Events": 1,
+      "Free,Parks & Recreation,Kids and Family,General Events": 1,
+      "Free,Parks & Recreation,Volunteer,Education,General Events": 1,
+      "Free,Property Owner Clinic,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 1,
+      "General Events": 3,
+      "Hearings and Meetings": 1,
+      "Job Fair,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,HPD Outreach Event": 1,
+      "Parks & Recreation": 2612,
+      "Street and Neighborhood": 74,
+      "Tenant Resource Fair ,Free,Housing Information Class,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 1,
+      "Tenant Resource Fair ,Free,Job Fair,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 1,
+      "Tenant Resource Fair ,Free,Property Owner Clinic,Housing Ambassador Event,General Events,HPD Outreach Event": 1,
+      "Tenant Resource Fair ,Free,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 10,
+      "Tenant Resource Fair ,Free,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,HPD Outreach Event": 3,
+      "Tenant Resource Fair ,Free,Property Owner Clinic,Property Owner Resource Fair,Housing Ambassador Event,General Events,HPD Outreach Event": 7,
+      "Tenant Resource Fair ,Free,Property Owner Resource Fair,Housing Ambassador Event,Veteran Events,HPD Outreach Event": 1
+    },
+    "permit_agency_counts": {
+      "Parks Department": 18368,
+      "Police Department": 15,
+      "Street Activity Permit Office": 219
+    }
+  },
+  "generated_at_utc": "2026-07-13T21:53:36.550213+00:00",
+  "overlap_analysis": {
+    "calendar_only_unique_keys": 2593,
+    "calendar_overlap_pct_of_calendar": 2.335,
+    "permit_only_unique_keys": 2916,
+    "permit_overlap_pct_of_permits": 2.082,
+    "title_date_overlap_rows": 65,
+    "title_date_overlap_unique_keys": 62
+  },
+  "pipeline_status": {
+    "auto_gps_match_pct": 93.776,
+    "gps_review_queue": 1827,
+    "gps_review_tail_pct": 6.224,
+    "permit_ingestion_accounted_rows": 29355,
+    "staged_feed_events": 23111,
+    "staged_with_valid_gps": 27528
+  },
+  "qa_pass": true,
+  "safety": {
+    "location_cache_modified": false,
+    "production_feeds_modified": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "staged_feed_modified": false
+  },
+  "samples": {
+    "calendar_only": [
+      {
+        "borough": [
+          "Bk"
+        ],
+        "categories": [
+          "Parks & Recreation"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1051696",
+        "start_date_time": "2026-07-24T10:00:00.000-04:00",
+        "title": "07\\/24 Wingate In-Person Care Captain Training"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Parks & Recreation"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1047696",
+        "start_date_time": "2026-08-02T15:00:00.000-04:00",
+        "title": "11BC Serenity Garden Presents Mary Edwards"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Athletic"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1044156",
+        "start_date_time": "2026-10-31T08:00:00.000-04:00",
+        "title": "2026 Abbott Dash to the finish line 5k"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Street and Neighborhood"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1044216",
+        "start_date_time": "2026-11-11T12:30:00.000-05:00",
+        "title": "2026 New York City Veterans Day Parade"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Athletic"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1044256",
+        "start_date_time": "2026-08-08T03:30:00.000-04:00",
+        "title": "2026 Percy Sutton Harlem 5K"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Parks & Recreation"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1047796",
+        "start_date_time": "2026-07-13T09:00:00.000-04:00",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Parks & Recreation"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1051956",
+        "start_date_time": "2026-07-14T09:00:00.000-04:00",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Parks & Recreation"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1051976",
+        "start_date_time": "2026-07-15T09:00:00.000-04:00",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Parks & Recreation"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1051996",
+        "start_date_time": "2026-07-16T09:00:00.000-04:00",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Parks & Recreation"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1052016",
+        "start_date_time": "2026-07-17T09:00:00.000-04:00",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      }
+    ],
+    "overlap": [
+      {
+        "borough": "Manhattan",
+        "categories": "Farmers Market",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "911545",
+        "start_date_time": "2026-07-16T08:00:00.000",
+        "title": "175 street Greenmarket Thursday"
+      },
+      {
+        "borough": "Manhattan",
+        "categories": "Athletic Race / Tour",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "918853",
+        "start_date_time": "2026-07-16T09:00:00.000",
+        "title": "2026 Soldier Ride New York"
+      },
+      {
+        "borough": "Manhattan",
+        "categories": "Farmers Market",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "911522",
+        "start_date_time": "2026-07-18T08:00:00.000",
+        "title": "57 Street Saturday Greenmarket"
+      },
+      {
+        "borough": "Manhattan",
+        "categories": "Farmers Market",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "897894",
+        "start_date_time": "2026-07-18T08:00:00.000",
+        "title": "82 Street Greenmarket Saturday"
+      },
+      {
+        "borough": "Manhattan",
+        "categories": "Farmers Market",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "898931",
+        "start_date_time": "2026-07-17T08:00:00.000",
+        "title": "97 Street Greenmarket Friday"
+      },
+      {
+        "borough": "Brooklyn",
+        "categories": "Special Event",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "913662",
+        "start_date_time": "2026-07-16T16:00:00.000",
+        "title": "Angling for a Fish"
+      },
+      {
+        "borough": "Manhattan",
+        "categories": "Special Event",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "955075",
+        "start_date_time": "2026-07-22T08:30:00.000",
+        "title": "ART IN THE PARK"
+      },
+      {
+        "borough": "Manhattan",
+        "categories": "Parade",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "918641",
+        "start_date_time": "2026-07-25T14:30:00.000",
+        "title": "BARAAT PROCESSION"
+      },
+      {
+        "borough": "Queens",
+        "categories": "Athletic Race / Tour",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "931638",
+        "start_date_time": "2026-07-26T08:00:00.000",
+        "title": "Bayside 5K"
+      },
+      {
+        "borough": "Brooklyn",
+        "categories": "Parade",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "929631",
+        "start_date_time": "2026-07-18T12:00:00.000",
+        "title": "Brownsville Old Timer's Parade"
+      }
+    ],
+    "permit_only": [
+      {
+        "borough": "Queens",
+        "categories": "Special Event",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "891628",
+        "start_date_time": "2026-10-11T10:00:00.000",
+        "title": "06 United 20th Anniversary Charity Cup"
+      },
+      {
+        "borough": "Queens",
+        "categories": "Special Event",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "886800",
+        "start_date_time": "2026-07-16T18:00:00.000",
+        "title": "1 Mile Fun Run"
+      },
+      {
+        "borough": "Queens",
+        "categories": "Special Event",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "886800",
+        "start_date_time": "2026-07-23T18:00:00.000",
+        "title": "1 Mile Fun Run"
+      },
+      {
+        "borough": "Queens",
+        "categories": "Special Event",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "931194",
+        "start_date_time": "2026-08-22T12:00:00.000",
+        "title": "100th birthday celebration"
+      },
+      {
+        "borough": "Manhattan",
+        "categories": "Block Party",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "942928",
+        "start_date_time": "2026-07-18T12:00:00.000",
+        "title": "100th Block of West 119th Street Block Party"
+      },
+      {
+        "borough": "Manhattan",
+        "categories": "Special Event",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "936583",
+        "start_date_time": "2026-08-04T15:00:00.000",
+        "title": "13th Precinct National Night Out Against Crime"
+      },
+      {
+        "borough": "Queens",
+        "categories": "Special Event",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "943388",
+        "start_date_time": "2026-08-08T12:00:00.000",
+        "title": "15 Day Family Reunion"
+      },
+      {
+        "borough": "Manhattan",
+        "categories": "Block Party",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "929502",
+        "start_date_time": "2026-07-25T11:00:00.000",
+        "title": "150-155th St. Edgecombe Avenue Block Association, Inc,"
+      },
+      {
+        "borough": "Queens",
+        "categories": "Parade",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "957082",
+        "start_date_time": "2026-07-18T18:00:00.000",
+        "title": "15th Annual Trans Latina March"
+      },
+      {
+        "borough": "Manhattan",
+        "categories": "Farmers Market",
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "911545",
+        "start_date_time": "2026-07-23T08:00:00.000",
+        "title": "175 street Greenmarket Thursday"
+      }
+    ]
+  },
+  "sources_compared": {
+    "citywide_calendar_api": {
+      "current_future_rows": 2781,
+      "dataset_id": "nyc-citywide-events-calendar-api",
+      "human_sources": [
+        "https://www.nyc.gov/main/events",
+        "https://api.nyc.gov/calendar/*"
+      ],
+      "snapshot_path": "data/nyc_citywide_events_calendar_snapshot.json",
+      "snapshot_present": true
+    },
+    "permit_open_data": {
+      "current_future_rows": 18602,
+      "dataset_id": "tvpp-9vvx",
+      "human_sources": [
+        "NYC Open Data CSV/JSON export",
+        "CECM permitted-event registry (same dataset family as E-Apply)"
+      ],
+      "snapshot_path": "data/raw_nyc_open_data_snapshot.json"
+    }
+  }
+}
