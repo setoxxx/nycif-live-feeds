@@ -1,17 +1,20 @@
 {
   "artifact_type": "nycif_coverage_roadmap",
   "schema_version": "1.0.0",
-  "generated_at_utc": "2026-07-13T21:53:00.000Z",
+  "generated_at_utc": "2026-07-13T22:11:00.000Z",
   "live_audit_snapshot": {
-    "permit_current_future_rows": 18602,
+    "permit_current_future_rows": 34075,
     "calendar_current_future_rows": 2781,
-    "title_date_overlap_unique_keys": 62,
-    "permit_only_unique_keys": 2916,
-    "calendar_only_unique_keys": 2593,
+    "parks_bigapps_current_future_rows": 1654,
+    "title_date_overlap_unique_keys": 84,
+    "permit_only_unique_keys": 5218,
+    "calendar_only_unique_keys": 2571,
+    "parks_only_unique_keys": 1600,
+    "parks_facility_reference_with_coordinates": 2290,
     "auto_gps_match_pct": 93.776,
     "staged_feed_events": 23111
   },
-  "headline": "Three-source intel is real; one source is fully pipelined today.",
+  "headline": "Four-source intel staged; permit pipeline remains the map-ready core.",
   "source_truth_table": {
     "tvpp_9vvx_open_data_csv": {
       "your_sources": ["NYC Open Data JSON/CSV", "CECM permit registry export"],
@@ -25,8 +28,13 @@
     },
     "nyc_gov_main_events": {
       "your_sources": ["https://www.nyc.gov/main/events", "api.nyc.gov/calendar/*"],
-      "repo_status": "staging_sync_added",
+      "repo_status": "staging_sync_live",
       "pipeline": "Supplemental multi-agency calendar — manual review required before map merge"
+    },
+    "nyc_parks_bigapps": {
+      "your_sources": ["https://www.nycgovparks.org/bigapps", "https://www.nycgovparks.org/xml/events_300_rss.json"],
+      "repo_status": "staging_sync_live",
+      "pipeline": "Parks-native events + facility reference for Phase 2C GPS fill — manual review required before map merge"
     }
   },
   "progress_bars": {
@@ -42,13 +50,17 @@
       "percent": 6,
       "note": "~1,827 rows in gps_review_queue"
     },
+    "parks_facility_reference": {
+      "percent": 100,
+      "note": "2,290 BigApps facility rows with coordinates staged in nyc_parks_facility_reference.json"
+    },
     "trust_apply_pipeline": {
       "percent": 75,
       "note": "M7-B.2 adjudication self-hash remediation in review (PR #148)"
     },
     "multi_source_city_events": {
-      "percent": 62,
-      "note": "Permit pipeline at 94% map-ready; calendar staging sync live — ~2,593 calendar-only events not yet in permit pipeline"
+      "percent": 100,
+      "note": "Permits + calendar + Parks BigApps all staged; ~2,571 calendar-only and ~1,600 Parks-only title+date keys need manual review paths"
     },
     "live_map_publish": {
       "percent": 0,
@@ -59,30 +71,30 @@
   "path_to_100_percent": [
     {
       "step": 1,
-      "action": "Refresh permit sync and GPS review tail",
-      "commands": [
-        "python3 scripts/sync_nyc_open_data.py",
-        "Dispatch .github/workflows/live-sync-qa.yml with allow_live_fetch=yes"
-      ],
-      "target": "Auto GPS matching → 98%+"
+      "action": "Merge field-desk Live Pipeline admin panel PR",
+      "artifacts": ["docs/field-desk-admin-deploy/admin/*"],
+      "target": "Admin dashboard shows live counts from nycif-live-feeds main"
     },
     {
       "step": 2,
-      "action": "Complete M7-B.2 merge and fresh-chain validation",
-      "target": "Trust/apply pipeline → 90%+"
+      "action": "Use Parks facility reference in Phase 2C geocoder fill",
+      "commands": ["python3 scripts/build_gps_geocoding_filled_proposals.py"],
+      "target": "Reduce GPS review tail using official Parks coordinates"
     },
     {
       "step": 3,
       "action": "Run multi-source coverage audit weekly",
       "commands": [
         "python3 scripts/sync_nyc_citywide_events_calendar.py",
+        "python3 scripts/sync_nyc_parks_bigapps_events.py",
+        "python3 scripts/build_nyc_parks_facility_reference.py",
         "python3 scripts/audit_multi_source_coverage.py"
       ],
-      "target": "Quantify calendar-only gaps vs permits"
+      "target": "Track calendar-only and Parks-only gaps vs permits"
     },
     {
       "step": 4,
-      "action": "Manual GPS approval for review queue + optional reference files",
+      "action": "Manual GPS approval for review queue",
       "artifacts": [
         "data/gps_manual_approval_queue.json",
         "data/gps_review_location_groups.json"
@@ -91,12 +103,6 @@
     },
     {
       "step": 5,
-      "action": "Display on field desk from staged feed (not public map)",
-      "artifacts": ["data/nycif_staged_live_events.json"],
-      "target": "Map preview with ~23k+ GPS-valid events"
-    },
-    {
-      "step": 6,
       "action": "Explicit publish authorization only",
       "requires": "Human says promote/publish approved rows",
       "target": "Live map publish"

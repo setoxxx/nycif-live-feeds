@@ -29,6 +29,7 @@ REPORT_PATH = DATA_DIR / "reports" / "multi_source_coverage_report.json"
 
 PERMIT_SNAPSHOT = DATA_DIR / "raw_nyc_open_data_snapshot.json"
 CALENDAR_SNAPSHOT = DATA_DIR / "nyc_citywide_events_calendar_snapshot.json"
+PARKS_SNAPSHOT = DATA_DIR / "nyc_parks_bigapps_events_snapshot.json"
 ROW_DISPOSITION = DATA_DIR / "row_disposition_report.json"
 STAGED_MANIFEST = DATA_DIR / "staged_live_manifest.json"
 
@@ -62,6 +63,29 @@ def calendar_rows(payload: Any) -> list[dict[str, Any]]:
     if isinstance(payload, list):
         return [row for row in payload if isinstance(row, dict)]
     return []
+
+
+def parks_rows(payload: Any) -> list[dict[str, Any]]:
+    if isinstance(payload, list):
+        return [row for row in payload if isinstance(row, dict)]
+    if isinstance(payload, dict) and isinstance(payload.get("events"), list):
+        return [row for row in payload["events"] if isinstance(row, dict)]
+    return []
+
+
+def build_parks_index(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    index: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        key = "|".join(
+            [
+                title_key(row.get("title")),
+                date_key(row.get("start_date_time") or row.get("start_date")),
+            ]
+        )
+        if not key.replace("|", ""):
+            continue
+        index.setdefault(key, []).append(row)
+    return index
 
 
 def build_permit_index(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
@@ -127,6 +151,8 @@ def main() -> int:
     today = datetime.now(timezone.utc).date().isoformat()
     permits = permit_rows(load_json(PERMIT_SNAPSHOT, []))
     calendar = calendar_rows(load_json(CALENDAR_SNAPSHOT, []))
+    parks_payload = load_json(PARKS_SNAPSHOT, {})
+    parks = parks_rows(parks_payload)
     disposition = load_json(ROW_DISPOSITION, {})
     staged_manifest = load_json(STAGED_MANIFEST, {})
 
@@ -136,15 +162,25 @@ def main() -> int:
     current_future_calendar = [
         row for row in calendar if date_key(row.get("start_date_time")) >= today
     ]
+    current_future_parks = [
+        row
+        for row in parks
+        if date_key(row.get("start_date_time") or row.get("start_date")) >= today
+    ]
 
     permit_index = build_permit_index(current_future_permits)
     calendar_index = build_calendar_index(current_future_calendar)
+    parks_index = build_parks_index(current_future_parks)
 
     permit_keys = set(permit_index)
     calendar_keys = set(calendar_index)
+    parks_keys = set(parks_index)
     overlap_keys = permit_keys & calendar_keys
     permit_only_keys = permit_keys - calendar_keys
     calendar_only_keys = calendar_keys - permit_keys
+    parks_only_keys = parks_keys - permit_keys
+    parks_calendar_overlap_keys = parks_keys & calendar_keys
+    parks_permit_overlap_keys = parks_keys & permit_keys
 
     calendar_category_counter = Counter()
     for row in current_future_calendar:
@@ -183,14 +219,28 @@ def main() -> int:
                 "current_future_rows": len(current_future_calendar),
                 "snapshot_present": bool(calendar),
             },
+            "parks_bigapps_events": {
+                "dataset_id": "nyc-parks-bigapps-events",
+                "snapshot_path": repo_relative(PARKS_SNAPSHOT),
+                "human_sources": [
+                    "https://www.nycgovparks.org/bigapps",
+                    "https://www.nycgovparks.org/xml/events_300_rss.json",
+                ],
+                "current_future_rows": len(current_future_parks),
+                "snapshot_present": bool(parks),
+            },
         },
         "overlap_analysis": {
             "title_date_overlap_rows": sum(len(calendar_index[k]) for k in overlap_keys),
             "title_date_overlap_unique_keys": len(overlap_keys),
             "permit_only_unique_keys": len(permit_only_keys),
             "calendar_only_unique_keys": len(calendar_only_keys),
+            "parks_only_unique_keys": len(parks_only_keys),
+            "parks_permit_overlap_unique_keys": len(parks_permit_overlap_keys),
+            "parks_calendar_overlap_unique_keys": len(parks_calendar_overlap_keys),
             "permit_overlap_pct_of_permits": pct(len(overlap_keys), len(permit_keys)),
             "calendar_overlap_pct_of_calendar": pct(len(overlap_keys), len(calendar_keys)),
+            "parks_overlap_pct_of_parks": pct(len(parks_permit_overlap_keys), len(parks_keys)),
         },
         "pipeline_status": {
             "permit_ingestion_accounted_rows": classified,
@@ -213,6 +263,7 @@ def main() -> int:
             "notes": [
                 "tvpp-9vvx is the authoritative permit registry export; E-Apply is the same CECM family via a different UI/API.",
                 "Citywide calendar is a separate curated multi-agency feed; overlap with permits is partial, not 1:1.",
+                "NYC Parks BigApps events feed is Parks-native with inline coordinates; overlaps calendar and permits partially.",
                 "Full 'all city events' requires merging supplemental calendar-only rows through manual review, not auto-promotion.",
             ],
         },
@@ -230,6 +281,9 @@ def main() -> int:
             "overlap": sample_rows(
                 [permit_index[k][0] for k in sorted(overlap_keys)[:10]]
             ),
+            "parks_only": sample_rows(
+                [parks_index[k][0] for k in sorted(parks_only_keys)[:10]]
+            ),
         },
         "safety": {
             "production_feeds_modified": False,
@@ -242,9 +296,13 @@ def main() -> int:
 
     if not calendar:
         report["qa_pass"] = False
-        report["warnings"] = [
+        report.setdefault("warnings", []).append(
             "Citywide calendar snapshot missing. Run scripts/sync_nyc_citywide_events_calendar.py first."
-        ]
+        )
+    if not parks:
+        report.setdefault("warnings", []).append(
+            "NYC Parks BigApps events snapshot missing. Run scripts/sync_nyc_parks_bigapps_events.py first."
+        )
 
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
     with REPORT_PATH.open("w", encoding="utf-8") as handle:

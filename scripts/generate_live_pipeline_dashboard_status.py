@@ -49,6 +49,8 @@ def main() -> int:
     coverage = load_json(REPORTS / "multi_source_coverage_report.json", {})
     coverage_roadmap = load_json(ROOT / "status" / "nycif-coverage-roadmap.json", {})
     calendar_sync = load_json(DATA / "nyc_citywide_events_calendar_sync_report.json", {})
+    parks_sync = load_json(DATA / "nyc_parks_bigapps_events_sync_report.json", {})
+    parks_facility_report = load_json(REPORTS / "nyc_parks_facility_reference_report.json", {})
     backend_gate = load_json(DATA / "backend_reliability_gate_report.json", {})
 
     staged_valid = int(disposition.get("disposition_counts", {}).get("staged_with_valid_gps") or 0)
@@ -76,6 +78,11 @@ def main() -> int:
             "raw_rows_loaded": int(live_sync.get("raw_rows_loaded") or 0),
             "current_future_raw_rows": int(live_sync.get("current_future_rows") or 0),
             "citywide_calendar_rows": int(calendar_sync.get("snapshot_rows") or 0),
+            "parks_bigapps_events_rows": int(parks_sync.get("snapshot_rows") or 0),
+            "parks_facility_reference_rows": int(parks_facility_report.get("reference_rows_total") or 0),
+            "parks_facility_reference_with_coordinates": int(
+                parks_facility_report.get("reference_rows_with_coordinates") or 0
+            ),
             "newly_added_events": int(live_delta.get("added_count") or 0),
             "removed_events": int(live_delta.get("removed_count") or 0),
             "changed_events": int(live_delta.get("changed_count") or 0),
@@ -98,7 +105,10 @@ def main() -> int:
             "title_date_overlap_unique_keys": int(overlap.get("title_date_overlap_unique_keys") or 0),
             "permit_only_unique_keys": int(overlap.get("permit_only_unique_keys") or 0),
             "calendar_only_unique_keys": int(overlap.get("calendar_only_unique_keys") or 0),
+            "parks_only_unique_keys": int(overlap.get("parks_only_unique_keys") or 0),
+            "parks_permit_overlap_unique_keys": int(overlap.get("parks_permit_overlap_unique_keys") or 0),
             "calendar_sync_qa_pass": bool(calendar_sync.get("qa_pass")),
+            "parks_bigapps_sync_qa_pass": bool(parks_sync.get("qa_pass")),
         },
         "freshness": {
             "live_sync_generated_at_utc": live_sync.get("generated_at_utc"),
@@ -106,6 +116,8 @@ def main() -> int:
             "live_delta_generated_at_utc": live_delta.get("generated_at_utc"),
             "coverage_report_generated_at_utc": coverage.get("generated_at_utc"),
             "calendar_sync_generated_at_utc": calendar_sync.get("generated_at_utc"),
+            "parks_bigapps_sync_generated_at_utc": parks_sync.get("generated_at_utc"),
+            "parks_facility_reference_generated_at_utc": parks_facility_report.get("generated_at_utc"),
             "disposition_generated_at_utc": disposition.get("generated_at_utc"),
         },
         "artifact_urls": {
@@ -117,6 +129,8 @@ def main() -> int:
             "staged_live_manifest": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/staged_live_manifest.json",
             "staged_live_events": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nycif_staged_live_events.json",
             "citywide_calendar_snapshot": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nyc_citywide_events_calendar_snapshot.json",
+            "parks_bigapps_events_snapshot": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nyc_parks_bigapps_events_snapshot.json",
+            "parks_facility_reference": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nyc_parks_facility_reference.json",
         },
         "samples": {
             "newly_added_events": (live_delta.get("added_events") or [])[:5],

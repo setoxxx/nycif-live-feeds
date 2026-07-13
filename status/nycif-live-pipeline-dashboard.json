@@ -6,45 +6,55 @@
     "live_delta_report": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/live_delta_report.json",
     "live_pipeline_dashboard": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/status/nycif-live-pipeline-dashboard.json",
     "multi_source_coverage_report": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/reports/multi_source_coverage_report.json",
+    "parks_bigapps_events_snapshot": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nyc_parks_bigapps_events_snapshot.json",
+    "parks_facility_reference": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nyc_parks_facility_reference.json",
     "row_disposition_report": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/row_disposition_report.json",
     "staged_live_events": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nycif_staged_live_events.json",
     "staged_live_manifest": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/staged_live_manifest.json"
   },
   "current_counts": {
-    "changed_events": 0,
+    "changed_events": 20,
     "citywide_calendar_rows": 2781,
-    "classified_permit_rows": 29355,
+    "classified_permit_rows": 34075,
     "current_future_raw_rows": 34075,
-    "gps_review_queue": 1827,
-    "net_change": 0,
-    "newly_added_events": 0,
+    "gps_review_queue": 3110,
+    "net_change": -4001,
+    "newly_added_events": 1,
+    "parks_bigapps_events_rows": 1654,
+    "parks_facility_reference_rows": 4527,
+    "parks_facility_reference_with_coordinates": 2290,
     "raw_rows_loaded": 35438,
-    "removed_events": 0,
+    "removed_events": 238,
     "staged_feed_events": 23111,
-    "staged_with_valid_gps": 27528
+    "staged_with_valid_gps": 30879
   },
   "freshness": {
-    "calendar_sync_generated_at_utc": "2026-07-13T22:02:26.525820+00:00",
-    "coverage_report_generated_at_utc": "2026-07-13T22:02:30.117253+00:00",
-    "disposition_generated_at_utc": "2026-07-02T22:18:35.864538+00:00",
-    "live_delta_generated_at_utc": "2026-07-02T22:18:31.786153+00:00",
+    "calendar_sync_generated_at_utc": "2026-07-13T22:10:53.671553+00:00",
+    "coverage_report_generated_at_utc": "2026-07-13T22:10:54.048290+00:00",
+    "disposition_generated_at_utc": "2026-07-13T22:10:06.427677+00:00",
+    "live_delta_generated_at_utc": "2026-07-13T22:10:04.281377+00:00",
     "live_sync_generated_at_utc": "2026-07-13T22:01:21.824939+00:00",
+    "parks_bigapps_sync_generated_at_utc": "2026-07-13T22:10:04.009993+00:00",
+    "parks_facility_reference_generated_at_utc": "2026-07-13T22:10:04.187954+00:00",
     "staged_manifest_generated_at_utc": "2026-07-07T12:16:01.176045+00:00"
   },
-  "generated_at_utc": "2026-07-13T22:02:30.161124+00:00",
+  "generated_at_utc": "2026-07-13T22:10:54.093199+00:00",
   "headline": "Live pipeline snapshot for NYCIF admin dashboards (read-only).",
   "multi_source": {
     "calendar_only_unique_keys": 2571,
     "calendar_sync_qa_pass": true,
     "citywide_calendar_dataset_id": "nyc-citywide-events-calendar-api",
+    "parks_bigapps_sync_qa_pass": true,
+    "parks_only_unique_keys": 1600,
+    "parks_permit_overlap_unique_keys": 19,
     "permit_dataset_id": "tvpp-9vvx",
     "permit_only_unique_keys": 5218,
     "title_date_overlap_unique_keys": 84
   },
   "progress_bars": {
-    "auto_gps_match_pct": 93.776,
+    "auto_gps_match_pct": 90.621,
     "backend_gate_pass": true,
-    "gps_review_tail_pct": 6.224,
+    "gps_review_tail_pct": 9.127,
     "multi_source_coverage_pct": 100.0,
     "permit_ingestion_pct": 100.0
   },
@@ -189,7 +199,30 @@
         "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
       }
     ],
-    "newly_added_events": []
+    "newly_added_events": [
+      {
+        "borough": "Queens",
+        "category": "arts",
+        "date": "2026-09-05",
+        "display_location": "Beach 17 Playground (O'Donohue Park): Beach 17th Street Performance Space",
+        "display_time": "5:00 PM",
+        "event_agency": "Parks Department",
+        "event_type": "Special Event",
+        "id": "nyc_open_data:tvpp-9vvx:888174",
+        "lat": 40.59472,
+        "lng": -73.74772,
+        "location_source": "event_id",
+        "match_type": "event_id",
+        "source_cemsid": [
+          "7601"
+        ],
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "888174",
+        "start_date_time": "2026-09-05T17:00:00.000",
+        "street_closure_type": "N/A",
+        "title": "Rockaway Beach House Music festival"
+      }
+    ]
   },
   "schema_version": "1.0.0",
   "visibility": "public"
