@@ -1,0 +1,112 @@
+{
+  "artifact_type": "nycif_coverage_roadmap",
+  "schema_version": "1.0.0",
+  "generated_at_utc": "2026-07-13T21:53:00.000Z",
+  "live_audit_snapshot": {
+    "permit_current_future_rows": 18602,
+    "calendar_current_future_rows": 2781,
+    "title_date_overlap_unique_keys": 62,
+    "permit_only_unique_keys": 2916,
+    "calendar_only_unique_keys": 2593,
+    "auto_gps_match_pct": 93.776,
+    "staged_feed_events": 23111
+  },
+  "headline": "Three-source intel is real; one source is fully pipelined today.",
+  "source_truth_table": {
+    "tvpp_9vvx_open_data_csv": {
+      "your_sources": ["NYC Open Data JSON/CSV", "CECM permit registry export"],
+      "repo_status": "live_ingested",
+      "pipeline": "Phase 1 complete — every current/future row classified"
+    },
+    "cecm_e_apply_page": {
+      "your_sources": ["www1.nyc.gov/site/cecm/e-apply"],
+      "repo_status": "same_dataset_family_not_separate_fetch",
+      "pipeline": "Conceptually overlaps tvpp-9vvx; different delivery (CEMS API vs SODA JSON)"
+    },
+    "nyc_gov_main_events": {
+      "your_sources": ["https://www.nyc.gov/main/events", "api.nyc.gov/calendar/*"],
+      "repo_status": "staging_sync_added",
+      "pipeline": "Supplemental multi-agency calendar — manual review required before map merge"
+    }
+  },
+  "progress_bars": {
+    "permit_ingestion": {
+      "percent": 100,
+      "note": "Accountability for tvpp-9vvx current/future rows (not silent drops)"
+    },
+    "auto_gps_matching": {
+      "percent": 94,
+      "note": "~27,528 staged with valid GPS of ~29,355 classified permit rows"
+    },
+    "human_review_tail": {
+      "percent": 6,
+      "note": "~1,827 rows in gps_review_queue"
+    },
+    "trust_apply_pipeline": {
+      "percent": 75,
+      "note": "M7-B.2 adjudication self-hash remediation in review (PR #148)"
+    },
+    "multi_source_city_events": {
+      "percent": 62,
+      "note": "Permit pipeline at 94% map-ready; calendar staging sync live — ~2,593 calendar-only events not yet in permit pipeline"
+    },
+    "live_map_publish": {
+      "percent": 0,
+      "status": "gated",
+      "note": "Requires explicit publish/promote authorization; staged feed is display-ready for field desk QA"
+    }
+  },
+  "path_to_100_percent": [
+    {
+      "step": 1,
+      "action": "Refresh permit sync and GPS review tail",
+      "commands": [
+        "python3 scripts/sync_nyc_open_data.py",
+        "Dispatch .github/workflows/live-sync-qa.yml with allow_live_fetch=yes"
+      ],
+      "target": "Auto GPS matching → 98%+"
+    },
+    {
+      "step": 2,
+      "action": "Complete M7-B.2 merge and fresh-chain validation",
+      "target": "Trust/apply pipeline → 90%+"
+    },
+    {
+      "step": 3,
+      "action": "Run multi-source coverage audit weekly",
+      "commands": [
+        "python3 scripts/sync_nyc_citywide_events_calendar.py",
+        "python3 scripts/audit_multi_source_coverage.py"
+      ],
+      "target": "Quantify calendar-only gaps vs permits"
+    },
+    {
+      "step": 4,
+      "action": "Manual GPS approval for review queue + optional reference files",
+      "artifacts": [
+        "data/gps_manual_approval_queue.json",
+        "data/gps_review_location_groups.json"
+      ],
+      "target": "Human review tail → 0%"
+    },
+    {
+      "step": 5,
+      "action": "Display on field desk from staged feed (not public map)",
+      "artifacts": ["data/nycif_staged_live_events.json"],
+      "target": "Map preview with ~23k+ GPS-valid events"
+    },
+    {
+      "step": 6,
+      "action": "Explicit publish authorization only",
+      "requires": "Human says promote/publish approved rows",
+      "target": "Live map publish"
+    }
+  ],
+  "safety": {
+    "public_map_modified": false,
+    "production_feeds_modified": false,
+    "location_cache_modified": false,
+    "staged_feed_modified": false,
+    "promotion_allowed": false
+  }
+}

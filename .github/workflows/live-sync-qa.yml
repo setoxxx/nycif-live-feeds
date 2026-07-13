@@ -82,6 +82,15 @@ jobs:
       - name: Build row disposition QA report
         run: python scripts/audit_row_disposition.py
 
+      - name: Sync citywide events calendar (staging)
+        run: python scripts/sync_nyc_citywide_events_calendar.py
+
+      - name: Audit multi-source coverage
+        run: python scripts/audit_multi_source_coverage.py
+
+      - name: Generate live pipeline dashboard status
+        run: python scripts/generate_live_pipeline_dashboard_status.py
+
       - name: Build backend reliability gate report
         run: python scripts/backend_reliability_gate.py || echo "BACKEND_GATE_FAILED=true" >> "$GITHUB_ENV"
 

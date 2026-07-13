@@ -1,0 +1,196 @@
+{
+  "artifact_type": "nycif_live_pipeline_dashboard",
+  "artifact_urls": {
+    "citywide_calendar_snapshot": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nyc_citywide_events_calendar_snapshot.json",
+    "coverage_roadmap": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/status/nycif-coverage-roadmap.json",
+    "live_delta_report": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/live_delta_report.json",
+    "live_pipeline_dashboard": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/status/nycif-live-pipeline-dashboard.json",
+    "multi_source_coverage_report": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/reports/multi_source_coverage_report.json",
+    "row_disposition_report": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/row_disposition_report.json",
+    "staged_live_events": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nycif_staged_live_events.json",
+    "staged_live_manifest": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/staged_live_manifest.json"
+  },
+  "current_counts": {
+    "changed_events": 0,
+    "citywide_calendar_rows": 2781,
+    "classified_permit_rows": 29355,
+    "current_future_raw_rows": 25156,
+    "gps_review_queue": 1827,
+    "net_change": 0,
+    "newly_added_events": 0,
+    "raw_rows_loaded": 31939,
+    "removed_events": 0,
+    "staged_feed_events": 23111,
+    "staged_with_valid_gps": 27528
+  },
+  "freshness": {
+    "calendar_sync_generated_at_utc": "2026-07-13T21:53:15.450416+00:00",
+    "coverage_report_generated_at_utc": "2026-07-13T21:56:45.399881+00:00",
+    "disposition_generated_at_utc": "2026-07-02T22:18:35.864538+00:00",
+    "live_delta_generated_at_utc": "2026-07-02T22:18:31.786153+00:00",
+    "live_sync_generated_at_utc": "2026-07-07T12:15:57.189050+00:00",
+    "staged_manifest_generated_at_utc": "2026-07-07T12:16:01.176045+00:00"
+  },
+  "generated_at_utc": "2026-07-13T21:56:45.436359+00:00",
+  "headline": "Live pipeline snapshot for NYCIF admin dashboards (read-only).",
+  "multi_source": {
+    "calendar_only_unique_keys": 2593,
+    "calendar_sync_qa_pass": true,
+    "citywide_calendar_dataset_id": "nyc-citywide-events-calendar-api",
+    "permit_dataset_id": "tvpp-9vvx",
+    "permit_only_unique_keys": 2916,
+    "title_date_overlap_unique_keys": 62
+  },
+  "progress_bars": {
+    "auto_gps_match_pct": 93.776,
+    "backend_gate_pass": true,
+    "gps_review_tail_pct": 6.224,
+    "multi_source_coverage_pct": 100.0,
+    "permit_ingestion_pct": 100.0
+  },
+  "project": "nycif-live-feeds",
+  "purpose": "admin_dashboard_live_visibility",
+  "repository": "setoxxx/nycif-live-feeds",
+  "safety": {
+    "browser_side_github_api_polling": false,
+    "contains_credentials": false,
+    "contains_private_repo_internals": false,
+    "contains_secrets": false,
+    "contains_tokens": false,
+    "deploy_controls": false,
+    "manual_review_status": "pending",
+    "production_feed_mutation": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "safe_for_public_dashboard": true,
+    "wordpress_change": false,
+    "write_controls": false
+  },
+  "samples": {
+    "calendar_only_events": [
+      {
+        "borough": [
+          "Bk"
+        ],
+        "categories": [
+          "Parks & Recreation"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1051696",
+        "start_date_time": "2026-07-24T10:00:00.000-04:00",
+        "title": "07\\/24 Wingate In-Person Care Captain Training"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Parks & Recreation"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1047696",
+        "start_date_time": "2026-08-02T15:00:00.000-04:00",
+        "title": "11BC Serenity Garden Presents Mary Edwards"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Athletic"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1044156",
+        "start_date_time": "2026-10-31T08:00:00.000-04:00",
+        "title": "2026 Abbott Dash to the finish line 5k"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Street and Neighborhood"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1044216",
+        "start_date_time": "2026-11-11T12:30:00.000-05:00",
+        "title": "2026 New York City Veterans Day Parade"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Athletic"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1044256",
+        "start_date_time": "2026-08-08T03:30:00.000-04:00",
+        "title": "2026 Percy Sutton Harlem 5K"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Parks & Recreation"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1047796",
+        "start_date_time": "2026-07-13T09:00:00.000-04:00",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Parks & Recreation"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1051956",
+        "start_date_time": "2026-07-14T09:00:00.000-04:00",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Parks & Recreation"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1051976",
+        "start_date_time": "2026-07-15T09:00:00.000-04:00",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Parks & Recreation"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1051996",
+        "start_date_time": "2026-07-16T09:00:00.000-04:00",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Parks & Recreation"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1052016",
+        "start_date_time": "2026-07-17T09:00:00.000-04:00",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      }
+    ],
+    "newly_added_events": []
+  },
+  "schema_version": "1.0.0",
+  "visibility": "public"
+}
