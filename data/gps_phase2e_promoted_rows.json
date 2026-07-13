@@ -1,2525 +1,785 @@
 {
-  "generated_at_utc": "2026-07-13T22:44:08.679764+00:00",
+  "generated_at_utc": "2026-07-13T23:32:30.529039+00:00",
   "promoted_rows": [
     {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:M211B",
-        "location:manhattan:langston hughes playground st nicholas playground north langston hughes playground basketball 01 langston hughes playground st nicholas playground north langston hughes playground basketball 02",
-        "group_key:manhattan|langston hughes playground st nicholas playground north langston hughes playground basketball 01 langston hughes playground st nicholas playground north langston hughes playground basketball 02"
-      ],
-      "display_location": "Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-01 ,Langston Hughes Playground (St. Nicholas Playground North): Langston Hughes Playground-Basketball-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|langston hughes playground st nicholas playground north langston hughes playground basketball 01 langston hughes playground st nicholas playground north langston hughes playground basketball 02",
-      "proposed_lat": 40.8122,
-      "proposed_lng": -73.9466
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B056",
-        "location:brooklyn:martin luther king jr playground basketball 02",
-        "group_key:brooklyn|martin luther king jr playground basketball 02"
-      ],
-      "display_location": "Martin Luther King Jr. Playground: Basketball-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|martin luther king jr playground basketball 02",
-      "proposed_lat": 40.6673,
-      "proposed_lng": -73.8903
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:Q015",
-        "location:queens:forest park tennis 05",
-        "group_key:queens|forest park tennis 05"
-      ],
-      "display_location": "Forest Park: Tennis-05",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|forest park tennis 05",
-      "proposed_lat": 40.6976,
-      "proposed_lng": -73.8557
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q015"
-      ],
-      "cache_keys_written": [
-        "location:queens:forest park tennis 06",
-        "group_key:queens|forest park tennis 06"
-      ],
-      "display_location": "Forest Park: Tennis-06",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|forest park tennis 06",
-      "proposed_lat": 40.6976,
-      "proposed_lng": -73.8557
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q015"
-      ],
-      "cache_keys_written": [
-        "location:queens:forest park tennis 07",
-        "group_key:queens|forest park tennis 07"
-      ],
-      "display_location": "Forest Park: Tennis-07",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|forest park tennis 07",
-      "proposed_lat": 40.6976,
-      "proposed_lng": -73.8557
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:Q448",
-        "location:queens:roy wilkins park tennis 02",
-        "group_key:queens|roy wilkins park tennis 02"
-      ],
-      "display_location": "Roy Wilkins Park: Tennis-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|roy wilkins park tennis 02",
-      "proposed_lat": 40.686,
-      "proposed_lng": -73.77
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q448"
-      ],
-      "cache_keys_written": [
-        "location:queens:roy wilkins park tennis 03",
-        "group_key:queens|roy wilkins park tennis 03"
-      ],
-      "display_location": "Roy Wilkins Park: Tennis-03",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|roy wilkins park tennis 03",
-      "proposed_lat": 40.686,
-      "proposed_lng": -73.77
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Cricket_001:Q005",
-        "location:queens:baisley pond park cricket 04",
-        "group_key:queens|baisley pond park cricket 04"
-      ],
-      "display_location": "Baisley Pond Park: Cricket-04",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|baisley pond park cricket 04",
-      "proposed_lat": 40.6838,
-      "proposed_lng": -73.7859
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:X029",
-        "location:bronx:lyons square playground basketball 04",
-        "group_key:bronx|lyons square playground basketball 04"
-      ],
-      "display_location": "Lyons Square Playground: Basketball-04",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|lyons square playground basketball 04",
-      "proposed_lat": 40.8225,
-      "proposed_lng": -73.8882
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B150",
-        "location:brooklyn:kolbert playground rachel haber cohen playground basketball 01",
-        "group_key:brooklyn|kolbert playground rachel haber cohen playground basketball 01"
-      ],
-      "display_location": "Kolbert Playground: Rachel Haber Cohen Playground-Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|kolbert playground rachel haber cohen playground basketball 01",
-      "proposed_lat": 40.6201,
-      "proposed_lng": -73.958
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:B018",
-        "location:brooklyn:canarsie park softball 05 canarsie park softball 06",
-        "group_key:brooklyn|canarsie park softball 05 canarsie park softball 06"
-      ],
-      "display_location": "Canarsie Park: Softball-05   ,Canarsie Park: Softball-06",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|canarsie park softball 05 canarsie park softball 06",
-      "proposed_lat": 40.6308,
-      "proposed_lng": -73.8933
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B210I",
-        "location:brooklyn:gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
-        "group_key:brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01"
-      ],
-      "display_location": "Gonzalo Plasencia Playground (JHS 136): Softball-01   ,Gonzalo Plasencia Playground (JHS 136): Handball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|gonzalo plasencia playground jhs 136 softball 01 gonzalo plasencia playground jhs 136 handball 01",
-      "proposed_lat": 40.6523,
-      "proposed_lng": -74.0081
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B152",
-        "location:brooklyn:rappaport playground rappaport playground rappaport playground handball 01",
-        "group_key:brooklyn|rappaport playground rappaport playground rappaport playground handball 01"
-      ],
-      "display_location": "Rappaport Playground: Rappaport Playground   ,Rappaport Playground: Handball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|rappaport playground rappaport playground rappaport playground handball 01",
-      "proposed_lat": 40.6372,
-      "proposed_lng": -74.0011
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B265",
-        "location:brooklyn:rainbow playground rainbow playground",
-        "group_key:brooklyn|rainbow playground rainbow playground"
-      ],
-      "display_location": "Rainbow Playground: Rainbow Playground",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|rainbow playground rainbow playground",
-      "proposed_lat": 40.6404,
-      "proposed_lng": -74.0111
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:B042",
-        "location:brooklyn:gravesend park lawn area",
-        "group_key:brooklyn|gravesend park lawn area"
-      ],
-      "display_location": "Gravesend Park: Lawn Area",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|gravesend park lawn area",
-      "proposed_lat": 40.6235,
-      "proposed_lng": -73.9848
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B244",
-        "location:brooklyn:mcdonald playground tennis 01",
-        "group_key:brooklyn|mcdonald playground tennis 01"
-      ],
-      "display_location": "McDonald Playground: Tennis-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|mcdonald playground tennis 01",
-      "proposed_lat": 40.6013,
-      "proposed_lng": -73.9719
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Playgrounds_001:B244"
-      ],
-      "cache_keys_written": [
-        "location:brooklyn:mcdonald playground tennis 02",
-        "group_key:brooklyn|mcdonald playground tennis 02"
-      ],
-      "display_location": "McDonald Playground: Tennis-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|mcdonald playground tennis 02",
-      "proposed_lat": 40.6013,
-      "proposed_lng": -73.9719
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Playgrounds_001:B244"
-      ],
-      "cache_keys_written": [
-        "location:brooklyn:mcdonald playground tennis 03",
-        "group_key:brooklyn|mcdonald playground tennis 03"
-      ],
-      "display_location": "McDonald Playground: Tennis-03",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|mcdonald playground tennis 03",
-      "proposed_lat": 40.6013,
-      "proposed_lng": -73.9719
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:M028",
-        "location:manhattan:fort washington park basketball 02",
-        "group_key:manhattan|fort washington park basketball 02"
-      ],
-      "display_location": "Fort Washington Park: Basketball-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|fort washington park basketball 02",
-      "proposed_lat": 40.8488,
-      "proposed_lng": -73.9462
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:M022",
-        "location:manhattan:de witt clinton park soccer 01a",
-        "group_key:manhattan|de witt clinton park soccer 01a"
-      ],
-      "display_location": "De Witt Clinton Park: Soccer-01A",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|de witt clinton park soccer 01a",
-      "proposed_lat": 40.7685,
-      "proposed_lng": -73.9947
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:M028"
-      ],
-      "cache_keys_written": [
-        "location:manhattan:fort washington park 163rd st soccer 01",
-        "group_key:manhattan|fort washington park 163rd st soccer 01"
-      ],
-      "display_location": "Fort Washington Park: 163rd St-Soccer-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|fort washington park 163rd st soccer 01",
-      "proposed_lat": 40.8488,
-      "proposed_lng": -73.9462
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:M028"
-      ],
-      "cache_keys_written": [
-        "location:manhattan:fort washington park tennis 01",
-        "group_key:manhattan|fort washington park tennis 01"
-      ],
-      "display_location": "Fort Washington Park: Tennis-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|fort washington park tennis 01",
-      "proposed_lat": 40.8488,
-      "proposed_lng": -73.9462
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:M028"
-      ],
-      "cache_keys_written": [
-        "location:manhattan:fort washington park tennis 02",
-        "group_key:manhattan|fort washington park tennis 02"
-      ],
-      "display_location": "Fort Washington Park: Tennis-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|fort washington park tennis 02",
-      "proposed_lat": 40.8488,
-      "proposed_lng": -73.9462
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:M028"
-      ],
-      "cache_keys_written": [
-        "location:manhattan:fort washington park volleyball 01",
-        "group_key:manhattan|fort washington park volleyball 01"
-      ],
-      "display_location": "Fort Washington Park: Volleyball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|fort washington park volleyball 01",
-      "proposed_lat": 40.8488,
-      "proposed_lng": -73.9462
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:M028"
-      ],
-      "cache_keys_written": [
-        "location:manhattan:fort washington park volleyball 02",
-        "group_key:manhattan|fort washington park volleyball 02"
-      ],
-      "display_location": "Fort Washington Park: Volleyball-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|fort washington park volleyball 02",
-      "proposed_lat": 40.8488,
-      "proposed_lng": -73.9462
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:Q444",
-        "location:queens:sean s place basketball 01",
-        "group_key:queens|sean s place basketball 01"
-      ],
-      "display_location": "Sean's Place: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|sean s place basketball 01",
-      "proposed_lat": 40.7606,
-      "proposed_lng": -73.9185
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:Q390",
-        "location:queens:clintonville playground tennis 01",
-        "group_key:queens|clintonville playground tennis 01"
-      ],
-      "display_location": "Clintonville Playground: Tennis-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|clintonville playground tennis 01",
-      "proposed_lat": 40.7831,
-      "proposed_lng": -73.8065
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Playgrounds_001:Q390"
-      ],
-      "cache_keys_written": [
-        "location:queens:clintonville playground tennis 02",
-        "group_key:queens|clintonville playground tennis 02"
-      ],
-      "display_location": "Clintonville Playground: Tennis-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|clintonville playground tennis 02",
-      "proposed_lat": 40.7831,
-      "proposed_lng": -73.8065
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:Q460",
-        "location:queens:broad channel park tennis 01",
-        "group_key:queens|broad channel park tennis 01"
-      ],
-      "display_location": "Broad Channel Park: Tennis-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|broad channel park tennis 01",
-      "proposed_lat": 40.6005,
-      "proposed_lng": -73.8196
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:B058",
-        "location:brooklyn:mccarren park bayard union lawns",
-        "group_key:brooklyn|mccarren park bayard union lawns"
-      ],
-      "display_location": "McCarren Park: Bayard/Union Lawns",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|mccarren park bayard union lawns",
-      "proposed_lat": 40.7213,
-      "proposed_lng": -73.9495
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B372",
-        "location:brooklyn:friends field lawn area",
-        "group_key:brooklyn|friends field lawn area"
-      ],
-      "display_location": "Friends Field: Lawn Area",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|friends field lawn area",
-      "proposed_lat": 40.6186,
-      "proposed_lng": -73.9726
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:M042",
-        "location:manhattan:inwood hill park dyckman hockey 01",
-        "group_key:manhattan|inwood hill park dyckman hockey 01"
-      ],
-      "display_location": "Inwood Hill Park: Dyckman-Hockey-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|inwood hill park dyckman hockey 01",
-      "proposed_lat": 40.8697,
-      "proposed_lng": -73.9217
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Handball_001:M099",
-        "location:manhattan:j hood wright park softball 01",
-        "group_key:manhattan|j hood wright park softball 01"
-      ],
-      "display_location": "J. Hood Wright Park: Softball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|j hood wright park softball 01",
-      "proposed_lat": 40.8471,
-      "proposed_lng": -73.9407
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Basketball_001:M022"
-      ],
-      "cache_keys_written": [
-        "location:manhattan:de witt clinton park basketball 01",
-        "group_key:manhattan|de witt clinton park basketball 01"
-      ],
-      "display_location": "De Witt Clinton Park: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|de witt clinton park basketball 01",
-      "proposed_lat": 40.7685,
-      "proposed_lng": -73.9947
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:M047",
-        "location:manhattan:thomas jefferson park track 01",
-        "group_key:manhattan|thomas jefferson park track 01"
-      ],
-      "display_location": "Thomas Jefferson Park: Track-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|thomas jefferson park track 01",
-      "proposed_lat": 40.7923,
-      "proposed_lng": -73.9356
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q448"
-      ],
-      "cache_keys_written": [
-        "location:queens:roy wilkins park tennis 01",
-        "group_key:queens|roy wilkins park tennis 01"
-      ],
-      "display_location": "Roy Wilkins Park: Tennis-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|roy wilkins park tennis 01",
-      "proposed_lat": 40.686,
-      "proposed_lng": -73.77
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Handball_001:Q360N",
-        "location:queens:hoffman park softball 01",
-        "group_key:queens|hoffman park softball 01"
-      ],
-      "display_location": "Hoffman Park: Softball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|hoffman park softball 01",
-      "proposed_lat": 40.7325,
-      "proposed_lng": -73.8728
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_RunningTracks_001:X045",
-        "location:bronx:st mary s park st mary s playground west tennis 01",
-        "group_key:bronx|st mary s park st mary s playground west tennis 01"
-      ],
-      "display_location": "St. Mary's Park: St Mary's Playground West-Tennis-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|st mary s park st mary s playground west tennis 01",
-      "proposed_lat": 40.8111,
-      "proposed_lng": -73.911
-    },
-    {
       "borough": "Bronx",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_RunningTracks_001:X045"
+        "cemsid:bronx:10754"
       ],
       "cache_keys_written": [
-        "location:bronx:st mary s park st mary s playground west tennis 02",
-        "group_key:bronx|st mary s park st mary s playground west tennis 02"
+        "location:bronx:macombs dam park basketball 04",
+        "group_key:bronx|macombs dam park basketball 04"
       ],
-      "display_location": "St. Mary's Park: St Mary's Playground West-Tennis-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|st mary s park st mary s playground west tennis 02",
-      "proposed_lat": 40.8111,
-      "proposed_lng": -73.911
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B364",
-        "location:brooklyn:woods playground ps 345 basketball 02",
-        "group_key:brooklyn|woods playground ps 345 basketball 02"
-      ],
-      "display_location": "Woods Playground (PS 345): Basketball-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|woods playground ps 345 basketball 02",
-      "proposed_lat": 40.6747,
-      "proposed_lng": -73.9292
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B292",
-        "location:brooklyn:pratt playground basketball 02",
-        "group_key:brooklyn|pratt playground basketball 02"
-      ],
-      "display_location": "Pratt Playground: Basketball-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|pratt playground basketball 02",
-      "proposed_lat": 40.6925,
-      "proposed_lng": -73.9625
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:B057",
-        "location:brooklyn:marine park soccer 01",
-        "group_key:brooklyn|marine park soccer 01"
-      ],
-      "display_location": "Marine Park: Soccer-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|marine park soccer 01",
-      "proposed_lat": 40.6079,
-      "proposed_lng": -73.935
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Handball_001:B214",
-        "location:brooklyn:linden park gershwin park jhs 166 track 01",
-        "group_key:brooklyn|linden park gershwin park jhs 166 track 01"
-      ],
-      "display_location": "Linden Park (Gershwin Park - JHS 166): Track-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|linden park gershwin park jhs 166 track 01",
-      "proposed_lat": 40.659,
-      "proposed_lng": -73.8864
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:M308",
-        "location:manhattan:washington market park tennis 01",
-        "group_key:manhattan|washington market park tennis 01"
-      ],
-      "display_location": "Washington Market Park: Tennis-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|washington market park tennis 01",
-      "proposed_lat": 40.7171,
-      "proposed_lng": -74.0123
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Handball_001:B220",
-        "location:brooklyn:washington hall park basketball 02",
-        "group_key:brooklyn|washington hall park basketball 02"
-      ],
-      "display_location": "Washington Hall Park: Basketball-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|washington hall park basketball 02",
-      "proposed_lat": 40.6952,
-      "proposed_lng": -73.9668
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:B052",
-        "location:brooklyn:leif ericson park tennis 04",
-        "group_key:brooklyn|leif ericson park tennis 04"
-      ],
-      "display_location": "Leif Ericson Park: Tennis-04",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|leif ericson park tennis 04",
-      "proposed_lat": 40.6319,
-      "proposed_lng": -74.0137
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:X171",
-        "location:bronx:spuyten duyvil playground basketball 01",
-        "group_key:bronx|spuyten duyvil playground basketball 01"
-      ],
-      "display_location": "Spuyten Duyvil Playground: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|spuyten duyvil playground basketball 01",
-      "proposed_lat": 40.8872,
-      "proposed_lng": -73.9164
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:M077",
-        "location:manhattan:st nicholas park st nicholas basketball 05",
-        "group_key:manhattan|st nicholas park st nicholas basketball 05"
-      ],
-      "display_location": "St Nicholas Park: St Nicholas-Basketball-05",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|st nicholas park st nicholas basketball 05",
-      "proposed_lat": 40.816,
-      "proposed_lng": -73.9489
+      "display_location": "Macombs Dam Park: Basketball-04",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "bronx|macombs dam park basketball 04",
+      "proposed_lat": 40.82701,
+      "proposed_lng": -73.92779
     },
     {
       "borough": "Manhattan",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:M042"
+        "cemsid:manhattan:10074"
       ],
       "cache_keys_written": [
-        "location:manhattan:inwood hill park tennis 02",
-        "group_key:manhattan|inwood hill park tennis 02"
+        "location:manhattan:riverside park south 71st st south basketball 14",
+        "group_key:manhattan|riverside park south 71st st south basketball 14"
       ],
-      "display_location": "Inwood Hill Park: Tennis-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|inwood hill park tennis 02",
-      "proposed_lat": 40.8697,
-      "proposed_lng": -73.9217
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:Q008",
-        "location:queens:brookville park brookville playground basketball 01",
-        "group_key:queens|brookville park brookville playground basketball 01"
-      ],
-      "display_location": "Brookville Park: Brookville Playground-Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|brookville park brookville playground basketball 01",
-      "proposed_lat": 40.6614,
-      "proposed_lng": -73.7442
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:Q102",
-        "location:queens:juniper valley park juniper playground tennis 06",
-        "group_key:queens|juniper valley park juniper playground tennis 06"
-      ],
-      "display_location": "Juniper Valley Park: Juniper Playground-Tennis-06",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|juniper valley park juniper playground tennis 06",
-      "proposed_lat": 40.7204,
-      "proposed_lng": -73.876
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q102"
-      ],
-      "cache_keys_written": [
-        "location:queens:juniper valley park juniper playground tennis 07",
-        "group_key:queens|juniper valley park juniper playground tennis 07"
-      ],
-      "display_location": "Juniper Valley Park: Juniper Playground-Tennis-07",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|juniper valley park juniper playground tennis 07",
-      "proposed_lat": 40.7204,
-      "proposed_lng": -73.876
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q102"
-      ],
-      "cache_keys_written": [
-        "location:queens:juniper valley park juniper playground tennis 08",
-        "group_key:queens|juniper valley park juniper playground tennis 08"
-      ],
-      "display_location": "Juniper Valley Park: Juniper Playground-Tennis-08",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|juniper valley park juniper playground tennis 08",
-      "proposed_lat": 40.7204,
-      "proposed_lng": -73.876
-    },
-    {
-      "borough": "Staten Island",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:R025",
-        "location:staten island:mahoney playground basketball 01",
-        "group_key:staten island|mahoney playground basketball 01"
-      ],
-      "display_location": "Mahoney Playground: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "staten island|mahoney playground basketball 01",
-      "proposed_lat": 40.6437,
-      "proposed_lng": -74.0858
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:X021",
-        "location:bronx:drew playground basketball 01",
-        "group_key:bronx|drew playground basketball 01"
-      ],
-      "display_location": "Drew Playground: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|drew playground basketball 01",
-      "proposed_lat": 40.8332,
-      "proposed_lng": -73.9031
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:X044",
-        "location:bronx:st james park tennis 01",
-        "group_key:bronx|st james park tennis 01"
-      ],
-      "display_location": "St. James Park: Tennis-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|st james park tennis 01",
-      "proposed_lat": 40.8656,
-      "proposed_lng": -73.8972
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:M058",
-        "location:manhattan:marcus garvey park marcus garvey park",
-        "group_key:manhattan|marcus garvey park marcus garvey park"
-      ],
-      "display_location": "Marcus Garvey Park: Marcus Garvey Park",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|marcus garvey park marcus garvey park",
-      "proposed_lat": 40.8033,
-      "proposed_lng": -73.9431
+      "display_location": "Riverside Park South: 71st St South-Basketball-14",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "manhattan|riverside park south 71st st south basketball 14",
+      "proposed_lat": 40.77947,
+      "proposed_lng": -73.98899
     },
     {
       "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:B192",
-        "location:brooklyn:russell pederson playground russell pedersen playground russell pederson playground handball 01",
-        "group_key:brooklyn|russell pederson playground russell pedersen playground russell pederson playground handball 01"
-      ],
-      "display_location": "Russell Pederson Playground: Russell Pedersen Playground   ,Russell Pederson Playground: Handball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|russell pederson playground russell pedersen playground russell pederson playground handball 01",
-      "proposed_lat": 40.6261,
-      "proposed_lng": -74.0361
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:X124",
-        "location:bronx:watson gleason playground basketball 01",
-        "group_key:bronx|watson gleason playground basketball 01"
-      ],
-      "display_location": "Watson Gleason Playground: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|watson gleason playground basketball 01",
-      "proposed_lat": 40.8292,
-      "proposed_lng": -73.8692
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:X104",
-        "location:bronx:williamsbridge oval track 01",
-        "group_key:bronx|williamsbridge oval track 01"
-      ],
-      "display_location": "Williamsbridge Oval: Track-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|williamsbridge oval track 01",
-      "proposed_lat": 40.8782,
-      "proposed_lng": -73.8777
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:M079",
-        "location:manhattan:st catherine s park basketball 01",
-        "group_key:manhattan|st catherine s park basketball 01"
-      ],
-      "display_location": "St Catherine's Park: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|st catherine s park basketball 01",
-      "proposed_lat": 40.7654,
-      "proposed_lng": -73.9592
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:Q357B",
-        "location:queens:real good park basketball 01",
-        "group_key:queens|real good park basketball 01"
-      ],
-      "display_location": "Real Good Park: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|real good park basketball 01",
-      "proposed_lat": 40.7359,
-      "proposed_lng": -73.8568
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:Q004",
-        "location:queens:astoria park tennis 12",
-        "group_key:queens|astoria park tennis 12"
-      ],
-      "display_location": "Astoria Park: Tennis-12",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|astoria park tennis 12",
-      "proposed_lat": 40.7756,
-      "proposed_lng": -73.9243
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Handball_001:Q020",
-        "location:queens:highland park tennis 01",
-        "group_key:queens|highland park tennis 01"
-      ],
-      "display_location": "Highland Park: Tennis-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|highland park tennis 01",
-      "proposed_lat": 40.6842,
-      "proposed_lng": -73.8881
-    },
-    {
-      "borough": "Queens",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Handball_001:Q020"
+        "cemsid:brooklyn:10424"
       ],
       "cache_keys_written": [
-        "location:queens:highland park tennis 02",
-        "group_key:queens|highland park tennis 02"
+        "location:brooklyn:washington park ms 51 south asphalt plaza",
+        "group_key:brooklyn|washington park ms 51 south asphalt plaza"
       ],
-      "display_location": "Highland Park: Tennis-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|highland park tennis 02",
-      "proposed_lat": 40.6842,
-      "proposed_lng": -73.8881
+      "display_location": "Washington Park (MS 51): South Asphalt Plaza",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|washington park ms 51 south asphalt plaza",
+      "proposed_lat": 40.85572,
+      "proposed_lng": -73.89369
     },
     {
-      "borough": "Queens",
+      "borough": "Brooklyn",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Handball_001:Q020"
+        "cemsid:brooklyn:9509"
       ],
       "cache_keys_written": [
-        "location:queens:highland park tennis 03",
-        "group_key:queens|highland park tennis 03"
+        "location:brooklyn:shore road park and parkway 79th st fields softball 01 shore road park and parkway 79th st fields softball 02",
+        "group_key:brooklyn|shore road park and parkway 79th st fields softball 01 shore road park and parkway 79th st fields softball 02"
       ],
-      "display_location": "Highland Park: Tennis-03",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|highland park tennis 03",
-      "proposed_lat": 40.6842,
-      "proposed_lng": -73.8881
+      "display_location": "Shore Road Park and Parkway: 79th St Fields-Softball-01 ,Shore Road Park and Parkway: 79th St Fields-Softball-02",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|shore road park and parkway 79th st fields softball 01 shore road park and parkway 79th st fields softball 02",
+      "proposed_lat": 40.65534,
+      "proposed_lng": -73.88662
     },
     {
-      "borough": "Queens",
+      "borough": "Brooklyn",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q004"
+        "cemsid:brooklyn:10509"
       ],
       "cache_keys_written": [
-        "location:queens:astoria park tennis 01",
-        "group_key:queens|astoria park tennis 01"
+        "location:brooklyn:st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+        "group_key:brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02"
       ],
-      "display_location": "Astoria Park: Tennis-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|astoria park tennis 01",
-      "proposed_lat": 40.7756,
-      "proposed_lng": -73.9243
+      "display_location": "St. John's Park: Buddy Keaton-Softball-01   ,St. John's Park: Buddy Keaton-Softball-02",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|st john s park buddy keaton softball 01 st john s park buddy keaton softball 02",
+      "proposed_lat": 40.67437,
+      "proposed_lng": -73.93475
     },
     {
-      "borough": "Queens",
+      "borough": "Brooklyn",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q004"
+        "cemsid:brooklyn:11409"
       ],
       "cache_keys_written": [
-        "location:queens:astoria park tennis 03",
-        "group_key:queens|astoria park tennis 03"
+        "location:brooklyn:owl s head park owls head park basketball 01",
+        "group_key:brooklyn|owl s head park owls head park basketball 01"
       ],
-      "display_location": "Astoria Park: Tennis-03",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|astoria park tennis 03",
-      "proposed_lat": 40.7756,
-      "proposed_lng": -73.9243
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q004"
-      ],
-      "cache_keys_written": [
-        "location:queens:astoria park tennis 02",
-        "group_key:queens|astoria park tennis 02"
-      ],
-      "display_location": "Astoria Park: Tennis-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|astoria park tennis 02",
-      "proposed_lat": 40.7756,
-      "proposed_lng": -73.9243
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:Q086",
-        "location:queens:flushing fields tennis 04",
-        "group_key:queens|flushing fields tennis 04"
-      ],
-      "display_location": "Flushing Fields: Tennis-04",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|flushing fields tennis 04",
-      "proposed_lat": 40.7756,
-      "proposed_lng": -73.8173
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Basketball_001:Q086"
-      ],
-      "cache_keys_written": [
-        "location:queens:flushing fields tennis 05",
-        "group_key:queens|flushing fields tennis 05"
-      ],
-      "display_location": "Flushing Fields: Tennis-05",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|flushing fields tennis 05",
-      "proposed_lat": 40.7756,
-      "proposed_lng": -73.8173
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Basketball_001:Q086"
-      ],
-      "cache_keys_written": [
-        "location:queens:flushing fields tennis 06",
-        "group_key:queens|flushing fields tennis 06"
-      ],
-      "display_location": "Flushing Fields: Tennis-06",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|flushing fields tennis 06",
-      "proposed_lat": 40.7756,
-      "proposed_lng": -73.8173
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Cricket_001:Q005"
-      ],
-      "cache_keys_written": [
-        "location:queens:baisley pond park baisley park south tennis 05",
-        "group_key:queens|baisley pond park baisley park south tennis 05"
-      ],
-      "display_location": "Baisley Pond Park: Baisley Park South-Tennis-05",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|baisley pond park baisley park south tennis 05",
-      "proposed_lat": 40.6838,
-      "proposed_lng": -73.7859
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Cricket_001:Q005"
-      ],
-      "cache_keys_written": [
-        "location:queens:baisley pond park baisley park south tennis 06",
-        "group_key:queens|baisley pond park baisley park south tennis 06"
-      ],
-      "display_location": "Baisley Pond Park: Baisley Park South-Tennis-06",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|baisley pond park baisley park south tennis 06",
-      "proposed_lat": 40.6838,
-      "proposed_lng": -73.7859
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Cricket_001:Q005"
-      ],
-      "cache_keys_written": [
-        "location:queens:baisley pond park baisley park south tennis 07",
-        "group_key:queens|baisley pond park baisley park south tennis 07"
-      ],
-      "display_location": "Baisley Pond Park: Baisley Park South-Tennis-07",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|baisley pond park baisley park south tennis 07",
-      "proposed_lat": 40.6838,
-      "proposed_lng": -73.7859
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Bocce_001:Q024",
-        "location:queens:kissena park tennis 10",
-        "group_key:queens|kissena park tennis 10"
-      ],
-      "display_location": "Kissena Park: Tennis-10",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|kissena park tennis 10",
-      "proposed_lat": 40.749,
-      "proposed_lng": -73.8063
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Bocce_001:Q024"
-      ],
-      "cache_keys_written": [
-        "location:queens:kissena park tennis 11",
-        "group_key:queens|kissena park tennis 11"
-      ],
-      "display_location": "Kissena Park: Tennis-11",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|kissena park tennis 11",
-      "proposed_lat": 40.749,
-      "proposed_lng": -73.8063
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Bocce_001:Q024"
-      ],
-      "cache_keys_written": [
-        "location:queens:kissena park tennis 09",
-        "group_key:queens|kissena park tennis 09"
-      ],
-      "display_location": "Kissena Park: Tennis-09",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|kissena park tennis 09",
-      "proposed_lat": 40.749,
-      "proposed_lng": -73.8063
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:Q001A",
-        "location:queens:alley athletic playground tennis 01",
-        "group_key:queens|alley athletic playground tennis 01"
-      ],
-      "display_location": "Alley Athletic Playground: Tennis-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|alley athletic playground tennis 01",
-      "proposed_lat": 40.7394,
-      "proposed_lng": -73.7343
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Playgrounds_001:Q001A"
-      ],
-      "cache_keys_written": [
-        "location:queens:alley athletic playground tennis 02",
-        "group_key:queens|alley athletic playground tennis 02"
-      ],
-      "display_location": "Alley Athletic Playground: Tennis-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|alley athletic playground tennis 02",
-      "proposed_lat": 40.7394,
-      "proposed_lng": -73.7343
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Playgrounds_001:Q001A"
-      ],
-      "cache_keys_written": [
-        "location:queens:alley athletic playground tennis 03",
-        "group_key:queens|alley athletic playground tennis 03"
-      ],
-      "display_location": "Alley Athletic Playground: Tennis-03",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|alley athletic playground tennis 03",
-      "proposed_lat": 40.7394,
-      "proposed_lng": -73.7343
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q004"
-      ],
-      "cache_keys_written": [
-        "location:queens:astoria park tennis 11",
-        "group_key:queens|astoria park tennis 11"
-      ],
-      "display_location": "Astoria Park: Tennis-11",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|astoria park tennis 11",
-      "proposed_lat": 40.7756,
-      "proposed_lng": -73.9243
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q102"
-      ],
-      "cache_keys_written": [
-        "location:queens:juniper valley park track 01",
-        "group_key:queens|juniper valley park track 01"
-      ],
-      "display_location": "Juniper Valley Park: Track-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|juniper valley park track 01",
-      "proposed_lat": 40.7204,
-      "proposed_lng": -73.876
-    },
-    {
-      "borough": "Staten Island",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:R153",
-        "location:staten island:fairview park tennis 01",
-        "group_key:staten island|fairview park tennis 01"
-      ],
-      "display_location": "Fairview Park: Tennis-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "staten island|fairview park tennis 01",
-      "proposed_lat": 40.5315,
-      "proposed_lng": -74.2317
+      "display_location": "Owl's Head Park: Owls Head Park-Basketball-01",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|owl s head park owls head park basketball 01",
+      "proposed_lat": 40.64018,
+      "proposed_lng": -74.03222
     },
     {
       "borough": "Staten Island",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:R153"
+        "cemsid:staten island:10617"
       ],
       "cache_keys_written": [
-        "location:staten island:fairview park tennis 02",
-        "group_key:staten island|fairview park tennis 02"
+        "location:staten island:silver lake park silver lake park softball 01",
+        "group_key:staten island|silver lake park silver lake park softball 01"
       ],
-      "display_location": "Fairview Park: Tennis-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "staten island|fairview park tennis 02",
-      "proposed_lat": 40.5315,
-      "proposed_lng": -74.2317
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:M187",
-        "location:manhattan:marx brothers playground softball 01",
-        "group_key:manhattan|marx brothers playground softball 01"
-      ],
-      "display_location": "Marx Brothers Playground: Softball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|marx brothers playground softball 01",
-      "proposed_lat": 40.7843,
-      "proposed_lng": -73.9462
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_RunningTracks_001:X039",
-        "location:bronx:pelham bay park tennis 01 north",
-        "group_key:bronx|pelham bay park tennis 01 north"
-      ],
-      "display_location": "Pelham Bay Park: Tennis-01 North",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|pelham bay park tennis 01 north",
-      "proposed_lat": 40.8491,
-      "proposed_lng": -73.823
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_RunningTracks_001:X039"
-      ],
-      "cache_keys_written": [
-        "location:bronx:pelham bay park tennis 02 north",
-        "group_key:bronx|pelham bay park tennis 02 north"
-      ],
-      "display_location": "Pelham Bay Park: Tennis-02 North",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|pelham bay park tennis 02 north",
-      "proposed_lat": 40.8491,
-      "proposed_lng": -73.823
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_RunningTracks_001:X039"
-      ],
-      "cache_keys_written": [
-        "location:bronx:pelham bay park tennis 03 north",
-        "group_key:bronx|pelham bay park tennis 03 north"
-      ],
-      "display_location": "Pelham Bay Park: Tennis-03 North",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|pelham bay park tennis 03 north",
-      "proposed_lat": 40.8491,
-      "proposed_lng": -73.823
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_RunningTracks_001:X039"
-      ],
-      "cache_keys_written": [
-        "location:bronx:pelham bay park track 01",
-        "group_key:bronx|pelham bay park track 01"
-      ],
-      "display_location": "Pelham Bay Park: Track-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|pelham bay park track 01",
-      "proposed_lat": 40.8491,
-      "proposed_lng": -73.823
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Handball_001:B088",
-        "location:brooklyn:herbert von king park large lawn",
-        "group_key:brooklyn|herbert von king park large lawn"
-      ],
-      "display_location": "Herbert Von King Park: Large Lawn",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|herbert von king park large lawn",
-      "proposed_lat": 40.6894,
-      "proposed_lng": -73.9459
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:M159",
-        "location:manhattan:frederick johnson playground tennis 01",
-        "group_key:manhattan|frederick johnson playground tennis 01"
-      ],
-      "display_location": "Frederick Johnson Playground: Tennis-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|frederick johnson playground tennis 01",
-      "proposed_lat": 40.8249,
-      "proposed_lng": -73.9362
+      "display_location": "Silver Lake Park: Silver Lake Park-Softball-01",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "staten island|silver lake park silver lake park softball 01",
+      "proposed_lat": 40.62735,
+      "proposed_lng": -74.09582
     },
     {
       "borough": "Manhattan",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Playgrounds_001:M159"
+        "cemsid:manhattan:9837"
       ],
       "cache_keys_written": [
-        "location:manhattan:frederick johnson playground tennis 02",
-        "group_key:manhattan|frederick johnson playground tennis 02"
+        "location:manhattan:peter s field basketball 05",
+        "group_key:manhattan|peter s field basketball 05"
       ],
-      "display_location": "Frederick Johnson Playground: Tennis-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|frederick johnson playground tennis 02",
-      "proposed_lat": 40.8249,
-      "proposed_lng": -73.9362
+      "display_location": "Peter's Field: Basketball-05",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "manhattan|peter s field basketball 05",
+      "proposed_lat": 40.73588,
+      "proposed_lng": -73.98103
+    },
+    {
+      "borough": "Manhattan",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:manhattan:9837"
+      ],
+      "cache_keys_written": [
+        "location:manhattan:peter s field basketball 04",
+        "group_key:manhattan|peter s field basketball 04"
+      ],
+      "display_location": "Peter's Field: Basketball-04",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "manhattan|peter s field basketball 04",
+      "proposed_lat": 40.73588,
+      "proposed_lng": -73.98103
     },
     {
       "borough": "Queens",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q102"
+        "cemsid:queens:10211"
       ],
       "cache_keys_written": [
-        "location:queens:juniper valley park juniper playground tennis 03",
-        "group_key:queens|juniper valley park juniper playground tennis 03"
+        "location:queens:flushing meadows corona park tennis 10",
+        "group_key:queens|flushing meadows corona park tennis 10"
       ],
-      "display_location": "Juniper Valley Park: Juniper Playground-Tennis-03",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|juniper valley park juniper playground tennis 03",
-      "proposed_lat": 40.7204,
-      "proposed_lng": -73.876
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q102"
-      ],
-      "cache_keys_written": [
-        "location:queens:juniper valley park juniper playground tennis 04",
-        "group_key:queens|juniper valley park juniper playground tennis 04"
-      ],
-      "display_location": "Juniper Valley Park: Juniper Playground-Tennis-04",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|juniper valley park juniper playground tennis 04",
-      "proposed_lat": 40.7204,
-      "proposed_lng": -73.876
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q102"
-      ],
-      "cache_keys_written": [
-        "location:queens:juniper valley park juniper playground tennis 05",
-        "group_key:queens|juniper valley park juniper playground tennis 05"
-      ],
-      "display_location": "Juniper Valley Park: Juniper Playground-Tennis-05",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|juniper valley park juniper playground tennis 05",
-      "proposed_lat": 40.7204,
-      "proposed_lng": -73.876
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:Q335",
-        "location:queens:russell sage playground tennis 01",
-        "group_key:queens|russell sage playground tennis 01"
-      ],
-      "display_location": "Russell Sage Playground: Tennis-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|russell sage playground tennis 01",
-      "proposed_lat": 40.7241,
-      "proposed_lng": -73.8516
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Playgrounds_001:Q335"
-      ],
-      "cache_keys_written": [
-        "location:queens:russell sage playground tennis 02",
-        "group_key:queens|russell sage playground tennis 02"
-      ],
-      "display_location": "Russell Sage Playground: Tennis-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|russell sage playground tennis 02",
-      "proposed_lat": 40.7241,
-      "proposed_lng": -73.8516
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Cricket_001:Q005"
-      ],
-      "cache_keys_written": [
-        "location:queens:baisley pond park track 01",
-        "group_key:queens|baisley pond park track 01"
-      ],
-      "display_location": "Baisley Pond Park: Track-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|baisley pond park track 01",
-      "proposed_lat": 40.6838,
-      "proposed_lng": -73.7859
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q015"
-      ],
-      "cache_keys_written": [
-        "location:queens:forest park track 01",
-        "group_key:queens|forest park track 01"
-      ],
-      "display_location": "Forest Park: Track-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|forest park track 01",
-      "proposed_lat": 40.6976,
-      "proposed_lng": -73.8557
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:B407",
-        "location:brooklyn:south oxford park tennis 01",
-        "group_key:brooklyn|south oxford park tennis 01"
-      ],
-      "display_location": "South Oxford Park: Tennis-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|south oxford park tennis 01",
-      "proposed_lat": 40.6836,
-      "proposed_lng": -73.9722
+      "display_location": "Flushing Meadows Corona Park: Tennis-10",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "queens|flushing meadows corona park tennis 10",
+      "proposed_lat": 40.74726,
+      "proposed_lng": -73.84333
     },
     {
       "borough": "Brooklyn",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:B057"
+        "cemsid:brooklyn:10424"
       ],
       "cache_keys_written": [
-        "location:brooklyn:marine park basketball 02",
-        "group_key:brooklyn|marine park basketball 02"
+        "location:brooklyn:washington park ms 51 playground b",
+        "group_key:brooklyn|washington park ms 51 playground b"
       ],
-      "display_location": "Marine Park: Basketball-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|marine park basketball 02",
-      "proposed_lat": 40.6079,
-      "proposed_lng": -73.935
+      "display_location": "Washington Park (MS 51): Playground B",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|washington park ms 51 playground b",
+      "proposed_lat": 40.85572,
+      "proposed_lng": -73.89369
     },
     {
       "borough": "Brooklyn",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:B057"
+        "cemsid:brooklyn:4264"
       ],
       "cache_keys_written": [
-        "location:brooklyn:marine park basketball 01",
-        "group_key:brooklyn|marine park basketball 01"
+        "location:brooklyn:commodore barry park baseball 01",
+        "group_key:brooklyn|commodore barry park baseball 01"
       ],
-      "display_location": "Marine Park: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|marine park basketball 01",
-      "proposed_lat": 40.6079,
-      "proposed_lng": -73.935
+      "display_location": "Commodore Barry Park: Baseball-01",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|commodore barry park baseball 01",
+      "proposed_lat": 40.69732,
+      "proposed_lng": -73.97937
     },
     {
       "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:B061",
-        "location:brooklyn:mclaughlin park basketball 01",
-        "group_key:brooklyn|mclaughlin park basketball 01"
+      "cache_keys_skipped_duplicate": [
+        "cemsid:brooklyn:11310"
       ],
-      "display_location": "McLaughlin Park: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|mclaughlin park basketball 01",
-      "proposed_lat": 40.6963,
-      "proposed_lng": -73.9866
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
       "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:M104",
-        "location:manhattan:randall s island park bronx shore fields softball 02 randall s island park bronx shore fields softball 09",
-        "group_key:manhattan|randall s island park bronx shore fields softball 02 randall s island park bronx shore fields softball 09"
+        "location:brooklyn:kelly park tennis 07",
+        "group_key:brooklyn|kelly park tennis 07"
       ],
-      "display_location": "Randall's Island Park: Bronx Shore Fields-Softball-02 ,Randall's Island Park: Bronx Shore Fields-Softball-09",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|randall s island park bronx shore fields softball 02 randall s island park bronx shore fields softball 09",
-      "proposed_lat": 40.7943,
-      "proposed_lng": -73.9198
+      "display_location": "Kelly Park: Tennis-07",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|kelly park tennis 07",
+      "proposed_lat": 40.60415,
+      "proposed_lng": -73.95788
     },
     {
       "borough": "Manhattan",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:M104"
+        "cemsid:manhattan:5626"
       ],
       "cache_keys_written": [
-        "location:manhattan:randall s island park bronx shore fields softball 01 randall s island park bronx shore fields softball 03",
-        "group_key:manhattan|randall s island park bronx shore fields softball 01 randall s island park bronx shore fields softball 03"
+        "location:manhattan:murphy s brother s playground basketball 01",
+        "group_key:manhattan|murphy s brother s playground basketball 01"
       ],
-      "display_location": "Randall's Island Park: Bronx Shore Fields-Softball-01 ,Randall's Island Park: Bronx Shore Fields-Softball-03",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|randall s island park bronx shore fields softball 01 randall s island park bronx shore fields softball 03",
-      "proposed_lat": 40.7943,
-      "proposed_lng": -73.9198
-    },
-    {
-      "borough": "Staten Island",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:R005",
-        "location:staten island:clove lakes park baseball 01",
-        "group_key:staten island|clove lakes park baseball 01"
-      ],
-      "display_location": "Clove Lakes Park: Baseball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "staten island|clove lakes park baseball 01",
-      "proposed_lat": 40.616,
-      "proposed_lng": -74.1054
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:M220",
-        "location:manhattan:frederick douglass playground softball 01",
-        "group_key:manhattan|frederick douglass playground softball 01"
-      ],
-      "display_location": "Frederick Douglass Playground: Softball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|frederick douglass playground softball 01",
-      "proposed_lat": 40.7968,
-      "proposed_lng": -73.968
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B269",
-        "location:brooklyn:jesse owens playground basketball 01 full court",
-        "group_key:brooklyn|jesse owens playground basketball 01 full court"
-      ],
-      "display_location": "Jesse Owens Playground: Basketball-01 Full Court",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|jesse owens playground basketball 01 full court",
-      "proposed_lat": 40.6918,
-      "proposed_lng": -73.9321
+      "display_location": "Murphy's Brother's Playground: Basketball-01",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "manhattan|murphy s brother s playground basketball 01",
+      "proposed_lat": 40.73033,
+      "proposed_lng": -73.97355
     },
     {
       "borough": "Queens",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q102"
+        "cemsid:queens:10224"
       ],
       "cache_keys_written": [
-        "location:queens:juniper valley park juniper south playground basketball 03",
-        "group_key:queens|juniper valley park juniper south playground basketball 03"
+        "location:queens:detective keith l williams park detective k l williams playground tennis 01",
+        "group_key:queens|detective keith l williams park detective k l williams playground tennis 01"
       ],
-      "display_location": "Juniper Valley Park: Juniper South Playground-Basketball-03",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|juniper valley park juniper south playground basketball 03",
-      "proposed_lat": 40.7204,
-      "proposed_lng": -73.876
+      "display_location": "Detective Keith L Williams Park: Detective K.L. Williams Playground-Tennis-01",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "queens|detective keith l williams park detective k l williams playground tennis 01",
+      "proposed_lat": 40.70288,
+      "proposed_lng": -73.78443
     },
     {
       "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:Q002",
-        "location:queens:grover cleveland playground basketball 01",
-        "group_key:queens|grover cleveland playground basketball 01"
+      "cache_keys_skipped_duplicate": [
+        "cemsid:queens:10224"
       ],
-      "display_location": "Grover Cleveland Playground: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|grover cleveland playground basketball 01",
-      "proposed_lat": 40.7115,
-      "proposed_lng": -73.911
+      "cache_keys_written": [
+        "location:queens:detective keith l williams park detective k l williams playground tennis 02",
+        "group_key:queens|detective keith l williams park detective k l williams playground tennis 02"
+      ],
+      "display_location": "Detective Keith L Williams Park: Detective K.L. Williams Playground-Tennis-02",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "queens|detective keith l williams park detective k l williams playground tennis 02",
+      "proposed_lat": 40.70288,
+      "proposed_lng": -73.78443
     },
     {
       "borough": "Manhattan",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:M104"
+        "cemsid:manhattan:10107"
       ],
       "cache_keys_written": [
-        "location:manhattan:randall s island park sunken meadow fields softball 16",
-        "group_key:manhattan|randall s island park sunken meadow fields softball 16"
+        "location:manhattan:brigadier general charles young playground lenox ave basketball 01",
+        "group_key:manhattan|brigadier general charles young playground lenox ave basketball 01"
       ],
-      "display_location": "Randall's Island Park: Sunken Meadow Fields-Softball-16",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|randall s island park sunken meadow fields softball 16",
-      "proposed_lat": 40.7943,
-      "proposed_lng": -73.9198
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:Q092",
-        "location:queens:police officer edward byrne park basketball 01",
-        "group_key:queens|police officer edward byrne park basketball 01"
-      ],
-      "display_location": "Police Officer Edward Byrne Park: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|police officer edward byrne park basketball 01",
-      "proposed_lat": 40.6672,
-      "proposed_lng": -73.8071
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:M010",
-        "location:manhattan:central park bowling green lawn",
-        "group_key:manhattan|central park bowling green lawn"
-      ],
-      "display_location": "Central Park: Bowling Green Lawn",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|central park bowling green lawn",
-      "proposed_lat": 40.7911,
-      "proposed_lng": -73.9598
+      "display_location": "Brigadier General Charles Young Playground: Lenox Ave-Basketball-01",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "manhattan|brigadier general charles young playground lenox ave basketball 01",
+      "proposed_lat": 40.819081,
+      "proposed_lng": -73.935674
     },
     {
       "borough": "Bronx",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Playgrounds_001:X171"
+        "cemsid:bronx:11915"
       ],
       "cache_keys_written": [
-        "location:bronx:spuyten duyvil playground basketball 01 spuyten duyvil playground basketball 02",
-        "group_key:bronx|spuyten duyvil playground basketball 01 spuyten duyvil playground basketball 02"
+        "location:bronx:parque de los ninos parque de los ninos basketball 02",
+        "group_key:bronx|parque de los ninos parque de los ninos basketball 02"
       ],
-      "display_location": "Spuyten Duyvil Playground: Basketball-01 ,Spuyten Duyvil Playground: Basketball-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|spuyten duyvil playground basketball 01 spuyten duyvil playground basketball 02",
-      "proposed_lat": 40.8872,
-      "proposed_lng": -73.9164
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B103",
-        "location:brooklyn:cypress hills playground softball 02",
-        "group_key:brooklyn|cypress hills playground softball 02"
-      ],
-      "display_location": "Cypress Hills Playground: Softball-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|cypress hills playground softball 02",
-      "proposed_lat": 40.6707,
-      "proposed_lng": -73.8712
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Bocce_001:Q021",
-        "location:queens:cunningham park tennis 02",
-        "group_key:queens|cunningham park tennis 02"
-      ],
-      "display_location": "Cunningham Park: Tennis-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|cunningham park tennis 02",
-      "proposed_lat": 40.7267,
-      "proposed_lng": -73.7755
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Bocce_001:Q021"
-      ],
-      "cache_keys_written": [
-        "location:queens:cunningham park tennis 05",
-        "group_key:queens|cunningham park tennis 05"
-      ],
-      "display_location": "Cunningham Park: Tennis-05",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|cunningham park tennis 05",
-      "proposed_lat": 40.7267,
-      "proposed_lng": -73.7755
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Bocce_001:Q021"
-      ],
-      "cache_keys_written": [
-        "location:queens:cunningham park tennis 04",
-        "group_key:queens|cunningham park tennis 04"
-      ],
-      "display_location": "Cunningham Park: Tennis-04",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|cunningham park tennis 04",
-      "proposed_lat": 40.7267,
-      "proposed_lng": -73.7755
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Bocce_001:Q021"
-      ],
-      "cache_keys_written": [
-        "location:queens:cunningham park tennis 03",
-        "group_key:queens|cunningham park tennis 03"
-      ],
-      "display_location": "Cunningham Park: Tennis-03",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|cunningham park tennis 03",
-      "proposed_lat": 40.7267,
-      "proposed_lng": -73.7755
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Bocce_001:Q021"
-      ],
-      "cache_keys_written": [
-        "location:queens:cunningham park tennis 01",
-        "group_key:queens|cunningham park tennis 01"
-      ],
-      "display_location": "Cunningham Park: Tennis-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|cunningham park tennis 01",
-      "proposed_lat": 40.7267,
-      "proposed_lng": -73.7755
+      "display_location": "Parque De Los Ninos: Parque De Los Ninos-Basketball-02",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "bronx|parque de los ninos parque de los ninos basketball 02",
+      "proposed_lat": 40.828111,
+      "proposed_lng": -73.873595
     },
     {
       "borough": "Brooklyn",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Basketball_001:B018"
+        "cemsid:brooklyn:10509"
       ],
       "cache_keys_written": [
-        "location:brooklyn:canarsie park monroe cohen football 01",
-        "group_key:brooklyn|canarsie park monroe cohen football 01"
+        "location:brooklyn:st john s park basketball 03 st john s park handball 12",
+        "group_key:brooklyn|st john s park basketball 03 st john s park handball 12"
       ],
-      "display_location": "Canarsie Park: Monroe Cohen-Football-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|canarsie park monroe cohen football 01",
-      "proposed_lat": 40.6308,
-      "proposed_lng": -73.8933
+      "display_location": "St. John's Park: Basketball-03   ,St. John's Park: Handball-12",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|st john s park basketball 03 st john s park handball 12",
+      "proposed_lat": 40.67437,
+      "proposed_lng": -73.93475
     },
     {
       "borough": "Brooklyn",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:B057"
+        "cemsid:brooklyn:9509"
       ],
       "cache_keys_written": [
-        "location:brooklyn:marine park field house north lawn",
-        "group_key:brooklyn|marine park field house north lawn"
+        "location:brooklyn:shore road park and parkway 95th st fields baseball 01",
+        "group_key:brooklyn|shore road park and parkway 95th st fields baseball 01"
       ],
-      "display_location": "Marine Park: Field House North Lawn",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|marine park field house north lawn",
-      "proposed_lat": 40.6079,
-      "proposed_lng": -73.935
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_RunningTracks_001:M071",
-        "location:manhattan:riverside park grants tomb south allee and lawns",
-        "group_key:manhattan|riverside park grants tomb south allee and lawns"
-      ],
-      "display_location": "Riverside Park: Grants Tomb South Allee and Lawns",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|riverside park grants tomb south allee and lawns",
-      "proposed_lat": 40.7827,
-      "proposed_lng": -73.9871
+      "display_location": "Shore Road Park and Parkway: 95th St Fields-Baseball-01",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|shore road park and parkway 95th st fields baseball 01",
+      "proposed_lat": 40.65534,
+      "proposed_lng": -73.88662
     },
     {
       "borough": "Queens",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Handball_001:Q360N"
+        "cemsid:queens:10224"
       ],
       "cache_keys_written": [
-        "location:queens:hoffman park basketball 02",
-        "group_key:queens|hoffman park basketball 02"
+        "location:queens:detective keith l williams park track 01",
+        "group_key:queens|detective keith l williams park track 01"
       ],
-      "display_location": "Hoffman Park: Basketball-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|hoffman park basketball 02",
-      "proposed_lat": 40.7325,
-      "proposed_lng": -73.8728
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:Q015"
-      ],
-      "cache_keys_written": [
-        "location:queens:forest park sgt schaefer oval lawn",
-        "group_key:queens|forest park sgt schaefer oval lawn"
-      ],
-      "display_location": "Forest Park: Sgt. Schaefer Oval Lawn",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|forest park sgt schaefer oval lawn",
-      "proposed_lat": 40.6976,
-      "proposed_lng": -73.8557
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:M158",
-        "location:manhattan:robert moses playground softball 01",
-        "group_key:manhattan|robert moses playground softball 01"
-      ],
-      "display_location": "Robert Moses Playground: Softball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|robert moses playground softball 01",
-      "proposed_lat": 40.7482,
-      "proposed_lng": -73.9693
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:X116",
-        "location:bronx:rev j polite playground soccer 01",
-        "group_key:bronx|rev j polite playground soccer 01"
-      ],
-      "display_location": "Rev J Polite Playground: Soccer-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|rev j polite playground soccer 01",
-      "proposed_lat": 40.8268,
-      "proposed_lng": -73.8975
+      "display_location": "Detective Keith L Williams Park: Track-01",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "queens|detective keith l williams park track 01",
+      "proposed_lat": 40.70288,
+      "proposed_lng": -73.78443
     },
     {
       "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B017",
-        "location:brooklyn:bushwick playground basketball 01",
-        "group_key:brooklyn|bushwick playground basketball 01"
-      ],
-      "display_location": "Bushwick Playground: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|bushwick playground basketball 01",
-      "proposed_lat": 40.6961,
-      "proposed_lng": -73.9116
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B102",
-        "location:brooklyn:crispus attucks playground basketball 02",
-        "group_key:brooklyn|crispus attucks playground basketball 02"
-      ],
-      "display_location": "Crispus Attucks Playground: Basketball-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|crispus attucks playground basketball 02",
-      "proposed_lat": 40.6815,
-      "proposed_lng": -73.959
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B127",
-        "location:brooklyn:martinez playground basketball 01",
-        "group_key:brooklyn|martinez playground basketball 01"
-      ],
-      "display_location": "Martinez Playground: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|martinez playground basketball 01",
-      "proposed_lat": 40.7091,
-      "proposed_lng": -73.9446
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:M206",
-        "location:manhattan:tanahey playground basketball 01",
-        "group_key:manhattan|tanahey playground basketball 01"
-      ],
-      "display_location": "Tanahey Playground: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|tanahey playground basketball 01",
-      "proposed_lat": 40.7101,
-      "proposed_lng": -73.9959
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Tennis_001:Q107",
-        "location:queens:springfield park springfield playground basketball 01",
-        "group_key:queens|springfield park springfield playground basketball 01"
-      ],
-      "display_location": "Springfield Park: Springfield Playground-Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|springfield park springfield playground basketball 01",
-      "proposed_lat": 40.6598,
-      "proposed_lng": -73.7623
-    },
-    {
-      "borough": "Queens",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Cricket_001:Q005"
+        "cemsid:brooklyn:11409"
       ],
       "cache_keys_written": [
-        "location:queens:baisley pond park cricket 05",
-        "group_key:queens|baisley pond park cricket 05"
+        "location:brooklyn:owl s head park lawn area 68th st",
+        "group_key:brooklyn|owl s head park lawn area 68th st"
       ],
-      "display_location": "Baisley Pond Park: Cricket-05",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|baisley pond park cricket 05",
-      "proposed_lat": 40.6838,
-      "proposed_lng": -73.7859
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Bocce_001:Q021"
-      ],
-      "cache_keys_written": [
-        "location:queens:cunningham park jogging track",
-        "group_key:queens|cunningham park jogging track"
-      ],
-      "display_location": "Cunningham Park: Jogging Track",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|cunningham park jogging track",
-      "proposed_lat": 40.7267,
-      "proposed_lng": -73.7755
+      "display_location": "Owl's Head Park: Lawn Area 68th St",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|owl s head park lawn area 68th st",
+      "proposed_lat": 40.64018,
+      "proposed_lng": -74.03222
     },
     {
       "borough": "Manhattan",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:M104"
+        "cemsid:manhattan:3838"
       ],
       "cache_keys_written": [
-        "location:manhattan:randall s island park soccer 10 randall s island park wards meadow fields soccer 74",
-        "group_key:manhattan|randall s island park soccer 10 randall s island park wards meadow fields soccer 74"
+        "location:manhattan:washington square park east playground picnic area",
+        "group_key:manhattan|washington square park east playground picnic area"
       ],
-      "display_location": "Randall's Island Park: Soccer-10 ,Randall's Island Park: Wards Meadow Fields-Soccer-74",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|randall s island park soccer 10 randall s island park wards meadow fields soccer 74",
-      "proposed_lat": 40.7943,
-      "proposed_lng": -73.9198
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:M190",
-        "location:manhattan:sheltering arms playground sheltering arms pool",
-        "group_key:manhattan|sheltering arms playground sheltering arms pool"
-      ],
-      "display_location": "Sheltering Arms Playground: Sheltering Arms Pool",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|sheltering arms playground sheltering arms pool",
-      "proposed_lat": 40.8146,
-      "proposed_lng": -73.9557
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_RunningTracks_001:M071"
-      ],
-      "cache_keys_written": [
-        "location:manhattan:riverside park greenway 145th 155th st rsp",
-        "group_key:manhattan|riverside park greenway 145th 155th st rsp"
-      ],
-      "display_location": "Riverside Park: Greenway-145th-155th St-RSP",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|riverside park greenway 145th 155th st rsp",
-      "proposed_lat": 40.7827,
-      "proposed_lng": -73.9871
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:B052"
-      ],
-      "cache_keys_written": [
-        "location:brooklyn:leif ericson park tennis 05",
-        "group_key:brooklyn|leif ericson park tennis 05"
-      ],
-      "display_location": "Leif Ericson Park: Tennis-05",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|leif ericson park tennis 05",
-      "proposed_lat": 40.6319,
-      "proposed_lng": -74.0137
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:B052"
-      ],
-      "cache_keys_written": [
-        "location:brooklyn:leif ericson park tennis 03",
-        "group_key:brooklyn|leif ericson park tennis 03"
-      ],
-      "display_location": "Leif Ericson Park: Tennis-03",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|leif ericson park tennis 03",
-      "proposed_lat": 40.6319,
-      "proposed_lng": -74.0137
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:B052"
-      ],
-      "cache_keys_written": [
-        "location:brooklyn:leif ericson park tennis 02",
-        "group_key:brooklyn|leif ericson park tennis 02"
-      ],
-      "display_location": "Leif Ericson Park: Tennis-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|leif ericson park tennis 02",
-      "proposed_lat": 40.6319,
-      "proposed_lng": -74.0137
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Basketball_001:M010"
-      ],
-      "cache_keys_written": [
-        "location:manhattan:central park east meadow",
-        "group_key:manhattan|central park east meadow"
-      ],
-      "display_location": "Central Park: East Meadow",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|central park east meadow",
-      "proposed_lat": 40.7911,
-      "proposed_lng": -73.9598
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:M148",
-        "location:manhattan:white playground playground white playground basketball 01",
-        "group_key:manhattan|white playground playground white playground basketball 01"
-      ],
-      "display_location": "White Playground: Playground   ,White Playground: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|white playground playground white playground basketball 01",
-      "proposed_lat": 40.7915,
-      "proposed_lng": -73.946
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Basketball_001:M010"
-      ],
-      "cache_keys_written": [
-        "location:manhattan:central park great lawn plgd basketball 05",
-        "group_key:manhattan|central park great lawn plgd basketball 05"
-      ],
-      "display_location": "Central Park: Great Lawn Plgd-Basketball-05",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|central park great lawn plgd basketball 05",
-      "proposed_lat": 40.7911,
-      "proposed_lng": -73.9598
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:X104"
-      ],
-      "cache_keys_written": [
-        "location:bronx:williamsbridge oval tennis 07",
-        "group_key:bronx|williamsbridge oval tennis 07"
-      ],
-      "display_location": "Williamsbridge Oval: Tennis-07",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|williamsbridge oval tennis 07",
-      "proposed_lat": 40.8782,
-      "proposed_lng": -73.8777
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:X104"
-      ],
-      "cache_keys_written": [
-        "location:bronx:williamsbridge oval tennis 08",
-        "group_key:bronx|williamsbridge oval tennis 08"
-      ],
-      "display_location": "Williamsbridge Oval: Tennis-08",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|williamsbridge oval tennis 08",
-      "proposed_lat": 40.8782,
-      "proposed_lng": -73.8777
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B219",
-        "location:brooklyn:callahan kelly playground soccer 01",
-        "group_key:brooklyn|callahan kelly playground soccer 01"
-      ],
-      "display_location": "Callahan-Kelly Playground: Soccer-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|callahan kelly playground soccer 01",
-      "proposed_lat": 40.6784,
-      "proposed_lng": -73.9058
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:Q014",
-        "location:queens:astoria heights playground handball 04",
-        "group_key:queens|astoria heights playground handball 04"
-      ],
-      "display_location": "Astoria Heights Playground: Handball-04",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|astoria heights playground handball 04",
-      "proposed_lat": 40.7608,
-      "proposed_lng": -73.9116
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Basketball_001:M047"
-      ],
-      "cache_keys_written": [
-        "location:manhattan:thomas jefferson park 114 st basketball 03",
-        "group_key:manhattan|thomas jefferson park 114 st basketball 03"
-      ],
-      "display_location": "Thomas Jefferson Park: 114 St-Basketball-03",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|thomas jefferson park 114 st basketball 03",
-      "proposed_lat": 40.7923,
-      "proposed_lng": -73.9356
-    },
-    {
-      "borough": "Queens",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Handball_001:Q127",
-        "location:queens:marconi park basketball 01",
-        "group_key:queens|marconi park basketball 01"
-      ],
-      "display_location": "Marconi Park: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|marconi park basketball 01",
-      "proposed_lat": 40.6942,
-      "proposed_lng": -73.7953
-    },
-    {
-      "borough": "Staten Island",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:R008",
-        "location:staten island:faber park basketball 01",
-        "group_key:staten island|faber park basketball 01"
-      ],
-      "display_location": "Faber Park: Basketball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "staten island|faber park basketball 01",
-      "proposed_lat": 40.6416,
-      "proposed_lng": -74.1354
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:X155",
-        "location:bronx:patterson playground softball 01",
-        "group_key:bronx|patterson playground softball 01"
-      ],
-      "display_location": "Patterson Playground: Softball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|patterson playground softball 01",
-      "proposed_lat": 40.8158,
-      "proposed_lng": -73.9233
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B130",
-        "location:brooklyn:greenwood playground ps 88 softball 01",
-        "group_key:brooklyn|greenwood playground ps 88 softball 01"
-      ],
-      "display_location": "Greenwood Playground (PS 88): Softball-01",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|greenwood playground ps 88 softball 01",
-      "proposed_lat": 40.6507,
-      "proposed_lng": -73.9765
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:B057"
-      ],
-      "cache_keys_written": [
-        "location:brooklyn:marine park marine park",
-        "group_key:brooklyn|marine park marine park"
-      ],
-      "display_location": "Marine Park: Marine Park",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|marine park marine park",
-      "proposed_lat": 40.6079,
-      "proposed_lng": -73.935
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_RunningTracks_001:M071"
-      ],
-      "cache_keys_written": [
-        "location:manhattan:riverside park lawn 116th street rsp",
-        "group_key:manhattan|riverside park lawn 116th street rsp"
-      ],
-      "display_location": "Riverside Park: Lawn-116th Street-RSP",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|riverside park lawn 116th street rsp",
-      "proposed_lat": 40.7827,
-      "proposed_lng": -73.9871
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:X008",
-        "location:bronx:claremont park picnic area 3",
-        "group_key:bronx|claremont park picnic area 3"
-      ],
-      "display_location": "Claremont Park: Picnic Area 3",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|claremont park picnic area 3",
-      "proposed_lat": 40.8378,
-      "proposed_lng": -73.9082
-    },
-    {
-      "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:B060",
-        "location:brooklyn:mckinley park east lawn",
-        "group_key:brooklyn|mckinley park east lawn"
-      ],
-      "display_location": "Mckinley Park: East Lawn",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|mckinley park east lawn",
-      "proposed_lat": 40.6262,
-      "proposed_lng": -74.0166
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Basketball_001:M010"
-      ],
-      "cache_keys_written": [
-        "location:manhattan:central park lawn outside levin playground section a central park lawn outside levin playground section b",
-        "group_key:manhattan|central park lawn outside levin playground section a central park lawn outside levin playground section b"
-      ],
-      "display_location": "Central Park: Lawn Outside Levin Playground (Section A)   ,Central Park: Lawn Outside Levin Playground (Section B)",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|central park lawn outside levin playground section a central park lawn outside levin playground section b",
-      "proposed_lat": 40.7911,
-      "proposed_lng": -73.9598
-    },
-    {
-      "borough": "Bronx",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Kayak_001:X305",
-        "location:bronx:concrete plant park concrete plant park",
-        "group_key:bronx|concrete plant park concrete plant park"
-      ],
-      "display_location": "Concrete Plant Park: Concrete Plant Park",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "bronx|concrete plant park concrete plant park",
-      "proposed_lat": 40.8275,
-      "proposed_lng": -73.8847
+      "display_location": "Washington Square Park: East Playground Picnic Area",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "manhattan|washington square park east playground picnic area",
+      "proposed_lat": 40.73089,
+      "proposed_lng": -73.9976
     },
     {
       "borough": "Queens",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Bocce_001:Q021"
+        "cemsid:queens:10224"
       ],
       "cache_keys_written": [
-        "location:queens:cunningham park picnic blue cunningham park baseball 05",
-        "group_key:queens|cunningham park picnic blue cunningham park baseball 05"
+        "location:queens:detective keith l williams park pool",
+        "group_key:queens|detective keith l williams park pool"
       ],
-      "display_location": "Cunningham Park: Picnic Blue   ,Cunningham Park: Baseball-05",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "queens|cunningham park picnic blue cunningham park baseball 05",
-      "proposed_lat": 40.7267,
-      "proposed_lng": -73.7755
+      "display_location": "Detective Keith L Williams Park: Pool",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "queens|detective keith l williams park pool",
+      "proposed_lat": 40.70288,
+      "proposed_lng": -73.78443
+    },
+    {
+      "borough": "Brooklyn",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:brooklyn:11310"
+      ],
+      "cache_keys_written": [
+        "location:brooklyn:kelly park tennis 06",
+        "group_key:brooklyn|kelly park tennis 06"
+      ],
+      "display_location": "Kelly Park: Tennis-06",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|kelly park tennis 06",
+      "proposed_lat": 40.60415,
+      "proposed_lng": -73.95788
+    },
+    {
+      "borough": "Queens",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:queens:10211"
+      ],
+      "cache_keys_written": [
+        "location:queens:flushing meadows corona park tennis 11",
+        "group_key:queens|flushing meadows corona park tennis 11"
+      ],
+      "display_location": "Flushing Meadows Corona Park: Tennis-11",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "queens|flushing meadows corona park tennis 11",
+      "proposed_lat": 40.74726,
+      "proposed_lng": -73.84333
+    },
+    {
+      "borough": "Queens",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:queens:10211"
+      ],
+      "cache_keys_written": [
+        "location:queens:flushing meadows corona park tennis 12",
+        "group_key:queens|flushing meadows corona park tennis 12"
+      ],
+      "display_location": "Flushing Meadows Corona Park: Tennis-12",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "queens|flushing meadows corona park tennis 12",
+      "proposed_lat": 40.74726,
+      "proposed_lng": -73.84333
+    },
+    {
+      "borough": "Queens",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:queens:2318"
+      ],
+      "cache_keys_written": [
+        "location:queens:rochdale park tennis 01",
+        "group_key:queens|rochdale park tennis 01"
+      ],
+      "display_location": "Rochdale Park: Tennis-01",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "queens|rochdale park tennis 01",
+      "proposed_lat": 40.67459,
+      "proposed_lng": -73.77435
+    },
+    {
+      "borough": "Queens",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:queens:2318"
+      ],
+      "cache_keys_written": [
+        "location:queens:rochdale park tennis 02",
+        "group_key:queens|rochdale park tennis 02"
+      ],
+      "display_location": "Rochdale Park: Tennis-02",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "queens|rochdale park tennis 02",
+      "proposed_lat": 40.67459,
+      "proposed_lng": -73.77435
+    },
+    {
+      "borough": "Queens",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:queens:2318"
+      ],
+      "cache_keys_written": [
+        "location:queens:rochdale park tennis 03",
+        "group_key:queens|rochdale park tennis 03"
+      ],
+      "display_location": "Rochdale Park: Tennis-03",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "queens|rochdale park tennis 03",
+      "proposed_lat": 40.67459,
+      "proposed_lng": -73.77435
     },
     {
       "borough": "Staten Island",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Basketball_001:R005"
+        "cemsid:staten island:10749"
       ],
       "cache_keys_written": [
-        "location:staten island:clove lakes park knoll 01 comm clove picnic victory blvd side",
-        "group_key:staten island|clove lakes park knoll 01 comm clove picnic victory blvd side"
+        "location:staten island:blood root valley greenbelt recreation center tennis 02",
+        "group_key:staten island|blood root valley greenbelt recreation center tennis 02"
       ],
-      "display_location": "Clove Lakes Park: Knoll 01 (Comm) - Clove Picnic Victory Blvd Side",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "staten island|clove lakes park knoll 01 comm clove picnic victory blvd side",
-      "proposed_lat": 40.616,
-      "proposed_lng": -74.1054
+      "display_location": "Blood Root Valley: Greenbelt Recreation Center-Tennis-02",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "staten island|blood root valley greenbelt recreation center tennis 02",
+      "proposed_lat": 40.59114,
+      "proposed_lng": -74.13101
+    },
+    {
+      "borough": "Staten Island",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:staten island:10749"
+      ],
+      "cache_keys_written": [
+        "location:staten island:blood root valley greenbelt recreation center tennis 01",
+        "group_key:staten island|blood root valley greenbelt recreation center tennis 01"
+      ],
+      "display_location": "Blood Root Valley: Greenbelt Recreation Center-Tennis-01",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "staten island|blood root valley greenbelt recreation center tennis 01",
+      "proposed_lat": 40.59114,
+      "proposed_lng": -74.13101
+    },
+    {
+      "borough": "Staten Island",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:staten island:10662"
+      ],
+      "cache_keys_written": [
+        "location:staten island:franklin d roosevelt boardwalk and beach south beach bocce 01",
+        "group_key:staten island|franklin d roosevelt boardwalk and beach south beach bocce 01"
+      ],
+      "display_location": "Franklin D Roosevelt Boardwalk and Beach: South Beach-Bocce-01",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "staten island|franklin d roosevelt boardwalk and beach south beach bocce 01",
+      "proposed_lat": 40.57257,
+      "proposed_lng": -74.08364
     },
     {
       "borough": "Manhattan",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Basketball_001:M047"
+        "cemsid:manhattan:11983"
       ],
       "cache_keys_written": [
-        "location:manhattan:thomas jefferson park 114th st picnic bbq area 3",
-        "group_key:manhattan|thomas jefferson park 114th st picnic bbq area 3"
+        "location:manhattan:highbridge park flag football 01",
+        "group_key:manhattan|highbridge park flag football 01"
       ],
-      "display_location": "Thomas Jefferson Park: 114th St Picnic/BBQ Area #3",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|thomas jefferson park 114th st picnic bbq area 3",
-      "proposed_lat": 40.7923,
-      "proposed_lng": -73.9356
-    },
-    {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Basketball_001:M010"
-      ],
-      "cache_keys_written": [
-        "location:manhattan:central park heckscher picnic area central park heckscher playground lawns",
-        "group_key:manhattan|central park heckscher picnic area central park heckscher playground lawns"
-      ],
-      "display_location": "Central Park: Heckscher Picnic Area   ,Central Park: Heckscher Playground Lawns",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|central park heckscher picnic area central park heckscher playground lawns",
-      "proposed_lat": 40.7911,
-      "proposed_lng": -73.9598
+      "display_location": "Highbridge Park: Flag Football-01",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "manhattan|highbridge park flag football 01",
+      "proposed_lat": 40.84112,
+      "proposed_lng": -73.93369
     },
     {
       "borough": "Brooklyn",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:B057"
+        "cemsid:brooklyn:9509"
       ],
       "cache_keys_written": [
-        "location:brooklyn:marine park softball 03 marine park softball 04",
-        "group_key:brooklyn|marine park softball 03 marine park softball 04"
+        "location:brooklyn:shore road park and parkway 79th st fields soccer 01",
+        "group_key:brooklyn|shore road park and parkway 79th st fields soccer 01"
       ],
-      "display_location": "Marine Park: Softball-03   ,Marine Park: Softball-04",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|marine park softball 03 marine park softball 04",
-      "proposed_lat": 40.6079,
-      "proposed_lng": -73.935
+      "display_location": "Shore Road Park and Parkway: 79th St Fields-Soccer-01",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|shore road park and parkway 79th st fields soccer 01",
+      "proposed_lat": 40.65534,
+      "proposed_lng": -73.88662
     },
     {
-      "borough": "Manhattan",
+      "borough": "Queens",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Basketball_001:M010"
+        "cemsid:queens:10224"
       ],
       "cache_keys_written": [
-        "location:manhattan:central park the dairy",
-        "group_key:manhattan|central park the dairy"
+        "location:queens:detective keith l williams park detective k l williams playground tennis 03",
+        "group_key:queens|detective keith l williams park detective k l williams playground tennis 03"
       ],
-      "display_location": "Central Park: The Dairy",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|central park the dairy",
-      "proposed_lat": 40.7911,
-      "proposed_lng": -73.9598
+      "display_location": "Detective Keith L Williams Park: Detective K.L. Williams Playground-Tennis-03",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "queens|detective keith l williams park detective k l williams playground tennis 03",
+      "proposed_lat": 40.70288,
+      "proposed_lng": -73.78443
+    },
+    {
+      "borough": "Queens",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:queens:10224"
+      ],
+      "cache_keys_written": [
+        "location:queens:detective keith l williams park detective k l williams playground tennis 04",
+        "group_key:queens|detective keith l williams park detective k l williams playground tennis 04"
+      ],
+      "display_location": "Detective Keith L Williams Park: Detective K.L. Williams Playground-Tennis-04",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "queens|detective keith l williams park detective k l williams playground tennis 04",
+      "proposed_lat": 40.70288,
+      "proposed_lng": -73.78443
     },
     {
       "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Pools_outdoor_001:B329",
-        "location:brooklyn:lindower park lindower basketball 02",
-        "group_key:brooklyn|lindower park lindower basketball 02"
+      "cache_keys_skipped_duplicate": [
+        "cemsid:brooklyn:4319"
       ],
-      "display_location": "Lindower Park: Lindower-Basketball-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|lindower park lindower basketball 02",
-      "proposed_lat": 40.6124,
-      "proposed_lng": -73.9113
+      "cache_keys_written": [
+        "location:brooklyn:brower park ps 289 playground only brower park",
+        "group_key:brooklyn|brower park ps 289 playground only brower park"
+      ],
+      "display_location": "Brower Park (PS 289 - Playground Only): Brower Park",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|brower park ps 289 playground only brower park",
+      "proposed_lat": 40.67349,
+      "proposed_lng": -73.9432
     },
     {
       "borough": "Manhattan",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Basketball_001:M010"
+        "cemsid:manhattan:11983"
       ],
       "cache_keys_written": [
-        "location:manhattan:central park cleopatra s needle lawn",
-        "group_key:manhattan|central park cleopatra s needle lawn"
+        "location:manhattan:highbridge park 175th street basketball 07",
+        "group_key:manhattan|highbridge park 175th street basketball 07"
       ],
-      "display_location": "Central Park: Cleopatra's Needle Lawn",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|central park cleopatra s needle lawn",
-      "proposed_lat": 40.7911,
-      "proposed_lng": -73.9598
+      "display_location": "Highbridge Park: 175th Street-Basketball-07",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "manhattan|highbridge park 175th street basketball 07",
+      "proposed_lat": 40.84112,
+      "proposed_lng": -73.93369
+    },
+    {
+      "borough": "Queens",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:queens:10211"
+      ],
+      "cache_keys_written": [
+        "location:queens:flushing meadows corona park tennis 09",
+        "group_key:queens|flushing meadows corona park tennis 09"
+      ],
+      "display_location": "Flushing Meadows Corona Park: Tennis-09",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "queens|flushing meadows corona park tennis 09",
+      "proposed_lat": 40.74726,
+      "proposed_lng": -73.84333
     },
     {
       "borough": "Manhattan",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:M104"
+        "cemsid:manhattan:10074"
       ],
       "cache_keys_written": [
-        "location:manhattan:randall s island park sunken meadow fields baseball 27 randall s island park sunken meadow fields baseball 20",
-        "group_key:manhattan|randall s island park sunken meadow fields baseball 27 randall s island park sunken meadow fields baseball 20"
+        "location:manhattan:riverside park south pier i cafe",
+        "group_key:manhattan|riverside park south pier i cafe"
       ],
-      "display_location": "Randall's Island Park: Sunken Meadow Fields-Baseball-27 ,Randall's Island Park: Sunken Meadow Fields-Baseball-20",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|randall s island park sunken meadow fields baseball 27 randall s island park sunken meadow fields baseball 20",
-      "proposed_lat": 40.7943,
-      "proposed_lng": -73.9198
+      "display_location": "Riverside Park South: Pier I Cafe",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "manhattan|riverside park south pier i cafe",
+      "proposed_lat": 40.77947,
+      "proposed_lng": -73.98899
     },
     {
-      "borough": "Manhattan",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:M249",
-        "location:manhattan:penn south playground basketball 02",
-        "group_key:manhattan|penn south playground basketball 02"
+      "borough": "Staten Island",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:staten island:10740"
       ],
-      "display_location": "Penn South Playground: Basketball-02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|penn south playground basketball 02",
-      "proposed_lat": 40.7475,
-      "proposed_lng": -73.9984
+      "cache_keys_written": [
+        "location:staten island:cpl thompson park softball 01",
+        "group_key:staten island|cpl thompson park softball 01"
+      ],
+      "display_location": "Cpl. Thompson Park: Softball-01",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "staten island|cpl thompson park softball 01",
+      "proposed_lat": 40.63806,
+      "proposed_lng": -74.11885
+    },
+    {
+      "borough": "Bronx",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:bronx:10324"
+      ],
+      "cache_keys_written": [
+        "location:bronx:bronx park waring plgd basketball 01",
+        "group_key:bronx|bronx park waring plgd basketball 01"
+      ],
+      "display_location": "Bronx Park: Waring Plgd-Basketball-01",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "bronx|bronx park waring plgd basketball 01",
+      "proposed_lat": 40.86226,
+      "proposed_lng": -73.873
+    },
+    {
+      "borough": "Staten Island",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:staten island:4426"
+      ],
+      "cache_keys_written": [
+        "location:staten island:seaside wildlife nature park lawn",
+        "group_key:staten island|seaside wildlife nature park lawn"
+      ],
+      "display_location": "Seaside Wildlife Nature Park: Lawn",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "staten island|seaside wildlife nature park lawn",
+      "proposed_lat": 40.54031,
+      "proposed_lng": -74.14287
     },
     {
       "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Basketball_001:B251",
-        "location:brooklyn:manhattan beach park picnic area 02",
-        "group_key:brooklyn|manhattan beach park picnic area 02"
+      "cache_keys_skipped_duplicate": [
+        "cemsid:brooklyn:10468"
       ],
-      "display_location": "Manhattan Beach Park: Picnic Area 02",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|manhattan beach park picnic area 02",
-      "proposed_lat": 40.5767,
-      "proposed_lng": -73.9461
+      "cache_keys_written": [
+        "location:brooklyn:coney island boat basin six diamonds football 02",
+        "group_key:brooklyn|coney island boat basin six diamonds football 02"
+      ],
+      "display_location": "Coney Island Boat Basin/Six Diamonds: Football-02",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|coney island boat basin six diamonds football 02",
+      "proposed_lat": 40.58275,
+      "proposed_lng": -73.99024
     },
     {
       "borough": "Manhattan",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_RunningTracks_001:M071"
+        "cemsid:manhattan:252"
       ],
       "cache_keys_written": [
-        "location:manhattan:riverside park playground dinosaur rsp",
-        "group_key:manhattan|riverside park playground dinosaur rsp"
+        "location:manhattan:madison square park redbud lawn",
+        "group_key:manhattan|madison square park redbud lawn"
       ],
-      "display_location": "Riverside Park: Playground-Dinosaur-RSP",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|riverside park playground dinosaur rsp",
-      "proposed_lat": 40.7827,
-      "proposed_lng": -73.9871
+      "display_location": "Madison Square Park: Redbud Lawn",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "manhattan|madison square park redbud lawn",
+      "proposed_lat": 40.74225,
+      "proposed_lng": -73.98798
     },
     {
       "borough": "Brooklyn",
-      "cache_keys_skipped_duplicate": [],
-      "cache_keys_written": [
-        "parks_facility:DPR_Playgrounds_001:B253",
-        "location:brooklyn:albert j parham playground ps 20 picnic area",
-        "group_key:brooklyn|albert j parham playground ps 20 picnic area"
+      "cache_keys_skipped_duplicate": [
+        "cemsid:brooklyn:11128"
       ],
-      "display_location": "Albert J. Parham Playground (PS 20): Picnic Area",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "brooklyn|albert j parham playground ps 20 picnic area",
-      "proposed_lat": 40.6903,
-      "proposed_lng": -73.9707
+      "cache_keys_written": [
+        "location:brooklyn:cadman plaza park south lawn",
+        "group_key:brooklyn|cadman plaza park south lawn"
+      ],
+      "display_location": "Cadman Plaza Park: South Lawn",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|cadman plaza park south lawn",
+      "proposed_lat": 40.69847,
+      "proposed_lng": -73.99055
+    },
+    {
+      "borough": "Bronx",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:bronx:11062"
+      ],
+      "cache_keys_written": [
+        "location:bronx:pelham bay park and orchard beach north picnic area 8",
+        "group_key:bronx|pelham bay park and orchard beach north picnic area 8"
+      ],
+      "display_location": "Pelham Bay Park and Orchard Beach: North Picnic Area 8",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "bronx|pelham bay park and orchard beach north picnic area 8",
+      "proposed_lat": 40.86932,
+      "proposed_lng": -73.80036
+    },
+    {
+      "borough": "Brooklyn",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:brooklyn:10509"
+      ],
+      "cache_keys_written": [
+        "location:brooklyn:st john s park basketball 02",
+        "group_key:brooklyn|st john s park basketball 02"
+      ],
+      "display_location": "St. John's Park: Basketball-02",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|st john s park basketball 02",
+      "proposed_lat": 40.67437,
+      "proposed_lng": -73.93475
+    },
+    {
+      "borough": "Staten Island",
+      "cache_keys_skipped_duplicate": [
+        "cemsid:staten island:10662"
+      ],
+      "cache_keys_written": [
+        "location:staten island:franklin d roosevelt boardwalk and beach south beach bocce 02",
+        "group_key:staten island|franklin d roosevelt boardwalk and beach south beach bocce 02"
+      ],
+      "display_location": "Franklin D Roosevelt Boardwalk and Beach: South Beach-Bocce-02",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "staten island|franklin d roosevelt boardwalk and beach south beach bocce 02",
+      "proposed_lat": 40.57257,
+      "proposed_lng": -74.08364
     },
     {
       "borough": "Manhattan",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:M042"
+        "cemsid:manhattan:3740"
       ],
       "cache_keys_written": [
-        "location:manhattan:inwood hill park peninsula",
-        "group_key:manhattan|inwood hill park peninsula"
+        "location:manhattan:bryant park petanque court",
+        "group_key:manhattan|bryant park petanque court"
       ],
-      "display_location": "Inwood Hill Park: Peninsula",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|inwood hill park peninsula",
-      "proposed_lat": 40.8697,
-      "proposed_lng": -73.9217
+      "display_location": "Bryant Park: Petanque Court",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "manhattan|bryant park petanque court",
+      "proposed_lat": 40.75382,
+      "proposed_lng": -73.98373
     },
     {
-      "borough": "Manhattan",
+      "borough": "Brooklyn",
       "cache_keys_skipped_duplicate": [
-        "parks_facility:DPR_Tennis_001:M028"
+        "cemsid:brooklyn:7706"
       ],
       "cache_keys_written": [
-        "location:manhattan:fort washington park 160th beach",
-        "group_key:manhattan|fort washington park 160th beach"
+        "location:brooklyn:shore parkway shore parkway bike path bay ridge",
+        "group_key:brooklyn|shore parkway shore parkway bike path bay ridge"
       ],
-      "display_location": "Fort Washington Park: 160th Beach",
-      "geocoder_source": "nyc_parks_bigapps",
-      "group_key": "manhattan|fort washington park 160th beach",
-      "proposed_lat": 40.8488,
-      "proposed_lng": -73.9462
+      "display_location": "Shore Parkway: Shore Parkway Bike Path Bay Ridge",
+      "geocoder_source": "existing_location_cache_place_memory",
+      "group_key": "brooklyn|shore parkway shore parkway bike path bay ridge",
+      "proposed_lat": 40.631337,
+      "proposed_lng": -73.886086
     }
   ]
 }

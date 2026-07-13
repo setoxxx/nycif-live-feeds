@@ -62,6 +62,14 @@ PENDING_REASON = (
     "Pending second-pass review: location_cache broad place-name match (medium confidence) "
     "requires individual pin verification before approval."
 )
+PENDING_APPROVE_REASON = (
+    "Approved after Phase 2D second pass: coordinates sourced from existing location_cache "
+    "cemsid memory with valid NYC bounds; court-specific location/group_key aliases approved "
+    "for master cache promotion."
+)
+PENDING_APPROVE_NOTES = (
+    "Second-pass batch approval for existing_location_cache_place_memory rows with cemsid keys."
+)
 
 
 def load_json_file(path: Path, default: Any) -> Any:
@@ -105,10 +113,32 @@ def load_csv_overrides(path: Path) -> dict[str, dict[str, str]]:
     return overrides
 
 
-def default_decision(row: dict[str, Any]) -> tuple[str, str, str]:
+def valid_nyc_lat_lng(lat: Any, lng: Any) -> bool:
+    try:
+        lat_f = float(lat)
+        lng_f = float(lng)
+    except Exception:
+        return False
+    return 40.0 <= lat_f <= 41.0 and -75.0 <= lng_f <= -73.0
+
+
+def pending_cache_memory_approvable(row: dict[str, Any]) -> bool:
+    place_id = str(row.get("geocoder_place_id") or "")
+    return (
+        row.get("manual_review_status") == "pending"
+        and row.get("geocoder_source") == "existing_location_cache_place_memory"
+        and row.get("geocoder_confidence") == "medium"
+        and place_id.startswith("cemsid:")
+        and valid_nyc_lat_lng(row.get("proposed_lat"), row.get("proposed_lng"))
+    )
+
+
+def default_decision(row: dict[str, Any], approve_pending_cache_memory: bool = False) -> tuple[str, str, str]:
     group_key = str(row.get("group_key") or "")
     if group_key in REJECT_GROUP_KEYS:
         return "rejected", REJECT_REASONS[group_key], "Known bad pin flagged during Phase 2D review."
+    if approve_pending_cache_memory and pending_cache_memory_approvable(row):
+        return "approved", PENDING_APPROVE_REASON, PENDING_APPROVE_NOTES
     source = row.get("geocoder_source")
     confidence = row.get("geocoder_confidence")
     if source == "nyc_parks_bigapps" and confidence == "high":
@@ -116,7 +146,12 @@ def default_decision(row: dict[str, Any]) -> tuple[str, str, str]:
     return "pending", "", PENDING_REASON
 
 
-def apply_row(row: dict[str, Any], reviewed_at_utc: str, override: dict[str, str] | None) -> dict[str, Any]:
+def apply_row(
+    row: dict[str, Any],
+    reviewed_at_utc: str,
+    override: dict[str, str] | None,
+    approve_pending_cache_memory: bool = False,
+) -> dict[str, Any]:
     out = dict(row)
     if override:
         status = override["manual_review_status"]
@@ -124,13 +159,19 @@ def apply_row(row: dict[str, Any], reviewed_at_utc: str, override: dict[str, str
         notes = override.get("manual_review_notes") or ""
         reviewer = override.get("manual_reviewer") or MANUAL_REVIEWER
     else:
-        status, reason, notes = default_decision(row)
+        status, reason, notes = default_decision(row, approve_pending_cache_memory=approve_pending_cache_memory)
         reviewer = MANUAL_REVIEWER
 
     out["manual_review_status"] = status
-    out["promotion_allowed"] = False
+    if row.get("phase_2e_promotion_performed") is True:
+        out["promotion_allowed"] = True
+        out["location_cache_modified"] = True
+        out["phase_2e_promotion_performed"] = True
+        out["phase_2e_promoted_at_utc"] = row.get("phase_2e_promoted_at_utc")
+    else:
+        out["promotion_allowed"] = False
+        out["location_cache_modified"] = False
     out["public_map_modified"] = False
-    out["location_cache_modified"] = False
     out["staged_feed_modified"] = False
 
     if status in {"approved", "rejected"}:
@@ -157,6 +198,11 @@ def main() -> int:
         default=None,
         help="Optional reviewed CSV with manual_review_status per group_key.",
     )
+    parser.add_argument(
+        "--approve-pending-cache-memory",
+        action="store_true",
+        help="Approve pending existing_location_cache_place_memory rows with cemsid keys.",
+    )
     args = parser.parse_args()
 
     payload = load_json_file(APPROVAL_QUEUE_PATH, {})
@@ -167,7 +213,14 @@ def main() -> int:
     updated: list[dict[str, Any]] = []
     for row in queue:
         group_key = str(row.get("group_key") or "")
-        updated.append(apply_row(row, reviewed_at_utc, overrides.get(group_key)))
+        updated.append(
+            apply_row(
+                row,
+                reviewed_at_utc,
+                overrides.get(group_key),
+                approve_pending_cache_memory=args.approve_pending_cache_memory,
+            )
+        )
 
     status_counts = Counter(row.get("manual_review_status") for row in updated)
     report = {
@@ -183,6 +236,7 @@ def main() -> int:
         "pending_count": status_counts.get("pending", 0),
         "promotion_allowed_count": 0,
         "rejected_group_keys": sorted(REJECT_GROUP_KEYS),
+        "approve_pending_cache_memory": args.approve_pending_cache_memory,
         "public_map_modified": False,
         "location_cache_modified": False,
         "staged_feed_modified": False,
