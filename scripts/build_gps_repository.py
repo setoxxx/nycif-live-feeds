@@ -22,6 +22,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.gps_identity import build_repository_candidate_keys
+except ModuleNotFoundError:  # pragma: no cover - direct script execution
+    from gps_identity import build_repository_candidate_keys
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 LOCATION_CACHE_PATH = DATA_DIR / "location_cache.json"
@@ -55,10 +60,6 @@ def rows_from_payload(payload: Any) -> list[dict[str, Any]]:
     if isinstance(payload, dict) and isinstance(payload.get("events"), list):
         return [row for row in payload["events"] if isinstance(row, dict)]
     return []
-
-
-def norm(value: Any) -> str:
-    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
 
 
 def split_ids(value: Any) -> list[str]:
@@ -116,22 +117,6 @@ def gps_payload(row: dict[str, Any], key_type: str, key_value: str, source_feed:
     }
 
 
-def candidate_keys(row: dict[str, Any]) -> list[tuple[str, str]]:
-    keys: list[tuple[str, str]] = []
-    event_id = source_event_id(row)
-    borough = borough_text(row)
-    location = location_text(row)
-    if event_id:
-        keys.append((f"event_id:{event_id}", "event_id"))
-    for cemsid in split_ids(row.get("source_cemsid") or row.get("cemsid")):
-        keys.append((f"cemsid:{norm(borough)}:{cemsid}", "cemsid"))
-    if location:
-        keys.append((f"location:{norm(borough)}:{norm(location)}", "location"))
-    if title_text(row) and location and date_key(row):
-        keys.append((f"text_date_location:{norm(title_text(row))}:{norm(borough)}:{norm(location)}:{date_key(row)}", "text_date_location"))
-    return keys
-
-
 def add_entries(cache: dict[str, Any], rows: list[dict[str, Any]], source_feed: str) -> tuple[int, int]:
     rows_with_gps = 0
     added = 0
@@ -139,7 +124,7 @@ def add_entries(cache: dict[str, Any], rows: list[dict[str, Any]], source_feed: 
         if not valid_lat_lng(row):
             continue
         rows_with_gps += 1
-        for key, key_type in candidate_keys(row):
+        for key, key_type in build_repository_candidate_keys(row):
             if key and key not in cache:
                 cache[key] = gps_payload(row, key_type, key, source_feed)
                 added += 1

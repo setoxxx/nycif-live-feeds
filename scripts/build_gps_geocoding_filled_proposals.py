@@ -27,12 +27,16 @@ Outputs:
 from __future__ import annotations
 
 import json
-import re
 import sys
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.gps_identity import normalize_text_legacy
+except ModuleNotFoundError:  # pragma: no cover - direct script execution
+    from gps_identity import normalize_text_legacy
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
@@ -59,10 +63,6 @@ def save_json_file(path: Path, payload: Any) -> None:
     with path.open("w", encoding="utf-8") as handle:
         json.dump(payload, handle, indent=2, ensure_ascii=False, sort_keys=True)
         handle.write("\n")
-
-
-def norm(value: Any) -> str:
-    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
 
 
 def valid_nyc_lat_lng(lat: Any, lng: Any) -> bool:
@@ -100,7 +100,7 @@ def proposal_keys(row: dict[str, Any]) -> set[str]:
         row.get("simplified_geocoder_query"),
         row.get("geocoder_query"),
     ]
-    return {norm(value) for value in values if norm(value)}
+    return {normalize_text_legacy(value) for value in values if normalize_text_legacy(value)}
 
 
 def reference_keys(row: dict[str, Any]) -> set[str]:
@@ -118,7 +118,7 @@ def reference_keys(row: dict[str, Any]) -> set[str]:
         value = str(row.get(field) or "").strip()
         if value and borough:
             values.append(f"{value}, {borough}, New York, NY")
-    return {norm(value) for value in values if norm(value)}
+    return {normalize_text_legacy(value) for value in values if normalize_text_legacy(value)}
 
 
 def build_reference_index(paths: list[tuple[str, Path]]) -> dict[str, dict[str, Any]]:
@@ -153,7 +153,7 @@ def simplified_place(text: str) -> str:
     first = str(text or "").split(",")[0].strip()
     if ":" in first:
         first = first.split(":", 1)[0].strip()
-    return norm(first)
+    return normalize_text_legacy(first)
 
 
 def build_cache_place_index() -> dict[str, dict[str, Any]]:
@@ -161,7 +161,7 @@ def build_cache_place_index() -> dict[str, dict[str, Any]]:
     for key, entry in location_cache_entries().items():
         if not isinstance(entry, dict) or not valid_nyc_lat_lng(entry.get("lat"), entry.get("lng")):
             continue
-        borough = norm(entry.get("borough"))
+        borough = normalize_text_legacy(entry.get("borough"))
         display = entry.get("display_location") or entry.get("key_value") or key
         place = simplified_place(str(display))
         if not place:
@@ -186,7 +186,7 @@ def fill_from_references(row: dict[str, Any], reference_index: dict[str, dict[st
 
 
 def fill_from_cache_memory(row: dict[str, Any], cache_index: dict[str, dict[str, Any]]) -> dict[str, Any] | None:
-    borough = norm(row.get("borough"))
+    borough = normalize_text_legacy(row.get("borough"))
     simplified = simplified_place(row.get("simplified_geocoder_query") or row.get("display_location"))
     if not borough or not simplified:
         return None

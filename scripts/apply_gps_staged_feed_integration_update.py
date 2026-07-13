@@ -1,12 +1,24 @@
 from __future__ import annotations
 
 import json
-import re
 import sys
 import traceback
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.gps_identity import (
+        build_stable_event_identity as stable_event_identity,
+        event_cemsids,
+        row_location,
+    )
+except ModuleNotFoundError:  # pragma: no cover - direct script execution
+    from gps_identity import (
+        build_stable_event_identity as stable_event_identity,
+        event_cemsids,
+        row_location,
+    )
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
@@ -36,12 +48,6 @@ def save_json(path: Path, payload: Any) -> None:
         handle.write("\n")
 
 
-def normalize(value: Any) -> str:
-    text = str(value or "").lower().replace("&", " and ")
-    text = re.sub(r"[^a-z0-9]+", " ", text)
-    return re.sub(r"\s+", " ", text).strip()
-
-
 def valid_nyc_lat_lng(lat: Any, lng: Any) -> bool:
     try:
         lat_f = float(lat)
@@ -49,31 +55,6 @@ def valid_nyc_lat_lng(lat: Any, lng: Any) -> bool:
     except Exception:
         return False
     return 40.0 <= lat_f <= 41.0 and -75.0 <= lng_f <= -73.0
-
-
-def row_location(row: dict[str, Any]) -> str:
-    return str(row.get("display_location") or row.get("location") or row.get("event_location") or "")
-
-
-def event_cemsids(row: dict[str, Any]) -> set[str]:
-    raw = row.get("source_cemsid") or row.get("cemsid") or []
-    if isinstance(raw, list):
-        return {str(item) for item in raw if str(item)}
-    if raw:
-        return {str(raw)}
-    return set()
-
-
-def stable_event_identity(row: dict[str, Any]) -> str:
-    return "|".join(
-        [
-            str(row.get("source_event_id") or row.get("event_id") or row.get("id") or ""),
-            normalize(row_location(row)),
-            ",".join(sorted(event_cemsids(row))),
-            str(row.get("date") or ""),
-            str(row.get("start_date_time") or ""),
-        ]
-    )
 
 
 def failure_report(message: str, **extra: Any) -> dict[str, Any]:

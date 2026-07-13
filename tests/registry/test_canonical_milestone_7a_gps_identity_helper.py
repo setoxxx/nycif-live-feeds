@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import builtins
 import copy
+import importlib
 import re
 from pathlib import Path
 from typing import Any
@@ -644,8 +645,8 @@ def test_helpers_are_deterministic_across_repeated_calls() -> None:
 
 
 # ---------------------------------------------------------------------------
-# H. Separation from historical and fixture-only identity systems, and
-#    confirmation that no active caller was migrated in M7-A.
+# H. Separation from historical and fixture-only identity systems, plus the
+#    M7-B caller migration boundary.
 # ---------------------------------------------------------------------------
 
 
@@ -692,32 +693,171 @@ ACTIVE_CALLER_FILES = [
     "scripts/apply_gps_staged_feed_integration_update.py",
 ]
 
+M7B_MIGRATED_CALLER_IMPORTS = {
+    "scripts/build_gps_repository.py": ["build_repository_candidate_keys"],
+    "scripts/build_gps_review_groups.py": ["build_group_key"],
+    "scripts/build_gps_geocoding_filled_proposals.py": ["normalize_text_legacy"],
+    "scripts/build_gps_manual_approval_staging.py": ["build_stable_identity_key", "normalize_text_with_ampersand"],
+    "scripts/generate_gps_staged_feed_integration_match_diagnostic.py": [
+        "build_stable_event_identity",
+        "event_cemsids",
+        "normalize_text_with_ampersand",
+        "row_location",
+    ],
+    "scripts/apply_gps_staged_feed_integration_update.py": [
+        "build_stable_event_identity",
+        "event_cemsids",
+        "row_location",
+    ],
+    "scripts/audit_feed_anomalies.py": ["normalize_text_legacy"],
+    "scripts/audit_row_disposition.py": ["normalize_text_legacy"],
+    "scripts/build_location_cache.py": ["normalize_text_legacy"],
+    "scripts/build_staged_production_feed.py": ["normalize_text_legacy"],
+    "scripts/build_test_enriched_feed.py": ["normalize_text_legacy"],
+    "scripts/sync_nyc_open_data.py": ["normalize_text_legacy"],
+}
 
-def test_no_active_caller_was_migrated_in_m7a() -> None:
-    """M7-A scope pin: the shared helper exists but no caller imports it yet.
 
-    Canonical Milestone 7-B (separately authorized) is expected to migrate
-    callers and update this test deliberately at that time.
-    """
-    for rel_path in ACTIVE_CALLER_FILES:
+def test_m7b_authorized_callers_import_shared_gps_identity_helper() -> None:
+    """M7-B deliberately migrates the documented active callers to
+    scripts.gps_identity while keeping historical xri helpers separate."""
+    assert set(ACTIVE_CALLER_FILES) <= set(M7B_MIGRATED_CALLER_IMPORTS)
+    for rel_path, helper_names in M7B_MIGRATED_CALLER_IMPORTS.items():
         source = (REPO_ROOT / rel_path).read_text(encoding="utf-8")
-        assert "gps_identity" not in source, f"{rel_path} references gps_identity before M7-B authorization"
+        assert "from scripts.gps_identity import" in source, f"{rel_path} does not import the shared helper"
+        for helper_name in helper_names:
+            assert helper_name in source, f"{rel_path} does not reference {helper_name}"
 
 
-def test_active_callers_still_define_their_own_identity_functions() -> None:
-    """The original definitions remain in place (nothing was deleted)."""
+def test_m7b_removes_documented_active_duplicate_identity_functions() -> None:
+    """M7-B removes only the duplicated active-pipeline identity helpers."""
     expectations = {
         "scripts/build_gps_repository.py": ["def norm(", "def candidate_keys("],
         "scripts/build_gps_review_groups.py": ["def norm(", "def group_key("],
         "scripts/build_gps_geocoding_filled_proposals.py": ["def norm("],
         "scripts/build_gps_manual_approval_staging.py": ["def norm_text(", "def stable_key("],
-        "scripts/generate_gps_staged_feed_integration_match_diagnostic.py": ["def normalize(", "def stable_event_identity("],
-        "scripts/apply_gps_staged_feed_integration_update.py": ["def normalize(", "def stable_event_identity("],
+        "scripts/generate_gps_staged_feed_integration_match_diagnostic.py": [
+            "def normalize(",
+            "def row_location(",
+            "def event_cemsids(",
+            "def stable_event_identity(",
+        ],
+        "scripts/apply_gps_staged_feed_integration_update.py": [
+            "def normalize(",
+            "def row_location(",
+            "def event_cemsids(",
+            "def stable_event_identity(",
+        ],
+        "scripts/audit_feed_anomalies.py": ["def norm("],
+        "scripts/audit_row_disposition.py": ["def norm("],
+        "scripts/build_location_cache.py": ["def norm("],
+        "scripts/build_staged_production_feed.py": ["def norm("],
+        "scripts/build_test_enriched_feed.py": ["def norm("],
+        "scripts/sync_nyc_open_data.py": ["def norm("],
     }
     for rel_path, needles in expectations.items():
         source = (REPO_ROOT / rel_path).read_text(encoding="utf-8")
         for needle in needles:
-            assert needle in source, f"{rel_path} lost {needle}"
+            assert needle not in source, f"{rel_path} still contains duplicated helper {needle}"
+
+
+def test_m7b_callers_bind_to_the_canonical_helper_functions() -> None:
+    import scripts.gps_identity as gi
+
+    repo = importlib.import_module("scripts.build_gps_repository")
+    groups = importlib.import_module("scripts.build_gps_review_groups")
+    geocoding = importlib.import_module("scripts.build_gps_geocoding_filled_proposals")
+    manual = importlib.import_module("scripts.build_gps_manual_approval_staging")
+    diagnostic = importlib.import_module("scripts.generate_gps_staged_feed_integration_match_diagnostic")
+    update = importlib.import_module("scripts.apply_gps_staged_feed_integration_update")
+
+    assert repo.build_repository_candidate_keys is gi.build_repository_candidate_keys
+    assert groups.build_group_key is gi.build_group_key
+    assert geocoding.normalize_text_legacy is gi.normalize_text_legacy
+    assert manual.build_stable_identity_key is gi.build_stable_identity_key
+    assert manual.normalize_text_with_ampersand is gi.normalize_text_with_ampersand
+    assert diagnostic.stable_event_identity is gi.build_stable_event_identity
+    assert diagnostic.row_location is gi.row_location
+    assert diagnostic.event_cemsids is gi.event_cemsids
+    assert update.stable_event_identity is gi.build_stable_event_identity
+    assert update.row_location is gi.row_location
+    assert update.event_cemsids is gi.event_cemsids
+
+
+def test_m7b_legacy_norm_callers_bind_to_legacy_normalizer() -> None:
+    module_names = [
+        "scripts.audit_feed_anomalies",
+        "scripts.audit_row_disposition",
+        "scripts.build_location_cache",
+        "scripts.build_staged_production_feed",
+        "scripts.build_test_enriched_feed",
+        "scripts.sync_nyc_open_data",
+    ]
+    for module_name in module_names:
+        module = importlib.import_module(module_name)
+        assert module.normalize_text_legacy is normalize_text_legacy
+        assert module.normalize_text_legacy("Bryant Park & 42nd St.") == oracle_norm("Bryant Park & 42nd St.")
+
+
+def test_m7b_repository_add_entries_uses_helper_keys_bit_for_bit() -> None:
+    repo = importlib.import_module("scripts.build_gps_repository")
+    row = {
+        "source_event_id": "EV-100",
+        "title": "July 4th Fireworks",
+        "borough": "Brooklyn",
+        "display_location": "Prospect Park & 9th St.",
+        "source_cemsid": "CEM-2, CEM-1",
+        "date": "2026-07-04T20:00:00",
+        "lat": 40.6602,
+        "lng": -73.9690,
+        "review_rank": 999,
+    }
+    expected_pairs = build_repository_candidate_keys(row)
+    cache: dict[str, Any] = {}
+
+    rows_with_gps, added = repo.add_entries(cache, [row], "unit_test")
+
+    assert rows_with_gps == 1
+    assert added == len(expected_pairs)
+    assert list(cache) == [key for key, _key_type in expected_pairs]
+    assert [cache[key]["key_type"] for key in cache] == [key_type for _key, key_type in expected_pairs]
+
+
+def test_m7b_manual_staging_candidate_identity_uses_helper_and_not_review_rank() -> None:
+    manual = importlib.import_module("scripts.build_gps_manual_approval_staging")
+    base = {
+        "group_key": "",
+        "display_location": "Baisley Pond Park & Playground",
+        "proposed_lat": 40.672,
+        "proposed_lng": -73.785,
+    }
+    candidate_a = manual.make_candidate({**base, "review_rank": 1}, "unit")
+    candidate_b = manual.make_candidate({**base, "review_rank": 42}, "unit")
+
+    assert candidate_a["stable_identity_key"] == build_stable_identity_key(base)
+    assert candidate_b["stable_identity_key"] == build_stable_identity_key(base)
+    assert candidate_a["stable_identity_key"] == candidate_b["stable_identity_key"]
+
+
+def test_m7b_staged_feed_callers_preserve_cemsid_order_and_review_rank_independence() -> None:
+    diagnostic = importlib.import_module("scripts.generate_gps_staged_feed_integration_match_diagnostic")
+    update = importlib.import_module("scripts.apply_gps_staged_feed_integration_update")
+    row_a = {
+        "source_event_id": "EV-100",
+        "display_location": "Prospect Park & 9th St.",
+        "source_cemsid": ["Z9", "A1", "M5"],
+        "date": "2026-07-04",
+        "start_date_time": "2026-07-04T20:00:00",
+        "review_rank": 1,
+    }
+    row_b = {**row_a, "source_cemsid": ["M5", "Z9", "A1"], "review_rank": 99}
+    expected = build_stable_event_identity(row_a)
+
+    assert expected == build_stable_event_identity(row_b)
+    assert diagnostic.stable_event_identity(row_a) == expected
+    assert diagnostic.stable_event_identity(row_b) == expected
+    assert update.stable_event_identity(row_a) == expected
+    assert update.stable_event_identity(row_b) == expected
 
 
 # ---------------------------------------------------------------------------
