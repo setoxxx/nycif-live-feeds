@@ -4,10 +4,10 @@
   "project": "nycif-live-feeds",
   "repository": "setoxxx/nycif-live-feeds",
   "visibility": "public",
-  "current_phase": "Public feed artifact governance",
-  "completion_percent": 28,
+  "current_phase": "Canonical Milestone 7-B.1 snapshot contract hardening (review)",
+  "completion_percent": 32,
   "health": "yellow",
-  "status_summary": "Live Feeds is the public repository for NYCIF live/public feed artifacts. This status artifact is static, public-safe, and does not change any production feed data.",
+  "status_summary": "M7-A and M7-B are complete. M7-B.1 snapshot contract hardening is in review on branch canonical-milestone-7b1-snapshot-contract-hardening. M7-C is not started and unauthorized.",
   "active_prs": [],
   "recent_prs": [
     {
@@ -18,10 +18,10 @@
     }
   ],
   "blockers": [
-    "Define feed freshness reporting without changing public feed data.",
-    "Define source ownership and approval-status reporting as public-safe summaries only."
+    "M7-B.1 PR requires independent review before merge authorization.",
+    "M7-C duplicate-key enforcement remains unauthorized."
   ],
-  "next_action": "Add feed-status reporting fields in a later controlled phase without mutating production feed artifacts.",
+  "next_action": "Complete independent review of M7-B.1 snapshot contract hardening PR; regenerate diagnostic/adjudication artifacts after merge before running apply.",
   "data_freshness": {
     "source": "Manual ChatGPT/GitHub connector snapshot",
     "last_verified_at": "2026-07-02T20:10:00.000Z",
@@ -40,5 +40,11 @@
     "production_feed_mutation": false,
     "wordpress_change": false
   },
-  "generated_at": "2026-07-02T20:10:00.000Z"
+  "generated_at": "2026-07-13T17:30:00.000Z",
+  "milestones": {
+    "m7a_identity_helper_foundation": "complete",
+    "m7b_caller_migration": "complete",
+    "m7b1_snapshot_contract_hardening": "in_review",
+    "m7c_duplicate_key_enforcement": "not_started_unauthorized"
+  }
 }
