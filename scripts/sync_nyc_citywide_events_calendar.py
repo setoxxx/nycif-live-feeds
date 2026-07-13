@@ -28,6 +28,7 @@ API_GATEWAY = os.environ.get("NYC_EVENT_CAL_API_GATEWAY", "https://api.nyc.gov/"
 API_KEY_ENV = "NYC_EVENT_CAL_API_KEY"
 PUBLIC_KEY_URL = "https://www.nyc.gov/bin/nyc/sc.ec.json"
 PUBLIC_KEY_FALLBACK_URLS = (
+    "https://web.archive.org/web/20240601000000/https://www.nyc.gov/bin/nyc/sc.ec.json",
     "https://web.archive.org/web/2024/https://www.nyc.gov/bin/nyc/sc.ec.json",
 )
 SEARCH_PATH = "calendar/search"
