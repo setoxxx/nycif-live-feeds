@@ -22,6 +22,10 @@ try:
         normalize_text_with_ampersand,
         row_location,
     )
+    from scripts.gps_snapshot_provenance import (
+        DEFAULT_STAGED_FEED_RELATIVE_PATH,
+        file_provenance,
+    )
 except ModuleNotFoundError:  # pragma: no cover - direct script execution
     from gps_identity import (
         build_stable_event_identity as stable_event_identity,
@@ -29,8 +33,13 @@ except ModuleNotFoundError:  # pragma: no cover - direct script execution
         normalize_text_with_ampersand,
         row_location,
     )
+    from gps_snapshot_provenance import (
+        DEFAULT_STAGED_FEED_RELATIVE_PATH,
+        file_provenance,
+    )
 
 ROOT = Path(__file__).resolve().parents[1]
+PRODUCER_SCRIPT = "scripts/generate_gps_staged_feed_integration_match_diagnostic.py"
 DATA_DIR = ROOT / "data"
 LOCATION_CACHE_PATH = DATA_DIR / "location_cache.json"
 PROMOTION_REPORT_PATH = DATA_DIR / "gps_phase2e_promotion_report.json"
@@ -575,6 +584,14 @@ def main() -> int:
         and not multi_key_conflicts
     )
 
+    staged_feed_provenance = file_provenance(
+        STAGED_FEED_PATH,
+        producer_script=PRODUCER_SCRIPT,
+        repo_root=ROOT,
+        staged_feed_path=DEFAULT_STAGED_FEED_RELATIVE_PATH,
+        generated_at_utc=utc_now(),
+    )
+
     report = {
         "blocking_issues": [] if stable_identity_ready else ["Diagnostic candidate identities do not yet equal the dry-run 430-row contract"],
         "candidate_count_by_promoted_cache_key": {key: len(rows) for key, rows in sorted(candidates_by_key.items())},
@@ -601,6 +618,7 @@ def main() -> int:
         "selected_stable_identity_rows": selected_rows,
         "staged_event_count": len(staged_rows),
         "staged_feed_modified": False,
+        "staged_feed_provenance": staged_feed_provenance,
         "stable_identity_ready_for_update": stable_identity_ready,
         "unmatched_promoted_cache_key_count": len(unmatched_keys),
         "unmatched_promoted_cache_keys": unmatched_keys,

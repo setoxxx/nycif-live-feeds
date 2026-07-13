@@ -13,11 +13,19 @@ try:
         event_cemsids,
         row_location,
     )
+    from scripts.gps_snapshot_provenance import (
+        provenance_failure_report,
+        validate_bound_snapshot,
+    )
 except ModuleNotFoundError:  # pragma: no cover - direct script execution
     from gps_identity import (
         build_stable_event_identity as stable_event_identity,
         event_cemsids,
         row_location,
+    )
+    from gps_snapshot_provenance import (
+        provenance_failure_report,
+        validate_bound_snapshot,
     )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -125,11 +133,28 @@ def build_safe_identity_map(rows: list[dict[str, Any]]) -> tuple[dict[str, dict[
 def main() -> int:
     try:
         summary = load_json(ADJUDICATION_SUMMARY_PATH, {})
-        staged_payload = load_json(STAGED_FEED_PATH, {})
-
         if not isinstance(summary, dict) or summary.get("qa_pass") is not True:
             save_json(UPDATE_REPORT_PATH, failure_report("Adjudication summary must exist and have qa_pass true", adjudication_summary_qa_pass=summary.get("qa_pass") if isinstance(summary, dict) else None))
             return 1
+
+        snapshot_validation = validate_bound_snapshot(
+            summary.get("staged_feed_provenance"),
+            STAGED_FEED_PATH,
+            repo_root=ROOT,
+            contract_source=str(ADJUDICATION_SUMMARY_PATH.relative_to(ROOT)),
+        )
+        if not snapshot_validation.ok:
+            save_json(
+                UPDATE_REPORT_PATH,
+                provenance_failure_report(
+                    snapshot_validation,
+                    input_adjudication_summary=str(ADJUDICATION_SUMMARY_PATH.relative_to(ROOT)),
+                    input_staged_feed=str(STAGED_FEED_PATH.relative_to(ROOT)),
+                ),
+            )
+            return 1
+
+        staged_payload = load_json(STAGED_FEED_PATH, {})
         if not isinstance(staged_payload, dict) or not isinstance(staged_payload.get("events"), list):
             save_json(UPDATE_REPORT_PATH, failure_report("nycif_staged_live_events.json must be an object with an events list", adjudication_summary_qa_pass=True))
             return 1
@@ -308,6 +333,7 @@ def main() -> int:
                 "safe_update_contract_count_is_204": len(safe_by_identity) == EXPECTED_SAFE_UPDATE_READY_COUNT,
                 "safe_update_ready_identity_count_is_204": safe_identity_count == EXPECTED_SAFE_UPDATE_READY_COUNT,
                 "skipped_count_is_0": skipped == 0,
+                "snapshot_contract_preflight_passed": True,
                 "staged_feed_modified_true": qa_pass,
                 "unmatched_safe_identity_count_is_0": len(unmatched_safe_identities) == 0,
                 "update_performed_true": qa_pass,

@@ -1,12 +1,27 @@
 from __future__ import annotations
 
+import copy
 import json
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.gps_snapshot_provenance import (
+        DEFAULT_STAGED_FEED_RELATIVE_PATH,
+        REGENERATE_ARTIFACTS_NEXT_STEP,
+        sha256_file,
+    )
+except ModuleNotFoundError:  # pragma: no cover - direct script execution
+    from gps_snapshot_provenance import (
+        DEFAULT_STAGED_FEED_RELATIVE_PATH,
+        REGENERATE_ARTIFACTS_NEXT_STEP,
+        sha256_file,
+    )
+
 ROOT = Path(__file__).resolve().parents[1]
+PRODUCER_SCRIPT = "scripts/generate_gps_staged_feed_integration_adjudication_summary.py"
 DATA_DIR = ROOT / "data"
 DIAGNOSTIC_PATH = DATA_DIR / "gps_staged_feed_integration_match_diagnostic.json"
 SUMMARY_PATH = DATA_DIR / "gps_staged_feed_integration_adjudication_summary.json"
@@ -153,8 +168,25 @@ def main() -> int:
     public_map_modified = False
     phase_3a_run = False
 
+    diagnostic_provenance = diagnostic.get("staged_feed_provenance")
+    provenance_present = isinstance(diagnostic_provenance, dict) and bool(
+        (diagnostic_provenance.get("staged_feed") or {}).get("sha256")
+    )
+    diagnostic_artifact_sha256 = sha256_file(DIAGNOSTIC_PATH) if DIAGNOSTIC_PATH.exists() else None
+
+    if provenance_present:
+        staged_feed_provenance = copy.deepcopy(diagnostic_provenance)
+        staged_feed_provenance["producer"] = {
+            "script": PRODUCER_SCRIPT,
+            "generated_at_utc": utc_now(),
+            "upstream_artifact_sha256": diagnostic_artifact_sha256,
+        }
+    else:
+        staged_feed_provenance = None
+
     qa_pass = (
-        safe_count == EXPECTED_SAFE_UPDATE_READY_COUNT
+        provenance_present
+        and safe_count == EXPECTED_SAFE_UPDATE_READY_COUNT
         and safe_identity_count == EXPECTED_SAFE_UPDATE_READY_COUNT
         and multi_key_conflict_count == 0
         and no_safe_match_count == EXPECTED_NO_SAFE_MATCH_PROMOTED_KEY_COUNT
@@ -166,12 +198,23 @@ def main() -> int:
 
     recommended_next_action = (
         "Patch staged-feed update to apply only the 204 adjudicated safe identities, with the old 430 dry-run target replaced by a new 204-row adjudicated-safe contract. Keep the 20 unmatched promoted keys out of the staged-feed update and carry them forward for human review."
-        if safe_count == EXPECTED_SAFE_UPDATE_READY_COUNT and multi_key_conflict_count == 0
+        if provenance_present and safe_count == EXPECTED_SAFE_UPDATE_READY_COUNT and multi_key_conflict_count == 0
+        else REGENERATE_ARTIFACTS_NEXT_STEP
+        if not provenance_present
         else "Do not patch update workflow; inspect adjudication summary first."
     )
 
+    blocking_issues: list[str] = []
+    if not provenance_present:
+        blocking_issues.append("Diagnostic artifact is missing staged_feed_provenance; regenerate diagnostic against the current staged feed")
+    if safe_count != EXPECTED_SAFE_UPDATE_READY_COUNT or multi_key_conflict_count != 0:
+        if not blocking_issues:
+            blocking_issues.append("Adjudication counts do not match the 204-safe contract")
+
     summary = {
         "adjudication_count_by_type": dict(sorted(adjudication_counts.items())),
+        "blocking_issues": blocking_issues,
+        "diagnostic_artifact_sha256": diagnostic_artifact_sha256,
         "generated_at_utc": utc_now(),
         "input_diagnostic": str(DIAGNOSTIC_PATH.relative_to(ROOT)),
         "location_cache_modified": location_cache_modified,
@@ -189,7 +232,9 @@ def main() -> int:
         "safe_update_ready_identity_count": safe_identity_count,
         "safe_update_ready_rows": selected_rows,
         "staged_feed_modified": staged_feed_modified,
+        "staged_feed_provenance": staged_feed_provenance,
         "validated_conditions": {
+            "diagnostic_staged_feed_provenance_present": provenance_present,
             "location_cache_modified_false": location_cache_modified is False,
             "multi_key_conflict_count_is_0": multi_key_conflict_count == 0,
             "no_safe_staged_match_promoted_key_count_is_20": no_safe_match_count == EXPECTED_NO_SAFE_MATCH_PROMOTED_KEY_COUNT,

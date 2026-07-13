@@ -1,0 +1,55 @@
+NYCIF LIVE FEEDS — INDEPENDENT REVIEW PROMPT
+CANONICAL MILESTONE 7-B.1: SNAPSHOT CONTRACT HARDENING
+
+Repository: setoxxx/nycif-live-feeds
+Target branch: canonical-milestone-7b1-snapshot-contract-hardening
+Base branch: main
+
+This prompt authorizes ONLY:
+
+- independent review of the M7-B.1 pull request
+- hash-contract review (SHA-256 exact-byte semantics)
+- provenance-chain review (diagnostic → adjudication → apply)
+- stale-contract fail-closed review
+- legacy-contract fail-closed review
+- incident regression fixture review (Run 29255753666 / Job 86835503805)
+- normal-path behavior review (matching hash reaches identity matching)
+- targeted M7-B.1 tests, M7-A tests, M7-B tests, registry suite, full pytest suite
+- compile/import checks
+- secret scan and protected-path verification
+- SonarQube quality gate review
+- review thread triage
+- mergeability assessment
+
+This prompt does NOT authorize:
+
+- merge (requires separate human merge authorization)
+- Canonical Milestone 7-C
+- duplicate-key enforcement
+- positional-array changes
+- APIs
+- website runtime changes
+- accounts
+- notifications
+- mobile development
+- production data mutation
+- deployment
+- public-map changes
+- promotion or publishing
+
+Review checklist:
+
+1. Confirm `scripts/gps_snapshot_provenance.py` is the sole active staged-feed hash helper.
+2. Confirm diagnostic writes `staged_feed_provenance` for the exact staged feed analyzed.
+3. Confirm adjudication copies diagnostic `staged_feed` provenance without re-hashing a different feed.
+4. Confirm apply preflight runs before identity matching and blocks stale/legacy contracts.
+5. Confirm stale failure reports include expected/actual SHA-256 and byte size.
+6. Confirm legacy failure reports include `required_next_step` regeneration guidance.
+7. Confirm incident regression blocks 204-vs-155 count mismatch at preflight, not as primary error.
+8. Confirm protected production data files were not modified in the PR.
+9. Confirm M7-A and M7-B tests still pass.
+10. Record SonarQube quality gate outcome before any merge recommendation.
+
+Required PR statement to preserve:
+
+DO NOT MERGE — independent review and separate merge authorization required.
