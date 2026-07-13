@@ -63,6 +63,8 @@ In `nycif-live-feeds`:
 
 ## Task B — Frontend: admin dashboard live data panels
 
+**Status:** Implementation ready in patch `docs/field-desk-admin-live-pipeline-panel.patch` (apply in `nycif-field-desk` on branch `cursor/admin-live-pipeline-panel-5215`).
+
 In `nycif-field-desk`:
 
 1. Read `admin/index.html` and `admin/master-projects.html`
@@ -102,6 +104,18 @@ In `nycif-field-desk`:
    - Admin newly-added panel already uses delta report — ensure counts match new live panel
 
 6. Keep **read-only guardrails** visible. No mutation buttons.
+
+**Apply patch (if not already merged):**
+```bash
+cd nycif-field-desk
+git checkout -b cursor/admin-live-pipeline-panel-5215
+git am /path/to/nycif-live-feeds/docs/field-desk-admin-live-pipeline-panel.patch
+git push -u origin cursor/admin-live-pipeline-panel-5215
+```
+
+**Files added/changed:**
+- `admin/live-pipeline-panel-v01.js` — fetches live-feeds artifacts, renders panel
+- `admin/index.html` — Live Pipeline section + overview cards wired to live counts
 
 ## Task C — Field desk map preview (admin-only)
 
