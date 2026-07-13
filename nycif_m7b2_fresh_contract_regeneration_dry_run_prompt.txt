@@ -1,0 +1,80 @@
+NYCIF LIVE FEEDS — FRESH CONTRACT REGENERATION AND DRY-RUN VALIDATION PROMPT
+CANONICAL MILESTONE 7-B.2 POST-MERGE VALIDATION
+
+Repository: setoxxx/nycif-live-feeds
+Merged milestone: Canonical Milestone 7-B.2 snapshot-bound GPS count contract
+Merge commit: 8b75524c9ae552435b98532e1c4adf0728aba39c
+Approved head: 3ddc5d5a192a2d8ef42391e3191de19f7285fad6
+Base at merge: cf3481ad75bbdd67a30ffc1cf053a2e3cdeca723
+
+This prompt authorizes ONLY:
+
+1. checkout of current main at or after merge commit 8b75524;
+2. regeneration of GPS staged-feed integration diagnostic against the current staged feed;
+3. regeneration of GPS adjudication summary using the M7-B.2 producer;
+4. verification that staged_feed_provenance binds to current staged-feed bytes;
+5. verification that safe_update_count_contract is present, schema-valid, and internally consistent;
+6. dry-run apply validation (run apply script in isolated test/fixture context OR inspect apply preflight without staged-feed write);
+7. recording exact commands, exit codes, artifact hashes, and count-contract fields;
+8. preparation of nycif_m7b2_validation_closure_and_m7c_readiness_review_prompt.txt ONLY if all validation passes.
+
+This prompt does NOT authorize:
+
+- staged-feed write (data/nycif_staged_live_events.json);
+- location-cache write;
+- public-map write or publish;
+- promotion or Phase 2E apply;
+- geocoding;
+- production workflow dispatch;
+- merge of any follow-up PR;
+- M7-C implementation;
+- duplicate-key enforcement;
+- positional-array changes;
+- APIs, website runtime, accounts, notifications, chat, iOS, or Android work;
+- modification of protected production artifacts unless explicitly listed as read-only inputs.
+
+Validation checklist:
+
+1. Confirm main contains scripts/gps_count_contract.py and M7-B.2 producer/apply changes.
+2. Run diagnostic producer against current data/nycif_staged_live_events.json (read-only on staged feed).
+3. Confirm diagnostic writes staged_feed_provenance with current staged-feed SHA-256 and byte size.
+4. Run adjudication producer against fresh diagnostic output.
+5. Confirm adjudication emits safe_update_count_contract with:
+   - schema_version: gps-safe-update-count-contract-v1
+   - staged_feed_sha256 matching current staged feed
+   - diagnostic_artifact_sha256 matching fresh diagnostic file
+   - counts derived from artifact contents (not hard-coded 204 or 155)
+   - multi_key_conflict_count: 0
+   - qa_pass: true only if provenance + count contract are consistent
+6. Run apply script validation in dry-run mode:
+   - snapshot preflight must pass
+   - count-contract preflight must pass
+   - do NOT allow staged_feed_modified: true or update_performed: true against production staged feed
+7. Confirm legacy adjudication artifact without count contract would fail with legacy_contract_missing_count_contract.
+8. Record current safe_update_ready_identity_count and prove it matches independently recomputed count.
+9. Confirm no protected path was modified during validation.
+10. Run targeted M7-B.2 tests on main (31 tests minimum).
+
+Required evidence artifacts (staging/report only — do not treat as production writes unless separately authorized):
+
+- fresh diagnostic hash and provenance block
+- fresh adjudication summary with safe_update_count_contract
+- apply dry-run or isolated-fixture report showing count_contract_preflight_passed: true
+- validation summary with PASS/FAIL verdict
+
+If validation passes, prepare:
+
+nycif_m7b2_validation_closure_and_m7c_readiness_review_prompt.txt
+
+That follow-up prompt may authorize ONLY:
+
+- independent review of fresh validation evidence;
+- confirmation M7-B.2 is closed on main;
+- readiness assessment for M7-C (not implementation);
+- preparation of a separate M7-C implementation authorization prompt.
+
+If any step fails:
+
+FINAL VERDICT: BLOCKED
+
+Do not prepare M7-C readiness review until fresh contract validation passes.
