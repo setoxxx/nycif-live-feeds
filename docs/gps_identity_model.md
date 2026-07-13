@@ -84,6 +84,7 @@ generate_gps_staged_feed_integration_adjudication_summary.py
 
 apply_gps_staged_feed_integration_update.py
   -> M7-B.1 snapshot preflight: adjudication staged_feed_provenance must match current staged-feed bytes before identity work
+  -> M7-B.2 count-contract preflight: safe_update_count_contract must be present, schema-valid, provenance-bound, and arithmetically consistent before identity work
   -> re-derives stable_event_identity(event_row) per staged-feed row, looks it
      up against the adjudication summary's safe_update_ready_rows
   -> build_safe_identity_map() fails closed if two different-content adjudication
