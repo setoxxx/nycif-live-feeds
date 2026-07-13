@@ -94,7 +94,7 @@ Shared helper: `scripts/gps_count_contract.py`
 6. `adjudication_category_total` = sum of `adjudication_count_by_type` values.
 7. `staged_feed_sha256` / `byte_size` copy from bound `staged_feed_provenance`.
 8. `diagnostic_artifact_sha256` equals on-disk diagnostic file hash at adjudication time.
-9. `adjudication_artifact_sha256` equals canonical self-hash of the full adjudication payload with this field nulled.
+9. `adjudication_artifact_sha256` equals canonical self-hash of the full adjudication payload with this field nulled (schema `gps-adjudication-self-hash-v1`; see `docs/canonical_milestone_7b2_adjudication_self_hash_remediation.md`).
 10. `generated_at_utc` is informational only.
 
 ## Arithmetic invariants

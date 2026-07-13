@@ -22,6 +22,7 @@ except ModuleNotFoundError:  # pragma: no cover - direct script execution
 
 COUNT_CONTRACT_SCHEMA_VERSION = "gps-safe-update-count-contract-v1"
 COUNT_RULES_VERSION = "gps-safe-update-count-rules-v1"
+ADJUDICATION_ARTIFACT_HASH_SCHEMA = "gps-adjudication-self-hash-v1"
 ADJUDICATION_PRODUCER_SCRIPT = (
     "scripts/generate_gps_staged_feed_integration_adjudication_summary.py"
 )
@@ -32,15 +33,21 @@ REGENERATE_COUNT_CONTRACT_NEXT_STEP = (
 )
 
 __all__ = [
+    "ADJUDICATION_ARTIFACT_HASH_SCHEMA",
     "ADJUDICATION_PRODUCER_SCRIPT",
     "COUNT_CONTRACT_SCHEMA_VERSION",
     "COUNT_RULES_VERSION",
     "CountContractValidationResult",
+    "adjudication_artifact_hash_payload",
     "build_count_contract",
+    "canonical_json_bytes",
+    "canonicalize_adjudication_summary",
+    "compute_adjudication_artifact_sha256",
     "compute_adjudication_self_hash",
     "count_contract_failure_report",
     "derive_counts_from_adjudication_summary",
     "finalize_count_contract_adjudication_hash",
+    "validate_adjudication_artifact_sha256",
     "validate_count_contract_for_apply",
     "validate_count_contract_internal",
 ]
@@ -189,25 +196,113 @@ def build_count_contract(
             "generated_at_utc": generated_at_utc,
             "rules_version": COUNT_RULES_VERSION,
             "provenance_schema_version": PROVENANCE_SCHEMA_VERSION,
+            "adjudication_artifact_hash_schema": ADJUDICATION_ARTIFACT_HASH_SCHEMA,
         },
     }
 
 
-def compute_adjudication_self_hash(summary: dict[str, Any]) -> str:
-    """Hash adjudication payload excluding the self-referential count-contract hash."""
+def canonical_json_bytes(payload: Any) -> bytes:
+    """Serialize using the same UTF-8 JSON rules as repository save_json helpers."""
+    text = json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True)
+    return (text + "\n").encode("utf-8")
+
+
+def canonicalize_adjudication_summary(summary: dict[str, Any]) -> dict[str, Any]:
+    """Round-trip through canonical JSON so hashes match saved artifact bytes."""
+    return json.loads(canonical_json_bytes(summary).decode("utf-8"))
+
+
+def adjudication_artifact_hash_payload(summary: dict[str, Any]) -> dict[str, Any]:
+    """Return a deep copy with the self-hash field normalized to null for hashing."""
     payload = copy.deepcopy(summary)
     contract = payload.get("safe_update_count_contract")
     if isinstance(contract, dict):
         contract["adjudication_artifact_sha256"] = None
-    canonical = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
-    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    return payload
+
+
+def compute_adjudication_artifact_sha256(summary: dict[str, Any]) -> str:
+    """Compute canonical object hash for a complete adjudication summary."""
+    payload = adjudication_artifact_hash_payload(summary)
+    return hashlib.sha256(canonical_json_bytes(payload)).hexdigest()
+
+
+def compute_adjudication_self_hash(summary: dict[str, Any]) -> str:
+    """Backward-compatible alias for compute_adjudication_artifact_sha256."""
+    return compute_adjudication_artifact_sha256(summary)
 
 
 def finalize_count_contract_adjudication_hash(summary: dict[str, Any]) -> None:
     contract = summary.get("safe_update_count_contract")
     if not isinstance(contract, dict):
         return
-    contract["adjudication_artifact_sha256"] = compute_adjudication_self_hash(summary)
+    derivation = contract.get("derivation")
+    if isinstance(derivation, dict):
+        derivation["adjudication_artifact_hash_schema"] = ADJUDICATION_ARTIFACT_HASH_SCHEMA
+    contract["adjudication_artifact_sha256"] = compute_adjudication_artifact_sha256(summary)
+
+
+def _is_valid_sha256_hex(value: Any) -> bool:
+    if not isinstance(value, str) or len(value) != 64:
+        return False
+    if value != value.lower():
+        return False
+    try:
+        int(value, 16)
+    except ValueError:
+        return False
+    return True
+
+
+def validate_adjudication_artifact_sha256(summary: dict[str, Any]) -> CountContractValidationResult:
+    contract = summary.get("safe_update_count_contract")
+    if not isinstance(contract, dict):
+        return CountContractValidationResult(
+            ok=False,
+            failure_type="missing_adjudication_artifact_hash",
+            message="Adjudication summary is missing safe_update_count_contract",
+        )
+    derivation = contract.get("derivation")
+    schema = (
+        contract.get("adjudication_artifact_hash_schema")
+        or (derivation.get("adjudication_artifact_hash_schema") if isinstance(derivation, dict) else None)
+    )
+    if not schema:
+        return CountContractValidationResult(
+            ok=False,
+            failure_type="missing_adjudication_artifact_hash",
+            message="Count contract is missing adjudication_artifact_hash_schema",
+        )
+    if schema != ADJUDICATION_ARTIFACT_HASH_SCHEMA:
+        return CountContractValidationResult(
+            ok=False,
+            failure_type="unsupported_adjudication_artifact_hash_schema",
+            message=f"Unsupported adjudication artifact hash schema: {schema!r}",
+        )
+    stored = contract.get("adjudication_artifact_sha256")
+    if stored is None:
+        return CountContractValidationResult(
+            ok=False,
+            failure_type="missing_adjudication_artifact_hash",
+            message="Count contract is missing adjudication_artifact_sha256",
+        )
+    if not _is_valid_sha256_hex(stored):
+        return CountContractValidationResult(
+            ok=False,
+            failure_type="malformed_adjudication_artifact_hash",
+            message="Count contract adjudication_artifact_sha256 must be lowercase hex SHA-256",
+            actual={"adjudication_artifact_sha256": stored},
+        )
+    expected = compute_adjudication_artifact_sha256(summary)
+    if stored != expected:
+        return CountContractValidationResult(
+            ok=False,
+            failure_type="adjudication_artifact_hash_mismatch",
+            message="Count contract adjudication_artifact_sha256 does not match canonical adjudication summary hash",
+            expected={"adjudication_artifact_sha256": expected},
+            actual={"adjudication_artifact_sha256": stored},
+        )
+    return CountContractValidationResult(ok=True)
 
 
 def _contract_counts(contract: dict[str, Any]) -> dict[str, Any] | None:
@@ -310,14 +405,14 @@ def validate_count_contract_bindings(
             expected={"diagnostic_artifact_sha256": summary.get("diagnostic_artifact_sha256")},
             actual={"diagnostic_artifact_sha256": contract.get("diagnostic_artifact_sha256")},
         )
-    expected_adj_hash = compute_adjudication_self_hash(summary)
-    if contract.get("adjudication_artifact_sha256") != expected_adj_hash:
+    hash_result = validate_adjudication_artifact_sha256(summary)
+    if not hash_result.ok:
         return CountContractValidationResult(
-            ok=False,
-            failure_type="count_contract_provenance_mismatch",
-            message="Count contract adjudication_artifact_sha256 does not match adjudication summary",
-            expected={"adjudication_artifact_sha256": expected_adj_hash},
-            actual={"adjudication_artifact_sha256": contract.get("adjudication_artifact_sha256")},
+            ok=hash_result.ok,
+            failure_type=hash_result.failure_type,
+            message=hash_result.message,
+            expected=hash_result.expected,
+            actual=hash_result.actual,
         )
     return CountContractValidationResult(ok=True)
 
@@ -454,6 +549,18 @@ def count_contract_failure_report(
         "count_contract_expected": validation.expected,
         "count_contract_preflight_passed": False,
         "failure_type": failure_type,
+        "failure_subreason": (
+            validation.failure_type
+            if validation.failure_type
+            in {
+                "missing_adjudication_artifact_hash",
+                "unsupported_adjudication_artifact_hash_schema",
+                "malformed_adjudication_artifact_hash",
+                "adjudication_artifact_hash_mismatch",
+                "adjudication_artifact_finalization_failed",
+            }
+            else None
+        ),
         "generated_at_utc": generated_at_utc,
         "input_adjudication_summary": input_adjudication_summary,
         "input_staged_feed": input_staged_feed,

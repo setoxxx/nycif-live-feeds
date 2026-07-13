@@ -1,0 +1,53 @@
+NYCIF LIVE FEEDS — INDEPENDENT REVIEW PROMPT
+M7-B.2 ADJUDICATION SELF-HASH REMEDIATION
+
+Repository: setoxxx/nycif-live-feeds
+Target branch: canonical-milestone-7b2-adjudication-self-hash-remediation
+Base branch: main
+
+This prompt authorizes ONLY:
+
+- independent review of the M7-B.2 self-hash remediation pull request
+- canonical hash-rule review (`gps-adjudication-self-hash-v1`)
+- producer finalization lifecycle review (no post-hash mutation)
+- apply validator lifecycle review (shared helper, not raw file SHA-256)
+- diagnostic exact-byte hash non-regression review
+- fresh-chain evidence review under /tmp/nycif-m7b2-self-hash-remediation-validation/
+- failure taxonomy review (`adjudication_artifact_hash_mismatch`, etc.)
+- targeted remediation tests, M7-B.2 tests, M7-B.1 tests, registry suite, full pytest suite
+- compile/import/direct-script checks
+- protected-path and secret scans
+- SonarQube quality gate review
+- mergeability assessment
+
+This prompt does NOT authorize:
+
+- merge (requires separate human merge authorization)
+- Canonical Milestone 7-C
+- duplicate-key enforcement
+- production data writes
+- promotion or publication
+- APIs
+- website runtime changes
+- mobile development
+- deployment
+- public-map changes
+
+Required review questions:
+
+1. Does the canonical self-hash rule exclude only `adjudication_artifact_sha256` (normalized to null)?
+2. Do producer and validator call the same `compute_adjudication_artifact_sha256` helper?
+3. Is finalization performed only after all hash-covered fields exist?
+4. Are hash-covered fields never mutated after finalization without re-finalization?
+5. Does diagnostic hashing remain exact-byte SHA-256?
+6. Do fresh 155/20/0 contracts pass save/reload self-hash validation and apply prefight?
+7. Do self-hash tamper controls fail before identity matching with zero repo mutations?
+8. Were protected production artifacts left byte-identical?
+
+Evidence paths:
+
+- docs/canonical_milestone_7b2_adjudication_self_hash_remediation.md
+- tests/registry/test_canonical_milestone_7b2_adjudication_self_hash_remediation.py
+- /tmp/nycif-m7b2-self-hash-remediation-validation/fresh_chain_validation_report.json
+
+DO NOT MERGE — independent review and separate merge authorization required.

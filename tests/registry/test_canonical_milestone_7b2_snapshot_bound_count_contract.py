@@ -18,6 +18,7 @@ from scripts.gps_count_contract import (
     COUNT_RULES_VERSION,
     REGENERATE_COUNT_CONTRACT_NEXT_STEP,
     build_count_contract,
+    canonicalize_adjudication_summary,
     compute_adjudication_self_hash,
     count_contract_failure_report,
     derive_counts_from_adjudication_summary,
@@ -59,6 +60,9 @@ def rebuild_count_contract(summary: dict[str, Any]) -> None:
         adjudication_count_by_type=summary.get("adjudication_count_by_type") or {},
         generated_at_utc=str(summary.get("generated_at_utc") or "2026-07-13T12:00:00+00:00"),
     )
+    canonical = canonicalize_adjudication_summary(summary)
+    summary.clear()
+    summary.update(canonical)
     finalize_count_contract_adjudication_hash(summary)
 
 
@@ -289,7 +293,7 @@ def test_adversarial_tampered_adjudication_hash(fresh_contract_summary: dict[str
 
     result = validate_count_contract_for_apply(fresh_contract_summary)
     assert result.ok is False
-    assert result.failure_type == "count_contract_provenance_mismatch"
+    assert result.failure_type == "adjudication_artifact_hash_mismatch"
 
 
 def test_adversarial_reordered_json_keys(fresh_contract_summary: dict[str, Any]) -> None:

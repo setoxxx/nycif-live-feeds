@@ -4,32 +4,71 @@
   "project": "nycif-live-feeds",
   "repository": "setoxxx/nycif-live-feeds",
   "visibility": "public",
-  "current_phase": "Milestone 10 — Resolver productionized in live sync; supplemental intake staging ready",
-  "completion_percent": 88,
+  "current_phase": "Open-track closure — schema-v1, discovery-taxonomy-v02, M7-B.2 self-hash remediation",
+  "completion_percent": 90,
   "health": "green",
-  "status_summary": "M9 merged (PR #161): permit GPS tail 0 at test enriched feed with tiered resolver. M10 wires resolver into sync_nyc_open_data.py and builds combined supplemental staging feed (4,032 calendar+Parks rows). Field-desk admin panel updated in deploy staging; human push required. Phase 2E not authorized.",
-  "active_prs": [],
+  "status_summary": "M9 and M10 are merged. PR #167 Sonar Reliability-D fixed and QA green (stacked on #166). PR #148 M7-B.2 adjudication self-hash remediation rebased onto current main. WordPress restore packaging is #164. Field-desk push and live-sync-qa remain human-gated. Phase 2E location_cache promotion and M7-C remain unauthorized.",
+  "active_prs": [
+    {
+      "number": 167,
+      "title": "Discovery Taxonomy v02 — full source-to-map handshake",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/167",
+      "state": "open"
+    },
+    {
+      "number": 166,
+      "title": "Fix schema-v1 quality gates and unified Major/All Field Desk mirror",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/166",
+      "state": "open"
+    },
+    {
+      "number": 148,
+      "title": "M7-B.2 remediation: fix adjudication artifact self-hash lifecycle",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/148",
+      "state": "open"
+    },
+    {
+      "number": 164,
+      "title": "Rollback NYCIF map plugin to restored Field Desk runtime",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/164",
+      "state": "open"
+    }
+  ],
   "recent_prs": [
+    {
+      "number": 162,
+      "title": "Milestone 10: Productionize resolver in live sync + supplemental intake staging",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/162",
+      "state": "merged"
+    },
     {
       "number": 161,
       "title": "Milestone 9: Coverage-gap review queues + findings (GPS, calendar, Parks)",
       "url": "https://github.com/setoxxx/nycif-live-feeds/pull/161",
       "state": "merged"
+    },
+    {
+      "number": 147,
+      "title": "Canonical Milestone 7-B.2: snapshot-bound GPS count contract",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/147",
+      "state": "merged"
     }
   ],
   "blockers": [
-    "Field-desk admin deploy requires human push (403 for cursor bot on nycif-field-desk).",
-    "live-sync-qa workflow dispatch requires human trigger (403 for agent token)."
+    "Field-desk admin/map deploy requires human push (403 for cursor bot on nycif-field-desk).",
+    "live-sync-qa workflow dispatch requires human trigger (403 for agent token).",
+    "WordPress plugin ZIP install on the live site is human-only (#164 is packaging only).",
+    "M7-C duplicate-key enforcement remains unauthorized."
   ],
-  "next_action": "Merge M10 PR. Human: push field-desk admin panel, dispatch live-sync-qa. Review supplemental_events_staging_feed.json (4,032 rows). Phase 2E only with explicit publish authorization.",
+  "next_action": "Merge #166 then retarget/merge #167; merge rebased #148 after related tests pass; human: field-desk push, optional WP #164 install, live-sync-qa. Do not promote location_cache or publish public map without explicit auth.",
   "admin_dashboard_urls": {
     "interim_live": "https://setoxxx.github.io/nycif-live-feeds/admin/index.html",
     "field_desk": "https://setoxxx.github.io/nycif-field-desk/admin/index.html"
   },
   "data_freshness": {
-    "source": "M10 local QA + live sync with resolver",
-    "last_verified_at": "2026-07-14T01:45:00.000Z",
-    "notes": "Live sync matched_with_gps 33,084/33,084 current/future permit rows."
+    "source": "GitHub open-PR inventory + overnight open-track closure run",
+    "last_verified_at": "2026-07-14T23:30:00.000Z",
+    "notes": "Static status artifact; does not poll GitHub from the browser and does not change feed payloads."
   },
   "safety": {
     "safe_for_public_dashboard": true,
@@ -43,20 +82,21 @@
     "public_map_runtime_change": false,
     "production_feed_mutation": false,
     "wordpress_change": true,
-  "wordpress_deploy_package": "docs/wordpress-plugin-deploy/nycif-events-map/",
-  "public_map_live_refresh": "2026-07-14",
+    "wordpress_deploy_package": "docs/wordpress-plugin-deploy/nycif-events-map/",
+    "public_map_live_refresh": "2026-07-14",
     "promotion_allowed": false
   },
-  "generated_at": "2026-07-14T01:45:00.000Z",
+  "generated_at": "2026-07-14T23:30:00.000Z",
   "milestones": {
     "m7a_identity_helper_foundation": "complete",
     "m7b_caller_migration": "complete",
     "m7b1_snapshot_contract_hardening": "complete",
-    "m7b2_snapshot_bound_count_contract": "in_review",
+    "m7b2_snapshot_bound_count_contract": "complete",
+    "m7b2_adjudication_self_hash_remediation": "in_review",
     "m7c_duplicate_key_enforcement": "not_started_unauthorized",
     "m8_live_admin_dashboard_multi_source": "complete",
     "m8b_gps_review_tail_at_scale": "complete_phase_2c_2d_staging",
     "m9_supplemental_coverage_gaps": "complete",
-    "m10_productionize_resolver": "in_progress"
+    "m10_productionize_resolver": "complete"
   }
 }

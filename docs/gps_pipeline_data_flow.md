@@ -13,6 +13,8 @@ Canonical Milestone 7-B.1 addition (snapshot contract hardening): diagnostic now
 
 Canonical Milestone 7-B.2 addition (count contract): adjudication emits `safe_update_count_contract` bound to staged-feed and diagnostic provenance; apply validates count schema, bindings, and independently recomputed counts **after** snapshot preflight and **before** identity matching. See `docs/canonical_milestone_7b2_snapshot_bound_count_contract.md`.
 
+M7-B.2 self-hash remediation: adjudication embeds `adjudication_artifact_sha256` using canonical object hashing (`gps-adjudication-self-hash-v1`) with the digest field nulled during computation; diagnostic hash remains exact-byte SHA-256. See `docs/canonical_milestone_7b2_adjudication_self_hash_remediation.md`.
+
 ## Verified fact: every stage consumes the same identity vocabulary
 
 All four stages operate on the **same two identity names**: `stable_event_identity` (staged-event side, a 5-component pipe-joined natural key) and `stable_identity_key` / `promoted_cache_key` (registry side, a `group:<group_key>` or `display:<normalized text>` string). No stage introduces a third, incompatible identity name within this scope. The join between the two vocabularies is a fuzzy match (RapidFuzz thresholds + CEMSID overlap + borough compatibility), not string equality — this is inherent to the design (staged events don't carry a promoted cache key until after matching) and is documented, not treated as a defect.
