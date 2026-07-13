@@ -98,13 +98,22 @@ def event_cemsids(row: dict[str, Any]) -> set[str]:
     """Staged-feed CEMSID set used by ``stable_event_identity``.
 
     Preserves ``event_cemsids()`` from the two staged-feed scripts exactly:
-    a list becomes ``{str(item) for item in raw if str(item)}`` (items are NOT
-    stripped), any other truthy value becomes a one-element set, and — unlike
+    each list item is converted with ``str()`` and included only when the
+    converted string is non-empty (items are NOT stripped, so ``None`` -> the
+    string ``"None"``, ``0`` -> ``"0"``, and ``False`` -> ``"False"`` are all
+    included); any other truthy value becomes a one-element set; and — unlike
     the repository's ``split_ids()`` — a comma-separated string is NOT split.
+    The loop form (rather than the callers' set comprehension) satisfies a
+    SonarQube always-true-condition finding with identical semantics.
     """
     raw = row.get("source_cemsid") or row.get("cemsid") or []
     if isinstance(raw, list):
-        return {str(item) for item in raw if str(item)}
+        values: set[str] = set()
+        for item in raw:
+            text = str(item)
+            if text:
+                values.add(text)
+        return values
     if raw:
         return {str(raw)}
     return set()

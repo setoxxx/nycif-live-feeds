@@ -88,10 +88,20 @@ def oracle_row_location(row: dict[str, Any]) -> str:
 def oracle_event_cemsids(row: dict[str, Any]) -> set[str]:
     """Verbatim ``event_cemsids()`` from
     scripts/generate_gps_staged_feed_integration_match_diagnostic.py:265
-    (bit-identical copy at scripts/apply_gps_staged_feed_integration_update.py:58)."""
+    (bit-identical copy at scripts/apply_gps_staged_feed_integration_update.py:58).
+
+    Restructured from the callers' set comprehension into an explicit loop to
+    satisfy a SonarQube always-true-condition finding; semantics are identical
+    (each item is converted with ``str()`` once and included only when the
+    converted string is non-empty)."""
     raw = row.get("source_cemsid") or row.get("cemsid") or []
     if isinstance(raw, list):
-        return {str(item) for item in raw if str(item)}
+        collected: set[str] = set()
+        for item in raw:
+            text = str(item)
+            if text:
+                collected.add(text)
+        return collected
     if raw:
         return {str(raw)}
     return set()
@@ -373,6 +383,24 @@ def test_stable_event_identity_golden_literals() -> None:
     assert build_stable_event_identity({}) == "||||"
     # a comma-separated cemsid STRING is one identity component, not split.
     assert build_stable_event_identity({"source_cemsid": "C2,C1"}) == "||C2,C1||"
+
+
+def test_event_cemsids_sonar_repair_falsy_and_duplicate_items() -> None:
+    """Focused regression for the SonarQube always-true-condition repair:
+    the loop form must keep the callers' exact semantics — items are included
+    by the truthiness of their ``str()`` conversion, never of the raw item."""
+    items = ["", None, 0, False, " ", "dup", "dup", "normal"]
+    expected = {"None", "0", "False", " ", "dup", "normal"}
+    row = {"source_cemsid": items}
+    assert event_cemsids(row) == expected
+    assert oracle_event_cemsids(row) == expected
+    assert event_cemsids(row) == oracle_event_cemsids(row)
+    # "" is excluded (str("") is empty); None/0/False are INCLUDED because
+    # their str() forms are non-empty; " " is included (no stripping);
+    # duplicates collapse via the set.
+    assert build_stable_event_identity(row) == oracle_stable_event_identity(row)
+    # input list unchanged
+    assert items == ["", None, 0, False, " ", "dup", "dup", "normal"]
 
 
 def test_event_cemsids_golden_behaviors() -> None:

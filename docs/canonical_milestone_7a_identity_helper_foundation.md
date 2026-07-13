@@ -109,6 +109,19 @@ The NYCIF platform plan (field-desk repository: platform dependency graph, featu
 - M7-B (caller migration), M7-C, duplicate-key enforcement, positional-array work, APIs, accounts, notifications, website runtime, and mobile all remain **unauthorized** by this milestone.
 - Milestone 6 history is not rewritten; its audit documents are unchanged.
 
+## SonarQube repair addendum (follow-up commit on PR #144)
+
+SonarQube Cloud's first analysis of PR #144 failed the Quality Gate (Reliability Rating on New Code = C, required A) with two Major "Fix this condition that always evaluates to true" findings, both on the same pattern — the ``if str(item)`` filter inside the ``event_cemsids`` set comprehension:
+
+1. `scripts/gps_identity.py` (helper implementation);
+2. `tests/registry/test_canonical_milestone_7a_gps_identity_helper.py` (the verbatim oracle copy of the same caller code).
+
+**Repair:** both comprehensions were restructured into an explicit loop that converts each item with ``str()`` exactly once and adds it only when the converted string is non-empty. Semantics are bit-for-bit identical to the callers' comprehension: `""` excluded; `None` → `"None"`, `0` → `"0"`, `False` → `"False"` all included; whitespace-only strings included (no stripping); duplicates collapsed by the set; input order irrelevant; no input mutation. The active caller files still contain the original comprehension form — they are unchanged (M7-B scope), and the oracle docstring now records that its loop form is a semantics-identical restructuring of the callers' code.
+
+**Focused regression added:** `test_event_cemsids_sonar_repair_falsy_and_duplicate_items` — pins the exact falsy/duplicate/whitespace item semantics above against both helper and oracle, plus the resulting `stable_event_identity` agreement and input non-mutation.
+
+**Post-repair validation (all exit 0):** targeted suite 240 passed; `tests/registry` 338 passed; full suite 350 passed; compileall OK; `import-ok`; changed valid identity count remains **0** (golden matrix re-run); secret scan zero matches; diff vs `origin/main` remains exactly the four authorized M7-A files.
+
 ## Final verdict
 
 **PASS** (implementation and all locally executable required QA; external GitHub Actions / SonarQube status is reported on the pull request).
