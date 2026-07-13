@@ -4,37 +4,37 @@
   "project": "nycif-live-feeds",
   "repository": "setoxxx/nycif-live-feeds",
   "visibility": "public",
-  "current_phase": "Canonical Milestone 8-B — GPS review tail at scale (Phase 2C/2D complete; field-desk UI + manual approval pending)",
-  "completion_percent": 72,
+  "current_phase": "Canonical Milestone 8 complete — Milestone 8-B GPS staging complete; manual approval queue review pending",
+  "completion_percent": 78,
   "health": "green",
-  "status_summary": "Milestone 8 backend complete. Milestone 8-B complete: 233/292 GPS proposals filled (179 via Parks BigApps). Field-desk Live Pipeline UI still not on main — see issue #102. Interim admin requires enabling Pages on nycif-live-feeds. M7-B.2 PR #148 separate.",
+  "status_summary": "Milestone 8 complete: backend live pipeline dashboard + field-desk Live Pipeline panel merged (PR #103). Milestone 8-B complete: 233/292 GPS proposals filled (179 via Parks BigApps). Interim live-feeds admin still requires enabling GitHub Pages. M7-B.2 PR #148 separate.",
   "active_prs": [],
   "recent_prs": [
     {
-      "number": 152,
-      "title": "Improve Parks BigApps Phase 2C fill matching",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/152",
+      "number": 154,
+      "title": "Milestone 8-B GPS review tail fill at scale",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/154",
       "state": "merged"
     },
     {
-      "number": 151,
-      "title": "Add NYC Parks BigApps staging and facility reference",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/151",
-      "state": "merged"
+      "number": 103,
+      "title": "Add Live Pipeline panel to admin dashboard (Milestone 8)",
+      "url": "https://github.com/setoxxx/nycif-field-desk/pull/103",
+      "state": "merged",
+      "repository": "setoxxx/nycif-field-desk"
     }
   ],
   "blockers": [
-    "Field-desk Live Pipeline panel not merged to main — GitHub Pages still serves stale admin without live counts.",
     "M7-B.2 PR #148 requires separate authorization before merge."
   ],
-  "next_action": "Human: merge field-desk Live Pipeline PR (issue #102). Enable live-feeds GitHub Pages for interim admin. Review 233-row gps_manual_approval_queue.json. Phase 2E only with explicit publish authorization.",
+  "next_action": "Hard-refresh field-desk admin to confirm live counts. Enable live-feeds GitHub Pages for interim admin (optional). Review 233-row gps_manual_approval_queue.json. Phase 2E only with explicit publish authorization.",
   "admin_dashboard_urls": {
     "interim_live": "https://setoxxx.github.io/nycif-live-feeds/admin/index.html",
-    "target_field_desk": "https://setoxxx.github.io/nycif-field-desk/admin/index.html"
+    "field_desk": "https://setoxxx.github.io/nycif-field-desk/admin/index.html"
   },
   "data_freshness": {
-    "source": "Milestone 8 completion pass",
-    "last_verified_at": "2026-07-13T22:20:00.000Z",
+    "source": "Field-desk PR #103 merge + live pipeline dashboard on main",
+    "last_verified_at": "2026-07-14T02:35:00.000Z",
     "notes": "Live counts served from status/nycif-live-pipeline-dashboard.json on main."
   },
   "safety": {
@@ -50,14 +50,14 @@
     "production_feed_mutation": false,
     "wordpress_change": false
   },
-  "generated_at": "2026-07-13T22:20:00.000Z",
+  "generated_at": "2026-07-14T02:35:00.000Z",
   "milestones": {
     "m7a_identity_helper_foundation": "complete",
     "m7b_caller_migration": "complete",
     "m7b1_snapshot_contract_hardening": "complete",
     "m7b2_snapshot_bound_count_contract": "in_review",
     "m7c_duplicate_key_enforcement": "not_started_unauthorized",
-    "m8_live_admin_dashboard_multi_source": "complete_backend_pending_field_desk_pages",
-    "m8b_gps_review_tail_at_scale": "complete_phase_2c_2d_staging",
+    "m8_live_admin_dashboard_multi_source": "complete",
+    "m8b_gps_review_tail_at_scale": "complete_phase_2c_2d_staging"
   }
 }
