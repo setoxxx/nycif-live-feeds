@@ -25,6 +25,56 @@ from scripts.gps_snapshot_provenance import (
     validate_bound_snapshot,
 )
 
+PATCH_NEXT_ACTION = (
+    "Patch staged-feed update to apply only the 204 adjudicated safe identities, "
+    "with the old 430 dry-run target replaced by a new 204-row adjudicated-safe "
+    "contract. Keep the 20 unmatched promoted keys out of the staged-feed update "
+    "and carry them forward for human review."
+)
+INSPECT_NEXT_ACTION = "Do not patch update workflow; inspect adjudication summary first."
+
+
+def run_adjudication_fixture(tmp_path: Path, diagnostic_payload: dict[str, Any]) -> dict[str, Any]:
+    diagnostic_path = tmp_path / "diagnostic.json"
+    summary_path = tmp_path / "summary.json"
+    write_json(diagnostic_path, diagnostic_payload)
+    adjudication = importlib.import_module("scripts.generate_gps_staged_feed_integration_adjudication_summary")
+    adjudication.ROOT = tmp_path
+    adjudication.DIAGNOSTIC_PATH = diagnostic_path
+    adjudication.SUMMARY_PATH = summary_path
+    adjudication.main()
+    return read_json(summary_path)
+
+
+def build_diagnostic_fixture(
+    tmp_path: Path,
+    *,
+    include_provenance: bool,
+    selected_count: int = 204,
+    multi_key_conflict_count: int = 0,
+) -> dict[str, Any]:
+    feed = tmp_path / "feed.json"
+    write_json(feed, build_staged_feed([]))
+    payload: dict[str, Any] = {
+        "dry_run_expected_matched_staged_event_count": 430,
+        "multi_key_conflict_count": multi_key_conflict_count,
+        "near_miss_diagnostics_by_promoted_cache_key": {},
+        "selected_candidate_count": selected_count,
+        "selected_stable_event_identity_count": selected_count,
+        "selected_stable_identity_rows": [{"stable_event_identity": f"id-{index}"} for index in range(selected_count)],
+        "unmatched_promoted_cache_key_count": 20,
+        "unmatched_promoted_cache_keys": [],
+    }
+    if include_provenance:
+        payload["staged_feed_provenance"] = file_provenance(
+            feed,
+            producer_script="scripts/generate_gps_staged_feed_integration_match_diagnostic.py",
+            repo_root=tmp_path,
+            generated_at_utc="2026-07-10T00:00:00+00:00",
+        )
+    return payload
+
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 FIXTURE_ROOT = REPO_ROOT / "tests" / "fixtures" / "m7b1_snapshot_contract"
 PROTECTED_PATHS = [
@@ -219,9 +269,15 @@ def test_diagnostic_records_staged_feed_provenance(tmp_path: Path) -> None:
     diagnostic.LOCATION_CACHE_PATH = tmp_path / "data" / "location_cache.json"
     diagnostic.PROMOTION_REPORT_PATH = tmp_path / "data" / "gps_phase2e_promotion_report.json"
     diagnostic.DRY_RUN_REPORT_PATH = tmp_path / "data" / "gps_staged_feed_integration_dry_run_report.json"
-    diagnostic.load_json = lambda path, default: (
-        build_staged_feed([]) if path == feed else {"matched_staged_event_count": 430} if "dry_run" in path.name else default
-    )
+
+    def fake_load_json(path: Path, default: object) -> object:
+        if path == feed:
+            return build_staged_feed([])
+        if "dry_run" in path.name:
+            return {"matched_staged_event_count": 430}
+        return default
+
+    diagnostic.load_json = fake_load_json
     diagnostic.rows_from_staged = lambda payload: []
     diagnostic.promoted_rows_from_report = lambda payload: {
         "group:test": {"lat": 40.7, "lng": -73.9, "display_location": "Test"},
@@ -304,6 +360,52 @@ def test_adjudication_rejects_missing_diagnostic_provenance(tmp_path: Path, monk
     assert exit_code == 1
     assert summary["qa_pass"] is False
     assert summary["staged_feed_provenance"] is None
+    assert summary["recommended_next_action"] == REGENERATE_ARTIFACTS_NEXT_STEP
+
+
+def test_adjudication_recommended_next_action_when_provenance_present_and_safe_contract(
+    tmp_path: Path,
+) -> None:
+    summary = run_adjudication_fixture(tmp_path, build_diagnostic_fixture(tmp_path, include_provenance=True))
+    assert summary["recommended_next_action"] == PATCH_NEXT_ACTION
+
+
+def test_adjudication_recommended_next_action_when_provenance_present_but_wrong_safe_count(
+    tmp_path: Path,
+) -> None:
+    summary = run_adjudication_fixture(
+        tmp_path,
+        build_diagnostic_fixture(tmp_path, include_provenance=True, selected_count=155),
+    )
+    assert summary["recommended_next_action"] == INSPECT_NEXT_ACTION
+
+
+def test_adjudication_recommended_next_action_when_provenance_present_but_conflicts(
+    tmp_path: Path,
+) -> None:
+    summary = run_adjudication_fixture(
+        tmp_path,
+        build_diagnostic_fixture(tmp_path, include_provenance=True, multi_key_conflict_count=2),
+    )
+    assert summary["recommended_next_action"] == INSPECT_NEXT_ACTION
+
+
+def test_diagnostic_fake_load_json_branches(tmp_path: Path) -> None:
+    feed = tmp_path / "data" / "nycif_staged_live_events.json"
+    dry_run = tmp_path / "data" / "gps_staged_feed_integration_dry_run_report.json"
+    other = tmp_path / "data" / "location_cache.json"
+    sentinel = {"default": True}
+
+    def fake_load_json(path: Path, default: object) -> object:
+        if path == feed:
+            return build_staged_feed([])
+        if "dry_run" in path.name:
+            return {"matched_staged_event_count": 430}
+        return default
+
+    assert fake_load_json(feed, sentinel) == build_staged_feed([])
+    assert fake_load_json(dry_run, sentinel) == {"matched_staged_event_count": 430}
+    assert fake_load_json(other, sentinel) is sentinel
 
 
 # ---------------------------------------------------------------------------

@@ -49,6 +49,7 @@ Review checklist:
 8. Confirm protected production data files were not modified in the PR.
 9. Confirm M7-A and M7-B tests still pass.
 10. Record SonarQube quality gate outcome before any merge recommendation.
+11. Confirm Sonar nested-conditional repairs in adjudication summary and M7-B.1 tests preserve behavior (24 targeted tests).
 
 Required PR statement to preserve:
 

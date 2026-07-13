@@ -196,13 +196,17 @@ def main() -> int:
         and phase_3a_run is False
     )
 
-    recommended_next_action = (
-        "Patch staged-feed update to apply only the 204 adjudicated safe identities, with the old 430 dry-run target replaced by a new 204-row adjudicated-safe contract. Keep the 20 unmatched promoted keys out of the staged-feed update and carry them forward for human review."
-        if provenance_present and safe_count == EXPECTED_SAFE_UPDATE_READY_COUNT and multi_key_conflict_count == 0
-        else REGENERATE_ARTIFACTS_NEXT_STEP
-        if not provenance_present
-        else "Do not patch update workflow; inspect adjudication summary first."
-    )
+    if not provenance_present:
+        recommended_next_action = REGENERATE_ARTIFACTS_NEXT_STEP
+    elif safe_count == EXPECTED_SAFE_UPDATE_READY_COUNT and multi_key_conflict_count == 0:
+        recommended_next_action = (
+            "Patch staged-feed update to apply only the 204 adjudicated safe identities, "
+            "with the old 430 dry-run target replaced by a new 204-row adjudicated-safe "
+            "contract. Keep the 20 unmatched promoted keys out of the staged-feed update "
+            "and carry them forward for human review."
+        )
+    else:
+        recommended_next_action = "Do not patch update workflow; inspect adjudication summary first."
 
     blocking_issues: list[str] = []
     if not provenance_present:
