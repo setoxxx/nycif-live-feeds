@@ -4,28 +4,38 @@
   "project": "nycif-live-feeds",
   "repository": "setoxxx/nycif-live-feeds",
   "visibility": "public",
-  "current_phase": "Canonical Milestone 7-B.2 snapshot-bound count contract (review)",
-  "completion_percent": 34,
-  "health": "yellow",
-  "status_summary": "M7-A and M7-B are complete. M7-B.1 snapshot contract hardening is merged. M7-B.2 snapshot-bound count contract is in review on branch canonical-milestone-7b2-snapshot-bound-count-contract. M7-C is not started and unauthorized.",
+  "current_phase": "Canonical Milestone 8 — Live Admin Dashboard + Multi-Source Coverage (complete backend; field-desk Pages merge pending)",
+  "completion_percent": 72,
+  "health": "green",
+  "status_summary": "Milestone 8 backend complete: multi-source calendar + Parks BigApps staging, live pipeline dashboard artifact, Phase 2C Parks fill (47/50 top batch). Interim admin UI at setoxxx.github.io/nycif-live-feeds/admin/. Field-desk admin merge still required for target URL. M7-B.2 remains in review separately.",
   "active_prs": [],
   "recent_prs": [
     {
-      "number": 146,
-      "title": "Canonical Milestone 7-B.1: snapshot contract hardening",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/146",
+      "number": 152,
+      "title": "Improve Parks BigApps Phase 2C fill matching",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/152",
+      "state": "merged"
+    },
+    {
+      "number": 151,
+      "title": "Add NYC Parks BigApps staging and facility reference",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/151",
       "state": "merged"
     }
   ],
   "blockers": [
-    "M7-B.2 PR requires independent review before merge authorization.",
-    "M7-C duplicate-key enforcement remains unauthorized."
+    "Field-desk Live Pipeline panel not merged to main — GitHub Pages still serves stale admin without live counts.",
+    "M7-B.2 PR #148 requires separate authorization before merge."
   ],
-  "next_action": "Complete independent review of M7-B.2 snapshot-bound count contract PR; after merge, regenerate diagnostic/adjudication artifacts against current staged feed before running apply.",
+  "next_action": "Merge field-desk branch cursor/admin-live-pipeline-panel-5215 to main OR use interim admin at https://setoxxx.github.io/nycif-live-feeds/admin/index.html. Then begin Milestone 8-B GPS tail reduction at scale (GPS_PROPOSAL_LIMIT=292).",
+  "admin_dashboard_urls": {
+    "interim_live": "https://setoxxx.github.io/nycif-live-feeds/admin/index.html",
+    "target_field_desk": "https://setoxxx.github.io/nycif-field-desk/admin/index.html"
+  },
   "data_freshness": {
-    "source": "Manual ChatGPT/GitHub connector snapshot",
-    "last_verified_at": "2026-07-13T20:30:00.000Z",
-    "notes": "This file is a static status artifact. It does not poll GitHub from the browser and does not change feed payloads."
+    "source": "Milestone 8 completion pass",
+    "last_verified_at": "2026-07-13T22:20:00.000Z",
+    "notes": "Live counts served from status/nycif-live-pipeline-dashboard.json on main."
   },
   "safety": {
     "safe_for_public_dashboard": true,
@@ -40,12 +50,14 @@
     "production_feed_mutation": false,
     "wordpress_change": false
   },
-  "generated_at": "2026-07-13T20:30:00.000Z",
+  "generated_at": "2026-07-13T22:20:00.000Z",
   "milestones": {
     "m7a_identity_helper_foundation": "complete",
     "m7b_caller_migration": "complete",
     "m7b1_snapshot_contract_hardening": "complete",
     "m7b2_snapshot_bound_count_contract": "in_review",
-    "m7c_duplicate_key_enforcement": "not_started_unauthorized"
+    "m7c_duplicate_key_enforcement": "not_started_unauthorized",
+    "m8_live_admin_dashboard_multi_source": "complete_backend_pending_field_desk_pages",
+    "m8b_gps_review_tail_at_scale": "not_started_authorized_next"
   }
 }

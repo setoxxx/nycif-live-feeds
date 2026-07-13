@@ -1,0 +1,48 @@
+{
+  "artifact_type": "nycif_milestone_status",
+  "milestone_id": "canonical_milestone_8",
+  "milestone_name": "Live Admin Dashboard + Multi-Source Coverage",
+  "schema_version": "1.0.0",
+  "status": "complete_backend_pending_field_desk_pages",
+  "generated_at_utc": "2026-07-13T22:20:00.000Z",
+  "repository": "setoxxx/nycif-live-feeds",
+  "merged_prs": [149, 150, 151, 152],
+  "exit_criteria_pass": {
+    "multi_source_calendar_sync": true,
+    "multi_source_coverage_audit": true,
+    "live_pipeline_dashboard_artifact": true,
+    "parks_bigapps_events_staging": true,
+    "parks_facility_reference": true,
+    "phase_2c_parks_fill_matching": true,
+    "admin_ui_deployed": false,
+    "admin_ui_interim_pages": true,
+    "public_map_unchanged": true,
+    "promotion_blocked": true
+  },
+  "live_counts": {
+    "staged_feed_events": 23111,
+    "gps_review_queue": 1827,
+    "citywide_calendar_rows": 2781,
+    "parks_bigapps_events_rows": 1654,
+    "calendar_only_unique_keys": 2571,
+    "parks_only_unique_keys": 1600,
+    "phase_2c_filled_top50": 47,
+    "manual_approval_queue_pending": 47
+  },
+  "admin_urls": {
+    "interim_live_dashboard": "https://setoxxx.github.io/nycif-live-feeds/admin/index.html",
+    "target_field_desk_dashboard": "https://setoxxx.github.io/nycif-field-desk/admin/index.html",
+    "field_desk_branch_pending_merge": "cursor/admin-live-pipeline-panel-5215"
+  },
+  "next_milestone": {
+    "id": "canonical_milestone_8b",
+    "name": "GPS review tail reduction at scale",
+    "authorization": "phase_2c_2d_authorized; phase_2e_not_authorized"
+  },
+  "safety": {
+    "public_map_modified": false,
+    "location_cache_modified": false,
+    "staged_feed_modified": false,
+    "promotion_allowed": false
+  }
+}
