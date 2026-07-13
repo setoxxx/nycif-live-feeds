@@ -14,6 +14,7 @@ if str(ROOT) not in sys.path:
 
 from scripts.audit_multi_source_coverage import (  # noqa: E402
     build_calendar_index,
+    build_parks_index,
     build_permit_index,
     date_key,
     title_key,
@@ -58,6 +59,14 @@ class MultiSourceCoverageTests(unittest.TestCase):
         self.assertFalse(row["promotion_allowed"])
         self.assertFalse(row["public_map_modified"])
         self.assertEqual(row["manual_review_status"], "pending")
+
+    def test_parks_index(self) -> None:
+        parks = [
+            {"title": "Park Yoga", "start_date_time": "2026-07-13T09:00:00"},
+            {"title": "Park Only", "start_date": "2026-07-14"},
+        ]
+        parks_index = build_parks_index(parks)
+        self.assertEqual(len(parks_index), 2)
 
     def test_audit_script_writes_report(self) -> None:
         from scripts import audit_multi_source_coverage as audit_mod

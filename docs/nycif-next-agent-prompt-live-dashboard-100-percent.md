@@ -1,161 +1,83 @@
 # NYCIF Next Agent Prompt — Live Admin Dashboard + 100% Coverage
 
-Copy everything below the line into a new Cursor Cloud Agent (or field-desk agent) session.
+Copy everything below the line into a new Cursor Cloud Agent session.
 
 ---
 
 ## Mission
 
-Wire the **NYCIF admin dashboard** to show **live backend pipeline data** (what is current, what was newly added, multi-source gaps) and continue the safe path to **100% city event coverage** without unauthorized public-map publish.
+Complete **field-desk admin Live Pipeline panel** deployment and continue **GPS review tail reduction** using staged Parks BigApps facility reference — no public-map publish.
 
 ## Repositories
 
 | Repo | Role |
 |------|------|
 | `setoxxx/nycif-live-feeds` | Backend feeds, GPS pipeline, QA artifacts, status JSON |
-| `setoxxx/nycif-field-desk` | Admin dashboard (`admin/index.html`), field desk map, feed-status panels |
+| `setoxxx/nycif-field-desk` | Admin dashboard (`admin/index.html`), field desk map |
 
 Read **both** `AGENTS.md` files before editing.
 
-## Current state (2026-07-13)
+## Current state (2026-07-13, approved completion pass)
 
-### Backend (`nycif-live-feeds`)
+### Backend (`nycif-live-feeds`) — DONE on branch pending merge
 
-- **PR #149** (draft): multi-source calendar staging sync + coverage audit
-- **PR #148** (draft): M7-B.2 adjudication self-hash remediation
-- Permit pipeline (`tvpp-9vvx`): ~100% row accountability, ~94% auto GPS match, ~1,827 GPS review tail
-- Staged feed: **~23,111** GPS-valid events in `data/nycif_staged_live_events.json`
-- Citywide calendar (`api.nyc.gov/calendar/*`): staging sync added; **~2,593 calendar-only** events not yet in permit pipeline
-- New dashboard artifact generator: `scripts/generate_live_pipeline_dashboard_status.py` → `status/nycif-live-pipeline-dashboard.json`
+- PR #149, #150 merged to `main`
+- NYC Parks BigApps staging added (branch `cursor/parks-bigapps-coverage-5215`):
+  - `scripts/sync_nyc_parks_bigapps_events.py` → `data/nyc_parks_bigapps_events_snapshot.json` (1,654 rows)
+  - `scripts/build_nyc_parks_facility_reference.py` → `data/nyc_parks_facility_reference.json` (2,290 with coordinates)
+  - Extended `audit_multi_source_coverage.py` with Parks overlap analysis
+  - `live_delta_report.json` refreshed (1 newly added, baseline updated)
+- Live counts: **23,111 staged**, **1,827 GPS review**, **2,571 calendar-only**, **1,600 Parks-only**
 
-### Frontend (`nycif-field-desk`)
+### Frontend (`nycif-field-desk`) — BLOCKED (403 for cursor[bot])
 
-- Admin dashboard: `https://setoxxx.github.io/nycif-field-desk/admin/index.html`
-- Master projects: `admin/master-projects.html` (already reads `nycif-live-feeds/status/nycif-project-status.json`)
-- **Problem:** `admin/data/*.json` snapshots are stale (July 2, sample limit 3 rows). Dashboard does NOT yet show live multi-source counts or newly-added live data at full scale.
+- Implementation complete on branch `cursor/admin-live-pipeline-panel-5215` (local + commit ready)
+- Deploy copies in `nycif-live-feeds/docs/field-desk-admin-deploy/admin/`
+- **Human must push:**
 
-## Hard rules (do not violate)
-
-- Do **not** publish/promote to public map unless user explicitly says "publish" or "promote approved rows"
-- Do **not** modify protected files: `location_cache.json`, `nycif_staged_live_events.json`, `staged_live_manifest.json`, public feed JSON, WordPress embed
-- Do **not** load GPS review/proposal artifacts as public live events
-- Admin dashboard changes must remain **read-only** (no write/publish/deploy controls)
-- Prefer admin-only paths over changing `nycinfocus.com/map/` production runtime
-
-## Task A — Backend: refresh live dashboard artifact
-
-In `nycif-live-feeds`:
-
-1. Merge **PR #149** if approved
-2. Run:
-   ```bash
-   python3 scripts/sync_nyc_open_data.py
-   python3 scripts/sync_nyc_citywide_events_calendar.py
-   python3 scripts/audit_multi_source_coverage.py
-   python3 scripts/generate_live_pipeline_dashboard_status.py
-   ```
-3. Commit refreshed artifacts:
-   - `status/nycif-live-pipeline-dashboard.json`
-   - `status/nycif-coverage-roadmap.json`
-   - `data/reports/multi_source_coverage_report.json`
-   - `data/nyc_citywide_events_calendar_sync_report.json`
-4. Optionally wire `generate_live_pipeline_dashboard_status.py` into `.github/workflows/live-sync-qa.yml` after QA steps (report-only)
-
-## Task B — Frontend: admin dashboard live data panels
-
-**Status:** Implementation ready in patch `docs/field-desk-admin-live-pipeline-panel.patch` (apply in `nycif-field-desk` on branch `cursor/admin-live-pipeline-panel-5215`).
-
-In `nycif-field-desk`:
-
-1. Read `admin/index.html` and `admin/master-projects.html`
-2. Add a **Live Pipeline** panel that fetches (cache-busted, read-only):
-   - `https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/status/nycif-live-pipeline-dashboard.json`
-   - `https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/live_delta_report.json`
-   - `https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/reports/multi_source_coverage_report.json`
-
-3. Display clearly:
-
-   **Current (what the map can show today)**
-   - Staged feed events count
-   - Staged with valid GPS
-   - Last staged manifest timestamp
-
-   **Newly added (since last snapshot)**
-   - Added / removed / changed counts from `live_delta_report.json`
-   - Top 5 newly added event cards (title, date, borough, location, source_event_id)
-
-   **Multi-source coverage**
-   - Permit rows (tvpp-9vvx)
-   - Citywide calendar rows (api.nyc.gov)
-   - Overlap / permit-only / calendar-only counts
-   - Progress bars from `nycif-live-pipeline-dashboard.json`
-
-   **GPS review tail**
-   - gps_review_queue count
-   - Link to backend report artifacts (not inline private data)
-
-4. Update **Source Freshness** section:
-   - Either regenerate `admin/data/source-freshness.json` via existing snapshot builder with full counts, OR
-   - Replace static TVPP rowCount with live values from `nycif-live-pipeline-dashboard.json`
-
-5. Add links panel:
-   - Staged feed raw URL (for field desk QA)
-   - Coverage report on GitHub
-   - Admin newly-added panel already uses delta report — ensure counts match new live panel
-
-6. Keep **read-only guardrails** visible. No mutation buttons.
-
-**Apply patch (if not already merged):**
 ```bash
 cd nycif-field-desk
-git checkout -b cursor/admin-live-pipeline-panel-5215
-git am /path/to/nycif-live-feeds/docs/field-desk-admin-live-pipeline-panel.patch
+git fetch origin
+git checkout cursor/admin-live-pipeline-panel-5215
 git push -u origin cursor/admin-live-pipeline-panel-5215
+# Open PR → merge → verify GitHub Pages admin
 ```
 
-**Files added/changed:**
-- `admin/live-pipeline-panel-v01.js` — fetches live-feeds artifacts, renders panel
-- `admin/index.html` — Live Pipeline section + overview cards wired to live counts
+Or copy files from `docs/field-desk-admin-deploy/admin/` into field-desk `admin/`.
 
-## Task C — Field desk map preview (admin-only)
+## Hard rules
 
-1. Ensure field desk can preview staged feed:
-   `https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nycif_staged_live_events.json`
-2. Do **not** change production public map feed URL unless explicitly authorized
-3. `feed-status-panel-v01.js` and `admin-newly-added-v01.js` already read `live_delta_report.json` — verify they work after backend refresh
+- No publish/promote without explicit authorization
+- No protected file edits (`location_cache.json`, staged production feeds) unless explicitly instructed
+- Admin dashboard read-only only
 
-## Task D — Path to 100%
+## Task 1 — Merge field-desk PR (PRIORITY)
 
-1. Complete M7-B.2 (PR #148) review/merge
-2. Dispatch `live-sync-qa.yml` with `allow_live_fetch=yes`
-3. GPS review tail: work `data/gps_review_location_groups.json` (~292 geocoding groups)
-4. Calendar-only rows: manual review queue only — no auto-promote
-5. Public publish: blocked until explicit user authorization
+Verify https://setoxxx.github.io/nycif-field-desk/admin/index.html shows:
+- ~23,111 live staged events
+- Parks BigApps + facility reference counts
+- System Overview updates after live pipeline loads
 
-## Acceptance criteria
+## Task 2 — Phase 2C GPS fill with Parks reference
 
-- [ ] Admin dashboard shows **live counts** (not July 2 sample-of-3)
-- [ ] Admin dashboard shows **current staged** vs **newly added** side by side
-- [ ] Admin dashboard shows **multi-source gap** (calendar-only ~2,593)
-- [ ] All panels read static JSON via fetch; no GitHub API tokens in browser
-- [ ] Production public map URL unchanged unless explicitly requested
-- [ ] Final response lists files changed, safety confirmation, and what remains gated
+```bash
+python3 scripts/build_gps_geocoding_filled_proposals.py
+python3 scripts/build_gps_geocoding_filled_proposals.py  # proposals must exist first
+python3 scripts/build_gps_geocoding_filled_proposals.py
+```
 
-## Key artifact URLs for testing
+Run full GPS proposal pipeline if proposals artifact exists, then verify fill report uses `nyc_parks_facility_reference.json`.
+
+## Task 3 — Optional
+
+- Merge PR #148 (M7-B.2) when authorized
+- Dispatch `live-sync-qa.yml` with `allow_live_fetch=yes`
+
+## Key URLs
 
 ```text
 https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/status/nycif-live-pipeline-dashboard.json
-https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/status/nycif-coverage-roadmap.json
-https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/live_delta_report.json
-https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/row_disposition_report.json
-https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/staged_live_manifest.json
+https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nyc_parks_facility_reference.json
 https://setoxxx.github.io/nycif-field-desk/admin/index.html
+https://www.nycgovparks.org/bigapps
 ```
-
-## Source reference (user's 3 inputs)
-
-| User source | Backend dataset |
-|-------------|-----------------|
-| CSV / Open Data JSON | `tvpp-9vvx` |
-| CECM E-Apply page | Same family as `tvpp-9vvx` |
-| nyc.gov/main/events | `api.nyc.gov/calendar/*` (staging sync in PR #149) |

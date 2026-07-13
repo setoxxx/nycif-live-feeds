@@ -5,10 +5,11 @@
     "notes": [
       "tvpp-9vvx is the authoritative permit registry export; E-Apply is the same CECM family via a different UI/API.",
       "Citywide calendar is a separate curated multi-agency feed; overlap with permits is partial, not 1:1.",
+      "NYC Parks BigApps events feed is Parks-native with inline coordinates; overlaps calendar and permits partially.",
       "Full 'all city events' requires merging supplemental calendar-only rows through manual review, not auto-promotion."
     ],
     "permit_pipeline_ingestion_pct_estimate": 100.0,
-    "permit_pipeline_map_ready_pct_estimate": 93.776
+    "permit_pipeline_map_ready_pct_estimate": 90.621
   },
   "distribution": {
     "calendar_category_counts": {
@@ -48,22 +49,26 @@
       "Street Activity Permit Office": 656
     }
   },
-  "generated_at_utc": "2026-07-13T22:02:30.117253+00:00",
+  "generated_at_utc": "2026-07-13T22:10:54.048290+00:00",
   "overlap_analysis": {
     "calendar_only_unique_keys": 2571,
     "calendar_overlap_pct_of_calendar": 3.164,
+    "parks_calendar_overlap_unique_keys": 1539,
+    "parks_only_unique_keys": 1600,
+    "parks_overlap_pct_of_parks": 1.174,
+    "parks_permit_overlap_unique_keys": 19,
     "permit_only_unique_keys": 5218,
     "permit_overlap_pct_of_permits": 1.584,
     "title_date_overlap_rows": 88,
     "title_date_overlap_unique_keys": 84
   },
   "pipeline_status": {
-    "auto_gps_match_pct": 93.776,
-    "gps_review_queue": 1827,
-    "gps_review_tail_pct": 6.224,
-    "permit_ingestion_accounted_rows": 29355,
+    "auto_gps_match_pct": 90.621,
+    "gps_review_queue": 3110,
+    "gps_review_tail_pct": 9.127,
+    "permit_ingestion_accounted_rows": 34075,
     "staged_feed_events": 23111,
-    "staged_with_valid_gps": 27528
+    "staged_with_valid_gps": 30879
   },
   "qa_pass": true,
   "safety": {
@@ -278,6 +283,108 @@
         "title": "ART IN THE PARK"
       }
     ],
+    "parks_only": [
+      {
+        "borough": null,
+        "categories": [
+          "Nature | Volunteer"
+        ],
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2195880",
+        "start_date_time": "2026-07-24T10:00 am",
+        "title": "07/24 Wingate In-Person Care Captain Training"
+      },
+      {
+        "borough": null,
+        "categories": [
+          "Art | History"
+        ],
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2109923",
+        "start_date_time": "2026-07-13T9:00 am",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": null,
+        "categories": [
+          "Art | History"
+        ],
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2109924",
+        "start_date_time": "2026-07-14T9:00 am",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": null,
+        "categories": [
+          "Art | History"
+        ],
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2109925",
+        "start_date_time": "2026-07-15T9:00 am",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": null,
+        "categories": [
+          "Art | History"
+        ],
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2109926",
+        "start_date_time": "2026-07-16T9:00 am",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": null,
+        "categories": [
+          "Art | History"
+        ],
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2109927",
+        "start_date_time": "2026-07-17T9:00 am",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": null,
+        "categories": [
+          "Art | History"
+        ],
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2109928",
+        "start_date_time": "2026-07-20T9:00 am",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": null,
+        "categories": [
+          "Art | History"
+        ],
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2109929",
+        "start_date_time": "2026-07-21T9:00 am",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": null,
+        "categories": [
+          "Art | History"
+        ],
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2109930",
+        "start_date_time": "2026-07-22T9:00 am",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": null,
+        "categories": [
+          "Art | History"
+        ],
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2109931",
+        "start_date_time": "2026-07-23T9:00 am",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      }
+    ],
     "permit_only": [
       {
         "borough": "Queens",
@@ -370,6 +477,16 @@
         "https://api.nyc.gov/calendar/*"
       ],
       "snapshot_path": "data/nyc_citywide_events_calendar_snapshot.json",
+      "snapshot_present": true
+    },
+    "parks_bigapps_events": {
+      "current_future_rows": 1654,
+      "dataset_id": "nyc-parks-bigapps-events",
+      "human_sources": [
+        "https://www.nycgovparks.org/bigapps",
+        "https://www.nycgovparks.org/xml/events_300_rss.json"
+      ],
+      "snapshot_path": "data/nyc_parks_bigapps_events_snapshot.json",
       "snapshot_present": true
     },
     "permit_open_data": {
