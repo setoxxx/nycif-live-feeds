@@ -1,0 +1,56 @@
+NYCIF LIVE FEEDS — INDEPENDENT REVIEW PROMPT
+CANONICAL MILESTONE 7-B.2: SNAPSHOT-BOUND COUNT CONTRACT
+
+Repository: setoxxx/nycif-live-feeds
+Target branch: canonical-milestone-7b2-snapshot-bound-count-contract
+Base branch: main
+
+This prompt authorizes ONLY:
+
+- independent review of the M7-B.2 pull request
+- count-contract schema review (`gps-safe-update-count-contract-v1`)
+- snapshot + count preflight ordering review (snapshot before counts)
+- derivation and arithmetic invariant review
+- legacy-contract fail-closed review (`legacy_contract_missing_count_contract`)
+- July 13 regression review (204 stale vs 155 fresh bound contract)
+- adversarial count-contract test matrix review
+- targeted M7-B.2 tests, M7-B.1 tests, M7-A/M7-B identity tests, registry suite, full pytest suite
+- compile/import checks
+- duplicate-constant scan and count-contract completeness scan
+- secret scan and protected-path verification
+- SonarQube quality gate review
+- review thread triage
+- mergeability assessment
+
+This prompt does NOT authorize:
+
+- merge (requires separate human merge authorization)
+- Canonical Milestone 7-C
+- duplicate-key enforcement
+- positional-array changes
+- APIs
+- website runtime changes
+- accounts
+- notifications
+- mobile development
+- production data mutation
+- deployment
+- public-map changes
+- promotion or publishing
+
+Review checklist:
+
+1. Confirm `scripts/gps_count_contract.py` is the sole active count-contract helper.
+2. Confirm adjudication producer derives counts from artifact contents — no runtime 204/20 constants.
+3. Confirm apply validates count contract only after snapshot preflight passes.
+4. Confirm legacy adjudication artifacts without count schema fail with `legacy_contract_missing_count_contract`.
+5. Confirm 155 is accepted only when derived, bound, and internally consistent — not via constant swap.
+6. Confirm duplicate safe identities, conflicts, and arithmetic mismatches fail closed.
+7. Confirm July 13 regression: stale 204 snapshot blocked at preflight; fresh 155 bound contract passes preflight.
+8. Confirm protected production data files were not modified in the PR.
+9. Confirm M7-A, M7-B, and M7-B.1 tests still pass.
+10. Record SonarQube quality gate outcome before any merge recommendation.
+
+Required PR statement to preserve:
+
+DO NOT MERGE — independent review and separate merge authorization required.

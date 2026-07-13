@@ -11,6 +11,8 @@ Scope: the four staged-feed-facing stages named in the Milestone 6 authorization
 
 Canonical Milestone 7-B.1 addition (snapshot contract hardening): diagnostic now writes `staged_feed_provenance`; adjudication copies it forward and records `diagnostic_artifact_sha256`; apply validates bound staged-feed SHA-256 and byte size **before** identity matching. See `docs/canonical_milestone_7b1_snapshot_contract_hardening.md`.
 
+Canonical Milestone 7-B.2 addition (count contract): adjudication emits `safe_update_count_contract` bound to staged-feed and diagnostic provenance; apply validates count schema, bindings, and independently recomputed counts **after** snapshot preflight and **before** identity matching. See `docs/canonical_milestone_7b2_snapshot_bound_count_contract.md`.
+
 ## Verified fact: every stage consumes the same identity vocabulary
 
 All four stages operate on the **same two identity names**: `stable_event_identity` (staged-event side, a 5-component pipe-joined natural key) and `stable_identity_key` / `promoted_cache_key` (registry side, a `group:<group_key>` or `display:<normalized text>` string). No stage introduces a third, incompatible identity name within this scope. The join between the two vocabularies is a fuzzy match (RapidFuzz thresholds + CEMSID overlap + borough compatibility), not string equality — this is inherent to the design (staged events don't carry a promoted cache key until after matching) and is documented, not treated as a defect.
@@ -37,7 +39,7 @@ All four stages operate on the **same two identity names**: `stable_event_identi
 
 **Computed check:** `selected_stable_event_identity_count == selected_candidate_count` (uniqueness assertion — `validated_conditions.selected_identities_are_unique`).
 
-**Outputs:** `data/gps_staged_feed_integration_adjudication_summary.json` — `safe_update_ready_rows` (rows cleared for the update stage, each still carrying `stable_event_identity` and its matched `promoted_cache_key`), `qa_pass`, counts (`safe_update_contract_count`, `safe_update_ready_identity_count`, `excluded_no_safe_match_promoted_keys_count`, `conflicts`).
+**Outputs:** `data/gps_staged_feed_integration_adjudication_summary.json` — `safe_update_ready_rows` (rows cleared for the update stage, each still carrying `stable_event_identity` and its matched `promoted_cache_key`), `qa_pass`, counts (`safe_update_contract_count`, `safe_update_ready_identity_count`, `excluded_no_safe_match_promoted_keys_count`, `conflicts`), and `safe_update_count_contract` (M7-B.2 snapshot-bound count metadata).
 
 **Field-name continuity:** `stable_event_identity` flows diagnostic → adjudication unchanged; this is the exact field the **update** stage below re-keys against.
 
@@ -48,6 +50,8 @@ All four stages operate on the **same two identity names**: `stable_event_identi
 - `data/nycif_staged_live_events.json` — the actual staged events to be updated; for each, `stable_event_identity(event_row)` is **re-derived independently** (not read from a persisted field — the staged event JSON does not carry a `stable_event_identity` field before this stage runs) using the identical function definition copy-pasted from the diagnostic stage.
 
 **Snapshot preflight (M7-B.1):** before identity matching, apply compares `staged_feed_provenance.staged_feed.sha256` and `byte_size` from the adjudication summary against the exact current staged-feed bytes. Stale or legacy contracts fail closed with `failure_type` set and zero mutations.
+
+**Count-contract preflight (M7-B.2):** after snapshot preflight, apply validates `safe_update_count_contract` schema, provenance bindings, and independently recomputed counts. Legacy artifacts without a count contract fail with `legacy_contract_missing_count_contract`. All expected apply counts come from the contract, not source constants.
 
 **Duplicate/conflict handling (fail-closed, in order):**
 1. `build_safe_identity_map()` — if two different-content rows in the adjudication summary share one `stable_event_identity`, marks `duplicate_safe_stable_event_identity_in_adjudication_summary` and the map is rejected as non-unique before any update is attempted.
