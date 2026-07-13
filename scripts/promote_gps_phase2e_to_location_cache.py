@@ -144,7 +144,11 @@ def main() -> int:
     before_count = len(entries)
     promoted_at = datetime.now(timezone.utc).isoformat()
 
-    approved_rows = [row for row in queue if row.get("manual_review_status") == "approved"]
+    approved_rows = [
+        row
+        for row in queue
+        if row.get("manual_review_status") == "approved" and row.get("phase_2e_promotion_performed") is not True
+    ]
     promoted_rows: list[dict[str, Any]] = []
     cache_writes: list[dict[str, Any]] = []
     skipped_duplicates: list[dict[str, Any]] = []
@@ -231,6 +235,8 @@ def main() -> int:
     cache_payload["cache_entry_count"] = after_count
     cache_payload["last_phase_2e_promotion_at_utc"] = promoted_at
     cache_payload["last_phase_2e_promotion_row_count"] = len(promoted_rows)
+    prior_total = int(cache_payload.get("phase_2e_total_promoted_rows") or 0)
+    cache_payload["phase_2e_total_promoted_rows"] = prior_total + len(promoted_rows)
 
     qa_pass = len(invalid_rows) == 0 and len(conflicts) == 0 and len(promoted_rows) == len(approved_rows)
 
@@ -240,6 +246,7 @@ def main() -> int:
         "qa_pass": qa_pass,
         "approved_input_count": len(approved_rows),
         "promoted_row_count": len(promoted_rows),
+        "promotion_batch_only_new_rows": True,
         "cache_keys_added_count": len(cache_writes),
         "duplicate_skip_count": len(skipped_duplicates),
         "conflict_count": len(conflicts),
