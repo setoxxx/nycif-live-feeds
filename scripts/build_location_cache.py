@@ -10,11 +10,15 @@ Output:
 from __future__ import annotations
 
 import json
-import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.gps_identity import normalize_text_legacy
+except ModuleNotFoundError:  # pragma: no cover - direct script execution
+    from gps_identity import normalize_text_legacy
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
@@ -45,10 +49,6 @@ def rows_from_payload(payload: Any) -> list[dict[str, Any]]:
     if isinstance(payload, dict) and isinstance(payload.get("events"), list):
         return [row for row in payload["events"] if isinstance(row, dict)]
     return []
-
-
-def norm(value: Any) -> str:
-    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
 
 
 def split_ids(value: Any) -> list[str]:
@@ -107,9 +107,9 @@ def main() -> int:
             add(cache, f"event_id:{event_id}", gps_payload(row, "event_id", event_id))
 
         for cemsid in split_ids(row.get("source_cemsid") or row.get("cemsid")):
-            add(cache, f"cemsid:{norm(borough)}:{cemsid}", gps_payload(row, "cemsid", cemsid))
+            add(cache, f"cemsid:{normalize_text_legacy(borough)}:{cemsid}", gps_payload(row, "cemsid", cemsid))
 
-        location_key = f"location:{norm(borough)}:{norm(location)}"
+        location_key = f"location:{normalize_text_legacy(borough)}:{normalize_text_legacy(location)}"
         add(cache, location_key, gps_payload(row, "location", location_key))
 
     payload = {

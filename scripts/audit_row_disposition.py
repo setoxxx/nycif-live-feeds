@@ -22,6 +22,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.gps_identity import normalize_text_legacy
+except ModuleNotFoundError:  # pragma: no cover - direct script execution
+    from gps_identity import normalize_text_legacy
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 RAW_SNAPSHOT_PATH = DATA_DIR / "raw_nyc_open_data_snapshot.json"
@@ -57,10 +62,6 @@ def rows_from_payload(payload: Any) -> list[dict[str, Any]]:
     if isinstance(payload, dict) and isinstance(payload.get("events"), list):
         return [row for row in payload["events"] if isinstance(row, dict)]
     return []
-
-
-def norm(value: Any) -> str:
-    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
 
 
 def split_ids(value: Any) -> list[str]:
@@ -120,12 +121,12 @@ def raw_keys(row: dict[str, Any]) -> set[str]:
         keys.add(event_id)
         keys.add(f"nyc_open_data:tvpp-9vvx:{event_id}")
     for cemsid in split_ids(row.get("source_cemsid") or row.get("cemsid")):
-        keys.add(f"cemsid:{norm(borough)}:{cemsid}")
+        keys.add(f"cemsid:{normalize_text_legacy(borough)}:{cemsid}")
     if location:
-        keys.add(f"location:{norm(borough)}:{norm(location)}")
+        keys.add(f"location:{normalize_text_legacy(borough)}:{normalize_text_legacy(location)}")
     if title and location and date:
-        keys.add(f"text_date_location:{norm(title)}:{norm(borough)}:{norm(location)}:{date}")
-        keys.add("|".join([norm(title), norm(borough), norm(location), date]))
+        keys.add(f"text_date_location:{normalize_text_legacy(title)}:{normalize_text_legacy(borough)}:{normalize_text_legacy(location)}:{date}")
+        keys.add("|".join([normalize_text_legacy(title), normalize_text_legacy(borough), normalize_text_legacy(location), date]))
     return {key for key in keys if key}
 
 

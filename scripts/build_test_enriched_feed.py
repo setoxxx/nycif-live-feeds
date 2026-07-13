@@ -19,6 +19,11 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlencode
 
+try:
+    from scripts.gps_identity import normalize_text_legacy
+except ModuleNotFoundError:  # pragma: no cover - direct script execution
+    from gps_identity import normalize_text_legacy
+
 RAW_URL = "https://data.cityofnewyork.us/resource/tvpp-9vvx.json"
 RAW_PAGE_LIMIT = 50000
 MAX_RAW_ROWS = 300000
@@ -112,10 +117,6 @@ def split_ids(value: Any) -> list[str]:
     return [item.strip() for item in str(value or "").split(",") if item.strip()]
 
 
-def norm(value: Any) -> str:
-    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
-
-
 def gps_ok(row: dict[str, Any] | None) -> bool:
     if not row:
         return False
@@ -143,11 +144,11 @@ def build_indexes(enriched: list[dict[str, Any]]) -> dict[str, dict[str, dict[st
             by_id[event_id] = row
         borough = row.get("borough") or row.get("event_borough") or ""
         for cemsid in split_ids(row.get("source_cemsid") or row.get("cemsid")):
-            by_cemsid[f"{norm(borough)}|{cemsid}"] = row
+            by_cemsid[f"{normalize_text_legacy(borough)}|{cemsid}"] = row
         text_key = "|".join([
-            norm(row.get("title") or row.get("event_name")),
-            norm(borough),
-            norm(row.get("location") or row.get("display_location") or row.get("event_location")),
+            normalize_text_legacy(row.get("title") or row.get("event_name")),
+            normalize_text_legacy(borough),
+            normalize_text_legacy(row.get("location") or row.get("display_location") or row.get("event_location")),
             date_key(row.get("start_date_time") or row.get("date")),
         ])
         if text_key.replace("|", ""):
@@ -163,8 +164,8 @@ def cache_keys(raw: dict[str, Any]) -> list[str]:
     if event_id:
         keys.append(f"event_id:{event_id}")
     for cemsid in split_ids(raw.get("cemsid")):
-        keys.append(f"cemsid:{norm(borough)}:{cemsid}")
-    keys.append(f"location:{norm(borough)}:{norm(location)}")
+        keys.append(f"cemsid:{normalize_text_legacy(borough)}:{cemsid}")
+    keys.append(f"location:{normalize_text_legacy(borough)}:{normalize_text_legacy(location)}")
     return keys
 
 
@@ -174,13 +175,13 @@ def find_match(raw: dict[str, Any], indexes: dict[str, dict[str, dict[str, Any]]
         return "event_id", indexes["event_id"][event_id]
     borough = raw.get("event_borough") or ""
     for cemsid in split_ids(raw.get("cemsid")):
-        hit = indexes["cemsid"].get(f"{norm(borough)}|{cemsid}")
+        hit = indexes["cemsid"].get(f"{normalize_text_legacy(borough)}|{cemsid}")
         if hit:
             return "cemsid", hit
     text_key = "|".join([
-        norm(raw.get("event_name")),
-        norm(borough),
-        norm(raw.get("event_location")),
+        normalize_text_legacy(raw.get("event_name")),
+        normalize_text_legacy(borough),
+        normalize_text_legacy(raw.get("event_location")),
         date_key(raw.get("start_date_time")),
     ])
     if text_key in indexes["text"]:
@@ -192,7 +193,7 @@ def find_match(raw: dict[str, Any], indexes: dict[str, dict[str, dict[str, Any]]
 
 
 def category(raw: dict[str, Any]) -> str:
-    text = norm(" ".join([str(raw.get("event_name") or ""), str(raw.get("event_type") or ""), str(raw.get("event_agency") or "")]))
+    text = normalize_text_legacy(" ".join([str(raw.get("event_name") or ""), str(raw.get("event_type") or ""), str(raw.get("event_agency") or "")]))
     if any(token in text for token in ["soccer", "baseball", "softball", "basketball", "tennis", "cricket", "football", "volleyball", "sport"]):
         return "sports"
     if any(token in text for token in ["market", "sidewalk sale", "fair", "plaza", "open street", "street activity"]):

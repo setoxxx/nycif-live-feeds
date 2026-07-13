@@ -27,6 +27,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.gps_identity import build_group_key
+except ModuleNotFoundError:  # pragma: no cover - direct script execution
+    from gps_identity import build_group_key
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 GPS_REVIEW_PATH = DATA_DIR / "gps_needs_review_events.json"
@@ -59,10 +64,6 @@ def rows_from_payload(payload: Any) -> list[dict[str, Any]]:
     if isinstance(payload, dict) and isinstance(payload.get("events"), list):
         return [row for row in payload["events"] if isinstance(row, dict)]
     return []
-
-
-def norm(value: Any) -> str:
-    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
 
 
 def date_key(value: Any) -> str:
@@ -100,10 +101,6 @@ def cemsids(row: dict[str, Any]) -> list[str]:
     if isinstance(value, list):
         return [str(item).strip() for item in value if str(item).strip()]
     return [item.strip() for item in str(value).split(",") if item.strip()]
-
-
-def group_key(row: dict[str, Any]) -> str:
-    return f"{norm(borough(row))}|{norm(location(row))}"
 
 
 def likely_geocoder_query(row: dict[str, Any]) -> str:
@@ -207,7 +204,7 @@ def main() -> int:
     review_rows = rows_from_payload(load_json_file(GPS_REVIEW_PATH, {}))
     groups: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in review_rows:
-        groups[group_key(row)].append(row)
+        groups[build_group_key(row)].append(row)
 
     grouped_rows = [build_group_record(key, rows) for key, rows in groups.items()]
     grouped_rows.sort(key=lambda row: (row["event_count"], row["unique_source_event_ids"]), reverse=True)

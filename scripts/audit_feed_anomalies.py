@@ -16,6 +16,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.gps_identity import normalize_text_legacy
+except ModuleNotFoundError:  # pragma: no cover - direct script execution
+    from gps_identity import normalize_text_legacy
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 OUTPUT = DATA_DIR / "feed_anomaly_report.json"
@@ -43,10 +48,6 @@ def rows_from_payload(payload: Any) -> list[dict[str, Any]]:
     if isinstance(payload, dict) and isinstance(payload.get("events"), list):
         return [row for row in payload["events"] if isinstance(row, dict)]
     return []
-
-
-def norm(value: Any) -> str:
-    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
 
 
 def title(row: dict[str, Any]) -> str:
@@ -99,7 +100,7 @@ def latlng(row: dict[str, Any]) -> str:
 
 
 def one_day_street_like(row: dict[str, Any]) -> bool:
-    text = norm(" ".join([title(row), location(row), event_type(row), str(row.get("major_reason") or ""), str(row.get("source_file") or "")]))
+    text = normalize_text_legacy(" ".join([title(row), location(row), event_type(row), str(row.get("major_reason") or ""), str(row.get("source_file") or "")]))
     return bool(re.search(r"block party|street event|street activity|street fair|permit", text))
 
 
@@ -142,7 +143,7 @@ def audit_feed(feed_name: str, rows: list[dict[str, Any]]) -> dict[str, Any]:
         sid = source_id(row)
         if sid:
             by_source[sid].append(row)
-        content_key = "|".join([norm(title(row)), norm(borough(row)), norm(location(row)), latlng(row)])
+        content_key = "|".join([normalize_text_legacy(title(row)), normalize_text_legacy(borough(row)), normalize_text_legacy(location(row)), latlng(row)])
         if content_key.strip("|"):
             by_content[content_key].append(row)
         exact_key = "|".join([sid, content_key, date_key(row)])

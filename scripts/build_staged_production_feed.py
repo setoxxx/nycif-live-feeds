@@ -20,6 +20,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+try:
+    from scripts.gps_identity import normalize_text_legacy
+except ModuleNotFoundError:  # pragma: no cover - direct script execution
+    from gps_identity import normalize_text_legacy
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 TEST_FEED_PATH = DATA_DIR / "nycif_live_test_enriched_events.json"
@@ -61,10 +66,6 @@ def valid_lat_lng(row: dict[str, Any]) -> bool:
     return 40.0 <= lat <= 41.0 and -75.0 <= lng <= -73.0
 
 
-def norm(value: Any) -> str:
-    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
-
-
 def date_key(row: dict[str, Any]) -> str:
     for key in ("start_date_time", "start", "date"):
         raw = str(row.get(key) or "")
@@ -91,7 +92,7 @@ def street_text(row: dict[str, Any]) -> str:
 
 
 def is_one_day_street_event(row: dict[str, Any]) -> bool:
-    text = norm(street_text(row))
+    text = normalize_text_legacy(street_text(row))
     return bool(
         re.search(
             r"\b(block party|street activity|street event|street fair|street closure|sidewalk closure|plaza event|festival)\b",
@@ -109,9 +110,9 @@ def one_day_street_key(row: dict[str, Any]) -> str:
         lng = ""
     return "|".join(
         [
-            norm(row.get("title") or row.get("event_name")),
-            norm(row.get("borough") or row.get("event_borough")),
-            norm(row.get("display_location") or row.get("location") or row.get("address")),
+            normalize_text_legacy(row.get("title") or row.get("event_name")),
+            normalize_text_legacy(row.get("borough") or row.get("event_borough")),
+            normalize_text_legacy(row.get("display_location") or row.get("location") or row.get("address")),
             lat,
             lng,
         ]

@@ -21,6 +21,11 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlencode
 
+try:
+    from scripts.gps_identity import normalize_text_legacy
+except ModuleNotFoundError:  # pragma: no cover - direct script execution
+    from gps_identity import normalize_text_legacy
+
 RAW_URL = "https://data.cityofnewyork.us/resource/tvpp-9vvx.json"
 RAW_PAGE_LIMIT = 50000
 MAX_RAW_ROWS = 300000
@@ -92,10 +97,6 @@ def split_ids(value: Any) -> list[str]:
     return [item.strip() for item in str(value or "").split(",") if item.strip()]
 
 
-def norm(value: Any) -> str:
-    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
-
-
 def has_gps(row: dict[str, Any] | None) -> bool:
     if not row:
         return False
@@ -139,11 +140,11 @@ def build_enriched_index(rows: list[dict[str, Any]]) -> EnrichedIndex:
             by_event_id[event_id] = row
         borough = row.get("borough") or row.get("event_borough") or ""
         for cemsid in split_ids(row.get("source_cemsid") or row.get("cemsid")):
-            by_cemsid[f"{norm(borough)}|{cemsid}"] = row
+            by_cemsid[f"{normalize_text_legacy(borough)}|{cemsid}"] = row
         text_key = "|".join([
-            norm(row.get("title") or row.get("event_name")),
-            norm(borough),
-            norm(row.get("location") or row.get("display_location") or row.get("event_location")),
+            normalize_text_legacy(row.get("title") or row.get("event_name")),
+            normalize_text_legacy(borough),
+            normalize_text_legacy(row.get("location") or row.get("display_location") or row.get("event_location")),
             date_key(row.get("start_date_time") or row.get("date")),
         ])
         if text_key.replace("|", ""):
@@ -159,8 +160,8 @@ def cache_lookup_keys(row: dict[str, Any]) -> list[str]:
     if event_id:
         keys.append(f"event_id:{event_id}")
     for cemsid in split_ids(row.get("cemsid") or row.get("source_cemsid")):
-        keys.append(f"cemsid:{norm(borough)}:{cemsid}")
-    keys.append(f"location:{norm(borough)}:{norm(location)}")
+        keys.append(f"cemsid:{normalize_text_legacy(borough)}:{cemsid}")
+    keys.append(f"location:{normalize_text_legacy(borough)}:{normalize_text_legacy(location)}")
     return keys
 
 
@@ -170,13 +171,13 @@ def classify_raw_row(row: dict[str, Any], index: EnrichedIndex, location_cache: 
         return "event_id", index.by_event_id[event_id]
     borough = row.get("event_borough") or row.get("borough") or ""
     for cemsid in split_ids(row.get("cemsid")):
-        match = index.by_cemsid.get(f"{norm(borough)}|{cemsid}")
+        match = index.by_cemsid.get(f"{normalize_text_legacy(borough)}|{cemsid}")
         if match:
             return "cemsid", match
     text_key = "|".join([
-        norm(row.get("event_name")),
-        norm(borough),
-        norm(row.get("event_location")),
+        normalize_text_legacy(row.get("event_name")),
+        normalize_text_legacy(borough),
+        normalize_text_legacy(row.get("event_location")),
         date_key(row.get("start_date_time")),
     ])
     if text_key in index.by_text:

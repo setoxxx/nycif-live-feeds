@@ -23,12 +23,16 @@ Outputs:
 from __future__ import annotations
 
 import json
-import re
 import sys
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.gps_identity import build_stable_identity_key, normalize_text_with_ampersand
+except ModuleNotFoundError:  # pragma: no cover - direct script execution
+    from gps_identity import build_stable_identity_key, normalize_text_with_ampersand
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
@@ -63,20 +67,6 @@ def rows_from_payload(payload: Any, key: str) -> list[dict[str, Any]]:
     return []
 
 
-def norm_text(value: Any) -> str:
-    text = str(value or "").lower()
-    text = text.replace("&", " and ")
-    text = re.sub(r"[^a-z0-9]+", " ", text)
-    return re.sub(r"\s+", " ", text).strip()
-
-
-def stable_key(row: dict[str, Any]) -> str:
-    group_key = str(row.get("group_key") or "").strip().lower()
-    if group_key:
-        return f"group:{group_key}"
-    return f"display:{norm_text(row.get('display_location'))}"
-
-
 def valid_nyc_lat_lng(lat: Any, lng: Any) -> bool:
     try:
         lat_f = float(lat)
@@ -96,7 +86,7 @@ def build_finding_exclusions(findings: dict[str, Any]) -> list[dict[str, Any]]:
     output: list[dict[str, Any]] = []
     seen: set[str] = set()
     for item in rows_from_payload(findings, "corrections_needed"):
-        display_key = norm_text(item.get("display_location"))
+        display_key = normalize_text_with_ampersand(item.get("display_location"))
         if not display_key or display_key in seen:
             continue
         seen.add(display_key)
@@ -108,9 +98,9 @@ def build_finding_exclusions(findings: dict[str, Any]) -> list[dict[str, Any]]:
 
 
 def match_exclusion(row: dict[str, Any], exclusions: list[dict[str, Any]]) -> dict[str, Any] | None:
-    row_display_key = norm_text(row.get("display_location"))
+    row_display_key = normalize_text_with_ampersand(row.get("display_location"))
     for item in exclusions:
-        item_display_key = item.get("stable_display_key") or norm_text(item.get("display_location"))
+        item_display_key = item.get("stable_display_key") or normalize_text_with_ampersand(item.get("display_location"))
         if not item_display_key:
             continue
         if row_display_key == item_display_key:
@@ -121,7 +111,7 @@ def match_exclusion(row: dict[str, Any], exclusions: list[dict[str, Any]]) -> di
 def make_candidate(row: dict[str, Any], review_source: str) -> dict[str, Any]:
     return {
         "review_rank_current": row.get("review_rank"),
-        "stable_identity_key": stable_key(row),
+        "stable_identity_key": build_stable_identity_key(row),
         "group_key": row.get("group_key"),
         "display_location": row.get("display_location"),
         "borough": row.get("borough"),
@@ -153,7 +143,7 @@ def make_excluded(row: dict[str, Any], finding: dict[str, Any], reason: str) -> 
     return {
         "review_rank_current": row.get("review_rank"),
         "review_rank_original_from_findings": finding.get("review_rank"),
-        "stable_identity_key": stable_key(row),
+        "stable_identity_key": build_stable_identity_key(row),
         "group_key": row.get("group_key"),
         "display_location": row.get("display_location"),
         "borough": row.get("borough"),
@@ -207,7 +197,7 @@ def main() -> int:
             continue
         candidates.append(candidate)
 
-    excluded_display_keys = {norm_text(row.get("display_location")) for row in excluded}
+    excluded_display_keys = {normalize_text_with_ampersand(row.get("display_location")) for row in excluded}
     missing_stable_exclusions = [
         {
             "review_rank_original_from_findings": item.get("review_rank"),
@@ -217,8 +207,8 @@ def main() -> int:
         for item in exclusions_from_findings
         if item.get("stable_display_key") not in excluded_display_keys
     ]
-    baisley_in_candidates = any("baisley pond park" in norm_text(row.get("display_location")) for row in candidates)
-    baisley_in_excluded = any("baisley pond park" in norm_text(row.get("display_location")) for row in excluded)
+    baisley_in_candidates = any("baisley pond park" in normalize_text_with_ampersand(row.get("display_location")) for row in candidates)
+    baisley_in_excluded = any("baisley pond park" in normalize_text_with_ampersand(row.get("display_location")) for row in excluded)
     generated_at = datetime.now(timezone.utc).isoformat()
     borough_counts = Counter(row.get("borough") or "unknown" for row in candidates)
     confidence_counts = Counter(row.get("geocoder_confidence") or "unknown" for row in candidates)

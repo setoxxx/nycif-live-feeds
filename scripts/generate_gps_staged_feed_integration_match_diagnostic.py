@@ -15,6 +15,21 @@ except Exception:  # pragma: no cover - dependency is checked at runtime
     fuzz = None
     utils = None
 
+try:
+    from scripts.gps_identity import (
+        build_stable_event_identity as stable_event_identity,
+        event_cemsids,
+        normalize_text_with_ampersand,
+        row_location,
+    )
+except ModuleNotFoundError:  # pragma: no cover - direct script execution
+    from gps_identity import (
+        build_stable_event_identity as stable_event_identity,
+        event_cemsids,
+        normalize_text_with_ampersand,
+        row_location,
+    )
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 LOCATION_CACHE_PATH = DATA_DIR / "location_cache.json"
@@ -62,30 +77,20 @@ def save_json(path: Path, payload: Any) -> None:
         handle.write("\n")
 
 
-def normalize(value: Any) -> str:
-    text = str(value or "").lower().replace("&", " and ")
-    text = re.sub(r"[^a-z0-9]+", " ", text)
-    return re.sub(r"\s+", " ", text).strip()
-
-
 def canonical_facility(value: Any) -> str:
-    text = normalize(value)
+    text = normalize_text_with_ampersand(value)
     text = re.sub(r"\b(\d+)[a-z]\b", r"\1", text)
     return text
 
 
 def borough_of(row: dict[str, Any]) -> str:
-    return normalize(row.get("borough") or row.get("event_borough"))
+    return normalize_text_with_ampersand(row.get("borough") or row.get("event_borough"))
 
 
 def borough_compatible(left: dict[str, Any], right: dict[str, Any]) -> bool:
     left_borough = borough_of(left)
     right_borough = borough_of(right)
     return not left_borough or not right_borough or left_borough == right_borough
-
-
-def row_location(row: dict[str, Any]) -> str:
-    return str(row.get("display_location") or row.get("location") or row.get("event_location") or "")
 
 
 def all_locations(row: dict[str, Any]) -> list[str]:
@@ -95,7 +100,7 @@ def all_locations(row: dict[str, Any]) -> list[str]:
         value = row.get(field)
         if value:
             text = str(value)
-            key = normalize(text)
+            key = normalize_text_with_ampersand(text)
             if key and key not in seen:
                 out.append(text)
                 seen.add(key)
@@ -158,7 +163,7 @@ def split_site_facility(part: str) -> tuple[str, str] | None:
         return None
     if ":" in part:
         site_raw, facility_raw = part.split(":", 1)
-        site = normalize(site_raw)
+        site = normalize_text_with_ampersand(site_raw)
         facility = canonical_facility(facility_raw)
         if site and facility_type(facility):
             return site, facility
@@ -260,27 +265,6 @@ def unwrap_location_cache(payload: Any) -> dict[str, Any]:
     if isinstance(payload, dict):
         return payload
     return {}
-
-
-def event_cemsids(row: dict[str, Any]) -> set[str]:
-    raw = row.get("source_cemsid") or row.get("cemsid") or []
-    if isinstance(raw, list):
-        return {str(item) for item in raw if str(item)}
-    if raw:
-        return {str(raw)}
-    return set()
-
-
-def stable_event_identity(row: dict[str, Any]) -> str:
-    return "|".join(
-        [
-            str(row.get("source_event_id") or row.get("event_id") or row.get("id") or ""),
-            normalize(row_location(row)),
-            ",".join(sorted(event_cemsids(row))),
-            str(row.get("date") or ""),
-            str(row.get("start_date_time") or ""),
-        ]
-    )
 
 
 def cache_entry_matches_promoted(cache_row: dict[str, Any], promoted_row: dict[str, Any]) -> bool:
