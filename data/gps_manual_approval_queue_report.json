@@ -1,17 +1,18 @@
 {
-  "approval_queue_count": 41,
+  "approval_queue_count": 47,
   "approved_count": 0,
   "borough_counts": {
-    "Bronx": 4,
-    "Brooklyn": 14,
-    "Manhattan": 12,
-    "Queens": 11
+    "Bronx": 5,
+    "Brooklyn": 17,
+    "Manhattan": 13,
+    "Queens": 12
   },
   "confidence_counts": {
-    "medium": 41
+    "high": 40,
+    "medium": 7
   },
-  "filled_candidates_loaded": 41,
-  "generated_at_utc": "2026-07-07T12:16:04.476795+00:00",
+  "filled_candidates_loaded": 47,
+  "generated_at_utc": "2026-07-13T22:17:12.712838+00:00",
   "input_proposal_count": 50,
   "location_cache_modified": false,
   "next_required_step": "Manually review queue rows. Only after manual approval should a separate validator and promotion script be used.",
@@ -19,7 +20,8 @@
   "promotion_allowed_count": 0,
   "public_map_modified": false,
   "source_counts": {
-    "existing_location_cache_place_memory": 41
+    "existing_location_cache_place_memory": 7,
+    "nyc_parks_bigapps": 40
   },
   "staged_feed_modified": false
 }

@@ -139,6 +139,10 @@ def build_reference_index(paths: list[tuple[str, Path]]) -> dict[str, dict[str, 
             }
             for key in reference_keys(row):
                 index.setdefault(key, reference)
+            for field in ("name", "place_name", "facility_name", "display_location", "location_text"):
+                simplified = simplified_place(str(row.get(field) or ""))
+                if simplified:
+                    index.setdefault(simplified, reference)
     return index
 
 
@@ -153,6 +157,8 @@ def simplified_place(text: str) -> str:
     first = str(text or "").split(",")[0].strip()
     if ":" in first:
         first = first.split(":", 1)[0].strip()
+    if "(" in first:
+        first = first.split("(", 1)[0].strip()
     return normalize_text_legacy(first)
 
 
@@ -182,6 +188,14 @@ def fill_from_references(row: dict[str, Any], reference_index: dict[str, dict[st
     for key in proposal_keys(row):
         if key in reference_index:
             return reference_index[key]
+    for value in (
+        row.get("display_location"),
+        row.get("simplified_geocoder_query"),
+        row.get("geocoder_query"),
+    ):
+        simplified = simplified_place(str(value or ""))
+        if simplified and simplified in reference_index:
+            return reference_index[simplified]
     return None
 
 
