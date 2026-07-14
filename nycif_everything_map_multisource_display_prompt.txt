@@ -1,0 +1,198 @@
+NYCIF — EVERYTHING-MAP MULTI-SOURCE DISPLAY
+FILL THE MAP FROM EXISTING JSON (FIELD DESK FIRST)
+
+Repository: setoxxx/nycif-live-feeds
+Frontend sibling: setoxxx/nycif-field-desk
+Base of truth: origin/main
+
+Howard’s intent: the map UI already looks excellent. The taxonomy / category /
+Major-All handshake is understood. Now make NYCIF the “everything app” by
+filling the map from the JSON we already pulled — not by inventing new scrapers —
+so the date strip (“Ouija board”) carries a dense, trustworthy city picture through
+the rest of 2026 (and early 2027 if present).
+
+============================================================
+PRIME DIRECTIVE
+============================================================
+Do not publish bad data.
+Prefer Field Desk / review / staging visibility over silent public promotion.
+Keep protected production artifacts untouched unless this prompt explicitly
+authorizes a named write.
+Inspect report artifacts before claiming success.
+
+============================================================
+WHAT ALREADY EXISTS (RE-VERIFY, DO NOT GUESS)
+============================================================
+Re-read these on main and quote actual counts in your final report:
+
+PRIMARY / ALREADY MAP-READY
+1) data/schema-v1-discovery/approved/   (~32,845) — NYC Open Data permits (tvpp)
+   window approximately 2026-07-14 → 2026-12-27
+2) data/schema-v1-discovery/major/      (~910)    — major subset of approved
+3) data/events_discovery_v02_approved.json
+4) data/events_discovery_v02_major.json
+5) data/nycif_staged_live_events.json / nycif_all_radar_map_events.json
+   (permit family — do not treat as the only universe)
+
+EXTRA EVENTS ALREADY PULLED — MUST BECOME VISIBLE ON FIELD DESK
+6) data/schema-v1-discovery/review/    (~4,435)  — calendar + Parks BigApps pages
+7) data/events_discovery_v02_review.json
+8) data/events_schema_v1_supplemental_review.json (~4,032)
+9) data/supplemental_events_staging_feed.json
+   - ~2,502 calendar_only + ~1,530 parks_only
+   - ~2,961 with lat/lng, ~1,071 list-only/no coords
+   - promotion_allowed: false, manual_review_status: pending
+10) data/nyc_citywide_events_calendar_snapshot.json (~2,781)
+11) data/nyc_parks_bigapps_events_snapshot.json (~1,654)
+12) data/calendar_parks_coord_match_proposals.json
+13) supplemental_*_review_queue.json / findings / CSV helpers
+14) data/events_discovery_missing_coordinates_v02.json (~1,350 list-only)
+15) data/events_discovery_low_confidence_v02.json
+16) data/howard_classification_assist_v02.json + godview digest
+17) Public overlay JSONs used by Field Desk (Active 5PM / cannabis / correlation)
+    — these are layers, not substitute event sources
+
+ASSISTING CLASSIFICATION / GEO MEMORY (read-only unless explicitly allowed)
+- data/nyc_parks_facility_reference.json
+- data/remainder_year_coverage_report.json
+- data/events_discovery_taxonomy_v02_audit.json
+- data/events_discovery_reconciliation_v02.json
+- data/events_source_inventory_v02.json
+
+============================================================
+GOAL
+============================================================
+Make Field Desk an everything desk:
+
+A. Approved path keeps the year-end permit glide (Ouija board).
+B. Review / Supplemental path shows calendar + Parks as first-class map/list data.
+C. List-only rows remain searchable without invented pins.
+D. Overlays remain optional and clearly labeled.
+E. Operators can see *why* a pin/list row is Approved vs Review vs List-only.
+F. Package Field Desk so Howard’s Pages push turns this on for the beautiful UI.
+
+This is a DISPLAY + PACKAGING + CONTINUITY milestone, not a silent public-map
+promotion of unreviewed GPS.
+
+============================================================
+AUTHORIZED WORK (DO IN ORDER)
+============================================================
+
+PHASE 1 — Source-of-truth audit for the everything map
+1. Produce data/everything_map_source_matrix.json + .md summarizing, for every
+   candidate JSON above:
+   - path, row count, date min/max
+   - source dataset / intake_type
+   - coordinate status (map_ready / proposed / missing)
+   - current map lane: approved / review / overlay / not-wired / protected
+   - whether Field Desk currently loads it
+2. Produce data/map_display_continuity_report.json:
+   - day-by-day counts for Approved, Review, Major from today → latest_date
+   - cliff/gap days, sudden drops, empty chips
+   - prove the Ouija board has events across the remainder of 2026 on Approved,
+     and that Review densifies the calendar where permits are thin
+
+PHASE 2 — Wire the everything-map lanes (Field Desk / discovery runtime)
+3. Ensure schema-v1 / discovery runtime source filter is unmistakable:
+   - Approved = permit/production-ready discovery approved pages
+   - Review = calendar + Parks review pages (schema-v1-discovery/review)
+   - All = Approved ∪ Review
+4. Default still Major + Next 7 days (do not surprise Howard with All Everywhere
+   as the first paint). Add clear UI affordances:
+   - “Show All Upcoming”
+   - source filter labels with live counts
+   - optional banner when Review rows are included: “Includes calendar/Parks under review”
+5. List-only / missing-coordinate rows:
+   - appear in search/list
+   - no invented map pins
+   - preserve review reasons from discovery missing-coordinates / supplemental feeds
+6. Use assisting JSON only to improve *display/explainability*:
+   - coord proposals may inform Review tooltips / confidence badges
+   - do NOT auto-write location_cache.json from proposals
+7. Regenerate discovery/schema page shards if code/filter rules require it so
+   main artifacts match the UI contract. Keep reconciliation + taxonomy QA green.
+
+PHASE 3 — Field Desk “everything app” package
+8. Update docs/field-desk-map-deploy/discovery-taxonomy-v02/ (and schema-v1-major-all
+   shared runtime as needed) so Pages can load:
+   - major + approved + review feeds from main
+   - overlays still optional
+   - version token that busts caches
+9. README with exact Howard copy/push checklist into nycif-field-desk
+   (bot cannot push field-desk).
+10. Headless/local QA script or checklist proving:
+    - Major mode paints
+    - All + Approved shows dense permits through Dec
+    - All + Review (or All) shows calendar/Parks pins/list
+    - date chips move across months without silent empties where data exists
+    - overlays toggle independently
+
+PHASE 4 — Operator desk glue
+11. Keep/extend Discovery God View so Howard can see daily added/rejected/
+    low-confidence/missing GPS/supplemental queues in one place.
+12. Refresh status/nycif-project-status.json honestly.
+
+============================================================
+OPTIONAL FAST DENSITY WIN (AUTHORIZED AS REVIEW-LAYER ONLY)
+============================================================
+You MAY promote calendar/Parks rows with valid NYC coordinates into the
+Field Desk **Review** lane / schema-v1-discovery/review pages if they are not
+already there after regeneration.
+
+You may label high-confidence proposed coordinates as “review proposed” in UI.
+
+You may NOT:
+- merge supplemental into data/nycif_staged_live_events.json
+- set promotion_allowed true on supplemental staging
+- write data/location_cache.json
+- publish WordPress / claim public nycinfocus.com map updated
+- treat Review as Approved
+
+If Howard later wants Review→Approved public promotion, that requires a separate
+prompt with explicit publish/promote language.
+
+============================================================
+EXPLICITLY NOT AUTHORIZED
+============================================================
+- Canonical Milestone 7-C
+- Phase 2E writes to location_cache.json
+- Editing protected files:
+  - data/location_cache.json
+  - data/nycif_staged_live_events.json
+  - data/staged_live_manifest.json
+  - data/previous_staged_live_events_snapshot.json
+- Public-map publish / WordPress live install
+- Pushing to nycif-field-desk if 403 (package + instructions only)
+- External paid geocoding auto-promote
+- Inventing events not present in pulled JSON
+
+============================================================
+DEFINITION OF DONE
+============================================================
+1) Source matrix + continuity report committed and inspected
+2) Field Desk package loads Approved + Review + Major from main discovery feeds
+3) Calendar + Parks contribute visible map/list density under Review/All
+4) Permit Ouija board still covers ~through 2026-12-27 on Approved
+5) List-only rows searchable, not fake-pinned
+6) discovery/schema QA green where applicable; full pytest if touched
+7) Status updated; zero false claims of public publish
+8) Final report includes:
+   - files/PRs changed
+   - before/after source counts on map lanes
+   - date coverage chart summary
+   - safety confirmation
+   - exact Howard field-desk push + Pages QA steps
+   - what remains unapproved for public promotion
+
+============================================================
+WORKING RULES
+============================================================
+- Smallest safe change; reuse discovery-taxonomy-v02 + schema-v1-major-all-v01
+- Branch: cursor/everything-map-multisource-display-<suffix>
+- Open/update a draft PR; mark ready when green
+- Do not merge unless Howard’s session separately authorizes merge
+- Prefer regenerating discovery review shards over one-off hardcoded JSON edits
+- Never claim public-map changes unless intentionally changed and verified
+
+Start with Phase 1 audits against main artifacts, then Phase 2 wiring, then the
+Field Desk package Howard can push.
