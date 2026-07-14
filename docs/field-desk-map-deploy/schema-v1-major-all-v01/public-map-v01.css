@@ -206,3 +206,220 @@ body.public-map-page .status {
     bottom: 164px;
   }
 }
+
+/* Discovery taxonomy v02 — Explore More + filter counts + focus */
+body.public-map-page .explore-more-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 28px;
+  margin: 4px 0 2px;
+  padding: 5px 6px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 9px;
+  background: rgba(8, 12, 18, .55);
+  color: #f3f4f6;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+}
+
+body.public-map-page .explore-more-toggle:focus-visible,
+body.public-map-page .layers-panel .check input:focus-visible,
+body.public-map-page .layers-panel .load-all:focus-visible,
+body.public-map-page .mode-btn:focus-visible {
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+}
+
+body.public-map-page .explore-more-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0 0 4px;
+  padding: 4px 0 2px 6px;
+  border-left: 2px solid rgba(251, 191, 36, .45);
+}
+
+body.public-map-page .explore-more-panel[hidden] {
+  display: none !important;
+}
+
+body.public-map-page [data-cat-label] .filter-count,
+body.public-map-page .filter-count {
+  opacity: .72;
+  font-weight: 600;
+}
+
+body.public-map-page .empty-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+body.public-map-page .empty-actions .load-all {
+  min-height: 28px;
+}
+
+/* Field Desk popup focus treatment v02 */
+body.public-map-page.nycif-popup-open .map {
+  z-index: 1000;
+}
+
+/* Keep the map natural—no darkening or reduced opacity. */
+body.public-map-page.nycif-popup-open .leaflet-tile-pane {
+  filter: none;
+}
+
+body.public-map-page.nycif-popup-open .leaflet-marker-pane,
+body.public-map-page.nycif-popup-open .leaflet-shadow-pane,
+body.public-map-page.nycif-popup-open .leaflet-overlay-pane {
+  opacity: 1;
+}
+
+body.public-map-page .leaflet-popup-pane {
+  z-index: 2500 !important;
+}
+
+body.public-map-page .nycif-event-popup {
+  margin-bottom: 8px;
+}
+
+body.public-map-page .nycif-event-popup .leaflet-popup-content-wrapper {
+  width: min(360px, calc(100vw - 30px));
+  max-width: min(360px, calc(100vw - 30px));
+  border: 1px solid rgba(255, 255, 255, .72);
+  border-radius: 20px;
+  background: rgba(250, 250, 252, .82);
+  color: #1d1d1f;
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, .24),
+    0 2px 8px rgba(0, 0, 0, .10);
+  backdrop-filter: saturate(180%) blur(22px);
+  -webkit-backdrop-filter: saturate(180%) blur(22px);
+  overflow: hidden;
+}
+
+body.public-map-page .nycif-event-popup .leaflet-popup-content {
+  width: auto !important;
+  max-width: none;
+  margin: 17px 19px 16px;
+}
+
+body.public-map-page .nycif-event-popup .leaflet-popup-tip {
+  background: rgba(250, 250, 252, .82);
+}
+
+body.public-map-page .nycif-event-popup .popup-card {
+  width: 100%;
+  min-width: 0;
+  max-width: none;
+  color: #1d1d1f;
+  font-size: 13px;
+  line-height: 1.38;
+}
+
+body.public-map-page .nycif-event-popup .popup-card h2 {
+  margin: 8px 32px 13px 0;
+  color: #1d1d1f;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.16;
+  letter-spacing: -.018em;
+}
+
+body.public-map-page .nycif-event-popup .popup-category {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin: 0;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: rgba(118, 118, 128, .12);
+  color: #3a3a3c;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+body.public-map-page .nycif-event-popup .popup-card dl {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+body.public-map-page .nycif-event-popup .popup-card dl > div {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr);
+  gap: 10px;
+  padding: 8px 0;
+  border-top: 1px solid rgba(60, 60, 67, .12);
+}
+
+body.public-map-page .nycif-event-popup .popup-card dt {
+  color: #6e6e73;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+body.public-map-page .nycif-event-popup .popup-card dd {
+  min-width: 0;
+  margin: 0;
+  color: #1d1d1f;
+  font-size: 12.5px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+body.public-map-page .nycif-event-popup .field-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+body.public-map-page .nycif-event-popup .field-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 13px;
+  border-radius: 999px;
+  background: #007aff;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+body.public-map-page .nycif-event-popup .field-action:hover {
+  background: #006ee6;
+}
+
+body.public-map-page .nycif-event-popup .leaflet-popup-close-button {
+  top: 9px;
+  right: 9px;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: rgba(118, 118, 128, .12);
+  color: #636366;
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 27px;
+}
+
+@media (max-width: 500px) {
+  body.public-map-page .nycif-event-popup .leaflet-popup-content-wrapper {
+    width: min(340px, calc(100vw - 24px));
+  }
+
+  body.public-map-page .nycif-event-popup .leaflet-popup-content {
+    margin: 15px 16px 14px;
+  }
+
+  body.public-map-page .nycif-event-popup .popup-card h2 {
+    font-size: 17px;
+  }
+}
