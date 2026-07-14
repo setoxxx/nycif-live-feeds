@@ -1,37 +1,54 @@
-# Field-desk public map deploy (M10 staged live)
+# Field-desk public map deploy (emergency restore 2026-07-13)
 
-Copy these files into `nycif-field-desk/` root (and admin panel into `admin/`):
+This package replaces the earlier M10 mirror with the validated emergency restore.
 
-```bash
-cp docs/field-desk-map-deploy/app-v06-safe.js ../nycif-field-desk/
-cp docs/field-desk-map-deploy/public-map-defaults-v01.js ../nycif-field-desk/
-cp docs/field-desk-map-deploy/index.html ../nycif-field-desk/
-cp docs/field-desk-admin-deploy/admin/live-pipeline-panel-v01.js ../nycif-field-desk/admin/
-git add app-v06-safe.js public-map-defaults-v01.js index.html admin/live-pipeline-panel-v01.js
-git commit -m "Public map: staged live default (M10 resolver-backed feed)"
-git push -u origin cursor/live-staged-map-m10-5215
-```
+## Why this exists here
 
-## What changes
+The repair was implemented and locally validated against `nycif-field-desk`, but this cloud agent token cannot push to `setoxxx/nycif-field-desk` (GitHub 403 for `cursor[bot]`). Until Field Desk repo write access is granted, deploy from this mirror.
 
-- **Default boot feed:** staged (`data/nycif_staged_live_events.json`) instead of stale major feed
-- **Filters:** parks + general enabled; major-only off
-- **Marker cap:** 2,000 for staged mode
-- **Cache bust:** `?v=m10-staged-live` on WordPress iframe
-
-## Prerequisites
-
-Run on `nycif-live-feeds` main (or M10 PR) first:
+## Copy into nycif-field-desk root
 
 ```bash
-NYCIF_ALLOW_LIVE_GEOSEARCH=yes python3 scripts/build_test_enriched_feed.py
-python3 scripts/build_staged_production_feed.py
-python3 scripts/build_public_map_feeds.py
+cd /path/to/nycif-field-desk
+git switch main
+git pull --ff-only origin main
+git switch -c cursor/emergency-public-map-restoration-20260713
+
+cp ../nycif-live-feeds/docs/field-desk-map-deploy/app-v06-safe.js ./
+cp ../nycif-live-feeds/docs/field-desk-map-deploy/public-map-defaults-v01.js ./
+cp ../nycif-live-feeds/docs/field-desk-map-deploy/index.html ./
+cp ../nycif-live-feeds/docs/field-desk-map-deploy/service-worker.js ./
+cp ../nycif-live-feeds/docs/field-desk-map-deploy/public-map-v01.css ./
+cp ../nycif-live-feeds/docs/field-desk-map-deploy/event-significance-v01.js ./
+cp ../nycif-live-feeds/docs/field-desk-map-deploy/map-date-key-v01.js ./
+mkdir -p docs tests
+cp ../nycif-live-feeds/docs/field-desk-map-deploy/event-significance-v01.md docs/
+cp ../nycif-live-feeds/docs/field-desk-map-deploy/public-map-emergency-restoration-diagnostic.md docs/
+cp ../nycif-live-feeds/docs/field-desk-map-deploy/public-map-emergency-restoration-qa.md docs/
+cp ../nycif-live-feeds/docs/field-desk-map-deploy/tests/map-restore-unit.test.js tests/
+
+git add app-v06-safe.js public-map-defaults-v01.js index.html service-worker.js public-map-v01.css \
+  event-significance-v01.js map-date-key-v01.js docs tests
+git commit -m "Emergency: restore public event population, fitness, and significance badges"
+git push -u origin cursor/emergency-public-map-restoration-20260713
 ```
 
-Merge backend PR, then deploy field-desk to GitHub Pages.
+Alternate artifact:
 
-## Verify
+- `dist/nycif-field-desk-map-restore-v01.zip`
+- `dist/nycif-field-desk-emergency-restore-20260713.patch`
 
-- https://setoxxx.github.io/nycif-field-desk/ — should show ~32k staged events (filtered by date/category)
-- https://nycinfocus.com/map/ — update iframe cache param after deploy
+## What this restore does
+
+- Boots staged feed first, then full, then major
+- Public defaults `staged-live-v03` (parks/general/fitness on, majorOnly off)
+- Next-available-date fallback when Today is empty
+- Fitness / wellness category everywhere
+- Gold/Silver/Bronze evidence-based significance UI
+- Service worker cache `nycif-v015-emergency-map-restore`
+- Preserves 5PM / cannabis / correlation overlays
+
+## Do not
+
+- Modify `data/location_cache.json`
+- Upload the WordPress plugin before GitHub Pages serves this Field Desk build

@@ -1,0 +1,208 @@
+/* NYCIF public map polish v01 */
+body.public-map-page .brand-card {
+  max-width: min(360px, calc(100vw - 98px));
+}
+
+body.public-map-page .brand-card strong::after {
+  content: " Event Map";
+}
+
+body.public-map-page .panel-label {
+  font-size: 0;
+}
+
+body.public-map-page .panel-label::after {
+  content: "Choose what to show";
+  font-size: 9.5px;
+}
+
+body.public-map-page .pill.layers-pill {
+  min-height: 31px;
+  padding: 0 10px;
+  gap: 6px;
+  font-size: 11px;
+  border-width: 1px;
+}
+
+body.public-map-page .pill.layers-pill span {
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
+}
+
+body.public-map-page .layers-panel {
+  width: min(208px, calc(100vw - 18px));
+  padding: 8px;
+  border-radius: 14px;
+  max-height: 52dvh;
+}
+
+body.public-map-page .layers-panel .check {
+  min-height: 26px;
+  padding: 3px 4px;
+  gap: 7px;
+  border-radius: 9px;
+  font-size: 10px;
+}
+
+body.public-map-page .layers-panel .check input {
+  width: 14px;
+  height: 14px;
+}
+
+body.public-map-page .layers-panel hr {
+  margin: 6px 0;
+}
+
+body.public-map-page #loadAllBtn {
+  min-height: 29px;
+  border-radius: 10px;
+  background: #111827;
+  font-size: 10px;
+}
+
+body.public-map-page #loadAllBtn::before {
+  content: "";
+}
+
+body.public-map-page #loadStagedBtn,
+body.public-map-page .staged-feed-test,
+body.public-map-page .full-today-test,
+body.public-map-page .full-data-test,
+body.public-map-page #statsToggleV05,
+body.public-map-page #statsPanelV05,
+body.public-map-page #feedStatusToggleV01,
+body.public-map-page #feedStatusPanelV01,
+body.public-map-page #truthPanelV09,
+body.public-map-page #truthToggleV09,
+body.public-map-page #testFeedPanelV01,
+body.public-map-page #testFeedToggleV01,
+body.public-map-page #testMapLayerPanelV01,
+body.public-map-page #testMapLayerToggleV01 {
+  display: none !important;
+}
+
+body.public-map-page .leaflet-control-zoom {
+  display: none !important;
+}
+
+body.public-map-page .status {
+  max-width: 720px;
+}
+
+.public-intro-v01 {
+  position: absolute;
+  z-index: 745;
+  left: calc(env(safe-area-inset-left, 0px) + 10px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 48px);
+  max-width: min(520px, calc(100vw - 20px));
+  padding: 8px 11px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, .94);
+  color: #111827;
+  box-shadow: 0 10px 28px rgba(0,0,0,.20);
+  backdrop-filter: blur(12px);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.public-intro-v01 strong {
+  color: #d40000;
+}
+
+@media (max-width: 700px) {
+  .public-intro-v01 {
+    display: none;
+  }
+}
+
+/* Emergency map restore: significance badges + empty recovery */
+.tier-badge {
+  display: inline-block;
+  margin-left: 4px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+  border: 1px solid transparent;
+  color: #111;
+}
+.tier-badge--gold {
+  background: #f5e6a8;
+  border-color: #b8860b;
+  color: #5c4300;
+}
+.tier-badge--silver {
+  background: #e8ebef;
+  border-color: #7a8694;
+  color: #334155;
+}
+.tier-badge--bronze {
+  background: #efd5bf;
+  border-color: #8b5a2b;
+  color: #5c3317;
+}
+.marker-tier {
+  position: absolute;
+  right: -2px;
+  bottom: -2px;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 2px;
+  border-radius: 3px;
+  background: #111;
+  color: #fff;
+  font-size: 8px;
+  font-weight: 800;
+  line-height: 14px;
+  text-align: center;
+}
+.marker--tier-gold .marker-tier { background: #b8860b; color: #fff; }
+.marker--tier-silver .marker-tier { background: #64748b; color: #fff; }
+.marker--tier-bronze .marker-tier { background: #8b5a2b; color: #fff; }
+.marker--fitness { box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.45); }
+.panel-sublabel {
+  margin: 4px 0 2px;
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #64748b;
+}
+.integrity-inline,
+.integrity-note {
+  margin: 4px 0 0;
+  font-size: 9px;
+  line-height: 1.3;
+  color: #64748b;
+}
+.popup-why-tier ul {
+  margin: 4px 0 0;
+  padding-left: 16px;
+}
+.empty-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.empty-actions button {
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  border-radius: 8px;
+  padding: 6px 8px;
+  font-size: 11px;
+  cursor: pointer;
+}
+.empty--error {
+  color: #991b1b;
+  background: #fef2f2;
+  border-radius: 10px;
+  padding: 10px;
+}
+body.public-map-page .layers-panel {
+  max-height: min(70dvh, 540px);
+  overflow: auto;
+}

@@ -1,6 +1,6 @@
 (function () {
   const STORAGE_KEY = 'nycif-field-desk-state-v06-safe';
-  const DEFAULT_VERSION = 'staged-live-v02';
+  const DEFAULT_VERSION = 'staged-live-v03';
   const defaults = {
     borough: 'all',
     sort: 'priority',
@@ -11,13 +11,17 @@
       market: true,
       arts: true,
       parks: true,
-      general: true,
-      fitness: false
+      fitness: true,
+      general: true
     },
     majorOnly: false,
     photoOnly: false,
     nypdOnly: false,
-    newOnly: false
+    newOnly: false,
+    significanceGold: true,
+    significanceSilver: true,
+    significanceBronze: true,
+    significanceOnly: false
   };
 
   function applyDefaults(forceReset) {
@@ -31,6 +35,13 @@
         ...defaults,
         nycifDefaultVersion: DEFAULT_VERSION
       }));
+    } else if (existing.categories && typeof existing.categories.fitness === 'undefined') {
+      existing.categories.fitness = true;
+      if (typeof existing.significanceGold === 'undefined') existing.significanceGold = true;
+      if (typeof existing.significanceSilver === 'undefined') existing.significanceSilver = true;
+      if (typeof existing.significanceBronze === 'undefined') existing.significanceBronze = true;
+      if (typeof existing.significanceOnly === 'undefined') existing.significanceOnly = false;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
     }
   }
 
@@ -43,7 +54,9 @@
       || versionFlag === 'c5p-postpublish-02'
       || versionFlag === 'm10-staged-live'
       || versionFlag === 'staged-live-v01'
-      || versionFlag === 'staged-live-v02';
+      || versionFlag === 'staged-live-v02'
+      || versionFlag === 'staged-live-v03'
+      || versionFlag === 'map-restore-v01';
     applyDefaults(forceReset);
   } catch {
     localStorage.setItem(STORAGE_KEY, JSON.stringify({

@@ -14,11 +14,11 @@
   <link rel="preconnect" href="https://raw.githubusercontent.com">
   <link rel="preconnect" href="https://{s}.tile.openstreetmap.org">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="./style.css?v=hotfix-053">
-  <link rel="stylesheet" href="./fielddesk-v02.css?v=v06safe-01">
-  <link rel="stylesheet" href="./weekstrip-v06-safe.css?v=073time">
-  <link rel="stylesheet" href="./staged-map-mode-v01.css?v=01">
-  <link rel="stylesheet" href="./public-map-v01.css?v=ui-final-04">
+  <link rel="stylesheet" href="./style.css?v=map-restore-v01">
+  <link rel="stylesheet" href="./fielddesk-v02.css?v=map-restore-v01">
+  <link rel="stylesheet" href="./weekstrip-v06-safe.css?v=map-restore-v01">
+  <link rel="stylesheet" href="./staged-map-mode-v01.css?v=map-restore-v01">
+  <link rel="stylesheet" href="./public-map-v01.css?v=map-restore-v01">
 </head>
 <body class="public-map-page">
   <main id="app" class="app">
@@ -51,7 +51,7 @@
           Show more events
         </button>
 
-        <label class="check major"><input type="checkbox" id="majorOnly" checked> <span>⭐ Major events only</span></label>
+        <label class="check major"><input type="checkbox" id="majorOnly"> <span>⭐ Major events only</span></label>
 
         <hr>
 
@@ -62,6 +62,14 @@
         <label class="check"><input type="checkbox" data-cat="parks"> <span>🌳 Parks / family</span></label>
         <label class="check"><input type="checkbox" data-cat="fitness"> <span>💪 Fitness / wellness</span></label>
         <label class="check"><input type="checkbox" data-cat="general"> <span>📍 General</span></label>
+
+        <hr>
+        <p class="panel-sublabel">Event significance</p>
+        <label class="check"><input type="checkbox" id="significanceGold" checked> <span><span class="tier-badge tier-badge--gold" aria-hidden="true">Gold</span> Gold</span></label>
+        <label class="check"><input type="checkbox" id="significanceSilver" checked> <span><span class="tier-badge tier-badge--silver" aria-hidden="true">Silver</span> Silver</span></label>
+        <label class="check"><input type="checkbox" id="significanceBronze" checked> <span><span class="tier-badge tier-badge--bronze" aria-hidden="true">Bronze</span> Bronze</span></label>
+        <label class="check"><input type="checkbox" id="significanceOnly"> <span>Significance only (hide untiered)</span></label>
+        <p class="integrity-inline">Event significance is evidence-based and cannot be purchased.</p>
 
         <hr>
 
@@ -109,27 +117,28 @@
         </label>
 
         <div id="listMeta" class="list-meta">Loading events...</div>
+        <div id="emptyState" class="empty-state" hidden></div>
         <div id="eventList" class="event-list"></div>
       </aside>
 
-      <div class="public-intro-v01"><strong>NYC In Focus:</strong> a live field map of public events, civic activity, arts, markets, parks and sports across New York City. Event details can change; confirm before traveling.</div>
+      <div class="public-intro-v01"><strong>NYC In Focus:</strong> a live field map of public events, civic activity, arts, markets, parks, fitness and sports across New York City. Event details can change; confirm before traveling.</div>
       <div id="status" class="status">Loading NYC In Focus event map…</div>
     </section>
   </main>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="./public-approved-overlays-capture-v01.js?v=02"></script>
-  <script src="./public-map-defaults-v01.js?v=staged-live-v02"></script>
-  <script src="./boot-today-v073-safe.js?v=01"></script>
-  <script src="./date-normalizer-v073-safe.js?v=01"></script>
-  <script src="./calendar-links-v01.js?v=07"></script>
-  <script src="./vip-filter-v01.js?v=01"></script>
-  <script src="./live-alerts-v02.js?v=02"></script>
-  <script src="./ui-polish-v01.js?v=03"></script>
-  <script src="./event-location-corrections-v01.js?v=01"></script>
-  <script src="./app-v06-safe.js?v=staged-live-m10" type="module"></script>
-  <script src="./public-approved-overlays-v01.js?v=03"></script>
-  <script src="./popup-autoclose-fix-v01.js?v=popup-v05-hide-x"></script>
-  <script src="./staged-review-autoload-v01.js?v=01"></script>
+  <script src="./public-approved-overlays-capture-v01.js?v=map-restore-v01"></script>
+  <script src="./public-map-defaults-v01.js?v=map-restore-v01"></script>
+  <script src="./boot-today-v073-safe.js?v=map-restore-v01"></script>
+  <script src="./date-normalizer-v073-safe.js?v=map-restore-v01"></script>
+  <script src="./calendar-links-v01.js?v=map-restore-v01"></script>
+  <script src="./vip-filter-v01.js?v=map-restore-v01"></script>
+  <script src="./live-alerts-v02.js?v=map-restore-v01"></script>
+  <script src="./ui-polish-v01.js?v=map-restore-v01"></script>
+  <script src="./event-location-corrections-v01.js?v=map-restore-v01"></script>
+  <script src="./app-v06-safe.js?v=map-restore-v01" type="module"></script>
+  <script src="./public-approved-overlays-v01.js?v=map-restore-v01"></script>
+  <script src="./popup-autoclose-fix-v01.js?v=map-restore-v01"></script>
+  <script src="./staged-review-autoload-v01.js?v=map-restore-v01"></script>
 </body>
 </html>

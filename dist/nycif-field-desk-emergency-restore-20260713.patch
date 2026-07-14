@@ -1,0 +1,1777 @@
+From 70fdca63f7f9aeb656328ae77603a489de601ef9 Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Tue, 14 Jul 2026 02:48:02 +0000
+Subject: [PATCH 1/4] Restore staged-feed boot and resilient date fallback
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Boot staged→full→major with no-store fetches, next-available-date
+fallback when Today is empty, and row.date-first date keys.
+---
+ app-v06-safe.js            | 478 +++++++++++++++++++++++++++++++++----
+ index.html                 |  50 ++--
+ map-date-key-v01.js        |  18 ++
+ public-map-defaults-v01.js |  29 ++-
+ 4 files changed, 497 insertions(+), 78 deletions(-)
+ create mode 100644 map-date-key-v01.js
+
+diff --git a/app-v06-safe.js b/app-v06-safe.js
+index 1a39789..7d08424 100644
+--- a/app-v06-safe.js
++++ b/app-v06-safe.js
+@@ -1,7 +1,15 @@
+-const VERSION = '0.6-staged-03-new-admin-filter';
++import {
++  classifyEventSignificance,
++  SIGNIFICANCE_INTEGRITY,
++  SIGNIFICANCE_VERSION
++} from './event-significance-v01.js';
++import { eventDateKey, isValidDateKey } from './map-date-key-v01.js';
++
++const VERSION = '0.8-emergency-map-restore-v01';
+ const NYC_CENTER = [40.7128, -74.0060];
+ const STORAGE_KEY = 'nycif-field-desk-state-v06-safe';
+-const PUBLIC_DEFAULT_VERSION = 'major-only-v04';
++const PUBLIC_DEFAULT_VERSION = 'staged-live-v03';
++const STAGED_MARKER_CAP = 2000;
+ 
+ const FEEDS = {
+   major: 'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/nycif_major_radar_map_events.json',
+@@ -12,9 +20,11 @@ const DELTA_REPORT_URL = 'https://raw.githubusercontent.com/setoxxx/nycif-live-f
+ 
+ const BOROUGHS = ['All', 'Manhattan', 'Brooklyn', 'Queens', 'Bronx', 'Staten Island'];
+ const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
++const FULL_DAY_NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
++const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+ 
+ const state = {
+-  feed: 'major',
++  feed: 'staged',
+   events: [],
+   fullLoaded: false,
+   stagedLoaded: false,
+@@ -23,15 +33,23 @@ const state = {
+   sort: 'priority',
+   dateMode: 'today',
+   userLocation: null,
+-  categories: { sports: true, parade: true, market: true, arts: true, parks: false, general: false },
++  categories: { sports: true, parade: true, market: true, arts: true, parks: true, fitness: true, general: true },
+   majorOnly: false,
+   photoOnly: false,
+   nypdOnly: false,
+   newOnly: false,
++  significanceGold: true,
++  significanceSilver: true,
++  significanceBronze: true,
++  significanceOnly: false,
+   newlyAddedKeys: new Set(),
+   deltaAddedCount: 0,
+   deltaGeneratedAt: null,
+-  maxMarkers: 650
++  maxMarkers: STAGED_MARKER_CAP,
++  userChangedFilters: false,
++  dateFallbackMessage: '',
++  feedLoadError: '',
++  lastFeedDiag: null
+ };
+ 
+ const els = {
+@@ -57,7 +75,12 @@ const els = {
+   dateChips: document.getElementById('dateChips'),
+   boroughs: document.getElementById('boroughs'),
+   listMeta: document.getElementById('listMeta'),
+-  eventList: document.getElementById('eventList')
++  eventList: document.getElementById('eventList'),
++  emptyState: document.getElementById('emptyState'),
++  significanceGold: document.getElementById('significanceGold'),
++  significanceSilver: document.getElementById('significanceSilver'),
++  significanceBronze: document.getElementById('significanceBronze'),
++  significanceOnly: document.getElementById('significanceOnly')
+ };
+ 
+ const map = L.map(els.map, { zoomControl: true, closePopupOnClick: false, tap: false }).setView(NYC_CENTER, 11);
+@@ -79,6 +102,12 @@ function weekStartSunday(date) { const d = new Date(date); d.setHours(0, 0, 0, 0
+ function isWeekendDate(date) { return !!date && (date.getDay() === 0 || date.getDay() === 6); }
+ function timeLabel(date) { return date ? date.toLocaleString([], { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) : 'Time not listed'; }
+ function isNYCoord(lat, lng) { return Number.isFinite(lat) && Number.isFinite(lng) && lat >= 40.4774 && lat <= 40.9176 && lng >= -74.2591 && lng <= -73.7004; }
++function formatHumanDate(key) {
++  if (!isValidDateKey(key)) return key;
++  const [y, m, d] = key.split('-').map(Number);
++  const dt = new Date(y, m - 1, d);
++  return `${FULL_DAY_NAMES[dt.getDay()]}, ${MONTH_NAMES[dt.getMonth()]} ${dt.getDate()}`;
++}
+ 
+ function milesBetween(a, b) {
+   if (!a || !b) return null;
+@@ -109,6 +138,7 @@ function category(row) {
+   if (preset === 'market') return { key: 'market', emoji: '🛍️', label: 'Market / street fair' };
+   if (preset === 'arts') return { key: 'arts', emoji: '🎭', label: 'Arts / production' };
+   if (preset === 'parks') return { key: 'parks', emoji: '🌳', label: 'Parks / family' };
++  if (preset === 'fitness') return { key: 'fitness', emoji: '💪', label: 'Fitness / wellness' };
+   const text = normalize([row.title, row.event_type, row.type, row.location, row.display_location, row.lane, row.nypd_notice, row.verification_status, row.icon].join(' '));
+   const icon = row.icon || '';
+   if (icon === '🌈' || /pride/.test(text)) return { key: 'parade', emoji: '🌈', label: 'Pride / parade' };
+@@ -117,6 +147,9 @@ function category(row) {
+   if (icon === '📣' || /parade|march|rally|vigil|ceremony|memorial|civic|street event|block party/.test(text)) return { key: 'parade', emoji: icon || '📣', label: 'Parade / civic' };
+   if (icon === '🛍️' || /market|food|vendor|feast|fair|merchandise|pop[- ]?up/.test(text)) return { key: 'market', emoji: icon || '🛍️', label: 'Market / street fair' };
+   if (icon === '🎭' || /music|concert|arts|dance|theater|theatre|film|production|performance/.test(text)) return { key: 'arts', emoji: icon || '🎭', label: 'Arts / production' };
++  if (/yoga|zumba|pilates|fitness|workout|aerobics|aerobic|exercise|calisthenics|boot camp|bootcamp|barre|spin class|spinning|tai chi|qigong|wellness class|movement class|stretching|training session/.test(text)) {
++    return { key: 'fitness', emoji: '💪', label: 'Fitness / wellness' };
++  }
+   if (icon === '🌳' || /park|family|kids|children|beach|garden|nature/.test(text)) return { key: 'parks', emoji: icon || '🌳', label: 'Parks / family' };
+   return { key: 'general', emoji: icon || '📍', label: 'General event' };
+ }
+@@ -133,6 +166,9 @@ function priority(event) {
+   if (event.crowd_level === 'medium_high') score += 160;
+   if (event.category.key === 'parade') score += 75;
+   if (event.category.key === 'market') score += 45;
++  if (event.significance?.tier === 'Gold') score += 120;
++  if (event.significance?.tier === 'Silver') score += 60;
++  if (event.significance?.tier === 'Bronze') score += 25;
+   return score;
+ }
+ 
+@@ -159,17 +195,39 @@ function isNewlyAdded(event) {
+   return state.newlyAddedKeys.has(deltaKey(event)) || state.newlyAddedKeys.has(String(event.id || '').trim()) || state.newlyAddedKeys.has(String(event.source_event_id || '').trim());
+ }
+ 
++function tierBadge(event) {
++  const tier = event.significance?.tier;
++  if (!tier) return '';
++  const label = `${tier} significance`;
++  return `<span class="tier-badge tier-badge--${tier.toLowerCase()}" aria-label="${esc(label)}"><span class="sr-only">${esc(label)}: </span>${esc(tier)}</span>`;
++}
++
+ function makeEvent(row, index) {
+-  const lat = Number.parseFloat(row.lat);
+-  const lng = Number.parseFloat(row.lng);
++  const lat = Number.parseFloat(row.lat ?? row.latitude);
++  const lng = Number.parseFloat(row.lng ?? row.longitude);
+   if (!isNYCoord(lat, lng)) return null;
+   const cat = category(row);
+   const start = parseDate(row.start_date_time || row.start || row.date);
+   const title = row.title || row.name || 'Untitled event';
+   const location = row.display_location || row.location || row.address || '';
+-  const event = { ...row, id: String(row.id || `event-${index}`), title, location, borough: row.borough || '', type: row.event_type || row.type || '', lat, lng, start, dateKey: dateKey(start) || (row.date || row.start_date_time || '').slice(0, 10), category: cat, searchText: normalize([title, location, row.borough, row.event_type, row.type, row.lane, row.nypd_notice, row.verification_status, row.source_file, row.major_reason, row.crowd_level].join(' ')) };
++  const dKey = eventDateKey(row, start);
++  const event = {
++    ...row,
++    id: String(row.id || `event-${index}`),
++    title,
++    location,
++    borough: row.borough || '',
++    type: row.event_type || row.type || '',
++    lat,
++    lng,
++    start,
++    dateKey: dKey,
++    category: cat,
++    searchText: normalize([title, location, row.borough, row.event_type, row.type, row.lane, row.nypd_notice, row.verification_status, row.source_file, row.major_reason, row.crowd_level, cat.label, 'fitness wellness'].join(' '))
++  };
+   if (row.staged_feed && !event.assignment_feed) event.assignment_feed = 'staged';
+   event.photoPick = isPhotoPick(event);
++  event.significance = classifyEventSignificance(event);
+   event.priority = priority(event);
+   event.newlyAdded = isNewlyAdded(event);
+   event.marker = null;
+@@ -177,7 +235,7 @@ function makeEvent(row, index) {
+ }
+ 
+ function assignmentText(event) {
+-  const lines = ['NYCIF FIELD ASSIGNMENT', event.title, `Time: ${timeLabel(event.start)}`, event.borough ? `Borough: ${event.borough}` : '', event.location ? `Location: ${event.location}` : '', distanceLabel(event) ? `Distance: ${distanceLabel(event)}` : '', `Photo priority: ${photoPriority(event)}`, crowdLabel(event) ? `Assignment read: ${crowdLabel(event)}` : '', isNypd(event) ? 'NYPD intel item' : '', event.nypd_notice ? `NYPD note: ${event.nypd_notice}` : '', `Apple Maps: ${appleMapsUrl(event)}`, `Google Maps: ${googleMapsUrl(event)}`, (event.source_url || event.url || event.event_url) ? `Source: ${event.source_url || event.url || event.event_url}` : ''];
++  const lines = ['NYCIF FIELD ASSIGNMENT', event.title, `Time: ${timeLabel(event.start)}`, event.borough ? `Borough: ${event.borough}` : '', event.location ? `Location: ${event.location}` : '', distanceLabel(event) ? `Distance: ${distanceLabel(event)}` : '', `Photo priority: ${photoPriority(event)}`, event.significance?.tier ? `Significance: ${event.significance.tier}` : '', crowdLabel(event) ? `Assignment read: ${crowdLabel(event)}` : '', isNypd(event) ? 'NYPD intel item' : '', event.nypd_notice ? `NYPD note: ${event.nypd_notice}` : '', `Apple Maps: ${appleMapsUrl(event)}`, `Google Maps: ${googleMapsUrl(event)}`, (event.source_url || event.url || event.event_url) ? `Source: ${event.source_url || event.url || event.event_url}` : ''];
+   return lines.filter(Boolean).join('\n');
+ }
+ 
+@@ -190,22 +248,27 @@ async function copyAssignment(event) {
+ function feedLabel() {
+   if (state.feed === 'major') return 'Fast major feed';
+   if (state.feed === 'full') return 'Full feed';
+-  if (state.feed === 'staged') return 'Staged deduped feed';
++  if (state.feed === 'staged') return 'Staged live feed';
+   return 'Live feed';
+ }
+ 
+ function popupHtml(event) {
+-  const source = isNypd(event) ? 'NYPD Field Intel' : (event.assignment_feed === 'staged' ? 'Staged Deduped Feed' : event.assignment_feed === 'major' ? 'Major Assignment Feed' : 'NYCIF Live Feed');
++  const source = isNypd(event) ? 'NYPD Field Intel' : (event.assignment_feed === 'staged' ? 'Staged Live Feed' : event.assignment_feed === 'major' ? 'Major Assignment Feed' : 'NYCIF Live Feed');
+   const crowd = crowdLabel(event);
+   const nypd = event.nypd_notice || '';
+   const sourceUrl = event.source_url || event.url || event.event_url || '';
+   const distance = distanceLabel(event);
+-  return `<article class="popup-card"><div class="popup-source ${isNypd(event) ? 'is-nypd' : ''}">${esc(source)}${event.newlyAdded ? ' · NEW' : ''}</div><div class="popup-category"><span>${esc(event.category.emoji)}</span> ${esc(event.category.label)}</div><div class="photo-priority ${photoPriority(event).toLowerCase().replaceAll(' ', '-')}">${esc(photoPriority(event))}</div><h2>${esc(event.title)}</h2>${isNypd(event) ? '<div class="popup-priority">High-priority field item</div>' : ''}<dl><div><dt>Time</dt><dd>${esc(timeLabel(event.start))}</dd></div>${distance ? `<div><dt>Distance</dt><dd>${esc(distance)}</dd></div>` : ''}${event.borough ? `<div><dt>Borough</dt><dd>${esc(event.borough)}</dd></div>` : ''}${event.location ? `<div><dt>Location</dt><dd>${esc(event.location)}</dd></div>` : ''}${crowd ? `<div><dt>Assignment read</dt><dd>${esc(crowd)}</dd></div>` : ''}</dl>${event.photoPick ? '<div class="popup-photo">📸 Camera-friendly assignment</div>' : ''}${nypd ? `<div class="popup-nypd"><b>NYPD Field Intel:</b> ${esc(nypd)}</div>` : ''}<div class="field-actions"><a class="field-action" target="_blank" rel="noopener" href="${esc(appleMapsUrl(event))}">Apple Maps</a><a class="field-action" target="_blank" rel="noopener" href="${esc(googleMapsUrl(event))}">Google Maps</a><button class="field-action" type="button" data-copy-id="${esc(event.id)}">Copy</button></div>${sourceUrl ? `<a class="popup-link" target="_blank" rel="noopener" href="${esc(sourceUrl)}">Source</a>` : ''}</article>`;
++  const sig = event.significance;
++  const why = sig?.tier
++    ? `<div class="popup-why-tier"><dt>Why this tier</dt><dd><strong>${esc(sig.tier)}</strong> (${esc(SIGNIFICANCE_VERSION)})<ul>${(sig.reasons || []).map(r => `<li>${esc(r)}</li>`).join('')}</ul><p class="integrity-note">${esc(SIGNIFICANCE_INTEGRITY)}</p></dd></div>`
++    : '';
++  return `<article class="popup-card"><div class="popup-source ${isNypd(event) ? 'is-nypd' : ''}">${esc(source)}${event.newlyAdded ? ' · NEW' : ''}</div><div class="popup-category"><span>${esc(event.category.emoji)}</span> ${esc(event.category.label)} ${tierBadge(event)}</div><div class="photo-priority ${photoPriority(event).toLowerCase().replaceAll(' ', '-')}">${esc(photoPriority(event))}</div><h2>${esc(event.title)}</h2>${isNypd(event) ? '<div class="popup-priority">High-priority field item</div>' : ''}<dl><div><dt>Time</dt><dd>${esc(timeLabel(event.start))}</dd></div>${distance ? `<div><dt>Distance</dt><dd>${esc(distance)}</dd></div>` : ''}${event.borough ? `<div><dt>Borough</dt><dd>${esc(event.borough)}</dd></div>` : ''}${event.location ? `<div><dt>Location</dt><dd>${esc(event.location)}</dd></div>` : ''}${crowd ? `<div><dt>Assignment read</dt><dd>${esc(crowd)}</dd></div>` : ''}${why}</dl>${event.photoPick ? '<div class="popup-photo">📸 Camera-friendly assignment</div>' : ''}${nypd ? `<div class="popup-nypd"><b>NYPD Field Intel:</b> ${esc(nypd)}</div>` : ''}<div class="field-actions"><a class="field-action" target="_blank" rel="noopener" href="${esc(appleMapsUrl(event))}">Apple Maps</a><a class="field-action" target="_blank" rel="noopener" href="${esc(googleMapsUrl(event))}">Google Maps</a><button class="field-action" type="button" data-copy-id="${esc(event.id)}">Copy</button></div>${sourceUrl ? `<a class="popup-link" target="_blank" rel="noopener" href="${esc(sourceUrl)}">Source</a>` : ''}</article>`;
+ }
+ 
+ function makeMarker(event) {
+-  const classes = ['marker', `marker--${event.category.key}`, event.photoPick ? 'marker--photo' : '', isNypd(event) ? 'marker--nypd' : '', event.newlyAdded ? 'marker--new' : '', event.crowd_level ? `marker--${event.crowd_level}` : ''].filter(Boolean).join(' ');
+-  const marker = L.marker([event.lat, event.lng], { icon: L.divIcon({ className: 'marker-shell', html: `<span class="${classes}"><span class="emoji">${event.category.emoji}</span></span>`, iconSize: [38, 38], iconAnchor: [19, 19], popupAnchor: [0, -24] }), title: event.title, alt: event.title, riseOnHover: true, bubblingMouseEvents: false }).bindPopup(popupHtml(event), { maxWidth: 330, minWidth: 240, autoPan: true, keepInView: true, closeButton: true, autoClose: false, closeOnClick: false, closeOnEscapeKey: false });
++  const classes = ['marker', `marker--${event.category.key}`, event.photoPick ? 'marker--photo' : '', isNypd(event) ? 'marker--nypd' : '', event.newlyAdded ? 'marker--new' : '', event.crowd_level ? `marker--${event.crowd_level}` : '', event.significance?.tier ? `marker--tier-${event.significance.tier.toLowerCase()}` : ''].filter(Boolean).join(' ');
++  const tierMark = event.significance?.tier ? `<span class="marker-tier" aria-hidden="true">${event.significance.tier[0]}</span>` : '';
++  const marker = L.marker([event.lat, event.lng], { icon: L.divIcon({ className: 'marker-shell', html: `<span class="${classes}"><span class="emoji">${event.category.emoji}</span>${tierMark}</span>`, iconSize: [38, 38], iconAnchor: [19, 19], popupAnchor: [0, -24] }), title: `${event.title}${event.significance?.tier ? ` (${event.significance.tier})` : ''}`, alt: `${event.title}${event.significance?.tier ? `, ${event.significance.tier} significance` : ''}`, riseOnHover: true, bubblingMouseEvents: false }).bindPopup(popupHtml(event), { maxWidth: 330, minWidth: 240, autoPan: true, keepInView: true, closeButton: true, autoClose: false, closeOnClick: false, closeOnEscapeKey: false });
+   marker.on('click tap', ev => { if (ev?.originalEvent) { L.DomEvent.preventDefault(ev.originalEvent); L.DomEvent.stop(ev.originalEvent); } marker.setPopupContent(popupHtml(event)); marker.openPopup(); });
+   marker.on('popupopen', ev => { const el = ev?.popup?.getElement?.(); if (!el) return; L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el); });
+   return marker;
+@@ -217,8 +280,29 @@ function ensureMarker(event) {
+ }
+ 
+ function isExactDateMode(value) { return /^\d{4}-\d{2}-\d{2}$/.test(value); }
+-function dateMatches(event) { if (state.dateMode === 'all') return true; if (!event.dateKey) return false; if (state.dateMode === 'today') return event.dateKey === todayKey(); if (state.dateMode === 'tomorrow') return event.dateKey === tomorrowKey(); if (state.dateMode === 'weekend') return isWeekendDate(event.start); if (isExactDateMode(state.dateMode)) return event.dateKey === state.dateMode; return true; }
+-function eventMatches(event) { if (!dateMatches(event)) return false; if (!state.categories[event.category.key]) return false; if (state.majorOnly && !(event.assignment_feed === 'major' || event.assignment_feed === 'staged' || event.field_default || event.photoPick || isNypd(event))) return false; if (state.photoOnly && !event.photoPick) return false; if (state.nypdOnly && !isNypd(event)) return false; if (state.newOnly && !event.newlyAdded) return false; if (state.borough !== 'all' && event.borough !== state.borough) return false; if (state.search && !event.searchText.includes(state.search)) return false; return true; }
++function dateMatches(event) { if (state.dateMode === 'all') return true; if (!event.dateKey) return false; if (state.dateMode === 'today') return event.dateKey === todayKey(); if (state.dateMode === 'tomorrow') return event.dateKey === tomorrowKey(); if (state.dateMode === 'weekend') return isWeekendDate(event.start) || (isValidDateKey(event.dateKey) && (() => { const [y, m, d] = event.dateKey.split('-').map(Number); return isWeekendDate(new Date(y, m - 1, d)); })()); if (isExactDateMode(state.dateMode)) return event.dateKey === state.dateMode; return true; }
++
++function significanceMatches(event) {
++  const tier = event.significance?.tier || null;
++  if (state.significanceOnly && !tier) return false;
++  if (tier === 'Gold') return !!state.significanceGold;
++  if (tier === 'Silver') return !!state.significanceSilver;
++  if (tier === 'Bronze') return !!state.significanceBronze;
++  return true;
++}
++
++function eventMatches(event) {
++  if (!dateMatches(event)) return false;
++  if (!state.categories[event.category.key]) return false;
++  if (!significanceMatches(event)) return false;
++  if (state.majorOnly && !(event.assignment_feed === 'major' || event.assignment_feed === 'staged' || event.field_default || event.photoPick || isNypd(event))) return false;
++  if (state.photoOnly && !event.photoPick) return false;
++  if (state.nypdOnly && !isNypd(event)) return false;
++  if (state.newOnly && !event.newlyAdded) return false;
++  if (state.borough !== 'all' && event.borough !== state.borough) return false;
++  if (state.search && !event.searchText.includes(state.search)) return false;
++  return true;
++}
+ 
+ function sortEvents(a, b) {
+   if (state.newOnly) return Number(b.newlyAdded) - Number(a.newlyAdded) || ((a.start?.getTime() || 9999999999999) - (b.start?.getTime() || 9999999999999));
+@@ -238,11 +322,15 @@ function getPublicDefaultPrefs() {
+     borough: 'all',
+     sort: 'priority',
+     dateMode: 'today',
+-    categories: { sports: true, parade: true, market: true, arts: true, parks: false, general: false },
+-    majorOnly: true,
++    categories: { sports: true, parade: true, market: true, arts: true, parks: true, fitness: true, general: true },
++    majorOnly: false,
+     photoOnly: false,
+     nypdOnly: false,
+     newOnly: false,
++    significanceGold: true,
++    significanceSilver: true,
++    significanceBronze: true,
++    significanceOnly: false,
+     nycifDefaultVersion: PUBLIC_DEFAULT_VERSION
+   };
+ }
+@@ -255,7 +343,12 @@ function shouldForcePublicDefaultReset() {
+     return resetFlag === '1'
+       || versionFlag === 'major-default-qa-01'
+       || versionFlag === 'ui-defaults-02'
+-      || versionFlag === 'c5p-postpublish-02';
++      || versionFlag === 'c5p-postpublish-02'
++      || versionFlag === 'm10-staged-live'
++      || versionFlag === 'staged-live-v01'
++      || versionFlag === 'staged-live-v02'
++      || versionFlag === 'staged-live-v03'
++      || versionFlag === 'map-restore-v01';
+   } catch {
+     return false;
+   }
+@@ -271,6 +364,10 @@ function applyPublicDefaultPrefsToState() {
+   state.photoOnly = defaults.photoOnly;
+   state.nypdOnly = defaults.nypdOnly;
+   state.newOnly = defaults.newOnly;
++  state.significanceGold = defaults.significanceGold;
++  state.significanceSilver = defaults.significanceSilver;
++  state.significanceBronze = defaults.significanceBronze;
++  state.significanceOnly = defaults.significanceOnly;
+ }
+ 
+ function applyPublicPrefsToState(prefs) {
+@@ -283,23 +380,32 @@ function applyPublicPrefsToState(prefs) {
+     market: !!prefs.categories?.market,
+     arts: !!prefs.categories?.arts,
+     parks: !!prefs.categories?.parks,
++    fitness: prefs.categories?.fitness !== undefined ? !!prefs.categories.fitness : true,
+     general: !!prefs.categories?.general
+   };
+   state.majorOnly = !!prefs.majorOnly;
+   state.photoOnly = !!prefs.photoOnly;
+   state.nypdOnly = !!prefs.nypdOnly;
+   state.newOnly = !!prefs.newOnly;
++  state.significanceGold = prefs.significanceGold !== undefined ? !!prefs.significanceGold : true;
++  state.significanceSilver = prefs.significanceSilver !== undefined ? !!prefs.significanceSilver : true;
++  state.significanceBronze = prefs.significanceBronze !== undefined ? !!prefs.significanceBronze : true;
++  state.significanceOnly = !!prefs.significanceOnly;
+ }
+ 
+ function applyLegacyPrefsToState(prefs) {
+   if (prefs.borough) state.borough = prefs.borough;
+   if (prefs.sort) state.sort = prefs.sort;
+   if (prefs.dateMode) state.dateMode = prefs.dateMode;
+-  if (prefs.categories) state.categories = { ...state.categories, ...prefs.categories };
++  if (prefs.categories) state.categories = { ...state.categories, ...prefs.categories, fitness: prefs.categories.fitness !== undefined ? !!prefs.categories.fitness : state.categories.fitness };
+   state.majorOnly = !!prefs.majorOnly;
+   state.photoOnly = !!prefs.photoOnly;
+   state.nypdOnly = !!prefs.nypdOnly;
+   state.newOnly = !!prefs.newOnly;
++  if (prefs.significanceGold !== undefined) state.significanceGold = !!prefs.significanceGold;
++  if (prefs.significanceSilver !== undefined) state.significanceSilver = !!prefs.significanceSilver;
++  if (prefs.significanceBronze !== undefined) state.significanceBronze = !!prefs.significanceBronze;
++  if (prefs.significanceOnly !== undefined) state.significanceOnly = !!prefs.significanceOnly;
+ }
+ 
+ function loadPublicMapPrefs() {
+@@ -325,7 +431,11 @@ function savePrefs() {
+     majorOnly: state.majorOnly,
+     photoOnly: state.photoOnly,
+     nypdOnly: state.nypdOnly,
+-    newOnly: state.newOnly
++    newOnly: state.newOnly,
++    significanceGold: state.significanceGold,
++    significanceSilver: state.significanceSilver,
++    significanceBronze: state.significanceBronze,
++    significanceOnly: state.significanceOnly
+   };
+   if (isPublicMapPage()) prefs.nycifDefaultVersion = PUBLIC_DEFAULT_VERSION;
+   localStorage.setItem(STORAGE_KEY, JSON.stringify(prefs));
+@@ -342,13 +452,71 @@ function loadPrefs() {
+   } catch {}
+ }
+ 
++function markUserFilterChange() {
++  state.userChangedFilters = true;
++  state.dateFallbackMessage = '';
++}
++
+ function updateChrome(visible) {
+   const nypdCount = visible.filter(isNypd).length;
+   const photoCount = visible.filter(e => e.photoPick).length;
+   const newCount = visible.filter(e => e.newlyAdded).length;
+   const nearNote = state.userLocation && state.sort === 'near' ? ' · near me' : '';
++  const sourceNote = state.lastFeedDiag ? ` · ${state.lastFeedDiag.sourceRows.toLocaleString()} source · ${state.lastFeedDiag.coordRows.toLocaleString()} GPS` : '';
+   if (els.brandCount) els.brandCount.textContent = `${visible.length} live${newCount ? ` · ${newCount} new` : ''}${nypdCount ? ` · ${nypdCount} NYPD` : ''}${photoCount ? ` · ${photoCount} photo` : ''}`;
+-  status(`${visible.length} assignment${visible.length === 1 ? '' : 's'} · ${feedLabel()}${state.newOnly ? ' · newly added only' : ''}${nearNote} · v${VERSION}`);
++  const fallback = state.dateFallbackMessage ? ` · ${state.dateFallbackMessage}` : '';
++  status(`${visible.length} event${visible.length === 1 ? '' : 's'} · ${feedLabel()}${state.newOnly ? ' · newly added only' : ''}${nearNote}${sourceNote}${fallback} · v${VERSION}`);
++}
++
++function emptyStateHtml(visibleCount) {
++  if (state.feedLoadError) {
++    return `<div class="empty empty--error" role="alert"><p>${esc(state.feedLoadError)}</p></div>`;
++  }
++  if (!state.events.length) {
++    return `<div class="empty" role="status"><p>No events with valid NYC coordinates were found in the loaded feed.</p></div>`;
++  }
++  if (visibleCount === 0) {
++    return `<div class="empty empty--filters" role="status">
++      <p>${state.dateFallbackMessage ? esc(state.dateFallbackMessage) : 'Events exist, but current filters hide them.'}</p>
++      <div class="empty-actions">
++        <button type="button" data-empty-action="all-categories">Show all categories</button>
++        <button type="button" data-empty-action="all-dates">Show all upcoming dates</button>
++        <button type="button" data-empty-action="reset">Reset filters</button>
++      </div>
++    </div>`;
++  }
++  return '';
++}
++
++function bindEmptyActions(root) {
++  root.querySelectorAll('[data-empty-action]').forEach(button => {
++    button.addEventListener('click', () => {
++      const action = button.dataset.emptyAction;
++      if (action === 'all-categories') {
++        Object.keys(state.categories).forEach(k => { state.categories[k] = true; });
++        state.majorOnly = false;
++        state.photoOnly = false;
++        state.nypdOnly = false;
++        state.newOnly = false;
++        state.significanceOnly = false;
++        state.significanceGold = true;
++        state.significanceSilver = true;
++        state.significanceBronze = true;
++      } else if (action === 'all-dates') {
++        state.dateMode = 'all';
++        state.dateFallbackMessage = '';
++        refreshDateChipActive();
++      } else if (action === 'reset') {
++        applyPublicDefaultPrefsToState();
++        state.dateFallbackMessage = '';
++        refreshDateChipActive();
++      }
++      markUserFilterChange();
++      syncUiFromState();
++      savePrefs();
++      render();
++    });
++  });
+ }
+ 
+ function render() {
+@@ -360,10 +528,42 @@ function render() {
+   const nypdCount = visible.filter(isNypd).length;
+   const newCount = visible.filter(e => e.newlyAdded).length;
+   const nearMode = state.userLocation && state.sort === 'near';
+-  els.listMeta.textContent = `${draw.length < visible.length ? `${draw.length} shown of ${visible.length}` : `${visible.length} visible`} assignments · ${newCount} newly added · ${photoCount} photo picks · ${nypdCount} NYPD${nearMode ? ' · sorted near you' : ''}`;
+-  els.eventList.innerHTML = visible.slice(0, 60).map(event => { const distance = distanceLabel(event); return `<button type="button" class="event-item" data-id="${esc(event.id)}"><span class="item-top"><span class="item-source">${esc(event.category.emoji)} ${esc(event.category.label)}</span><span class="item-tags">${event.newlyAdded ? '<span class="item-tag danger">NEW</span>' : ''}${distance ? `<span class="item-tag near">${esc(distance)}</span>` : ''}<span class="item-tag priority-${photoPriority(event).toLowerCase().replaceAll(' ', '-')}">${esc(photoPriority(event))}</span>${event.assignment_feed === 'staged' ? '<span class="item-tag">STAGED</span>' : ''}${event.photoPick ? '<span class="item-tag">📸</span>' : ''}${isNypd(event) ? '<span class="item-tag danger">NYPD</span>' : ''}</span></span><strong>${esc(event.title)}</strong><span>${esc(timeLabel(event.start))}</span><small>${esc([event.borough, event.location, crowdLabel(event)].filter(Boolean).join(' • '))}</small><span class="quick-actions"><a href="${esc(appleMapsUrl(event))}" target="_blank" rel="noopener">Directions</a><button type="button" data-copy-id="${esc(event.id)}">Copy</button></span></button>`; }).join('') || '<div class="empty">No assignments match this view.</div>';
+-  els.eventList.querySelectorAll('[data-id]').forEach(button => button.addEventListener('click', ev => { if (ev.target.closest('a,button[data-copy-id]')) return; const event = state.events.find(e => e.id === button.dataset.id); if (!event) return; map.flyTo([event.lat, event.lng], Math.max(map.getZoom(), 15), { duration: 0.55 }); setTimeout(() => { const marker = ensureMarker(event); marker.setPopupContent(popupHtml(event)); marker.openPopup(); if (!markers.hasLayer(marker)) markers.addLayer(marker); }, 420); setDesk(false); }));
+-  els.eventList.querySelectorAll('[data-copy-id]').forEach(button => button.addEventListener('click', ev => { ev.stopPropagation(); const event = state.events.find(e => e.id === button.dataset.copyId); if (event) copyAssignment(event); }));
++  const empty = emptyStateHtml(visible.length);
++  els.listMeta.textContent = `${draw.length < visible.length ? `${draw.length} shown of ${visible.length}` : `${visible.length} visible`} events · ${newCount} newly added · ${photoCount} photo picks · ${nypdCount} NYPD${nearMode ? ' · sorted near you' : ''}${state.dateFallbackMessage ? ` · ${state.dateFallbackMessage}` : ''}`;
++  if (visible.length) {
++    els.eventList.innerHTML = visible.slice(0, 60).map(event => {
++      const distance = distanceLabel(event);
++      return `<button type="button" class="event-item" data-id="${esc(event.id)}"><span class="item-top"><span class="item-source">${esc(event.category.emoji)} ${esc(event.category.label)} ${tierBadge(event)}</span><span class="item-tags">${event.newlyAdded ? '<span class="item-tag danger">NEW</span>' : ''}${distance ? `<span class="item-tag near">${esc(distance)}</span>` : ''}<span class="item-tag priority-${photoPriority(event).toLowerCase().replaceAll(' ', '-')}">${esc(photoPriority(event))}</span>${event.assignment_feed === 'staged' ? '<span class="item-tag">STAGED</span>' : ''}${event.photoPick ? '<span class="item-tag">📸</span>' : ''}${isNypd(event) ? '<span class="item-tag danger">NYPD</span>' : ''}</span></span><strong>${esc(event.title)}</strong><span>${esc(timeLabel(event.start))}</span><small>${esc([event.borough, event.location, crowdLabel(event)].filter(Boolean).join(' • '))}</small><span class="quick-actions"><a href="${esc(appleMapsUrl(event))}" target="_blank" rel="noopener">Directions</a><button type="button" data-copy-id="${esc(event.id)}">Copy</button></span></button>`;
++    }).join('');
++  } else {
++    els.eventList.innerHTML = empty || '<div class="empty">No events match this view.</div>';
++    bindEmptyActions(els.eventList);
++  }
++  if (els.emptyState) {
++    els.emptyState.hidden = visible.length > 0 && !state.feedLoadError;
++    if (!els.emptyState.hidden) {
++      els.emptyState.innerHTML = empty || '';
++      bindEmptyActions(els.emptyState);
++    }
++  }
++  els.eventList.querySelectorAll('[data-id]').forEach(button => button.addEventListener('click', ev => {
++    if (ev.target.closest('a,button[data-copy-id]')) return;
++    const event = state.events.find(e => e.id === button.dataset.id);
++    if (!event) return;
++    map.flyTo([event.lat, event.lng], Math.max(map.getZoom(), 15), { duration: 0.55 });
++    setTimeout(() => {
++      const marker = ensureMarker(event);
++      marker.setPopupContent(popupHtml(event));
++      marker.openPopup();
++      if (!markers.hasLayer(marker)) markers.addLayer(marker);
++    }, 420);
++    setDesk(false);
++  }));
++  els.eventList.querySelectorAll('[data-copy-id]').forEach(button => button.addEventListener('click', ev => {
++    ev.stopPropagation();
++    const event = state.events.find(e => e.id === button.dataset.copyId);
++    if (event) copyAssignment(event);
++  }));
+   updateChrome(visible);
+   return visible;
+ }
+@@ -394,21 +594,26 @@ async function loadDeltaReport() {
+   }
+ }
+ 
+-async function loadFeed(kind) {
++async function fetchFeedRows(kind) {
+   const url = FEEDS[kind];
+-  const label = kind === 'major' ? 'major field assignments' : kind === 'full' ? 'full event database' : 'staged deduped feed';
++  const label = kind === 'major' ? 'major field assignments' : kind === 'full' ? 'full event database' : 'staged live feed';
+   status(`Loading ${label}…`);
+   const response = await fetch(`${url}?cache=${Date.now()}`, { headers: { Accept: 'application/json' }, cache: 'no-store' });
+   if (!response.ok) throw new Error(`${kind} feed HTTP ${response.status}`);
+   const json = await response.json();
+   const rows = Array.isArray(json) ? json : (json.events || []);
+-  const events = rows.map(makeEvent).filter(Boolean);
++  return { rows, label };
++}
++
++function applyLoadedEvents(kind, events, sourceRows) {
++  state.feedLoadError = '';
++  state.lastFeedDiag = { kind, sourceRows, coordRows: events.length };
+   if (kind === 'major') {
+     state.maxMarkers = 650;
+     state.events = events;
+     state.feed = 'major';
+   } else if (kind === 'staged') {
+-    state.maxMarkers = 250;
++    state.maxMarkers = STAGED_MARKER_CAP;
+     state.events = events;
+     state.feed = 'staged';
+     state.stagedLoaded = true;
+@@ -419,16 +624,79 @@ async function loadFeed(kind) {
+     }
+   } else {
+     state.maxMarkers = 650;
+-    const existing = new Map(state.events.map(e => [e.id, e]));
+-    events.forEach(event => existing.set(event.id, event));
+-    state.events = [...existing.values()];
++    state.events = events;
+     state.feed = 'full';
+     state.fullLoaded = true;
+   }
++}
++
++function maybeApplyDateFallback() {
++  if (state.userChangedFilters) return;
++  if (state.feedLoadError) return;
++  if (!state.events.length) return;
++  const visibleNow = state.events.filter(eventMatches);
++  if (visibleNow.length) return;
++  if (!(state.dateMode === 'today' || isExactDateMode(state.dateMode))) return;
++
++  const today = todayKey();
++  const upcoming = [...new Set(state.events.map(e => e.dateKey).filter(k => isValidDateKey(k) && k >= today))].sort();
++  if (upcoming.length) {
++    const next = upcoming[0];
++    state.dateMode = next === today ? 'today' : next;
++    state.dateFallbackMessage = `No events remained for today. Showing the next available date: ${formatHumanDate(next)}.`;
++    refreshDateChipActive();
++    return;
++  }
++  state.dateMode = 'all';
++  state.dateFallbackMessage = 'No upcoming exact date found. Showing all upcoming events.';
++  refreshDateChipActive();
++}
++
++async function loadFeed(kind, { allowMerge = false } = {}) {
++  const { rows, label } = await fetchFeedRows(kind);
++  const events = rows.map(makeEvent).filter(Boolean);
++  if (!events.length) {
++    const err = new Error(`${kind} feed parsed but contained no valid NYC coordinates (${rows.length} source rows)`);
++    err.code = 'NO_COORDS';
++    err.sourceRows = rows.length;
++    throw err;
++  }
++  if (kind === 'full' && allowMerge && state.events.length) {
++    const existing = new Map(state.events.map(e => [e.id, e]));
++    events.forEach(event => existing.set(event.id, event));
++    applyLoadedEvents(kind, [...existing.values()], rows.length);
++  } else {
++    applyLoadedEvents(kind, events, rows.length);
++  }
++  maybeApplyDateFallback();
+   const visible = render();
+   if (visible.length && kind !== 'staged') map.fitBounds(visible.slice(0, 200).map(e => [e.lat, e.lng]), { padding: [44, 44], maxZoom: 12 });
+-  if (visible.length && kind === 'staged') status(`${visible.length} assignments · Staged deduped feed loaded · first ${Math.min(visible.length, state.maxMarkers)} markers drawn · v${VERSION}`);
++  if (visible.length && kind === 'staged') {
++    status(`${visible.length} events · Staged live feed · ${state.lastFeedDiag.sourceRows.toLocaleString()} source rows · first ${Math.min(visible.length, state.maxMarkers)} markers · v${VERSION}${state.dateFallbackMessage ? ` · ${state.dateFallbackMessage}` : ''}`);
++  } else {
++    updateChrome(visible);
++  }
+   setTimeout(() => map.invalidateSize(), 120);
++  return { kind, label, sourceRows: rows.length, events: events.length, visible: visible.length };
++}
++
++async function loadFeedWithFallback() {
++  const order = ['staged', 'full', 'major'];
++  const failures = [];
++  for (const kind of order) {
++    try {
++      const result = await loadFeed(kind, { allowMerge: false });
++      return result;
++    } catch (error) {
++      failures.push(`${kind}: ${error.message}`);
++      console.warn(`NYCIF feed ${kind} failed`, error);
++    }
++  }
++  state.events = [];
++  state.feedLoadError = `All map feeds failed. ${failures.join(' | ')}`;
++  render();
++  status(state.feedLoadError);
++  throw new Error(state.feedLoadError);
+ }
+ 
+ function syncUiFromState() {
+@@ -438,6 +706,10 @@ function syncUiFromState() {
+   if (els.newOnly) els.newOnly.checked = state.newOnly;
+   els.sortSelect.value = state.sort;
+   document.querySelectorAll('[data-cat]').forEach(input => { input.checked = !!state.categories[input.dataset.cat]; });
++  if (els.significanceGold) els.significanceGold.checked = state.significanceGold;
++  if (els.significanceSilver) els.significanceSilver.checked = state.significanceSilver;
++  if (els.significanceBronze) els.significanceBronze.checked = state.significanceBronze;
++  if (els.significanceOnly) els.significanceOnly.checked = state.significanceOnly;
+ }
+ 
+ function setLayers(open) { els.layersPanel.hidden = !open; els.layersBtn.setAttribute('aria-expanded', String(open)); setTimeout(() => map.invalidateSize(), 100); }
+@@ -445,19 +717,48 @@ function setDesk(open) { els.deskDrawer.hidden = !open; els.deskBtn.setAttribute
+ 
+ function buildBoroughs() {
+   els.boroughs.innerHTML = BOROUGHS.map(b => { const value = b === 'All' ? 'all' : b; return `<button type="button" class="${state.borough === value ? 'active' : ''}" data-borough="${esc(value)}">${esc(b)}</button>`; }).join('');
+-  els.boroughs.addEventListener('click', ev => { const button = ev.target.closest('[data-borough]'); if (!button) return; state.borough = button.dataset.borough; els.boroughs.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === button)); savePrefs(); render(); });
++  els.boroughs.addEventListener('click', ev => {
++    const button = ev.target.closest('[data-borough]');
++    if (!button) return;
++    state.borough = button.dataset.borough;
++    els.boroughs.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === button));
++    markUserFilterChange();
++    savePrefs();
++    render();
++  });
+ }
+ 
+ function chipModeForDate(date) { return dateKey(date) === todayKey() ? 'today' : dateKey(date); }
+ function chipText(date) { return `${DAY_NAMES[date.getDay()]} ${date.getMonth() + 1}/${date.getDate()}`; }
++
++function refreshDateChipActive() {
++  if (!els.dateChips) return;
++  els.dateChips.querySelectorAll('[data-date-mode]').forEach(button => {
++    button.classList.toggle('active', button.dataset.dateMode === state.dateMode);
++  });
++  const active = els.dateChips.querySelector('button.active');
++  if (active) setTimeout(() => active.scrollIntoView({ inline: 'center', block: 'nearest' }), 50);
++}
++
+ function buildDateChips() {
+   if (!els.dateChips) return;
+   const start = weekStartSunday(new Date());
+   const days = Array.from({ length: 14 }, (_, index) => addDays(start, index));
+-  els.dateChips.innerHTML = `<div class="date-chip-track">${days.map(date => { const mode = chipModeForDate(date); const label = dateKey(date) === todayKey() ? 'Today' : chipText(date); return `<button type="button" data-date-mode="${esc(mode)}" data-date-key="${esc(dateKey(date))}" class="${state.dateMode === mode ? 'active' : ''}">${esc(label)}</button>`; }).join('')}<button type="button" data-date-mode="all" class="${state.dateMode === 'all' ? 'active' : ''}">All</button></div>`;
+-  const active = els.dateChips.querySelector('button.active');
+-  if (active) setTimeout(() => active.scrollIntoView({ inline: 'center', block: 'nearest' }), 50);
+-  els.dateChips.addEventListener('click', ev => { const button = ev.target.closest('[data-date-mode]'); if (!button) return; state.dateMode = button.dataset.dateMode; els.dateChips.querySelectorAll('[data-date-mode]').forEach(b => b.classList.toggle('active', b === button)); savePrefs(); render(); });
++  els.dateChips.innerHTML = `<div class="date-chip-track">${days.map(date => {
++    const mode = chipModeForDate(date);
++    const label = dateKey(date) === todayKey() ? 'Today' : chipText(date);
++    return `<button type="button" data-date-mode="${esc(mode)}" data-date-key="${esc(dateKey(date))}" class="${state.dateMode === mode ? 'active' : ''}">${esc(label)}</button>`;
++  }).join('')}<button type="button" data-date-mode="all" class="${state.dateMode === 'all' ? 'active' : ''}">All</button></div>`;
++  refreshDateChipActive();
++  els.dateChips.addEventListener('click', ev => {
++    const button = ev.target.closest('[data-date-mode]');
++    if (!button) return;
++    state.dateMode = button.dataset.dateMode;
++    markUserFilterChange();
++    refreshDateChipActive();
++    savePrefs();
++    render();
++  });
+ }
+ 
+ function setUserLocation(latitude, longitude, accuracy) {
+@@ -470,7 +771,15 @@ function setUserLocation(latitude, longitude, accuracy) {
+ function locateUser(options = {}) {
+   if (!navigator.geolocation) { status('Location is not available in this browser.'); return; }
+   status('Finding your location…');
+-  navigator.geolocation.getCurrentPosition(pos => { const { latitude, longitude, accuracy } = pos.coords; setUserLocation(latitude, longitude, accuracy); if (options.sortNear) { state.sort = 'near'; els.sortSelect.value = 'near'; savePrefs(); } map.flyTo([latitude, longitude], Math.max(map.getZoom(), 14), { duration: 0.6 }); userMarker.openPopup(); render(); status(options.sortNear ? 'Sorted assignments near you.' : 'Location updated.'); }, err => status(`Location failed: ${err.message}`), { enableHighAccuracy: true, timeout: 12000, maximumAge: 15000 });
++  navigator.geolocation.getCurrentPosition(pos => {
++    const { latitude, longitude, accuracy } = pos.coords;
++    setUserLocation(latitude, longitude, accuracy);
++    if (options.sortNear) { state.sort = 'near'; els.sortSelect.value = 'near'; savePrefs(); }
++    map.flyTo([latitude, longitude], Math.max(map.getZoom(), 14), { duration: 0.6 });
++    userMarker.openPopup();
++    render();
++    status(options.sortNear ? 'Sorted events near you.' : 'Location updated.');
++  }, err => status(`Location failed: ${err.message}`), { enableHighAccuracy: true, timeout: 12000, maximumAge: 15000 });
+ }
+ 
+ function ensureStagedButton() {
+@@ -491,16 +800,66 @@ function bindUi() {
+   els.closeDeskBtn.addEventListener('click', () => setDesk(false));
+   els.locateBtn.addEventListener('click', () => locateUser());
+   els.nearMeBtn.addEventListener('click', () => locateUser({ sortNear: true }));
+-  els.loadAllBtn.addEventListener('click', async () => { if (state.fullLoaded) { status('Full feed already loaded.'); return; } els.loadAllBtn.disabled = true; els.loadAllBtn.textContent = 'Loading all events…'; try { await loadFeed('full'); els.loadAllBtn.textContent = 'All events loaded'; } catch (error) { els.loadAllBtn.disabled = false; els.loadAllBtn.textContent = 'Load all events'; status(`Full feed failed: ${error.message}`); } });
+-  if (els.stagedFeedBtn) els.stagedFeedBtn.addEventListener('click', async () => { if (state.stagedLoaded) { status('Staged feed already loaded.'); return; } els.stagedFeedBtn.disabled = true; els.stagedFeedBtn.textContent = 'Loading staged feed…'; try { await loadFeed('staged'); } catch (error) { els.stagedFeedBtn.disabled = false; els.stagedFeedBtn.textContent = 'Load staged feed'; status(`Staged feed failed: ${error.message}`); } });
+-  els.majorOnly.addEventListener('change', () => { state.majorOnly = els.majorOnly.checked; savePrefs(); render(); });
+-  els.photoOnly.addEventListener('change', () => { state.photoOnly = els.photoOnly.checked; savePrefs(); render(); });
+-  els.nypdOnly.addEventListener('change', () => { state.nypdOnly = els.nypdOnly.checked; savePrefs(); render(); });
+-  if (els.newOnly) els.newOnly.addEventListener('change', async () => { state.newOnly = els.newOnly.checked; savePrefs(); if (state.newOnly && !state.stagedLoaded) { if (els.stagedFeedBtn) els.stagedFeedBtn.click(); else await loadFeed('staged'); } else render(); });
+-  document.querySelectorAll('[data-cat]').forEach(input => input.addEventListener('change', () => { state.categories[input.dataset.cat] = input.checked; savePrefs(); render(); }));
+-  els.searchInput.addEventListener('input', () => { state.search = normalize(els.searchInput.value); render(); });
+-  els.sortSelect.addEventListener('change', () => { state.sort = els.sortSelect.value; savePrefs(); if (state.sort === 'near' && !state.userLocation) locateUser({ sortNear: true }); else render(); });
+-  document.addEventListener('click', ev => { const button = ev.target.closest('[data-copy-id]'); if (!button) return; const event = state.events.find(e => e.id === button.dataset.copyId); if (event) copyAssignment(event); });
++  els.loadAllBtn.addEventListener('click', async () => {
++    if (state.fullLoaded && state.feed === 'full') { status('Full feed already loaded.'); return; }
++    els.loadAllBtn.disabled = true;
++    els.loadAllBtn.textContent = 'Loading all events…';
++    try {
++      await loadFeed('full', { allowMerge: false });
++      els.loadAllBtn.textContent = 'All events loaded';
++    } catch (error) {
++      els.loadAllBtn.disabled = false;
++      els.loadAllBtn.textContent = 'Show more events';
++      status(`Full feed failed: ${error.message}`);
++    }
++  });
++  if (els.stagedFeedBtn) els.stagedFeedBtn.addEventListener('click', async () => {
++    if (state.stagedLoaded && state.feed === 'staged') { status('Staged feed already loaded.'); return; }
++    els.stagedFeedBtn.disabled = true;
++    els.stagedFeedBtn.textContent = 'Loading staged feed…';
++    try { await loadFeed('staged'); }
++    catch (error) {
++      els.stagedFeedBtn.disabled = false;
++      els.stagedFeedBtn.textContent = 'Load staged feed';
++      status(`Staged feed failed: ${error.message}`);
++    }
++  });
++  els.majorOnly.addEventListener('change', () => { state.majorOnly = els.majorOnly.checked; markUserFilterChange(); savePrefs(); render(); });
++  els.photoOnly.addEventListener('change', () => { state.photoOnly = els.photoOnly.checked; markUserFilterChange(); savePrefs(); render(); });
++  els.nypdOnly.addEventListener('change', () => { state.nypdOnly = els.nypdOnly.checked; markUserFilterChange(); savePrefs(); render(); });
++  if (els.newOnly) els.newOnly.addEventListener('change', async () => {
++    state.newOnly = els.newOnly.checked;
++    markUserFilterChange();
++    savePrefs();
++    if (state.newOnly && !state.stagedLoaded) {
++      if (els.stagedFeedBtn) els.stagedFeedBtn.click();
++      else await loadFeed('staged');
++    } else render();
++  });
++  document.querySelectorAll('[data-cat]').forEach(input => input.addEventListener('change', () => {
++    state.categories[input.dataset.cat] = input.checked;
++    markUserFilterChange();
++    savePrefs();
++    render();
++  }));
++  if (els.significanceGold) els.significanceGold.addEventListener('change', () => { state.significanceGold = els.significanceGold.checked; markUserFilterChange(); savePrefs(); render(); });
++  if (els.significanceSilver) els.significanceSilver.addEventListener('change', () => { state.significanceSilver = els.significanceSilver.checked; markUserFilterChange(); savePrefs(); render(); });
++  if (els.significanceBronze) els.significanceBronze.addEventListener('change', () => { state.significanceBronze = els.significanceBronze.checked; markUserFilterChange(); savePrefs(); render(); });
++  if (els.significanceOnly) els.significanceOnly.addEventListener('change', () => { state.significanceOnly = els.significanceOnly.checked; markUserFilterChange(); savePrefs(); render(); });
++  els.searchInput.addEventListener('input', () => { state.search = normalize(els.searchInput.value); markUserFilterChange(); render(); });
++  els.sortSelect.addEventListener('change', () => {
++    state.sort = els.sortSelect.value;
++    markUserFilterChange();
++    savePrefs();
++    if (state.sort === 'near' && !state.userLocation) locateUser({ sortNear: true });
++    else render();
++  });
++  document.addEventListener('click', ev => {
++    const button = ev.target.closest('[data-copy-id]');
++    if (!button) return;
++    const event = state.events.find(e => e.id === button.dataset.copyId);
++    if (event) copyAssignment(event);
++  });
+   map.on('click tap', ev => { if (ev?.originalEvent) L.DomEvent.stopPropagation(ev.originalEvent); });
+ }
+ 
+@@ -512,7 +871,22 @@ async function boot() {
+   buildBoroughs();
+   buildDateChips();
+   if ('serviceWorker' in navigator) navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+-  try { await loadFeed('major'); } catch (error) { status(`Major feed failed: ${error.message}`); }
++  try {
++    await loadFeedWithFallback();
++  } catch (error) {
++    status(error.message || String(error));
++  }
+ }
+ 
+ boot();
++
++export {
++  classifyEventSignificance,
++  eventDateKey,
++  category,
++  makeEvent,
++  VERSION,
++  PUBLIC_DEFAULT_VERSION,
++  FEEDS,
++  STAGED_MARKER_CAP
++};
+diff --git a/index.html b/index.html
+index df88a78..203ab14 100644
+--- a/index.html
++++ b/index.html
+@@ -14,11 +14,11 @@
+   <link rel="preconnect" href="https://raw.githubusercontent.com">
+   <link rel="preconnect" href="https://{s}.tile.openstreetmap.org">
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+-  <link rel="stylesheet" href="./style.css?v=hotfix-053">
+-  <link rel="stylesheet" href="./fielddesk-v02.css?v=v06safe-01">
+-  <link rel="stylesheet" href="./weekstrip-v06-safe.css?v=073time">
+-  <link rel="stylesheet" href="./staged-map-mode-v01.css?v=01">
+-  <link rel="stylesheet" href="./public-map-v01.css?v=ui-final-04">
++  <link rel="stylesheet" href="./style.css?v=map-restore-v01">
++  <link rel="stylesheet" href="./fielddesk-v02.css?v=map-restore-v01">
++  <link rel="stylesheet" href="./weekstrip-v06-safe.css?v=map-restore-v01">
++  <link rel="stylesheet" href="./staged-map-mode-v01.css?v=map-restore-v01">
++  <link rel="stylesheet" href="./public-map-v01.css?v=map-restore-v01">
+ </head>
+ <body class="public-map-page">
+   <main id="app" class="app">
+@@ -51,7 +51,7 @@
+           Show more events
+         </button>
+ 
+-        <label class="check major"><input type="checkbox" id="majorOnly" checked> <span>⭐ Major events only</span></label>
++        <label class="check major"><input type="checkbox" id="majorOnly"> <span>⭐ Major events only</span></label>
+ 
+         <hr>
+ 
+@@ -60,8 +60,17 @@
+         <label class="check"><input type="checkbox" data-cat="market"> <span>🛍️ Street fairs / markets</span></label>
+         <label class="check"><input type="checkbox" data-cat="arts"> <span>🎭 Arts / performance</span></label>
+         <label class="check"><input type="checkbox" data-cat="parks"> <span>🌳 Parks / family</span></label>
++        <label class="check"><input type="checkbox" data-cat="fitness"> <span>💪 Fitness / wellness</span></label>
+         <label class="check"><input type="checkbox" data-cat="general"> <span>📍 General</span></label>
+ 
++        <hr>
++        <p class="panel-sublabel">Event significance</p>
++        <label class="check"><input type="checkbox" id="significanceGold" checked> <span><span class="tier-badge tier-badge--gold" aria-hidden="true">Gold</span> Gold</span></label>
++        <label class="check"><input type="checkbox" id="significanceSilver" checked> <span><span class="tier-badge tier-badge--silver" aria-hidden="true">Silver</span> Silver</span></label>
++        <label class="check"><input type="checkbox" id="significanceBronze" checked> <span><span class="tier-badge tier-badge--bronze" aria-hidden="true">Bronze</span> Bronze</span></label>
++        <label class="check"><input type="checkbox" id="significanceOnly"> <span>Significance only (hide untiered)</span></label>
++        <p class="integrity-inline">Event significance is evidence-based and cannot be purchased.</p>
++
+         <hr>
+ 
+         <label class="check"><input type="checkbox" id="photoOnly"> <span>📸 Photo-friendly picks</span></label>
+@@ -108,27 +117,28 @@
+         </label>
+ 
+         <div id="listMeta" class="list-meta">Loading events...</div>
++        <div id="emptyState" class="empty-state" hidden></div>
+         <div id="eventList" class="event-list"></div>
+       </aside>
+ 
+-      <div class="public-intro-v01"><strong>NYC In Focus:</strong> a live field map of public events, civic activity, arts, markets, parks and sports across New York City. Event details can change; confirm before traveling.</div>
++      <div class="public-intro-v01"><strong>NYC In Focus:</strong> a live field map of public events, civic activity, arts, markets, parks, fitness and sports across New York City. Event details can change; confirm before traveling.</div>
+       <div id="status" class="status">Loading NYC In Focus event map…</div>
+     </section>
+   </main>
+ 
+   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+-  <script src="./public-approved-overlays-capture-v01.js?v=02"></script>
+-  <script src="./public-map-defaults-v01.js?v=04"></script>
+-  <script src="./boot-today-v073-safe.js?v=01"></script>
+-  <script src="./date-normalizer-v073-safe.js?v=01"></script>
+-  <script src="./calendar-links-v01.js?v=07"></script>
+-  <script src="./vip-filter-v01.js?v=01"></script>
+-  <script src="./live-alerts-v02.js?v=02"></script>
+-  <script src="./ui-polish-v01.js?v=03"></script>
+-  <script src="./event-location-corrections-v01.js?v=01"></script>
+-  <script src="./app-v06-safe.js?v=major-default-v04" type="module"></script>
+-  <script src="./public-approved-overlays-v01.js?v=03"></script>
+-  <script src="./popup-autoclose-fix-v01.js?v=popup-v05-hide-x"></script>
+-  <script src="./staged-review-autoload-v01.js?v=01"></script>
++  <script src="./public-approved-overlays-capture-v01.js?v=map-restore-v01"></script>
++  <script src="./public-map-defaults-v01.js?v=map-restore-v01"></script>
++  <script src="./boot-today-v073-safe.js?v=map-restore-v01"></script>
++  <script src="./date-normalizer-v073-safe.js?v=map-restore-v01"></script>
++  <script src="./calendar-links-v01.js?v=map-restore-v01"></script>
++  <script src="./vip-filter-v01.js?v=map-restore-v01"></script>
++  <script src="./live-alerts-v02.js?v=map-restore-v01"></script>
++  <script src="./ui-polish-v01.js?v=map-restore-v01"></script>
++  <script src="./event-location-corrections-v01.js?v=map-restore-v01"></script>
++  <script src="./app-v06-safe.js?v=map-restore-v01" type="module"></script>
++  <script src="./public-approved-overlays-v01.js?v=map-restore-v01"></script>
++  <script src="./popup-autoclose-fix-v01.js?v=map-restore-v01"></script>
++  <script src="./staged-review-autoload-v01.js?v=map-restore-v01"></script>
+ </body>
+ </html>
+diff --git a/map-date-key-v01.js b/map-date-key-v01.js
+new file mode 100644
+index 0000000..147736a
+--- /dev/null
++++ b/map-date-key-v01.js
+@@ -0,0 +1,18 @@
++/** Prefer explicit YYYY-MM-DD row.date; only derive from timestamps when absent/invalid. */
++export function isValidDateKey(value) {
++  return /^\d{4}-\d{2}-\d{2}$/.test(String(value || ''));
++}
++
++export function dateKeyFromLocalDate(date) {
++  if (!date || Number.isNaN(date.getTime())) return '';
++  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
++}
++
++export function eventDateKey(row = {}, start = null) {
++  const raw = String(row.date || '').trim();
++  if (isValidDateKey(raw)) return raw;
++  const fromStart = start instanceof Date ? dateKeyFromLocalDate(start) : '';
++  if (fromStart) return fromStart;
++  const slice = String(row.start_date_time || row.start || '').slice(0, 10);
++  return isValidDateKey(slice) ? slice : '';
++}
+diff --git a/public-map-defaults-v01.js b/public-map-defaults-v01.js
+index c5eedb4..7b59d14 100644
+--- a/public-map-defaults-v01.js
++++ b/public-map-defaults-v01.js
+@@ -1,6 +1,6 @@
+ (function () {
+   const STORAGE_KEY = 'nycif-field-desk-state-v06-safe';
+-  const DEFAULT_VERSION = 'major-only-v04';
++  const DEFAULT_VERSION = 'staged-live-v03';
+   const defaults = {
+     borough: 'all',
+     sort: 'priority',
+@@ -10,13 +10,18 @@
+       parade: true,
+       market: true,
+       arts: true,
+-      parks: false,
+-      general: false
++      parks: true,
++      fitness: true,
++      general: true
+     },
+-    majorOnly: true,
++    majorOnly: false,
+     photoOnly: false,
+     nypdOnly: false,
+-    newOnly: false
++    newOnly: false,
++    significanceGold: true,
++    significanceSilver: true,
++    significanceBronze: true,
++    significanceOnly: false
+   };
+ 
+   function applyDefaults(forceReset) {
+@@ -30,6 +35,13 @@
+         ...defaults,
+         nycifDefaultVersion: DEFAULT_VERSION
+       }));
++    } else if (existing.categories && typeof existing.categories.fitness === 'undefined') {
++      existing.categories.fitness = true;
++      if (typeof existing.significanceGold === 'undefined') existing.significanceGold = true;
++      if (typeof existing.significanceSilver === 'undefined') existing.significanceSilver = true;
++      if (typeof existing.significanceBronze === 'undefined') existing.significanceBronze = true;
++      if (typeof existing.significanceOnly === 'undefined') existing.significanceOnly = false;
++      localStorage.setItem(STORAGE_KEY, JSON.stringify(existing));
+     }
+   }
+ 
+@@ -39,7 +51,12 @@
+     const forceReset = url.searchParams.get('resetFilters') === '1'
+       || versionFlag === 'major-default-qa-01'
+       || versionFlag === 'ui-defaults-02'
+-      || versionFlag === 'c5p-postpublish-02';
++      || versionFlag === 'c5p-postpublish-02'
++      || versionFlag === 'm10-staged-live'
++      || versionFlag === 'staged-live-v01'
++      || versionFlag === 'staged-live-v02'
++      || versionFlag === 'staged-live-v03'
++      || versionFlag === 'map-restore-v01';
+     applyDefaults(forceReset);
+   } catch {
+     localStorage.setItem(STORAGE_KEY, JSON.stringify({
+-- 
+2.43.0
+
+
+From 4c92c8ccf53327634246ad62653114d2f0800847 Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Tue, 14 Jul 2026 02:48:02 +0000
+Subject: [PATCH 2/4] Add event-significance v01 UI and tests
+
+Deterministic Gold/Silver/Bronze classifier with filter badges,
+Why-this-tier popups, and integrity statement that tiers cannot be purchased.
+---
+ docs/event-significance-v01.md |  65 ++++++++
+ event-significance-v01.js      | 264 +++++++++++++++++++++++++++++++++
+ public-map-v01.css             |  91 ++++++++++++
+ tests/map-restore-unit.test.js | 101 +++++++++++++
+ 4 files changed, 521 insertions(+)
+ create mode 100644 docs/event-significance-v01.md
+ create mode 100644 event-significance-v01.js
+ create mode 100644 tests/map-restore-unit.test.js
+
+diff --git a/docs/event-significance-v01.md b/docs/event-significance-v01.md
+new file mode 100644
+index 0000000..33c6918
+--- /dev/null
++++ b/docs/event-significance-v01.md
+@@ -0,0 +1,65 @@
++# Event significance v01
++
++Deterministic, transparent, evidence-based Gold / Silver / Bronze labels for the Field Desk public map.
++
++**Integrity rule:** Event significance is evidence-based and cannot be purchased.
++
++This is a provisional Field Desk classifier (`SIGNIFICANCE_VERSION = event-significance-v01`). It is not a future app-facing paid designation service.
++
++## Inputs consulted
++
++- Canonical `significance_tier` when already Gold/Silver/Bronze
++- Title and event type
++- Category
++- Duration from start/end timestamps
++- `street_closure_type`
++- `expected_crowd_score`, `priority_score`, `crowd_level`
++- `major_reason`, `photo_pick`, `field_default`, major-feed assignment
++
++## Inputs ignored
++
++Sponsorship, payment, advertiser status, organizer identity, and any paid-tier fields are ignored and cannot change the result.
++
++## Exclusions (remain untiered)
++
++- Titles that are only “closed” / closure / maintenance
++- Routine practices, miscellaneous permits, generic field reservations
++- Ordinary `Sport - Youth` / `Sport - Adult` rows without additional public-impact evidence
++
++## Thresholds (conservative)
++
++| Tier | Minimum score |
++| --- | ---: |
++| Gold | 85 |
++| Silver | 50 |
++| Bronze | 28 |
++| Untiered | below 28 |
++
++## Representative examples (staged feed sample)
++
++| Example | Evidence | Result |
++| --- | --- | --- |
++| World Cup Activation (plaza + long duration) | landmark title, plaza impact, duration | Gold |
++| Block party with full street closure | civic pattern + closure | often Gold/Silver |
++| Farmers market with curb/sidewalk impact | market type + closure | often Silver/Bronze |
++| Baseball Little League (`Sport - Youth`) | ordinary reservation | Untiered |
++| Title `closed` / maintenance day | exclusion rules | Untiered |
++| Row with `significance_tier: Gold` | canonical override | Gold regardless of fallback score |
++
++## Observed distribution on current staged feed
++
++Approximate after threshold calibration:
++
++- Gold: ~161
++- Silver: ~295
++- Bronze: ~224
++- Untiered: ~32,165 of 32,845
++
++Most of the 32k staged rows remain untiered by design.
++
++## UI
++
++- Gold / Silver / Bronze filters (all on by default)
++- Optional “Significance only” hides untiered rows
++- Badges on markers, list cards, and popups (text + color)
++- Popup “Why this tier” lists plain-language reasons + integrity statement
+diff --git a/event-significance-v01.js b/event-significance-v01.js
+new file mode 100644
+index 0000000..71dc74f
+--- /dev/null
++++ b/event-significance-v01.js
+@@ -0,0 +1,264 @@
++/**
++ * Event significance v01 — deterministic, evidence-based Gold/Silver/Bronze.
++ * Cannot be purchased. Sponsorship/payment fields are ignored.
++ */
++export const SIGNIFICANCE_VERSION = 'event-significance-v01';
++export const SIGNIFICANCE_INTEGRITY =
++  'Event significance is evidence-based and cannot be purchased.';
++
++const CANONICAL_TIERS = new Set(['Gold', 'Silver', 'Bronze']);
++
++const EXCLUDE_TITLE =
++  /^(closed|closure|maintenance|facility closed|field closed|cancelled|canceled)$/i;
++const EXCLUDE_TEXT =
++  /\b(maintenance day|routine practice|miscellaneous permit|generic field reservation|closed facility)\b/i;
++
++const GOLD_TITLE =
++  /\b(world cup|fifa|marathon|pride parade|thanksgiving day parade|new year'?s eve|nye ball|macys|macy's|presidential|inauguration|major festival)\b/i;
++const SILVER_TITLE =
++  /\b(parade|festival|street fair|block party|concert|criterium|fan zone|race|tour|carnival|film festival)\b/i;
++const BRONZE_TITLE =
++  /\b(market|farmers market|plaza partner|open street|street event|production event|health fair|open culture)\b/i;
++
++function num(value) {
++  const n = Number.parseFloat(value);
++  return Number.isFinite(n) ? n : 0;
++}
++
++function textBlob(event) {
++  return [
++    event.title,
++    event.event_type,
++    event.type,
++    event.category?.key || event.category,
++    event.major_reason,
++    event.crowd_level,
++    event.lane,
++    event.nypd_notice
++  ]
++    .map(v => String(v || ''))
++    .join(' ')
++    .toLowerCase();
++}
++
++function durationHours(event) {
++  const start = event.start_date_time || event.start;
++  const end = event.end_date_time || event.end;
++  if (!start || !end) return 0;
++  const a = Date.parse(start);
++  const b = Date.parse(end);
++  if (!Number.isFinite(a) || !Number.isFinite(b) || b <= a) return 0;
++  return (b - a) / 3600000;
++}
++
++function isExcludedGeneric(event) {
++  const title = String(event.title || '').trim();
++  if (EXCLUDE_TITLE.test(title)) return true;
++  const blob = textBlob(event);
++  if (EXCLUDE_TEXT.test(blob)) return true;
++  const et = String(event.event_type || event.type || '').toLowerCase();
++  if (/^sport - (youth|adult)$/.test(et) && !event.street_closure_type) {
++    // Ordinary league/reservation rows stay untiered unless other evidence appears later.
++    return !event.photo_pick && !event.photoPick && !event.field_default && num(event.expected_crowd_score) < 200;
++  }
++  return false;
++}
++
++/**
++ * @param {object} event
++ * @returns {{ tier: 'Gold'|'Silver'|'Bronze'|null, score: number, source: string, reasons: string[] }}
++ */
++export function classifyEventSignificance(event = {}) {
++  const reasons = [];
++  const rawTier = [
++    event.significance_tier,
++    event.significanceTier,
++    event.tier
++  ]
++    .map(v => (v == null ? '' : String(v).trim()))
++    .filter(Boolean);
++
++  for (const candidate of rawTier) {
++    const normalized =
++      candidate.charAt(0).toUpperCase() + candidate.slice(1).toLowerCase();
++    if (CANONICAL_TIERS.has(normalized)) {
++      return {
++        tier: normalized,
++        score: normalized === 'Gold' ? 100 : normalized === 'Silver' ? 70 : 40,
++        source: `${SIGNIFICANCE_VERSION}+canonical`,
++        reasons: [`Feed provided significance_tier=${normalized}`]
++      };
++    }
++  }
++
++  // Explicitly ignore purchase / sponsorship / advertiser identity.
++  void event.sponsored;
++  void event.is_sponsored;
++  void event.paid_tier;
++  void event.advertiser;
++  void event.sponsor;
++  void event.payment_status;
++  void event.organizer;
++
++  if (isExcludedGeneric(event)) {
++    return {
++      tier: null,
++      score: 0,
++      source: SIGNIFICANCE_VERSION,
++      reasons: ['Excluded as routine reservation, maintenance, closed, or ordinary practice']
++    };
++  }
++
++  let score = 0;
++  const title = String(event.title || '');
++  const eventType = String(event.event_type || event.type || '');
++  const blob = textBlob(event);
++  const closure = String(event.street_closure_type || '').trim();
++  const hours = durationHours(event);
++  const crowdScore = num(event.expected_crowd_score);
++  const priorityScore = num(event.priority_score);
++  const crowdLevel = String(event.crowd_level || '').toLowerCase();
++  const cat = String(event.category?.key || event.category || '').toLowerCase();
++
++  if (GOLD_TITLE.test(title) || GOLD_TITLE.test(eventType)) {
++    score += 55;
++    reasons.push('Title/type matches major citywide or landmark event patterns');
++  } else if (SILVER_TITLE.test(title) || SILVER_TITLE.test(eventType)) {
++    score += 32;
++    reasons.push('Title/type matches civic/festival/parade/fair patterns');
++  } else if (BRONZE_TITLE.test(title) || BRONZE_TITLE.test(eventType)) {
++    score += 14;
++    reasons.push('Title/type matches public market or partner event patterns');
++  }
++
++  if (/parade/i.test(eventType)) {
++    score += 28;
++    reasons.push(`Event type is Parade`);
++  } else if (/block party/i.test(eventType)) {
++    score += 22;
++    reasons.push('Event type is Block Party');
++  } else if (/farmers market|street fair|athletic race|street event|plaza/i.test(eventType)) {
++    score += 16;
++    reasons.push(`Event type indicates public gathering (${eventType})`);
++  } else if (/production event|open culture|health fair/i.test(eventType)) {
++    score += 12;
++    reasons.push(`Cultural/production event type (${eventType})`);
++  } else if (/special event/i.test(eventType)) {
++    score += 4;
++    reasons.push('Special Event permit type');
++  }
++
++  if (/full street closure/i.test(closure)) {
++    score += 30;
++    reasons.push('Full street closure scheduled');
++  } else if (/sidewalk and street|sidewalk and curb/i.test(closure)) {
++    score += 22;
++    reasons.push(`Significant street/sidewalk closure (${closure})`);
++  } else if (/pedestrian plaza/i.test(closure)) {
++    score += 18;
++    reasons.push('Pedestrian plaza impact');
++  } else if (closure && closure !== 'N/A') {
++    score += 10;
++    reasons.push(`Street/public-way impact (${closure})`);
++  }
++
++  if (hours >= 8) {
++    score += 16;
++    reasons.push(`Long duration (${hours.toFixed(1)} hours)`);
++  } else if (hours >= 4) {
++    score += 10;
++    reasons.push(`Multi-hour duration (${hours.toFixed(1)} hours)`);
++  } else if (hours >= 2) {
++    score += 4;
++    reasons.push(`Extended duration (${hours.toFixed(1)} hours)`);
++  }
++
++  if (crowdScore >= 1000) {
++    score += 40;
++    reasons.push(`Very high expected crowd score (${crowdScore})`);
++  } else if (crowdScore >= 400) {
++    score += 28;
++    reasons.push(`High expected crowd score (${crowdScore})`);
++  } else if (crowdScore >= 150) {
++    score += 16;
++    reasons.push(`Elevated expected crowd score (${crowdScore})`);
++  } else if (crowdScore >= 50) {
++    score += 8;
++    reasons.push(`Moderate expected crowd score (${crowdScore})`);
++  }
++
++  if (priorityScore >= 80) {
++    score += 20;
++    reasons.push(`High priority_score (${priorityScore})`);
++  } else if (priorityScore >= 40) {
++    score += 10;
++    reasons.push(`Elevated priority_score (${priorityScore})`);
++  }
++
++  if (crowdLevel === 'very_high') {
++    score += 30;
++    reasons.push('Crowd level very_high');
++  } else if (crowdLevel === 'high') {
++    score += 22;
++    reasons.push('Crowd level high');
++  } else if (crowdLevel === 'medium_high') {
++    score += 14;
++    reasons.push('Crowd level medium_high');
++  } else if (crowdLevel === 'medium') {
++    score += 6;
++    reasons.push('Crowd level medium');
++  }
++
++  if (event.major_reason) {
++    score += 12;
++    reasons.push(`Major-reason note: ${String(event.major_reason).slice(0, 80)}`);
++  }
++  if (event.photo_pick === true || event.photoPick === true) {
++    score += 14;
++    reasons.push('Marked photo_pick / camera-friendly');
++  }
++  if (event.field_default === true) {
++    score += 10;
++    reasons.push('Included in major/field assignment set');
++  }
++  if (event.assignment_feed === 'major' || event._from_major_feed === true) {
++    score += 8;
++    reasons.push('Present on major assignment feed');
++  }
++  if (cat === 'parade' || cat === 'market' || cat === 'arts') {
++    score += 6;
++    reasons.push(`Public-facing category (${cat})`);
++  }
++
++  // Conservative thresholds — ordinary special-event permits stay largely untiered.
++  let tier = null;
++  if (score >= 85) tier = 'Gold';
++  else if (score >= 50) tier = 'Silver';
++  else if (score >= 28) tier = 'Bronze';
++
++  if (!tier) {
++    return {
++      tier: null,
++      score,
++      source: SIGNIFICANCE_VERSION,
++      reasons: reasons.length
++        ? reasons
++        : ['Insufficient public-significance evidence for a tier']
++    };
++  }
++
++  return {
++    tier,
++    score,
++    source: SIGNIFICANCE_VERSION,
++    reasons: reasons.length ? reasons : [`Score ${score} met ${tier} threshold`]
++  };
++}
++
++export function significanceBadgeHtml(significance, esc = s => String(s ?? '')) {
++  if (!significance?.tier) return '';
++  const tier = significance.tier;
++  const label =
++    tier === 'Gold' ? 'Gold significance' : tier === 'Silver' ? 'Silver significance' : 'Bronze significance';
++  return `<span class="tier-badge tier-badge--${tier.toLowerCase()}" title="${esc(label)}"><span class="sr-only">${esc(label)}: </span>${esc(tier)}</span>`;
++}
+diff --git a/public-map-v01.css b/public-map-v01.css
+index 9d404d2..70698a2 100644
+--- a/public-map-v01.css
++++ b/public-map-v01.css
+@@ -115,3 +115,94 @@ body.public-map-page .status {
+     display: none;
+   }
+ }
++
++/* Emergency map restore: significance badges + empty recovery */
++.tier-badge {
++  display: inline-block;
++  margin-left: 4px;
++  padding: 1px 6px;
++  border-radius: 4px;
++  font-size: 9px;
++  font-weight: 700;
++  letter-spacing: 0.02em;
++  vertical-align: middle;
++  border: 1px solid transparent;
++  color: #111;
++}
++.tier-badge--gold {
++  background: #f5e6a8;
++  border-color: #b8860b;
++  color: #5c4300;
++}
++.tier-badge--silver {
++  background: #e8ebef;
++  border-color: #7a8694;
++  color: #334155;
++}
++.tier-badge--bronze {
++  background: #efd5bf;
++  border-color: #8b5a2b;
++  color: #5c3317;
++}
++.marker-tier {
++  position: absolute;
++  right: -2px;
++  bottom: -2px;
++  min-width: 14px;
++  height: 14px;
++  padding: 0 2px;
++  border-radius: 3px;
++  background: #111;
++  color: #fff;
++  font-size: 8px;
++  font-weight: 800;
++  line-height: 14px;
++  text-align: center;
++}
++.marker--tier-gold .marker-tier { background: #b8860b; color: #fff; }
++.marker--tier-silver .marker-tier { background: #64748b; color: #fff; }
++.marker--tier-bronze .marker-tier { background: #8b5a2b; color: #fff; }
++.marker--fitness { box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.45); }
++.panel-sublabel {
++  margin: 4px 0 2px;
++  font-size: 9px;
++  font-weight: 700;
++  text-transform: uppercase;
++  letter-spacing: 0.04em;
++  color: #64748b;
++}
++.integrity-inline,
++.integrity-note {
++  margin: 4px 0 0;
++  font-size: 9px;
++  line-height: 1.3;
++  color: #64748b;
++}
++.popup-why-tier ul {
++  margin: 4px 0 0;
++  padding-left: 16px;
++}
++.empty-actions {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 6px;
++  margin-top: 8px;
++}
++.empty-actions button {
++  border: 1px solid #cbd5e1;
++  background: #fff;
++  border-radius: 8px;
++  padding: 6px 8px;
++  font-size: 11px;
++  cursor: pointer;
++}
++.empty--error {
++  color: #991b1b;
++  background: #fef2f2;
++  border-radius: 10px;
++  padding: 10px;
++}
++body.public-map-page .layers-panel {
++  max-height: min(70dvh, 540px);
++  overflow: auto;
++}
+diff --git a/tests/map-restore-unit.test.js b/tests/map-restore-unit.test.js
+new file mode 100644
+index 0000000..880392a
+--- /dev/null
++++ b/tests/map-restore-unit.test.js
+@@ -0,0 +1,101 @@
++import assert from 'node:assert/strict';
++import { classifyEventSignificance, SIGNIFICANCE_INTEGRITY } from '../event-significance-v01.js';
++import { eventDateKey } from '../map-date-key-v01.js';
++
++function test(name, fn) {
++  try {
++    fn();
++    console.log(`PASS ${name}`);
++  } catch (error) {
++    console.error(`FAIL ${name}`);
++    throw error;
++  }
++}
++
++test('canonical significance_tier overrides fallback', () => {
++  const result = classifyEventSignificance({
++    title: 'Ordinary pick-up game',
++    event_type: 'Sport - Adult',
++    significance_tier: 'Gold',
++    sponsored: true,
++    paid_tier: 'ignore-me'
++  });
++  assert.equal(result.tier, 'Gold');
++  assert.match(result.source, /canonical/);
++  assert.ok(result.reasons.length >= 1);
++});
++
++test('paid/sponsored fields do not create tiers', () => {
++  const base = { title: 'closed', event_type: 'Special Event' };
++  const a = classifyEventSignificance(base);
++  const b = classifyEventSignificance({
++    ...base,
++    sponsored: true,
++    is_sponsored: true,
++    paid_tier: 'Gold',
++    advertiser: 'Acme',
++    sponsor: 'Acme',
++    payment_status: 'paid',
++    organizer: 'Paid Org'
++  });
++  assert.deepEqual(a, b);
++  assert.equal(a.tier, null);
++});
++
++test('maintenance and closed remain untiered', () => {
++  assert.equal(classifyEventSignificance({ title: 'closed', event_type: 'Special Event' }).tier, null);
++  assert.equal(
++    classifyEventSignificance({ title: 'Bowling Greens - Maintenance Day - Closed All Day', event_type: 'Special Event' }).tier,
++    null
++  );
++});
++
++test('world cup / street closure evidence can reach Gold', () => {
++  const result = classifyEventSignificance({
++    title: 'World Cup Celebration',
++    event_type: 'Street Event',
++    street_closure_type: 'Full Street Closure',
++    start_date_time: '2026-07-14T12:00:00',
++    end_date_time: '2026-07-14T16:00:00',
++    category: 'market'
++  });
++  assert.equal(result.tier, 'Gold');
++  assert.ok(result.reasons.length >= 1);
++});
++
++test('ordinary youth sport stays untiered', () => {
++  const result = classifyEventSignificance({
++    title: 'Baseball - 12 and Under (Little League)',
++    event_type: 'Sport - Youth',
++    category: 'sports'
++  });
++  assert.equal(result.tier, null);
++});
++
++test('every returned tier includes reasons and integrity statement exists', () => {
++  const result = classifyEventSignificance({
++    title: 'Evening of Jazz',
++    event_type: 'Block Party',
++    street_closure_type: 'Full Street Closure',
++    category: 'parade'
++  });
++  assert.ok(['Gold', 'Silver', 'Bronze'].includes(result.tier));
++  assert.ok(result.reasons.length >= 1);
++  assert.match(SIGNIFICANCE_INTEGRITY, /cannot be purchased/i);
++});
++
++test('row.date wins over UTC-shifted start_date_time', () => {
++  const key = eventDateKey(
++    { date: '2026-07-14', start_date_time: '2026-07-15T03:00:00.000Z' },
++    new Date('2026-07-15T03:00:00.000Z')
++  );
++  assert.equal(key, '2026-07-14');
++});
++
++test('invalid date falls back to start local dateKey', () => {
++  const start = new Date(2026, 6, 16, 9, 0, 0);
++  const key = eventDateKey({ date: 'not-a-date', start_date_time: '2026-07-16T13:00:00.000Z' }, start);
++  assert.equal(key, '2026-07-16');
++});
++
++console.log('All map restore unit tests passed.');
+-- 
+2.43.0
+
+
+From 170f03c20dd6e37704af35c203eb5e7539746c62 Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Tue, 14 Jul 2026 02:48:02 +0000
+Subject: [PATCH 3/4] Bust service-worker and public asset caches
+
+Use nycif-v015-emergency-map-restore with network-first for app shell
+and raw GitHub feed requests.
+---
+ service-worker.js | 47 +++++++++++++++++++++++++++++++----------------
+ 1 file changed, 31 insertions(+), 16 deletions(-)
+
+diff --git a/service-worker.js b/service-worker.js
+index 38e3b70..183bcf5 100644
+--- a/service-worker.js
++++ b/service-worker.js
+@@ -1,4 +1,4 @@
+-const CACHE_NAME = 'nycif-v014-category-defaults-fix';
++const CACHE_NAME = 'nycif-v015-emergency-map-restore';
+ const APP_SHELL = [
+   './',
+   './index.html',
+@@ -15,6 +15,8 @@ const APP_SHELL = [
+   './public-approved-overlays-v01.js',
+   './boot-today-v073-safe.js',
+   './date-normalizer-v073-safe.js',
++  './event-significance-v01.js',
++  './map-date-key-v01.js',
+   './app-v06-safe.js',
+   './stats-v05-safe.js',
+   './data-window-v08-safe.js',
+@@ -25,14 +27,15 @@ const APP_SHELL = [
+   './icons/icon-512.svg'
+ ];
+ 
+-const UI_CONFIG_RE = /\/(?:index\.html|app-v06-safe\.js|public-map-defaults-v01\.js|public-approved-overlays-v01\.js|public-approved-overlays-capture-v01\.js)$/;
++const NETWORK_FIRST_RE = /\/(?:index\.html|app-v06-safe\.js|public-map-defaults-v01\.js|event-significance-v01\.js|map-date-key-v01\.js|service-worker\.js|public-approved-overlays-v01\.js|public-approved-overlays-capture-v01\.js)$/;
+ 
+-function isUiConfigRequest(url) {
+-  return url.origin === location.origin && UI_CONFIG_RE.test(url.pathname);
++function isNetworkFirstRequest(url) {
++  if (url.hostname === 'raw.githubusercontent.com') return true;
++  return url.origin === location.origin && NETWORK_FIRST_RE.test(url.pathname);
+ }
+ 
+ self.addEventListener('install', e => {
+-  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(APP_SHELL)));
++  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(APP_SHELL)).catch(() => undefined));
+   self.skipWaiting();
+ });
+ 
+@@ -45,18 +48,30 @@ self.addEventListener('fetch', e => {
+   const u = new URL(e.request.url);
+   if (u.origin !== location.origin && u.hostname !== 'raw.githubusercontent.com') return;
+ 
+-  if (isUiConfigRequest(u)) {
+-    e.respondWith(fetch(e.request, { cache: 'no-store' }).then(r => {
+-      const copy = r.clone();
+-      caches.open(CACHE_NAME).then(c => c.put(e.request, copy));
+-      return r;
+-    }));
++  if (isNetworkFirstRequest(u)) {
++    e.respondWith(
++      fetch(e.request, { cache: 'no-store' })
++        .then(r => {
++          if (r && r.ok && e.request.method === 'GET' && u.origin === location.origin) {
++            const copy = r.clone();
++            caches.open(CACHE_NAME).then(c => c.put(e.request, copy)).catch(() => undefined);
++          }
++          return r;
++        })
++        .catch(() => caches.match(e.request))
++    );
+     return;
+   }
+ 
+-  e.respondWith(fetch(e.request).then(r => {
+-    const copy = r.clone();
+-    caches.open(CACHE_NAME).then(c => c.put(e.request, copy));
+-    return r;
+-  }).catch(() => caches.match(e.request)));
++  e.respondWith(
++    fetch(e.request)
++      .then(r => {
++        if (r && r.ok && e.request.method === 'GET') {
++          const copy = r.clone();
++          caches.open(CACHE_NAME).then(c => c.put(e.request, copy)).catch(() => undefined);
++        }
++        return r;
++      })
++      .catch(() => caches.match(e.request))
++  );
+ });
+-- 
+2.43.0
+
+
+From 32be115c47e88582f8de163e11c1744f5fc881bd Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Tue, 14 Jul 2026 02:48:02 +0000
+Subject: [PATCH 4/4] Add diagnostic and QA documentation
+
+Record pre-fix major-only blank-map diagnosis and post-fix
+browser/fallback validation evidence.
+---
+ ...ic-map-emergency-restoration-diagnostic.md | 63 +++++++++++++++
+ docs/public-map-emergency-restoration-qa.md   | 80 +++++++++++++++++++
+ 2 files changed, 143 insertions(+)
+ create mode 100644 docs/public-map-emergency-restoration-diagnostic.md
+ create mode 100644 docs/public-map-emergency-restoration-qa.md
+
+diff --git a/docs/public-map-emergency-restoration-diagnostic.md b/docs/public-map-emergency-restoration-diagnostic.md
+new file mode 100644
+index 0000000..3122904
+--- /dev/null
++++ b/docs/public-map-emergency-restoration-diagnostic.md
+@@ -0,0 +1,63 @@
++# Public map emergency restoration — pre-fix diagnostic
++
++Generated: 2026-07-14 (UTC) during emergency repair for Howard Weiss.
++
++## Backend health (nycif-live-feeds dashboard)
++
++Source: `status/nycif-live-pipeline-dashboard.json` (`generated_at_utc`: 2026-07-14T02:02:16Z)
++
++| Metric | Count |
++| --- | ---: |
++| staged_feed_events | 32,845 |
++| classified_permit_rows / current_future_raw_rows | 33,084 |
++| fitness | 192 |
++| parks | 4,461 |
++| sports | 27,020 |
++| market | 930 |
++| arts | 218 |
++| general | 24 |
++
++Staged feed file `data/nycif_staged_live_events.json` was inspected locally:
++
++- 32,845 events, all with valid NYC coordinates
++- Date range begins `2026-07-14` through `2026-12-27`
++- 1,125 events on local calendar date 2026-07-14
++- Categories present include `fitness`
++
++## Live Field Desk (GitHub Pages + local main checkout)
++
++Served local main checkout at `http://127.0.0.1:8765/` and compared with `https://setoxxx.github.io/nycif-field-desk/`.
++
++| Observation | Value |
++| --- | --- |
++| App version string | `0.6-staged-03-new-admin-filter` |
++| `PUBLIC_DEFAULT_VERSION` | `major-only-v04` |
++| Boot feed request | `nycif_major_radar_map_events.json` only |
++| Status line | `10 assignments · Fast major feed · v0.6-...` |
++| Event list items | 10 |
++| Parks / General checkboxes | unchecked / absent fitness control |
++| Major events only | checked (`true`) |
++| localStorage prefs version | `major-only-v04` with `majorOnly: true`, parks/general false, fitness missing |
++| Active service-worker cache | `nycif-v014-category-defaults-fix` |
++| Fatal console errors | none observed |
++| Staged / full feed fetch on boot | **not requested** |
++
++## Root cause
++
++The public map boots the **major** assignment feed (~582 rows) with **major-only** public defaults, parks/general disabled, and no fitness category. Ordinary staged live events (~32k) are never loaded on first paint. Overlay scripts (`public-approved-overlays-v01.js`) still load separately, so 5PM / cannabis / correlation pins can appear while the ordinary event population looks empty or near-empty.
++
++Secondary risks confirmed in source:
++
++1. Strict `dateMode: 'today'` with no next-date fallback can blank the map when the browser date precedes the earliest feed date.
++2. `makeEvent` derives `dateKey` primarily from `Date.parse(start_date_time)`, which can shift calendar days under UTC offsets; `row.date` should be primary.
++3. Service worker + old `?v=` query strings keep serving the major-only shell after code updates.
++
++## M10 mirror note
++
++`nycif-live-feeds/docs/field-desk-map-deploy/` contains a partial repair (staged boot, fitness classifier stub, parks/general in defaults file, marker cap 2000) that was **not** deployed to `nycif-field-desk` main. That mirror still leaves fitness default `false` in app state and lacks resilient multi-feed fallback, today→next-date fallback, significance UI, and SW bust — so it is a reference, not a blind overwrite target.
++
++## Safety check for this diagnostic
++
++- Did not modify `data/location_cache.json`
++- Did not alter GPS review / approval artifacts
++- Did not publish to WordPress or GitHub Pages
+diff --git a/docs/public-map-emergency-restoration-qa.md b/docs/public-map-emergency-restoration-qa.md
+new file mode 100644
+index 0000000..836ead8
+--- /dev/null
++++ b/docs/public-map-emergency-restoration-qa.md
+@@ -0,0 +1,80 @@
++# Public map emergency restoration — QA
++
++Branch: `cursor/emergency-public-map-restoration-20260713`  
++App version: `0.8-emergency-map-restore-v01`  
++Public defaults: `staged-live-v03`  
++Query: `?v=map-restore-v01&resetFilters=1`
++
++## Automated checks
++
++| Check | Result |
++| --- | --- |
++| `node --check` on app / significance / date / defaults / SW | PASS |
++| `node tests/map-restore-unit.test.js` | PASS (8 assertions) |
++| PHP lint plugin 1.2.1 | PASS (in live-feeds repo) |
++| ZIP integrity `dist/nycif-events-map-1.2.1.zip` | PASS |
++
++## Local browser smoke (`http://127.0.0.1:8765/?v=map-restore-v01&resetFilters=1`)
++
++| Check | Result |
++| --- | --- |
++| Staged feed HTTP 200 | PASS |
++| Source rows | 32,845 |
++| Events today (visible) | 1,125 |
++| Markers drawn (≤ cap) | 1,125 markers for today / up to 2,000 when broader |
++| Event list populated | PASS (60 list rows) |
++| Fitness / wellness control present + default on | PASS |
++| Fitness-only filter | PASS (9 fitness events listed) |
++| Parks + General default on | PASS |
++| Major events only default off | PASS |
++| Gold/Silver/Bronze filters default on | PASS |
++| Significance-only mode | PASS (122 tiered events) |
++| Why this tier + integrity text in popup | PASS |
++| 5PM / cannabis / correlation overlay controls present | PASS |
++| Service worker cache | `nycif-v015-emergency-map-restore` |
++| Fatal console errors | none |
++| Mobile 390px screenshot captured | PASS |
++| Manual “All” date not overridden | PASS (32,845 events) |
++
++Screenshots:
++
++- `/opt/cursor/artifacts/screenshots/map-restore-desktop.png`
++- `/opt/cursor/artifacts/screenshots/map-restore-mobile-390.png`
++
++## Feed fallback
++
++| Scenario | Result |
++| --- | --- |
++| Staged abort → full | PASS (`Full feed`, 33,127 GPS rows) |
++| Staged+full abort → major | PASS (`Fast major feed`) |
++| All abort | PASS explicit error: `All map feeds failed...` |
++
++## Date behavior
++
++| Scenario | Result |
++| --- | --- |
++| `row.date` preferred over UTC `start_date_time` | PASS (unit test) |
++| Simulated empty today → next date Wed Jul 15 | PASS with status message |
++| Manual All after fallback | stays All; not overridden |
++
++## Significance
++
++| Scenario | Result |
++| --- | --- |
++| Paid/sponsored ignored | PASS |
++| Closed/maintenance untiered | PASS |
++| Canonical `significance_tier` override | PASS |
++| Displayed tiers include reasons | PASS |
++| Untiered visible by default | PASS |
++
++## Safety
++
++- `data/location_cache.json` not modified
++- GPS review / approval artifacts not modified
++- Overlays not removed
++- No WordPress upload performed
++- No silent PR merges
++
++## Remaining limitation
++
++GitHub Pages and WordPress still serve the pre-restore runtime until the Field Desk PR is merged/deployed and the 1.2.1 plugin ZIP is uploaded manually.
+-- 
+2.43.0
+
