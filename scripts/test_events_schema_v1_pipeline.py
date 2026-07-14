@@ -98,6 +98,43 @@ def main() -> int:
     if not (ROOT / "data" / "schema-v1" / "major" / "events.json").exists():
         errors.append("missing major events.json")
 
+    # Category refinement samples (approved staged with general backend).
+    from schema_v1_common import infer_category  # noqa: E402
+
+    samples = [
+        ({"title": "Brownsville Old Timer's Parade", "category": "general", "event_type": "Parade"}, "civic"),
+        ({"title": "Community March", "category": "general", "event_type": "Street Event"}, "civic"),
+        ({"title": "15th Annual Trans Latina March", "category": "general"}, "civic"),
+        ({"title": "July Falun Dafa Parade", "category": "general", "event_type": "Parade"}, "civic"),
+        ({"title": "Colombian Day Parade", "category": "general", "event_type": "Parade"}, "civic"),
+        ({"title": "Bayside 5K", "category": "general", "event_type": "Athletic Race / Tour"}, "sports"),
+        ({"title": "Bedstuy HERITAGE 5k", "category": "general"}, "sports"),
+        ({"title": "Unity Walk", "category": "general"}, "civic"),
+        ({"title": "BARAAT PROCESSION", "category": "general"}, "civic"),
+        ({"title": "Public Hearing on Budget", "category": "general"}, "government"),
+        ({"title": "City Job Fair", "category": "general"}, "jobs"),
+        ({"title": "Tenant Resource Event", "category": "general"}, "housing"),
+        ({"title": "Sport - Youth Basketball", "category": "general", "event_type": "Sport - Youth"}, "sports"),
+        ({"title": "Yoga and Zumba Wellness", "category": "general"}, "fitness"),
+        ({"title": "Specific Sports Already", "category": "sports"}, "sports"),
+    ]
+    for row, expected in samples:
+        got, _reason = infer_category(row, prefer_direct=True)
+        if got != expected:
+            errors.append(f"category sample {row.get('title')!r}: expected {expected}, got {got}")
+
+    if major_report.get("legacy_carryover_only_count") is None:
+        errors.append("major report missing legacy_carryover_only_count")
+    samples_legacy = major_report.get("legacy_carryover_only_samples") or []
+    if major_report.get("legacy_carryover_only_count", 0) >= 25 and len(samples_legacy) < 25:
+        errors.append("major report needs >=25 legacy-only samples when count>=25")
+
+    approved_general = (cat_audit.get("approved") or {}).get("remaining_general_records") or []
+    for row in approved_general:
+        if not row.get("why_still_general"):
+            errors.append("general remaining row missing why_still_general")
+            break
+
     report = {"qa_pass": not errors, "errors": errors}
     (ROOT / "data" / "events_schema_v1_pipeline_test_report.json").write_text(
         json.dumps(report, indent=2) + "\n", encoding="utf-8"

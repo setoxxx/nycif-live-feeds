@@ -3,21 +3,37 @@
   const STORAGE_KEY = 'nycif-field-desk-state-v06-safe';
   const DEFAULT_VERSION = 'schema-v1-major-all-v01';
   const LIST_PAGE = 100;
-  const VIEWPORT_MARKER_CAP = 450;
+  const VIEWPORT_BUFFER = 0.15;
+  const MAJOR_MARKER_SOFT_CAP = 800;
+  const ALL_MARKER_SOFT_CAP = 600;
   const SEARCH_DEBOUNCE_MS = 180;
   const NYC_CENTER = [40.7128, -74.006];
-  const FEED_HOST = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
+  const SCHEMA = window.NYCIF_EVENT_FEED_SCHEMA_V1;
+  const localHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  const feedBranch = (() => {
+    try {
+      const raw = new URL(location.href).searchParams.get('feeds');
+      if (!raw) return 'main';
+      if (/^[A-Za-z0-9._\/-]+$/.test(raw)) return raw;
+      return 'main';
+    } catch {
+      return 'main';
+    }
+  })();
+  const FEED_HOST = localHost
     ? ''
-    : 'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main';
+    : `https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/${feedBranch}`;
+  const pageUrl = (layer, cursor) => {
+    const name = String(cursor || '').replace(/\.json$/i, '');
+    return `${FEED_HOST}/data/schema-v1/${layer}/pages/${name}.json`;
+  };
   const FEEDS = {
-    major: `${FEED_HOST}/data/events_schema_v1_major.json`,
-    approved: `${FEED_HOST}/data/events_schema_v1_staged.json`,
-    review: `${FEED_HOST}/data/events_schema_v1_supplemental_review.json`,
-    approvedManifest: `${FEED_HOST}/data/schema-v1/approved/manifest.json`,
-    reviewManifest: `${FEED_HOST}/data/schema-v1/review/manifest.json`,
-    legacyMajor: `${FEED_HOST}/nycif_major_radar_map_events.json`,
-    legacyStaged: `${FEED_HOST}/data/nycif_staged_live_events.json`,
-    legacySupp: `${FEED_HOST}/data/supplemental_events_staging_feed.json`
+    major: FEED_HOST + '/data/schema-v1/major/events.json',
+    majorFallback: FEED_HOST + '/data/events_schema_v1_major.json',
+    approvedManifest: FEED_HOST + '/data/schema-v1/approved/manifest.json',
+    reviewManifest: FEED_HOST + '/data/schema-v1/review/manifest.json',
+    approvedPage: cursor => pageUrl('approved', cursor),
+    reviewPage: cursor => pageUrl('review', cursor)
   };
   const CATEGORY_META = {
     sports: { emoji: '🏟️', label: 'Sports' },
@@ -39,8 +55,10 @@
   const ALL_CATEGORY_KEYS = Object.keys(CATEGORY_META);
   const BOROUGHS = ['All', 'Manhattan', 'Brooklyn', 'Queens', 'Bronx', 'Staten Island'];
   const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const SCHEMA = window.NYCIF_EVENT_FEED_SCHEMA_V1;
-  const debug = (() => { try { return new URL(location.href).searchParams.get('debugMap') === '1'; } catch { return false; } })();
+  const debug = (() => {
+    try { return new URL(location.href).searchParams.get('debugMap') === '1'; }
+    catch { return false; }
+  })();
 
   const state = {
     viewMode: 'major',
@@ -60,9 +78,14 @@
     banner: '',
     fallbackUsed: false,
     timings: {},
-    feedMeta: {},
     errors: [],
-    markerObjects: 0
+    markerObjects: 0,
+    peakMarkerObjects: 0,
+    indexComplete: false,
+    pagesLoaded: { approved: 0, review: 0 },
+    pagesTotal: { approved: 0, review: 0 },
+    loadToken: 0,
+    manifests: { approved: null, review: null }
   };
 
   const els = {
@@ -91,12 +114,24 @@
     loadMoreBtn: document.getElementById('loadMoreBtn'),
     resetFiltersBtn: document.getElementById('resetFiltersBtn'),
     retryFeedBtn: document.getElementById('retryFeedBtn'),
-    debugPanel: document.getElementById('debugPanel')
+    debugPanel: document.getElementById('debugPanel'),
+    indexStatus: document.getElementById('indexStatus')
   };
+
+  if (!els.map || !SCHEMA) {
+    if (els.status) {
+      els.status.textContent = 'Map boot failed: required map/schema elements are missing.';
+    }
+    return;
+  }
 
   const map = L.map(els.map, { zoomControl: true, closePopupOnClick: false, tap: false }).setView(NYC_CENTER, 11);
   window.NYCIF_MAIN_MAP = map;
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    crossOrigin: true
+  }).addTo(map);
+
   const useCluster = typeof L.markerClusterGroup === 'function';
   const markers = useCluster
     ? L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 55, spiderfyOnMaxZoom: true, disableClusteringAtZoom: 16 })
@@ -106,35 +141,54 @@
   let userAccuracy = null;
   let searchTimer = null;
   let renderTimer = null;
+  let moveTimer = null;
+  let swRegistered = false;
 
-  const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const norm = v => String(v ?? '').toLowerCase().replace(/\s+/g, ' ').trim();
   const dateKey = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
   const todayKey = () => dateKey(new Date());
   const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
-  // Next 7 days = today through today + 7 (inclusive), matching prior Field Desk dayRange.
   const dayRange = () => ({ today: todayKey(), end: dateKey(addDays(new Date(), 7)) });
   const status = t => { if (els.status) els.status.textContent = t; };
-  const setBanner = t => { state.banner = t || ''; if (els.banner) { els.banner.hidden = !state.banner; els.banner.textContent = state.banner; } };
+  const setBanner = t => {
+    state.banner = t || '';
+    if (!els.banner) {
+      return;
+    }
+    els.banner.hidden = !state.banner;
+    els.banner.textContent = state.banner;
+  };
+  const setIndexStatus = t => {
+    if (!els.indexStatus) {
+      return;
+    }
+    els.indexStatus.hidden = !t;
+    els.indexStatus.textContent = t || '';
+  };
 
   function eventDate(row) {
     const nycifDate = row?.nycif?.event_date;
-    if (/^\d{4}-\d{2}-\d{2}$/.test(String(nycifDate || ''))) return nycifDate;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(String(nycifDate || ''))) {
+      return nycifDate;
+    }
     const direct = String(row.date || '').slice(0, 10);
-    if (/^\d{4}-\d{2}-\d{2}$/.test(direct)) return direct;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(direct)) {
+      return direct;
+    }
     const start = String(row.start_date_time || '');
-    if (/^\d{4}-\d{2}-\d{2}/.test(start)) return start.slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}/.test(start)) {
+      return start.slice(0, 10);
+    }
     return '';
   }
 
-  function toUiEvent(schemaEvent, fallbackSource) {
+  function toUiEvent(schemaEvent) {
     const nycif = schemaEvent.nycif || {};
     const catKey = CATEGORY_META[schemaEvent.category] ? schemaEvent.category : 'general';
     const mapReady = nycif.coordinate_status === 'map_ready'
       && Number.isFinite(schemaEvent.latitude)
       && Number.isFinite(schemaEvent.longitude);
-    const layer = nycif.data_layer || fallbackSource;
-    const review = layer === 'review_supplemental';
+    const review = (nycif.data_layer || '') === 'review_supplemental';
     const title = schemaEvent.title || 'Untitled event';
     const location = schemaEvent.location || '';
     const borough = schemaEvent.borough || '';
@@ -149,28 +203,33 @@
       isReview: review,
       isMajor: schemaEvent.significance === 'major' || !!nycif.is_major,
       photoPick: !!nycif.photo_pick,
-      fieldDefault: !!nycif.field_default,
-      crowd_level: nycif.crowd_level,
+      verification_status: nycif.verification_status,
       major_reason: nycif.major_reason,
       major_score: nycif.major_score || 0,
-      verification_status: nycif.verification_status,
-      assignment_feed: nycif.assignment_feed,
       searchText: norm([title, location, borough, catKey, schemaEvent.source?.dataset, schemaEvent.source?.source_event_id, nycif.event_type, nycif.major_reason].filter(Boolean).join(' ')),
       marker: null
     };
-    e.priority = Number(e.major_score || 0)
-      + (e.isMajor ? 500 : 0)
-      + (e.photoPick ? 120 : 0)
-      + (e.verification_status === 'nypd_field_intel' ? 800 : 0);
+    e.priority = Number(e.major_score || 0) + (e.isMajor ? 500 : 0) + (e.photoPick ? 120 : 0);
+    if (e.verification_status === 'nypd_field_intel') {
+      e.priority += 800;
+    }
     return e;
   }
 
-  function upsertEvents(schemaEvents, sourceLabel) {
+  function upsertEvents(schemaEvents) {
     for (const raw of schemaEvents) {
-      const e = toUiEvent(raw, sourceLabel);
-      if (!e.id) continue;
+      const e = toUiEvent(raw);
+      if (!e.id) {
+        continue;
+      }
       const existing = state.byId.get(e.id);
-      if (existing?.marker) e.marker = existing.marker;
+      if (existing?.marker) {
+        e.marker = existing.marker;
+      }
+      if (existing?.isMajor && !e.isMajor) {
+        e.isMajor = true;
+        e.significance = 'major';
+      }
       state.byId.set(e.id, e);
     }
     state.events = [...state.byId.values()];
@@ -183,259 +242,18 @@
       headers: { Accept: 'application/json' }
     });
     const fetchMs = performance.now() - t0;
-    if (!res.ok) throw new Error(`${label} HTTP ${res.status}`);
+    if (!res.ok) {
+      throw new Error(`${label} unavailable (${res.status})`);
+    }
     const t1 = performance.now();
     const json = await res.json();
-    const parseMs = performance.now() - t1;
-    state.timings[label] = { fetchMs: Math.round(fetchMs), parseMs: Math.round(parseMs), url, status: res.status };
-    return { json, status: res.status, url };
-  }
-
-  async function loadSchemaFeed(preferredUrl, fallbackUrl, dataLayer, label) {
-    try {
-      const { json, url } = await fetchJson(preferredUrl, label);
-      if (!SCHEMA) throw new Error('schema helper missing');
-      const envelope = SCHEMA.projectEnvelope(json, dataLayer, json.generated_at_utc);
-      if (envelope.schema_version !== '1.0') throw new Error(`${label} bad schema_version`);
-      state.feedMeta[label] = { url, total: envelope.total, schema_version: envelope.schema_version, fallback: false };
-      return envelope;
-    } catch (err) {
-      state.errors.push(String(err.message || err));
-      if (!fallbackUrl) throw err;
-      status(`${label} schema feed failed; using legacy fallback…`);
-      const { json, url } = await fetchJson(fallbackUrl, `${label}-fallback`);
-      const envelope = SCHEMA.projectEnvelope(json, dataLayer, json.generated_at_utc);
-      state.fallbackUsed = true;
-      state.feedMeta[label] = { url, total: envelope.total, schema_version: envelope.schema_version, fallback: true };
-      setBanner(`Schema feed issue for ${label}. Legacy fallback is in use.`);
-      return envelope;
-    }
-  }
-
-  function isNypd(e) {
-    return e.verification_status === 'nypd_field_intel' || /nypd/i.test(e.title || '');
-  }
-
-  function milesBetween(a, b) {
-    if (!a || !b || !Number.isFinite(b.lat) || !Number.isFinite(b.lng)) return null;
-    const R = 3958.8;
-    const toRad = x => x * Math.PI / 180;
-    const dLat = toRad(b.lat - a.lat);
-    const dLng = toRad(b.lng - a.lng);
-    const lat1 = toRad(a.lat);
-    const lat2 = toRad(b.lat);
-    const x = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
-    return 2 * R * Math.asin(Math.sqrt(x));
-  }
-
-  function dateMatches(e) {
-    if (!e.dateKey) return false;
-    const { today, end } = dayRange();
-    if (state.dateMode === 'next7') return e.dateKey >= today && e.dateKey <= end;
-    if (state.dateMode === 'all') return e.dateKey >= today;
-    if (state.dateMode === 'today') return e.dateKey === today;
-    if (/^\d{4}-\d{2}-\d{2}$/.test(state.dateMode)) return e.dateKey === state.dateMode;
-    return e.dateKey >= today;
-  }
-
-  function sourceMatches(e) {
-    if (state.viewMode === 'major') return e.isMajor && !e.isReview;
-    if (state.sourceFilter === 'approved') return !e.isReview;
-    if (state.sourceFilter === 'review') return e.isReview;
-    return true;
-  }
-
-  function eventMatches(e) {
-    return sourceMatches(e)
-      && dateMatches(e)
-      && !!state.categories[e.categoryKey]
-      && (!state.photoOnly || e.photoPick)
-      && (!state.nypdOnly || isNypd(e))
-      && (state.borough === 'all' || e.borough === state.borough)
-      && (!state.search || e.searchText.includes(state.search));
-  }
-
-  function sortEvents(a, b) {
-    if (state.sort === 'near') {
-      const da = milesBetween(state.userLocation, a) ?? 999999;
-      const db = milesBetween(state.userLocation, b) ?? 999999;
-      return da - db || b.priority - a.priority;
-    }
-    if (state.sort === 'borough') return (a.borough || 'zz').localeCompare(b.borough || 'zz') || b.priority - a.priority;
-    if (state.sort === 'type') return (a.nycif?.event_type || 'zz').localeCompare(b.nycif?.event_type || 'zz') || b.priority - a.priority;
-    if (state.sort === 'time') return (a.dateKey || '9999').localeCompare(b.dateKey || '9999') || b.priority - a.priority;
-    return b.priority - a.priority || (a.dateKey || '').localeCompare(b.dateKey || '');
-  }
-
-  function appleMapsUrl(e) { return `https://maps.apple.com/?daddr=${e.lat},${e.lng}&q=${encodeURIComponent(e.title)}`; }
-  function googleMapsUrl(e) { return `https://www.google.com/maps/dir/?api=1&destination=${e.lat},${e.lng}&travelmode=driving`; }
-
-  function popupHtml(e) {
-    const src = e.isReview ? 'Expanded review (not production-approved)' : (e.isMajor ? 'Major events' : 'Approved / staged');
-    return `<article class="popup-card"><div class="popup-source">${esc(src)}</div><div class="popup-category"><span>${esc(e.categoryMeta.emoji)}</span> ${esc(e.categoryMeta.label)}</div><h2>${esc(e.title)}</h2><dl><div><dt>Date</dt><dd>${esc(e.dateKey || 'n/a')}</dd></div>${e.borough ? `<div><dt>Borough</dt><dd>${esc(e.borough)}</dd></div>` : ''}${e.location ? `<div><dt>Location</dt><dd>${esc(e.location)}</dd></div>` : ''}${e.major_reason ? `<div><dt>Why major</dt><dd>${esc(e.major_reason)}</dd></div>` : ''}</dl>${e.mapReady ? `<div class="field-actions"><a class="field-action" target="_blank" rel="noopener" href="${esc(appleMapsUrl(e))}">Apple Maps</a><a class="field-action" target="_blank" rel="noopener" href="${esc(googleMapsUrl(e))}">Google Maps</a></div>` : '<div class="popup-photo">LIST ONLY — coordinates pending</div>'}</article>`;
-  }
-
-  function makeMarker(e) {
-    const cls = ['marker', `marker--${e.categoryKey}`, e.photoPick ? 'marker--photo' : '', isNypd(e) ? 'marker--nypd' : '', e.isMajor ? 'marker--major' : ''].filter(Boolean).join(' ');
-    return L.marker([e.lat, e.lng], {
-      icon: L.divIcon({
-        className: 'marker-shell',
-        html: `<span class="${cls}"><span class="emoji">${e.categoryMeta.emoji}</span></span>`,
-        iconSize: [38, 38],
-        iconAnchor: [19, 19],
-        popupAnchor: [0, -24]
-      }),
-      title: e.title,
-      riseOnHover: true
-    }).bindPopup(popupHtml(e), { maxWidth: 330, autoPan: true, closeButton: true, autoClose: false, closeOnClick: false });
-  }
-
-  function ensureMarker(e) {
-    if (!e.mapReady) return null;
-    if (!e.marker) e.marker = makeMarker(e);
-    return e.marker;
-  }
-
-  function inMapBounds(e, bounds) {
-    if (!e.mapReady || !bounds) return false;
-    return bounds.contains([e.lat, e.lng]);
-  }
-
-  function countForMode(mode) {
-    const { today, end } = dayRange();
-    return state.events.filter(e => {
-      if (!e.dateKey || e.dateKey < today || e.dateKey > end) return false;
-      if (mode === 'major') return e.isMajor && !e.isReview;
-      return true;
-    }).length;
-  }
-
-  function updateModeButtons() {
-    const majorN = countForMode('major');
-    const allN = countForMode('all');
-    if (els.modeMajor) {
-      els.modeMajor.textContent = `Major Events (${majorN.toLocaleString()})`;
-      els.modeMajor.classList.toggle('active', state.viewMode === 'major');
-      els.modeMajor.setAttribute('aria-pressed', String(state.viewMode === 'major'));
-    }
-    if (els.modeAll) {
-      els.modeAll.textContent = `All Events (${allN.toLocaleString()})`;
-      els.modeAll.classList.toggle('active', state.viewMode === 'all');
-      els.modeAll.setAttribute('aria-pressed', String(state.viewMode === 'all'));
-    }
-    if (els.sourceFilter) els.sourceFilter.hidden = state.viewMode !== 'all';
-  }
-
-  function applyZeroMajorFallback(visible) {
-    if (state.viewMode !== 'major' || state.userChangedFilters) return visible;
-    if (visible.length) return visible;
-    const upcomingMajor = state.events
-      .filter(e => e.isMajor && !e.isReview && e.dateKey && e.dateKey >= todayKey())
-      .sort((a, b) => a.dateKey.localeCompare(b.dateKey));
-    if (upcomingMajor.length) {
-      state.dateMode = upcomingMajor[0].dateKey;
-      setBanner(`No Major Events in the next 7 days. Showing the next major date: ${state.dateMode}.`);
-      buildDateChips();
-      return state.events.filter(eventMatches).sort(sortEvents);
-    }
-    state.viewMode = 'all';
-    state.dateMode = 'next7';
-    setBanner('No upcoming Major Events were found. Showing all events for the next seven days.');
-    updateModeButtons();
-    buildDateChips();
-    return state.events.filter(eventMatches).sort(sortEvents);
-  }
-
-  function renderMarkers(visible) {
-    const t0 = performance.now();
-    if (markers.clearLayers) markers.clearLayers();
-    const bounds = map.getBounds();
-    const mapReady = visible.filter(e => e.mapReady);
-    let draw;
-    if (useCluster) {
-      draw = mapReady.slice(0, 2500);
-    } else {
-      const inView = mapReady.filter(e => inMapBounds(e, bounds));
-      draw = (inView.length ? inView : mapReady).slice(0, VIEWPORT_MARKER_CAP);
-    }
-    const batch = [];
-    for (const e of draw) {
-      const m = ensureMarker(e);
-      if (m) batch.push(m);
-    }
-    if (useCluster && markers.addLayers) markers.addLayers(batch);
-    else batch.forEach(m => markers.addLayer(m));
-    state.markerObjects = batch.length;
-    state.timings.markerUpdateMs = Math.round(performance.now() - t0);
-    return draw;
-  }
-
-  function card(e) {
-    const dist = milesBetween(state.userLocation, e);
-    const distLabel = Number.isFinite(dist) ? (dist < 0.1 ? 'nearby' : `${dist.toFixed(dist < 10 ? 1 : 0)} mi`) : '';
-    return `<button type="button" class="event-item" data-id="${esc(e.id)}"><span class="item-top"><span class="item-source">${esc(e.categoryMeta.emoji)} ${esc(e.categoryMeta.label)}</span><span class="item-tags">${e.isReview ? '<span class="item-tag nycif-source-review">REVIEW</span>' : '<span class="item-tag">LIVE</span>'}${e.mapReady ? '' : '<span class="item-tag nycif-list-only">LIST ONLY</span>'}${e.isMajor ? '<span class="item-tag">MAJOR</span>' : ''}${distLabel ? `<span class="item-tag near">${esc(distLabel)}</span>` : ''}</span></span><strong>${esc(e.title)}</strong><span>${esc(e.dateKey || 'Date unavailable')}</span><small>${esc([e.borough, e.location, e.nycif?.event_type].filter(Boolean).join(' • '))}</small>${e.mapReady ? `<span class="quick-actions"><a href="${esc(appleMapsUrl(e))}" target="_blank" rel="noopener">Directions</a></span>` : ''}</button>`;
-  }
-
-  function render() {
-    const t0 = performance.now();
-    updateModeButtons();
-    let visible = state.events.filter(eventMatches).sort(sortEvents);
-    visible = applyZeroMajorFallback(visible);
-    const drawn = renderMarkers(visible);
-    const shown = Math.min(state.listShown, visible.length);
-    const listOnly = visible.filter(e => !e.mapReady).length;
-    els.listMeta.textContent = `${state.events.length.toLocaleString()} total · ${visible.length.toLocaleString()} match filters · ${drawn.length.toLocaleString()} markers ${useCluster ? 'clustered/capped' : 'in view'} · showing ${shown.toLocaleString()} of ${visible.length.toLocaleString()} list results${listOnly ? ` · ${listOnly.toLocaleString()} list-only` : ''}`;
-    els.eventList.innerHTML = visible.slice(0, shown).map(card).join('') || '<div class="empty">No events match this view. Try Show All Events or Reset Filters.</div>';
-    if (els.loadMoreBtn) {
-      els.loadMoreBtn.hidden = shown >= visible.length;
-      els.loadMoreBtn.textContent = `Load 100 more (${Math.max(0, visible.length - shown).toLocaleString()} remaining)`;
-    }
-    els.eventList.querySelectorAll('[data-id]').forEach(btn => {
-      btn.addEventListener('click', ev => {
-        if (ev.target.closest('a')) return;
-        focusEvent(btn.dataset.id);
-      });
-    });
-    if (els.brandCount) {
-      els.brandCount.textContent = `${visible.length.toLocaleString()} ${state.viewMode === 'major' ? 'major' : 'events'} · ${state.dateMode === 'next7' ? 'next 7 days' : state.dateMode}`;
-    }
-    status(`${state.viewMode === 'major' ? 'Major' : 'All'} · ${visible.length.toLocaleString()} match · ${drawn.length.toLocaleString()} markers · v${VERSION}`);
-    state.timings.listRenderMs = Math.round(performance.now() - t0);
-    if (debug) updateDebug(visible, drawn);
-    return visible;
-  }
-
-  function focusEvent(id) {
-    const e = state.byId.get(id);
-    if (!e) return;
-    if (!e.mapReady) {
-      status(`${e.title}: coordinate pending; list-only record.`);
-      setDesk(true);
-      return;
-    }
-    const marker = ensureMarker(e);
-    map.flyTo([e.lat, e.lng], Math.max(map.getZoom(), 15), { duration: 0.55 });
-    setTimeout(() => marker?.openPopup(), 420);
-    setDesk(false);
-  }
-
-  function updateDebug(visible, drawn) {
-    if (!els.debugPanel) return;
-    els.debugPanel.hidden = false;
-    els.debugPanel.textContent = JSON.stringify({
-      version: VERSION,
-      viewMode: state.viewMode,
-      feeds: state.feedMeta,
-      total: state.events.length,
-      filtered: visible.length,
-      markers: drawn.length,
-      markerObjects: state.markerObjects,
-      listShown: Math.min(state.listShown, visible.length),
-      fallbackUsed: state.fallbackUsed,
-      errors: state.errors.slice(-8),
-      timings: state.timings,
-      cluster: useCluster
-    }, null, 2);
+    state.timings[label] = {
+      fetchMs: Math.round(fetchMs),
+      parseMs: Math.round(performance.now() - t1),
+      url,
+      status: res.status
+    };
+    return json;
   }
 
   function publicDefaults() {
@@ -460,23 +278,28 @@
         || v === DEFAULT_VERSION
         || v === 'map-restore-v02'
         || v === 'data-explorer-v01';
-    } catch { return false; }
+    } catch {
+      return false;
+    }
   }
 
   function loadPrefs() {
     try {
-      if (forceReset()) localStorage.removeItem(STORAGE_KEY);
-      const p = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-      const d = publicDefaults();
-      const migrate = forceReset() || p.nycifDefaultVersion !== DEFAULT_VERSION;
-      const use = migrate ? d : {
-        ...d,
-        ...p,
-        categories: { ...d.categories, ...(p.categories || {}) },
-        viewMode: p.viewMode === 'all' ? 'all' : 'major'
+      if (forceReset()) {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+      const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      const defaults = publicDefaults();
+      const migrate = forceReset() || parsed.nycifDefaultVersion !== DEFAULT_VERSION;
+      const use = migrate ? defaults : {
+        ...defaults,
+        ...parsed,
+        categories: { ...defaults.categories, ...(parsed.categories || {}) },
+        viewMode: parsed.viewMode === 'all' ? 'all' : 'major'
       };
-      // Legacy parade -> civic
-      if (use.categories.parade != null && use.categories.civic == null) use.categories.civic = !!use.categories.parade;
+      if (use.categories.parade != null && use.categories.civic == null) {
+        use.categories.civic = !!use.categories.parade;
+      }
       Object.assign(state, {
         borough: use.borough,
         sort: use.sort,
@@ -507,84 +330,707 @@
     }));
   }
 
+  function dateMatches(e) {
+    if (!e.dateKey) {
+      return false;
+    }
+    const { today, end } = dayRange();
+    if (state.dateMode === 'next7') {
+      return e.dateKey >= today && e.dateKey <= end;
+    }
+    if (state.dateMode === 'all') {
+      return e.dateKey >= today;
+    }
+    if (state.dateMode === 'today') {
+      return e.dateKey === today;
+    }
+    if (/^\d{4}-\d{2}-\d{2}$/.test(state.dateMode)) {
+      return e.dateKey === state.dateMode;
+    }
+    return e.dateKey >= today;
+  }
+
+  function sourceMatches(e) {
+    if (state.viewMode === 'major') {
+      return e.isMajor && !e.isReview;
+    }
+    if (state.sourceFilter === 'approved') {
+      return !e.isReview;
+    }
+    if (state.sourceFilter === 'review') {
+      return e.isReview;
+    }
+    return true;
+  }
+
+  function eventMatches(e) {
+    return sourceMatches(e)
+      && dateMatches(e)
+      && !!state.categories[e.categoryKey]
+      && (!state.photoOnly || e.photoPick)
+      && (!state.nypdOnly || e.verification_status === 'nypd_field_intel')
+      && (state.borough === 'all' || e.borough === state.borough)
+      && (!state.search || e.searchText.includes(state.search));
+  }
+
+  function milesBetween(a, b) {
+    if (!a || !b || !Number.isFinite(b.lat) || !Number.isFinite(b.lng)) {
+      return null;
+    }
+    const R = 3958.8;
+    const toRad = x => x * Math.PI / 180;
+    const dLat = toRad(b.lat - a.lat);
+    const dLng = toRad(b.lng - a.lng);
+    const lat1 = toRad(a.lat);
+    const lat2 = toRad(b.lat);
+    const x = Math.sin(dLat / 2) ** 2 + Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+    return 2 * R * Math.asin(Math.sqrt(x));
+  }
+
+  function sortEvents(a, b) {
+    if (state.sort === 'near') {
+      const da = milesBetween(state.userLocation, a) ?? 999999;
+      const db = milesBetween(state.userLocation, b) ?? 999999;
+      return da - db || b.priority - a.priority;
+    }
+    if (state.sort === 'borough') {
+      return (a.borough || 'zz').localeCompare(b.borough || 'zz') || b.priority - a.priority;
+    }
+    if (state.sort === 'type') {
+      return String(a.nycif?.event_type || 'zz').localeCompare(String(b.nycif?.event_type || 'zz')) || b.priority - a.priority;
+    }
+    if (state.sort === 'time') {
+      return (a.dateKey || '9999').localeCompare(b.dateKey || '9999') || b.priority - a.priority;
+    }
+    return b.priority - a.priority || (a.dateKey || '').localeCompare(b.dateKey || '');
+  }
+
+  function mapsUrl(kind, e) {
+    if (!e.mapReady) {
+      return null;
+    }
+    if (kind === 'apple') {
+      return `https://maps.apple.com/?daddr=${e.lat},${e.lng}&q=${encodeURIComponent(e.title)}`;
+    }
+    return `https://www.google.com/maps/dir/?api=1&destination=${e.lat},${e.lng}&travelmode=driving`;
+  }
+
+  function clearChildren(node) {
+    while (node.firstChild) node.removeChild(node.firstChild);
+  }
+
+  function appendText(parent, tag, text, className) {
+    const el = document.createElement(tag);
+    if (className) {
+      el.className = className;
+    }
+    el.textContent = text == null ? '' : String(text);
+    parent.appendChild(el);
+    return el;
+  }
+
+  function appendSafeLink(parent, href, label, className) {
+    const safe = SCHEMA.safeExternalUrl(href);
+    if (!safe) {
+      return null;
+    }
+    const a = document.createElement('a');
+    a.href = safe;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    if (className) {
+      a.className = className;
+    }
+    a.textContent = label;
+    parent.appendChild(a);
+    return a;
+  }
+
+  function popupRoot(e) {
+    const root = document.createElement('article');
+    root.className = 'popup-card';
+    const src = e.isReview ? 'Expanded review (not production-approved)' : (e.isMajor ? 'Major events' : 'Approved / staged');
+    appendText(root, 'div', src, 'popup-source');
+    const cat = appendText(root, 'div', '', 'popup-category');
+    appendText(cat, 'span', e.categoryMeta.emoji);
+    cat.appendChild(document.createTextNode(` ${e.categoryMeta.label}`));
+    appendText(root, 'h2', e.title);
+    const dl = document.createElement('dl');
+    const addRow = (dt, dd) => {
+      if (!dd) {
+        return;
+      }
+      const wrap = document.createElement('div');
+      appendText(wrap, 'dt', dt);
+      appendText(wrap, 'dd', dd);
+      dl.appendChild(wrap);
+    };
+    addRow('Date', e.dateKey || 'n/a');
+    addRow('Borough', e.borough);
+    addRow('Location', e.location);
+    addRow('Why major', e.major_reason);
+    root.appendChild(dl);
+    if (e.mapReady) {
+      const actions = document.createElement('div');
+      actions.className = 'field-actions';
+      appendSafeLink(actions, mapsUrl('apple', e), 'Apple Maps', 'field-action');
+      appendSafeLink(actions, mapsUrl('google', e), 'Google Maps', 'field-action');
+      root.appendChild(actions);
+    } else {
+      appendText(root, 'div', 'LIST ONLY — coordinates pending', 'popup-photo');
+    }
+    return root;
+  }
+
+  function makeMarker(e) {
+    const cls = ['marker', `marker--${e.categoryKey}`];
+    if (e.photoPick) {
+      cls.push('marker--photo');
+    }
+    if (e.isMajor) {
+      cls.push('marker--major');
+    }
+    const marker = L.marker([e.lat, e.lng], {
+      icon: L.divIcon({
+        className: 'marker-shell',
+        html: `<span class="${cls.join(' ')}"><span class="emoji"></span></span>`,
+        iconSize: [38, 38],
+        iconAnchor: [19, 19],
+        popupAnchor: [0, -24]
+      }),
+      title: e.title,
+      riseOnHover: true
+    });
+    // Set emoji via textContent after icon create for trusted static shell only.
+    marker.on('add', () => {
+      const emoji = marker.getElement()?.querySelector('.emoji');
+      if (emoji) {
+        emoji.textContent = e.categoryMeta.emoji;
+      }
+    });
+    marker.bindPopup(popupRoot(e), { maxWidth: 330, autoPan: true, closeButton: true, autoClose: false, closeOnClick: false });
+    return marker;
+  }
+
+  function ensureMarker(e) {
+    if (!e.mapReady) {
+      return null;
+    }
+    if (!e.marker) {
+      e.marker = makeMarker(e);
+    }
+    return e.marker;
+  }
+
+  function expandedBounds() {
+    const bounds = map.getBounds();
+    if (!bounds) {
+      return null;
+    }
+    const padLat = (bounds.getNorth() - bounds.getSouth()) * VIEWPORT_BUFFER;
+    const padLng = (bounds.getEast() - bounds.getWest()) * VIEWPORT_BUFFER;
+    return L.latLngBounds(
+      [bounds.getSouth() - padLat, bounds.getWest() - padLng],
+      [bounds.getNorth() + padLat, bounds.getEast() + padLng]
+    );
+  }
+
+  function renderMarkers(visible) {
+    const t0 = performance.now();
+    if (markers.clearLayers) {
+      markers.clearLayers();
+    }
+    const mapReady = visible.filter(e => e.mapReady);
+    let candidates;
+    if (state.viewMode === 'major') {
+      candidates = mapReady.slice(0, MAJOR_MARKER_SOFT_CAP);
+    } else {
+      const bounds = expandedBounds();
+      const inView = bounds ? mapReady.filter(e => bounds.contains([e.lat, e.lng])) : mapReady;
+      candidates = (inView.length ? inView : mapReady).slice(0, ALL_MARKER_SOFT_CAP);
+    }
+    const batch = [];
+    for (const e of candidates) {
+      const marker = ensureMarker(e);
+      if (marker) {
+        batch.push(marker);
+      }
+    }
+    if (useCluster && markers.addLayers) {
+      markers.addLayers(batch);
+    }
+    else batch.forEach(marker => markers.addLayer(marker));
+    state.markerObjects = batch.length;
+    state.peakMarkerObjects = Math.max(state.peakMarkerObjects, batch.length);
+    state.timings.markerUpdateMs = Math.round(performance.now() - t0);
+    return batch;
+  }
+
+  function buildListCard(e) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'event-item';
+    button.dataset.id = e.id;
+
+    const top = document.createElement('span');
+    top.className = 'item-top';
+    appendText(top, 'span', `${e.categoryMeta.emoji} ${e.categoryMeta.label}`, 'item-source');
+    const tags = document.createElement('span');
+    tags.className = 'item-tags';
+    appendText(tags, 'span', e.isReview ? 'REVIEW' : 'LIVE', e.isReview ? 'item-tag nycif-source-review' : 'item-tag');
+    if (!e.mapReady) {
+      appendText(tags, 'span', 'LIST ONLY', 'item-tag nycif-list-only');
+    }
+    if (e.isMajor) {
+      appendText(tags, 'span', 'MAJOR', 'item-tag');
+    }
+    const dist = milesBetween(state.userLocation, e);
+    if (Number.isFinite(dist)) {
+      appendText(tags, 'span', dist < 0.1 ? 'nearby' : `${dist.toFixed(dist < 10 ? 1 : 0)} mi`, 'item-tag near');
+    }
+    top.appendChild(tags);
+    button.appendChild(top);
+    appendText(button, 'strong', e.title);
+    appendText(button, 'span', e.dateKey || 'Date unavailable');
+    appendText(button, 'small', [e.borough, e.location, e.nycif?.event_type].filter(Boolean).join(' • '));
+    if (e.mapReady) {
+      const actions = document.createElement('span');
+      actions.className = 'quick-actions';
+      appendSafeLink(actions, mapsUrl('apple', e), 'Directions');
+      button.appendChild(actions);
+    }
+    button.addEventListener('click', ev => {
+      if (ev.target.closest('a')) {
+        return;
+      }
+      focusEvent(e.id);
+    });
+    return button;
+  }
+
+  function countForMode(mode) {
+    const { today, end } = dayRange();
+    return state.events.filter(e => {
+      if (!e.dateKey || e.dateKey < today || e.dateKey > end) {
+        return false;
+      }
+      if (mode === 'major') {
+        return e.isMajor && !e.isReview;
+      }
+      return true;
+    }).length;
+  }
+
+  function updateModeButtons() {
+    if (els.modeMajor) {
+      els.modeMajor.textContent = `Major Events (${countForMode('major').toLocaleString()})`;
+      els.modeMajor.classList.toggle('active', state.viewMode === 'major');
+      els.modeMajor.setAttribute('aria-pressed', String(state.viewMode === 'major'));
+    }
+    if (els.modeAll) {
+      els.modeAll.textContent = `All Events (${countForMode('all').toLocaleString()})`;
+      els.modeAll.classList.toggle('active', state.viewMode === 'all');
+      els.modeAll.setAttribute('aria-pressed', String(state.viewMode === 'all'));
+    }
+    if (els.sourceFilter) {
+      els.sourceFilter.hidden = state.viewMode !== 'all';
+    }
+  }
+
+  function applyZeroMajorFallback(visible) {
+    if (state.viewMode !== 'major' || state.userChangedFilters || visible.length) {
+      return visible;
+    }
+    const upcomingMajor = state.events
+      .filter(e => e.isMajor && !e.isReview && e.dateKey && e.dateKey >= todayKey())
+      .sort((a, b) => a.dateKey.localeCompare(b.dateKey));
+    if (upcomingMajor.length) {
+      state.dateMode = upcomingMajor[0].dateKey;
+      setBanner(`No Major Events in the next 7 days. Showing the next major date: ${state.dateMode}.`);
+      buildDateChips();
+      return state.events.filter(eventMatches).sort(sortEvents);
+    }
+    state.viewMode = 'all';
+    state.dateMode = 'next7';
+    setBanner('No upcoming Major Events were found. Showing all events for the next seven days.');
+    updateModeButtons();
+    buildDateChips();
+    return state.events.filter(eventMatches).sort(sortEvents);
+  }
+
+  function updateIndexLabel() {
+    if (state.indexComplete) {
+      setIndexStatus('Search index complete for all loaded pages.');
+      return;
+    }
+    setIndexStatus(`Search still indexing pages… approved ${state.pagesLoaded.approved}/${state.pagesTotal.approved || '?'} · review ${state.pagesLoaded.review}/${state.pagesTotal.review || '?'}`);
+  }
+
+  function render() {
+    const t0 = performance.now();
+    updateModeButtons();
+    updateIndexLabel();
+    let visible = state.events.filter(eventMatches).sort(sortEvents);
+    visible = applyZeroMajorFallback(visible);
+    const drawn = renderMarkers(visible);
+    const shown = Math.min(state.listShown, visible.length);
+    const listOnly = visible.filter(e => !e.mapReady).length;
+    let indexNote = state.indexComplete ? 'full index loaded' : 'index still loading pages';
+    els.listMeta.textContent = `${state.events.length.toLocaleString()} loaded · ${visible.length.toLocaleString()} match filters · ${drawn.length.toLocaleString()} markers in view · showing ${shown.toLocaleString()} of ${visible.length.toLocaleString()} list results · ${indexNote}${listOnly ? ` · ${listOnly.toLocaleString()} list-only` : ''}`;
+    clearChildren(els.eventList);
+    if (!visible.length) {
+      appendText(els.eventList, 'div', 'No events match this view. Try Show All Events or Reset Filters.', 'empty');
+    } else {
+      visible.slice(0, shown).forEach(e => els.eventList.appendChild(buildListCard(e)));
+    }
+    if (els.loadMoreBtn) {
+      els.loadMoreBtn.hidden = shown >= visible.length;
+      els.loadMoreBtn.textContent = `Load 100 more (${Math.max(0, visible.length - shown).toLocaleString()} remaining)`;
+    }
+    if (els.brandCount) {
+      els.brandCount.textContent = `${visible.length.toLocaleString()} ${state.viewMode === 'major' ? 'major' : 'events'} · ${state.dateMode === 'next7' ? 'next 7 days' : state.dateMode}`;
+    }
+    status(`${state.viewMode === 'major' ? 'Major' : 'All'} · ${visible.length.toLocaleString()} match · ${drawn.length.toLocaleString()} markers · v${VERSION}`);
+    state.timings.listRenderMs = Math.round(performance.now() - t0);
+    if (debug && els.debugPanel) {
+      els.debugPanel.hidden = false;
+      els.debugPanel.textContent = JSON.stringify({
+        version: VERSION,
+        viewMode: state.viewMode,
+        total: state.events.length,
+        filtered: visible.length,
+        markers: drawn.length,
+        peakMarkerObjects: state.peakMarkerObjects,
+        indexComplete: state.indexComplete,
+        pagesLoaded: state.pagesLoaded,
+        pagesTotal: state.pagesTotal,
+        cluster: useCluster,
+        timings: state.timings,
+        errors: state.errors.slice(-8)
+      }, null, 2);
+    }
+    return visible;
+  }
+
+  function scheduleRender() {
+    clearTimeout(renderTimer);
+    renderTimer = setTimeout(() => render(), 40);
+  }
+
+  function focusEvent(id) {
+    const e = state.byId.get(id);
+    if (!e) {
+      return;
+    }
+    if (!e.mapReady) {
+      status(`${e.title}: coordinate pending; list-only record.`);
+      setDesk(true);
+      return;
+    }
+    const marker = ensureMarker(e);
+    if (marker && !markers.hasLayer(marker)) {
+      markers.addLayer(marker);
+    }
+    map.flyTo([e.lat, e.lng], Math.max(map.getZoom(), 15), { duration: 0.55 });
+    setTimeout(() => marker?.openPopup(), 420);
+    setDesk(false);
+  }
+
   function setLayers(open) {
+    if (!els.layersPanel || !els.layersBtn) {
+      return;
+    }
     els.layersPanel.hidden = !open;
     els.layersBtn.setAttribute('aria-expanded', String(open));
     setTimeout(() => map.invalidateSize(), 100);
   }
+
   function setDesk(open) {
+    if (!els.deskDrawer || !els.deskBtn) {
+      return;
+    }
     els.deskDrawer.hidden = !open;
     els.deskBtn.setAttribute('aria-expanded', String(open));
     setTimeout(() => map.invalidateSize(), 100);
   }
 
   function buildBoroughs() {
-    els.boroughs.innerHTML = BOROUGHS.map(b => {
-      const v = b === 'All' ? 'all' : b;
-      return `<button type="button" class="${state.borough === v ? 'active' : ''}" data-borough="${esc(v)}">${esc(b)}</button>`;
-    }).join('');
-  }
-
-  function dateCounts() {
-    const { today, end } = dayRange();
-    const pool = state.events.filter(e => {
-      if (state.viewMode === 'major') return e.isMajor && !e.isReview;
-      if (state.sourceFilter === 'approved') return !e.isReview;
-      if (state.sourceFilter === 'review') return e.isReview;
-      return true;
+    if (!els.boroughs) {
+      return;
+    }
+    clearChildren(els.boroughs);
+    BOROUGHS.forEach(b => {
+      const value = b === 'All' ? 'all' : b;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.borough = value;
+      button.textContent = b;
+      if (state.borough === value) {
+        button.classList.add('active');
+      }
+      button.addEventListener('click', () => {
+        state.userChangedFilters = true;
+        state.borough = value;
+        els.boroughs.querySelectorAll('button').forEach(x => x.classList.toggle('active', x === button));
+        savePrefs();
+        scheduleRender();
+      });
+      els.boroughs.appendChild(button);
     });
-    return {
-      today: pool.filter(e => e.dateKey === today).length,
-      next7: pool.filter(e => e.dateKey && e.dateKey >= today && e.dateKey <= end).length,
-      all: pool.filter(e => e.dateKey && e.dateKey >= today).length
-    };
   }
 
   function buildDateChips() {
-    const counts = dateCounts();
-    const days = Array.from({ length: 8 }, (_, i) => addDays(new Date(), i));
-    els.dateChips.innerHTML = `<div class="date-chip-track"><button type="button" data-date-mode="next7" class="${state.dateMode === 'next7' ? 'active' : ''}">Next 7 days (${counts.next7.toLocaleString()})</button>${days.map((d, i) => {
-      const k = dateKey(d);
-      const n = state.events.filter(e => {
-        if (e.dateKey !== k) return false;
-        if (state.viewMode === 'major') return e.isMajor && !e.isReview;
-        return true;
-      }).length;
+    if (!els.dateChips) {
+      return;
+    }
+    clearChildren(els.dateChips);
+    const track = document.createElement('div');
+    track.className = 'date-chip-track';
+    const { today, end } = dayRange();
+    const pool = state.events.filter(e => {
+      if (state.viewMode === 'major') {
+        return e.isMajor && !e.isReview;
+      }
+      if (state.sourceFilter === 'approved') {
+        return !e.isReview;
+      }
+      if (state.sourceFilter === 'review') {
+        return e.isReview;
+      }
+      return true;
+    });
+    const counts = {
+      next7: pool.filter(e => e.dateKey && e.dateKey >= today && e.dateKey <= end).length,
+      all: pool.filter(e => e.dateKey && e.dateKey >= today).length
+    };
+    const addChip = (mode, label) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.dateMode = mode;
+      button.textContent = label;
+      if (state.dateMode === mode) {
+        button.classList.add('active');
+      }
+      button.addEventListener('click', () => {
+        state.userChangedFilters = true;
+        state.dateMode = mode;
+        state.listShown = LIST_PAGE;
+        savePrefs();
+        buildDateChips();
+        scheduleRender();
+        loadPagesForCurrentWindow(state.loadToken);
+      });
+      track.appendChild(button);
+    };
+    addChip('next7', `Next 7 days (${counts.next7.toLocaleString()})`);
+    for (let i = 0; i < 8; i += 1) {
+      const d = addDays(new Date(), i);
+      const key = dateKey(d);
+      const n = pool.filter(e => e.dateKey === key).length;
       const label = i === 0 ? `Today (${n})` : `${DAY_NAMES[d.getDay()]} ${d.getMonth() + 1}/${d.getDate()} (${n})`;
-      return `<button type="button" data-date-mode="${esc(k)}" class="${state.dateMode === k ? 'active' : ''}">${esc(label)}</button>`;
-    }).join('')}<button type="button" data-date-mode="all" class="${state.dateMode === 'all' ? 'active' : ''}">All upcoming (${counts.all.toLocaleString()})</button></div>`;
+      addChip(key, label);
+    }
+    addChip('all', `All upcoming (${counts.all.toLocaleString()})`);
+    els.dateChips.appendChild(track);
   }
 
   function setUserLocation(lat, lng, accuracy) {
     const here = [lat, lng];
     state.userLocation = { lat, lng };
-    if (userMarker) userMarker.setLatLng(here);
+    if (userMarker) {
+      userMarker.setLatLng(here);
+    }
     else {
       userMarker = L.marker(here, {
-        icon: L.divIcon({ className: 'user-location-shell', html: '<span class="user-location">🗽</span>', iconSize: [36, 44], iconAnchor: [18, 42] }),
+        icon: L.divIcon({ className: 'user-location-shell', html: '<span class="user-location"></span>', iconSize: [36, 44], iconAnchor: [18, 42] }),
         zIndexOffset: 4000
-      }).addTo(map).bindPopup(`<strong>You are here</strong><br>Accuracy: ${Math.round(accuracy || 0)} meters`);
+      }).addTo(map);
+      const shell = userMarker.getElement()?.querySelector('.user-location');
+      if (shell) {
+        shell.textContent = '🗽';
+      }
+      userMarker.bindPopup('Location updated');
     }
-    if (userAccuracy) { userAccuracy.setLatLng(here); userAccuracy.setRadius(accuracy || 0); }
-    else userAccuracy = L.circle(here, { radius: accuracy || 0, color: '#d40000', weight: 2, fillColor: '#d40000', fillOpacity: 0.08 }).addTo(map);
+    if (userAccuracy) {
+      userAccuracy.setLatLng(here);
+      userAccuracy.setRadius(accuracy || 0);
+    } else {
+      userAccuracy = L.circle(here, { radius: accuracy || 0, color: '#d40000', weight: 2, fillColor: '#d40000', fillOpacity: 0.08 }).addTo(map);
+    }
   }
 
   function locateUser(options = {}) {
-    if (!navigator.geolocation) { status('Location is not available in this browser.'); return; }
+    if (!navigator.geolocation) {
+      status('Location is not available in this browser.');
+      return;
+    }
     status('Finding your location…');
     navigator.geolocation.getCurrentPosition(pos => {
       const { latitude, longitude, accuracy } = pos.coords;
       setUserLocation(latitude, longitude, accuracy);
-      if (options.sortNear) { state.sort = 'near'; if (els.sortSelect) els.sortSelect.value = 'near'; savePrefs(); }
+      if (options.sortNear) {
+        state.sort = 'near';
+        if (els.sortSelect) {
+          els.sortSelect.value = 'near';
+        }
+        savePrefs();
+      }
       map.flyTo([latitude, longitude], Math.max(map.getZoom(), 14), { duration: 0.6 });
-      userMarker.openPopup();
+      userMarker?.openPopup();
       scheduleRender();
-    }, err => status(`Location failed: ${err.message}`), { enableHighAccuracy: true, timeout: 12000, maximumAge: 15000 });
+    }, () => status('Location failed.'), { enableHighAccuracy: true, timeout: 12000, maximumAge: 15000 });
   }
 
-  function scheduleRender() {
-    clearTimeout(renderTimer);
-    renderTimer = setTimeout(() => render(), 40);
+  function pageOverlapsWindow(page, today, end) {
+    if (!page.earliest_date || !page.latest_date) {
+      return true;
+    }
+    if (state.dateMode === 'all') {
+      return page.latest_date >= today;
+    }
+    if (state.dateMode === 'today') {
+      return page.earliest_date <= today && page.latest_date >= today;
+    }
+    if (/^\d{4}-\d{2}-\d{2}$/.test(state.dateMode)) {
+      return page.earliest_date <= state.dateMode && page.latest_date >= state.dateMode;
+    }
+    return page.latest_date >= today && page.earliest_date <= end;
+  }
+
+  async function loadLayerPages(layer, manifest, token, prioritizeWindow) {
+    if (!manifest?.pages?.length) {
+      return;
+    }
+    state.pagesTotal[layer] = manifest.page_count || manifest.pages.length;
+    const { today, end } = dayRange();
+    const ordered = [...manifest.pages].sort((a, b) => {
+      const aHit = pageOverlapsWindow(a, today, end) ? 0 : 1;
+      const bHit = pageOverlapsWindow(b, today, end) ? 0 : 1;
+      return aHit - bHit;
+    });
+    const urlFor = layer === 'approved' ? FEEDS.approvedPage : FEEDS.reviewPage;
+    for (const page of ordered) {
+      if (token !== state.loadToken) {
+        return;
+      }
+      if (prioritizeWindow && !pageOverlapsWindow(page, today, end) && state.dateMode !== 'all') {
+        // still load later for full search index
+      }
+      try {
+        const json = await fetchJson(urlFor(page.cursor || page.page.replace('.json', '')), `${layer}-${page.page}`);
+        if (token !== state.loadToken) {
+          return;
+        }
+        const envelope = SCHEMA.projectEnvelope(json, layer === 'review' ? 'review_supplemental' : 'approved_staged', json.generated_at_utc);
+        upsertEvents(envelope.events);
+        state.pagesLoaded[layer] += 1;
+        updateIndexLabel();
+        scheduleRender();
+      } catch (err) {
+        state.errors.push(String(err.message || err));
+      }
+    }
+  }
+
+  async function loadPagesForCurrentWindow(token) {
+    const needReview = state.viewMode === 'all' && (state.sourceFilter === 'all' || state.sourceFilter === 'review');
+    const needApproved = state.viewMode === 'all' || true; // approved pages also enrich major flags/search
+    if (needApproved && state.manifests.approved) {
+      await loadLayerPages('approved', state.manifests.approved, token, true);
+    }
+    if (needReview && state.manifests.review) {
+      await loadLayerPages('review', state.manifests.review, token, true);
+    }
+    if (token === state.loadToken) {
+      state.indexComplete = state.pagesLoaded.approved >= (state.pagesTotal.approved || 0)
+        && (
+          !(state.viewMode === 'all' && (state.sourceFilter === 'all' || state.sourceFilter === 'review'))
+          || state.pagesLoaded.review >= (state.pagesTotal.review || 0)
+        );
+      // Once approved fully loaded, search is globally complete for approved/major.
+      if (state.pagesLoaded.approved >= (state.pagesTotal.approved || 0) && state.pagesLoaded.review >= (state.pagesTotal.review || 0)) {
+        state.indexComplete = true;
+      }
+      updateIndexLabel();
+      scheduleRender();
+    }
+  }
+
+  async function bootFeeds() {
+    const token = ++state.loadToken;
+    state.errors = [];
+    state.pagesLoaded = { approved: 0, review: 0 };
+    state.indexComplete = false;
+    status('Loading Major Events…');
+    try {
+      let majorJson;
+      try {
+        majorJson = await fetchJson(FEEDS.major, 'major');
+      } catch {
+        majorJson = await fetchJson(FEEDS.majorFallback, 'major-fallback');
+        state.fallbackUsed = true;
+      }
+      if (token !== state.loadToken) {
+        return;
+      }
+      const major = SCHEMA.projectEnvelope(majorJson, 'approved_staged', majorJson.generated_at_utc);
+      major.events.forEach(e => {
+        e.significance = 'major';
+        e.nycif = { ...(e.nycif || {}), is_major: true, data_layer: 'approved_staged' };
+      });
+      state.byId.clear();
+      upsertEvents(major.events);
+      state.timings.timeToFirstMajorMs = state.timings.major?.fetchMs || 0;
+      const visible = render();
+      const mapReady = visible.filter(e => e.mapReady);
+      if (mapReady.length) {
+        map.fitBounds(mapReady.slice(0, 200).map(e => [e.lat, e.lng]), { padding: [44, 44], maxZoom: 12 });
+      }
+    } catch (err) {
+      state.errors.push(String(err.message || err));
+      setBanner('Major feed unavailable. Use Retry Feed or open All Events after recovery.');
+      status('Major feed unavailable.');
+    }
+
+    try {
+      status('Loading approved and review page manifests…');
+      const [approvedManifest, reviewManifest] = await Promise.all([
+        fetchJson(FEEDS.approvedManifest, 'approved-manifest'),
+        fetchJson(FEEDS.reviewManifest, 'review-manifest')
+      ]);
+      if (token !== state.loadToken) {
+        return;
+      }
+      state.manifests.approved = approvedManifest;
+      state.manifests.review = reviewManifest;
+      state.pagesTotal.approved = approvedManifest.page_count || approvedManifest.pages?.length || 0;
+      state.pagesTotal.review = reviewManifest.page_count || reviewManifest.pages?.length || 0;
+      await loadPagesForCurrentWindow(token);
+    } catch (err) {
+      state.errors.push(String(err.message || err));
+      setBanner('Page manifests unavailable. Major Events may still work. All Events search may be incomplete.');
+      state.indexComplete = false;
+      updateIndexLabel();
+    }
+  }
+
+  function syncUi() {
+    if (els.photoOnly) {
+      els.photoOnly.checked = state.photoOnly;
+    }
+    if (els.nypdOnly) {
+      els.nypdOnly.checked = state.nypdOnly;
+    }
+    if (els.sortSelect) {
+      els.sortSelect.value = state.sort;
+    }
+    if (els.sourceFilter) {
+      els.sourceFilter.value = state.sourceFilter;
+    }
+    document.querySelectorAll('[data-cat]').forEach(input => {
+      input.checked = !!state.categories[input.dataset.cat];
+    });
+    updateModeButtons();
   }
 
   function bindUi() {
@@ -608,6 +1054,7 @@
       setBanner('');
       savePrefs();
       scheduleRender();
+      loadPagesForCurrentWindow(state.loadToken);
     });
     els.sourceFilter?.addEventListener('change', () => {
       state.userChangedFilters = true;
@@ -615,19 +1062,24 @@
       state.listShown = LIST_PAGE;
       savePrefs();
       scheduleRender();
+      loadPagesForCurrentWindow(state.loadToken);
     });
-    [els.photoOnly, els.nypdOnly].filter(Boolean).forEach(i => i.addEventListener('change', () => {
-      state.userChangedFilters = true;
-      state[i.id] = i.checked;
-      savePrefs();
-      scheduleRender();
-    }));
-    document.querySelectorAll('[data-cat]').forEach(i => i.addEventListener('change', () => {
-      state.userChangedFilters = true;
-      state.categories[i.dataset.cat] = i.checked;
-      savePrefs();
-      scheduleRender();
-    }));
+    [els.photoOnly, els.nypdOnly].filter(Boolean).forEach(input => {
+      input.addEventListener('change', () => {
+        state.userChangedFilters = true;
+        state[input.id] = input.checked;
+        savePrefs();
+        scheduleRender();
+      });
+    });
+    document.querySelectorAll('[data-cat]').forEach(input => {
+      input.addEventListener('change', () => {
+        state.userChangedFilters = true;
+        state.categories[input.dataset.cat] = input.checked;
+        savePrefs();
+        scheduleRender();
+      });
+    });
     els.searchInput?.addEventListener('input', () => {
       state.userChangedFilters = true;
       clearTimeout(searchTimer);
@@ -641,121 +1093,50 @@
       state.userChangedFilters = true;
       state.sort = els.sortSelect.value;
       savePrefs();
-      if (state.sort === 'near' && !state.userLocation) locateUser({ sortNear: true });
+      if (state.sort === 'near' && !state.userLocation) {
+        locateUser({ sortNear: true });
+      }
       else scheduleRender();
     });
-    els.boroughs?.addEventListener('click', ev => {
-      const b = ev.target.closest('[data-borough]');
-      if (!b) return;
-      state.userChangedFilters = true;
-      state.borough = b.dataset.borough;
-      els.boroughs.querySelectorAll('button').forEach(x => x.classList.toggle('active', x === b));
-      savePrefs();
+    els.loadMoreBtn?.addEventListener('click', () => {
+      state.listShown += LIST_PAGE;
       scheduleRender();
     });
-    els.dateChips?.addEventListener('click', ev => {
-      const b = ev.target.closest('[data-date-mode]');
-      if (!b) return;
-      state.userChangedFilters = true;
-      state.dateMode = b.dataset.dateMode;
-      state.listShown = LIST_PAGE;
-      buildDateChips();
-      savePrefs();
-      scheduleRender();
-    });
-    els.loadMoreBtn?.addEventListener('click', () => { state.listShown += LIST_PAGE; scheduleRender(); });
     els.resetFiltersBtn?.addEventListener('click', () => {
-      Object.assign(state, publicDefaults(), { events: state.events, byId: state.byId, timings: state.timings, feedMeta: state.feedMeta });
-      state.userChangedFilters = false;
-      state.listShown = LIST_PAGE;
+      const keepEvents = state.events;
+      const keepById = state.byId;
+      const keepMeta = { timings: state.timings, manifests: state.manifests, pagesLoaded: state.pagesLoaded, pagesTotal: state.pagesTotal, indexComplete: state.indexComplete };
+      Object.assign(state, publicDefaults(), keepMeta, { events: keepEvents, byId: keepById, listShown: LIST_PAGE, userChangedFilters: false, search: '' });
       setBanner('');
-      if (els.searchInput) els.searchInput.value = '';
+      if (els.searchInput) {
+        els.searchInput.value = '';
+      }
       syncUi();
       savePrefs();
       buildDateChips();
       scheduleRender();
     });
     els.retryFeedBtn?.addEventListener('click', () => bootFeeds());
-    map.on('moveend', () => { if (!useCluster) scheduleRender(); });
-  }
-
-  function syncUi() {
-    if (els.photoOnly) els.photoOnly.checked = state.photoOnly;
-    if (els.nypdOnly) els.nypdOnly.checked = state.nypdOnly;
-    if (els.sortSelect) els.sortSelect.value = state.sort;
-    if (els.sourceFilter) els.sourceFilter.value = state.sourceFilter;
-    document.querySelectorAll('[data-cat]').forEach(i => { i.checked = !!state.categories[i.dataset.cat]; });
-    updateModeButtons();
-  }
-
-  async function bootFeeds() {
-    const tBoot = performance.now();
-    state.errors = [];
-    status('Loading Major Events…');
-    let majorIds = new Set();
-    try {
-      const major = await loadSchemaFeed(FEEDS.major, FEEDS.legacyMajor, 'approved_staged', 'major');
-      major.events.forEach(e => {
-        e.significance = 'major';
-        e.nycif = { ...(e.nycif || {}), is_major: true, data_layer: 'approved_staged', assignment_feed: 'major' };
-        majorIds.add(e.id);
-      });
-      state.byId.clear();
-      upsertEvents(major.events, 'approved_staged');
-      state.timings.timeToFirstMajorMs = Math.round(performance.now() - tBoot);
-      const visible = render();
-      if (visible.filter(e => e.mapReady).length) {
-        map.fitBounds(visible.filter(e => e.mapReady).slice(0, 200).map(e => [e.lat, e.lng]), { padding: [44, 44], maxZoom: 12 });
-      }
-    } catch (err) {
-      state.errors.push(String(err.message || err));
-      setBanner(`Major feed failed: ${err.message}`);
-      status(`Major feed failed: ${err.message}`);
-    }
-
-    status('Loading approved and review events in background…');
-    try {
-      const [approved, review] = await Promise.all([
-        loadSchemaFeed(FEEDS.approved, FEEDS.legacyStaged, 'approved_staged', 'approved'),
-        loadSchemaFeed(FEEDS.review, FEEDS.legacySupp, 'review_supplemental', 'review')
-      ]);
-      const majorBySeidDate = new Set();
-      // Rebuild majorIds against approved events using source_event_id + date.
-      // (IDs are stable as base@date from schema projection.)
-      approved.events.forEach(e => {
-        const key = `${e.source?.source_event_id || ''}|${e.nycif?.event_date || ''}`;
-        if (majorIds.has(e.id)) majorBySeidDate.add(key);
-      });
-      // Also accept any event already flagged in major feed file.
-      approved.events.forEach(e => {
-        if (majorIds.has(e.id) || e.significance === 'major' || e.nycif?.is_major) {
-          e.significance = 'major';
-          e.nycif = { ...(e.nycif || {}), is_major: true, assignment_feed: 'major' };
+    map.on('moveend', () => {
+      clearTimeout(moveTimer);
+      moveTimer = setTimeout(() => {
+        if (state.viewMode === 'all') {
+          scheduleRender();
         }
-      });
-      state.byId.clear();
-      upsertEvents(approved.events, 'approved_staged');
-      upsertEvents(review.events, 'review_supplemental');
-      buildDateChips();
-      scheduleRender();
-      status(`Loaded ${state.events.length.toLocaleString()} schema-v1 records.`);
-    } catch (err) {
-      state.errors.push(String(err.message || err));
-      setBanner(`All Events background load failed: ${err.message}`);
-    }
+      }, 120);
+    });
   }
 
   async function boot() {
-    if (!SCHEMA) {
-      status('Schema helper missing; cannot boot unified viewer.');
-      return;
-    }
     loadPrefs();
     syncUi();
     bindUi();
     buildBoroughs();
     buildDateChips();
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('./service-worker.js').catch(() => {});
+    if ('serviceWorker' in navigator && !swRegistered) {
+      swRegistered = true;
+      navigator.serviceWorker.register('./service-worker.js').catch(() => { /* optional */ });
+    }
     await bootFeeds();
     window.NYCIF_UNIFIED_VIEWER = {
       version: VERSION,
@@ -767,13 +1148,19 @@
         mapReady: state.events.filter(e => e.mapReady).length,
         listOnly: state.events.filter(e => !e.mapReady).length,
         markerObjects: state.markerObjects,
+        peakMarkerObjects: state.peakMarkerObjects,
         cluster: useCluster,
-        timings: state.timings,
-        feedMeta: state.feedMeta
+        indexComplete: state.indexComplete,
+        pagesLoaded: state.pagesLoaded,
+        pagesTotal: state.pagesTotal,
+        fullDumpDownloaded: false,
+        timings: state.timings
       })
     };
   }
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot, { once: true });
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot, { once: true });
+  }
   else boot();
 })();

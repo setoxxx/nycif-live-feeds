@@ -34,7 +34,8 @@ body.public-map-page .layers-panel {
   width: min(208px, calc(100vw - 18px));
   padding: 8px;
   border-radius: 14px;
-  max-height: 52dvh;
+  max-height: 70dvh;
+  overflow: auto;
 }
 
 body.public-map-page .layers-panel .check {
@@ -110,6 +111,34 @@ body.public-map-page .status {
   color: #d40000;
 }
 
+.view-banner {
+  position: absolute;
+  top: 112px;
+  left: 12px;
+  right: 12px;
+  z-index: 880;
+  max-width: min(560px, calc(100vw - 24px));
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(245, 158, 11, .92);
+  color: #111;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.index-status {
+  position: absolute;
+  top: 148px;
+  left: 12px;
+  z-index: 870;
+  max-width: min(560px, calc(100vw - 24px));
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(8, 12, 18, .8);
+  color: #e5e7eb;
+  font-size: 11px;
+}
+
 .mode-toggle {
   position: absolute;
   top: 72px;
@@ -119,6 +148,10 @@ body.public-map-page .status {
   gap: 6px;
   flex-wrap: wrap;
   max-width: min(420px, calc(100vw - 24px));
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-inline-size: 0;
 }
 
 .mode-btn {
@@ -134,21 +167,6 @@ body.public-map-page .status {
 
 .mode-btn.active {
   background: #d40000;
-}
-
-.view-banner {
-  position: absolute;
-  top: 112px;
-  left: 12px;
-  right: 12px;
-  z-index: 880;
-  max-width: min(560px, calc(100vw - 24px));
-  padding: 8px 12px;
-  border-radius: 10px;
-  background: rgba(245, 158, 11, .92);
-  color: #111;
-  font-size: 12px;
-  font-weight: 650;
 }
 
 .nycif-source-review { color: #f59e0b; font-weight: 800; }
@@ -170,11 +188,6 @@ body.public-map-page .status {
   font-size: 10px;
 }
 
-body.public-map-page .layers-panel {
-  max-height: 70dvh;
-  overflow: auto;
-}
-
 @media (max-width: 700px) {
   .public-intro-v01 {
     display: none;
@@ -184,8 +197,12 @@ body.public-map-page .layers-panel {
     bottom: 86px;
     left: 10px;
   }
-  .view-banner {
+  .view-banner,
+  .index-status {
     top: auto;
     bottom: 128px;
+  }
+  .index-status {
+    bottom: 164px;
   }
 }

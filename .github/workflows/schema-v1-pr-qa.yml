@@ -1,0 +1,55 @@
+name: Schema v1 PR QA
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'cursor/event-feed-schema-v1-27bf'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nycif-schema-v1-pr-qa-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  schema-v1-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Project schema-v1 feeds
+        run: python scripts/project_events_schema_v1.py
+
+      - name: Build schema-v1 major feed
+        run: python scripts/build_events_schema_v1_major.py
+
+      - name: Build schema-v1 page shards
+        run: python scripts/build_events_schema_v1_pages.py
+
+      - name: Audit categories
+        run: python scripts/audit_events_schema_v1_categories.py
+
+      - name: Full schema audit
+        run: python scripts/audit_events_schema_v1_full.py
+
+      - name: Pipeline contract tests
+        run: python scripts/test_events_schema_v1_pipeline.py
+
+      - name: Security rendering tests
+        run: python scripts/test_events_schema_v1_security.py
+
+      - name: JavaScript syntax checks
+        run: |
+          node --check docs/field-desk-map-deploy/schema-v1-major-all-v01/event-feed-schema-v1.js
+          node --check docs/field-desk-map-deploy/schema-v1-major-all-v01/app-schema-v1-major-all-v01.js
+          node --check docs/field-desk-map-deploy/schema-v1-major-all-v01/service-worker.js
+          node --check docs/field-desk-map-deploy/schema-v1-major-all-v01/public-map-defaults-v01.js

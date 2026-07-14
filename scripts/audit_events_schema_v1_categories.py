@@ -25,11 +25,11 @@ def audit_layer(name: str, path: Path) -> dict:
         1
         for e in events
         if str((e.get("nycif") or {}).get("classification_reason") or "").startswith("keyword_")
+        or (e.get("nycif") or {}).get("classification_reason") == "fallback_general_no_documented_rule"
         or (e.get("nycif") or {}).get("classification_reason") == "fallback_general"
     )
-    general = by_norm.get("general", 0)
     samples = defaultdict(list)
-    general_samples = []
+    general_remaining = []
     for e in events:
         cat = e.get("category")
         if len(samples[cat]) < 3:
@@ -39,26 +39,24 @@ def audit_layer(name: str, path: Path) -> dict:
                     "title": e.get("title"),
                     "raw_category": (e.get("nycif") or {}).get("raw_category"),
                     "classification_reason": (e.get("nycif") or {}).get("classification_reason"),
+                    "event_type": (e.get("nycif") or {}).get("event_type"),
                 }
             )
-        if cat == "general" and len(general_samples) < 15:
-            general_samples.append(
+        if cat == "general":
+            general_remaining.append(
                 {
                     "id": e.get("id"),
                     "title": e.get("title"),
                     "raw_category": (e.get("nycif") or {}).get("raw_category"),
+                    "event_type": (e.get("nycif") or {}).get("event_type"),
+                    "event_agency": (e.get("nycif") or {}).get("event_agency"),
                     "classification_reason": (e.get("nycif") or {}).get("classification_reason"),
+                    "why_still_general": (
+                        "No documented specific category matched title, event_type, agency, "
+                        "or raw categories after backend general refinement."
+                    ),
                 }
             )
-
-    conflicts = []
-    for e in events:
-        raw = (e.get("nycif") or {}).get("raw_category")
-        if raw and str(raw).lower() in VALID_CATEGORIES and e.get("category") != str(raw).lower():
-            # parade historically maps to civic — not a conflict
-            if str(raw).lower() == "parade" and e.get("category") == "civic":
-                continue
-            conflicts.append({"id": e.get("id"), "raw": raw, "normalized": e.get("category")})
 
     return {
         "layer": name,
@@ -69,12 +67,17 @@ def audit_layer(name: str, path: Path) -> dict:
         "invalid_categories": [c for c in by_norm if c not in VALID_CATEGORIES],
         "source_category_counts": {str(k): v for k, v in by_raw.most_common(50)},
         "fallback_classified_count": fallback,
-        "general_count": general,
-        "conflicting_category_count": len(conflicts),
-        "conflicting_category_sample": conflicts[:20],
+        "general_count": by_norm.get("general", 0),
+        "remaining_general_records": general_remaining,
         "sample_rows_by_category": {k: samples[k] for k in sorted(samples)},
-        "sample_rows_general": general_samples,
         "classification_reason_distribution": dict(by_reason.most_common()),
+        "precedence": [
+            "valid specific backend category (not general)",
+            "preserve raw_category",
+            "event_type documented mapping",
+            "keyword refinement when backend is general/missing",
+            "general only when no documented rule fits",
+        ],
     }
 
 
@@ -91,7 +94,16 @@ def main() -> int:
         if isinstance(layer, dict) and "total" in layer
     )
     OUT.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-    print(json.dumps({"qa_pass": report["qa_pass"], "report": str(OUT)}, indent=2))
+    print(
+        json.dumps(
+            {
+                "qa_pass": report["qa_pass"],
+                "approved_general": report["approved"]["general_count"],
+                "report": str(OUT),
+            },
+            indent=2,
+        )
+    )
     return 0 if report["qa_pass"] else 1
 
 

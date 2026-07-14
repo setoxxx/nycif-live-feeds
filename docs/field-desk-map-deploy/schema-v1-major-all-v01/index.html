@@ -13,9 +13,9 @@
   <link rel="apple-touch-icon" href="./icons/icon-192.svg">
   <link rel="preconnect" href="https://raw.githubusercontent.com">
   <link rel="preconnect" href="https://{s}.tile.openstreetmap.org">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" integrity="sha384-wgw+aLYNQ7dlhK47ZPK7FRACiq7ROZwgFNg0m04avm4CaXS+Z9Y7nMu8yNjBKYC+" crossorigin="anonymous">
   <link rel="stylesheet" href="./style.css?v=hotfix-053">
   <link rel="stylesheet" href="./fielddesk-v02.css?v=v06safe-01">
   <link rel="stylesheet" href="./weekstrip-v06-safe.css?v=073time">
@@ -34,18 +34,16 @@
         </div>
       </div>
 
-      <div class="mode-toggle" role="group" aria-label="Event mode">
+      <fieldset class="mode-toggle">
+        <legend class="sr-only">Event mode</legend>
         <button id="modeMajor" type="button" class="mode-btn active" aria-pressed="true">Major Events</button>
         <button id="modeAll" type="button" class="mode-btn" aria-pressed="false">All Events</button>
-      </div>
+      </fieldset>
 
       <div id="viewBanner" class="view-banner" hidden></div>
+      <div id="indexStatus" class="index-status" hidden></div>
 
-      <div id="dateChips" class="date-chips" aria-label="Date filters">
-        <button type="button" data-date-mode="next7" class="active">Next 7 days</button>
-        <button type="button" data-date-mode="today">Today</button>
-        <button type="button" data-date-mode="all">All upcoming</button>
-      </div>
+      <div id="dateChips" class="date-chips" aria-label="Date filters"></div>
 
       <button id="layersBtn" class="pill layers-pill" type="button" aria-expanded="false" aria-controls="layersPanel">
         <span>☰</span><b>Filters</b>
@@ -90,17 +88,9 @@
         <label class="check"><input type="checkbox" id="nypdOnly"> <span>🚨 Public safety / field intel</span></label>
       </aside>
 
-      <button id="locateBtn" class="locate-btn" type="button" aria-label="Show my location" title="Show my location">
-        🗽
-      </button>
-
-      <button id="nearMeBtn" class="near-me-btn" type="button" aria-label="Sort events near me" title="Near me">
-        Near Me
-      </button>
-
-      <button id="deskBtn" class="desk-btn" type="button" aria-expanded="false" aria-controls="deskDrawer">
-        Event List
-      </button>
+      <button id="locateBtn" class="locate-btn" type="button" aria-label="Show my location" title="Show my location">🗽</button>
+      <button id="nearMeBtn" class="near-me-btn" type="button" aria-label="Sort events near me" title="Near me">Near Me</button>
+      <button id="deskBtn" class="desk-btn" type="button" aria-expanded="false" aria-controls="deskDrawer">Event List</button>
 
       <aside id="deskDrawer" class="desk-drawer" aria-label="Event list" hidden>
         <header class="desk-header">
@@ -134,14 +124,14 @@
         <button id="loadMoreBtn" class="load-all" type="button" hidden>Load 100 more</button>
       </aside>
 
-      <div class="public-intro-v01"><strong>NYC In Focus:</strong> Major Events by default, with All Events access to the complete schema-v1 dataset. Supplemental review records stay labeled REVIEW. Coordinate-pending records stay LIST ONLY. Confirm details before traveling.</div>
+      <div class="public-intro-v01"><strong>NYC In Focus:</strong> Major Events by default, with progressive All Events access to schema-v1 pages. REVIEW and LIST ONLY labels remain clear. Confirm details before traveling.</div>
       <div id="status" class="status">Loading NYC In Focus event map…</div>
       <pre id="debugPanel" class="debug-panel" hidden></pre>
     </section>
   </main>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr" crossorigin="anonymous"></script>
   <script src="./public-approved-overlays-capture-v01.js?v=02"></script>
   <script src="./public-map-defaults-v01.js?v=schema-v1-major-all-v01"></script>
   <script src="./boot-today-v073-safe.js?v=01"></script>

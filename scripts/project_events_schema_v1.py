@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
-"""Project staged + supplemental feeds into schema_version 1.0 envelopes.
-
-Does not modify protected location_cache or rewrite staged feed files in place.
-"""
+"""Project staged + supplemental feeds into schema_version 1.0 envelopes."""
 
 from __future__ import annotations
 
@@ -20,6 +17,7 @@ from schema_v1_common import (  # noqa: E402
     extract_events,
     project_event,
     reset_stable_id_registry,
+    safe_write_json,
     utc_now,
 )
 
@@ -28,47 +26,67 @@ SUPPLEMENTAL_PATH = ROOT / "data" / "supplemental_events_staging_feed.json"
 OUT_STAGED = ROOT / "data" / "events_schema_v1_staged.json"
 OUT_SUPP = ROOT / "data" / "events_schema_v1_supplemental_review.json"
 OUT_REPORT = ROOT / "data" / "events_schema_v1_validation_report.json"
+REQUIRED_EVENT_FIELDS = [
+    "id",
+    "title",
+    "category",
+    "start_date_time",
+    "end_date_time",
+    "timezone",
+    "borough",
+    "location",
+    "latitude",
+    "longitude",
+    "significance",
+    "source",
+]
 
 
-def write_json(path: Path, payload) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + "\n", encoding="utf-8")
-
-
-def validate_event(event: dict, errors: list[str], prefix: str) -> None:
-    required = [
-        "id",
-        "title",
-        "category",
-        "start_date_time",
-        "end_date_time",
-        "timezone",
-        "borough",
-        "location",
-        "latitude",
-        "longitude",
-        "significance",
-        "source",
-    ]
-    for key in required:
+def validate_required_fields(event: dict, errors: list[str], prefix: str) -> None:
+    for key in REQUIRED_EVENT_FIELDS:
         if key not in event:
             errors.append(f"{prefix}: missing field {key}")
+
+
+def validate_source_block(event: dict, errors: list[str], prefix: str) -> None:
     source = event.get("source")
     if not isinstance(source, dict) or "dataset" not in source or "source_event_id" not in source:
         errors.append(f"{prefix}: source must include dataset and source_event_id")
+
+
+def validate_coordinates(event: dict, errors: list[str], prefix: str) -> None:
     lat, lng = event.get("latitude"), event.get("longitude")
     if (lat is None) != (lng is None):
         errors.append(f"{prefix}: latitude/longitude must both be set or both null")
     if "lat" in event or "lng" in event:
         errors.append(f"{prefix}: legacy lat/lng leaked")
+
+
+def validate_supplemental_checks(event: dict, errors: list[str], prefix: str) -> None:
     nycif = event.get("nycif") or {}
-    if nycif.get("data_layer") == "review_supplemental":
-        if nycif.get("promotion_allowed") is True:
-            errors.append(f"{prefix}: supplemental promotion_allowed true")
-        if nycif.get("production_feed") is True:
-            errors.append(f"{prefix}: supplemental production_feed true")
-        if not str(event.get("id", "")).startswith("review_supplemental:"):
-            errors.append(f"{prefix}: supplemental id not namespaced")
+    if nycif.get("data_layer") != "review_supplemental":
+        return
+    if nycif.get("promotion_allowed") is True:
+        errors.append(f"{prefix}: supplemental promotion_allowed true")
+    if nycif.get("production_feed") is True:
+        errors.append(f"{prefix}: supplemental production_feed true")
+    if not str(event.get("id", "")).startswith("review_supplemental:"):
+        errors.append(f"{prefix}: supplemental id not namespaced")
+
+
+def validate_event(event: dict, errors: list[str], prefix: str) -> None:
+    validate_required_fields(event, errors, prefix)
+    validate_source_block(event, errors, prefix)
+    validate_coordinates(event, errors, prefix)
+    validate_supplemental_checks(event, errors, prefix)
+
+
+def project_layer(rows: list[dict], *, data_layer: str, production_feed: bool) -> list[dict]:
+    reset_stable_id_registry()
+    return [
+        project_event(row, index=i, data_layer=data_layer, production_feed=production_feed)
+        for i, row in enumerate(rows)
+    ]
 
 
 def main() -> int:
@@ -80,17 +98,10 @@ def main() -> int:
     staged_rows = extract_events(json.loads(STAGED_PATH.read_text(encoding="utf-8")))
     supplemental_rows = extract_events(json.loads(SUPPLEMENTAL_PATH.read_text(encoding="utf-8")))
 
-    reset_stable_id_registry()
-    staged_events = [
-        project_event(row, index=i, data_layer="approved_staged", production_feed=True)
-        for i, row in enumerate(staged_rows)
-    ]
-    reset_stable_id_registry()
-    supplemental_events = [
-        project_event(row, index=i, data_layer="review_supplemental", production_feed=False)
-        for i, row in enumerate(supplemental_rows)
-    ]
-
+    staged_events = project_layer(staged_rows, data_layer="approved_staged", production_feed=True)
+    supplemental_events = project_layer(
+        supplemental_rows, data_layer="review_supplemental", production_feed=False
+    )
     staged_env = envelope(staged_events, generated_at_utc=generated_at, next_cursor=None)
     supp_env = envelope(supplemental_events, generated_at_utc=generated_at, next_cursor=None)
 
@@ -108,7 +119,8 @@ def main() -> int:
     if len(supplemental_events) != len(supplemental_rows):
         errors.append("supplemental count mismatch")
 
-    for i, event in enumerate(staged_events[:100] + staged_events[-50:]):
+    sample = staged_events[:100] + staged_events[-50:]
+    for i, event in enumerate(sample):
         validate_event(event, errors, f"staged[{i}]")
     for i, event in enumerate(supplemental_events):
         validate_event(event, errors, f"supplemental[{i}]")
@@ -154,9 +166,9 @@ def main() -> int:
     }
 
     if not args.skip_write_feeds:
-        write_json(OUT_STAGED, staged_env)
-        write_json(OUT_SUPP, supp_env)
-    write_json(OUT_REPORT, report)
+        safe_write_json(OUT_STAGED, staged_env, root=ROOT)
+        safe_write_json(OUT_SUPP, supp_env, root=ROOT)
+    safe_write_json(OUT_REPORT, report, root=ROOT)
     print(json.dumps({"qa_pass": report["qa_pass"], "report": str(OUT_REPORT)}, indent=2))
     return 0 if report["qa_pass"] else 1
 
