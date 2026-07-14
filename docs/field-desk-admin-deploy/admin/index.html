@@ -19,6 +19,7 @@
 <section class="panel"><h2>Project Status</h2><div id="project-status"></div></section>
 <section class="panel"><h2>Source Freshness</h2><div id="source-freshness"></div></section>
 <section class="panel" id="press-god-view-section"><h2>Press God View — Unfiltered Daily Event Universe</h2><div id="press-god-view"></div></section>
+<section class="panel" id="discovery-god-view-section"><h2>Discovery God View — Newly Pulled + Rejected / Review Queues</h2><div class="notice ok">Read-only discovery-taxonomy-v02 digest from nycif-live-feeds. Shows daily delta, hard rejects, low-confidence labels Howard can confirm, list-only missing GPS, and Phase 1 GPS review. Not a public-map publish control.</div><div id="discovery-god-view-status" class="muted detail">Loading discovery queues…</div><div id="discovery-god-view"></div></section>
 <section class="panel"><h2>TVPP Candidate Panel</h2><div id="candidates"></div></section>
 <section class="panel"><h2>TVPP Triage</h2><div id="triage"></div></section>
 <section class="panel"><h2>Location Readiness</h2><div id="location-readiness"></div></section>
@@ -28,6 +29,7 @@
 <p class="footer">Admin Dashboard Data Panels v1 + Live Pipeline panel v02 (gold medals, fitness, geo resolver). Visibility-only display. Live pipeline reads nycif-live-feeds status artifacts; local admin/data snapshots remain for TVPP triage samples.</p>
 </div>
 <script src="./live-pipeline-panel-v02.js"></script>
+<script src="./discovery-godview-panel-v02.js"></script>
 <script>
 const resources=[['index','./data/index.json'],['projectStatus','./data/project-status.json'],['sourceFreshness','./data/source-freshness.json'],['tvppCandidates','./data/tvpp-candidates.json'],['tvppTriage','./data/tvpp-triage.json'],['tvppLocationReadiness','./data/tvpp-location-readiness.json'],['xriStatus','./data/xri-status.json']];
 const triageBuckets=['strong_assignment','possible_assignment','logistics_or_closure','low_value','needs_review'];

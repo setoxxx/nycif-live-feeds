@@ -26,6 +26,8 @@ jobs:
         run: python scripts/inventory_events_sources_v02.py
       - name: Project discovery taxonomy
         run: python scripts/project_events_discovery_v02.py
+      - name: Build discovery God View digest
+        run: python scripts/build_events_discovery_godview_digest_v02.py
       - name: Discovery contract tests
         run: python scripts/test_events_discovery_v02.py
       - name: Schema-v1 security still green
