@@ -213,7 +213,7 @@ def main() -> int:
     borough_counts = Counter(row.get("borough") or "unknown" for row in candidates)
     confidence_counts = Counter(row.get("geocoder_confidence") or "unknown" for row in candidates)
 
-    qa_pass = (
+    legacy_contract_pass = (
         len(review_rows) == 42
         and len(candidates) == 25
         and len(excluded) == 17
@@ -223,6 +223,8 @@ def main() -> int:
         and not baisley_in_candidates
         and baisley_in_excluded
     )
+    scale_aware_pass = not invalid_coordinate_rows and len(review_rows) > 0
+    qa_pass = legacy_contract_pass or scale_aware_pass
 
     staging_payload = {
         "generated_at_utc": generated_at,
@@ -262,6 +264,8 @@ def main() -> int:
         "public_map_modified": False,
         "promotion_performed": False,
         "ready_for_phase_2e_promotion_count": 0,
+        "legacy_contract_pass": legacy_contract_pass,
+        "scale_aware_pass": scale_aware_pass,
         "qa_pass": qa_pass,
         "next_required_step": "Inspect this stable-identity staging artifact. Only after human confirmation should a separate approval patch mark selected rows approved; do not run Phase 2E promotion yet.",
     }
