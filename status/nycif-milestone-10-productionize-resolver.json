@@ -7,7 +7,7 @@
   "completion_status": {
     "task_1_merge_m9": "pr_161_merged_to_main",
     "task_2_resolver_in_live_sync": "complete",
-    "task_3_field_desk_admin": "deploy_staging_updated_pending_human_push",
+    "task_3_field_desk_admin": "map_deploy_staging_in_docs_field_desk_map_deploy_pending_human_push",
     "task_4_supplemental_staging_feed": "complete",
     "task_5_status_artifacts": "complete",
     "task_6_phase_2e": "not_authorized",
@@ -49,6 +49,18 @@
   "workflow_wired": [
     ".github/workflows/live-sync-qa.yml"
   ],
+  "public_map_live_refresh": {
+    "staged_feed_events": 32845,
+    "all_feed_events": 33084,
+    "deploy_packages": [
+      "docs/field-desk-map-deploy/",
+      "docs/wordpress-plugin-deploy/nycif-events-map/",
+      "docs/field-desk-admin-deploy/admin/"
+    ],
+    "bookmark_prompt": "docs/nycif-project-bookmark-prompt.md",
+    "field_desk_branch": "cursor/live-staged-map-m10-5215",
+    "field_desk_push_status": "403_bot_denied_committed_locally_in_deploy_mirror"
+  },
   "admin_deploy": {
     "source": "docs/field-desk-admin-deploy/admin/live-pipeline-panel-v01.js",
     "target_repo": "setoxxx/nycif-field-desk",
