@@ -34,8 +34,9 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Build location cache
-        run: python scripts/build_location_cache.py
+      # Use committed data/location_cache.json (includes Phase 2E master GPS keys).
+      # Do not run build_location_cache.py here — it rebuilds from enriched feed only
+      # and would drop promoted keys during this QA run.
 
       - name: Run backend QA sync
         run: python scripts/sync_nyc_open_data.py
@@ -58,19 +59,7 @@ jobs:
       - name: Build GPS filled geocoding proposals
         run: python scripts/build_gps_geocoding_filled_proposals.py
 
-      - name: Build GPS manual approval queue
-        run: python scripts/build_gps_manual_approval_queue.py
-
-      - name: Build GPS manual review sheet
-        run: python scripts/build_gps_manual_review_sheet.py
-
-      - name: Build GPS manual approval staging
-        run: python scripts/build_gps_manual_approval_staging.py
-
-      - name: Build GPS reviewed approval artifact
-        run: python scripts/build_gps_reviewed_approval_artifact.py
-
-      - name: Validate GPS manual approvals
+      - name: Validate committed GPS manual approval queue
         run: python scripts/validate_gps_manual_approvals.py
 
       - name: Build live delta report
