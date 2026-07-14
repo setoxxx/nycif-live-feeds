@@ -45,30 +45,36 @@ const state = {
   markersInView: 0
 };
 
+function bindEls(ids) {
+  return Object.fromEntries(ids.map((id) => [id, document.getElementById(id)]));
+}
+
 const els = {
-  map: document.getElementById('map'),
-  status: document.getElementById('status'),
-  brandCount: document.getElementById('brandCount'),
-  layersBtn: document.getElementById('layersBtn'),
-  layersPanel: document.getElementById('layersPanel'),
-  locateBtn: document.getElementById('locateBtn'),
-  nearMeBtn: document.getElementById('nearMeBtn'),
-  deskBtn: document.getElementById('deskBtn'),
-  deskDrawer: document.getElementById('deskDrawer'),
-  closeDeskBtn: document.getElementById('closeDeskBtn'),
-  loadAllBtn: document.getElementById('loadAllBtn'),
-  majorOnly: document.getElementById('majorOnly'),
-  photoOnly: document.getElementById('photoOnly'),
-  nypdOnly: document.getElementById('nypdOnly'),
-  newOnly: document.getElementById('newOnly'),
-  newOnlyText: document.getElementById('newOnlyText'),
-  searchInput: document.getElementById('searchInput'),
-  sortSelect: document.getElementById('sortSelect'),
-  dateChips: document.getElementById('dateChips'),
-  boroughs: document.getElementById('boroughs'),
-  listMeta: document.getElementById('listMeta'),
-  eventList: document.getElementById('eventList'),
-  emptyState: document.getElementById('emptyState')
+  ...bindEls([
+    'map',
+    'status',
+    'brandCount',
+    'layersBtn',
+    'layersPanel',
+    'locateBtn',
+    'nearMeBtn',
+    'deskBtn',
+    'deskDrawer',
+    'closeDeskBtn',
+    'loadAllBtn',
+    'majorOnly',
+    'photoOnly',
+    'nypdOnly',
+    'newOnly',
+    'newOnlyText',
+    'searchInput',
+    'sortSelect',
+    'dateChips',
+    'boroughs',
+    'listMeta',
+    'eventList',
+    'emptyState',
+  ]),
 };
 
 const map = L.map(els.map, { zoomControl: true, closePopupOnClick: false, tap: false }).setView(NYC_CENTER, 11);

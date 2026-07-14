@@ -2,6 +2,10 @@
 
 This agent cannot push to `nycif-field-desk` (GitHub 403 for cursor[bot]).
 
+Packaging/docs only. Does **not** publish the public map, does **not** install WordPress, and does **not** mutate protected production feeds.
+
+Sonar note: Leaflet CSS/JS tags include SRI (`integrity` + `crossorigin`). Source mirror under this directory is the human-copy target; regenerate any `dist/*.bundle`/`*.patch` after source edits if you rely on those artifacts.
+
 ## Import into Field Desk
 
 ```bash
