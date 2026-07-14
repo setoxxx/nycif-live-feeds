@@ -175,6 +175,11 @@
           <div class="detail">${fmtNum(supplemental.parks_only_with_coordinates_count ?? 0)} already have coordinates</div>
         </div>
         <div class="stat">
+          <div class="label">Supplemental staging feed (M10)</div>
+          <div class="value">${fmtNum(multi.supplemental_staging_event_count ?? 0)}</div>
+          <div class="detail">${fmtNum(multi.supplemental_staging_with_coordinates_count ?? 0)} with proposed coordinates · manual intake only</div>
+        </div>
+        <div class="stat">
           <div class="label">Calendar↔Parks coord proposals</div>
           <div class="value">${fmtNum(multi.calendar_parks_coord_proposals_count ?? 0)}</div>
           <div class="detail">Proposed coords for overlap review only</div>
@@ -186,6 +191,8 @@
         ${supplemental.parks_only_review_queue ? `<a href="${repoBase}/${esc(supplemental.parks_only_review_queue)}" target="_blank" rel="noopener noreferrer">Parks-only queue</a>` : ''}
         ${supplemental.calendar_parks_coord_match_proposals ? `<a href="${repoBase}/${esc(supplemental.calendar_parks_coord_match_proposals)}" target="_blank" rel="noopener noreferrer">Coord match proposals</a>` : ''}
         <a href="${repoBase}/data/supplemental_calendar_only_priority_review.csv" target="_blank" rel="noopener noreferrer">Calendar priority CSV</a>
+        <a href="${repoBase}/data/supplemental_events_staging_feed.json" target="_blank" rel="noopener noreferrer">Supplemental staging feed (M10)</a>
+        <a href="${repoBase}/data/supplemental_events_staging_report.json" target="_blank" rel="noopener noreferrer">Supplemental staging report</a>
       </div>
 
       <h3>Tiered location resolver</h3>
@@ -294,6 +301,8 @@
         calendar_parks_coord_proposals_count: dashboardResult.payload?.multi_source?.calendar_parks_coord_proposals_count,
         calendar_only_with_parks_match_count: dashboardResult.payload?.supplemental_review?.calendar_only_with_parks_match_count,
         parks_only_with_coordinates_count: dashboardResult.payload?.supplemental_review?.parks_only_with_coordinates_count,
+        supplemental_staging_event_count: dashboardResult.payload?.multi_source?.supplemental_staging_event_count,
+        supplemental_staging_with_coordinates_count: dashboardResult.payload?.multi_source?.supplemental_staging_with_coordinates_count,
         supplemental_review_status: dashboardResult.payload?.supplemental_review?.manual_review_status,
         location_gazetteer_key_count: dashboardResult.payload?.multi_source?.location_gazetteer_key_count,
         location_resolver_unresolved_count: dashboardResult.payload?.location_resolver?.unresolved_count

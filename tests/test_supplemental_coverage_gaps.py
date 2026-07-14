@@ -301,5 +301,63 @@ class CoverageGapFindingsTests(unittest.TestCase):
                     setattr(findings_mod, name, value)
 
 
+class SupplementalStagingFeedTests(unittest.TestCase):
+    def test_staging_feed_merges_queues(self) -> None:
+        from scripts import build_supplemental_events_staging_feed as staging_mod
+
+        with tempfile.TemporaryDirectory() as tmp:
+            data_dir = Path(tmp) / "data"
+            data_dir.mkdir()
+            calendar_queue = [
+                {
+                    "overlap_key": "cal event|2099-01-02",
+                    "title": "Cal Event",
+                    "start_date_time": "2099-01-02T10:00:00",
+                    "address": "123 Test Ave",
+                    "boroughs": ["Manhattan"],
+                    "source_event_id": "c1",
+                    "parks_title_date_match": False,
+                }
+            ]
+            parks_queue = [
+                {
+                    "overlap_key": "parks event|2099-01-03",
+                    "title": "Parks Event",
+                    "start_date_time": "2099-01-03T10:00:00",
+                    "location": "Prospect Park",
+                    "borough": "Brooklyn",
+                    "lat": 40.66,
+                    "lng": -73.97,
+                    "has_coordinates": True,
+                    "source_event_id": "p1",
+                }
+            ]
+            originals = {
+                "CALENDAR_QUEUE": staging_mod.CALENDAR_QUEUE,
+                "PARKS_QUEUE": staging_mod.PARKS_QUEUE,
+                "FEED_PATH": staging_mod.FEED_PATH,
+                "MANIFEST_PATH": staging_mod.MANIFEST_PATH,
+                "REPORT_PATH": staging_mod.REPORT_PATH,
+            }
+            staging_mod.CALENDAR_QUEUE = data_dir / "supplemental_calendar_only_review_queue.json"
+            staging_mod.PARKS_QUEUE = data_dir / "supplemental_parks_only_review_queue.json"
+            staging_mod.FEED_PATH = data_dir / "supplemental_events_staging_feed.json"
+            staging_mod.MANIFEST_PATH = data_dir / "supplemental_events_staging_manifest.json"
+            staging_mod.REPORT_PATH = data_dir / "supplemental_events_staging_report.json"
+            staging_mod.CALENDAR_QUEUE.write_text(json.dumps(calendar_queue), encoding="utf-8")
+            staging_mod.PARKS_QUEUE.write_text(json.dumps(parks_queue), encoding="utf-8")
+            try:
+                self.assertEqual(staging_mod.main(), 0)
+                feed = json.loads(staging_mod.FEED_PATH.read_text(encoding="utf-8"))
+                report = json.loads(staging_mod.REPORT_PATH.read_text(encoding="utf-8"))
+                self.assertEqual(report["event_count"], 2)
+                self.assertFalse(feed["promotion_allowed"])
+                intake_types = {row["intake_type"] for row in feed["events"]}
+                self.assertEqual(intake_types, {"calendar_only", "parks_only"})
+            finally:
+                for name, value in originals.items():
+                    setattr(staging_mod, name, value)
+
+
 if __name__ == "__main__":
     unittest.main()

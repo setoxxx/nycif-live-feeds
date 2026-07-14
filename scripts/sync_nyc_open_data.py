@@ -23,8 +23,10 @@ from urllib.parse import urlencode
 
 try:
     from scripts.gps_identity import normalize_text_legacy
+    from scripts.nyc_location_resolver import NYCLocationResolver
 except ModuleNotFoundError:  # pragma: no cover - direct script execution
     from gps_identity import normalize_text_legacy
+    from nyc_location_resolver import NYCLocationResolver
 
 RAW_URL = "https://data.cityofnewyork.us/resource/tvpp-9vvx.json"
 RAW_PAGE_LIMIT = 50000
@@ -189,6 +191,32 @@ def classify_raw_row(row: dict[str, Any], index: EnrichedIndex, location_cache: 
     return "none", None
 
 
+def classify_with_resolver(
+    row: dict[str, Any],
+    index: EnrichedIndex,
+    location_cache: dict[str, dict[str, Any]],
+    resolver: NYCLocationResolver | None,
+) -> tuple[str, dict[str, Any] | None]:
+    match_type, match = classify_raw_row(row, index, location_cache)
+    if match is not None and has_gps(match):
+        return match_type, match
+    if resolver is not None:
+        borough = str(row.get("event_borough") or row.get("borough") or "")
+        location = str(row.get("event_location") or "")
+        result = resolver.resolve(
+            display_location=location,
+            borough=borough or None,
+            cache_keys=cache_lookup_keys(row),
+        )
+        if result.resolved:
+            return result.tier, result.as_match_dict()
+        if resolver._live_calls and resolver._live_calls % 25 == 0:
+            resolver.save_geosearch_cache()
+    if match is not None:
+        return match_type, match
+    return "none", None
+
+
 def normalize_raw(row: dict[str, Any]) -> dict[str, Any]:
     return {
         "source_dataset": "tvpp-9vvx",
@@ -212,16 +240,17 @@ def main() -> int:
     enriched = enriched_rows(load_json_file(ENRICHED_PATH, []))
     location_cache = load_location_cache()
     index = build_enriched_index(enriched)
+    resolver = NYCLocationResolver.load_default()
     current_future = [row for row in raw_rows if date_key(row.get("start_date_time")) >= TODAY_UTC]
 
-    match_counts = {"event_id": 0, "cemsid": 0, "text_date_location": 0, "location_cache": 0, "none": 0}
+    match_counts: dict[str, int] = {}
     matched_with_gps = 0
     matched_without_gps = []
     needs_enrichment = []
 
     for row in current_future:
-        match_type, match = classify_raw_row(row, index, location_cache)
-        match_counts[match_type] += 1
+        match_type, match = classify_with_resolver(row, index, location_cache, resolver)
+        match_counts[match_type] = match_counts.get(match_type, 0) + 1
         if match is None:
             if len(needs_enrichment) < 25:
                 needs_enrichment.append(normalize_raw(row))
@@ -229,6 +258,9 @@ def main() -> int:
             matched_with_gps += 1
         elif len(matched_without_gps) < 25:
             matched_without_gps.append(normalize_raw(row))
+
+    if resolver._live_calls:
+        resolver.save_geosearch_cache()
 
     report = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -241,11 +273,14 @@ def main() -> int:
         "current_future_rows_with_cemsid": sum(1 for row in current_future if split_ids(row.get("cemsid"))),
         "enriched_rows_loaded": len(enriched),
         "location_cache_entries_loaded": len(location_cache),
+        "location_resolver_live_geosearch_calls": resolver._live_calls,
         "match_counts": match_counts,
         "matched_with_gps": matched_with_gps,
         "matched_without_gps_sample": matched_without_gps,
         "needs_enrichment_sample": needs_enrichment,
         "production_feeds_modified": False,
+        "location_cache_modified": False,
+        "public_map_modified": False,
     }
 
     save_json_file(RAW_SNAPSHOT_PATH, [normalize_raw(row) for row in raw_rows])

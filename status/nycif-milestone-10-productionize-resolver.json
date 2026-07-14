@@ -1,0 +1,68 @@
+{
+  "artifact_type": "nycif_milestone_10_productionize_resolver",
+  "schema_version": "1.0.0",
+  "generated_at_utc": "2026-07-14T01:45:00.000Z",
+  "milestone": "M10 — Productionize resolver + supplemental intake staging",
+  "headline": "Tiered resolver wired into live sync; combined supplemental staging feed for manual intake.",
+  "completion_status": {
+    "task_1_merge_m9": "pr_161_merged_to_main",
+    "task_2_resolver_in_live_sync": "complete",
+    "task_3_field_desk_admin": "deploy_staging_updated_pending_human_push",
+    "task_4_supplemental_staging_feed": "complete",
+    "task_5_status_artifacts": "complete",
+    "task_6_phase_2e": "not_authorized",
+    "task_7_ci_dispatch": "pending_human"
+  },
+  "live_sync_resolver": {
+    "script": "scripts/sync_nyc_open_data.py",
+    "env_gate": "NYCIF_ALLOW_LIVE_GEOSEARCH=yes",
+    "matched_with_gps": 33084,
+    "current_future_rows": 33084,
+    "needs_enrichment_sample_count": 0,
+    "resolver_tiers_in_match_counts": [
+      "tier_1_gazetteer_display",
+      "tier_2_geosearch_cache",
+      "tier_2_geosearch_midpoint"
+    ],
+    "location_cache_modified": false,
+    "public_map_modified": false
+  },
+  "supplemental_intake_staging": {
+    "feed_path": "data/supplemental_events_staging_feed.json",
+    "manifest_path": "data/supplemental_events_staging_manifest.json",
+    "report_path": "data/supplemental_events_staging_report.json",
+    "event_count": 4032,
+    "calendar_only_count": 2502,
+    "parks_only_count": 1530,
+    "with_proposed_coordinates_count": 2961,
+    "without_coordinates_count": 1071,
+    "manual_review_status": "pending",
+    "promotion_allowed": false
+  },
+  "scripts_added": [
+    "scripts/build_supplemental_events_staging_feed.py"
+  ],
+  "scripts_extended": [
+    "scripts/sync_nyc_open_data.py",
+    "scripts/generate_live_pipeline_dashboard_status.py"
+  ],
+  "workflow_wired": [
+    ".github/workflows/live-sync-qa.yml"
+  ],
+  "admin_deploy": {
+    "source": "docs/field-desk-admin-deploy/admin/live-pipeline-panel-v01.js",
+    "target_repo": "setoxxx/nycif-field-desk",
+    "target_url": "https://setoxxx.github.io/nycif-field-desk/admin/index.html",
+    "status": "pending_human_push"
+  },
+  "next_milestone_preview": {
+    "m11": "Human-approved supplemental merge + optional Phase 2E location_cache promotion (explicit authorization only)"
+  },
+  "safety": {
+    "public_map_modified": false,
+    "location_cache_modified": false,
+    "staged_feed_modified": false,
+    "promotion_allowed": false,
+    "manual_review_status": "pending"
+  }
+}

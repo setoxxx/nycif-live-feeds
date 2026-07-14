@@ -39,6 +39,8 @@ jobs:
       # and would drop promoted keys during this QA run.
 
       - name: Run backend QA sync
+        env:
+          NYCIF_ALLOW_LIVE_GEOSEARCH: "yes"
         run: python scripts/sync_nyc_open_data.py
 
       - name: Build test enriched feed
@@ -98,6 +100,9 @@ jobs:
 
       - name: Build supplemental coverage review queues
         run: python scripts/build_supplemental_coverage_review_queues.py
+
+      - name: Build supplemental events staging feed
+        run: python scripts/build_supplemental_events_staging_feed.py
 
       - name: Build coverage gap review findings
         run: python scripts/build_coverage_gap_review_findings.py

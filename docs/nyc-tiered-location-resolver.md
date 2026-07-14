@@ -17,8 +17,11 @@ If all tiers fail → `data/location_resolver_unresolved_queue.json` (admin revi
 ```bash
 python3 scripts/build_nyc_location_gazetteer.py
 python3 scripts/build_location_resolver_report.py
+NYCIF_ALLOW_LIVE_GEOSEARCH=yes python3 scripts/sync_nyc_open_data.py
 NYCIF_ALLOW_LIVE_GEOSEARCH=yes python3 scripts/build_test_enriched_feed.py
 ```
+
+Primary ingest (`sync_nyc_open_data.py`) and the test enriched feed both use the same tiered resolver when `NYCIF_ALLOW_LIVE_GEOSEARCH=yes`.
 
 ## Safety
 

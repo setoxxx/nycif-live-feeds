@@ -57,6 +57,8 @@ def main() -> int:
     coord_match_report = load_json(DATA / "calendar_parks_coord_match_proposals_report.json", {})
     unfilled_gps_report = load_json(DATA / "gps_review_geocoding_unfilled_report.json", {})
     gps_fill_report = load_json(DATA / "gps_review_geocoding_fill_report.json", {})
+    supplemental_staging_report = load_json(DATA / "supplemental_events_staging_report.json", {})
+    supplemental_staging_manifest = load_json(DATA / "supplemental_events_staging_manifest.json", {})
     resolver_report = load_json(DATA / "location_resolver_report.json", {})
     gazetteer = load_json(DATA / "nyc_location_gazetteer.json", {})
 
@@ -123,6 +125,10 @@ def main() -> int:
             "location_gazetteer_key_count": int(gazetteer.get("index_key_count") or 0),
             "location_resolver_unresolved_count": int(resolver_report.get("unresolved_count") or 0),
             "location_resolver_resolved_count": int(resolver_report.get("resolved_count") or 0),
+            "supplemental_staging_event_count": int(supplemental_staging_manifest.get("event_count") or 0),
+            "supplemental_staging_with_coordinates_count": int(
+                supplemental_staging_manifest.get("with_proposed_coordinates_count") or 0
+            ),
         },
         "location_resolver": {
             "gazetteer_path": "data/nyc_location_gazetteer.json",
@@ -147,6 +153,12 @@ def main() -> int:
                 calendar_only_report.get("without_parks_match_count") or 0
             ),
             "parks_only_with_coordinates_count": int(parks_only_report.get("with_coordinates_count") or 0),
+            "supplemental_staging_feed": "data/supplemental_events_staging_feed.json",
+            "supplemental_staging_manifest": "data/supplemental_events_staging_manifest.json",
+            "supplemental_staging_event_count": int(supplemental_staging_manifest.get("event_count") or 0),
+            "supplemental_staging_with_coordinates_count": int(
+                supplemental_staging_manifest.get("with_proposed_coordinates_count") or 0
+            ),
             "manual_review_status": "pending",
             "promotion_allowed": False,
         },
