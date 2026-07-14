@@ -1,7 +1,7 @@
 const VERSION = '0.7-staged-live-m10';
 const NYC_CENTER = [40.7128, -74.0060];
 const STORAGE_KEY = 'nycif-field-desk-state-v06-safe';
-const PUBLIC_DEFAULT_VERSION = 'staged-live-v01';
+const PUBLIC_DEFAULT_VERSION = 'staged-live-v02';
 
 const FEEDS = {
   major: 'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/nycif_major_radar_map_events.json',
@@ -23,7 +23,7 @@ const state = {
   sort: 'priority',
   dateMode: 'today',
   userLocation: null,
-  categories: { sports: true, parade: true, market: true, arts: true, parks: false, general: false },
+  categories: { sports: true, parade: true, market: true, arts: true, parks: false, general: false, fitness: false },
   majorOnly: false,
   photoOnly: false,
   nypdOnly: false,
@@ -109,6 +109,7 @@ function category(row) {
   if (preset === 'market') return { key: 'market', emoji: '🛍️', label: 'Market / street fair' };
   if (preset === 'arts') return { key: 'arts', emoji: '🎭', label: 'Arts / production' };
   if (preset === 'parks') return { key: 'parks', emoji: '🌳', label: 'Parks / family' };
+  if (preset === 'fitness') return { key: 'fitness', emoji: '💪', label: 'Fitness / wellness' };
   const text = normalize([row.title, row.event_type, row.type, row.location, row.display_location, row.lane, row.nypd_notice, row.verification_status, row.icon].join(' '));
   const icon = row.icon || '';
   if (icon === '🌈' || /pride/.test(text)) return { key: 'parade', emoji: '🌈', label: 'Pride / parade' };
@@ -117,6 +118,9 @@ function category(row) {
   if (icon === '📣' || /parade|march|rally|vigil|ceremony|memorial|civic|street event|block party/.test(text)) return { key: 'parade', emoji: icon || '📣', label: 'Parade / civic' };
   if (icon === '🛍️' || /market|food|vendor|feast|fair|merchandise|pop[- ]?up/.test(text)) return { key: 'market', emoji: icon || '🛍️', label: 'Market / street fair' };
   if (icon === '🎭' || /music|concert|arts|dance|theater|theatre|film|production|performance/.test(text)) return { key: 'arts', emoji: icon || '🎭', label: 'Arts / production' };
+  if (/yoga|zumba|fitness|workout|pilates|crossfit|aerobic|exercise|calisthenics|boot camp|bootcamp|barre|spin class|spinning|tai chi|qigong|wellness class|movement class|stretching|training session/.test(text)) {
+    return { key: 'fitness', emoji: '💪', label: 'Fitness / wellness' };
+  }
   if (icon === '🌳' || /park|family|kids|children|beach|garden|nature/.test(text)) return { key: 'parks', emoji: icon || '🌳', label: 'Parks / family' };
   return { key: 'general', emoji: icon || '📍', label: 'General event' };
 }
@@ -238,7 +242,7 @@ function getPublicDefaultPrefs() {
     borough: 'all',
     sort: 'priority',
     dateMode: 'today',
-    categories: { sports: true, parade: true, market: true, arts: true, parks: false, general: false },
+    categories: { sports: true, parade: true, market: true, arts: true, parks: false, general: false, fitness: false },
     majorOnly: true,
     photoOnly: false,
     nypdOnly: false,
@@ -255,7 +259,8 @@ function shouldForcePublicDefaultReset() {
     return resetFlag === '1'
       || versionFlag === 'major-default-qa-01'
       || versionFlag === 'ui-defaults-02'
-      || versionFlag === 'c5p-postpublish-02';
+      || versionFlag === 'c5p-postpublish-02'
+      || versionFlag === 'staged-live-v02';
   } catch {
     return false;
   }
@@ -283,7 +288,8 @@ function applyPublicPrefsToState(prefs) {
     market: !!prefs.categories?.market,
     arts: !!prefs.categories?.arts,
     parks: !!prefs.categories?.parks,
-    general: !!prefs.categories?.general
+    general: !!prefs.categories?.general,
+    fitness: !!prefs.categories?.fitness
   };
   state.majorOnly = !!prefs.majorOnly;
   state.photoOnly = !!prefs.photoOnly;
