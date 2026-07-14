@@ -5,7 +5,7 @@
   },
   "blocking_issues": [],
   "diagnostic_artifact_sha256": "b19970d03c92ffc99ad23d438c5f2eedc141fab5ef5e5d645d222af27d2a96c9",
-  "generated_at_utc": "2026-07-13T20:33:32.652210+00:00",
+  "generated_at_utc": "2026-07-14T23:32:08.471927+00:00",
   "input_diagnostic": "data/gps_staged_feed_integration_match_diagnostic.json",
   "location_cache_modified": false,
   "multi_key_conflict_count": 0,
@@ -7410,7 +7410,7 @@
   "qa_pass": true,
   "recommended_next_action": "Patch staged-feed update to apply only the 155 adjudicated safe identities, with the old 430-row dry-run target replaced by a new 155-row adjudicated-safe contract. Keep the 20 unmatched promoted keys out of the staged-feed update and carry them forward for human review.",
   "safe_update_count_contract": {
-    "adjudication_artifact_sha256": "06e4023f993ea9332ea28d8b9c641affd47eba2dd0a63d5c5df1b169afaa1ee6",
+    "adjudication_artifact_sha256": "ee214f668d119d12bd65f94316f1ffbc75431f89bb68b5a54ca2a8db10284636",
     "counts": {
       "adjudication_category_total": 20,
       "adjudication_row_count": 175,
@@ -7421,7 +7421,8 @@
       "selected_identity_count": 155
     },
     "derivation": {
-      "generated_at_utc": "2026-07-13T20:33:32.652210+00:00",
+      "adjudication_artifact_hash_schema": "gps-adjudication-self-hash-v1",
+      "generated_at_utc": "2026-07-14T23:32:08.471927+00:00",
       "producer_script": "scripts/generate_gps_staged_feed_integration_adjudication_summary.py",
       "provenance_schema_version": "gps-staged-feed-provenance-v1",
       "rules_version": "gps-safe-update-count-rules-v1"
@@ -10236,7 +10237,7 @@
   "staged_feed_modified": false,
   "staged_feed_provenance": {
     "producer": {
-      "generated_at_utc": "2026-07-13T20:33:32.652195+00:00",
+      "generated_at_utc": "2026-07-14T23:32:08.471915+00:00",
       "script": "scripts/generate_gps_staged_feed_integration_adjudication_summary.py",
       "upstream_artifact_sha256": "b19970d03c92ffc99ad23d438c5f2eedc141fab5ef5e5d645d222af27d2a96c9"
     },
@@ -10250,6 +10251,7 @@
     }
   },
   "validated_conditions": {
+    "adjudication_artifact_hash_finalized": true,
     "count_contract_internally_consistent": true,
     "count_contract_present": true,
     "diagnostic_staged_feed_provenance_present": true,
