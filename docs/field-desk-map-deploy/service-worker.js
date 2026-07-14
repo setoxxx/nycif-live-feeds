@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nycif-v015-emergency-map-restore';
+const CACHE_NAME = 'nycif-v016-emergency-map-restore-v02';
 const APP_SHELL = [
   './',
   './index.html',

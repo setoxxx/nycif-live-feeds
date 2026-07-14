@@ -14,11 +14,11 @@
   <link rel="preconnect" href="https://raw.githubusercontent.com">
   <link rel="preconnect" href="https://{s}.tile.openstreetmap.org">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <link rel="stylesheet" href="./style.css?v=map-restore-v01">
-  <link rel="stylesheet" href="./fielddesk-v02.css?v=map-restore-v01">
-  <link rel="stylesheet" href="./weekstrip-v06-safe.css?v=map-restore-v01">
-  <link rel="stylesheet" href="./staged-map-mode-v01.css?v=map-restore-v01">
-  <link rel="stylesheet" href="./public-map-v01.css?v=map-restore-v01">
+  <link rel="stylesheet" href="./style.css?v=map-restore-v02">
+  <link rel="stylesheet" href="./fielddesk-v02.css?v=map-restore-v02">
+  <link rel="stylesheet" href="./weekstrip-v06-safe.css?v=map-restore-v02">
+  <link rel="stylesheet" href="./staged-map-mode-v01.css?v=map-restore-v02">
+  <link rel="stylesheet" href="./public-map-v01.css?v=map-restore-v02">
 </head>
 <body class="public-map-page">
   <main id="app" class="app">
@@ -34,10 +34,9 @@
       </div>
 
       <div id="dateChips" class="date-chips" aria-label="Date filters">
-        <button type="button" data-date-mode="today" class="active">Today</button>
-        <button type="button" data-date-mode="tomorrow">Tomorrow</button>
-        <button type="button" data-date-mode="weekend">Weekend</button>
-        <button type="button" data-date-mode="all">All</button>
+        <button type="button" data-date-mode="today">Today</button>
+        <button type="button" data-date-mode="next7" class="active">Next 7 days</button>
+        <button type="button" data-date-mode="all">All upcoming</button>
       </div>
 
       <button id="layersBtn" class="pill layers-pill" type="button" aria-expanded="false" aria-controls="layersPanel">
@@ -47,7 +46,7 @@
       <aside id="layersPanel" class="layers-panel" aria-label="Map filters" hidden>
         <p class="panel-label">Choose what to show</p>
 
-        <button id="loadAllBtn" class="load-all" type="button">
+        <button id="loadAllBtn" class="load-all" type="button" hidden>
           Show more events
         </button>
 
@@ -127,18 +126,17 @@
   </main>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="./public-approved-overlays-capture-v01.js?v=map-restore-v01"></script>
-  <script src="./public-map-defaults-v01.js?v=map-restore-v01"></script>
-  <script src="./boot-today-v073-safe.js?v=map-restore-v01"></script>
-  <script src="./date-normalizer-v073-safe.js?v=map-restore-v01"></script>
-  <script src="./calendar-links-v01.js?v=map-restore-v01"></script>
-  <script src="./vip-filter-v01.js?v=map-restore-v01"></script>
-  <script src="./live-alerts-v02.js?v=map-restore-v01"></script>
-  <script src="./ui-polish-v01.js?v=map-restore-v01"></script>
-  <script src="./event-location-corrections-v01.js?v=map-restore-v01"></script>
-  <script src="./app-v06-safe.js?v=map-restore-v01" type="module"></script>
-  <script src="./public-approved-overlays-v01.js?v=map-restore-v01"></script>
-  <script src="./popup-autoclose-fix-v01.js?v=map-restore-v01"></script>
-  <script src="./staged-review-autoload-v01.js?v=map-restore-v01"></script>
+  <script src="./public-approved-overlays-capture-v01.js?v=map-restore-v02"></script>
+  <script src="./public-map-defaults-v01.js?v=map-restore-v02"></script>
+  <script src="./boot-today-v073-safe.js?v=map-restore-v02"></script>
+  <script src="./date-normalizer-v073-safe.js?v=map-restore-v02"></script>
+  <script src="./calendar-links-v01.js?v=map-restore-v02"></script>
+  <script src="./vip-filter-v01.js?v=map-restore-v02"></script>
+  <script src="./live-alerts-v02.js?v=map-restore-v02"></script>
+  <script src="./ui-polish-v01.js?v=map-restore-v02"></script>
+  <script src="./event-location-corrections-v01.js?v=map-restore-v02"></script>
+  <script src="./app-v06-safe.js?v=map-restore-v02" type="module"></script>
+  <script src="./public-approved-overlays-v01.js?v=map-restore-v02"></script>
+  <script src="./popup-autoclose-fix-v01.js?v=map-restore-v02"></script>
 </body>
 </html>

@@ -1,3 +1,5 @@
+# Field-desk public map deploy (emergency restore v02)
+
 # Field-desk public map deploy (emergency restore 2026-07-13)
 
 This package replaces the earlier M10 mirror with the validated emergency restore.

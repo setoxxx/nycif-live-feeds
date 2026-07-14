@@ -1,7 +1,7 @@
 From 70fdca63f7f9aeb656328ae77603a489de601ef9 Mon Sep 17 00:00:00 2001
 From: Cursor Agent <cursoragent@cursor.com>
 Date: Tue, 14 Jul 2026 02:48:02 +0000
-Subject: [PATCH 1/4] Restore staged-feed boot and resilient date fallback
+Subject: [PATCH 1/5] Restore staged-feed boot and resilient date fallback
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -942,7 +942,7 @@ index c5eedb4..7b59d14 100644
 From 4c92c8ccf53327634246ad62653114d2f0800847 Mon Sep 17 00:00:00 2001
 From: Cursor Agent <cursoragent@cursor.com>
 Date: Tue, 14 Jul 2026 02:48:02 +0000
-Subject: [PATCH 2/4] Add event-significance v01 UI and tests
+Subject: [PATCH 2/5] Add event-significance v01 UI and tests
 
 Deterministic Gold/Silver/Bronze classifier with filter badges,
 Why-this-tier popups, and integrity statement that tiers cannot be purchased.
@@ -1510,7 +1510,7 @@ index 0000000..880392a
 From 170f03c20dd6e37704af35c203eb5e7539746c62 Mon Sep 17 00:00:00 2001
 From: Cursor Agent <cursoragent@cursor.com>
 Date: Tue, 14 Jul 2026 02:48:02 +0000
-Subject: [PATCH 3/4] Bust service-worker and public asset caches
+Subject: [PATCH 3/5] Bust service-worker and public asset caches
 
 Use nycif-v015-emergency-map-restore with network-first for app shell
 and raw GitHub feed requests.
@@ -1606,7 +1606,7 @@ index 38e3b70..183bcf5 100644
 From 32be115c47e88582f8de163e11c1744f5fc881bd Mon Sep 17 00:00:00 2001
 From: Cursor Agent <cursoragent@cursor.com>
 Date: Tue, 14 Jul 2026 02:48:02 +0000
-Subject: [PATCH 4/4] Add diagnostic and QA documentation
+Subject: [PATCH 4/5] Add diagnostic and QA documentation
 
 Record pre-fix major-only blank-map diagnosis and post-fix
 browser/fallback validation evidence.
@@ -1772,6 +1772,400 @@ index 0000000..836ead8
 +## Remaining limitation
 +
 +GitHub Pages and WordPress still serve the pre-restore runtime until the Field Desk PR is merged/deployed and the 1.2.1 plugin ZIP is uploaded manually.
+-- 
+2.43.0
+
+
+From 60034638ae03570b534dfe46b40852c0125a4044 Mon Sep 17 00:00:00 2001
+From: Cursor Agent <cursoragent@cursor.com>
+Date: Tue, 14 Jul 2026 03:00:17 +0000
+Subject: [PATCH 5/5] Show Next 7 days of all events with fitness; drop staged
+ review UI
+
+Default to a forward-only Today/next-7 date strip, raise marker cap so
+every matching event can draw, keep softball in Sports, and remove
+public staged-review controls.
+---
+ app-v06-safe.js            | 92 +++++++++++++++++++++++++++-----------
+ boot-today-v073-safe.js    |  6 ++-
+ index.html                 | 44 +++++++++---------
+ public-map-defaults-v01.js |  8 ++--
+ public-map-v01.css         |  1 +
+ service-worker.js          |  2 +-
+ 6 files changed, 97 insertions(+), 56 deletions(-)
+
+diff --git a/app-v06-safe.js b/app-v06-safe.js
+index 7d08424..a91d332 100644
+--- a/app-v06-safe.js
++++ b/app-v06-safe.js
+@@ -5,11 +5,12 @@ import {
+ } from './event-significance-v01.js';
+ import { eventDateKey, isValidDateKey } from './map-date-key-v01.js';
+ 
+-const VERSION = '0.8-emergency-map-restore-v01';
++const VERSION = '0.8-emergency-map-restore-v02';
+ const NYC_CENTER = [40.7128, -74.0060];
+ const STORAGE_KEY = 'nycif-field-desk-state-v06-safe';
+-const PUBLIC_DEFAULT_VERSION = 'staged-live-v03';
+-const STAGED_MARKER_CAP = 2000;
++const PUBLIC_DEFAULT_VERSION = 'staged-live-v04';
++/** Cap map markers so Today + next 7 days (~8–10k) can all draw; list keeps full matching count. */
++const PUBLIC_MARKER_CAP = 12000;
+ 
+ const FEEDS = {
+   major: 'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/nycif_major_radar_map_events.json',
+@@ -31,7 +32,7 @@ const state = {
+   search: '',
+   borough: 'all',
+   sort: 'priority',
+-  dateMode: 'today',
++  dateMode: 'next7',
+   userLocation: null,
+   categories: { sports: true, parade: true, market: true, arts: true, parks: true, fitness: true, general: true },
+   majorOnly: false,
+@@ -45,7 +46,7 @@ const state = {
+   newlyAddedKeys: new Set(),
+   deltaAddedCount: 0,
+   deltaGeneratedAt: null,
+-  maxMarkers: STAGED_MARKER_CAP,
++  maxMarkers: PUBLIC_MARKER_CAP,
+   userChangedFilters: false,
+   dateFallbackMessage: '',
+   feedLoadError: '',
+@@ -141,13 +142,18 @@ function category(row) {
+   if (preset === 'fitness') return { key: 'fitness', emoji: '💪', label: 'Fitness / wellness' };
+   const text = normalize([row.title, row.event_type, row.type, row.location, row.display_location, row.lane, row.nypd_notice, row.verification_status, row.icon].join(' '));
+   const icon = row.icon || '';
++  const competitiveSport =
++    /\b(softball|baseball|basketball|soccer|football|hockey|tennis|lacrosse|cricket|volleyball|kickball|rugby|sport - youth|sport - adult|little league|athletic race)\b/.test(text);
+   if (icon === '🌈' || /pride/.test(text)) return { key: 'parade', emoji: '🌈', label: 'Pride / parade' };
+   if (icon === '🚴' || /criterium|cycling|bike/.test(text)) return { key: 'sports', emoji: '🚴', label: 'Cycling / sports' };
+-  if (icon === '🏟️' || /world cup|fifa|fan zone|sport|soccer|race|marathon|run|walk|yankee|citi field/.test(text)) return { key: 'sports', emoji: icon || '🏟️', label: 'Sports / World Cup' };
++  if (competitiveSport || icon === '🏟️' || /world cup|fifa|fan zone|sport|soccer|race|marathon|yankee|citi field/.test(text)) {
++    return { key: 'sports', emoji: icon || '🏟️', label: 'Sports / World Cup' };
++  }
+   if (icon === '📣' || /parade|march|rally|vigil|ceremony|memorial|civic|street event|block party/.test(text)) return { key: 'parade', emoji: icon || '📣', label: 'Parade / civic' };
+   if (icon === '🛍️' || /market|food|vendor|feast|fair|merchandise|pop[- ]?up/.test(text)) return { key: 'market', emoji: icon || '🛍️', label: 'Market / street fair' };
+   if (icon === '🎭' || /music|concert|arts|dance|theater|theatre|film|production|performance/.test(text)) return { key: 'arts', emoji: icon || '🎭', label: 'Arts / production' };
+-  if (/yoga|zumba|pilates|fitness|workout|aerobics|aerobic|exercise|calisthenics|boot camp|bootcamp|barre|spin class|spinning|tai chi|qigong|wellness class|movement class|stretching|training session/.test(text)) {
++  // Fitness / wellness only — never steal softball/baseball/league sports into this bucket.
++  if (/yoga|zumba|pilates|fitness|workout|aerobics|aerobic|exercise|calisthenics|boot camp|bootcamp|barre|spin class|spinning|tai chi|qigong|wellness class|movement class|stretching|shape up nyc|bodyweight/.test(text)) {
+     return { key: 'fitness', emoji: '💪', label: 'Fitness / wellness' };
+   }
+   if (icon === '🌳' || /park|family|kids|children|beach|garden|nature/.test(text)) return { key: 'parks', emoji: icon || '🌳', label: 'Parks / family' };
+@@ -248,12 +254,12 @@ async function copyAssignment(event) {
+ function feedLabel() {
+   if (state.feed === 'major') return 'Fast major feed';
+   if (state.feed === 'full') return 'Full feed';
+-  if (state.feed === 'staged') return 'Staged live feed';
++  if (state.feed === 'staged') return 'Live event feed';
+   return 'Live feed';
+ }
+ 
+ function popupHtml(event) {
+-  const source = isNypd(event) ? 'NYPD Field Intel' : (event.assignment_feed === 'staged' ? 'Staged Live Feed' : event.assignment_feed === 'major' ? 'Major Assignment Feed' : 'NYCIF Live Feed');
++  const source = isNypd(event) ? 'NYPD Field Intel' : (event.assignment_feed === 'major' ? 'Major Assignment Feed' : 'NYCIF Live Feed');
+   const crowd = crowdLabel(event);
+   const nypd = event.nypd_notice || '';
+   const sourceUrl = event.source_url || event.url || event.event_url || '';
+@@ -280,7 +286,25 @@ function ensureMarker(event) {
+ }
+ 
+ function isExactDateMode(value) { return /^\d{4}-\d{2}-\d{2}$/.test(value); }
+-function dateMatches(event) { if (state.dateMode === 'all') return true; if (!event.dateKey) return false; if (state.dateMode === 'today') return event.dateKey === todayKey(); if (state.dateMode === 'tomorrow') return event.dateKey === tomorrowKey(); if (state.dateMode === 'weekend') return isWeekendDate(event.start) || (isValidDateKey(event.dateKey) && (() => { const [y, m, d] = event.dateKey.split('-').map(Number); return isWeekendDate(new Date(y, m - 1, d)); })()); if (isExactDateMode(state.dateMode)) return event.dateKey === state.dateMode; return true; }
++function next7EndKey() { return dateKey(addDays(new Date(), 7)); }
++function dateMatches(event) {
++  if (!event.dateKey) return false;
++  const today = todayKey();
++  // Public map never scrolls into the past: "All" means all upcoming.
++  if (state.dateMode === 'all') return event.dateKey >= today;
++  if (state.dateMode === 'next7') return event.dateKey >= today && event.dateKey <= next7EndKey();
++  if (state.dateMode === 'today') return event.dateKey === today;
++  if (state.dateMode === 'tomorrow') return event.dateKey === tomorrowKey();
++  if (state.dateMode === 'weekend') {
++    if (event.dateKey < today) return false;
++    return isWeekendDate(event.start) || (isExactDateMode(event.dateKey) && (() => {
++      const [y, m, d] = event.dateKey.split('-').map(Number);
++      return isWeekendDate(new Date(y, m - 1, d));
++    })());
++  }
++  if (isExactDateMode(state.dateMode)) return event.dateKey === state.dateMode;
++  return true;
++}
+ 
+ function significanceMatches(event) {
+   const tier = event.significance?.tier || null;
+@@ -321,7 +345,7 @@ function getPublicDefaultPrefs() {
+   return {
+     borough: 'all',
+     sort: 'priority',
+-    dateMode: 'today',
++    dateMode: 'next7',
+     categories: { sports: true, parade: true, market: true, arts: true, parks: true, fitness: true, general: true },
+     majorOnly: false,
+     photoOnly: false,
+@@ -348,7 +372,9 @@ function shouldForcePublicDefaultReset() {
+       || versionFlag === 'staged-live-v01'
+       || versionFlag === 'staged-live-v02'
+       || versionFlag === 'staged-live-v03'
+-      || versionFlag === 'map-restore-v01';
++      || versionFlag === 'staged-live-v04'
++      || versionFlag === 'map-restore-v01'
++      || versionFlag === 'map-restore-v02';
+   } catch {
+     return false;
+   }
+@@ -531,9 +557,9 @@ function render() {
+   const empty = emptyStateHtml(visible.length);
+   els.listMeta.textContent = `${draw.length < visible.length ? `${draw.length} shown of ${visible.length}` : `${visible.length} visible`} events · ${newCount} newly added · ${photoCount} photo picks · ${nypdCount} NYPD${nearMode ? ' · sorted near you' : ''}${state.dateFallbackMessage ? ` · ${state.dateFallbackMessage}` : ''}`;
+   if (visible.length) {
+-    els.eventList.innerHTML = visible.slice(0, 60).map(event => {
++    els.eventList.innerHTML = visible.slice(0, 120).map(event => {
+       const distance = distanceLabel(event);
+-      return `<button type="button" class="event-item" data-id="${esc(event.id)}"><span class="item-top"><span class="item-source">${esc(event.category.emoji)} ${esc(event.category.label)} ${tierBadge(event)}</span><span class="item-tags">${event.newlyAdded ? '<span class="item-tag danger">NEW</span>' : ''}${distance ? `<span class="item-tag near">${esc(distance)}</span>` : ''}<span class="item-tag priority-${photoPriority(event).toLowerCase().replaceAll(' ', '-')}">${esc(photoPriority(event))}</span>${event.assignment_feed === 'staged' ? '<span class="item-tag">STAGED</span>' : ''}${event.photoPick ? '<span class="item-tag">📸</span>' : ''}${isNypd(event) ? '<span class="item-tag danger">NYPD</span>' : ''}</span></span><strong>${esc(event.title)}</strong><span>${esc(timeLabel(event.start))}</span><small>${esc([event.borough, event.location, crowdLabel(event)].filter(Boolean).join(' • '))}</small><span class="quick-actions"><a href="${esc(appleMapsUrl(event))}" target="_blank" rel="noopener">Directions</a><button type="button" data-copy-id="${esc(event.id)}">Copy</button></span></button>`;
++      return `<button type="button" class="event-item" data-id="${esc(event.id)}"><span class="item-top"><span class="item-source">${esc(event.category.emoji)} ${esc(event.category.label)} ${tierBadge(event)}</span><span class="item-tags">${event.newlyAdded ? '<span class="item-tag danger">NEW</span>' : ''}${distance ? `<span class="item-tag near">${esc(distance)}</span>` : ''}<span class="item-tag priority-${photoPriority(event).toLowerCase().replaceAll(' ', '-')}">${esc(photoPriority(event))}</span>${event.photoPick ? '<span class="item-tag">📸</span>' : ''}${isNypd(event) ? '<span class="item-tag danger">NYPD</span>' : ''}</span></span><strong>${esc(event.title)}</strong><span>${esc(timeLabel(event.start))}</span><small>${esc([event.borough, event.location, crowdLabel(event)].filter(Boolean).join(' • '))}</small><span class="quick-actions"><a href="${esc(appleMapsUrl(event))}" target="_blank" rel="noopener">Directions</a><button type="button" data-copy-id="${esc(event.id)}">Copy</button></span></button>`;
+     }).join('');
+   } else {
+     els.eventList.innerHTML = empty || '<div class="empty">No events match this view.</div>';
+@@ -609,21 +635,21 @@ function applyLoadedEvents(kind, events, sourceRows) {
+   state.feedLoadError = '';
+   state.lastFeedDiag = { kind, sourceRows, coordRows: events.length };
+   if (kind === 'major') {
+-    state.maxMarkers = 650;
++    state.maxMarkers = Math.min(PUBLIC_MARKER_CAP, 2000);
+     state.events = events;
+     state.feed = 'major';
+   } else if (kind === 'staged') {
+-    state.maxMarkers = STAGED_MARKER_CAP;
++    state.maxMarkers = PUBLIC_MARKER_CAP;
+     state.events = events;
+     state.feed = 'staged';
+     state.stagedLoaded = true;
+     state.fullLoaded = false;
+     if (els.stagedFeedBtn) {
+-      els.stagedFeedBtn.textContent = 'Staged feed loaded';
++      els.stagedFeedBtn.textContent = 'Live feed loaded';
+       els.stagedFeedBtn.disabled = true;
+     }
+   } else {
+-    state.maxMarkers = 650;
++    state.maxMarkers = PUBLIC_MARKER_CAP;
+     state.events = events;
+     state.feed = 'full';
+     state.fullLoaded = true;
+@@ -636,14 +662,21 @@ function maybeApplyDateFallback() {
+   if (!state.events.length) return;
+   const visibleNow = state.events.filter(eventMatches);
+   if (visibleNow.length) return;
+-  if (!(state.dateMode === 'today' || isExactDateMode(state.dateMode))) return;
++  if (!(state.dateMode === 'today' || state.dateMode === 'next7' || isExactDateMode(state.dateMode))) return;
+ 
+   const today = todayKey();
+   const upcoming = [...new Set(state.events.map(e => e.dateKey).filter(k => isValidDateKey(k) && k >= today))].sort();
+   if (upcoming.length) {
+     const next = upcoming[0];
+-    state.dateMode = next === today ? 'today' : next;
+-    state.dateFallbackMessage = `No events remained for today. Showing the next available date: ${formatHumanDate(next)}.`;
++    // Prefer the Next-7 window when at least one upcoming day exists inside it.
++    const inNext7 = upcoming.some(k => k <= next7EndKey());
++    if (inNext7 && state.dateMode === 'next7') {
++      state.dateMode = 'next7';
++      state.dateFallbackMessage = `No events remained for today. Showing the next 7 days starting ${formatHumanDate(next)}.`;
++    } else {
++      state.dateMode = next === today ? 'today' : next;
++      state.dateFallbackMessage = `No events remained for today. Showing the next available date: ${formatHumanDate(next)}.`;
++    }
+     refreshDateChipActive();
+     return;
+   }
+@@ -672,7 +705,7 @@ async function loadFeed(kind, { allowMerge = false } = {}) {
+   const visible = render();
+   if (visible.length && kind !== 'staged') map.fitBounds(visible.slice(0, 200).map(e => [e.lat, e.lng]), { padding: [44, 44], maxZoom: 12 });
+   if (visible.length && kind === 'staged') {
+-    status(`${visible.length} events · Staged live feed · ${state.lastFeedDiag.sourceRows.toLocaleString()} source rows · first ${Math.min(visible.length, state.maxMarkers)} markers · v${VERSION}${state.dateFallbackMessage ? ` · ${state.dateFallbackMessage}` : ''}`);
++    status(`${visible.length} events · Live feed · ${state.lastFeedDiag.sourceRows.toLocaleString()} source rows · ${Math.min(visible.length, state.maxMarkers)} markers · v${VERSION}${state.dateFallbackMessage ? ` · ${state.dateFallbackMessage}` : ''}`);
+   } else {
+     updateChrome(visible);
+   }
+@@ -742,13 +775,16 @@ function refreshDateChipActive() {
+ 
+ function buildDateChips() {
+   if (!els.dateChips) return;
+-  const start = weekStartSunday(new Date());
+-  const days = Array.from({ length: 14 }, (_, index) => addDays(start, index));
+-  els.dateChips.innerHTML = `<div class="date-chip-track">${days.map(date => {
++  // Forward-only: Today + next 7 calendar days. Never chips for past days.
++  const today = new Date();
++  today.setHours(0, 0, 0, 0);
++  const days = Array.from({ length: 8 }, (_, index) => addDays(today, index));
++  const dayButtons = days.map(date => {
+     const mode = chipModeForDate(date);
+     const label = dateKey(date) === todayKey() ? 'Today' : chipText(date);
+     return `<button type="button" data-date-mode="${esc(mode)}" data-date-key="${esc(dateKey(date))}" class="${state.dateMode === mode ? 'active' : ''}">${esc(label)}</button>`;
+-  }).join('')}<button type="button" data-date-mode="all" class="${state.dateMode === 'all' ? 'active' : ''}">All</button></div>`;
++  }).join('');
++  els.dateChips.innerHTML = `<div class="date-chip-track">${dayButtons}<button type="button" data-date-mode="next7" class="${state.dateMode === 'next7' ? 'active' : ''}">Next 7 days</button><button type="button" data-date-mode="all" class="${state.dateMode === 'all' ? 'active' : ''}">All upcoming</button></div>`;
+   refreshDateChipActive();
+   els.dateChips.addEventListener('click', ev => {
+     const button = ev.target.closest('[data-date-mode]');
+@@ -783,6 +819,8 @@ function locateUser(options = {}) {
+ }
+ 
+ function ensureStagedButton() {
++  // Public map: no staged-review control. Live feed already boots with the full staged inventory.
++  if (isPublicMapPage()) return;
+   if (!els.layersPanel || document.getElementById('loadStagedBtn')) return;
+   const button = document.createElement('button');
+   button.id = 'loadStagedBtn';
+@@ -888,5 +926,5 @@ export {
+   VERSION,
+   PUBLIC_DEFAULT_VERSION,
+   FEEDS,
+-  STAGED_MARKER_CAP
++  PUBLIC_MARKER_CAP
+ };
+diff --git a/boot-today-v073-safe.js b/boot-today-v073-safe.js
+index cdae6e6..29e7a85 100644
+--- a/boot-today-v073-safe.js
++++ b/boot-today-v073-safe.js
+@@ -6,8 +6,10 @@
+       if (!raw) continue;
+       const prefs = JSON.parse(raw);
+       if (!prefs || typeof prefs !== 'object') continue;
+-      if (prefs.dateMode === 'all' || prefs.dateMode === 'weekend' || prefs.dateMode === 'tomorrow') {
+-        prefs.dateMode = 'today';
++      // Keep next7 / exact dates / all upcoming. Only normalize legacy "weekend"/"tomorrow"
++      // when somehow stuck without a public default version.
++      if (!prefs.nycifDefaultVersion && (prefs.dateMode === 'weekend' || prefs.dateMode === 'tomorrow')) {
++        prefs.dateMode = 'next7';
+         localStorage.setItem(key, JSON.stringify(prefs));
+       }
+     } catch {}
+diff --git a/index.html b/index.html
+index 203ab14..2db9b57 100644
+--- a/index.html
++++ b/index.html
+@@ -14,11 +14,11 @@
+   <link rel="preconnect" href="https://raw.githubusercontent.com">
+   <link rel="preconnect" href="https://{s}.tile.openstreetmap.org">
+   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+-  <link rel="stylesheet" href="./style.css?v=map-restore-v01">
+-  <link rel="stylesheet" href="./fielddesk-v02.css?v=map-restore-v01">
+-  <link rel="stylesheet" href="./weekstrip-v06-safe.css?v=map-restore-v01">
+-  <link rel="stylesheet" href="./staged-map-mode-v01.css?v=map-restore-v01">
+-  <link rel="stylesheet" href="./public-map-v01.css?v=map-restore-v01">
++  <link rel="stylesheet" href="./style.css?v=map-restore-v02">
++  <link rel="stylesheet" href="./fielddesk-v02.css?v=map-restore-v02">
++  <link rel="stylesheet" href="./weekstrip-v06-safe.css?v=map-restore-v02">
++  <link rel="stylesheet" href="./staged-map-mode-v01.css?v=map-restore-v02">
++  <link rel="stylesheet" href="./public-map-v01.css?v=map-restore-v02">
+ </head>
+ <body class="public-map-page">
+   <main id="app" class="app">
+@@ -34,10 +34,9 @@
+       </div>
+ 
+       <div id="dateChips" class="date-chips" aria-label="Date filters">
+-        <button type="button" data-date-mode="today" class="active">Today</button>
+-        <button type="button" data-date-mode="tomorrow">Tomorrow</button>
+-        <button type="button" data-date-mode="weekend">Weekend</button>
+-        <button type="button" data-date-mode="all">All</button>
++        <button type="button" data-date-mode="today">Today</button>
++        <button type="button" data-date-mode="next7" class="active">Next 7 days</button>
++        <button type="button" data-date-mode="all">All upcoming</button>
+       </div>
+ 
+       <button id="layersBtn" class="pill layers-pill" type="button" aria-expanded="false" aria-controls="layersPanel">
+@@ -47,7 +46,7 @@
+       <aside id="layersPanel" class="layers-panel" aria-label="Map filters" hidden>
+         <p class="panel-label">Choose what to show</p>
+ 
+-        <button id="loadAllBtn" class="load-all" type="button">
++        <button id="loadAllBtn" class="load-all" type="button" hidden>
+           Show more events
+         </button>
+ 
+@@ -127,18 +126,17 @@
+   </main>
+ 
+   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+-  <script src="./public-approved-overlays-capture-v01.js?v=map-restore-v01"></script>
+-  <script src="./public-map-defaults-v01.js?v=map-restore-v01"></script>
+-  <script src="./boot-today-v073-safe.js?v=map-restore-v01"></script>
+-  <script src="./date-normalizer-v073-safe.js?v=map-restore-v01"></script>
+-  <script src="./calendar-links-v01.js?v=map-restore-v01"></script>
+-  <script src="./vip-filter-v01.js?v=map-restore-v01"></script>
+-  <script src="./live-alerts-v02.js?v=map-restore-v01"></script>
+-  <script src="./ui-polish-v01.js?v=map-restore-v01"></script>
+-  <script src="./event-location-corrections-v01.js?v=map-restore-v01"></script>
+-  <script src="./app-v06-safe.js?v=map-restore-v01" type="module"></script>
+-  <script src="./public-approved-overlays-v01.js?v=map-restore-v01"></script>
+-  <script src="./popup-autoclose-fix-v01.js?v=map-restore-v01"></script>
+-  <script src="./staged-review-autoload-v01.js?v=map-restore-v01"></script>
++  <script src="./public-approved-overlays-capture-v01.js?v=map-restore-v02"></script>
++  <script src="./public-map-defaults-v01.js?v=map-restore-v02"></script>
++  <script src="./boot-today-v073-safe.js?v=map-restore-v02"></script>
++  <script src="./date-normalizer-v073-safe.js?v=map-restore-v02"></script>
++  <script src="./calendar-links-v01.js?v=map-restore-v02"></script>
++  <script src="./vip-filter-v01.js?v=map-restore-v02"></script>
++  <script src="./live-alerts-v02.js?v=map-restore-v02"></script>
++  <script src="./ui-polish-v01.js?v=map-restore-v02"></script>
++  <script src="./event-location-corrections-v01.js?v=map-restore-v02"></script>
++  <script src="./app-v06-safe.js?v=map-restore-v02" type="module"></script>
++  <script src="./public-approved-overlays-v01.js?v=map-restore-v02"></script>
++  <script src="./popup-autoclose-fix-v01.js?v=map-restore-v02"></script>
+ </body>
+ </html>
+diff --git a/public-map-defaults-v01.js b/public-map-defaults-v01.js
+index 7b59d14..e93889c 100644
+--- a/public-map-defaults-v01.js
++++ b/public-map-defaults-v01.js
+@@ -1,10 +1,10 @@
+ (function () {
+   const STORAGE_KEY = 'nycif-field-desk-state-v06-safe';
+-  const DEFAULT_VERSION = 'staged-live-v03';
++  const DEFAULT_VERSION = 'staged-live-v04';
+   const defaults = {
+     borough: 'all',
+     sort: 'priority',
+-    dateMode: 'today',
++    dateMode: 'next7',
+     categories: {
+       sports: true,
+       parade: true,
+@@ -56,7 +56,9 @@
+       || versionFlag === 'staged-live-v01'
+       || versionFlag === 'staged-live-v02'
+       || versionFlag === 'staged-live-v03'
+-      || versionFlag === 'map-restore-v01';
++      || versionFlag === 'staged-live-v04'
++      || versionFlag === 'map-restore-v01'
++      || versionFlag === 'map-restore-v02';
+     applyDefaults(forceReset);
+   } catch {
+     localStorage.setItem(STORAGE_KEY, JSON.stringify({
+diff --git a/public-map-v01.css b/public-map-v01.css
+index 70698a2..b047941 100644
+--- a/public-map-v01.css
++++ b/public-map-v01.css
+@@ -67,6 +67,7 @@ body.public-map-page #loadAllBtn::before {
+ 
+ body.public-map-page #loadStagedBtn,
+ body.public-map-page .staged-feed-test,
++body.public-map-page #stagedReviewBadge,
+ body.public-map-page .full-today-test,
+ body.public-map-page .full-data-test,
+ body.public-map-page #statsToggleV05,
+diff --git a/service-worker.js b/service-worker.js
+index 183bcf5..263aebf 100644
+--- a/service-worker.js
++++ b/service-worker.js
+@@ -1,4 +1,4 @@
+-const CACHE_NAME = 'nycif-v015-emergency-map-restore';
++const CACHE_NAME = 'nycif-v016-emergency-map-restore-v02';
+ const APP_SHELL = [
+   './',
+   './index.html',
 -- 
 2.43.0
 
