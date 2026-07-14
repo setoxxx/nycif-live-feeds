@@ -9,7 +9,7 @@
       "Full 'all city events' requires merging supplemental calendar-only rows through manual review, not auto-promotion."
     ],
     "permit_pipeline_ingestion_pct_estimate": 100.0,
-    "permit_pipeline_map_ready_pct_estimate": 90.621
+    "permit_pipeline_map_ready_pct_estimate": 100.0
   },
   "distribution": {
     "calendar_category_counts": {
@@ -18,11 +18,9 @@
       "Cultural,Featured,General Events": 1,
       "Environment,Free,Street and Neighborhood,Kids and Family,Featured,General Events": 7,
       "Free,Benefits Access,General Events,Special Event": 30,
-      "Free,Holidays,Parks & Recreation,Featured,General Events": 1,
       "Free,Kids and Family,Athletic,Featured,General Events": 1,
       "Free,Parks & Recreation,Athletic,General Events": 2,
       "Free,Parks & Recreation,Education,General Events": 2,
-      "Free,Parks & Recreation,Featured": 1,
       "Free,Parks & Recreation,General Events": 3,
       "Free,Parks & Recreation,Kids and Family,Athletic,General Events": 2,
       "Free,Parks & Recreation,Kids and Family,Education,General Events": 1,
@@ -32,7 +30,7 @@
       "General Events": 3,
       "Hearings and Meetings": 1,
       "Job Fair,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,HPD Outreach Event": 1,
-      "Parks & Recreation": 2612,
+      "Parks & Recreation": 2541,
       "Street and Neighborhood": 74,
       "Tenant Resource Fair ,Free,Housing Information Class,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 1,
       "Tenant Resource Fair ,Free,Job Fair,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 1,
@@ -43,32 +41,31 @@
       "Tenant Resource Fair ,Free,Property Owner Resource Fair,Housing Ambassador Event,Veteran Events,HPD Outreach Event": 1
     },
     "permit_agency_counts": {
-      "Mayor's Office of Media & Entertainment": 1,
-      "Parks Department": 33385,
-      "Police Department": 33,
-      "Street Activity Permit Office": 656
+      "Parks Department": 32410,
+      "Police Department": 32,
+      "Street Activity Permit Office": 642
     }
   },
-  "generated_at_utc": "2026-07-13T22:10:54.048290+00:00",
+  "generated_at_utc": "2026-07-14T01:28:14.670466+00:00",
   "overlap_analysis": {
-    "calendar_only_unique_keys": 2571,
-    "calendar_overlap_pct_of_calendar": 3.164,
-    "parks_calendar_overlap_unique_keys": 1539,
-    "parks_only_unique_keys": 1600,
-    "parks_overlap_pct_of_parks": 1.174,
+    "calendar_only_unique_keys": 2502,
+    "calendar_overlap_pct_of_calendar": 3.248,
+    "parks_calendar_overlap_unique_keys": 1474,
+    "parks_only_unique_keys": 1530,
+    "parks_overlap_pct_of_parks": 1.227,
     "parks_permit_overlap_unique_keys": 19,
-    "permit_only_unique_keys": 5218,
-    "permit_overlap_pct_of_permits": 1.584,
+    "permit_only_unique_keys": 5114,
+    "permit_overlap_pct_of_permits": 1.616,
     "title_date_overlap_rows": 88,
     "title_date_overlap_unique_keys": 84
   },
   "pipeline_status": {
-    "auto_gps_match_pct": 90.621,
-    "gps_review_queue": 3110,
-    "gps_review_tail_pct": 9.127,
-    "permit_ingestion_accounted_rows": 34075,
-    "staged_feed_events": 23111,
-    "staged_with_valid_gps": 30879
+    "auto_gps_match_pct": 100.0,
+    "gps_review_queue": 0,
+    "gps_review_tail_pct": 0.0,
+    "permit_ingestion_accounted_rows": 33084,
+    "staged_feed_events": 32845,
+    "staged_with_valid_gps": 33084
   },
   "qa_pass": true,
   "safety": {
@@ -136,18 +133,6 @@
           "Parks & Recreation"
         ],
         "source_dataset": "nyc-citywide-events-calendar-api",
-        "source_event_id": "1047796",
-        "start_date_time": "2026-07-13T09:00:00.000-04:00",
-        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
-      },
-      {
-        "borough": [
-          "Mn"
-        ],
-        "categories": [
-          "Parks & Recreation"
-        ],
-        "source_dataset": "nyc-citywide-events-calendar-api",
         "source_event_id": "1051956",
         "start_date_time": "2026-07-14T09:00:00.000-04:00",
         "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
@@ -198,6 +183,18 @@
         "source_dataset": "nyc-citywide-events-calendar-api",
         "source_event_id": "1052036",
         "start_date_time": "2026-07-20T09:00:00.000-04:00",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": [
+          "Mn"
+        ],
+        "categories": [
+          "Parks & Recreation"
+        ],
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1051716",
+        "start_date_time": "2026-07-21T09:00:00.000-04:00",
         "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
       }
     ],
@@ -300,16 +297,6 @@
           "Art | History"
         ],
         "source_dataset": "nyc-parks-bigapps-events",
-        "source_event_id": "2109923",
-        "start_date_time": "2026-07-13T9:00 am",
-        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
-      },
-      {
-        "borough": null,
-        "categories": [
-          "Art | History"
-        ],
-        "source_dataset": "nyc-parks-bigapps-events",
         "source_event_id": "2109924",
         "start_date_time": "2026-07-14T9:00 am",
         "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
@@ -382,6 +369,16 @@
         "source_dataset": "nyc-parks-bigapps-events",
         "source_event_id": "2109931",
         "start_date_time": "2026-07-23T9:00 am",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "borough": null,
+        "categories": [
+          "Art | History"
+        ],
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2109932",
+        "start_date_time": "2026-07-24T9:00 am",
         "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
       }
     ],
@@ -470,7 +467,7 @@
   },
   "sources_compared": {
     "citywide_calendar_api": {
-      "current_future_rows": 2781,
+      "current_future_rows": 2708,
       "dataset_id": "nyc-citywide-events-calendar-api",
       "human_sources": [
         "https://www.nyc.gov/main/events",
@@ -480,7 +477,7 @@
       "snapshot_present": true
     },
     "parks_bigapps_events": {
-      "current_future_rows": 1654,
+      "current_future_rows": 1581,
       "dataset_id": "nyc-parks-bigapps-events",
       "human_sources": [
         "https://www.nycgovparks.org/bigapps",
@@ -490,7 +487,7 @@
       "snapshot_present": true
     },
     "permit_open_data": {
-      "current_future_rows": 34075,
+      "current_future_rows": 33084,
       "dataset_id": "tvpp-9vvx",
       "human_sources": [
         "NYC Open Data CSV/JSON export",
@@ -498,5 +495,15 @@
       ],
       "snapshot_path": "data/raw_nyc_open_data_snapshot.json"
     }
+  },
+  "supplemental_review_artifacts": {
+    "calendar_only_review_queue": "data/supplemental_calendar_only_review_queue.json",
+    "calendar_parks_coord_match_proposals": "data/calendar_parks_coord_match_proposals.json",
+    "generation_scripts": [
+      "scripts/build_supplemental_coverage_review_queues.py",
+      "scripts/build_gps_unfilled_review_report.py"
+    ],
+    "gps_unfilled_review_queue": "data/gps_review_geocoding_unfilled_review_queue.json",
+    "parks_only_review_queue": "data/supplemental_parks_only_review_queue.json"
   }
 }

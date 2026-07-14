@@ -285,6 +285,16 @@ def main() -> int:
                 [parks_index[k][0] for k in sorted(parks_only_keys)[:10]]
             ),
         },
+        "supplemental_review_artifacts": {
+            "calendar_only_review_queue": "data/supplemental_calendar_only_review_queue.json",
+            "parks_only_review_queue": "data/supplemental_parks_only_review_queue.json",
+            "calendar_parks_coord_match_proposals": "data/calendar_parks_coord_match_proposals.json",
+            "gps_unfilled_review_queue": "data/gps_review_geocoding_unfilled_review_queue.json",
+            "generation_scripts": [
+                "scripts/build_supplemental_coverage_review_queues.py",
+                "scripts/build_gps_unfilled_review_report.py",
+            ],
+        },
         "safety": {
             "production_feeds_modified": False,
             "public_map_modified": False,

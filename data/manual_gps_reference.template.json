@@ -1,0 +1,31 @@
+{
+  "artifact_type": "manual_gps_reference_template",
+  "generated_at_utc": "2026-07-14T00:39:01.736193+00:00",
+  "instructions": [
+    "Copy verified rows into data/manual_gps_reference.json with lat/lng filled.",
+    "Re-run scripts/build_gps_geocoding_filled_proposals.py after updating manual reference.",
+    "Do not set promotion_allowed=true here; use Phase 2D/2E workflows after manual approval."
+  ],
+  "references": [
+    {
+      "borough": "Bronx",
+      "confidence_reason": "Fill after field verification. Do not commit real coordinates without review.",
+      "display_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
+      "geocoder_confidence": null,
+      "geocoder_source": "manual_human_reference",
+      "group_key": "bronx|catherine scott promenade catherine scott promenade event area",
+      "lat": null,
+      "lng": null,
+      "location_complexity": "park_or_facility_subsite",
+      "manual_review_status": "pending",
+      "promotion_allowed": false,
+      "simplified_geocoder_query": "Catherine Scott Promenade, Bronx, New York, NY"
+    }
+  ],
+  "safety": {
+    "location_cache_modified": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "staged_feed_modified": false
+  }
+}

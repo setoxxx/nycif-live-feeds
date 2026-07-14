@@ -42,6 +42,8 @@ jobs:
         run: python scripts/sync_nyc_open_data.py
 
       - name: Build test enriched feed
+        env:
+          NYCIF_ALLOW_LIVE_GEOSEARCH: "yes"
         run: python scripts/build_test_enriched_feed.py
 
       - name: Build staged production feed
@@ -58,6 +60,9 @@ jobs:
 
       - name: Build GPS filled geocoding proposals
         run: python scripts/build_gps_geocoding_filled_proposals.py
+
+      - name: Build GPS unfilled review report
+        run: python scripts/build_gps_unfilled_review_report.py
 
       - name: Validate committed GPS manual approval queue
         run: python scripts/validate_gps_manual_approvals.py
@@ -80,8 +85,22 @@ jobs:
       - name: Build NYC Parks facility reference (staging)
         run: python scripts/build_nyc_parks_facility_reference.py
 
+      - name: Build NYC location gazetteer
+        run: python scripts/build_nyc_location_gazetteer.py
+
+      - name: Build location resolver report
+        env:
+          NYCIF_ALLOW_LIVE_GEOSEARCH: "yes"
+        run: python scripts/build_location_resolver_report.py
+
       - name: Audit multi-source coverage
         run: python scripts/audit_multi_source_coverage.py
+
+      - name: Build supplemental coverage review queues
+        run: python scripts/build_supplemental_coverage_review_queues.py
+
+      - name: Build coverage gap review findings
+        run: python scripts/build_coverage_gap_review_findings.py
 
       - name: Generate live pipeline dashboard status
         run: python scripts/generate_live_pipeline_dashboard_status.py

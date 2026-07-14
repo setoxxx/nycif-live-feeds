@@ -8,8 +8,8 @@
     "parks_bigapps_current_future_rows": 1654,
     "title_date_overlap_unique_keys": 84,
     "permit_only_unique_keys": 5218,
-    "calendar_only_unique_keys": 2571,
-    "parks_only_unique_keys": 1600,
+    "calendar_only_unique_keys": 2502,
+    "parks_only_unique_keys": 1530,
     "parks_facility_reference_with_coordinates": 2290,
     "auto_gps_match_pct": 93.776,
     "staged_feed_events": 23111
@@ -60,7 +60,7 @@
     },
     "multi_source_city_events": {
       "percent": 100,
-      "note": "Permits + calendar + Parks BigApps all staged; ~2,571 calendar-only and ~1,600 Parks-only title+date keys need manual review paths"
+      "note": "Permits + calendar + Parks BigApps staged; supplemental review queues generated for 2,502 calendar-only and 1,530 Parks-only current/future keys"
     },
     "live_map_publish": {
       "percent": 0,
@@ -94,6 +94,17 @@
     },
     {
       "step": 4,
+      "action": "Review supplemental coverage-gap queues (M9)",
+      "artifacts": [
+        "data/supplemental_calendar_only_review_queue.csv",
+        "data/supplemental_parks_only_review_queue.csv",
+        "data/gps_review_geocoding_unfilled_review_queue.csv",
+        "data/calendar_parks_coord_match_proposals.json"
+      ],
+      "target": "Human review for calendar-only, Parks-only, and unfilled GPS rows"
+    },
+    {
+      "step": 5,
       "action": "Manual GPS approval for review queue",
       "artifacts": [
         "data/gps_manual_approval_queue.json",
@@ -102,7 +113,7 @@
       "target": "Human review tail → 0%"
     },
     {
-      "step": 5,
+      "step": 6,
       "action": "Explicit publish authorization only",
       "requires": "Human says promote/publish approved rows",
       "target": "Live map publish"

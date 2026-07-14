@@ -1,0 +1,19 @@
+{
+  "generated_at_utc": "2026-07-14T01:28:14.358484+00:00",
+  "input_count": 0,
+  "live_geosearch_calls": 0,
+  "location_cache_modified": false,
+  "next_required_step": "Review location_resolver_unresolved_queue.json on admin dashboard.",
+  "phase": "tiered_location_resolver_audit",
+  "promotion_allowed": false,
+  "public_map_modified": false,
+  "resolved_count": 0,
+  "resolver_tiers": [
+    "tier_1_location_cache_key / tier_1_gazetteer_display",
+    "tier_2_geosearch_cache / tier_2_geosearch_midpoint",
+    "tier_3_nyc_geosearch_live (when NYCIF_ALLOW_LIVE_GEOSEARCH=yes)",
+    "unresolved → admin review queue"
+  ],
+  "tier_counts": {},
+  "unresolved_count": 0
+}

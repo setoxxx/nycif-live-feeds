@@ -1,0 +1,38 @@
+{
+  "confidence_counts": {},
+  "generated_at_utc": "2026-07-14T01:27:28.630882+00:00",
+  "geocoded_count": 0,
+  "geocoded_rows": [],
+  "geocoder": "nyc_geosearch_planninglabs",
+  "input_count": 1,
+  "location_cache_modified": false,
+  "next_required_step": "Spot-check geocoded coordinates, then run build_gps_geocoding_filled_proposals.py. Do not promote until manual approval.",
+  "phase": "external_geocoder_staging",
+  "promotion_allowed_count": 0,
+  "public_map_modified": false,
+  "staged_feed_modified": false,
+  "unfilled_count": 1,
+  "unfilled_rows": [
+    {
+      "borough": "Bronx",
+      "confidence_reason": "No NYC GeoSearch match found.",
+      "display_location": "Catherine Scott Promenade: Catherine Scott Promenade Event Area",
+      "event_count": 1,
+      "geocoded": false,
+      "geocoder_confidence": null,
+      "geocoder_label": null,
+      "geocoder_source": null,
+      "group_key": "bronx|catherine scott promenade catherine scott promenade event area",
+      "lat": null,
+      "lng": null,
+      "location_cache_modified": false,
+      "location_complexity": "park_or_facility_subsite",
+      "manual_review_status": "pending",
+      "priority_score": 2,
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "query_used": null,
+      "staged_feed_modified": false
+    }
+  ]
+}

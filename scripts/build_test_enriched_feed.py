@@ -21,8 +21,10 @@ from urllib.parse import urlencode
 
 try:
     from scripts.gps_identity import normalize_text_legacy
+    from scripts.nyc_location_resolver import NYCLocationResolver
 except ModuleNotFoundError:  # pragma: no cover - direct script execution
     from gps_identity import normalize_text_legacy
+    from nyc_location_resolver import NYCLocationResolver
 
 RAW_URL = "https://data.cityofnewyork.us/resource/tvpp-9vvx.json"
 RAW_PAGE_LIMIT = 50000
@@ -169,7 +171,12 @@ def cache_keys(raw: dict[str, Any]) -> list[str]:
     return keys
 
 
-def find_match(raw: dict[str, Any], indexes: dict[str, dict[str, dict[str, Any]]], cache: dict[str, dict[str, Any]]) -> tuple[str, dict[str, Any] | None]:
+def find_match(
+    raw: dict[str, Any],
+    indexes: dict[str, dict[str, dict[str, Any]]],
+    cache: dict[str, dict[str, Any]],
+    resolver: NYCLocationResolver | None = None,
+) -> tuple[str, dict[str, Any] | None]:
     event_id = str(raw.get("event_id") or "").strip()
     if event_id and event_id in indexes["event_id"]:
         return "event_id", indexes["event_id"][event_id]
@@ -186,9 +193,21 @@ def find_match(raw: dict[str, Any], indexes: dict[str, dict[str, dict[str, Any]]
     ])
     if text_key in indexes["text"]:
         return "text_date_location", indexes["text"][text_key]
-    for key in cache_keys(raw):
+    keys = cache_keys(raw)
+    for key in keys:
         if key in cache:
             return "location_cache", cache[key]
+    if resolver is not None:
+        location = str(raw.get("event_location") or "")
+        result = resolver.resolve(
+            display_location=location,
+            borough=str(borough or "") or None,
+            cache_keys=keys,
+        )
+        if result.resolved:
+            return result.tier, result.as_match_dict()
+        if resolver._live_calls and resolver._live_calls % 25 == 0:
+            resolver.save_geosearch_cache()
     return "none", None
 
 
@@ -246,21 +265,25 @@ def main() -> int:
     enriched = rows_from_payload(load_json_file(ENRICHED_PATH, []))
     cache = location_cache_entries()
     indexes = build_indexes(enriched)
+    resolver = NYCLocationResolver.load_default()
 
     events: list[dict[str, Any]] = []
-    match_counts = {"event_id": 0, "cemsid": 0, "text_date_location": 0, "location_cache": 0, "none": 0}
+    match_counts: dict[str, int] = {}
     gps_ready = 0
     needs_review = 0
 
     for raw in raw_current:
-        match_type, match = find_match(raw, indexes, cache)
-        match_counts[match_type] += 1
+        match_type, match = find_match(raw, indexes, cache, resolver)
+        match_counts[match_type] = match_counts.get(match_type, 0) + 1
         event = build_event(raw, match_type, match)
         if event["needs_review"]:
             needs_review += 1
         else:
             gps_ready += 1
         events.append(event)
+
+    if resolver._live_calls:
+        resolver.save_geosearch_cache()
 
     events.sort(key=lambda row: (row.get("date") or "9999-99-99", row.get("start_date_time") or "", row.get("borough") or "", row.get("title") or ""))
 
@@ -279,6 +302,7 @@ def main() -> int:
         "current_future_rows": len(raw_current),
         "enriched_rows_loaded": len(enriched),
         "location_cache_entries_loaded": len(cache),
+        "location_resolver_live_geosearch_calls": resolver._live_calls,
         "test_feed_events": len(events),
         "gps_ready_events": gps_ready,
         "needs_review_events": needs_review,
