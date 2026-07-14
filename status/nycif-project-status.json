@@ -7,22 +7,21 @@
   "current_phase": "Post open-track closure — human field-desk / WP / live-sync follow-through",
   "completion_percent": 92,
   "health": "green",
-  "status_summary": "Overnight open-track closure merged #166 (schema-v1), #167 (discovery-taxonomy-v02; Sonar Reliability-D fixed), #148 (M7-B.2 self-hash remediation rebased), and #164 (WP map plugin restore package). #163 closed as superseded by #164. #165 packaging PR Sonar hardening in flight. Field-desk push, live WP install, and live-sync-qa remain human-gated. Phase 2E location_cache promotion and M7-C unauthorized.",
-  "active_prs": [
-    {
-      "number": 165,
-      "title": "Package Field Desk complete event-data access review",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/165",
-      "state": "open"
-    },
+  "status_summary": "Open-track closure complete: merged #166, #167, #148, #164, #165, #168, #133. Zero open engineering PRs. Human follow-through remains: field-desk push, optional WP install from #164 package, live-sync-qa. Phase 2E location_cache promotion and M7-C remain unauthorized.",
+  "active_prs": [],
+  "recent_prs": [
     {
       "number": 133,
       "title": "Add Cursor Cloud dev environment setup instructions",
       "url": "https://github.com/setoxxx/nycif-live-feeds/pull/133",
-      "state": "open"
-    }
-  ],
-  "recent_prs": [
+      "state": "merged"
+    },
+    {
+      "number": 168,
+      "title": "Refresh status after open-track closure merges",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/168",
+      "state": "merged"
+    },
     {
       "number": 167,
       "title": "Discovery Taxonomy v02 — full source-to-map handshake",
@@ -36,6 +35,12 @@
       "state": "merged"
     },
     {
+      "number": 165,
+      "title": "Package Field Desk complete event-data access review",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/165",
+      "state": "merged"
+    },
+    {
       "number": 164,
       "title": "Rollback NYCIF map plugin to restored Field Desk runtime",
       "url": "https://github.com/setoxxx/nycif-live-feeds/pull/164",
@@ -46,12 +51,6 @@
       "title": "M7-B.2 remediation: fix adjudication artifact self-hash lifecycle",
       "url": "https://github.com/setoxxx/nycif-live-feeds/pull/148",
       "state": "merged"
-    },
-    {
-      "number": 162,
-      "title": "Milestone 10: Productionize resolver in live sync + supplemental intake staging",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/162",
-      "state": "merged"
     }
   ],
   "blockers": [
@@ -60,14 +59,14 @@
     "WordPress plugin ZIP install on the live site is human-only (#164 packaging merged; site install not authorized here).",
     "M7-C duplicate-key enforcement remains unauthorized."
   ],
-  "next_action": "Howard: push field-desk mirrors (schema-v1-major-all + discovery-taxonomy-v02 / admin God View), optionally install WP plugin from #164 package, dispatch live-sync-qa. Review/merge #165 when Sonar green. Do not promote location_cache or publish public map without explicit auth.",
+  "next_action": "Howard: push field-desk mirrors (schema-v1-major-all + discovery-taxonomy-v02 / admin God View), optionally install WP plugin from merged #164 package, dispatch live-sync-qa. Do not promote location_cache or publish public map without explicit auth.",
   "admin_dashboard_urls": {
     "interim_live": "https://setoxxx.github.io/nycif-live-feeds/admin/index.html",
     "field_desk": "https://setoxxx.github.io/nycif-field-desk/admin/index.html"
   },
   "data_freshness": {
     "source": "Overnight open-track closure GitHub inventory",
-    "last_verified_at": "2026-07-14T23:32:25.000Z",
+    "last_verified_at": "2026-07-14T23:35:39.000Z",
     "notes": "Static status artifact; does not poll GitHub from the browser and does not change feed payloads."
   },
   "safety": {
@@ -86,7 +85,7 @@
     "public_map_live_refresh": "2026-07-14",
     "promotion_allowed": false
   },
-  "generated_at": "2026-07-14T23:32:25.000Z",
+  "generated_at": "2026-07-14T23:35:39.000Z",
   "milestones": {
     "m7a_identity_helper_foundation": "complete",
     "m7b_caller_migration": "complete",
