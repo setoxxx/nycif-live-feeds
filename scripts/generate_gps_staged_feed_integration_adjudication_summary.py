@@ -11,7 +11,9 @@ try:
     from scripts.gps_count_contract import (
         ADJUDICATION_PRODUCER_SCRIPT,
         build_count_contract,
+        canonicalize_adjudication_summary,
         finalize_count_contract_adjudication_hash,
+        validate_count_contract_for_apply,
         validate_count_contract_internal,
     )
     from scripts.gps_snapshot_provenance import (
@@ -23,7 +25,9 @@ except ModuleNotFoundError:  # pragma: no cover - direct script execution
     from gps_count_contract import (
         ADJUDICATION_PRODUCER_SCRIPT,
         build_count_contract,
+        canonicalize_adjudication_summary,
         finalize_count_contract_adjudication_hash,
+        validate_count_contract_for_apply,
         validate_count_contract_internal,
     )
     from gps_snapshot_provenance import (
@@ -237,7 +241,7 @@ def main() -> int:
     if multi_key_conflict_count != 0:
         blocking_issues.append("Multi-key conflicts must remain zero for safe-update contracts")
 
-    summary_without_hash: dict[str, Any] = {
+    summary: dict[str, Any] = {
         "adjudication_count_by_type": adjudication_count_by_type,
         "blocking_issues": blocking_issues,
         "diagnostic_artifact_sha256": diagnostic_artifact_sha256,
@@ -261,10 +265,9 @@ def main() -> int:
     }
 
     if safe_update_count_contract is not None:
-        finalize_count_contract_adjudication_hash(summary_without_hash)
         count_validation = validate_count_contract_internal(
             safe_update_count_contract,
-            summary_without_hash,
+            summary,
         )
         count_contract_valid = count_validation.ok
         if not count_contract_valid:
@@ -302,32 +305,72 @@ def main() -> int:
     else:
         recommended_next_action = "Do not patch update workflow; inspect adjudication summary first."
 
-    summary = {
-        **summary_without_hash,
-        "blocking_issues": blocking_issues,
-        "qa_pass": qa_pass,
-        "recommended_next_action": recommended_next_action,
-        "validated_conditions": {
-            "count_contract_internally_consistent": count_contract_valid,
-            "count_contract_present": safe_update_count_contract is not None,
-            "diagnostic_staged_feed_provenance_present": provenance_present,
-            "location_cache_modified_false": location_cache_modified is False,
-            "multi_key_conflict_count_is_0": multi_key_conflict_count == 0,
-            "no_safe_staged_match_promoted_key_count_matches_contract": (
-                contract_no_safe_match_count == no_safe_match_count
-            ),
-            "phase_3a_run_false": phase_3a_run is False,
-            "public_map_modified_false": public_map_modified is False,
-            "qa_pass_true": qa_pass,
-            "safe_update_ready_count_matches_contract": contract_safe_identity_count == safe_count,
-            "safe_update_ready_identity_count_matches_contract": (
-                contract_safe_identity_count == safe_identity_count
-            ),
-            "staged_feed_modified_false": staged_feed_modified is False,
-        },
-    }
+    summary.update(
+        {
+            "blocking_issues": blocking_issues,
+            "qa_pass": qa_pass,
+            "recommended_next_action": recommended_next_action,
+            "validated_conditions": {
+                "adjudication_artifact_hash_finalized": safe_update_count_contract is not None,
+                "count_contract_internally_consistent": count_contract_valid,
+                "count_contract_present": safe_update_count_contract is not None,
+                "diagnostic_staged_feed_provenance_present": provenance_present,
+                "location_cache_modified_false": location_cache_modified is False,
+                "multi_key_conflict_count_is_0": multi_key_conflict_count == 0,
+                "no_safe_staged_match_promoted_key_count_matches_contract": (
+                    contract_no_safe_match_count == no_safe_match_count
+                ),
+                "phase_3a_run_false": phase_3a_run is False,
+                "public_map_modified_false": public_map_modified is False,
+                "qa_pass_true": qa_pass,
+                "safe_update_ready_count_matches_contract": contract_safe_identity_count == safe_count,
+                "safe_update_ready_identity_count_matches_contract": (
+                    contract_safe_identity_count == safe_identity_count
+                ),
+                "staged_feed_modified_false": staged_feed_modified is False,
+            },
+        }
+    )
+
+    if safe_update_count_contract is not None:
+        summary = canonicalize_adjudication_summary(summary)
+        finalize_count_contract_adjudication_hash(summary)
+        apply_validation = validate_count_contract_for_apply(summary)
+        if not apply_validation.ok:
+            blocking_issues.append(
+                apply_validation.message or "Adjudication artifact finalization validation failed"
+            )
+            summary["blocking_issues"] = blocking_issues
+            summary["qa_pass"] = False
+            summary["validated_conditions"]["qa_pass_true"] = False
+            summary["validated_conditions"]["adjudication_artifact_hash_finalized"] = False
+            summary = canonicalize_adjudication_summary(summary)
+            finalize_count_contract_adjudication_hash(summary)
+            retry_validation = validate_count_contract_for_apply(summary)
+            if not retry_validation.ok:
+                save_json(
+                    SUMMARY_PATH,
+                    {
+                        **summary,
+                        "validated_conditions": {
+                            **summary["validated_conditions"],
+                            "adjudication_artifact_finalization_failed": True,
+                        },
+                    },
+                )
+                printable = {
+                    k: v
+                    for k, v in summary.items()
+                    if k not in {"safe_update_ready_rows", "no_safe_staged_match_adjudication"}
+                }
+                print(json.dumps(printable, indent=2, ensure_ascii=False))
+                return 1
 
     save_json(SUMMARY_PATH, summary)
+    if safe_update_count_contract is not None:
+        reloaded = load_json(SUMMARY_PATH, {})
+        if not validate_count_contract_for_apply(reloaded).ok:
+            return 1
     printable = {k: v for k, v in summary.items() if k not in {"safe_update_ready_rows", "no_safe_staged_match_adjudication"}}
     print(json.dumps(printable, indent=2, ensure_ascii=False))
     return 0 if qa_pass else 1

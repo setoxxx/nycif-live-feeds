@@ -19,6 +19,7 @@ from scripts.generate_gps_staged_feed_integration_adjudication_summary import (
 )
 from scripts.gps_count_contract import (
     build_count_contract,
+    canonicalize_adjudication_summary,
     finalize_count_contract_adjudication_hash,
 )
 from scripts.gps_identity import build_stable_event_identity
@@ -163,6 +164,7 @@ def build_contract_summary(
     adjudication_count_by_type: dict[str, int] = {}
     summary: dict[str, Any] = {
         "adjudication_count_by_type": adjudication_count_by_type,
+        "blocking_issues": [],
         "diagnostic_artifact_sha256": diagnostic_artifact_sha256,
         "generated_at_utc": "2026-07-13T12:00:00+00:00",
         "input_diagnostic": "data/gps_staged_feed_integration_match_diagnostic.json",
@@ -176,10 +178,16 @@ def build_contract_summary(
         "phase_3a_run": False,
         "public_map_modified": False,
         "qa_pass": True,
+        "recommended_next_action": "Patch staged-feed update",
         "safe_update_ready_count": len(safe_rows),
         "safe_update_ready_identity_count": len(safe_rows),
         "safe_update_ready_rows": safe_rows,
         "staged_feed_modified": False,
+        "validated_conditions": {
+            "count_contract_internally_consistent": True,
+            "count_contract_present": include_count_contract,
+            "qa_pass_true": True,
+        },
     }
     if include_provenance:
         summary["staged_feed_provenance"] = provenance_override or file_provenance(
@@ -200,6 +208,7 @@ def build_contract_summary(
             adjudication_count_by_type=adjudication_count_by_type,
             generated_at_utc=summary["generated_at_utc"],
         )
+        summary = canonicalize_adjudication_summary(summary)
         finalize_count_contract_adjudication_hash(summary)
     return summary
 
