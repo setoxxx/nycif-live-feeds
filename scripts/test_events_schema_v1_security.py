@@ -29,31 +29,55 @@ def fail(msg: str) -> None:
     sys.exit(1)
 
 
-def source_guards() -> None:
+def check_dom_xss_guards() -> None:
     if re.search(r"innerHTML\s*=\s*[`'\"][^`'\"]*\$\{", APP):
         fail("template string assigned to innerHTML (possible XSS)")
     if "popup.setContent('<div" in APP or 'popup.setContent("<div' in APP:
         fail("hardcoded HTML string popup for dynamic content")
     if "textContent" not in APP:
         fail("expected textContent-based DOM rendering")
+
+
+def check_url_guards() -> None:
     if "safeExternalUrl" not in SCHEMA and "safeExternalUrl" not in APP:
         fail("missing safeExternalUrl helper")
     if "javascript:" not in SCHEMA:
         fail("safeExternalUrl must document javascript: rejection")
     if "noopener noreferrer" not in APP:
         fail("external links must set rel=noopener noreferrer")
+
+
+def check_eval_guards() -> None:
     if re.search(r"\beval\s*\(", APP + SCHEMA) or "new Function" in (APP + SCHEMA):
         fail("eval/new Function forbidden")
     if "setTimeout(String(" in APP or 'setTimeout("' in APP:
         fail("string-based timers forbidden")
+
+
+def check_cdn_integrity() -> None:
     if "integrity=" not in INDEX or "crossorigin=" not in INDEX:
         fail("CDN scripts/styles must include integrity + crossorigin")
+
+
+def check_page_shard_guards() -> None:
     if "manifest.json" not in APP or "/pages/" not in APP:
         fail("viewer must load page shards via manifest")
-    if "schema-v1-explorer" in APP or "schema-v1-explorer" in INDEX:
-        fail("obsolete explorer path referenced")
     if "events_schema_v1_all.json" in APP and "loadLayerPages" not in APP:
         fail("viewer still references full dump without page shards")
+
+
+def check_obsolete_paths() -> None:
+    if "schema-v1-explorer" in APP or "schema-v1-explorer" in INDEX:
+        fail("obsolete explorer path referenced")
+
+
+def source_guards() -> None:
+    check_dom_xss_guards()
+    check_url_guards()
+    check_eval_guards()
+    check_cdn_integrity()
+    check_page_shard_guards()
+    check_obsolete_paths()
 
 
 def runtime_url_and_xss_checks() -> None:

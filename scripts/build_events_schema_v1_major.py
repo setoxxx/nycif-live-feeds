@@ -23,7 +23,7 @@ from schema_v1_common import (  # noqa: E402
     norm_text,
     project_event,
     reset_stable_id_registry,
-    safe_write_json,
+    write_repo_json,
     today_nyc_approx,
     utc_now,
 )
@@ -367,12 +367,7 @@ def build_candidate_index(staged_rows: list[dict], all_rows: list[dict]) -> list
     return list(by_id.values())
 
 
-def main() -> int:
-    generated_at = utc_now()
-    today = today_nyc_approx()
-    end7 = today + timedelta(days=7)
-    today_s, end7_s = today.isoformat(), end7.isoformat()
-
+def load_pipeline_inputs() -> tuple[list[dict], list[dict], list[dict], dict[str, dict], dict]:
     staged_rows = extract_events(json.loads(STAGED_PATH.read_text(encoding="utf-8")))
     all_rows = extract_events(json.loads(ALL_PATH.read_text(encoding="utf-8"))) if ALL_PATH.exists() else []
     legacy_major = (
@@ -382,7 +377,14 @@ def main() -> int:
     )
     by_seid, by_tdl = index_legacy(legacy_major)
     candidates = build_candidate_index(staged_rows, all_rows)
+    return staged_rows, legacy_major, candidates, by_seid, by_tdl
 
+
+def score_and_select(
+    candidates: list[dict],
+    by_seid: dict[str, dict],
+    by_tdl: dict,
+) -> tuple[list[dict], list, Counter, Counter, Counter, Counter, list]:
     reset_stable_id_registry()
     selected = []
     rule_counter = Counter()
@@ -430,6 +432,10 @@ def main() -> int:
         event["nycif"]["is_major"] = True
         selected.append(event)
 
+    return selected, scored_rows, rule_counter, score_hist, source_counter, legacy_only_samples
+
+
+def sort_and_cap_major(selected: list[dict], today_s: str) -> list[dict]:
     selected.sort(
         key=lambda e: (
             0 if (event_date_key(e) or "") >= today_s else 1,
@@ -438,36 +444,62 @@ def main() -> int:
             e.get("title") or "",
         )
     )
-    if len(selected) > DEFAULT_MAX_MAJOR:
-        upcoming = [e for e in selected if (event_date_key(e) or "") >= today_s]
-        past = [e for e in selected if (event_date_key(e) or "") < today_s]
-        selected = (upcoming + past)[:DEFAULT_MAX_MAJOR]
+    if len(selected) <= DEFAULT_MAX_MAJOR:
+        return selected
+    upcoming = [e for e in selected if (event_date_key(e) or "") >= today_s]
+    past = [e for e in selected if (event_date_key(e) or "") < today_s]
+    return (upcoming + past)[:DEFAULT_MAX_MAJOR]
 
-    major_env = envelope(selected, generated_at_utc=generated_at, next_cursor=None)
+
+def legacy_drop_ids(scored_rows: list) -> list[str]:
+    without_legacy = []
+    for score, rules, meta, row, _index, _source, _legacy_match in scored_rows:
+        score2, rules2, meta2 = score_event(row, None)
+        if should_include(score, meta, rules) and not should_include(score2, meta2, rules2):
+            without_legacy.append(str(row.get("id")))
+    return without_legacy
+
+
+def load_staged_schema() -> dict | None:
+    if not STAGED_SCHEMA_PATH.exists():
+        return None
+    return json.loads(STAGED_SCHEMA_PATH.read_text(encoding="utf-8"))
+
+
+def count_approved_upcoming(staged_schema: dict | None, today_s: str) -> int:
+    if not staged_schema:
+        return 0
+    approved_upcoming = 0
+    for event in extract_events(staged_schema):
+        day = event_date_key(event)
+        if day and day >= today_s:
+            approved_upcoming += 1
+    return approved_upcoming
+
+
+def build_major_report(
+    *,
+    generated_at: str,
+    today_s: str,
+    end7_s: str,
+    candidates: list[dict],
+    selected: list[dict],
+    rule_counter: Counter,
+    score_hist: Counter,
+    source_counter: Counter,
+    legacy_only_samples: list,
+    without_legacy: list[str],
+    staged_schema: dict | None,
+    approved_upcoming: int,
+) -> dict:
     upcoming = [e for e in selected if (event_date_key(e) or "") >= today_s]
     today_rows = [e for e in selected if event_date_key(e) == today_s]
     next7_rows = [e for e in selected if today_s <= (event_date_key(e) or "") <= end7_s]
     dates = [event_date_key(e) for e in selected if event_date_key(e)]
-
-    without_legacy = []
-    for score, rules, meta, row, index, source, legacy_match in scored_rows:
-        score2, rules2, meta2 = score_event(row, None)
-        if should_include(score, meta, rules) and not should_include(score2, meta2, rules2):
-            without_legacy.append(str(row.get("id")))
-
-    staged_schema = None
-    if STAGED_SCHEMA_PATH.exists():
-        staged_schema = json.loads(STAGED_SCHEMA_PATH.read_text(encoding="utf-8"))
-    approved_upcoming = 0
-    if staged_schema:
-        for event in extract_events(staged_schema):
-            day = event_date_key(event)
-            if day and day >= today_s:
-                approved_upcoming += 1
     only_past = bool(dates) and max(dates) < today_s
     freshness_fail = bool(approved_upcoming > 0 and (only_past or len(upcoming) == 0))
 
-    report = {
+    return {
         "schema_version": SCHEMA_VERSION,
         "generated_at_utc": generated_at,
         "reference_today_nyc": today_s,
@@ -538,8 +570,40 @@ def main() -> int:
         "qa_pass": (not freshness_fail) and len(selected) > 0 and len(upcoming) > 0,
     }
 
-    safe_write_json(OUT_MAJOR, major_env, root=ROOT)
-    safe_write_json(OUT_REPORT, report, root=ROOT)
+
+def main() -> int:
+    generated_at = utc_now()
+    today = today_nyc_approx()
+    end7 = today + timedelta(days=7)
+    today_s, end7_s = today.isoformat(), end7.isoformat()
+
+    _staged_rows, _legacy_major, candidates, by_seid, by_tdl = load_pipeline_inputs()
+    selected, scored_rows, rule_counter, score_hist, source_counter, legacy_only_samples = score_and_select(
+        candidates, by_seid, by_tdl
+    )
+    selected = sort_and_cap_major(selected, today_s)
+    without_legacy = legacy_drop_ids(scored_rows)
+    staged_schema = load_staged_schema()
+    approved_upcoming = count_approved_upcoming(staged_schema, today_s)
+
+    major_env = envelope(selected, generated_at_utc=generated_at, next_cursor=None)
+    report = build_major_report(
+        generated_at=generated_at,
+        today_s=today_s,
+        end7_s=end7_s,
+        candidates=candidates,
+        selected=selected,
+        rule_counter=rule_counter,
+        score_hist=score_hist,
+        source_counter=source_counter,
+        legacy_only_samples=legacy_only_samples,
+        without_legacy=without_legacy,
+        staged_schema=staged_schema,
+        approved_upcoming=approved_upcoming,
+    )
+
+    write_repo_json("data/events_schema_v1_major.json", major_env)
+    write_repo_json("data/events_schema_v1_major_report.json", report)
     print(
         json.dumps(
             {

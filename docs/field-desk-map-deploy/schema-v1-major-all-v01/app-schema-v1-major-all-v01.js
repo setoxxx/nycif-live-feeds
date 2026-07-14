@@ -14,7 +14,7 @@
     try {
       const raw = new URL(location.href).searchParams.get('feeds');
       if (!raw) return 'main';
-      if (/^[A-Za-z0-9._\/-]+$/.test(raw)) return raw;
+      if (/^[A-Za-z0-9._/-]+$/.test(raw)) return raw;
       return 'main';
     } catch {
       return 'main';
@@ -446,10 +446,51 @@
     return a;
   }
 
+  function eventSourceLabel(e) {
+    if (e.isReview) {
+      return 'Expanded review (not production-approved)';
+    }
+    if (e.isMajor) {
+      return 'Major events';
+    }
+    return 'Approved / staged';
+  }
+
+  function reviewTagClass(isReview) {
+    return isReview ? 'item-tag nycif-source-review' : 'item-tag';
+  }
+
+  function formatDistanceLabel(dist) {
+    if (dist < 0.1) {
+      return 'nearby';
+    }
+    const digits = dist < 10 ? 1 : 0;
+    return `${dist.toFixed(digits)} mi`;
+  }
+
+  function viewModeNoun() {
+    return state.viewMode === 'major' ? 'major' : 'events';
+  }
+
+  function dateModeLabel() {
+    return state.dateMode === 'next7' ? 'next 7 days' : state.dateMode;
+  }
+
+  function viewModeTitle() {
+    return state.viewMode === 'major' ? 'Major' : 'All';
+  }
+
+  function listOnlySuffix(count) {
+    if (!count) {
+      return '';
+    }
+    return ` · ${count.toLocaleString()} list-only`;
+  }
+
   function popupRoot(e) {
     const root = document.createElement('article');
     root.className = 'popup-card';
-    const src = e.isReview ? 'Expanded review (not production-approved)' : (e.isMajor ? 'Major events' : 'Approved / staged');
+    const src = eventSourceLabel(e);
     appendText(root, 'div', src, 'popup-source');
     const cat = appendText(root, 'div', '', 'popup-category');
     appendText(cat, 'span', e.categoryMeta.emoji);
@@ -577,7 +618,7 @@
     appendText(top, 'span', `${e.categoryMeta.emoji} ${e.categoryMeta.label}`, 'item-source');
     const tags = document.createElement('span');
     tags.className = 'item-tags';
-    appendText(tags, 'span', e.isReview ? 'REVIEW' : 'LIVE', e.isReview ? 'item-tag nycif-source-review' : 'item-tag');
+    appendText(tags, 'span', e.isReview ? 'REVIEW' : 'LIVE', reviewTagClass(e.isReview));
     if (!e.mapReady) {
       appendText(tags, 'span', 'LIST ONLY', 'item-tag nycif-list-only');
     }
@@ -586,7 +627,7 @@
     }
     const dist = milesBetween(state.userLocation, e);
     if (Number.isFinite(dist)) {
-      appendText(tags, 'span', dist < 0.1 ? 'nearby' : `${dist.toFixed(dist < 10 ? 1 : 0)} mi`, 'item-tag near');
+      appendText(tags, 'span', formatDistanceLabel(dist), 'item-tag near');
     }
     top.appendChild(tags);
     button.appendChild(top);
@@ -676,7 +717,7 @@
     const shown = Math.min(state.listShown, visible.length);
     const listOnly = visible.filter(e => !e.mapReady).length;
     let indexNote = state.indexComplete ? 'full index loaded' : 'index still loading pages';
-    els.listMeta.textContent = `${state.events.length.toLocaleString()} loaded · ${visible.length.toLocaleString()} match filters · ${drawn.length.toLocaleString()} markers in view · showing ${shown.toLocaleString()} of ${visible.length.toLocaleString()} list results · ${indexNote}${listOnly ? ` · ${listOnly.toLocaleString()} list-only` : ''}`;
+    els.listMeta.textContent = `${state.events.length.toLocaleString()} loaded · ${visible.length.toLocaleString()} match filters · ${drawn.length.toLocaleString()} markers in view · showing ${shown.toLocaleString()} of ${visible.length.toLocaleString()} list results · ${indexNote}${listOnlySuffix(listOnly)}`;
     clearChildren(els.eventList);
     if (!visible.length) {
       appendText(els.eventList, 'div', 'No events match this view. Try Show All Events or Reset Filters.', 'empty');
@@ -688,9 +729,9 @@
       els.loadMoreBtn.textContent = `Load 100 more (${Math.max(0, visible.length - shown).toLocaleString()} remaining)`;
     }
     if (els.brandCount) {
-      els.brandCount.textContent = `${visible.length.toLocaleString()} ${state.viewMode === 'major' ? 'major' : 'events'} · ${state.dateMode === 'next7' ? 'next 7 days' : state.dateMode}`;
+      els.brandCount.textContent = `${visible.length.toLocaleString()} ${viewModeNoun()} · ${dateModeLabel()}`;
     }
-    status(`${state.viewMode === 'major' ? 'Major' : 'All'} · ${visible.length.toLocaleString()} match · ${drawn.length.toLocaleString()} markers · v${VERSION}`);
+    status(`${viewModeTitle()} · ${visible.length.toLocaleString()} match · ${drawn.length.toLocaleString()} markers · v${VERSION}`);
     state.timings.listRenderMs = Math.round(performance.now() - t0);
     if (debug && els.debugPanel) {
       els.debugPanel.hidden = false;
@@ -754,6 +795,23 @@
     setTimeout(() => map.invalidateSize(), 100);
   }
 
+  function setActiveBoroughButton(activeButton) {
+    if (!els.boroughs) {
+      return;
+    }
+    els.boroughs.querySelectorAll('button').forEach(btn => {
+      btn.classList.toggle('active', btn === activeButton);
+    });
+  }
+
+  function onBoroughSelected(value, button) {
+    state.userChangedFilters = true;
+    state.borough = value;
+    setActiveBoroughButton(button);
+    savePrefs();
+    scheduleRender();
+  }
+
   function buildBoroughs() {
     if (!els.boroughs) {
       return;
@@ -768,15 +826,31 @@
       if (state.borough === value) {
         button.classList.add('active');
       }
-      button.addEventListener('click', () => {
-        state.userChangedFilters = true;
-        state.borough = value;
-        els.boroughs.querySelectorAll('button').forEach(x => x.classList.toggle('active', x === button));
-        savePrefs();
-        scheduleRender();
-      });
+      button.addEventListener('click', () => onBoroughSelected(value, button));
       els.boroughs.appendChild(button);
     });
+  }
+
+  function onDateChipSelected(mode) {
+    state.userChangedFilters = true;
+    state.dateMode = mode;
+    state.listShown = LIST_PAGE;
+    savePrefs();
+    buildDateChips();
+    scheduleRender();
+    loadPagesForCurrentWindow(state.loadToken);
+  }
+
+  function appendDateChip(track, mode, label) {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.dataset.dateMode = mode;
+    button.textContent = label;
+    if (state.dateMode === mode) {
+      button.classList.add('active');
+    }
+    button.addEventListener('click', () => onDateChipSelected(mode));
+    track.appendChild(button);
   }
 
   function buildDateChips() {
@@ -803,25 +877,7 @@
       next7: pool.filter(e => e.dateKey && e.dateKey >= today && e.dateKey <= end).length,
       all: pool.filter(e => e.dateKey && e.dateKey >= today).length
     };
-    const addChip = (mode, label) => {
-      const button = document.createElement('button');
-      button.type = 'button';
-      button.dataset.dateMode = mode;
-      button.textContent = label;
-      if (state.dateMode === mode) {
-        button.classList.add('active');
-      }
-      button.addEventListener('click', () => {
-        state.userChangedFilters = true;
-        state.dateMode = mode;
-        state.listShown = LIST_PAGE;
-        savePrefs();
-        buildDateChips();
-        scheduleRender();
-        loadPagesForCurrentWindow(state.loadToken);
-      });
-      track.appendChild(button);
-    };
+    const addChip = (mode, label) => appendDateChip(track, mode, label);
     addChip('next7', `Next 7 days (${counts.next7.toLocaleString()})`);
     for (let i = 0; i < 8; i += 1) {
       const d = addDays(new Date(), i);
@@ -1033,6 +1089,51 @@
     updateModeButtons();
   }
 
+  function onToggleFilterChange(input) {
+    state.userChangedFilters = true;
+    state[input.id] = input.checked;
+    savePrefs();
+    scheduleRender();
+  }
+
+  function onCategoryFilterChange(input) {
+    state.userChangedFilters = true;
+    state.categories[input.dataset.cat] = input.checked;
+    savePrefs();
+    scheduleRender();
+  }
+
+  function onSearchInput() {
+    state.userChangedFilters = true;
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => {
+      state.search = norm(els.searchInput.value);
+      state.listShown = LIST_PAGE;
+      scheduleRender();
+    }, SEARCH_DEBOUNCE_MS);
+  }
+
+  function onSortSelectChange() {
+    state.userChangedFilters = true;
+    state.sort = els.sortSelect.value;
+    savePrefs();
+    if (state.sort === 'near' && !state.userLocation) {
+      locateUser({ sortNear: true });
+    }
+    else {
+      scheduleRender();
+    }
+  }
+
+  function onMapMoveEnd() {
+    clearTimeout(moveTimer);
+    moveTimer = setTimeout(() => {
+      if (state.viewMode === 'all') {
+        scheduleRender();
+      }
+    }, 120);
+  }
+
   function bindUi() {
     els.layersBtn?.addEventListener('click', () => setLayers(els.layersPanel.hidden));
     els.deskBtn?.addEventListener('click', () => setDesk(els.deskDrawer.hidden));
@@ -1065,39 +1166,13 @@
       loadPagesForCurrentWindow(state.loadToken);
     });
     [els.photoOnly, els.nypdOnly].filter(Boolean).forEach(input => {
-      input.addEventListener('change', () => {
-        state.userChangedFilters = true;
-        state[input.id] = input.checked;
-        savePrefs();
-        scheduleRender();
-      });
+      input.addEventListener('change', () => onToggleFilterChange(input));
     });
     document.querySelectorAll('[data-cat]').forEach(input => {
-      input.addEventListener('change', () => {
-        state.userChangedFilters = true;
-        state.categories[input.dataset.cat] = input.checked;
-        savePrefs();
-        scheduleRender();
-      });
+      input.addEventListener('change', () => onCategoryFilterChange(input));
     });
-    els.searchInput?.addEventListener('input', () => {
-      state.userChangedFilters = true;
-      clearTimeout(searchTimer);
-      searchTimer = setTimeout(() => {
-        state.search = norm(els.searchInput.value);
-        state.listShown = LIST_PAGE;
-        scheduleRender();
-      }, SEARCH_DEBOUNCE_MS);
-    });
-    els.sortSelect?.addEventListener('change', () => {
-      state.userChangedFilters = true;
-      state.sort = els.sortSelect.value;
-      savePrefs();
-      if (state.sort === 'near' && !state.userLocation) {
-        locateUser({ sortNear: true });
-      }
-      else scheduleRender();
-    });
+    els.searchInput?.addEventListener('input', onSearchInput);
+    els.sortSelect?.addEventListener('change', onSortSelectChange);
     els.loadMoreBtn?.addEventListener('click', () => {
       state.listShown += LIST_PAGE;
       scheduleRender();
@@ -1117,14 +1192,7 @@
       scheduleRender();
     });
     els.retryFeedBtn?.addEventListener('click', () => bootFeeds());
-    map.on('moveend', () => {
-      clearTimeout(moveTimer);
-      moveTimer = setTimeout(() => {
-        if (state.viewMode === 'all') {
-          scheduleRender();
-        }
-      }, 120);
-    });
+    map.on('moveend', onMapMoveEnd);
   }
 
   async function boot() {

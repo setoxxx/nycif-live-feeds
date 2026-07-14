@@ -13,14 +13,16 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from schema_v1_common import (  # noqa: E402
+    REPO_ROOT,
     SCHEMA_VERSION,
     event_date_key,
     extract_events,
-    safe_write_json,
+    write_repo_json,
     utc_now,
 )
 
 PAGE_SIZE = 750
+ALLOWED_LAYERS = frozenset({"approved", "review", "major"})
 LAYER_SOURCES = {
     "approved": ROOT / "data" / "events_schema_v1_staged.json",
     "review": ROOT / "data" / "events_schema_v1_supplemental_review.json",
@@ -39,23 +41,26 @@ def page_meta(events: list[dict]) -> dict:
     }
 
 
-def clear_pages(pages_dir: Path) -> None:
+def clear_pages(layer: str) -> None:
+    if layer not in ALLOWED_LAYERS:
+        raise ValueError(f"invalid layer: {layer}")
+    pages_dir = REPO_ROOT / "data" / "schema-v1" / layer / "pages"
     if not pages_dir.exists():
         pages_dir.mkdir(parents=True, exist_ok=True)
         return
-    for old in pages_dir.glob("page-*.json"):
+    for old in sorted(pages_dir.glob("page-*.json")):
         resolved = old.resolve()
-        if resolved.is_relative_to(ROOT.resolve()):
+        if resolved.is_relative_to(REPO_ROOT.resolve()):
             old.unlink()
 
 
-def build_layer(name: str, source: Path, out_dir: Path, page_size: int) -> dict:
+def build_layer(name: str, source: Path, page_size: int) -> dict:
+    if name not in ALLOWED_LAYERS:
+        raise ValueError(f"invalid layer: {name}")
     payload = json.loads(source.read_text(encoding="utf-8"))
     events = extract_events(payload)
     generated = payload.get("generated_at_utc") or utc_now()
-    pages_dir = out_dir / "pages"
-    clear_pages(pages_dir)
-    pages_dir.mkdir(parents=True, exist_ok=True)
+    clear_pages(name)
 
     page_entries = []
     total = len(events)
@@ -66,8 +71,8 @@ def build_layer(name: str, source: Path, out_dir: Path, page_size: int) -> dict:
         page_name = f"page-{i + 1:04d}.json"
         next_cursor = f"page-{i + 2:04d}" if i + 1 < page_count else None
         meta = page_meta(chunk)
-        safe_write_json(
-            pages_dir / page_name,
+        write_repo_json(
+            f"data/schema-v1/{name}/pages/{page_name}",
             {
                 "schema_version": SCHEMA_VERSION,
                 "generated_at_utc": generated,
@@ -80,7 +85,6 @@ def build_layer(name: str, source: Path, out_dir: Path, page_size: int) -> dict:
                 "boroughs": meta["boroughs"],
                 "events": chunk,
             },
-            root=ROOT,
         )
         page_entries.append(
             {
@@ -115,9 +119,9 @@ def build_layer(name: str, source: Path, out_dir: Path, page_size: int) -> dict:
             "major": "data/events_schema_v1_major.json",
         }.get(name),
     }
-    safe_write_json(out_dir / "manifest.json", manifest, root=ROOT)
+    write_repo_json(f"data/schema-v1/{name}/manifest.json", manifest)
     if name == "major":
-        safe_write_json(out_dir / "events.json", payload, root=ROOT)
+        write_repo_json(f"data/schema-v1/{name}/events.json", payload)
     return manifest
 
 
@@ -128,18 +132,17 @@ def main() -> int:
 
     report = {"generated_at_utc": utc_now(), "page_size": args.page_size, "layers": {}}
     for name, source in LAYER_SOURCES.items():
-        out_dir = ROOT / "data" / "schema-v1" / name
         if not source.exists():
             report["layers"][name] = {"error": f"missing {source.name}"}
             continue
-        manifest = build_layer(name, source, out_dir, args.page_size)
+        manifest = build_layer(name, source, args.page_size)
         report["layers"][name] = {
             "total": manifest["total"],
             "page_count": manifest["page_count"],
             "manifest": f"data/schema-v1/{name}/manifest.json",
         }
 
-    safe_write_json(ROOT / "data" / "events_schema_v1_pages_report.json", report, root=ROOT)
+    write_repo_json("data/events_schema_v1_pages_report.json", report)
     print(json.dumps(report, indent=2))
     return 0
 

@@ -32,7 +32,7 @@
   function applyDefaults(forceReset) {
     if (forceReset) localStorage.removeItem(STORAGE_KEY);
     const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    if (forceReset || !existing || existing.nycifDefaultVersion !== DEFAULT_VERSION) {
+    if (forceReset || existing?.nycifDefaultVersion !== DEFAULT_VERSION) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         ...defaults,
         nycifDefaultVersion: DEFAULT_VERSION

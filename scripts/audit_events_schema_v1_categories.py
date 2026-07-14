@@ -16,20 +16,18 @@ from schema_v1_common import VALID_CATEGORIES, extract_events  # noqa: E402
 OUT = ROOT / "data" / "events_schema_v1_category_audit.json"
 
 
-def audit_layer(name: str, path: Path) -> dict:
-    events = extract_events(json.loads(path.read_text(encoding="utf-8")))
-    by_norm = Counter(e.get("category") for e in events)
-    by_raw = Counter((e.get("nycif") or {}).get("raw_category") for e in events)
-    by_reason = Counter((e.get("nycif") or {}).get("classification_reason") for e in events)
-    fallback = sum(
+def count_fallback_classified(events: list[dict]) -> int:
+    return sum(
         1
         for e in events
         if str((e.get("nycif") or {}).get("classification_reason") or "").startswith("keyword_")
         or (e.get("nycif") or {}).get("classification_reason") == "fallback_general_no_documented_rule"
         or (e.get("nycif") or {}).get("classification_reason") == "fallback_general"
     )
-    samples = defaultdict(list)
-    general_remaining = []
+
+
+def collect_category_samples(events: list[dict]) -> dict[str, list[dict]]:
+    samples: dict[str, list[dict]] = defaultdict(list)
     for e in events:
         cat = e.get("category")
         if len(samples[cat]) < 3:
@@ -42,21 +40,38 @@ def audit_layer(name: str, path: Path) -> dict:
                     "event_type": (e.get("nycif") or {}).get("event_type"),
                 }
             )
-        if cat == "general":
-            general_remaining.append(
-                {
-                    "id": e.get("id"),
-                    "title": e.get("title"),
-                    "raw_category": (e.get("nycif") or {}).get("raw_category"),
-                    "event_type": (e.get("nycif") or {}).get("event_type"),
-                    "event_agency": (e.get("nycif") or {}).get("event_agency"),
-                    "classification_reason": (e.get("nycif") or {}).get("classification_reason"),
-                    "why_still_general": (
-                        "No documented specific category matched title, event_type, agency, "
-                        "or raw categories after backend general refinement."
-                    ),
-                }
-            )
+    return samples
+
+
+def collect_general_remaining(events: list[dict]) -> list[dict]:
+    general_remaining = []
+    for e in events:
+        if e.get("category") != "general":
+            continue
+        general_remaining.append(
+            {
+                "id": e.get("id"),
+                "title": e.get("title"),
+                "raw_category": (e.get("nycif") or {}).get("raw_category"),
+                "event_type": (e.get("nycif") or {}).get("event_type"),
+                "event_agency": (e.get("nycif") or {}).get("event_agency"),
+                "classification_reason": (e.get("nycif") or {}).get("classification_reason"),
+                "why_still_general": (
+                    "No documented specific category matched title, event_type, agency, "
+                    "or raw categories after backend general refinement."
+                ),
+            }
+        )
+    return general_remaining
+
+
+def audit_layer(name: str, path: Path) -> dict:
+    events = extract_events(json.loads(path.read_text(encoding="utf-8")))
+    by_norm = Counter(e.get("category") for e in events)
+    by_raw = Counter((e.get("nycif") or {}).get("raw_category") for e in events)
+    by_reason = Counter((e.get("nycif") or {}).get("classification_reason") for e in events)
+    samples = collect_category_samples(events)
+    general_remaining = collect_general_remaining(events)
 
     return {
         "layer": name,
@@ -66,7 +81,7 @@ def audit_layer(name: str, path: Path) -> dict:
         "sum_equals_total": sum(by_norm.values()) == len(events),
         "invalid_categories": [c for c in by_norm if c not in VALID_CATEGORIES],
         "source_category_counts": {str(k): v for k, v in by_raw.most_common(50)},
-        "fallback_classified_count": fallback,
+        "fallback_classified_count": count_fallback_classified(events),
         "general_count": by_norm.get("general", 0),
         "remaining_general_records": general_remaining,
         "sample_rows_by_category": {k: samples[k] for k in sorted(samples)},

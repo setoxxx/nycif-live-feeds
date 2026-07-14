@@ -36,7 +36,7 @@
     ['services', /benefit|resource fair|outreach|clinic|health screening|social service|food assistance|legal help/],
     ['education', /education|training|workshop|lecture|literacy|school program|\bclass\b/],
     ['family', /kids and family|\bkids\b|children|youth program|storytime/],
-    ['volunteer', /volunteer|it'?s my park|stewardship|service project/],
+    ['volunteer', /volunteer|stewardship|service project|my park/],
     ['environment', /environment|ecology|climate|cleanup|compost|recycling|conservation|gardening|nature walk/],
     ['arts', /cultural|music|concert|\barts?\b|dance|theater|theatre|film|performance|exhibit|museum|summerstage|feast/],
     ['market', /market|greenmarket|farmers market|vendor|fair|food festival|pop[- ]?up|merchandise/],

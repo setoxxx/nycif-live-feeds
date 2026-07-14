@@ -3,9 +3,14 @@
 
 from __future__ import annotations
 
+import json
 import re
 from datetime import date, datetime, timezone
+from pathlib import Path
 from typing import Any
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+_SAFE_WRITE_PREFIXES = ("data/", "docs/")
 
 SCHEMA_VERSION = "1.0"
 CATEGORY_VERSION = "categories-v01"
@@ -473,7 +478,7 @@ def project_event(
     event_id = stable_id(row, data_layer=data_layer, index=index)
     event_date = preserve_date(row)
     meta = major_meta or {}
-    is_major, significance, production_feed = resolve_major_flags(data_layer, meta)
+    is_major, significance, resolved_production_feed = resolve_major_flags(data_layer, meta)
     safety = layer_safety_fields(row, data_layer=data_layer)
 
     return {
@@ -498,7 +503,7 @@ def project_event(
             map_ready=map_ready,
             event_date=event_date,
             safety=safety,
-            production_feed=production_feed,
+            production_feed=resolved_production_feed,
             is_major=is_major,
             major_meta=meta,
         ),
@@ -539,17 +544,23 @@ def today_nyc_approx() -> date:
         return date.today()
 
 
-def safe_write_json(path, payload, *, root) -> None:
-    """Write JSON only when the resolved path stays under repository root."""
-    from pathlib import Path
-    import json
-
-    root_path = Path(root).resolve()
-    out_path = Path(path).resolve()
-    if not out_path.is_relative_to(root_path):
-        raise ValueError(f"refusing to write outside repository root: {out_path}")
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(
+def write_repo_json(relative_path: str, payload: Any) -> None:
+    """Write JSON under REPO_ROOT using a validated relative path only."""
+    rel = str(relative_path).replace("\\", "/").lstrip("./")
+    if ".." in rel.split("/") or rel.startswith("/") or not any(
+        rel.startswith(p) for p in _SAFE_WRITE_PREFIXES
+    ):
+        raise ValueError(f"refusing write outside allowlisted prefixes: {relative_path}")
+    parts = [p for p in rel.split("/") if p]
+    for part in parts:
+        if part in (".", "..") or "/" in part or "\\" in part:
+            raise ValueError(f"invalid path segment: {part}")
+    out = REPO_ROOT.joinpath(*parts)
+    resolved = out.resolve()
+    if not resolved.is_relative_to(REPO_ROOT):
+        raise ValueError(f"path escape blocked: {resolved}")
+    resolved.parent.mkdir(parents=True, exist_ok=True)
+    resolved.write_text(
         json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + "\n",
         encoding="utf-8",
     )

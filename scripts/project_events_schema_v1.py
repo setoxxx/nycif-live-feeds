@@ -17,7 +17,7 @@ from schema_v1_common import (  # noqa: E402
     extract_events,
     project_event,
     reset_stable_id_registry,
-    safe_write_json,
+    write_repo_json,
     utc_now,
 )
 
@@ -166,9 +166,9 @@ def main() -> int:
     }
 
     if not args.skip_write_feeds:
-        safe_write_json(OUT_STAGED, staged_env, root=ROOT)
-        safe_write_json(OUT_SUPP, supp_env, root=ROOT)
-    safe_write_json(OUT_REPORT, report, root=ROOT)
+        write_repo_json("data/events_schema_v1_staged.json", staged_env)
+        write_repo_json("data/events_schema_v1_supplemental_review.json", supp_env)
+    write_repo_json("data/events_schema_v1_validation_report.json", report)
     print(json.dumps({"qa_pass": report["qa_pass"], "report": str(OUT_REPORT)}, indent=2))
     return 0 if report["qa_pass"] else 1
 
