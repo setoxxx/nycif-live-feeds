@@ -1,22 +1,18 @@
 {
-  "borough_counts": {
-    "Bronx": 1
-  },
-  "complexity_counts": {
-    "park_or_facility_subsite": 1
-  },
+  "borough_counts": {},
+  "complexity_counts": {},
   "csv_output": "data/gps_review_geocoding_unfilled_review_queue.csv",
-  "generated_at_utc": "2026-07-14T00:39:01.735575+00:00",
-  "input_proposal_count": 292,
+  "generated_at_utc": "2026-07-14T01:28:07.340366+00:00",
+  "input_proposal_count": 0,
   "json_output": "data/gps_review_geocoding_unfilled_review_queue.json",
   "location_cache_modified": false,
   "manual_reference_template": "data/manual_gps_reference.template.json",
   "next_required_step": "Review unfilled rows in CSV. Add verified coordinates to manual_gps_reference.json, then re-run build_gps_geocoding_filled_proposals.py.",
-  "park_or_facility_subsite_count": 1,
+  "park_or_facility_subsite_count": 0,
   "phase": "phase_2c_unfilled_gps_review",
   "promotion_allowed_count": 0,
   "public_map_modified": false,
   "staged_feed_modified": false,
   "street_between_pair_count": 0,
-  "unfilled_count": 1
+  "unfilled_count": 0
 }

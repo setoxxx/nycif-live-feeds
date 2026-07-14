@@ -9,7 +9,7 @@
       "Full 'all city events' requires merging supplemental calendar-only rows through manual review, not auto-promotion."
     ],
     "permit_pipeline_ingestion_pct_estimate": 100.0,
-    "permit_pipeline_map_ready_pct_estimate": 90.621
+    "permit_pipeline_map_ready_pct_estimate": 100.0
   },
   "distribution": {
     "calendar_category_counts": {
@@ -46,7 +46,7 @@
       "Street Activity Permit Office": 642
     }
   },
-  "generated_at_utc": "2026-07-14T00:17:54.025199+00:00",
+  "generated_at_utc": "2026-07-14T01:28:14.670466+00:00",
   "overlap_analysis": {
     "calendar_only_unique_keys": 2502,
     "calendar_overlap_pct_of_calendar": 3.248,
@@ -60,12 +60,12 @@
     "title_date_overlap_unique_keys": 84
   },
   "pipeline_status": {
-    "auto_gps_match_pct": 90.621,
-    "gps_review_queue": 3110,
-    "gps_review_tail_pct": 9.127,
-    "permit_ingestion_accounted_rows": 34075,
-    "staged_feed_events": 23111,
-    "staged_with_valid_gps": 30879
+    "auto_gps_match_pct": 100.0,
+    "gps_review_queue": 0,
+    "gps_review_tail_pct": 0.0,
+    "permit_ingestion_accounted_rows": 33084,
+    "staged_feed_events": 32845,
+    "staged_with_valid_gps": 33084
   },
   "qa_pass": true,
   "safety": {
