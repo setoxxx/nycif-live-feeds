@@ -57,6 +57,8 @@ def main() -> int:
     coord_match_report = load_json(DATA / "calendar_parks_coord_match_proposals_report.json", {})
     unfilled_gps_report = load_json(DATA / "gps_review_geocoding_unfilled_report.json", {})
     gps_fill_report = load_json(DATA / "gps_review_geocoding_fill_report.json", {})
+    supplemental_staging_report = load_json(DATA / "supplemental_events_staging_report.json", {})
+    supplemental_staging_manifest = load_json(DATA / "supplemental_events_staging_manifest.json", {})
     resolver_report = load_json(DATA / "location_resolver_report.json", {})
     gazetteer = load_json(DATA / "nyc_location_gazetteer.json", {})
 
@@ -64,6 +66,7 @@ def main() -> int:
     gps_review = int(disposition.get("disposition_counts", {}).get("gps_review_queue") or 0)
     classified = int(disposition.get("classified_rows") or 0)
     staged_events = int(staged_manifest.get("staged_feed_events") or 0)
+    category_counts = staged_manifest.get("category_counts") or {}
 
     overlap = coverage.get("overlap_analysis") or {}
     pipeline = coverage.get("pipeline_status") or {}
@@ -94,6 +97,15 @@ def main() -> int:
             "removed_events": int(live_delta.get("removed_count") or 0),
             "changed_events": int(live_delta.get("changed_count") or 0),
             "net_change": int(live_delta.get("net_change") or 0),
+            "fitness_event_count": int(category_counts.get("fitness") or 0),
+        },
+        "category_counts": {
+            "sports": int(category_counts.get("sports") or 0),
+            "parks": int(category_counts.get("parks") or 0),
+            "fitness": int(category_counts.get("fitness") or 0),
+            "market": int(category_counts.get("market") or 0),
+            "arts": int(category_counts.get("arts") or 0),
+            "general": int(category_counts.get("general") or 0),
         },
         "progress_bars": {
             "permit_ingestion_pct": pct(classified, classified) if classified else 0.0,
@@ -123,6 +135,10 @@ def main() -> int:
             "location_gazetteer_key_count": int(gazetteer.get("index_key_count") or 0),
             "location_resolver_unresolved_count": int(resolver_report.get("unresolved_count") or 0),
             "location_resolver_resolved_count": int(resolver_report.get("resolved_count") or 0),
+            "supplemental_staging_event_count": int(supplemental_staging_manifest.get("event_count") or 0),
+            "supplemental_staging_with_coordinates_count": int(
+                supplemental_staging_manifest.get("with_proposed_coordinates_count") or 0
+            ),
         },
         "location_resolver": {
             "gazetteer_path": "data/nyc_location_gazetteer.json",
@@ -147,6 +163,12 @@ def main() -> int:
                 calendar_only_report.get("without_parks_match_count") or 0
             ),
             "parks_only_with_coordinates_count": int(parks_only_report.get("with_coordinates_count") or 0),
+            "supplemental_staging_feed": "data/supplemental_events_staging_feed.json",
+            "supplemental_staging_manifest": "data/supplemental_events_staging_manifest.json",
+            "supplemental_staging_event_count": int(supplemental_staging_manifest.get("event_count") or 0),
+            "supplemental_staging_with_coordinates_count": int(
+                supplemental_staging_manifest.get("with_proposed_coordinates_count") or 0
+            ),
             "manual_review_status": "pending",
             "promotion_allowed": False,
         },

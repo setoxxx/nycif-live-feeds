@@ -1,20 +1,21 @@
 {
   "artifact_type": "nycif_coverage_roadmap",
   "schema_version": "1.0.0",
-  "generated_at_utc": "2026-07-13T22:11:00.000Z",
+  "generated_at_utc": "2026-07-14T01:45:00.000Z",
   "live_audit_snapshot": {
-    "permit_current_future_rows": 34075,
-    "calendar_current_future_rows": 2781,
-    "parks_bigapps_current_future_rows": 1654,
+    "permit_current_future_rows": 33084,
+    "calendar_current_future_rows": 2708,
+    "parks_bigapps_current_future_rows": 1581,
     "title_date_overlap_unique_keys": 84,
-    "permit_only_unique_keys": 5218,
+    "permit_only_unique_keys": 5114,
     "calendar_only_unique_keys": 2502,
     "parks_only_unique_keys": 1530,
     "parks_facility_reference_with_coordinates": 2290,
-    "auto_gps_match_pct": 93.776,
-    "staged_feed_events": 23111
+    "auto_gps_match_pct": 100.0,
+    "staged_feed_events": 32845,
+    "supplemental_staging_event_count": 4032
   },
-  "headline": "Four-source intel staged; permit pipeline remains the map-ready core.",
+  "headline": "Permit GPS tail cleared via tiered resolver; supplemental intake staging feed ready for manual review.",
   "source_truth_table": {
     "tvpp_9vvx_open_data_csv": {
       "your_sources": ["NYC Open Data JSON/CSV", "CECM permit registry export"],
@@ -43,12 +44,12 @@
       "note": "Accountability for tvpp-9vvx current/future rows (not silent drops)"
     },
     "auto_gps_matching": {
-      "percent": 94,
-      "note": "~27,528 staged with valid GPS of ~29,355 classified permit rows"
+      "percent": 100,
+      "note": "33,084/33,084 current/future permit rows matched with valid GPS (live sync + tiered resolver)"
     },
     "human_review_tail": {
-      "percent": 6,
-      "note": "~1,827 rows in gps_review_queue"
+      "percent": 0,
+      "note": "0 rows in gps_review_queue after M9/M10 resolver productionization"
     },
     "parks_facility_reference": {
       "percent": 100,
@@ -94,23 +95,19 @@
     },
     {
       "step": 4,
-      "action": "Review supplemental coverage-gap queues (M9)",
+      "action": "Review supplemental intake staging feed (M10)",
       "artifacts": [
-        "data/supplemental_calendar_only_review_queue.csv",
-        "data/supplemental_parks_only_review_queue.csv",
-        "data/gps_review_geocoding_unfilled_review_queue.csv",
-        "data/calendar_parks_coord_match_proposals.json"
+        "data/supplemental_events_staging_feed.json",
+        "data/supplemental_events_staging_manifest.json",
+        "data/supplemental_calendar_only_priority_review.csv"
       ],
-      "target": "Human review for calendar-only, Parks-only, and unfilled GPS rows"
+      "target": "Human review for 4,032 calendar+Parks supplemental rows before any map merge"
     },
     {
       "step": 5,
-      "action": "Manual GPS approval for review queue",
-      "artifacts": [
-        "data/gps_manual_approval_queue.json",
-        "data/gps_review_location_groups.json"
-      ],
-      "target": "Human review tail → 0%"
+      "action": "Optional Phase 2E location_cache promotion",
+      "requires": "Explicit human authorization to promote approved resolver rows",
+      "target": "~16.5k resolver keys proven in QA but not yet written to location_cache.json"
     },
     {
       "step": 6,

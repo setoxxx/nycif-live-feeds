@@ -212,14 +212,49 @@ def find_match(
 
 
 def category(raw: dict[str, Any]) -> str:
-    text = normalize_text_legacy(" ".join([str(raw.get("event_name") or ""), str(raw.get("event_type") or ""), str(raw.get("event_agency") or "")]))
+    text = normalize_text_legacy(
+        " ".join(
+            [
+                str(raw.get("event_name") or ""),
+                str(raw.get("event_type") or ""),
+                str(raw.get("event_agency") or ""),
+                str(raw.get("event_location") or ""),
+            ]
+        )
+    )
     if any(token in text for token in ["soccer", "baseball", "softball", "basketball", "tennis", "cricket", "football", "volleyball", "sport"]):
         return "sports"
     if any(token in text for token in ["market", "sidewalk sale", "fair", "plaza", "open street", "street activity"]):
         return "market"
     if any(token in text for token in ["movie", "music", "piano", "performance", "dance", "book", "arts"]):
         return "arts"
-    if any(token in text for token in ["park", "picnic", "camp", "barbecue", "yoga", "zumba"]):
+    if any(
+        token in text
+        for token in [
+            "yoga",
+            "zumba",
+            "fitness",
+            "workout",
+            "pilates",
+            "crossfit",
+            "aerobic",
+            "exercise",
+            "calisthenics",
+            "boot camp",
+            "bootcamp",
+            "barre",
+            "spin class",
+            "spinning",
+            "tai chi",
+            "qigong",
+            "wellness class",
+            "movement class",
+            "stretch",
+            "training session",
+        ]
+    ):
+        return "fitness"
+    if any(token in text for token in ["park", "picnic", "camp", "barbecue"]):
         return "parks"
     return "general"
 

@@ -12,11 +12,20 @@
     "staged_live_events": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nycif_staged_live_events.json",
     "staged_live_manifest": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/staged_live_manifest.json"
   },
+  "category_counts": {
+    "arts": 218,
+    "fitness": 192,
+    "general": 24,
+    "market": 930,
+    "parks": 4461,
+    "sports": 27020
+  },
   "current_counts": {
     "changed_events": 0,
     "citywide_calendar_rows": 2781,
     "classified_permit_rows": 33084,
     "current_future_raw_rows": 33084,
+    "fitness_event_count": 192,
     "gps_review_queue": 0,
     "net_change": 0,
     "newly_added_events": 0,
@@ -33,12 +42,12 @@
     "coverage_report_generated_at_utc": "2026-07-14T01:28:14.670466+00:00",
     "disposition_generated_at_utc": "2026-07-14T01:28:11.114539+00:00",
     "live_delta_generated_at_utc": "2026-07-14T01:28:07.762109+00:00",
-    "live_sync_generated_at_utc": "2026-07-14T01:26:29.728762+00:00",
+    "live_sync_generated_at_utc": "2026-07-14T01:44:58.040623+00:00",
     "parks_bigapps_sync_generated_at_utc": "2026-07-14T00:06:27.134900+00:00",
     "parks_facility_reference_generated_at_utc": "2026-07-14T01:26:30.234850+00:00",
-    "staged_manifest_generated_at_utc": "2026-07-14T01:27:18.633225+00:00"
+    "staged_manifest_generated_at_utc": "2026-07-14T01:52:02.516390+00:00"
   },
-  "generated_at_utc": "2026-07-14T01:28:15.422540+00:00",
+  "generated_at_utc": "2026-07-14T02:02:16.987049+00:00",
   "headline": "Live pipeline snapshot for NYCIF admin dashboards (read-only).",
   "location_resolver": {
     "gazetteer_key_count": 45956,
@@ -67,6 +76,8 @@
     "permit_only_unique_keys": 5114,
     "supplemental_calendar_only_queue_count": 2502,
     "supplemental_parks_only_queue_count": 1530,
+    "supplemental_staging_event_count": 4032,
+    "supplemental_staging_with_coordinates_count": 2961,
     "title_date_overlap_unique_keys": 84
   },
   "progress_bars": {
@@ -229,7 +240,11 @@
     "manual_review_status": "pending",
     "parks_only_review_queue": "data/supplemental_parks_only_review_queue.json",
     "parks_only_with_coordinates_count": 1518,
-    "promotion_allowed": false
+    "promotion_allowed": false,
+    "supplemental_staging_event_count": 4032,
+    "supplemental_staging_feed": "data/supplemental_events_staging_feed.json",
+    "supplemental_staging_manifest": "data/supplemental_events_staging_manifest.json",
+    "supplemental_staging_with_coordinates_count": 2961
   },
   "visibility": "public"
 }
