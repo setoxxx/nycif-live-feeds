@@ -57,6 +57,8 @@ def main() -> int:
     coord_match_report = load_json(DATA / "calendar_parks_coord_match_proposals_report.json", {})
     unfilled_gps_report = load_json(DATA / "gps_review_geocoding_unfilled_report.json", {})
     gps_fill_report = load_json(DATA / "gps_review_geocoding_fill_report.json", {})
+    resolver_report = load_json(DATA / "location_resolver_report.json", {})
+    gazetteer = load_json(DATA / "nyc_location_gazetteer.json", {})
 
     staged_valid = int(disposition.get("disposition_counts", {}).get("staged_with_valid_gps") or 0)
     gps_review = int(disposition.get("disposition_counts", {}).get("gps_review_queue") or 0)
@@ -118,6 +120,20 @@ def main() -> int:
             "supplemental_parks_only_queue_count": int(parks_only_report.get("queue_count") or 0),
             "calendar_parks_coord_proposals_count": int(coord_match_report.get("proposal_count") or 0),
             "gps_unfilled_proposal_count": int(unfilled_gps_report.get("unfilled_count") or gps_fill_report.get("unfilled_count") or 0),
+            "location_gazetteer_key_count": int(gazetteer.get("index_key_count") or 0),
+            "location_resolver_unresolved_count": int(resolver_report.get("unresolved_count") or 0),
+            "location_resolver_resolved_count": int(resolver_report.get("resolved_count") or 0),
+        },
+        "location_resolver": {
+            "gazetteer_path": "data/nyc_location_gazetteer.json",
+            "unresolved_queue_path": "data/location_resolver_unresolved_queue.json",
+            "report_path": "data/location_resolver_report.json",
+            "gazetteer_key_count": int(gazetteer.get("index_key_count") or 0),
+            "unresolved_count": int(resolver_report.get("unresolved_count") or 0),
+            "resolved_count": int(resolver_report.get("resolved_count") or 0),
+            "tier_counts": resolver_report.get("tier_counts") or {},
+            "manual_review_status": "pending",
+            "promotion_allowed": False,
         },
         "supplemental_review": {
             "calendar_only_review_queue": "data/supplemental_calendar_only_review_queue.json",

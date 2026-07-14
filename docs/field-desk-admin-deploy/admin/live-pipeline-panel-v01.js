@@ -188,6 +188,30 @@
         <a href="${repoBase}/data/supplemental_calendar_only_priority_review.csv" target="_blank" rel="noopener noreferrer">Calendar priority CSV</a>
       </div>
 
+      <h3>Tiered location resolver</h3>
+      <div class="notice">Gazetteer + GeoSearch tiers · unresolved rows surface here for admin review only</div>
+      <div class="grid">
+        <div class="stat">
+          <div class="label">Gazetteer keys (public sources)</div>
+          <div class="value">${fmtNum(multi.location_gazetteer_key_count ?? dashboard?.location_resolver?.gazetteer_key_count ?? 0)}</div>
+          <div class="detail">location_cache + Parks facility/events + manual ref + GeoSearch cache</div>
+        </div>
+        <div class="stat">
+          <div class="label">Resolver unresolved (admin queue)</div>
+          <div class="value">${fmtNum(dashboard?.location_resolver?.unresolved_count ?? multi.location_resolver_unresolved_count ?? 0)}</div>
+          <div class="detail">Should be a handful after 3 tiers</div>
+        </div>
+        <div class="stat">
+          <div class="label">Resolver resolved (audit)</div>
+          <div class="value">${fmtNum(dashboard?.location_resolver?.resolved_count ?? multi.location_resolver_resolved_count ?? 0)}</div>
+        </div>
+      </div>
+      <div class="links" style="margin-top:8px">
+        <a href="${repoBase}/data/nyc_location_gazetteer.json" target="_blank" rel="noopener noreferrer">Gazetteer index</a>
+        <a href="${repoBase}/data/location_resolver_unresolved_queue.json" target="_blank" rel="noopener noreferrer">Unresolved queue</a>
+        <a href="${repoBase}/data/location_resolver_report.json" target="_blank" rel="noopener noreferrer">Resolver report</a>
+      </div>
+
       <h3>Newly added events (top 5)</h3>
       <div class="table-wrap">
         <table>
@@ -271,6 +295,9 @@
         calendar_only_with_parks_match_count: dashboardResult.payload?.supplemental_review?.calendar_only_with_parks_match_count,
         parks_only_with_coordinates_count: dashboardResult.payload?.supplemental_review?.parks_only_with_coordinates_count,
         supplemental_review_status: dashboardResult.payload?.supplemental_review?.manual_review_status,
+        location_gazetteer_key_count: dashboardResult.payload?.multi_source?.location_gazetteer_key_count,
+        location_resolver_unresolved_count: dashboardResult.payload?.location_resolver?.unresolved_count
+          ?? dashboardResult.payload?.multi_source?.location_resolver_unresolved_count,
       };
       document.dispatchEvent(new CustomEvent('nycif-live-pipeline-ready'));
     } catch (error) {

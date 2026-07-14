@@ -38,14 +38,34 @@
     "parks_facility_reference_generated_at_utc": "2026-07-13T22:10:04.187954+00:00",
     "staged_manifest_generated_at_utc": "2026-07-07T12:16:01.176045+00:00"
   },
-  "generated_at_utc": "2026-07-14T00:24:34.950653+00:00",
+  "generated_at_utc": "2026-07-14T01:19:10.907604+00:00",
   "headline": "Live pipeline snapshot for NYCIF admin dashboards (read-only).",
+  "location_resolver": {
+    "gazetteer_key_count": 45437,
+    "gazetteer_path": "data/nyc_location_gazetteer.json",
+    "manual_review_status": "pending",
+    "promotion_allowed": false,
+    "report_path": "data/location_resolver_report.json",
+    "resolved_count": 1948,
+    "tier_counts": {
+      "tier_1_gazetteer_display": 1907,
+      "tier_2_geosearch_cache": 15,
+      "tier_2_geosearch_midpoint": 25,
+      "tier_3_nyc_geosearch_live": 1,
+      "unresolved": 2
+    },
+    "unresolved_count": 2,
+    "unresolved_queue_path": "data/location_resolver_unresolved_queue.json"
+  },
   "multi_source": {
     "calendar_only_unique_keys": 2502,
     "calendar_parks_coord_proposals_count": 1455,
     "calendar_sync_qa_pass": true,
     "citywide_calendar_dataset_id": "nyc-citywide-events-calendar-api",
-    "gps_unfilled_proposal_count": 56,
+    "gps_unfilled_proposal_count": 1,
+    "location_gazetteer_key_count": 45437,
+    "location_resolver_resolved_count": 1948,
+    "location_resolver_unresolved_count": 2,
     "parks_bigapps_sync_qa_pass": true,
     "parks_only_unique_keys": 1530,
     "parks_permit_overlap_unique_keys": 19,
