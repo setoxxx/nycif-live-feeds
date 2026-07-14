@@ -66,6 +66,7 @@ def main() -> int:
     gps_review = int(disposition.get("disposition_counts", {}).get("gps_review_queue") or 0)
     classified = int(disposition.get("classified_rows") or 0)
     staged_events = int(staged_manifest.get("staged_feed_events") or 0)
+    category_counts = staged_manifest.get("category_counts") or {}
 
     overlap = coverage.get("overlap_analysis") or {}
     pipeline = coverage.get("pipeline_status") or {}
@@ -96,6 +97,15 @@ def main() -> int:
             "removed_events": int(live_delta.get("removed_count") or 0),
             "changed_events": int(live_delta.get("changed_count") or 0),
             "net_change": int(live_delta.get("net_change") or 0),
+            "fitness_event_count": int(category_counts.get("fitness") or 0),
+        },
+        "category_counts": {
+            "sports": int(category_counts.get("sports") or 0),
+            "parks": int(category_counts.get("parks") or 0),
+            "fitness": int(category_counts.get("fitness") or 0),
+            "market": int(category_counts.get("market") or 0),
+            "arts": int(category_counts.get("arts") or 0),
+            "general": int(category_counts.get("general") or 0),
         },
         "progress_bars": {
             "permit_ingestion_pct": pct(classified, classified) if classified else 0.0,

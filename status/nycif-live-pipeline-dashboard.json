@@ -12,11 +12,20 @@
     "staged_live_events": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nycif_staged_live_events.json",
     "staged_live_manifest": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/staged_live_manifest.json"
   },
+  "category_counts": {
+    "arts": 218,
+    "fitness": 192,
+    "general": 24,
+    "market": 930,
+    "parks": 4461,
+    "sports": 27020
+  },
   "current_counts": {
     "changed_events": 0,
     "citywide_calendar_rows": 2781,
     "classified_permit_rows": 33084,
     "current_future_raw_rows": 33084,
+    "fitness_event_count": 192,
     "gps_review_queue": 0,
     "net_change": 0,
     "newly_added_events": 0,
@@ -25,7 +34,7 @@
     "parks_facility_reference_with_coordinates": 2290,
     "raw_rows_loaded": 35438,
     "removed_events": 0,
-    "staged_feed_events": 23111,
+    "staged_feed_events": 32845,
     "staged_with_valid_gps": 33084
   },
   "freshness": {
@@ -36,9 +45,9 @@
     "live_sync_generated_at_utc": "2026-07-14T01:44:58.040623+00:00",
     "parks_bigapps_sync_generated_at_utc": "2026-07-14T00:06:27.134900+00:00",
     "parks_facility_reference_generated_at_utc": "2026-07-14T01:26:30.234850+00:00",
-    "staged_manifest_generated_at_utc": "2026-07-07T12:16:01.176045+00:00"
+    "staged_manifest_generated_at_utc": "2026-07-14T01:52:02.516390+00:00"
   },
-  "generated_at_utc": "2026-07-14T01:45:16.391632+00:00",
+  "generated_at_utc": "2026-07-14T02:02:16.987049+00:00",
   "headline": "Live pipeline snapshot for NYCIF admin dashboards (read-only).",
   "location_resolver": {
     "gazetteer_key_count": 45956,
@@ -93,8 +102,7 @@
     "promotion_allowed": false,
     "public_map_modified": false,
     "safe_for_public_dashboard": true,
-    "wordpress_change": true,
-    "public_map_feed_refresh": true,
+    "wordpress_change": false,
     "write_controls": false
   },
   "samples": {
