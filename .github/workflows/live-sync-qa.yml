@@ -59,6 +59,9 @@ jobs:
       - name: Build GPS filled geocoding proposals
         run: python scripts/build_gps_geocoding_filled_proposals.py
 
+      - name: Build GPS unfilled review report
+        run: python scripts/build_gps_unfilled_review_report.py
+
       - name: Validate committed GPS manual approval queue
         run: python scripts/validate_gps_manual_approvals.py
 
@@ -82,6 +85,9 @@ jobs:
 
       - name: Audit multi-source coverage
         run: python scripts/audit_multi_source_coverage.py
+
+      - name: Build supplemental coverage review queues
+        run: python scripts/build_supplemental_coverage_review_queues.py
 
       - name: Generate live pipeline dashboard status
         run: python scripts/generate_live_pipeline_dashboard_status.py

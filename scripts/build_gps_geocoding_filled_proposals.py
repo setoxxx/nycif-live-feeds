@@ -18,6 +18,7 @@ Current fill strategy:
 Optional local reference inputs:
 - data/manual_gps_reference.json
 - data/nyc_parks_facility_reference.json
+- data/nyc_parks_bigapps_events_snapshot.json (Parks event location memory)
 
 Outputs:
 - data/gps_review_geocoding_filled_proposals.json
@@ -44,6 +45,7 @@ PROPOSALS_PATH = DATA_DIR / "gps_review_geocoding_proposals.json"
 LOCATION_CACHE_PATH = DATA_DIR / "location_cache.json"
 MANUAL_REFERENCE_PATH = DATA_DIR / "manual_gps_reference.json"
 PARKS_REFERENCE_PATH = DATA_DIR / "nyc_parks_facility_reference.json"
+PARKS_EVENTS_SNAPSHOT_PATH = DATA_DIR / "nyc_parks_bigapps_events_snapshot.json"
 FILLED_PROPOSALS_PATH = DATA_DIR / "gps_review_geocoding_filled_proposals.json"
 FILL_REPORT_PATH = DATA_DIR / "gps_review_geocoding_fill_report.json"
 
@@ -119,6 +121,48 @@ def reference_keys(row: dict[str, Any]) -> set[str]:
         if value and borough:
             values.append(f"{value}, {borough}, New York, NY")
     return {normalize_text_legacy(value) for value in values if normalize_text_legacy(value)}
+
+
+def parks_event_rows(payload: Any) -> list[dict[str, Any]]:
+    if isinstance(payload, list):
+        return [row for row in payload if isinstance(row, dict)]
+    if isinstance(payload, dict) and isinstance(payload.get("events"), list):
+        return [row for row in payload["events"] if isinstance(row, dict)]
+    return []
+
+
+def build_parks_events_location_index(path: Path) -> dict[str, dict[str, Any]]:
+    index: dict[str, dict[str, Any]] = {}
+    for row in parks_event_rows(load_json_file(path, {})):
+        lat = row.get("lat") or row.get("latitude")
+        lng = row.get("lng") or row.get("lon") or row.get("longitude")
+        if not valid_nyc_lat_lng(lat, lng):
+            continue
+        reference = {
+            "lat": float(lat),
+            "lng": float(lng),
+            "source": "nyc_parks_bigapps_events_snapshot",
+            "place_id": row.get("source_event_id") or row.get("id"),
+            "confidence": "high",
+            "confidence_reason": "Matched location text from NYC Parks BigApps events snapshot. Requires manual approval before promotion.",
+        }
+        for field in ("location", "display_location", "park_names", "title"):
+            value = row.get(field)
+            if isinstance(value, list):
+                for item in value:
+                    key = simplified_place(str(item or ""))
+                    if key:
+                        index.setdefault(key, reference)
+            else:
+                key = simplified_place(str(value or ""))
+                if key:
+                    index.setdefault(key, reference)
+                if field == "location" and isinstance(value, str) and "(" in value:
+                    parent = value.split("(", 1)[0].strip()
+                    parent_key = simplified_place(parent)
+                    if parent_key:
+                        index.setdefault(parent_key, reference)
+    return index
 
 
 def build_reference_index(paths: list[tuple[str, Path]]) -> dict[str, dict[str, Any]]:
@@ -242,6 +286,9 @@ def main() -> int:
         ("manual_gps_reference", MANUAL_REFERENCE_PATH),
         ("nyc_parks_facility_reference", PARKS_REFERENCE_PATH),
     ])
+    parks_events_index = build_parks_events_location_index(PARKS_EVENTS_SNAPSHOT_PATH)
+    for key, reference in parks_events_index.items():
+        reference_index.setdefault(key, reference)
     cache_index = build_cache_place_index()
 
     filled: list[dict[str, Any]] = []
@@ -265,6 +312,7 @@ def main() -> int:
         "source_counts": dict(source_counts),
         "confidence_counts": dict(confidence_counts),
         "reference_keys_loaded": len(reference_index),
+        "parks_events_location_keys_loaded": len(parks_events_index),
         "cache_place_keys_loaded": len(cache_index),
         "public_map_modified": False,
         "location_cache_modified": False,

@@ -1,0 +1,71 @@
+{
+  "artifact_type": "nycif_milestone_9_coverage_gaps",
+  "schema_version": "1.0.0",
+  "generated_at_utc": "2026-07-14T00:17:54.075118+00:00",
+  "milestone": "M9 — Supplemental coverage-gap review queues",
+  "headline": "All three remaining coverage gaps now have manual-review artifacts; no auto-promotion.",
+  "coverage_gaps": {
+    "gps_unfilled_proposals": {
+      "before_count": 59,
+      "after_count": 56,
+      "reduction_via_parks_events_fill": 3,
+      "street_between_pair_count": 41,
+      "park_or_facility_subsite_count": 15,
+      "artifacts": [
+        "data/gps_review_geocoding_unfilled_review_queue.json",
+        "data/gps_review_geocoding_unfilled_review_queue.csv",
+        "data/gps_review_geocoding_unfilled_report.json",
+        "data/manual_gps_reference.template.json"
+      ],
+      "next_step": "Human fills manual_gps_reference.json for street segments, then re-runs Phase 2C fill."
+    },
+    "calendar_only_events": {
+      "current_future_unique_keys": 2502,
+      "review_queue_count": 2502,
+      "parks_title_date_match_count": 1455,
+      "without_parks_match_count": 1047,
+      "with_proposed_coordinates_count": 1443,
+      "artifacts": [
+        "data/supplemental_calendar_only_review_queue.json",
+        "data/supplemental_calendar_only_review_queue.csv",
+        "data/supplemental_calendar_only_review_queue_report.json",
+        "data/calendar_parks_coord_match_proposals.json",
+        "data/calendar_parks_coord_match_proposals_report.json"
+      ],
+      "next_step": "Review calendar-only CSV; Parks overlaps include proposed coords for manual check only."
+    },
+    "parks_only_events": {
+      "current_future_unique_keys": 1530,
+      "review_queue_count": 1530,
+      "with_coordinates_count": 1518,
+      "without_coordinates_count": 12,
+      "calendar_title_date_match_count": 1455,
+      "artifacts": [
+        "data/supplemental_parks_only_review_queue.json",
+        "data/supplemental_parks_only_review_queue.csv",
+        "data/supplemental_parks_only_review_queue_report.json"
+      ],
+      "next_step": "Review Parks-only rows for supplemental ingestion; coords already present for most rows."
+    }
+  },
+  "scripts_added": [
+    "scripts/coverage_gap_utils.py",
+    "scripts/build_supplemental_coverage_review_queues.py",
+    "scripts/build_gps_unfilled_review_report.py"
+  ],
+  "scripts_extended": [
+    "scripts/build_gps_geocoding_filled_proposals.py",
+    "scripts/audit_multi_source_coverage.py",
+    "scripts/generate_live_pipeline_dashboard_status.py"
+  ],
+  "workflow_wired": [
+    ".github/workflows/live-sync-qa.yml"
+  ],
+  "safety": {
+    "public_map_modified": false,
+    "location_cache_modified": false,
+    "staged_feed_modified": false,
+    "promotion_allowed": false,
+    "manual_review_status": "pending"
+  }
+}

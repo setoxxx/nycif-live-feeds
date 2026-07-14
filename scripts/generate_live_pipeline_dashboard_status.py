@@ -52,6 +52,11 @@ def main() -> int:
     parks_sync = load_json(DATA / "nyc_parks_bigapps_events_sync_report.json", {})
     parks_facility_report = load_json(REPORTS / "nyc_parks_facility_reference_report.json", {})
     backend_gate = load_json(DATA / "backend_reliability_gate_report.json", {})
+    calendar_only_report = load_json(DATA / "supplemental_calendar_only_review_queue_report.json", {})
+    parks_only_report = load_json(DATA / "supplemental_parks_only_review_queue_report.json", {})
+    coord_match_report = load_json(DATA / "calendar_parks_coord_match_proposals_report.json", {})
+    unfilled_gps_report = load_json(DATA / "gps_review_geocoding_unfilled_report.json", {})
+    gps_fill_report = load_json(DATA / "gps_review_geocoding_fill_report.json", {})
 
     staged_valid = int(disposition.get("disposition_counts", {}).get("staged_with_valid_gps") or 0)
     gps_review = int(disposition.get("disposition_counts", {}).get("gps_review_queue") or 0)
@@ -109,6 +114,25 @@ def main() -> int:
             "parks_permit_overlap_unique_keys": int(overlap.get("parks_permit_overlap_unique_keys") or 0),
             "calendar_sync_qa_pass": bool(calendar_sync.get("qa_pass")),
             "parks_bigapps_sync_qa_pass": bool(parks_sync.get("qa_pass")),
+            "supplemental_calendar_only_queue_count": int(calendar_only_report.get("queue_count") or 0),
+            "supplemental_parks_only_queue_count": int(parks_only_report.get("queue_count") or 0),
+            "calendar_parks_coord_proposals_count": int(coord_match_report.get("proposal_count") or 0),
+            "gps_unfilled_proposal_count": int(unfilled_gps_report.get("unfilled_count") or gps_fill_report.get("unfilled_count") or 0),
+        },
+        "supplemental_review": {
+            "calendar_only_review_queue": "data/supplemental_calendar_only_review_queue.json",
+            "parks_only_review_queue": "data/supplemental_parks_only_review_queue.json",
+            "calendar_parks_coord_match_proposals": "data/calendar_parks_coord_match_proposals.json",
+            "gps_unfilled_review_queue": "data/gps_review_geocoding_unfilled_review_queue.json",
+            "calendar_only_with_parks_match_count": int(
+                calendar_only_report.get("parks_title_date_match_count") or 0
+            ),
+            "calendar_only_without_parks_match_count": int(
+                calendar_only_report.get("without_parks_match_count") or 0
+            ),
+            "parks_only_with_coordinates_count": int(parks_only_report.get("with_coordinates_count") or 0),
+            "manual_review_status": "pending",
+            "promotion_allowed": False,
         },
         "freshness": {
             "live_sync_generated_at_utc": live_sync.get("generated_at_utc"),

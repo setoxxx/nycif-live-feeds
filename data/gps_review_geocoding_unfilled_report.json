@@ -1,0 +1,27 @@
+{
+  "borough_counts": {
+    "Bronx": 11,
+    "Brooklyn": 12,
+    "Manhattan": 24,
+    "Queens": 8,
+    "Staten Island": 1
+  },
+  "complexity_counts": {
+    "park_or_facility_subsite": 15,
+    "street_between_pair": 41
+  },
+  "csv_output": "data/gps_review_geocoding_unfilled_review_queue.csv",
+  "generated_at_utc": "2026-07-14T00:17:53.183577+00:00",
+  "input_proposal_count": 292,
+  "json_output": "data/gps_review_geocoding_unfilled_review_queue.json",
+  "location_cache_modified": false,
+  "manual_reference_template": "data/manual_gps_reference.template.json",
+  "next_required_step": "Review unfilled rows in CSV. Add verified coordinates to manual_gps_reference.json, then re-run build_gps_geocoding_filled_proposals.py.",
+  "park_or_facility_subsite_count": 15,
+  "phase": "phase_2c_unfilled_gps_review",
+  "promotion_allowed_count": 0,
+  "public_map_modified": false,
+  "staged_feed_modified": false,
+  "street_between_pair_count": 41,
+  "unfilled_count": 56
+}
