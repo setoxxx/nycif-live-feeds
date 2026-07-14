@@ -290,3 +290,15 @@ Final responses should include:
 - what remains unapproved/unpromoted
 
 Never claim public-map changes unless the public map was intentionally changed and verified.
+
+## Cursor Cloud specific instructions
+
+Environment context for future cloud agents (the update script has already installed dependencies before your session starts):
+
+- This repo is a **pure Python batch pipeline** — there is no web server, HTTP API, or long-running service. "Running" means executing `python3 scripts/<name>.py`. Use `python3`, not `python` (there is no `python` alias on the VM).
+- **Dependencies:** install from `requirements.txt` (`rapidfuzz==3.*`, `pytest==9.0.2`). `rapidfuzz` is used by GPS staged-feed match diagnostics; `pytest` runs the test suite. Everything else is Python standard library. Cloud/update scripts may pre-install these.
+- **Tests:** run `python3 -m pytest` from the repo root (the root must be on `sys.path` so `tools.registry.*` imports resolve). Registry tests under `tests/registry/` are deterministic and offline/fixture-based; full suite size is 400+ and grows with milestones.
+- **Lint:** there is no configured linter (no ruff/flake8/pylint config). Use `python3 -m compileall scripts tools tests` as a syntax check.
+- **Full pipeline order** is defined in `.github/workflows/live-sync-qa.yml`; run scripts in that order to reproduce CI locally.
+- **Offline by default:** the committed JSON snapshots under `data/` (e.g. `data/raw_nyc_open_data_snapshot.json`) are the pipeline's datastore, so the pipeline runs end-to-end offline. Only `sync_nyc_open_data.py` and `build_test_enriched_feed.py` hit the network (NYC Open Data), and `send_live_delta_email.py` needs SMTP secrets — all optional/gated.
+- **Gotcha — running scripts rewrites tracked artifacts:** many build scripts overwrite JSON under `data/`, and `build_gps_repository.py` re-serializes the protected `data/location_cache.json`. If you ran scripts only to verify the environment (not to intentionally change data), restore with `git checkout -- data/` so you do not commit unintended (or protected) data changes.
