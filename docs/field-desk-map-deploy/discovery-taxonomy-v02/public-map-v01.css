@@ -1,0 +1,265 @@
+/* NYCIF public map polish v01 */
+body.public-map-page .brand-card {
+  max-width: min(360px, calc(100vw - 98px));
+}
+
+body.public-map-page .brand-card strong::after {
+  content: " Event Map";
+}
+
+body.public-map-page .panel-label {
+  font-size: 0;
+}
+
+body.public-map-page .panel-label::after {
+  content: "Choose what to show";
+  font-size: 9.5px;
+}
+
+body.public-map-page .pill.layers-pill {
+  min-height: 31px;
+  padding: 0 10px;
+  gap: 6px;
+  font-size: 11px;
+  border-width: 1px;
+}
+
+body.public-map-page .pill.layers-pill span {
+  width: 18px;
+  height: 18px;
+  font-size: 11px;
+}
+
+body.public-map-page .layers-panel {
+  width: min(208px, calc(100vw - 18px));
+  padding: 8px;
+  border-radius: 14px;
+  max-height: 70dvh;
+  overflow: auto;
+}
+
+body.public-map-page .layers-panel .check {
+  min-height: 26px;
+  padding: 3px 4px;
+  gap: 7px;
+  border-radius: 9px;
+  font-size: 10px;
+}
+
+body.public-map-page .layers-panel .check input {
+  width: 14px;
+  height: 14px;
+}
+
+body.public-map-page .layers-panel hr {
+  margin: 6px 0;
+}
+
+body.public-map-page #loadAllBtn {
+  min-height: 29px;
+  border-radius: 10px;
+  background: #111827;
+  font-size: 10px;
+}
+
+body.public-map-page #loadAllBtn::before {
+  content: "";
+}
+
+body.public-map-page #loadStagedBtn,
+body.public-map-page .staged-feed-test,
+body.public-map-page .full-today-test,
+body.public-map-page .full-data-test,
+body.public-map-page #statsToggleV05,
+body.public-map-page #statsPanelV05,
+body.public-map-page #feedStatusToggleV01,
+body.public-map-page #feedStatusPanelV01,
+body.public-map-page #truthPanelV09,
+body.public-map-page #truthToggleV09,
+body.public-map-page #testFeedPanelV01,
+body.public-map-page #testFeedToggleV01,
+body.public-map-page #testMapLayerPanelV01,
+body.public-map-page #testMapLayerToggleV01 {
+  display: none !important;
+}
+
+body.public-map-page .leaflet-control-zoom {
+  display: none !important;
+}
+
+body.public-map-page .status {
+  max-width: 720px;
+}
+
+.public-intro-v01 {
+  position: absolute;
+  z-index: 745;
+  left: calc(env(safe-area-inset-left, 0px) + 10px);
+  bottom: calc(env(safe-area-inset-bottom, 0px) + 48px);
+  max-width: min(520px, calc(100vw - 20px));
+  padding: 8px 11px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, .94);
+  color: #111827;
+  box-shadow: 0 10px 28px rgba(0,0,0,.20);
+  backdrop-filter: blur(12px);
+  font-size: 11px;
+  line-height: 1.35;
+}
+
+.public-intro-v01 strong {
+  color: #d40000;
+}
+
+.view-banner {
+  position: absolute;
+  top: 112px;
+  left: 12px;
+  right: 12px;
+  z-index: 880;
+  max-width: min(560px, calc(100vw - 24px));
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(245, 158, 11, .92);
+  color: #111;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.index-status {
+  position: absolute;
+  top: 148px;
+  left: 12px;
+  z-index: 870;
+  max-width: min(560px, calc(100vw - 24px));
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: rgba(8, 12, 18, .8);
+  color: #e5e7eb;
+  font-size: 11px;
+}
+
+.mode-toggle {
+  position: absolute;
+  top: 72px;
+  left: 12px;
+  z-index: 900;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  max-width: min(420px, calc(100vw - 24px));
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-inline-size: 0;
+}
+
+.mode-btn {
+  border: 0;
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  background: rgba(8, 12, 18, .78);
+  color: #fff;
+  cursor: pointer;
+}
+
+.mode-btn.active {
+  background: #d40000;
+}
+
+.nycif-source-review { color: #f59e0b; font-weight: 800; }
+.nycif-list-only { color: #ef4444; font-weight: 800; }
+
+.debug-panel {
+  position: absolute;
+  right: 10px;
+  bottom: 64px;
+  z-index: 1200;
+  width: min(360px, calc(100vw - 20px));
+  max-height: 40vh;
+  overflow: auto;
+  margin: 0;
+  padding: 8px;
+  border-radius: 10px;
+  background: rgba(0,0,0,.84);
+  color: #d1fae5;
+  font-size: 10px;
+}
+
+@media (max-width: 700px) {
+  .public-intro-v01 {
+    display: none;
+  }
+  .mode-toggle {
+    top: auto;
+    bottom: 86px;
+    left: 10px;
+  }
+  .view-banner,
+  .index-status {
+    top: auto;
+    bottom: 128px;
+  }
+  .index-status {
+    bottom: 164px;
+  }
+}
+
+/* Discovery taxonomy v02 — Explore More + filter counts + focus */
+body.public-map-page .explore-more-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  min-height: 28px;
+  margin: 4px 0 2px;
+  padding: 5px 6px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 9px;
+  background: rgba(8, 12, 18, .55);
+  color: #f3f4f6;
+  font-size: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+}
+
+body.public-map-page .explore-more-toggle:focus-visible,
+body.public-map-page .layers-panel .check input:focus-visible,
+body.public-map-page .layers-panel .load-all:focus-visible,
+body.public-map-page .mode-btn:focus-visible {
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+}
+
+body.public-map-page .explore-more-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0 0 4px;
+  padding: 4px 0 2px 6px;
+  border-left: 2px solid rgba(251, 191, 36, .45);
+}
+
+body.public-map-page .explore-more-panel[hidden] {
+  display: none !important;
+}
+
+body.public-map-page [data-cat-label] .filter-count,
+body.public-map-page .filter-count {
+  opacity: .72;
+  font-weight: 600;
+}
+
+body.public-map-page .empty-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+body.public-map-page .empty-actions .load-all {
+  min-height: 28px;
+}

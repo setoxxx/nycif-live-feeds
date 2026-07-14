@@ -1,0 +1,113 @@
+{
+  "version": "discovery-taxonomy-v02",
+  "schema_version": "1.0",
+  "categories": [
+    "sports",
+    "fitness",
+    "parks",
+    "arts",
+    "market",
+    "civic",
+    "education",
+    "family",
+    "volunteer",
+    "tours",
+    "government",
+    "services",
+    "jobs",
+    "housing",
+    "environment",
+    "general"
+  ],
+  "category_labels": {
+    "sports": "Sports",
+    "fitness": "Fitness / wellness",
+    "parks": "Parks / outdoors",
+    "arts": "Arts / performance",
+    "market": "Street fairs / markets",
+    "civic": "Parades / civic",
+    "education": "Classes / workshops",
+    "family": "Kids / family",
+    "volunteer": "Volunteer opportunities",
+    "tours": "Tours / history",
+    "government": "Government / meetings",
+    "services": "Health / benefits",
+    "jobs": "Jobs / career",
+    "housing": "Housing / tenant help",
+    "environment": "Environment / nature",
+    "general": "General"
+  },
+  "main_filter_order": [
+    "major_only",
+    "sports",
+    "civic",
+    "market",
+    "arts",
+    "parks",
+    "fitness",
+    "family",
+    "education",
+    "volunteer",
+    "general",
+    "photo_pick",
+    "field_intel"
+  ],
+  "explore_more_order": [
+    "tours",
+    "government",
+    "services",
+    "jobs",
+    "housing",
+    "environment"
+  ],
+  "event_roles": [
+    "public_event",
+    "supporting_permit",
+    "street_closure",
+    "transportation_operation",
+    "maintenance_or_closure",
+    "private_or_reserved_activity"
+  ],
+  "significance": [
+    "major",
+    "featured",
+    "standard"
+  ],
+  "coordinate_status": [
+    "map_ready",
+    "list_only"
+  ],
+  "display_dispositions": [
+    "standalone_public_event",
+    "grouped_under_public_event",
+    "list_only",
+    "maintenance_or_closure",
+    "private_or_reserved_activity",
+    "invalid_rejected"
+  ],
+  "classification_confidence": [
+    "high",
+    "medium",
+    "low"
+  ],
+  "filter_handshake": {
+    "category_match": "selectedCategories.has(event.category) OR event.interests.some(i => selectedCategories.has(i))",
+    "category_operator": "OR",
+    "dimension_operator": "AND",
+    "dimensions": [
+      "category",
+      "borough",
+      "date",
+      "source",
+      "search",
+      "special"
+    ]
+  },
+  "marker_eligibility": {
+    "coordinate_status": "map_ready",
+    "event_role": "public_event",
+    "parent_event_id": null,
+    "valid_nyc_coordinates": true,
+    "matches_filters": true
+  }
+}
