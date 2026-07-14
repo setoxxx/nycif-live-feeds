@@ -1,47 +1,51 @@
 # Discovery taxonomy v02 — Field Desk map mirror
 
-Canonical Field Desk runtime mirror for **discovery-taxonomy-v02** Major Events / All Events with inclusive category+interests filters.
+Thin deployment package for **discovery-taxonomy-v02**. It does **not** duplicate the full map application JavaScript inside this folder.
 
-Apply the files in this directory onto `setoxxx/nycif-field-desk`. Do not keep a second copy of normalization/rendering logic elsewhere in this repo.
+Core runtime lives in sibling:
 
-## Push / copy instructions
+```text
+docs/field-desk-map-deploy/schema-v1-major-all-v01/
+  event-feed-schema-v1.js
+  app-schema-v1-major-all-v01.js   # reads window.NYCIF_DISCOVERY_V02 hooks
+```
 
-- **Branch to push (live-feeds):** `cursor/discovery-taxonomy-v02` (or `cursor/discovery-taxonomy-v02-27bf`)
-- **Field Desk target branch:** copy these mirror files into the field-desk repo manually
-- **`cursor[bot]` cannot push field-desk** — Howard must copy mirror files into `setoxxx/nycif-field-desk`
-- **Do not create WordPress plugin 1.4.0 yet** — keep plugin 1.3.1 / PR #164 as rollback until live Pages pass
+## Push / copy instructions (Field Desk)
 
-## Files replaced in this mirror
+`cursor[bot]` cannot push `setoxxx/nycif-field-desk`. Howard must copy:
 
-| File | Role |
-|------|------|
-| `index.html` | Filter panel order, Explore More, script tags |
-| `app-discovery-taxonomy-v02.js` | Map app, feeds, filters, markers |
-| `event-feed-schema-v1.js` | Schema projection + discovery fields |
-| `public-map-defaults-v01.js` | LocalStorage defaults + version token |
-| `public-map-v01.css` | Explore More, filter counts, focus states |
-| `service-worker.js` | App-shell cache |
-| `README.md` | This file |
+| Copy from live-feeds | Into field-desk |
+|----------------------|-----------------|
+| `discovery-taxonomy-v02/index.html` | `index.html` (or review path) |
+| `discovery-taxonomy-v02/discovery-patch-v02.js` | `./discovery-patch-v02.js` |
+| `discovery-taxonomy-v02/public-map-defaults-v01.js` | `./public-map-defaults-v01.js` |
+| `discovery-taxonomy-v02/public-map-v01.css` | merge / replace |
+| `discovery-taxonomy-v02/service-worker.js` | `./service-worker.js` |
+| `schema-v1-major-all-v01/app-schema-v1-major-all-v01.js` | `./app-schema-v1-major-all-v01.js` |
+| `schema-v1-major-all-v01/event-feed-schema-v1.js` | `./event-feed-schema-v1.js` |
 
-Preserve existing overlay scripts in `index.html` (`public-approved-overlays-*.js`) — PUBLIC DATA LAYERS (5PM, Cannabis, Correlation) stay separate with disclaimers.
+**Preserve** in field-desk (do not delete):
+
+- Existing overlay scripts already on Pages (`public-approved-overlays-*.js`) — this mirror also ships copies for offline preview
+- `boot-today-*`, `date-normalizer-*`, calendar/VIP polish scripts if still referenced after HTML swap
+- Overlay JSON under `data/`
+- Plugin 1.3.1 / map-restore-v02 rollback path
+
+After copying into field-desk, change script `src` values that point at `../schema-v1-major-all-v01/` to local `./` paths.
 
 ## Runtime
 
-- **Cache token / VERSION:** `discovery-taxonomy-v02`
+- **Cache / version token:** `discovery-taxonomy-v02`
 - **Service worker CACHE_NAME:** `nycif-v019-discovery-taxonomy-v02`
+- **Config object:** `window.NYCIF_DISCOVERY_V02` from `discovery-patch-v02.js` (must load **before** the app)
 - **Default mode:** Major Events, Next 7 days, all boroughs, all main + Explore More categories ON
-- **Category filter handshake:** `selectedCategories.has(event.category) || event.interests.some(i => selectedCategories.has(i))`
-- **Major-only checkbox:** filters `significance === 'major'` / `nycif.is_major`
+- **Category filter handshake:** `category match OR any interest match` (inclusive OR across selected interests)
 - **Marker eligibility:** `map_ready` + `event_role === public_event` + no `parent_event_id` + `display_disposition === standalone_public_event`
-- **Grouped supporting:** related count on parent popup; child rows do not get competing pins
-- **Badges:** LIST ONLY for list-only rows; REVIEW for review layer
-- **Search index status:** `Indexing more events…` / `Full event index loaded`
-- **Security:** `textContent` for strings; `safeExternalUrl` for links
-- **Leaflet CDN:** SRI integrity attributes preserved in `index.html`
+- **Search index copy:** `Indexing more events…` / `Full event index loaded`
 
-## Feed URLs (after live-feeds merge to `main`)
+## Feed URLs
 
-Preview any branch with `?feeds=<branch>` (same as prior mirrors).
+Preview branch feeds with `?feeds=<branch>` (e.g. `?feeds=cursor/discovery-taxonomy-v02-27bf`).
 
 | Layer | Path |
 |-------|------|
@@ -51,20 +55,25 @@ Preview any branch with `?feeds=<branch>` (same as prior mirrors).
 | Approved pages | `data/schema-v1-discovery/approved/pages/page-XXXX.json` |
 | Review pages | `data/schema-v1-discovery/review/pages/page-XXXX.json` |
 
-Raw GitHub host (production):
+Production host after merge to `main`:
 
-```
+```text
 https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/schema-v1-discovery/...
 ```
 
-## Blank-state actions
+## GitHub Pages test checklist
 
-When no events match: **Reset Filters**, **Show All Events**, **Enable All Categories** (panel buttons + list empty state).
+1. Push field-desk branch with the files above
+2. Open Pages URL with `?v=discovery-taxonomy-v02&resetFilters=1&feeds=cursor/discovery-taxonomy-v02-27bf`
+3. Confirm Major default, Kids/Classes/Volunteer on main panel, Explore More expands
+4. Confirm Parks label is **Parks / outdoors**
+5. Toggle each PUBLIC DATA LAYER and confirm pins/status change (script tag alone is not enough)
+6. Existing-profile + incognito + mobile
 
 ## WordPress
 
-Do not ship plugin **1.4.0** from this mirror.
+Do **not** create plugin **1.4.0** until live Pages pass. Keep PR #164 / 1.3.1 as rollback.
 
 ## Safety
 
-This mirror does not modify `location_cache.json`, staged protected feeds, or the public map promotion pipeline.
+This mirror does not modify `location_cache.json`, protected staged feeds, or public-map promotion.

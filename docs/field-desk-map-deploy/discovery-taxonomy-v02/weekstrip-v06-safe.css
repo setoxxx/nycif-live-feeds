@@ -1,0 +1,44 @@
+/* v0.6-safe scrollable week strip */
+.date-chips {
+  width: min(560px, calc(100vw - 18px));
+  overflow: hidden;
+}
+
+.date-chip-track {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  max-width: 100%;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  touch-action: pan-x;
+}
+
+.date-chip-track::-webkit-scrollbar {
+  display: none;
+}
+
+.date-chip-track button {
+  flex: 0 0 auto;
+  min-width: 64px;
+  scroll-snap-align: center;
+}
+
+.date-chip-track button[data-date-mode="all"] {
+  min-width: 52px;
+}
+
+@media (max-width: 720px) {
+  .date-chips {
+    width: calc(100vw - 18px);
+    left: 9px;
+    right: 9px;
+    transform: none;
+  }
+
+  .date-chip-track button {
+    min-width: 60px;
+  }
+}

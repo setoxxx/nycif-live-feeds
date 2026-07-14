@@ -32,6 +32,9 @@ jobs:
         run: python scripts/test_events_schema_v1_security.py
       - name: JavaScript syntax
         run: |
-          node --check docs/field-desk-map-deploy/discovery-taxonomy-v02/event-feed-schema-v1.js
-          node --check docs/field-desk-map-deploy/discovery-taxonomy-v02/app-discovery-taxonomy-v02.js
+          node --check docs/field-desk-map-deploy/discovery-taxonomy-v02/discovery-patch-v02.js
+          node --check docs/field-desk-map-deploy/discovery-taxonomy-v02/public-map-defaults-v01.js
           node --check docs/field-desk-map-deploy/discovery-taxonomy-v02/service-worker.js
+          node --check docs/field-desk-map-deploy/discovery-taxonomy-v02/public-approved-overlays-v01.js
+          node --check docs/field-desk-map-deploy/schema-v1-major-all-v01/event-feed-schema-v1.js
+          node --check docs/field-desk-map-deploy/schema-v1-major-all-v01/app-schema-v1-major-all-v01.js

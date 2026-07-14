@@ -108,18 +108,31 @@ def main() -> int:
                 errors.append(f"missing nycif.{key}")
                 break
 
-    # Frontend mirror exists
+    # Frontend thin mirror + shared major-all runtime with discovery hooks
     mirror = ROOT / "docs" / "field-desk-map-deploy" / "discovery-taxonomy-v02"
+    major_all = ROOT / "docs" / "field-desk-map-deploy" / "schema-v1-major-all-v01"
     for name in (
         "index.html",
-        "app-discovery-taxonomy-v02.js",
-        "event-feed-schema-v1.js",
+        "discovery-patch-v02.js",
         "public-map-defaults-v01.js",
         "service-worker.js",
         "README.md",
+        "public-approved-overlays-v01.js",
     ):
         if not (mirror / name).exists():
             errors.append(f"missing mirror file {name}")
+    for name in ("app-schema-v1-major-all-v01.js", "event-feed-schema-v1.js"):
+        if not (major_all / name).exists():
+            errors.append(f"missing shared runtime {name}")
+
+    patch = (mirror / "discovery-patch-v02.js").read_text(encoding="utf-8") if (mirror / "discovery-patch-v02.js").exists() else ""
+    if "NYCIF_DISCOVERY_V02" not in patch or "schema-v1-discovery" not in patch:
+        errors.append("discovery patch missing feedRoot config")
+
+    app_js = (major_all / "app-schema-v1-major-all-v01.js").read_text(encoding="utf-8") if (major_all / "app-schema-v1-major-all-v01.js").exists() else ""
+    for needle in ("NYCIF_DISCOVERY_V02", "categoryFilterMatch", "markerEligible", "Indexing more events"):
+        if needle not in app_js:
+            errors.append(f"shared app missing discovery hook: {needle}")
 
     if (mirror / "index.html").exists():
         html = (mirror / "index.html").read_text(encoding="utf-8")
@@ -128,6 +141,8 @@ def main() -> int:
                 errors.append(f"index missing {needle}")
         if 'data-cat="parade"' in html:
             errors.append("obsolete parade slug present")
+        if "discovery-patch-v02.js" not in html:
+            errors.append("index missing discovery-patch script")
 
     report = {"qa_pass": not errors, "errors": errors[:50]}
     (ROOT / "data" / "events_discovery_v02_test_report.json").write_text(
