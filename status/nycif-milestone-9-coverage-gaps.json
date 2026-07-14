@@ -3,7 +3,13 @@
   "schema_version": "1.0.0",
   "generated_at_utc": "2026-07-14T00:17:54.075118+00:00",
   "milestone": "M9 — Supplemental coverage-gap review queues",
-  "headline": "All three remaining coverage gaps now have manual-review artifacts; no auto-promotion.",
+  "headline": "All three remaining coverage gaps have manual-review artifacts and automated findings; no auto-promotion.",
+  "completion_status": {
+    "phase_a_gps_unfilled": "findings_complete_pending_human_coords",
+    "phase_b_calendar_only": "findings_and_priority_csv_complete",
+    "phase_c_parks_only": "classification_findings_complete",
+    "phase_d_admin_dashboard": "deploy_staging_updated_pending_field_desk_merge"
+  },
   "coverage_gaps": {
     "gps_unfilled_proposals": {
       "before_count": 59,
@@ -17,7 +23,10 @@
         "data/gps_review_geocoding_unfilled_report.json",
         "data/manual_gps_reference.template.json"
       ],
-      "next_step": "Human fills manual_gps_reference.json for street segments, then re-runs Phase 2C fill."
+      "next_step": "Human field-verifies street midpoints and park subsites; copy confirmed rows into manual_gps_reference.json",
+      "findings_artifact": "data/gps_unfilled_review_findings.json",
+      "ready_for_manual_reference_count": 0,
+      "needs_human_field_verification_count": 56
     },
     "calendar_only_events": {
       "current_future_unique_keys": 2502,
@@ -32,7 +41,11 @@
         "data/calendar_parks_coord_match_proposals.json",
         "data/calendar_parks_coord_match_proposals_report.json"
       ],
-      "next_step": "Review calendar-only CSV; Parks overlaps include proposed coords for manual check only."
+      "next_step": "Review supplemental_calendar_only_priority_review.csv (top 100); spot-check likely_valid_parks_overlap rows",
+      "findings_artifact": "data/supplemental_calendar_only_review_findings.json",
+      "priority_review_csv": "data/supplemental_calendar_only_priority_review.csv",
+      "likely_valid_parks_overlap_count": 1443,
+      "needs_more_research_count": 1059
     },
     "parks_only_events": {
       "current_future_unique_keys": 1530,
@@ -45,7 +58,12 @@
         "data/supplemental_parks_only_review_queue.csv",
         "data/supplemental_parks_only_review_queue_report.json"
       ],
-      "next_step": "Review Parks-only rows for supplemental ingestion; coords already present for most rows."
+      "next_step": "Review 64 high_value_unique_events; skip 11 recurring_program_instances unless desired",
+      "findings_artifact": "data/supplemental_parks_only_review_findings.json",
+      "high_value_unique_events_count": 64,
+      "recurring_program_instances_count": 11,
+      "already_represented_via_calendar_count": 1443,
+      "missing_coordinates_count": 12
     }
   },
   "scripts_added": [

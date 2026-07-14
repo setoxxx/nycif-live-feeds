@@ -81,9 +81,11 @@
     const counts = dashboard?.current_counts || {};
     const bars = dashboard?.progress_bars || {};
     const multi = dashboard?.multi_source || coverage?.overlap_analysis || {};
+    const supplemental = dashboard?.supplemental_review || {};
     const freshness = dashboard?.freshness || {};
     const added = Array.isArray(delta?.added_events) ? delta.added_events.slice(0, 5) : (dashboard?.samples?.newly_added_events || []).slice(0, 5);
     const calendarOnly = (coverage?.samples?.calendar_only || dashboard?.samples?.calendar_only_events || []).slice(0, 5);
+    const repoBase = 'https://github.com/setoxxx/nycif-live-feeds/blob/main';
 
     root.innerHTML = `
       <div class="notice ok">Loaded from nycif-live-feeds branch(es): ${esc(branches.join(', '))}. Read-only — no publish or mutation controls.</div>
@@ -152,6 +154,38 @@
           <div class="value">${fmtNum(multi.parks_only_unique_keys)}</div>
           <div class="detail">Parks feed rows not matched to permit title+date keys</div>
         </div>
+      </div>
+
+      <h3>M9 — Supplemental review queues (read-only)</h3>
+      <div class="notice">Manual review only · promotion_allowed: ${esc(String(supplemental.promotion_allowed ?? false))} · status: ${esc(supplemental.manual_review_status || 'pending')}</div>
+      <div class="grid">
+        <div class="stat">
+          <div class="label">GPS unfilled proposals</div>
+          <div class="value">${fmtNum(multi.gps_unfilled_proposal_count)}</div>
+          <div class="detail">Phase 2C rows still missing coordinates</div>
+        </div>
+        <div class="stat">
+          <div class="label">Calendar-only review queue</div>
+          <div class="value">${fmtNum(multi.supplemental_calendar_only_queue_count ?? multi.calendar_only_unique_keys)}</div>
+          <div class="detail">${fmtNum(supplemental.calendar_only_with_parks_match_count ?? 0)} w/ Parks match · ${fmtNum(supplemental.calendar_only_without_parks_match_count ?? 0)} without</div>
+        </div>
+        <div class="stat">
+          <div class="label">Parks-only review queue</div>
+          <div class="value">${fmtNum(multi.supplemental_parks_only_queue_count ?? multi.parks_only_unique_keys)}</div>
+          <div class="detail">${fmtNum(supplemental.parks_only_with_coordinates_count ?? 0)} already have coordinates</div>
+        </div>
+        <div class="stat">
+          <div class="label">Calendar↔Parks coord proposals</div>
+          <div class="value">${fmtNum(multi.calendar_parks_coord_proposals_count ?? 0)}</div>
+          <div class="detail">Proposed coords for overlap review only</div>
+        </div>
+      </div>
+      <div class="links" style="margin-top:8px">
+        ${supplemental.gps_unfilled_review_queue ? `<a href="${repoBase}/${esc(supplemental.gps_unfilled_review_queue)}" target="_blank" rel="noopener noreferrer">GPS unfilled queue</a>` : ''}
+        ${supplemental.calendar_only_review_queue ? `<a href="${repoBase}/${esc(supplemental.calendar_only_review_queue)}" target="_blank" rel="noopener noreferrer">Calendar-only queue</a>` : ''}
+        ${supplemental.parks_only_review_queue ? `<a href="${repoBase}/${esc(supplemental.parks_only_review_queue)}" target="_blank" rel="noopener noreferrer">Parks-only queue</a>` : ''}
+        ${supplemental.calendar_parks_coord_match_proposals ? `<a href="${repoBase}/${esc(supplemental.calendar_parks_coord_match_proposals)}" target="_blank" rel="noopener noreferrer">Coord match proposals</a>` : ''}
+        <a href="${repoBase}/data/supplemental_calendar_only_priority_review.csv" target="_blank" rel="noopener noreferrer">Calendar priority CSV</a>
       </div>
 
       <h3>Newly added events (top 5)</h3>
@@ -230,6 +264,13 @@
           ?? coverageResult.payload?.overlap_analysis?.calendar_only_unique_keys,
         parks_only_unique_keys: dashboardResult.payload?.multi_source?.parks_only_unique_keys
           ?? coverageResult.payload?.overlap_analysis?.parks_only_unique_keys,
+        gps_unfilled_proposal_count: dashboardResult.payload?.multi_source?.gps_unfilled_proposal_count,
+        supplemental_calendar_only_queue_count: dashboardResult.payload?.multi_source?.supplemental_calendar_only_queue_count,
+        supplemental_parks_only_queue_count: dashboardResult.payload?.multi_source?.supplemental_parks_only_queue_count,
+        calendar_parks_coord_proposals_count: dashboardResult.payload?.multi_source?.calendar_parks_coord_proposals_count,
+        calendar_only_with_parks_match_count: dashboardResult.payload?.supplemental_review?.calendar_only_with_parks_match_count,
+        parks_only_with_coordinates_count: dashboardResult.payload?.supplemental_review?.parks_only_with_coordinates_count,
+        supplemental_review_status: dashboardResult.payload?.supplemental_review?.manual_review_status,
       };
       document.dispatchEvent(new CustomEvent('nycif-live-pipeline-ready'));
     } catch (error) {

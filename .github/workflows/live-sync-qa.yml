@@ -89,6 +89,9 @@ jobs:
       - name: Build supplemental coverage review queues
         run: python scripts/build_supplemental_coverage_review_queues.py
 
+      - name: Build coverage gap review findings
+        run: python scripts/build_coverage_gap_review_findings.py
+
       - name: Generate live pipeline dashboard status
         run: python scripts/generate_live_pipeline_dashboard_status.py
 

@@ -196,5 +196,110 @@ class UnfilledGpsReviewTests(unittest.TestCase):
                     setattr(unfilled_mod, name, value)
 
 
+class CoverageGapFindingsTests(unittest.TestCase):
+    def test_findings_script_writes_artifacts(self) -> None:
+        from scripts import build_coverage_gap_review_findings as findings_mod
+
+        with tempfile.TemporaryDirectory() as tmp:
+            data_dir = Path(tmp) / "data"
+            data_dir.mkdir()
+            (data_dir / "gps_review_geocoding_unfilled_review_queue.json").write_text(
+                json.dumps(
+                    {
+                        "review_queue": [
+                            {
+                                "group_key": "manhattan|test street",
+                                "display_location": "TEST STREET between A and B",
+                                "borough": "Manhattan",
+                                "event_count": 2,
+                                "priority_score": 10,
+                                "location_complexity": "street_between_pair",
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (data_dir / "supplemental_calendar_only_review_queue.json").write_text(
+                json.dumps(
+                    {
+                        "review_queue": [
+                            {
+                                "overlap_key": "park yoga|2099-01-01",
+                                "title": "Park Yoga",
+                                "start_date_time": "2099-01-01T10:00:00",
+                                "boroughs": ["Manhattan"],
+                                "categories": ["Parks & Recreation"],
+                                "parks_title_date_match": True,
+                                "proposed_lat": 40.7,
+                                "proposed_lng": -74.0,
+                                "review_rank": 1,
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (data_dir / "supplemental_parks_only_review_queue.json").write_text(
+                json.dumps(
+                    {
+                        "review_queue": [
+                            {
+                                "overlap_key": "unique hike|2099-01-02",
+                                "title": "Unique Hike",
+                                "start_date_time": "2099-01-02T09:00:00",
+                                "location": "Central Park",
+                                "lat": 40.7812,
+                                "lng": -73.9665,
+                                "calendar_title_date_match": False,
+                                "review_rank": 1,
+                            }
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            facility_ref = data_dir / "nyc_parks_facility_reference.json"
+            parks_snapshot = data_dir / "nyc_parks_bigapps_events_snapshot.json"
+            location_cache = data_dir / "location_cache.json"
+            facility_ref.write_text(json.dumps({"facilities": []}), encoding="utf-8")
+            parks_snapshot.write_text(json.dumps({"events": []}), encoding="utf-8")
+            location_cache.write_text(json.dumps({"entries": {}}), encoding="utf-8")
+
+            originals = {
+                "UNFILLED_QUEUE": findings_mod.UNFILLED_QUEUE,
+                "FACILITY_REF": findings_mod.FACILITY_REF,
+                "PARKS_SNAPSHOT": findings_mod.PARKS_SNAPSHOT,
+                "LOCATION_CACHE": findings_mod.LOCATION_CACHE,
+                "GPS_FINDINGS": findings_mod.GPS_FINDINGS,
+                "CALENDAR_QUEUE": findings_mod.CALENDAR_QUEUE,
+                "CALENDAR_FINDINGS": findings_mod.CALENDAR_FINDINGS,
+                "CALENDAR_PRIORITY_CSV": findings_mod.CALENDAR_PRIORITY_CSV,
+                "PARKS_QUEUE": findings_mod.PARKS_QUEUE,
+                "PARKS_FINDINGS": findings_mod.PARKS_FINDINGS,
+            }
+            try:
+                findings_mod.UNFILLED_QUEUE = data_dir / "gps_review_geocoding_unfilled_review_queue.json"
+                findings_mod.FACILITY_REF = facility_ref
+                findings_mod.PARKS_SNAPSHOT = parks_snapshot
+                findings_mod.LOCATION_CACHE = location_cache
+                findings_mod.CALENDAR_QUEUE = data_dir / "supplemental_calendar_only_review_queue.json"
+                findings_mod.PARKS_QUEUE = data_dir / "supplemental_parks_only_review_queue.json"
+                findings_mod.GPS_FINDINGS = data_dir / "gps_unfilled_review_findings.json"
+                findings_mod.CALENDAR_FINDINGS = data_dir / "supplemental_calendar_only_review_findings.json"
+                findings_mod.CALENDAR_PRIORITY_CSV = data_dir / "supplemental_calendar_only_priority_review.csv"
+                findings_mod.PARKS_FINDINGS = data_dir / "supplemental_parks_only_review_findings.json"
+                self.assertEqual(findings_mod.main(), 0)
+                gps = json.loads(findings_mod.GPS_FINDINGS.read_text(encoding="utf-8"))
+                cal = json.loads(findings_mod.CALENDAR_FINDINGS.read_text(encoding="utf-8"))
+                parks = json.loads(findings_mod.PARKS_FINDINGS.read_text(encoding="utf-8"))
+                self.assertEqual(gps["input_count"], 1)
+                self.assertEqual(cal["likely_valid_parks_overlap_count"], 1)
+                self.assertEqual(parks["high_value_unique_events_count"], 1)
+            finally:
+                for name, value in originals.items():
+                    setattr(findings_mod, name, value)
+
+
 if __name__ == "__main__":
     unittest.main()
