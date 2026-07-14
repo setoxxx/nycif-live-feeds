@@ -11,9 +11,17 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from schema_v1_common import VALID_CATEGORIES, extract_events  # noqa: E402
+from schema_v1_common import (  # noqa: E402
+    VALID_CATEGORIES,
+    extract_events,
+    write_repo_json,
+)
 
-OUT = ROOT / "data" / "events_schema_v1_category_audit.json"
+LAYER_FILES = {
+    "approved": "data/events_schema_v1_staged.json",
+    "review": "data/events_schema_v1_supplemental_review.json",
+    "major": "data/events_schema_v1_major.json",
+}
 
 
 def count_fallback_classified(events: list[dict]) -> int:
@@ -65,8 +73,18 @@ def collect_general_remaining(events: list[dict]) -> list[dict]:
     return general_remaining
 
 
-def audit_layer(name: str, path: Path) -> dict:
-    events = extract_events(json.loads(path.read_text(encoding="utf-8")))
+def load_layer_events(name: str) -> list[dict]:
+    if name not in LAYER_FILES:
+        raise ValueError(f"unknown layer: {name}")
+    rel = LAYER_FILES[name]
+    path = ROOT.joinpath(*rel.split("/"))
+    if not path.is_relative_to(ROOT):
+        raise ValueError("layer path escape blocked")
+    return extract_events(json.loads(path.read_text(encoding="utf-8")))
+
+
+def audit_layer(name: str) -> dict:
+    events = load_layer_events(name)
     by_norm = Counter(e.get("category") for e in events)
     by_raw = Counter((e.get("nycif") or {}).get("raw_category") for e in events)
     by_reason = Counter((e.get("nycif") or {}).get("classification_reason") for e in events)
@@ -98,23 +116,24 @@ def audit_layer(name: str, path: Path) -> dict:
 
 def main() -> int:
     report = {
-        "approved": audit_layer("approved", ROOT / "data" / "events_schema_v1_staged.json"),
-        "review": audit_layer("review", ROOT / "data" / "events_schema_v1_supplemental_review.json"),
+        "approved": audit_layer("approved"),
+        "review": audit_layer("review"),
     }
-    if (ROOT / "data" / "events_schema_v1_major.json").exists():
-        report["major"] = audit_layer("major", ROOT / "data" / "events_schema_v1_major.json")
+    major_path = ROOT.joinpath("data", "events_schema_v1_major.json")
+    if major_path.exists():
+        report["major"] = audit_layer("major")
     report["qa_pass"] = all(
         layer.get("sum_equals_total") and not layer.get("invalid_categories")
         for layer in report.values()
         if isinstance(layer, dict) and "total" in layer
     )
-    OUT.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    write_repo_json("data/events_schema_v1_category_audit.json", report)
     print(
         json.dumps(
             {
                 "qa_pass": report["qa_pass"],
                 "approved_general": report["approved"]["general_count"],
-                "report": str(OUT),
+                "report": "data/events_schema_v1_category_audit.json",
             },
             indent=2,
         )

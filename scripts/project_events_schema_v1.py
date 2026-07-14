@@ -81,10 +81,10 @@ def validate_event(event: dict, errors: list[str], prefix: str) -> None:
     validate_supplemental_checks(event, errors, prefix)
 
 
-def project_layer(rows: list[dict], *, data_layer: str, production_feed: bool) -> list[dict]:
+def project_layer(rows: list[dict], *, data_layer: str) -> list[dict]:
     reset_stable_id_registry()
     return [
-        project_event(row, index=i, data_layer=data_layer, production_feed=production_feed)
+        project_event(row, index=i, data_layer=data_layer)
         for i, row in enumerate(rows)
     ]
 
@@ -98,10 +98,8 @@ def main() -> int:
     staged_rows = extract_events(json.loads(STAGED_PATH.read_text(encoding="utf-8")))
     supplemental_rows = extract_events(json.loads(SUPPLEMENTAL_PATH.read_text(encoding="utf-8")))
 
-    staged_events = project_layer(staged_rows, data_layer="approved_staged", production_feed=True)
-    supplemental_events = project_layer(
-        supplemental_rows, data_layer="review_supplemental", production_feed=False
-    )
+    staged_events = project_layer(staged_rows, data_layer="approved_staged")
+    supplemental_events = project_layer(supplemental_rows, data_layer="review_supplemental")
     staged_env = envelope(staged_events, generated_at_utc=generated_at, next_cursor=None)
     supp_env = envelope(supplemental_events, generated_at_utc=generated_at, next_cursor=None)
 

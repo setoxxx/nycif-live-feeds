@@ -425,7 +425,6 @@ def score_and_select(
             row,
             index=index,
             data_layer="approved_staged",
-            production_feed=True,
             major_meta=meta,
         )
         event["significance"] = "major"

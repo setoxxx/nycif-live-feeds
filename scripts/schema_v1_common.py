@@ -466,7 +466,6 @@ def project_event(
     *,
     index: int,
     data_layer: str,
-    production_feed: bool,
     major_meta: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     prefer_direct = data_layer == "approved_staged"

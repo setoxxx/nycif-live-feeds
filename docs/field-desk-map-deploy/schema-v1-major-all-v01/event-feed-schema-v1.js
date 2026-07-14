@@ -30,7 +30,7 @@
     ['jobs', /job fair|career fair|employment|workforce|hiring/],
     ['housing', /\btenant\b|housing ambassador|rent assistance|landlord|homeowner|property owner clinic/],
     ['government', /hearing|public meeting|community board|city government|government office|council meeting/],
-    ['sports', /sport - youth|sport - adult|athletic race|triathlon|duathlon|softball|baseball|basketball|soccer|football|hockey|tennis|lacrosse|cricket|volleyball|kickball|rugby|marathon|\b5k\b|\b10k\b|criterium|world cup|fifa|fan zone/],
+    ['sports', /sport - youth|sport - adult|athletic race|triathlon|duathlon|marathon|\b5k\b|\b10k\b|criterium|world cup|fifa|fan zone|softball|baseball|basketball|soccer|football|hockey|tennis|volleyball/],
     ['fitness', /yoga|zumba|pilates|fitness|workout|aerobics|exercise|calisthenics|boot camp|barre|spinning|tai chi|qigong|wellness|stretching|shape up nyc|lap swim/],
     ['civic', /\bparade\b|\bmarch\b|\brally\b|\bvigil\b|\bceremony\b|\bprocession\b|baraat|street and neighborhood|block party|open street|\bcivic\b|unity walk/],
     ['services', /benefit|resource fair|outreach|clinic|health screening|social service|food assistance|legal help/],
