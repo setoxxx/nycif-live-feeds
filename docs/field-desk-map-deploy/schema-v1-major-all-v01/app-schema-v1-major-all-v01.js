@@ -22,7 +22,14 @@
       return 'main';
     }
   })();
-  const FEED_HOST = localHost
+  const hasFeedOverride = (() => {
+    try {
+      return new URL(location.href).searchParams.has('feeds');
+    } catch {
+      return false;
+    }
+  })();
+  const FEED_HOST = localHost && !hasFeedOverride
     ? ''
     : `https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/${feedBranch}`;
   const pageUrl = (layer, cursor) => {
@@ -139,12 +146,57 @@
 
   const map = L.map(els.map, { zoomControl: true, closePopupOnClick: false, tap: false }).setView(NYC_CENTER, 11);
   window.NYCIF_MAIN_MAP = map;
+
+  let popupCentering = false;
+
+  map.on('popupopen', event => {
+    document.body.classList.add('nycif-popup-open');
+
+    const source = event.popup && event.popup._source;
+    if (!source || typeof source.getLatLng !== 'function') {
+      return;
+    }
+
+    const selectedLocation = source.getLatLng();
+    const currentCenter = map.getCenter();
+
+    if (currentCenter.distanceTo(selectedLocation) < 1) {
+      return;
+    }
+
+    popupCentering = true;
+
+    map.once('moveend', () => {
+      popupCentering = false;
+    });
+
+    map.panTo(selectedLocation, {
+      animate: true,
+      duration: 0.32,
+      easeLinearity: 0.25
+    });
+
+    window.setTimeout(() => {
+      popupCentering = false;
+    }, 700);
+  });
+
+  map.on('popupclose', () => {
+    document.body.classList.remove('nycif-popup-open');
+  });
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors',
     crossOrigin: true
   }).addTo(map);
 
-  const useCluster = typeof L.markerClusterGroup === 'function';
+  const clusterEnabled = (() => {
+    try {
+      return new URL(location.href).searchParams.get('clusters') === '1';
+    } catch {
+      return false;
+    }
+  })();
+  const useCluster = clusterEnabled && typeof L.markerClusterGroup === 'function';
   const markers = useCluster
     ? L.markerClusterGroup({ showCoverageOnHover: false, maxClusterRadius: 55, spiderfyOnMaxZoom: true, disableClusteringAtZoom: 16 })
     : L.layerGroup();
@@ -554,8 +606,7 @@
   function popupRoot(e) {
     const root = document.createElement('article');
     root.className = 'popup-card';
-    const src = eventSourceLabel(e);
-    appendText(root, 'div', src, 'popup-source');
+
     const cat = appendText(root, 'div', '', 'popup-category');
     appendText(cat, 'span', e.categoryMeta.emoji);
     cat.appendChild(document.createTextNode(` ${e.categoryMeta.label}`));
@@ -570,10 +621,12 @@
       appendText(wrap, 'dd', dd);
       dl.appendChild(wrap);
     };
-    addRow('Date', e.dateKey || 'n/a');
+    const displayDate = /^\d{4}-\d{2}-\d{2}$/.test(String(e.dateKey || ''))
+      ? `${e.dateKey.slice(5, 7)}/${e.dateKey.slice(8, 10)}/${e.dateKey.slice(2, 4)}`
+      : (e.dateKey || 'Date unavailable');
+    addRow('Date', displayDate);
     addRow('Borough', e.borough);
     addRow('Location', e.location);
-    addRow('Why major', e.major_reason);
     root.appendChild(dl);
     if (e.mapReady) {
       const actions = document.createElement('div');
@@ -613,7 +666,16 @@
         emoji.textContent = e.categoryMeta.emoji;
       }
     });
-    marker.bindPopup(popupRoot(e), { maxWidth: 330, autoPan: true, closeButton: true, autoClose: false, closeOnClick: false });
+    marker.bindPopup(popupRoot(e), {
+      maxWidth: 360,
+      minWidth: 300,
+      autoPan: false,
+      autoPanPadding: [28, 28],
+      closeButton: true,
+      autoClose: true,
+      closeOnClick: true,
+      className: 'nycif-event-popup'
+    });
     return marker;
   }
 
@@ -1190,6 +1252,10 @@
   }
 
   function onMapMoveEnd() {
+    if (popupCentering) {
+      return;
+    }
+
     clearTimeout(moveTimer);
     moveTimer = setTimeout(() => {
       if (state.viewMode === 'all') {
