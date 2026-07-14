@@ -42,7 +42,9 @@
     "deploy_controls": false,
     "public_map_runtime_change": false,
     "production_feed_mutation": false,
-    "wordpress_change": false,
+    "wordpress_change": true,
+  "wordpress_deploy_package": "docs/wordpress-plugin-deploy/nycif-events-map/",
+  "public_map_live_refresh": "2026-07-14",
     "promotion_allowed": false
   },
   "generated_at": "2026-07-14T01:45:00.000Z",

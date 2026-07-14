@@ -104,6 +104,9 @@ jobs:
       - name: Build supplemental events staging feed
         run: python scripts/build_supplemental_events_staging_feed.py
 
+      - name: Build public map feeds from test enriched
+        run: python scripts/build_public_map_feeds.py
+
       - name: Build coverage gap review findings
         run: python scripts/build_coverage_gap_review_findings.py
 

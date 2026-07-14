@@ -1,21 +1,13 @@
 {
-  "generated_at": "2026-06-27T04:19:14.912841+00:00",
-  "source_events": 39198,
-  "output_rows": 12196,
-  "dropped": 45,
-  "window_start": "2026-06-26",
-  "window_end": "2026-12-31",
-  "lane_breakdown": {
-    "civic_public_record": 604,
-    "family_parks": 34,
-    "food_market": 24,
-    "general": 4687,
-    "music_arts": 124,
-    "world_cup_sports": 6723
+  "event_count": 33084,
+  "feed_name": "nycif_all_radar_map_events",
+  "generated_at_utc": "2026-07-14T01:49:52.458673+00:00",
+  "public_map_urls": {
+    "all_feed_raw": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/nycif_all_radar_map_events.json",
+    "github_pages_map": "https://setoxxx.github.io/nycif-field-desk/",
+    "staged_feed_raw": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nycif_staged_live_events.json",
+    "wordpress_map": "https://nycinfocus.com/map/"
   },
-  "last_nypd_hardwrite_at": "2026-06-27T04:31:53.890558+00:00",
-  "nypd_hardwrite_source": "NYPD notice pasted 2026-06-27",
-  "nypd_hardwrite_added": 14,
-  "nypd_hardwrite_removed_existing_duplicates": 0,
-  "output_rows_after_nypd_hardwrite": 12210
+  "source_test_feed": "data/nycif_live_test_enriched_events.json",
+  "staged_feed_companion": "data/nycif_staged_live_events.json"
 }
