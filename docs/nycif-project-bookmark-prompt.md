@@ -34,9 +34,14 @@ Read **both** `AGENTS.md` files before editing.
 | M8 Live admin dashboard | ✅ merged | Live pipeline panel, multi-source coverage |
 | M8-B GPS tail at scale | ✅ merged | Parks facility reference, Phase 2C fill |
 | **M9 Coverage gaps** | ✅ merged PR #161 | Supplemental review queues, tiered resolver in test feed, GeoSearch fill |
-| **M10 Productionize resolver** | 🔄 PR #162 open | Resolver in `sync_nyc_open_data.py`, supplemental staging feed (4,032 rows) |
-| **M10b Live map refresh** | 🔄 this bookmark | Regenerate staged/all feeds, map defaults → staged live, WordPress plugin deploy package |
-| M11 Supplemental merge | ⏳ next | Human-approved calendar+Parks → map layer; optional Phase 2E cache promotion |
+| **M10 Productionize resolver** | ✅ merged PR #162 | Resolver in `sync_nyc_open_data.py`, supplemental staging feed (4,032 rows) |
+| **Schema-v1 Field Desk mirror** | ✅ merged PR #166 | Unified Major/All Field Desk mirror + schema-v1 QA |
+| **Discovery Taxonomy v02** | ✅ merged PR #167 | Source-to-map handshake; Sonar Reliability-D fixed; filter counts; Green Market demotion |
+| **M7-B.2 self-hash remediation** | ✅ merged PR #148 | `gps-adjudication-self-hash-v1` producer/validator lifecycle |
+| **WP map plugin restore package** | ✅ merged PR #164 | Canonical packaging (`map-restore-v02`); live site install still human-only |
+| **M10b Live map refresh** | 🔄 human follow-through | Field-desk push, optional WP install from #164, live-sync-qa dispatch |
+| M11 Supplemental merge | ⏳ next | Human-approved calendar+Parks → map layer; optional Phase 2E cache promotion (unauthorized until explicit) |
+| M7-C duplicate-key enforcement | 🚫 unauthorized | Not started |
 
 ---
 
