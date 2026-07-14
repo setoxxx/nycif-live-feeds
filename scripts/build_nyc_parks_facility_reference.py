@@ -21,6 +21,13 @@ OUTPUT_PATH = DATA_DIR / "nyc_parks_facility_reference.json"
 REPORT_PATH = DATA_DIR / "reports" / "nyc_parks_facility_reference_report.json"
 
 BASE_URL = "https://www.nycgovparks.org/bigapps"
+DEFAULT_HEADERS = {
+    "Accept": "application/json,text/plain,*/*",
+    "User-Agent": (
+        "Mozilla/5.0 (compatible; NYCIF-live-feeds/1.0; "
+        "+https://github.com/setoxxx/nycif-live-feeds)"
+    ),
+}
 
 FACILITY_FEEDS: tuple[tuple[str, str, str], ...] = (
     ("DPR_Playgrounds_001", "playground", "Playgrounds"),
@@ -60,11 +67,18 @@ def valid_nyc_lat_lng(lat: Any, lng: Any) -> bool:
     return 40.0 <= lat_f <= 41.0 and -75.0 <= lng_f <= -73.0
 
 
+def load_json_file(path: Path, default: Any) -> Any:
+    if not path.exists() or path.stat().st_size == 0:
+        return default
+    try:
+        with path.open("r", encoding="utf-8") as handle:
+            return json.load(handle)
+    except Exception:
+        return default
+
+
 def fetch_json(url: str) -> list[dict[str, Any]]:
-    request = urllib.request.Request(
-        url,
-        headers={"Accept": "application/json", "User-Agent": "NYCIF-live-feed-QA/1.0"},
-    )
+    request = urllib.request.Request(url, headers=DEFAULT_HEADERS)
     with urllib.request.urlopen(request, timeout=120) as response:
         payload = json.loads(response.read().decode("utf-8"))
     if isinstance(payload, list):
@@ -164,6 +178,8 @@ def main() -> int:
     facilities: list[dict[str, Any]] = []
     feed_stats: list[dict[str, Any]] = []
     errors: list[str] = []
+    fetch_mode = "live"
+    live_fetch_error = None
 
     for feed_id, facility_type, feed_label in FACILITY_FEEDS:
         url = f"{BASE_URL}/{feed_id}.json"
@@ -212,6 +228,15 @@ def main() -> int:
             }
         )
 
+    if not facilities:
+        committed = load_json_file(OUTPUT_PATH, {})
+        committed_rows = committed.get("facilities") if isinstance(committed, dict) else []
+        if isinstance(committed_rows, list) and committed_rows:
+            facilities = [row for row in committed_rows if isinstance(row, dict)]
+            fetch_mode = "committed_reference_fallback"
+            live_fetch_error = "; ".join(errors[:3]) if errors else "live fetch returned no facilities"
+            errors.append("Used committed nyc_parks_facility_reference.json because live BigApps feeds were unavailable.")
+
     with_coordinates = sum(1 for entry in facilities if entry.get("lat") is not None)
     payload = {
         "generated_at_utc": generated_at,
@@ -229,6 +254,8 @@ def main() -> int:
     report = {
         "generated_at_utc": generated_at,
         "qa_pass": bool(facilities) and with_coordinates > 0,
+        "fetch_mode": fetch_mode,
+        "live_fetch_error": live_fetch_error,
         "facility_feeds_requested": len(FACILITY_FEEDS),
         "facility_feeds_loaded": sum(1 for stat in feed_stats if stat.get("rows_loaded")),
         "reference_rows_total": len(facilities),
