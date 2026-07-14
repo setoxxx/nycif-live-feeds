@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#05070b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NYCIF Map">
+  <title>NYC In Focus Event Map</title>
+
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="./icons/icon-192.svg">
+  <link rel="preconnect" href="https://raw.githubusercontent.com">
+  <link rel="preconnect" href="https://{s}.tile.openstreetmap.org">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" integrity="sha384-wgw+aLYNQ7dlhK47ZPK7FRACiq7ROZwgFNg0m04avm4CaXS+Z9Y7nMu8yNjBKYC+" crossorigin="anonymous">
+  <link rel="stylesheet" href="./style.css?v=hotfix-053">
+  <link rel="stylesheet" href="./fielddesk-v02.css?v=v06safe-01">
+  <link rel="stylesheet" href="./weekstrip-v06-safe.css?v=073time">
+  <link rel="stylesheet" href="./public-map-v01.css?v=discovery-taxonomy-v02">
+</head>
+<body class="public-map-page">
+  <main id="app" class="app">
+    <section class="map-shell" aria-label="NYC In Focus public event map">
+      <div id="map" class="map" role="application" aria-label="NYC event map"></div>
+
+      <div class="brand-card" aria-label="NYC In Focus Event Map status">
+        <div class="brand-mark">NYCIF</div>
+        <div>
+          <strong>Field</strong>
+          <span id="brandCount">Loading NYC events…</span>
+        </div>
+      </div>
+
+      <fieldset class="mode-toggle">
+        <legend class="sr-only">Event mode</legend>
+        <button id="modeMajor" type="button" class="mode-btn active" aria-pressed="true">Major Events</button>
+        <button id="modeAll" type="button" class="mode-btn" aria-pressed="false">All Events</button>
+      </fieldset>
+
+      <div id="viewBanner" class="view-banner" hidden></div>
+      <div id="indexStatus" class="index-status" hidden></div>
+
+      <div id="dateChips" class="date-chips" aria-label="Date filters"></div>
+
+      <button id="layersBtn" class="pill layers-pill" type="button" aria-expanded="false" aria-controls="layersPanel">
+        <span>☰</span><b>Filters</b>
+      </button>
+
+      <aside id="layersPanel" class="layers-panel" aria-label="Map filters" hidden>
+        <p class="panel-label">Choose what to show</p>
+
+        <label class="sort source-filter-label">
+          <span>All Events source</span>
+          <select id="sourceFilter">
+            <option value="all">All Sources</option>
+            <option value="approved">Approved</option>
+            <option value="review">Review</option>
+          </select>
+        </label>
+
+        <button id="resetFiltersBtn" class="load-all" type="button">Reset Filters</button>
+        <button id="showAllEventsBtn" class="load-all" type="button">Show All Events</button>
+        <button id="enableAllCategoriesBtn" class="load-all" type="button">Enable All Categories</button>
+        <button id="retryFeedBtn" class="load-all" type="button">Retry Feed</button>
+
+        <hr>
+
+        <label class="check"><input type="checkbox" id="majorOnly"> <span>⭐ Major events only</span></label>
+        <label class="check"><input type="checkbox" data-cat="sports" checked> <span data-cat-label="sports">🏟️ Sports</span></label>
+        <label class="check"><input type="checkbox" data-cat="civic" checked> <span data-cat-label="civic">📣 Parades / civic</span></label>
+        <label class="check"><input type="checkbox" data-cat="market" checked> <span data-cat-label="market">🛍️ Street fairs / markets</span></label>
+        <label class="check"><input type="checkbox" data-cat="arts" checked> <span data-cat-label="arts">🎭 Arts / performance</span></label>
+        <label class="check"><input type="checkbox" data-cat="parks" checked> <span data-cat-label="parks">🌳 Parks / outdoors</span></label>
+        <label class="check"><input type="checkbox" data-cat="fitness" checked> <span data-cat-label="fitness">💪 Fitness / wellness</span></label>
+        <label class="check"><input type="checkbox" data-cat="family" checked> <span data-cat-label="family">👨‍👩‍👧 Kids / family</span></label>
+        <label class="check"><input type="checkbox" data-cat="education" checked> <span data-cat-label="education">📚 Classes / workshops</span></label>
+        <label class="check"><input type="checkbox" data-cat="volunteer" checked> <span data-cat-label="volunteer">🙋 Volunteer opportunities</span></label>
+        <label class="check"><input type="checkbox" data-cat="general" checked> <span data-cat-label="general">📍 General</span></label>
+        <label class="check"><input type="checkbox" id="photoOnly"> <span>📸 Photo-friendly picks</span></label>
+        <label class="check"><input type="checkbox" id="nypdOnly"> <span>🚨 Public safety / field intel</span></label>
+
+        <button id="exploreMoreToggle" type="button" class="explore-more-toggle" aria-expanded="false" aria-controls="exploreMorePanel">
+          🧭 Explore More
+        </button>
+        <div id="exploreMorePanel" class="explore-more-panel" hidden>
+          <label class="check"><input type="checkbox" data-cat="tours" checked> <span data-cat-label="tours">🗺️ Tours / history</span></label>
+          <label class="check"><input type="checkbox" data-cat="government" checked> <span data-cat-label="government">🏛️ Government / meetings</span></label>
+          <label class="check"><input type="checkbox" data-cat="services" checked> <span data-cat-label="services">🤝 Health / benefits</span></label>
+          <label class="check"><input type="checkbox" data-cat="jobs" checked> <span data-cat-label="jobs">💼 Jobs / career</span></label>
+          <label class="check"><input type="checkbox" data-cat="housing" checked> <span data-cat-label="housing">🏠 Housing / tenant help</span></label>
+          <label class="check"><input type="checkbox" data-cat="environment" checked> <span data-cat-label="environment">🌎 Environment / nature</span></label>
+        </div>
+      </aside>
+
+      <button id="locateBtn" class="locate-btn" type="button" aria-label="Show my location" title="Show my location">🗽</button>
+      <button id="nearMeBtn" class="near-me-btn" type="button" aria-label="Sort events near me" title="Near me">Near Me</button>
+      <button id="deskBtn" class="desk-btn" type="button" aria-expanded="false" aria-controls="deskDrawer">Event List</button>
+
+      <aside id="deskDrawer" class="desk-drawer" aria-label="Event list" hidden>
+        <header class="desk-header">
+          <div>
+            <p>NYC In Focus</p>
+            <h1>Event Map</h1>
+          </div>
+          <button id="closeDeskBtn" class="close-btn" type="button" aria-label="Close event list">×</button>
+        </header>
+
+        <label class="search">
+          <span class="sr-only">Search events</span>
+          <input id="searchInput" type="search" placeholder="Search title, location, borough, type" autocomplete="off">
+        </label>
+
+        <div class="boroughs" id="boroughs"></div>
+
+        <label class="sort">
+          <span>Sort</span>
+          <select id="sortSelect">
+            <option value="priority">Priority</option>
+            <option value="near">Near me</option>
+            <option value="time">Time</option>
+            <option value="borough">Borough</option>
+            <option value="type">Type</option>
+          </select>
+        </label>
+
+        <div id="listMeta" class="list-meta">Loading events...</div>
+        <div id="eventList" class="event-list"></div>
+        <button id="loadMoreBtn" class="load-all" type="button" hidden>Load 100 more</button>
+      </aside>
+
+      <div class="public-intro-v01"><strong>NYC In Focus:</strong> Major Events by default with discovery taxonomy filters. Category filters match primary category or interests. REVIEW and LIST ONLY labels stay clear. PUBLIC DATA LAYERS (5PM, Cannabis, Correlation) are separate overlays with disclaimers. Confirm details before traveling.</div>
+      <div id="status" class="status">Loading NYC In Focus event map…</div>
+      <pre id="debugPanel" class="debug-panel" hidden></pre>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr" crossorigin="anonymous"></script>
+  <script src="./public-approved-overlays-capture-v01.js?v=02"></script>
+  <script src="./public-map-defaults-v01.js?v=discovery-taxonomy-v02"></script>
+  <script src="./boot-today-v073-safe.js?v=01"></script>
+  <script src="./date-normalizer-v073-safe.js?v=01"></script>
+  <script src="./calendar-links-v01.js?v=07"></script>
+  <script src="./vip-filter-v01.js?v=01"></script>
+  <script src="./live-alerts-v02.js?v=02"></script>
+  <script src="./ui-polish-v01.js?v=03"></script>
+  <script src="./event-location-corrections-v01.js?v=01"></script>
+  <script src="./event-feed-schema-v1.js?v=discovery-taxonomy-v02"></script>
+  <script src="./app-discovery-taxonomy-v02.js?v=discovery-taxonomy-v02"></script>
+  <script src="./public-approved-overlays-v01.js?v=03"></script>
+  <script src="./popup-autoclose-fix-v01.js?v=popup-v05-hide-x"></script>
+</body>
+</html>

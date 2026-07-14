@@ -1,0 +1,37 @@
+name: Discovery Taxonomy v02 QA
+
+on:
+  pull_request:
+  push:
+    branches:
+      - 'cursor/discovery-taxonomy-v02-27bf'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nycif-discovery-v02-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  discovery-v02-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Inventory sources
+        run: python scripts/inventory_events_sources_v02.py
+      - name: Project discovery taxonomy
+        run: python scripts/project_events_discovery_v02.py
+      - name: Discovery contract tests
+        run: python scripts/test_events_discovery_v02.py
+      - name: Schema-v1 security still green
+        run: python scripts/test_events_schema_v1_security.py
+      - name: JavaScript syntax
+        run: |
+          node --check docs/field-desk-map-deploy/discovery-taxonomy-v02/event-feed-schema-v1.js
+          node --check docs/field-desk-map-deploy/discovery-taxonomy-v02/app-discovery-taxonomy-v02.js
+          node --check docs/field-desk-map-deploy/discovery-taxonomy-v02/service-worker.js
