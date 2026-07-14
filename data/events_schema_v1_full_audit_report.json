@@ -1,0 +1,322 @@
+{
+  "generated_at_utc": "2026-07-14T04:43:05Z",
+  "reference_today_nyc": "2026-07-14",
+  "next_7_days_definition": "today through today + 7 days (inclusive)",
+  "approved": {
+    "layer": "approved_staged",
+    "legacy_input_count": 32845,
+    "schema_output_count": 32845,
+    "counts_match": true,
+    "map_ready_count": 32845,
+    "list_only_count": 0,
+    "missing_title_count": 0,
+    "missing_borough_count": 0,
+    "missing_location_count": 0,
+    "missing_source_id_count": 0,
+    "missing_date_count": 0,
+    "invalid_date_count": 0,
+    "duplicate_stable_id_count": 0,
+    "duplicate_stable_ids_sample": [],
+    "duplicate_title_date_location_count": 4197,
+    "normalized_category_counts": {
+      "sports": 27024,
+      "parks": 4461,
+      "market": 930,
+      "arts": 218,
+      "fitness": 192,
+      "civic": 20
+    },
+    "raw_category_counts": {
+      "sports": 27020,
+      "parks": 4461,
+      "market": 930,
+      "arts": 218,
+      "fitness": 192,
+      "general": 24
+    },
+    "source_dataset_counts": {
+      "tvpp-9vvx": 32845
+    },
+    "borough_counts": {
+      "Manhattan": 10948,
+      "Brooklyn": 8172,
+      "Queens": 7502,
+      "Bronx": 4688,
+      "Staten Island": 1535
+    },
+    "event_date_counts_top": {
+      "2026-07-18": 1476,
+      "2026-07-25": 1430,
+      "2026-07-26": 1256,
+      "2026-07-19": 1248,
+      "2026-08-08": 1192,
+      "2026-08-01": 1189,
+      "2026-08-02": 1154,
+      "2026-07-16": 1142,
+      "2026-07-23": 1142,
+      "2026-07-15": 1129,
+      "2026-07-14": 1125,
+      "2026-07-22": 1121,
+      "2026-07-21": 1115,
+      "2026-08-09": 1104,
+      "2026-07-30": 1067,
+      "2026-07-29": 1060,
+      "2026-07-28": 1054,
+      "2026-08-06": 1035,
+      "2026-08-04": 1013,
+      "2026-08-05": 996
+    },
+    "earliest_date": "2026-07-14",
+    "latest_date": "2026-12-27",
+    "records_today": 1125,
+    "records_next_7_days": 9136,
+    "records_all_upcoming": 32845,
+    "map_render_rejects": {
+      "count": 0,
+      "reasons": {
+        "invalid_or_missing_nyc_coordinates": 0
+      },
+      "sample": []
+    },
+    "invalid_normalized_categories": [],
+    "category_sum_equals_total": true
+  },
+  "supplemental": {
+    "layer": "review_supplemental",
+    "legacy_input_count": 4032,
+    "schema_output_count": 4032,
+    "counts_match": true,
+    "map_ready_count": 2961,
+    "list_only_count": 1071,
+    "missing_title_count": 0,
+    "missing_borough_count": 1530,
+    "missing_location_count": 0,
+    "missing_source_id_count": 0,
+    "missing_date_count": 0,
+    "invalid_date_count": 0,
+    "duplicate_stable_id_count": 0,
+    "duplicate_stable_ids_sample": [],
+    "duplicate_title_date_location_count": 293,
+    "normalized_category_counts": {
+      "family": 1191,
+      "parks": 892,
+      "education": 691,
+      "fitness": 591,
+      "arts": 248,
+      "sports": 169,
+      "volunteer": 106,
+      "services": 34,
+      "general": 34,
+      "civic": 33,
+      "housing": 24,
+      "environment": 11,
+      "government": 4,
+      "jobs": 2,
+      "market": 2
+    },
+    "raw_category_counts": {
+      "Parks & Recreation": 2395,
+      "None": 1530,
+      "Free,Benefits Access,General Events,Special Event": 26,
+      "Street and Neighborhood": 25,
+      "Tenant Resource Fair ,Free,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 10,
+      "Tenant Resource Fair ,Free,Property Owner Clinic,Property Owner Resource Fair,Housing Ambassador Event,General Events,HPD Outreach Event": 7,
+      "Environment,Free,Street and Neighborhood,Kids and Family,Featured,General Events": 7,
+      "Athletic": 6,
+      "City Government Office,HPD Outreach Event": 3,
+      "Tenant Resource Fair ,Free,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,HPD Outreach Event": 3,
+      "General Events": 3,
+      "Free,Parks & Recreation,Education,General Events": 2,
+      "Job Fair,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,HPD Outreach Event": 1,
+      "Tenant Resource Fair ,Free,Property Owner Clinic,Housing Ambassador Event,General Events,HPD Outreach Event": 1,
+      "Free,Parks & Recreation,Athletic,General Events": 1,
+      "Free,Parks & Recreation,Kids and Family,Athletic,General Events": 1,
+      "Free,Parks & Recreation,Volunteer,Education,General Events": 1,
+      "Free,Kids and Family,Athletic,Featured,General Events": 1,
+      "Cultural,Featured,General Events": 1,
+      "Hearings and Meetings": 1,
+      "Free,Parks & Recreation,Kids and Family,General Events": 1,
+      "Free,Parks & Recreation,General Events": 1,
+      "Free,Parks & Recreation,Kids and Family,Education,General Events": 1,
+      "Tenant Resource Fair ,Free,Job Fair,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 1,
+      "Free,Property Owner Clinic,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 1,
+      "Tenant Resource Fair ,Free,Property Owner Resource Fair,Housing Ambassador Event,Veteran Events,HPD Outreach Event": 1,
+      "Tenant Resource Fair ,Free,Housing Information Class,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 1
+    },
+    "source_dataset_counts": {
+      "nyc-citywide-events-calendar-api": 2502,
+      "nyc-parks-bigapps-events": 1530
+    },
+    "borough_counts": {
+      "None": 1530,
+      "Manhattan": 737,
+      "Queens": 555,
+      "Bronx": 446,
+      "Staten Island": 374,
+      "Brooklyn": 347,
+      "Other": 38,
+      "Bx, Bk, Mn, Qn, SI": 4,
+      "Mn, Other": 1
+    },
+    "event_date_counts_top": {
+      "2026-07-16": 302,
+      "2026-07-15": 299,
+      "2026-07-14": 276,
+      "2026-07-22": 272,
+      "2026-07-25": 265,
+      "2026-07-17": 264,
+      "2026-07-21": 260,
+      "2026-07-23": 259,
+      "2026-07-18": 250,
+      "2026-07-24": 229,
+      "2026-07-20": 136,
+      "2026-08-05": 131,
+      "2026-07-29": 130,
+      "2026-07-30": 127,
+      "2026-07-27": 116,
+      "2026-07-28": 116,
+      "2026-08-04": 115,
+      "2026-08-01": 110,
+      "2026-07-31": 102,
+      "2026-07-19": 69
+    },
+    "earliest_date": "2026-07-14",
+    "latest_date": "2026-12-19",
+    "records_today": 276,
+    "records_next_7_days": 1856,
+    "records_all_upcoming": 4032,
+    "map_render_rejects": {
+      "count": 1071,
+      "reasons": {
+        "invalid_or_missing_nyc_coordinates": 1071
+      },
+      "sample": [
+        {
+          "id": "review_supplemental:nyc-citywide-events-calendar-api:1117076@2026-07-14",
+          "reason": "invalid_or_missing_nyc_coordinates",
+          "latitude": null,
+          "longitude": null
+        },
+        {
+          "id": "review_supplemental:nyc-citywide-events-calendar-api:1116776@2026-07-14",
+          "reason": "invalid_or_missing_nyc_coordinates",
+          "latitude": null,
+          "longitude": null
+        },
+        {
+          "id": "review_supplemental:nyc-citywide-events-calendar-api:1064816@2026-07-14",
+          "reason": "invalid_or_missing_nyc_coordinates",
+          "latitude": null,
+          "longitude": null
+        },
+        {
+          "id": "review_supplemental:nyc-citywide-events-calendar-api:996236@2026-07-14",
+          "reason": "invalid_or_missing_nyc_coordinates",
+          "latitude": null,
+          "longitude": null
+        },
+        {
+          "id": "review_supplemental:nyc-citywide-events-calendar-api:1115936@2026-07-14",
+          "reason": "invalid_or_missing_nyc_coordinates",
+          "latitude": null,
+          "longitude": null
+        },
+        {
+          "id": "review_supplemental:nyc-citywide-events-calendar-api:1116816@2026-07-14",
+          "reason": "invalid_or_missing_nyc_coordinates",
+          "latitude": null,
+          "longitude": null
+        },
+        {
+          "id": "review_supplemental:nyc-citywide-events-calendar-api:1116836@2026-07-14",
+          "reason": "invalid_or_missing_nyc_coordinates",
+          "latitude": null,
+          "longitude": null
+        },
+        {
+          "id": "review_supplemental:nyc-citywide-events-calendar-api:1116636@2026-07-14",
+          "reason": "invalid_or_missing_nyc_coordinates",
+          "latitude": null,
+          "longitude": null
+        },
+        {
+          "id": "review_supplemental:nyc-citywide-events-calendar-api:1107296@2026-07-14",
+          "reason": "invalid_or_missing_nyc_coordinates",
+          "latitude": null,
+          "longitude": null
+        },
+        {
+          "id": "review_supplemental:nyc-citywide-events-calendar-api:1089076@2026-07-14",
+          "reason": "invalid_or_missing_nyc_coordinates",
+          "latitude": null,
+          "longitude": null
+        },
+        {
+          "id": "review_supplemental:nyc-citywide-events-calendar-api:1116736@2026-07-15",
+          "reason": "invalid_or_missing_nyc_coordinates",
+          "latitude": null,
+          "longitude": null
+        },
+        {
+          "id": "review_supplemental:nyc-citywide-events-calendar-api:919556@2026-07-15",
+          "reason": "invalid_or_missing_nyc_coordinates",
+          "latitude": null,
+          "longitude": null
+        },
+        {
+          "id": "review_supplemental:nyc-citywide-events-calendar-api:1064836@2026-07-15",
+          "reason": "invalid_or_missing_nyc_coordinates",
+          "latitude": null,
+          "longitude": null
+        },
+        {
+          "id": "review_supplemental:nyc-citywide-events-calendar-api:1092756@2026-07-15",
+          "reason": "invalid_or_missing_nyc_coordinates",
+          "latitude": null,
+          "longitude": null
+        },
+        {
+          "id": "review_supplemental:nyc-citywide-events-calendar-api:1112436@2026-07-15",
+          "reason": "invalid_or_missing_nyc_coordinates",
+          "latitude": null,
+          "longitude": null
+        }
+      ]
+    },
+    "invalid_normalized_categories": [],
+    "category_sum_equals_total": true
+  },
+  "combined": {
+    "total_accessible_records": 36877,
+    "map_ready_count": 35806,
+    "list_only_count": 1071
+  },
+  "major": {
+    "legacy_major_count": 582,
+    "legacy_earliest": "2026-06-27",
+    "legacy_latest": "2026-12-27",
+    "legacy_past_count": 362,
+    "legacy_upcoming_count": 220,
+    "legacy_today": 4,
+    "legacy_next7": 28,
+    "schema_major_count": 432,
+    "schema_earliest": "2026-07-14",
+    "schema_latest": "2026-12-27",
+    "schema_today": 10,
+    "schema_next7": 83,
+    "schema_upcoming": 432,
+    "legacy_is_stale": true
+  },
+  "qa": {
+    "approved_counts_match": true,
+    "supplemental_counts_match": true,
+    "no_duplicate_approved_ids": true,
+    "no_duplicate_supplemental_ids": true,
+    "categories_valid_approved": true,
+    "categories_valid_supplemental": true,
+    "legacy_major_feed_stale": true,
+    "location_cache_modified": false,
+    "promotion_allowed": false,
+    "pass": true
+  }
+}
