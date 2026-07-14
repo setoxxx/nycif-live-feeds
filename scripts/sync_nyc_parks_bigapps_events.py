@@ -21,6 +21,23 @@ SNAPSHOT_PATH = DATA_DIR / "nyc_parks_bigapps_events_snapshot.json"
 REPORT_PATH = DATA_DIR / "nyc_parks_bigapps_events_sync_report.json"
 
 EVENTS_URL = "https://www.nycgovparks.org/xml/events_300_rss.json"
+DEFAULT_HEADERS = {
+    "Accept": "application/json,text/plain,*/*",
+    "User-Agent": (
+        "Mozilla/5.0 (compatible; NYCIF-live-feeds/1.0; "
+        "+https://github.com/setoxxx/nycif-live-feeds)"
+    ),
+}
+
+
+def load_json_file(path: Path, default: Any) -> Any:
+    if not path.exists() or path.stat().st_size == 0:
+        return default
+    try:
+        with path.open("r", encoding="utf-8") as handle:
+            return json.load(handle)
+    except Exception:
+        return default
 
 
 def save_json(path: Path, payload: Any) -> None:
@@ -109,10 +126,7 @@ def normalize_event_item(item: dict[str, Any]) -> dict[str, Any]:
 
 
 def fetch_events() -> list[dict[str, Any]]:
-    request = urllib.request.Request(
-        EVENTS_URL,
-        headers={"Accept": "application/json", "User-Agent": "NYCIF-live-feed-QA/1.0"},
-    )
+    request = urllib.request.Request(EVENTS_URL, headers=DEFAULT_HEADERS)
     with urllib.request.urlopen(request, timeout=120) as response:
         payload = json.loads(response.read().decode("utf-8"))
     if isinstance(payload, list):
@@ -126,12 +140,34 @@ def fetch_events() -> list[dict[str, Any]]:
     return [row for row in rows if isinstance(row, dict)]
 
 
+def load_committed_snapshot_events() -> list[dict[str, Any]]:
+    payload = load_json_file(SNAPSHOT_PATH, {})
+    events = payload.get("events") if isinstance(payload, dict) else []
+    if not isinstance(events, list):
+        return []
+    return [row for row in events if isinstance(row, dict)]
+
+
 def main() -> int:
     generated_at = datetime.now(timezone.utc).isoformat()
     today = date.today().isoformat()
+    fetch_mode = "live"
+    live_fetch_error = None
+    normalized: list[dict[str, Any]] = []
+
     try:
         raw_items = fetch_events()
         normalized = [normalize_event_item(item) for item in raw_items]
+    except Exception as exc:
+        live_fetch_error = str(exc)
+        committed_rows = load_committed_snapshot_events()
+        if committed_rows:
+            normalized = committed_rows
+            fetch_mode = "committed_snapshot_fallback"
+        else:
+            fetch_mode = "live_fetch_failed"
+
+    try:
         current_future = [
             row
             for row in normalized
@@ -139,29 +175,31 @@ def main() -> int:
         ]
         with_coords = sum(1 for row in normalized if row.get("lat") is not None)
         qa_pass = bool(normalized)
-        error = None
+        error = live_fetch_error if fetch_mode != "live" else None
     except Exception as exc:
-        raw_items = []
-        normalized = []
         current_future = []
         with_coords = 0
         qa_pass = False
         error = str(exc)
+        fetch_mode = "processing_failed"
 
     snapshot = {
         "generated_at_utc": generated_at,
         "source_url": EVENTS_URL,
         "source_page": "https://www.nycgovparks.org/bigapps",
+        "fetch_mode": fetch_mode,
         "events": normalized,
     }
     report = {
         "generated_at_utc": generated_at,
         "qa_pass": qa_pass,
+        "fetch_mode": fetch_mode,
         "source_url": EVENTS_URL,
         "snapshot_rows": len(normalized),
         "current_future_rows": len(current_future),
         "rows_with_coordinates": with_coords,
         "error": error,
+        "live_fetch_error": live_fetch_error,
         "production_feeds_modified": False,
         "public_map_modified": False,
         "location_cache_modified": False,
