@@ -1,7 +1,8 @@
 (() => {
-  const VERSION = 'schema-v1-major-all-v01';
+  const DISCOVERY = window.NYCIF_DISCOVERY_V02 || null;
+  const VERSION = (DISCOVERY && DISCOVERY.version) || 'schema-v1-major-all-v01';
   const STORAGE_KEY = 'nycif-field-desk-state-v06-safe';
-  const DEFAULT_VERSION = 'schema-v1-major-all-v01';
+  const DEFAULT_VERSION = VERSION;
   const LIST_PAGE = 100;
   const VIEWPORT_BUFFER = 0.15;
   const MAJOR_MARKER_SOFT_CAP = 800;
@@ -9,6 +10,7 @@
   const SEARCH_DEBOUNCE_MS = 180;
   const NYC_CENTER = [40.7128, -74.006];
   const SCHEMA = window.NYCIF_EVENT_FEED_SCHEMA_V1;
+  const FEED_ROOT = (DISCOVERY && DISCOVERY.feedRoot) || 'schema-v1';
   const localHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
   const feedBranch = (() => {
     try {
@@ -25,13 +27,17 @@
     : `https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/${feedBranch}`;
   const pageUrl = (layer, cursor) => {
     const name = String(cursor || '').replace(/\.json$/i, '');
-    return `${FEED_HOST}/data/schema-v1/${layer}/pages/${name}.json`;
+    return `${FEED_HOST}/data/${FEED_ROOT}/${layer}/pages/${name}.json`;
   };
   const FEEDS = {
-    major: FEED_HOST + '/data/schema-v1/major/events.json',
-    majorFallback: FEED_HOST + '/data/events_schema_v1_major.json',
-    approvedManifest: FEED_HOST + '/data/schema-v1/approved/manifest.json',
-    reviewManifest: FEED_HOST + '/data/schema-v1/review/manifest.json',
+    major: FEED_HOST + `/data/${FEED_ROOT}/major/events.json`,
+    majorFallback: FEED_HOST + (
+      DISCOVERY
+        ? '/data/events_discovery_v02_major.json'
+        : '/data/events_schema_v1_major.json'
+    ),
+    approvedManifest: FEED_HOST + `/data/${FEED_ROOT}/approved/manifest.json`,
+    reviewManifest: FEED_HOST + `/data/${FEED_ROOT}/review/manifest.json`,
     approvedPage: cursor => pageUrl('approved', cursor),
     reviewPage: cursor => pageUrl('review', cursor)
   };
@@ -50,8 +56,14 @@
     volunteer: { emoji: '🙋', label: 'Volunteer' },
     jobs: { emoji: '💼', label: 'Jobs / careers' },
     housing: { emoji: '🏠', label: 'Housing / tenant help' },
-    general: { emoji: '📍', label: 'General' }
+    general: { emoji: '📍', label: 'General' },
+    tours: { emoji: '🗺️', label: 'Tours / history' }
   };
+  if (DISCOVERY && DISCOVERY.categoryMeta) {
+    Object.keys(DISCOVERY.categoryMeta).forEach(key => {
+      CATEGORY_META[key] = { ...(CATEGORY_META[key] || {}), ...DISCOVERY.categoryMeta[key] };
+    });
+  }
   const ALL_CATEGORY_KEYS = Object.keys(CATEGORY_META);
   const BOROUGHS = ['All', 'Manhattan', 'Brooklyn', 'Queens', 'Bronx', 'Staten Island'];
   const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
@@ -192,6 +204,12 @@
     const title = schemaEvent.title || 'Untitled event';
     const location = schemaEvent.location || '';
     const borough = schemaEvent.borough || '';
+    const interests = Array.isArray(schemaEvent.interests)
+      ? schemaEvent.interests.map(v => String(v || '')).filter(Boolean)
+      : [];
+    const tags = Array.isArray(schemaEvent.tags)
+      ? schemaEvent.tags.map(v => String(v || '')).filter(Boolean)
+      : [];
     const e = {
       ...schemaEvent,
       lat: schemaEvent.latitude,
@@ -199,6 +217,10 @@
       dateKey: eventDate(schemaEvent),
       categoryKey: catKey,
       categoryMeta: CATEGORY_META[catKey],
+      interests,
+      tags,
+      event_role: schemaEvent.event_role || 'public_event',
+      parent_event_id: schemaEvent.parent_event_id || null,
       mapReady,
       isReview: review,
       isMajor: schemaEvent.significance === 'major' || !!nycif.is_major,
@@ -206,7 +228,19 @@
       verification_status: nycif.verification_status,
       major_reason: nycif.major_reason,
       major_score: nycif.major_score || 0,
-      searchText: norm([title, location, borough, catKey, schemaEvent.source?.dataset, schemaEvent.source?.source_event_id, nycif.event_type, nycif.major_reason].filter(Boolean).join(' ')),
+      searchText: norm([
+        title,
+        location,
+        borough,
+        catKey,
+        interests.join(' '),
+        tags.join(' '),
+        schemaEvent.source?.dataset,
+        schemaEvent.source?.source_event_id,
+        nycif.event_type,
+        nycif.major_reason,
+        schemaEvent.event_role
+      ].filter(Boolean).join(' ')),
       marker: null
     };
     e.priority = Number(e.major_score || 0) + (e.isMajor ? 500 : 0) + (e.photoPick ? 120 : 0);
@@ -214,6 +248,36 @@
       e.priority += 800;
     }
     return e;
+  }
+
+  function categoryFilterMatch(e) {
+    if (state.categories[e.categoryKey]) {
+      return true;
+    }
+    if (!DISCOVERY) {
+      return false;
+    }
+    return (e.interests || []).some(interest => !!state.categories[interest]);
+  }
+
+  function markerEligible(e) {
+    if (!e.mapReady) {
+      return false;
+    }
+    if (!DISCOVERY) {
+      return true;
+    }
+    if (e.event_role !== 'public_event') {
+      return false;
+    }
+    if (e.parent_event_id) {
+      return false;
+    }
+    const disposition = e.nycif && e.nycif.display_disposition;
+    if (disposition && disposition !== 'standalone_public_event') {
+      return false;
+    }
+    return true;
   }
 
   function upsertEvents(schemaEvents) {
@@ -366,7 +430,7 @@
   function eventMatches(e) {
     return sourceMatches(e)
       && dateMatches(e)
-      && !!state.categories[e.categoryKey]
+      && categoryFilterMatch(e)
       && (!state.photoOnly || e.photoPick)
       && (!state.nypdOnly || e.verification_status === 'nypd_field_intel')
       && (state.borough === 'all' || e.borough === state.borough)
@@ -554,7 +618,7 @@
   }
 
   function ensureMarker(e) {
-    if (!e.mapReady) {
+    if (!markerEligible(e)) {
       return null;
     }
     if (!e.marker) {
@@ -581,7 +645,7 @@
     if (markers.clearLayers) {
       markers.clearLayers();
     }
-    const mapReady = visible.filter(e => e.mapReady);
+    const mapReady = visible.filter(e => markerEligible(e));
     let candidates;
     if (state.viewMode === 'major') {
       candidates = mapReady.slice(0, MAJOR_MARKER_SOFT_CAP);
@@ -701,10 +765,10 @@
 
   function updateIndexLabel() {
     if (state.indexComplete) {
-      setIndexStatus('Search index complete for all loaded pages.');
+      setIndexStatus('Full event index loaded');
       return;
     }
-    setIndexStatus(`Search still indexing pages… approved ${state.pagesLoaded.approved}/${state.pagesTotal.approved || '?'} · review ${state.pagesLoaded.review}/${state.pagesTotal.review || '?'}`);
+    setIndexStatus('Indexing more events…');
   }
 
   function render() {

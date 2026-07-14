@@ -8,17 +8,12 @@ const APP_SHELL = [
   './public-map-v01.css',
   './public-approved-overlays-capture-v01.js',
   './public-map-defaults-v01.js',
+  './discovery-patch-v02.js',
   './public-approved-overlays-v01.js',
-  './boot-today-v073-safe.js',
-  './date-normalizer-v073-safe.js',
-  './event-feed-schema-v1.js',
-  './app-discovery-taxonomy-v02.js',
-  './manifest.json',
-  './icons/icon-192.svg',
-  './icons/icon-512.svg'
+  './service-worker.js'
 ];
 
-const NETWORK_FIRST_RE = /\/(?:index\.html|app-discovery-taxonomy-v02\.js|event-feed-schema-v1\.js|public-map-defaults-v01\.js|service-worker\.js|public-approved-overlays-v01\.js|public-approved-overlays-capture-v01\.js)$/;
+const NETWORK_FIRST_RE = /\/(?:index\.html|discovery-patch-v02\.js|public-map-defaults-v01\.js|service-worker\.js|public-approved-overlays-v01\.js|public-approved-overlays-capture-v01\.js|app-schema-v1-major-all-v01\.js|event-feed-schema-v1\.js)$/;
 
 function isNetworkFirst(url) {
   return (url.origin === location.origin && NETWORK_FIRST_RE.test(url.pathname)) || url.hostname === 'raw.githubusercontent.com';

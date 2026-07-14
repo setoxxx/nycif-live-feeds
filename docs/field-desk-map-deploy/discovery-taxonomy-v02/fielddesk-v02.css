@@ -1,0 +1,288 @@
+/* NYCIF Field Desk v0.2 controls */
+.brand-card {
+  position: absolute;
+  z-index: 790;
+  top: calc(env(safe-area-inset-top, 0px) + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  max-width: min(330px, calc(100vw - 98px));
+  min-height: 42px;
+  padding: 7px 12px;
+  border-radius: 16px;
+  background: rgba(5, 7, 11, .86);
+  color: #fff;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, .32);
+  backdrop-filter: blur(14px);
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 28px;
+  border-radius: 10px;
+  background: #d40000;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 1000;
+  letter-spacing: .04em;
+}
+
+.brand-card strong { display: block; font-size: 13px; line-height: 1; }
+.brand-card span {
+  display: block;
+  margin-top: 2px;
+  font-size: 10px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, .78);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.date-chips {
+  position: absolute;
+  z-index: 755;
+  top: calc(env(safe-area-inset-top, 0px) + 58px);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  max-width: calc(100vw - 18px);
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(5, 7, 11, .78);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .25);
+  backdrop-filter: blur(12px);
+}
+
+.date-chips button {
+  border: 0;
+  border-radius: 999px;
+  padding: 7px 10px;
+  background: transparent;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.date-chips button.active { background: #fff; color: #111827; }
+
+.near-me-btn {
+  position: absolute;
+  z-index: 760;
+  top: calc(env(safe-area-inset-top, 0px) + 148px);
+  right: calc(env(safe-area-inset-right, 0px) + 8px);
+  min-height: 32px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0 11px;
+  background: rgba(5, 7, 11, .86);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 900;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .3);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+}
+
+.item-tags {
+  display: flex !important;
+  gap: 4px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.item-tag.near { background: rgba(17, 24, 39, .08); color: #111827 !important; }
+
+/* NYCIF Field Desk v0.3 workflow controls, merged into loaded stylesheet */
+.field-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 6px;
+  margin-top: 9px;
+}
+
+.field-action,
+.quick-actions a,
+.quick-actions button {
+  border: 0;
+  border-radius: 999px;
+  padding: 7px 8px;
+  background: #111827;
+  color: #fff !important;
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  text-decoration: none !important;
+  cursor: pointer;
+}
+
+.field-action:first-child,
+.quick-actions a { background: #d40000; }
+
+.photo-priority,
+.item-tag[class*="priority-"] {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 1000;
+  letter-spacing: .02em;
+}
+
+.photo-priority {
+  margin: 0 5px 6px 0;
+  padding: 4px 7px;
+  text-transform: uppercase;
+  background: rgba(17, 24, 39, .08);
+  color: #111827;
+}
+
+.photo-priority[class*="must"],
+.item-tag[class*="must"] {
+  background: #d40000 !important;
+  color: #fff !important;
+}
+
+.photo-priority[class*="good"],
+.item-tag[class*="good"] {
+  background: rgba(212, 0, 0, .12) !important;
+  color: #d40000 !important;
+}
+
+.quick-actions {
+  display: flex !important;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.quick-actions a,
+.quick-actions button {
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  padding-inline: 10px;
+}
+
+/* v0.5-safe stats panel */
+#statsToggleV05 {
+  position: absolute;
+  z-index: 770;
+  right: calc(env(safe-area-inset-right, 0px) + 8px);
+  top: calc(env(safe-area-inset-top, 0px) + 188px);
+  min-height: 32px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0 12px;
+  background: rgba(255, 255, 255, .96);
+  color: #111827;
+  font-size: 11px;
+  font-weight: 1000;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, .3);
+  cursor: pointer;
+}
+
+#statsPanelV05 {
+  position: absolute;
+  z-index: 920;
+  right: calc(env(safe-area-inset-right, 0px) + 8px);
+  top: calc(env(safe-area-inset-top, 0px) + 226px);
+  width: min(330px, calc(100vw - 18px));
+  max-height: 62dvh;
+  overflow: auto;
+  padding: 10px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .97);
+  color: #111827;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .34);
+  backdrop-filter: blur(14px);
+}
+
+#statsPanelV05 header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+#statsPanelV05 header strong {
+  color: #d40000;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+#statsCloseV05,
+#statsRefreshV05 {
+  border: 0;
+  border-radius: 999px;
+  background: #111827;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+#statsCloseV05 {
+  width: 28px;
+  height: 28px;
+}
+
+#statsRefreshV05 {
+  min-height: 30px;
+  padding: 0 10px;
+  margin-top: 8px;
+  background: #d40000;
+}
+
+#statsPanelV05 dl {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+}
+
+#statsPanelV05 dl div {
+  display: grid;
+  grid-template-columns: 116px 1fr;
+  gap: 8px;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(17, 24, 39, .08);
+}
+
+#statsPanelV05 dt {
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 1000;
+}
+
+#statsPanelV05 dd {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+#statsPanelV05 p {
+  margin: 8px 0 0;
+  color: #6b7280;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+@media (max-width: 720px) {
+  .brand-card { max-width: calc(100vw - 106px); }
+  .brand-card strong { font-size: 12px; }
+  .brand-card span { max-width: 155px; }
+  .date-chips { top: calc(env(safe-area-inset-top, 0px) + 56px); }
+  .date-chips button { font-size: 10px; padding: 7px 8px; }
+  #statsPanelV05 { top: calc(env(safe-area-inset-top, 0px) + 224px); }
+}

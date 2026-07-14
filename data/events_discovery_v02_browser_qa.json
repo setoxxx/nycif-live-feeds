@@ -1,0 +1,149 @@
+{
+  "desktop": {
+    "label": "desktop",
+    "result": {
+      "hasDiscovery": true,
+      "brandText": "245 major \u00b7 next 7 days",
+      "statusText": "Major \u00b7 245 match \u00b7 245 markers \u00b7 vdiscovery-taxonomy-v02",
+      "indexText": "Full event index loaded",
+      "majorActive": true,
+      "labels": [
+        "\ud83c\udfdf\ufe0f Sports",
+        "\ud83d\udce3 Parades / civic",
+        "\ud83d\udecd\ufe0f Street fairs / markets",
+        "\ud83c\udfad Arts / performance",
+        "\ud83c\udf33 Parks / outdoors",
+        "\ud83d\udcaa Fitness / wellness",
+        "\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67 Kids / family",
+        "\ud83d\udcda Classes / workshops",
+        "\ud83d\ude4b Volunteer opportunities",
+        "\ud83d\udccd General",
+        "\ud83d\uddfa\ufe0f Tours / history",
+        "\ud83c\udfdb\ufe0f Government / meetings",
+        "\ud83e\udd1d Health / benefits",
+        "\ud83d\udcbc Jobs / career",
+        "\ud83c\udfe0 Housing / tenant help",
+        "\ud83c\udf0e Environment / nature",
+        "\ud83d\udcf8 Photo-friendly picks",
+        "\ud83d\udea8 Public safety / field intel",
+        "\ud83d\udd25 It's 5PM Somewhere",
+        "\u2705 Legal Cannabis Dispensaries",
+        "\ud83d\udd0e Smoke/Vape/Cannabis Correlation"
+      ],
+      "hasKids": true,
+      "hasClasses": true,
+      "hasVolunteer": true,
+      "hasParksOutdoors": true,
+      "hasExplore": true,
+      "exploreExpanded": "true",
+      "explorePanelHidden": false,
+      "overlayMounted": true,
+      "overlayLabels": [
+        "\ud83d\udd25 It's 5PM Somewhere",
+        "\u2705 Legal Cannabis Dispensaries",
+        "\ud83d\udd0e Smoke/Vape/Cannabis Correlation"
+      ]
+    },
+    "exploreAfter": {
+      "aria": "false",
+      "hidden": true,
+      "toursVisible": false
+    },
+    "overlayInteraction": {
+      "attempted": true,
+      "checked": false,
+      "statusAfter": "It's 5PM Somewhere failed: It's 5PM Somewhere HTTP 404"
+    },
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "JSHandle@error"
+    ]
+  },
+  "mobile": {
+    "label": "mobile",
+    "result": {
+      "hasDiscovery": true,
+      "brandText": "245 major \u00b7 next 7 days",
+      "statusText": "Major \u00b7 245 match \u00b7 245 markers \u00b7 vdiscovery-taxonomy-v02",
+      "indexText": "Full event index loaded",
+      "majorActive": true,
+      "labels": [
+        "\ud83c\udfdf\ufe0f Sports",
+        "\ud83d\udce3 Parades / civic",
+        "\ud83d\udecd\ufe0f Street fairs / markets",
+        "\ud83c\udfad Arts / performance",
+        "\ud83c\udf33 Parks / outdoors",
+        "\ud83d\udcaa Fitness / wellness",
+        "\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67 Kids / family",
+        "\ud83d\udcda Classes / workshops",
+        "\ud83d\ude4b Volunteer opportunities",
+        "\ud83d\udccd General",
+        "\ud83d\uddfa\ufe0f Tours / history",
+        "\ud83c\udfdb\ufe0f Government / meetings",
+        "\ud83e\udd1d Health / benefits",
+        "\ud83d\udcbc Jobs / career",
+        "\ud83c\udfe0 Housing / tenant help",
+        "\ud83c\udf0e Environment / nature",
+        "\ud83d\udcf8 Photo-friendly picks",
+        "\ud83d\udea8 Public safety / field intel",
+        "\ud83d\udd25 It's 5PM Somewhere",
+        "\u2705 Legal Cannabis Dispensaries",
+        "\ud83d\udd0e Smoke/Vape/Cannabis Correlation"
+      ],
+      "hasKids": true,
+      "hasClasses": true,
+      "hasVolunteer": true,
+      "hasParksOutdoors": true,
+      "hasExplore": true,
+      "exploreExpanded": "false",
+      "explorePanelHidden": true,
+      "overlayMounted": true,
+      "overlayLabels": [
+        "\ud83d\udd25 It's 5PM Somewhere",
+        "\u2705 Legal Cannabis Dispensaries",
+        "\ud83d\udd0e Smoke/Vape/Cannabis Correlation"
+      ]
+    },
+    "exploreAfter": {
+      "aria": "true",
+      "hidden": false,
+      "toursVisible": true
+    },
+    "overlayInteraction": {
+      "attempted": true,
+      "checked": false,
+      "statusAfter": "It's 5PM Somewhere failed: It's 5PM Somewhere HTTP 404"
+    },
+    "consoleErrors": [
+      "Failed to load resource: the server responded with a status of 404 (File not found)",
+      "JSHandle@error"
+    ]
+  },
+  "overlay": {
+    "ui_mounted": true,
+    "labels_present": true,
+    "toggle_with_local_symlink_data": {
+      "checked": true,
+      "status": "It's 5PM Somewhere loaded \u00b7 150 markers \u00b7 public-record layer",
+      "pins": 150,
+      "note": "Local live-feeds preview needs field-desk overlay JSON under discovery-taxonomy-v02/data; on Field Desk Pages those files already exist."
+    }
+  },
+  "existing_profile": {
+    "majorActive": true,
+    "version": "discovery-taxonomy-v02",
+    "storage": "{\"borough\":\"all\",\"sort\":\"priority\",\"dateMode\":\"next7\",\"viewMode\":\"major\",\"sourceFilter\":\"all\",\"categories\":{\"sports\":true,\"fitness\":true,\"parks\":true,\"arts\":true,\"market\":true,\"civic\":true,\"government\":true,\"education\":true,\"family\":true,\"services\":true,\"environment\":true,\"volunteer\":true,\"jobs\":true,\"housing\":true,\"general\":true,\"tours\":true},\"photoOnly\":false,\"nypdOnly\":false,\"nycifDefaultVersion\":\"discovery-taxonomy-v02\"}"
+  },
+  "incognito": {
+    "majorActive": true,
+    "version": "discovery-taxonomy-v02",
+    "brand": "245 major \u00b7 next 7 days"
+  },
+  "errors": [],
+  "pass": true,
+  "screenshots": {
+    "desktop": "/opt/cursor/artifacts/discovery-v02-desktop.png",
+    "mobile": "/opt/cursor/artifacts/discovery-v02-mobile.png"
+  }
+}

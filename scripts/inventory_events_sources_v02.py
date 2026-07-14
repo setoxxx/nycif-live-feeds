@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from discovery_v02 import dump_md, extract_rows, write_json  # noqa: E402
+from discovery_v02 import dump_md, extract_rows, utc_now, write_json  # noqa: E402
 
 # Explicit catalog — status is intentional, not inferred from filename alone.
 SOURCE_CATALOG = [
@@ -201,10 +201,10 @@ def main() -> int:
     duplicative = [s for s in sources if s["current_pipeline_status"] == "duplicative_source"]
     historical = [s for s in sources if s["current_pipeline_status"] == "historical_only"]
 
+    from discovery_v02 import utc_now
+
     report = {
-        "generated_at_utc": __import__("discovery_v02", fromlist=["utc_now"]).utc_now()
-        if False
-        else None,
+        "generated_at_utc": utc_now(),
         "source_file_count": len(sources),
         "status_counts": by_status,
         "raw_intake_source_row_total": sum(s["event_like_row_count"] for s in raw_intake),
@@ -225,9 +225,6 @@ def main() -> int:
             ],
         },
     }
-    from discovery_v02 import utc_now
-
-    report["generated_at_utc"] = utc_now()
     write_json("data/events_source_inventory_v02.json", report)
 
     lines = [

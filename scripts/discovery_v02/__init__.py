@@ -451,6 +451,63 @@ def classify_record(row: dict[str, Any]) -> dict[str, Any]:
                 "role_reason": role_reason,
             }
 
+    # 4 high-confidence semantic overrides (before raw source category)
+    semantic_overrides = [
+        (
+            "tours",
+            r"guided tour|walking tour|historical tour|architecture tour|cemetery tour|gallery tour|public gallery tour|public-art tour|heritage walk|hart island tour",
+            ["tours"],
+            [],
+            "high_confidence_semantic_tours",
+        ),
+        (
+            "jobs",
+            r"job fair|career fair|hiring event|employment fair|workforce event",
+            ["jobs"],
+            [],
+            "high_confidence_semantic_jobs",
+        ),
+        (
+            "housing",
+            r"tenant resource fair|housing ambassador|rent assistance|property-owner clinic|landlord clinic|hpd housing|tenant-rights workshop",
+            ["housing"],
+            [],
+            "high_confidence_semantic_housing",
+        ),
+        (
+            "government",
+            r"public hearing|community board meeting|city council meeting|agency meeting|government hearing|land-use hearing",
+            ["government"],
+            [],
+            "high_confidence_semantic_government",
+        ),
+        (
+            "volunteer",
+            r"\bvolunteer\b|stewardship|it's my park|park cleanup|tree care|food-distribution volunteer",
+            ["volunteer"],
+            [],
+            "high_confidence_semantic_volunteer",
+        ),
+    ]
+    for cat, pattern, interests, tags, reason in semantic_overrides:
+        if re.search(pattern, text):
+            tags_final = list(tags) + infer_tags(cat, text, event_role)
+            interests_final = infer_interests(cat, text, tags_final)
+            for interest in interests:
+                if interest not in interests_final:
+                    interests_final.insert(0, interest)
+            return {
+                "category": cat,
+                "interests": interests_final,
+                "tags": tags_final[:12],
+                "event_role": event_role,
+                "classification_reason": reason,
+                "classification_confidence": "high",
+                "raw_category": raw_category,
+                "raw_categories": raw_cats,
+                "role_reason": role_reason,
+            }
+
     # 5 specific authoritative source category if specific
     direct = CATEGORY_ALIASES.get(norm_text(raw_category))
     if direct and direct != "general":
