@@ -1,0 +1,113 @@
+# Event feed schema v1.0
+
+Canonical consumer contract for NYC In Focus event payloads.
+
+## Envelope
+
+```json
+{
+  "schema_version": "1.0",
+  "generated_at_utc": "2026-07-14T03:00:00Z",
+  "total": 32845,
+  "next_cursor": null,
+  "events": []
+}
+```
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `schema_version` | string | Always `"1.0"` for this contract. |
+| `generated_at_utc` | string | ISO-8601 UTC timestamp. |
+| `total` | integer | Count of events in this payload (or total matching the query when paginated). |
+| `next_cursor` | string \| null | Opaque pagination cursor. Full dumps use `null`. |
+| `events` | array | Ordered event objects. |
+
+## Event object
+
+```json
+{
+  "id": "stable-event-id",
+  "title": "Event title",
+  "category": "fitness",
+  "start_date_time": "2026-07-14T09:00:00-04:00",
+  "end_date_time": "2026-07-14T10:00:00-04:00",
+  "timezone": "America/New_York",
+  "borough": "Brooklyn",
+  "location": "Prospect Park",
+  "latitude": 40.6602,
+  "longitude": -73.9690,
+  "significance": null,
+  "source": {
+    "dataset": "nyc-parks",
+    "source_event_id": "12345"
+  }
+}
+```
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `id` | string | Stable id. |
+| `title` | string | Display title. |
+| `category` | string | Normalized category slug (see below). |
+| `start_date_time` | string \| null | Local/ISO start. |
+| `end_date_time` | string \| null | Local/ISO end. |
+| `timezone` | string | Default `America/New_York`. |
+| `borough` | string \| null | Human borough label when known. |
+| `location` | string \| null | Place / address text. |
+| `latitude` | number \| null | NYC latitude when map-ready; otherwise `null` (list-only). |
+| `longitude` | number \| null | NYC longitude when map-ready; otherwise `null`. |
+| `significance` | string \| null | Reserved; may be `null`. |
+| `source.dataset` | string \| null | Upstream dataset id. |
+| `source.source_event_id` | string \| null | Upstream event id. |
+
+## Category slugs
+
+`sports`, `fitness`, `parks`, `arts`, `market`, `civic`, `government`, `education`, `family`, `services`, `environment`, `volunteer`, `jobs`, `housing`, `general`
+
+Explorer display labels (UI only) may expand these into longer names. The wire format uses the slug.
+
+## Layer separation (NYCIF extensions)
+
+Schema v1.0 core fields above are required for all published explorer/staged projections.
+
+Optional extension object (ignored by strict core consumers):
+
+```json
+{
+  "nycif": {
+    "data_layer": "approved_staged",
+    "coordinate_status": "map_ready",
+    "production_feed": true,
+    "promotion_allowed": false,
+    "manual_review_status": null
+  }
+}
+```
+
+Rules:
+
+- `approved_staged` — projected from `data/nycif_staged_live_events.json`.
+- `review_supplemental` — projected from `data/supplemental_events_staging_feed.json`.
+- Review rows stay labeled; they are never silently mixed into the approved production feed.
+- Missing/invalid NYC coordinates → `latitude`/`longitude` = `null` and `coordinate_status` = `list_only`.
+
+## Artifacts
+
+| Path | Role |
+| --- | --- |
+| `scripts/project_events_schema_v1.py` | Projects legacy shaped feeds into schema v1.0. |
+| `data/events_schema_v1_staged.json` | Schema projection of approved/staged events. |
+| `data/events_schema_v1_supplemental_review.json` | Schema projection of expanded review intake. |
+| `data/events_schema_v1_validation_report.json` | Projection QA report. |
+
+## Safety
+
+- Does **not** modify `data/location_cache.json`.
+- Does **not** rewrite protected staged/manifest snapshots in place.
+- Does **not** set `promotion_allowed` true.
+- Does **not** publish to the public map.
+- Supplemental projections remain `production_feed: false`.
+
+## Legacy compatibility
+
+Internal pipeline files may still use `lat`/`lng` and flat `source_dataset` fields. All consumer-facing explorer / plugin data paths must project through this schema before UI presentation.
