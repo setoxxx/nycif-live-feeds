@@ -107,6 +107,24 @@ jobs:
       - name: Build public map feeds from test enriched
         run: python scripts/build_public_map_feeds.py
 
+      - name: Project schema-v1 consumer feeds
+        run: python scripts/project_events_schema_v1.py
+
+      - name: Build schema-v1 major events feed
+        run: python scripts/build_events_schema_v1_major.py
+
+      - name: Build schema-v1 page shards
+        run: python scripts/build_events_schema_v1_pages.py
+
+      - name: Audit schema-v1 categories
+        run: python scripts/audit_events_schema_v1_categories.py
+
+      - name: Full schema-v1 audit
+        run: python scripts/audit_events_schema_v1_full.py
+
+      - name: Test schema-v1 pipeline contract
+        run: python scripts/test_events_schema_v1_pipeline.py
+
       - name: Build coverage gap review findings
         run: python scripts/build_coverage_gap_review_findings.py
 

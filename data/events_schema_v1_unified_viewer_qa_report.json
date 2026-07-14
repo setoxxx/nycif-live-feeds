@@ -1,0 +1,156 @@
+{
+  "generated_for": "Howard Weiss",
+  "local_browser_qa_passed": true,
+  "github_pages_deployed_test": false,
+  "reason_pages_not_tested": "cursor[bot] cannot push to nycif-field-desk (403); Pages URL still serves pre-unified runtime until Field Desk PR is merged by a human with write access.",
+  "wordpress_zip_created": false,
+  "reason_no_wordpress_zip": "Deployment order requires GitHub Pages verification before plugin 1.4.0 packaging.",
+  "counts": {
+    "approved": 32845,
+    "supplemental": 4032,
+    "combined": 36877,
+    "map_ready": 35806,
+    "list_only": 1071,
+    "approved_today": 1125,
+    "approved_next7": 9136,
+    "approved_upcoming": 32845,
+    "major_today": 11,
+    "major_next7": 140,
+    "major_upcoming": 848,
+    "category_counts_approved": {
+      "sports": 27020,
+      "parks": 4461,
+      "market": 930,
+      "arts": 218,
+      "fitness": 192,
+      "general": 24
+    },
+    "category_counts_review": {
+      "family": 1222,
+      "parks": 811,
+      "education": 744,
+      "fitness": 563,
+      "arts": 219,
+      "sports": 172,
+      "volunteer": 108,
+      "services": 68,
+      "housing": 51,
+      "general": 32,
+      "civic": 23,
+      "environment": 11,
+      "government": 4,
+      "jobs": 2,
+      "market": 2
+    }
+  },
+  "browser_qa": {
+    "summary": {
+      "total": 36877,
+      "major": 847,
+      "approved": 32845,
+      "review": 4032,
+      "mapReady": 35806,
+      "listOnly": 1071,
+      "markerObjects": 3,
+      "cluster": true,
+      "timings": {
+        "major": {
+          "fetchMs": 8,
+          "parseMs": 7,
+          "url": "/data/events_schema_v1_major.json",
+          "status": 200
+        },
+        "timeToFirstMajorMs": 20,
+        "markerUpdateMs": 0,
+        "listRenderMs": 14,
+        "review": {
+          "fetchMs": 19,
+          "parseMs": 169,
+          "url": "/data/events_schema_v1_supplemental_review.json",
+          "status": 200
+        },
+        "approved": {
+          "fetchMs": 19,
+          "parseMs": 172,
+          "url": "/data/events_schema_v1_staged.json",
+          "status": 200
+        }
+      },
+      "feedMeta": {
+        "major": {
+          "url": "/data/events_schema_v1_major.json",
+          "total": 848,
+          "schema_version": "1.0",
+          "fallback": false
+        },
+        "review": {
+          "url": "/data/events_schema_v1_supplemental_review.json",
+          "total": 4032,
+          "schema_version": "1.0",
+          "fallback": false
+        },
+        "approved": {
+          "url": "/data/events_schema_v1_staged.json",
+          "total": 32845,
+          "schema_version": "1.0",
+          "fallback": false
+        }
+      }
+    },
+    "ui": {
+      "status": "All \u00b7 3 match \u00b7 3 markers \u00b7 vschema-v1-major-all-v01",
+      "listMeta": "36,877 total \u00b7 3 match filters \u00b7 3 markers clustered/capped \u00b7 showing 3 of 3 list results",
+      "modeMajor": "Major Events (140)",
+      "modeAll": "All Events (10,992)",
+      "majorActive": false,
+      "allActive": true,
+      "banner": null,
+      "listCount": 3,
+      "loadMoreVisible": false
+    },
+    "celeb": [
+      "\ud83d\udecd\ufe0f Markets / fairs LIVE MAJOR World Cup Celebration 2026-07-14 Manhattan \u2022 EAST 115 STREET between PARK AVENUE and LEXINGTON AVENUE \u2022 Street Event Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udf33 Parks / recreation LIVE MAJOR Celebration 2026-07-16 Brooklyn \u2022 Coney Island Beach & Boardwalk: Bays 6 - 10 \u2022 Special Event Directions G Calendar \uf8ff Calendar",
+      "\ud83d\udecd\ufe0f Markets / fairs LIVE MAJOR Celebration 2026-07-16 Brooklyn \u2022 Irving Square Park: Plaza \u2022 Special Event Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udfdf\ufe0f Sports LIVE MAJOR Celebration 2026-07-18 Bronx \u2022 Williamsbridge Oval: Scenic Tables ,Williamsbridge Oval: Plgd w/ Mini Pool & Courts-Basketball-01 ,Williamsbridge Oval: Tennis-03 ,Williamsbridge Oval: Tennis-04 \u2022 Special Event Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udf33 Parks / recreation LIVE MAJOR Celebration 2026-07-18 Bronx \u2022 Mill Pond Park: Picnic Area No BBQ \u2022 Special Event Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udfdf\ufe0f Sports LIVE MAJOR Celebration 2026-07-18 Manhattan \u2022 Randall's Island Park: Wards Meadow Picnic Area Blue ,Randall's Island Park: Wards Meadow Picnic Area Green ,Randall's Island Park: Wards Meadow Picnic Area Orange ,Randall's Island Park: Hell Gate Fields-Soccer-62 \u2022 Special Event Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udf33 Parks / recreation LIVE MAJOR Celebration 2026-07-18 Manhattan \u2022 Morningside Park: West 114th BBQ Area 03 \u2022 Special Event Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udf33 Parks / recreation LIVE MAJOR Celebration 2026-07-18 Brooklyn \u2022 Canarsie Park: Lawn Area Remsen and Seaview \u2022 Special Event Directions G Calendar \uf8ff Calendar"
+    ],
+    "ocean": [
+      "\ud83c\udfdf\ufe0f Sports REVIEW Open House at Ocean Breeze Athletic Complex 2026-07-14 Staten Island \u2022 Ocean Breeze Track & Field Athletic Complex in Ocean Breeze Park Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udfdf\ufe0f Sports REVIEW Open House at Ocean Breeze Athletic Complex 2026-07-14 Ocean Breeze Track & Field Athletic Complex (in Ocean Breeze Park) Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udf33 Parks / recreation REVIEW Ocean Breeze Bocce Tournament 2026-07-16 Staten Island \u2022 Bocce Court in South Beach Wetlands Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udf33 Parks / recreation REVIEW Ocean Breeze Bocce Tournament 2026-07-16 Bocce Court (in South Beach Wetlands) Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udfdf\ufe0f Sports REVIEW LIST ONLY Nature Exploration Hike 2026-07-18 Staten Island \u2022 Ocean Breeze Athletic Complex in Ocean Breeze Track & Field Athletic Complex",
+      "\ud83c\udf33 Parks / recreation REVIEW Birding: Beach Birds 2026-07-19 Ocean Breeze Pier, Seaview Avenue and Father Capodanno Boulevard (in Franklin D. Roosevelt Boardwalk and Beach) Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udf33 Parks / recreation REVIEW Birding: Beach Birds 2026-07-19 Staten Island \u2022 Ocean Breeze Pier, Seaview Avenue and Father Capodanno Boulevard in Franklin D. Roosevelt Boardwalk and Beach Directions G Calendar \uf8ff Calendar"
+    ],
+    "soccer": [
+      "\ud83c\udfdf\ufe0f Sports LIVE Soccer - Non Regulation 2026-07-14 Queens \u2022 Cunningham Park: Soccer-05 \u2022 Sport - Youth Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udfdf\ufe0f Sports LIVE Soccer - Non Regulation 2026-07-15 Queens \u2022 Cunningham Park: Soccer-05 \u2022 Sport - Youth Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udfdf\ufe0f Sports LIVE Soccer - Non Regulation 2026-07-16 Queens \u2022 Cunningham Park: Soccer-05 \u2022 Sport - Youth Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udfdf\ufe0f Sports LIVE Soccer - Non Regulation 2026-07-17 Queens \u2022 Cunningham Park: Soccer-05 \u2022 Sport - Youth Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udfdf\ufe0f Sports LIVE Soccer - Non Regulation 2026-07-18 Queens \u2022 Cunningham Park: Soccer-05 \u2022 Sport - Youth Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udfdf\ufe0f Sports LIVE Soccer - Non Regulation 2026-07-19 Queens \u2022 Cunningham Park: Soccer-05 \u2022 Sport - Youth Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udfdf\ufe0f Sports LIVE Soccer - Non Regulation 2026-07-20 Queens \u2022 Cunningham Park: Soccer-05 \u2022 Sport - Youth Directions G Calendar \uf8ff Calendar",
+      "\ud83c\udfdf\ufe0f Sports LIVE Soccer - Non Regulation 2026-07-21 Queens \u2022 Cunningham Park: Soccer-05 \u2022 Sport - Youth Directions G Calendar \uf8ff Calendar"
+    ],
+    "green": [
+      "\ud83d\udecd\ufe0f Markets / fairs LIVE Green Market 2026-07-14 Manhattan \u2022 Bowling Green: Subway Plaza (Cobblestone) \u2022 Special Event Directions G Calendar \uf8ff Calendar",
+      "\ud83d\udecd\ufe0f Markets / fairs LIVE Green Market 2026-07-16 Manhattan \u2022 Bowling Green: Subway Plaza (Cobblestone) \u2022 Special Event Directions G Calendar \uf8ff Calendar",
+      "\ud83d\udecd\ufe0f Markets / fairs LIVE Green Market 2026-07-21 Manhattan \u2022 Bowling Green: Subway Plaza (Cobblestone) \u2022 Special Event Directions G Calendar \uf8ff Calendar"
+    ],
+    "layersText": "CHOOSE WHAT TO SHOW\n\nAll Events source\nAll Sources\nApproved\nReview\nReset Filters Retry Feed\n\ud83c\udfdf\ufe0f Sports\n\ud83d\udcaa Fitness / wellness\n\ud83c\udf33 Parks / recreation\n\ud83c\udfad Arts / culture\n\ud83d\udecd\ufe0f Markets / fairs\n\ud83d\udce3 Civic / neighborhood\n\ud83c\udfdb\ufe0f Government / hearings\n\ud83d\udcda Education / training\n\ud83d\udc68\u200d\ud83d\udc69\u200d\ud83d\udc67 Kids / family\n\ud83e\udd1d Benefits / services\n\ud83c\udf0e Environment\n\ud83d\ude4b Volunteer\n\ud83d\udcbc Jobs / careers\n\ud83c\udfe0 Housing / tenant help\n\ud83d\udccd General\n\ud83d\udcf8 Photo-friendly picks\n\ud83d\udea8 Public safety / field intel\n\nPUBLIC DATA LAYERS\n\n\ud83d\udd25 It's 5PM Somewhere\n\u2705 Legal Cannabis Dispensaries\n\ud83d\udd0e Smoke/Vape/Cannabis Correlation\n\nComplaint and correlation layers are public-record signals, not proof of wrongdoing, causation, safety conditions, or verified crowd size.",
+    "afterLocate": "All \u00b7 3 match \u00b7 3 markers \u00b7 vschema-v1-major-all-v01",
+    "overlays": {
+      "fivePm": true,
+      "cannabis": true,
+      "correlation": true
+    }
+  },
+  "marker_strategy": "leaflet.markercluster with batch addLayers and soft cap 2500",
+  "max_marker_objects_observed": 2500,
+  "prs_merged_automatically": false
+}
