@@ -155,14 +155,21 @@
       </div>
     `;
 
-    document.getElementById("discoveryGodViewRefresh")?.addEventListener("click", () => load(true));
+    document.getElementById("discoveryGodViewRefresh")?.addEventListener("click", () => {
+      void load({ forceRefresh: true });
+    });
   }
 
-  async function load() {
+  async function load(options = {}) {
+    const forceRefresh = Boolean(options && options.forceRefresh);
     const root = document.getElementById("discovery-god-view");
     const status = document.getElementById("discovery-god-view-status");
     if (!root) return;
-    if (status) status.textContent = "Loading discovery God View digest…";
+    if (status) {
+      status.textContent = forceRefresh
+        ? "Refreshing discovery God View digest…"
+        : "Loading discovery God View digest…";
+    }
     root.innerHTML = "";
     try {
       const digestResult = await fetchBranchJson(PATHS.digest);
@@ -182,6 +189,7 @@
         branch: digestResult.branch,
         queue_totals: digestResult.payload?.queue_totals,
         delta_added: digestResult.payload?.daily_delta?.added_count,
+        force_refresh: forceRefresh,
       };
       document.dispatchEvent(new CustomEvent("nycif-discovery-godview-ready"));
     } catch (error) {
@@ -190,11 +198,18 @@
     }
   }
 
-  window.NYCIF_DISCOVERY_GODVIEW_PANEL = { version: VERSION, refresh: () => load(true) };
+  window.NYCIF_DISCOVERY_GODVIEW_PANEL = {
+    version: VERSION,
+    refresh: () => {
+      void load({ forceRefresh: true });
+    },
+  };
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => load(false));
+    document.addEventListener("DOMContentLoaded", () => {
+      void load();
+    });
   } else {
-    load(false);
+    void load();
   }
 })();

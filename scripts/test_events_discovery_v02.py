@@ -11,6 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from discovery_v02 import classify_record, load_contract, match_recurring_registry  # noqa: E402
+from project_events_discovery_v02 import build_base_event  # noqa: E402
 
 
 def fail(msg: str) -> None:
@@ -79,6 +80,25 @@ def main() -> int:
     if maint["event_role"] != "maintenance_or_closure":
         errors.append("maintenance role")
 
+    # Ordinary Green Markets must not stay major solely via prior major-feed carryover.
+    gm = build_base_event(
+        {
+            "title": "Union Square Greenmarket",
+            "category": "market",
+            "date": "2026-07-15",
+            "source_event_id": "gm-test-1",
+            "dataset": "nyc_open_data_events",
+            "lat": 40.7359,
+            "lng": -73.9911,
+        },
+        data_layer="test",
+        index=0,
+        production_feed=False,
+        current_major_keys={("gm-test-1", "2026-07-15")},
+    )
+    if not gm or (gm.get("nycif") or {}).get("is_major"):
+        errors.append("ordinary green market incorrectly remains major")
+
     # Approved events have required fields
     for e in approved["events"][:200]:
         for key in (
@@ -130,19 +150,33 @@ def main() -> int:
         errors.append("discovery patch missing feedRoot config")
 
     app_js = (major_all / "app-schema-v1-major-all-v01.js").read_text(encoding="utf-8") if (major_all / "app-schema-v1-major-all-v01.js").exists() else ""
-    for needle in ("NYCIF_DISCOVERY_V02", "categoryFilterMatch", "markerEligible", "Indexing more events"):
+    for needle in (
+        "NYCIF_DISCOVERY_V02",
+        "categoryFilterMatch",
+        "markerEligible",
+        "Indexing more events",
+        "updateCategoryFilterCounts",
+    ):
         if needle not in app_js:
             errors.append(f"shared app missing discovery hook: {needle}")
 
     if (mirror / "index.html").exists():
         html = (mirror / "index.html").read_text(encoding="utf-8")
-        for needle in ("Kids / family", "Classes / workshops", "Volunteer", "Explore More", "Parks / outdoors"):
+        for needle in ("Kids / family", "Classes / workshops", "Volunteer", "Explore More", "Parks / outdoors", "data-cat-count"):
             if needle not in html:
                 errors.append(f"index missing {needle}")
         if 'data-cat="parade"' in html:
             errors.append("obsolete parade slug present")
         if "discovery-patch-v02.js" not in html:
             errors.append("index missing discovery-patch script")
+
+    godview = ROOT / "docs" / "field-desk-admin-deploy" / "admin" / "discovery-godview-panel-v02.js"
+    if godview.exists():
+        godview_src = godview.read_text(encoding="utf-8")
+        if "async function load(options = {})" not in godview_src:
+            errors.append("godview panel load() must accept options object (Sonar S930)")
+        if "load(true)" in godview_src or "load(false)" in godview_src:
+            errors.append("godview panel still calls load with bare boolean (Sonar S930)")
 
     report = {"qa_pass": not errors, "errors": errors[:50]}
     (ROOT / "data" / "events_discovery_v02_test_report.json").write_text(

@@ -133,10 +133,12 @@ def build_base_event(
         major_source = "nypd_or_field_intel"
         significance = "major"
     elif in_current_major and event_role == "public_event":
-        # Do not auto-keep routine fitness/little-league as major even if prior feed listed them.
+        # Do not auto-keep routine fitness/little-league/ordinary Green Markets as
+        # major even if a prior major feed listed them.
         routine = bool(
             re.search(
-                r"shape up|yoga|zumba|pilates|little league|fitness class|bodyweight|senior cardio",
+                r"shape up|yoga|zumba|pilates|little league|fitness class|bodyweight|senior cardio|"
+                r"\bgreen\s*markets?\b|\bgreenmarket\b",
                 (title or "").lower(),
             )
         )
@@ -174,6 +176,20 @@ def build_base_event(
         major_reason = "documented_large_public_activation_rule"
         major_source = "documented_event_rules"
         significance = "major"
+
+    # Ordinary weekly Green Markets are category=market, never major, unless a
+    # stronger current signal already classified them (field intel / registry /
+    # explicit major fields / documented festival-scale rules).
+    if (
+        is_major
+        and major_source in {None, "current_score", "demoted_legacy_only"}
+        and re.search(r"\bgreen\s*markets?\b|\bgreenmarket\b", (title or "").lower())
+    ):
+        is_major = False
+        major_score = 0
+        major_reason = "demoted_ordinary_green_market"
+        major_source = None
+        significance = "standard"
 
     # Disposition
     if event_role == "maintenance_or_closure":

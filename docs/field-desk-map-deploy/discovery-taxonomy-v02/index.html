@@ -37,6 +37,12 @@
     }
     #explore-more-panel { margin-top: 0.45rem; display: grid; gap: 0.35rem; }
     #explore-more-panel[hidden] { display: none !important; }
+    .filter-count {
+      font-style: normal;
+      font-weight: 600;
+      opacity: 0.72;
+      margin-left: 0.2rem;
+    }
   </style>
 </head>
 <body class="public-map-page">
@@ -87,28 +93,28 @@
         <hr>
 
         <p class="panel-label">Main categories (inclusive OR with interests)</p>
-        <label class="check"><input type="checkbox" data-cat="sports" checked> <span>🏟️ Sports</span></label>
-        <label class="check"><input type="checkbox" data-cat="civic" checked> <span>📣 Parades / civic</span></label>
-        <label class="check"><input type="checkbox" data-cat="market" checked> <span>🛍️ Street fairs / markets</span></label>
-        <label class="check"><input type="checkbox" data-cat="arts" checked> <span>🎭 Arts / performance</span></label>
-        <label class="check"><input type="checkbox" data-cat="parks" checked> <span>🌳 Parks / outdoors</span></label>
-        <label class="check"><input type="checkbox" data-cat="fitness" checked> <span>💪 Fitness / wellness</span></label>
-        <label class="check"><input type="checkbox" data-cat="family" checked> <span>👨‍👩‍👧 Kids / family</span></label>
-        <label class="check"><input type="checkbox" data-cat="education" checked> <span>📚 Classes / workshops</span></label>
-        <label class="check"><input type="checkbox" data-cat="volunteer" checked> <span>🙋 Volunteer opportunities</span></label>
-        <label class="check"><input type="checkbox" data-cat="general" checked> <span>📍 General</span></label>
+        <label class="check"><input type="checkbox" data-cat="sports" checked> <span>🏟️ Sports <em class="filter-count" data-cat-count="sports">(0)</em></span></label>
+        <label class="check"><input type="checkbox" data-cat="civic" checked> <span>📣 Parades / civic <em class="filter-count" data-cat-count="civic">(0)</em></span></label>
+        <label class="check"><input type="checkbox" data-cat="market" checked> <span>🛍️ Street fairs / markets <em class="filter-count" data-cat-count="market">(0)</em></span></label>
+        <label class="check"><input type="checkbox" data-cat="arts" checked> <span>🎭 Arts / performance <em class="filter-count" data-cat-count="arts">(0)</em></span></label>
+        <label class="check"><input type="checkbox" data-cat="parks" checked> <span>🌳 Parks / outdoors <em class="filter-count" data-cat-count="parks">(0)</em></span></label>
+        <label class="check"><input type="checkbox" data-cat="fitness" checked> <span>💪 Fitness / wellness <em class="filter-count" data-cat-count="fitness">(0)</em></span></label>
+        <label class="check"><input type="checkbox" data-cat="family" checked> <span>👨‍👩‍👧 Kids / family <em class="filter-count" data-cat-count="family">(0)</em></span></label>
+        <label class="check"><input type="checkbox" data-cat="education" checked> <span>📚 Classes / workshops <em class="filter-count" data-cat-count="education">(0)</em></span></label>
+        <label class="check"><input type="checkbox" data-cat="volunteer" checked> <span>🙋 Volunteer opportunities <em class="filter-count" data-cat-count="volunteer">(0)</em></span></label>
+        <label class="check"><input type="checkbox" data-cat="general" checked> <span>📍 General <em class="filter-count" data-cat-count="general">(0)</em></span></label>
 
         <div class="explore-more-block">
           <button id="explore-more-toggle" type="button" aria-expanded="false" aria-controls="explore-more-panel">
             🧭 Explore More
           </button>
           <div id="explore-more-panel" hidden>
-            <label class="check"><input type="checkbox" data-cat="tours" checked> <span>🗺️ Tours / history</span></label>
-            <label class="check"><input type="checkbox" data-cat="government" checked> <span>🏛️ Government / meetings</span></label>
-            <label class="check"><input type="checkbox" data-cat="services" checked> <span>🤝 Health / benefits</span></label>
-            <label class="check"><input type="checkbox" data-cat="jobs" checked> <span>💼 Jobs / career</span></label>
-            <label class="check"><input type="checkbox" data-cat="housing" checked> <span>🏠 Housing / tenant help</span></label>
-            <label class="check"><input type="checkbox" data-cat="environment" checked> <span>🌎 Environment / nature</span></label>
+            <label class="check"><input type="checkbox" data-cat="tours" checked> <span>🗺️ Tours / history <em class="filter-count" data-cat-count="tours">(0)</em></span></label>
+            <label class="check"><input type="checkbox" data-cat="government" checked> <span>🏛️ Government / meetings <em class="filter-count" data-cat-count="government">(0)</em></span></label>
+            <label class="check"><input type="checkbox" data-cat="services" checked> <span>🤝 Health / benefits <em class="filter-count" data-cat-count="services">(0)</em></span></label>
+            <label class="check"><input type="checkbox" data-cat="jobs" checked> <span>💼 Jobs / career <em class="filter-count" data-cat-count="jobs">(0)</em></span></label>
+            <label class="check"><input type="checkbox" data-cat="housing" checked> <span>🏠 Housing / tenant help <em class="filter-count" data-cat-count="housing">(0)</em></span></label>
+            <label class="check"><input type="checkbox" data-cat="environment" checked> <span>🌎 Environment / nature <em class="filter-count" data-cat-count="environment">(0)</em></span></label>
           </div>
         </div>
 

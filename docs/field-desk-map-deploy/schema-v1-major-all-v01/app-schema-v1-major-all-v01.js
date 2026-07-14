@@ -489,6 +489,37 @@
       && (!state.search || e.searchText.includes(state.search));
   }
 
+  function eventMatchesIgnoringCategory(e) {
+    return sourceMatches(e)
+      && dateMatches(e)
+      && (!state.photoOnly || e.photoPick)
+      && (!state.nypdOnly || e.verification_status === 'nypd_field_intel')
+      && (state.borough === 'all' || e.borough === state.borough)
+      && (!state.search || e.searchText.includes(state.search));
+  }
+
+  function updateCategoryFilterCounts() {
+    const counts = Object.create(null);
+    state.events.filter(eventMatchesIgnoringCategory).forEach(e => {
+      const primary = e.category || e.nycif?.category;
+      if (primary) {
+        counts[primary] = (counts[primary] || 0) + 1;
+      }
+      (e.interests || []).forEach(interest => {
+        if (!interest) {
+          return;
+        }
+        counts[interest] = (counts[interest] || 0) + 1;
+      });
+    });
+    document.querySelectorAll('[data-cat-count]').forEach(el => {
+      const key = el.dataset.catCount;
+      const n = counts[key] || 0;
+      el.textContent = `(${n.toLocaleString()})`;
+      el.hidden = false;
+    });
+  }
+
   function milesBetween(a, b) {
     if (!a || !b || !Number.isFinite(b.lat) || !Number.isFinite(b.lng)) {
       return null;
@@ -857,6 +888,7 @@
     if (els.brandCount) {
       els.brandCount.textContent = `${visible.length.toLocaleString()} ${viewModeNoun()} · ${dateModeLabel()}`;
     }
+    updateCategoryFilterCounts();
     status(`${viewModeTitle()} · ${visible.length.toLocaleString()} match · ${drawn.length.toLocaleString()} markers · v${VERSION}`);
     state.timings.listRenderMs = Math.round(performance.now() - t0);
     if (debug && els.debugPanel) {
