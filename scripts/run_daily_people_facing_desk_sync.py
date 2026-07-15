@@ -42,6 +42,8 @@ ALLOWED_SCRIPTS = frozenset(
         "scripts/build_photographer_money_day_packs.py",
         "scripts/sync_nyc_permits_historical.py",
         "scripts/build_photographer_viral_recurrence.py",
+        "scripts/build_pin_integrity_gate.py",
+        "scripts/build_photographer_shoot_day_certified.py",
         "scripts/build_events_discovery_godview_digest_v02.py",
         "scripts/build_civic_people_facing_godview_digest.py",
     }
@@ -156,6 +158,9 @@ def main() -> int:
         hist_args.append("--skip-network")
     steps.append(run_step(safe_python_script("scripts/sync_nyc_permits_historical.py", *hist_args)))
     steps.append(run_step(safe_python_script("scripts/build_photographer_viral_recurrence.py", *ref_args)))
+    # Pin integrity fail-closed: after calendar/packs/viral/civic coverage rebuilds.
+    steps.append(run_step(safe_python_script("scripts/build_pin_integrity_gate.py")))
+    steps.append(run_step(safe_python_script("scripts/build_photographer_shoot_day_certified.py", *ref_args)))
     # Discovery first, then civic God View so civic bookmark is re-injected last.
     if (ROOT / "scripts" / "build_events_discovery_godview_digest_v02.py").exists():
         steps.append(run_step(safe_python_script("scripts/build_events_discovery_godview_digest_v02.py")))
@@ -171,6 +176,8 @@ def main() -> int:
     pack_report = load_json(DATA_DIR / "photographer_money_day_pack_report.json", {})
     viral_report = load_json(DATA_DIR / "photographer_viral_recurrence_report.json", {})
     hist_report = load_json(DATA_DIR / "nyc_permits_historical_sync_report.json", {})
+    pin_report = load_json(DATA_DIR / "pin_integrity_gate_report.json", {})
+    shoot_report = load_json(DATA_DIR / "photographer_shoot_day_certified_report.json", {})
 
     qa_pass = (
         all(s.get("ok") for s in steps)
@@ -182,6 +189,8 @@ def main() -> int:
         and bool(pack_report.get("qa_pass", False))
         and bool(hist_report.get("qa_pass", False))
         and bool(viral_report.get("qa_pass", False))
+        and bool(pin_report.get("qa_pass", False))
+        and bool(shoot_report.get("qa_pass", False))
     )
 
     report = {
@@ -223,6 +232,20 @@ def main() -> int:
                 "next_14d_crowd_magnets": viral_report.get("next_14d_crowd_magnets"),
                 "historical_rows": hist_report.get("compact_row_count"),
             },
+            "pin_integrity": {
+                "qa_pass": pin_report.get("qa_pass"),
+                "demotion_count": pin_report.get("demotion_count"),
+                "map_ready_before_total": pin_report.get("map_ready_before_total"),
+                "map_ready_after_total": pin_report.get("map_ready_after_total"),
+                "demotion_reason_counts": pin_report.get("demotion_reason_counts"),
+                "report": "data/pin_integrity_gate_report.json",
+            },
+            "shoot_day_certified": {
+                "qa_pass": shoot_report.get("qa_pass"),
+                "today_certified_pins": shoot_report.get("today_certified_pins"),
+                "tomorrow_certified_pins": shoot_report.get("tomorrow_certified_pins"),
+                "pack": "data/photographer_shoot_day_certified_pack.json",
+            },
         },
         "promotion_allowed": False,
         "public_map_modified": False,
@@ -230,7 +253,8 @@ def main() -> int:
         "staged_feed_modified": False,
         "notes": (
             "Safe daily desk sync. Does not run build_staged_production_feed / "
-            "build_location_cache / public WordPress publish. Full permit→staged "
+            "build_location_cache / public WordPress publish. Pin integrity gate "
+            "fail-closed: qa_pass requires ZERO bad map_ready pins. Full permit→staged "
             "refresh remains live-sync-qa (manual dispatch)."
         ),
     }

@@ -180,7 +180,16 @@
     const coords = validNycCoords(row.latitude, row.longitude);
     const nycif = { ...(row.nycif || {}) };
     if (!nycif.data_layer) nycif.data_layer = dataLayer;
-    if (!nycif.coordinate_status) nycif.coordinate_status = coords.valid ? 'map_ready' : 'list_only';
+    // Fail closed: claimed map_ready without NYC box → list_only (never leave bad numbers).
+    if (!coords.valid) {
+      if (nycif.coordinate_status !== 'proposed') {
+        nycif.coordinate_status = 'list_only';
+      }
+    } else if (!nycif.coordinate_status) {
+      nycif.coordinate_status = 'map_ready';
+    } else if (nycif.coordinate_status === 'map_ready') {
+      nycif.coordinate_status = 'map_ready';
+    }
     if (dataLayer === 'review_supplemental') {
       nycif.production_feed = false;
       nycif.promotion_allowed = false;

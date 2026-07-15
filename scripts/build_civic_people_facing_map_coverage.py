@@ -21,7 +21,16 @@ from civic_people_facing_common import (  # noqa: E402
     save_json,
     utc_now,
 )
+from pin_integrity import certify_nyc_pin  # noqa: E402
 from schema_v1_common import valid_nyc_coords  # noqa: E402
+
+
+def _memory_nyc_coords(lat: Any, lng: Any) -> tuple[float | None, float | None, bool]:
+    """Memory joins use pin certification (no invent; swap only when unambiguous)."""
+    lat_f, lng_f, ok, _reason = certify_nyc_pin(lat, lng, allow_swap_correct=True)
+    if ok:
+        return lat_f, lng_f, True
+    return valid_nyc_coords(lat, lng)
 
 STAGING_PATH = DATA_DIR / "civic_people_facing_staging_feed.json"
 QA_PATH = DATA_DIR / "civic_people_facing_date_time_location_qa.json"
@@ -48,7 +57,7 @@ def build_memory_index() -> dict[str, dict[str, Any]]:
         for fac in facilities:
             if not isinstance(fac, dict):
                 continue
-            lat, lng, ok = valid_nyc_coords(fac.get("lat") or fac.get("latitude"), fac.get("lng") or fac.get("longitude"))
+            lat, lng, ok = _memory_nyc_coords(fac.get("lat") or fac.get("latitude"), fac.get("lng") or fac.get("longitude"))
             if not ok:
                 continue
             for key in (
@@ -77,7 +86,7 @@ def build_memory_index() -> dict[str, dict[str, Any]]:
         for row in refs:
             if not isinstance(row, dict):
                 continue
-            lat, lng, ok = valid_nyc_coords(row.get("lat") or row.get("latitude"), row.get("lng") or row.get("longitude"))
+            lat, lng, ok = _memory_nyc_coords(row.get("lat") or row.get("latitude"), row.get("lng") or row.get("longitude"))
             if not ok:
                 continue
             for key in (row.get("display_location"), row.get("name"), row.get("group_key")):
@@ -101,7 +110,7 @@ def build_memory_index() -> dict[str, dict[str, Any]]:
     for event in staging.get("events") or []:
         if event.get("coordinate_status") != "map_ready":
             continue
-        lat, lng, ok = valid_nyc_coords(event.get("latitude"), event.get("longitude"))
+        lat, lng, ok = _memory_nyc_coords(event.get("latitude"), event.get("longitude"))
         if not ok:
             continue
         for key in (event.get("display_location"), event.get("address"), event.get("title")):

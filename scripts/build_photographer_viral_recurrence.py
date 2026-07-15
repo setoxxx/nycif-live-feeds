@@ -360,42 +360,80 @@ def build_next_14d_pack(
     )
     magnets = []
     for m in ranked[:40]:
-        cur = m["current"]
+        cur = dict(m["current"])
+        # Viral pack exposes current-side coords only — never invent from historical.
+        # Map pins: NYC-certified map_ready only.
+        status = cur.get("coordinate_status")
+        lat, lng = cur.get("latitude"), cur.get("longitude")
+        if status == "map_ready":
+            from pin_integrity import certify_nyc_pin
+
+            clat, clng, ok, reason = certify_nyc_pin(lat, lng, allow_swap_correct=True)
+            if ok:
+                lat, lng = clat, clng
+                certified = True
+                pin_reason = reason
+            else:
+                status = "list_only"
+                lat, lng = None, None
+                certified = False
+                pin_reason = reason
+                cur["map_link"] = None
+        else:
+            lat, lng = None, None
+            certified = False
+            pin_reason = "not_map_ready"
+            cur["map_link"] = None
         magnets.append(
             {
                 "title": cur.get("title"),
                 "date": cur.get("date"),
                 "borough": cur.get("borough"),
                 "display_location": cur.get("display_location"),
-                "coordinate_status": cur.get("coordinate_status"),
+                "coordinate_status": status,
+                "latitude": lat,
+                "longitude": lng,
+                "certified_pin": certified,
+                "pin_integrity_reason": pin_reason,
                 "match_score": m.get("match_score"),
                 "recurrence_label": m.get("recurrence_label"),
                 "prior_year_title": (m.get("prior_year") or {}).get("title"),
                 "prior_year_date": (m.get("prior_year") or {}).get("date"),
                 "match_reasons": m.get("match_reasons"),
                 "field_desk_link": cur.get("field_desk_link"),
-                "map_link": cur.get("map_link"),
+                "map_link": cur.get("map_link") if certified else None,
                 "foil_operator": m.get("foil_operator"),
                 "event_id": cur.get("event_id"),
                 "prior_event_id": (m.get("prior_year") or {}).get("event_id"),
                 "cemsid": (m.get("prior_year") or {}).get("cemsid"),
             }
         )
+    # Map surface: only certified pins in crowd_magnets (list_only stays in matches artifact).
+    map_magnets = [m for m in magnets if m.get("certified_pin") and m.get("coordinate_status") == "map_ready"]
+    needs_location = [
+        {k: m.get(k) for k in ("title", "date", "borough", "display_location", "event_id", "recurrence_label", "match_score")}
+        for m in magnets
+        if not m.get("certified_pin")
+    ]
     return {
         "schema_version": "photographer-viral-recurrence-pack-v1",
         "premium_label": "Viral Recurrence Pack — next 14 days (premium/operator)",
         "generated_at_utc": utc_now(),
         "reference_today_nyc": reference.isoformat(),
         "window_end": end.isoformat(),
-        "crowd_magnet_count": len(magnets),
-        "returning_likely_count": sum(1 for m in magnets if m.get("recurrence_label") == "returning_likely"),
-        "possible_count": sum(1 for m in magnets if m.get("recurrence_label") == "possible"),
-        "crowd_magnets": magnets,
+        "crowd_magnet_count": len(map_magnets),
+        "returning_likely_count": sum(1 for m in map_magnets if m.get("recurrence_label") == "returning_likely"),
+        "possible_count": sum(1 for m in map_magnets if m.get("recurrence_label") == "possible"),
+        "crowd_magnets": map_magnets,
+        "needs_location": needs_location[:40],
         "promotion_allowed": False,
         "public_map_modified": False,
         "location_cache_modified": False,
         "staged_feed_modified": False,
-        "notes": "Coords/times from current Money-Day rows only. Prior-year rows are history matches.",
+        "notes": (
+            "Coords/times from current Money-Day rows only after NYC pin certification. "
+            "Prior-year rows are history matches never used for pins."
+        ),
     }
 
 

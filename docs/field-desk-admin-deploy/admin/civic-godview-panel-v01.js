@@ -5,7 +5,7 @@
 (() => {
   const VERSION = "civic-godview-panel-v01";
   const LIVE_FEEDS_BASE = "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds";
-  const BRANCH_CANDIDATES = ["main", "cursor/civic-map-coverage-godview-da92"];
+  const BRANCH_CANDIDATES = ["main", "cursor/pin-integrity-shoot-day-gate-da92"];
   const DIGEST_PATH = "data/civic_people_facing_godview_digest.json";
 
   function esc(value) {
@@ -47,12 +47,32 @@
     const checkpoint = digest.checkpoint || {};
     const fieldDesk = digest.field_desk || {};
     const gap = digest.food_access_gap || {};
+    const pin = digest.pin_integrity || {};
+    const shoot = digest.shoot_day_certified || {};
     const links = digest.artifact_links || {};
 
     root.innerHTML = `
       <div class="notice violet">Civic People-Facing God View ${esc(VERSION)} — project bookmark. Read-only; not a public-map publish control.</div>
       <div class="notice ok">Loaded from <code>${esc(branch)}</code>. Merged PR #${esc(checkpoint.merged_pr || 171)} · promotion_allowed=${esc(String(checkpoint.promotion_allowed))}.</div>
       <div class="notice">${esc(digest.public_map_policy || "")}</div>
+
+      <h3>Pin Integrity KPI</h3>
+      <div class="grid">
+        <div class="stat"><div class="label">map_ready certified</div><div class="value">${esc(fmtNum(pin.map_ready_after_total ?? counts.pin_map_ready_certified))}</div><div class="detail">before ${esc(fmtNum(pin.map_ready_before_total))}</div></div>
+        <div class="stat"><div class="label">Demotions</div><div class="value">${esc(fmtNum(pin.demotion_count ?? counts.pin_demotions))}</div><div class="detail">Prefer list_only over ocean pins</div></div>
+        <div class="stat"><div class="label">Pin gate</div><div class="value">${pin.qa_pass ? "PASS" : "FAIL"}</div><div class="detail">${pin.qa_pass ? '<span class="notice ok">qa_pass</span>' : '<span class="notice danger">fail-closed</span>'}</div></div>
+      </div>
+
+      <h3>Shoot Day Certified (read-only)</h3>
+      <div class="grid">
+        <div class="stat"><div class="label">Today certified pins</div><div class="value">${esc(fmtNum(shoot.today_certified_pins ?? counts.shoot_day_today_certified))}</div><div class="detail">needs location ${esc(fmtNum(shoot.today_needs_location))}</div></div>
+        <div class="stat"><div class="label">Tomorrow certified pins</div><div class="value">${esc(fmtNum(shoot.tomorrow_certified_pins ?? counts.shoot_day_tomorrow_certified))}</div><div class="detail">needs location ${esc(fmtNum(shoot.tomorrow_needs_location))}</div></div>
+      </div>
+      <div class="links">
+        ${shoot.today_field_desk_link ? `<a href="${esc(shoot.today_field_desk_link)}" target="_blank" rel="noopener noreferrer">Field Desk today (assignment=1)</a>` : ""}
+        ${shoot.tomorrow_field_desk_link ? `<a href="${esc(shoot.tomorrow_field_desk_link)}" target="_blank" rel="noopener noreferrer">Field Desk tomorrow (assignment=1)</a>` : ""}
+        <a href="https://github.com/setoxxx/nycif-live-feeds/blob/${encodeURIComponent(branch)}/data/photographer_shoot_day_certified_pack.json" target="_blank" rel="noopener noreferrer">Shoot Day Certified pack JSON</a>
+      </div>
 
       <h3>Where we are</h3>
       <div class="grid">

@@ -9,6 +9,8 @@
   const ALL_MARKER_SOFT_CAP = 600;
   const SEARCH_DEBOUNCE_MS = 180;
   const NYC_CENTER = [40.7128, -74.006];
+  // NYC metro envelope — same as schema_v1_common.NYC / pin_integrity.
+  const NYC_BOX = { minLat: 40.4774, maxLat: 40.9176, minLng: -74.2591, maxLng: -73.7004 };
   const SCHEMA = window.NYCIF_EVENT_FEED_SCHEMA_V1;
   const FEED_ROOT = (DISCOVERY && DISCOVERY.feedRoot) || 'schema-v1';
   const localHost = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
@@ -270,12 +272,32 @@
     return '';
   }
 
+  function nycCertifiedPin(lat, lng) {
+    const latN = Number(lat);
+    const lngN = Number(lng);
+    if (!Number.isFinite(latN) || !Number.isFinite(lngN)) return { ok: false, lat: null, lng: null, reason: 'nonfinite' };
+    if (Math.abs(latN) < 1e-12 && Math.abs(lngN) < 1e-12) return { ok: false, lat: null, lng: null, reason: 'null_island' };
+    const ok = latN >= NYC_BOX.minLat && latN <= NYC_BOX.maxLat && lngN >= NYC_BOX.minLng && lngN <= NYC_BOX.maxLng;
+    if (!ok) {
+      // Likely lat/lng swap: refuse (backend may auto-correct; Field Desk never invents).
+      const swappedOk = lngN >= NYC_BOX.minLat && lngN <= NYC_BOX.maxLat && latN >= NYC_BOX.minLng && latN <= NYC_BOX.maxLng;
+      return { ok: false, lat: null, lng: null, reason: swappedOk ? 'swap_suspected' : 'oob_outside_nyc_box' };
+    }
+    return { ok: true, lat: latN, lng: lngN, reason: 'ok_nyc_certified' };
+  }
+
   function toUiEvent(schemaEvent) {
     const nycif = schemaEvent.nycif || {};
-    const catKey = CATEGORY_META[schemaEvent.category] ? schemaEvent.category : 'general';
-    const mapReady = nycif.coordinate_status === 'map_ready'
-      && Number.isFinite(schemaEvent.latitude)
-      && Number.isFinite(schemaEvent.longitude);
+    const pin = nycCertifiedPin(schemaEvent.latitude, schemaEvent.longitude);
+    const claimedReady = nycif.coordinate_status === 'map_ready';
+    // Fail closed: ocean / Null Island / OOB / swap cannot remain mapReady on markers.
+    const mapReady = claimedReady && pin.ok;
+    let coordStatus = String(nycif.coordinate_status || 'list_only');
+    if (mapReady) {
+      coordStatus = 'map_ready';
+    } else if (claimedReady) {
+      coordStatus = 'list_only';
+    }
     const layer = String(nycif.data_layer || '');
     const review = layer === 'review_supplemental' || layer === 'civic_review';
     const civicLane = String(nycif.civic_lane || '');
@@ -292,11 +314,13 @@
     const sourceDataset = schemaEvent.source && schemaEvent.source.dataset
       ? String(schemaEvent.source.dataset)
       : '';
-    const coordStatus = String(nycif.coordinate_status || (mapReady ? 'map_ready' : 'list_only'));
+    const catKey = catKeyFrom(schemaEvent);
     const e = {
       ...schemaEvent,
-      lat: schemaEvent.latitude,
-      lng: schemaEvent.longitude,
+      lat: mapReady ? pin.lat : null,
+      lng: mapReady ? pin.lng : null,
+      latitude: mapReady ? pin.lat : null,
+      longitude: mapReady ? pin.lng : null,
       dateKey: eventDate(schemaEvent),
       categoryKey: catKey,
       categoryMeta: CATEGORY_META[catKey],
@@ -310,6 +334,7 @@
       civicLane,
       sourceDataset,
       coordinateStatus: coordStatus,
+      pinIntegrityReason: pin.reason,
       isMajor: schemaEvent.significance === 'major' || !!nycif.is_major,
       photoPick: !!nycif.photo_pick,
       verification_status: nycif.verification_status,
@@ -335,6 +360,10 @@
       e.priority += 800;
     }
     return e;
+  }
+
+  function catKeyFrom(schemaEvent) {
+    return CATEGORY_META[schemaEvent.category] ? schemaEvent.category : 'general';
   }
 
   function categoryFilterMatch(e) {
@@ -458,7 +487,7 @@
       state.moneyDayIdsByDate = byDate;
       state.moneyDayReady = true;
       if (els.banner) {
-        setBanner(`Assignment Mode: money-day pins only (${ids.size.toLocaleString()} curated ids).`);
+        setBanner(`Assignment Mode: money-day desk (${ids.size.toLocaleString()} curated ids). Pins require NYC certification — LIST ONLY never get fake markers.`);
       }
     } catch (err) {
       // Fail soft — keep date filter without wiping map.
