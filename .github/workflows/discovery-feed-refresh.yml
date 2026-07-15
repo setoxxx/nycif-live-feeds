@@ -1,0 +1,95 @@
+name: Discovery Feed Refresh
+
+# Rebuilds the public discovery event feed the Field Desk map consumes
+# (data/schema-v1-discovery/**) from the committed source snapshots on main
+# and commits the result back to main.
+#
+# The builder scripts and an initial feed already live on main, but the
+# existing discovery-taxonomy-v02-qa.yml only VALIDATES (contents: read, no
+# schedule, no commit) — so without this workflow the committed feed never
+# refreshes and goes stale. This adds the scheduled rebuild-and-commit so the
+# frontend can safely pin its feed ref to `main`.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '40 10 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: discovery-feed-refresh
+  cancel-in-progress: false
+
+jobs:
+  refresh-discovery-feed:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build and commit discovery feed
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          # The discovery feed is derived state. If main advances between our
+          # checkout and our push (the staged-feed pipeline, a PR merge), the
+          # correct resolution is to rebuild on the new tip and try again —
+          # never merge, rebase-with-conflicts, or force-push over it.
+          for attempt in 1 2 3; do
+            git fetch origin main
+            git reset --hard FETCH_HEAD
+
+            # Two-step pipeline: the schema-v1 major build produces the major
+            # key set that the discovery projector reads to flag Featured
+            # events; the projector then writes data/schema-v1-discovery/**.
+            python scripts/build_events_schema_v1_major.py
+            python scripts/project_events_discovery_v02.py
+
+            # Fail closed: never commit an empty or malformed public feed.
+            python - <<'PY'
+          import json, glob, sys
+          major = json.load(open("data/schema-v1-discovery/major/events.json"))
+          if not major.get("events"):
+              sys.exit("major feed has no events")
+          man = json.load(open("data/schema-v1-discovery/approved/manifest.json"))
+          pages = glob.glob("data/schema-v1-discovery/approved/pages/*.json")
+          if man.get("page_count") != len(pages) or not pages:
+              sys.exit(f"approved manifest page_count {man.get('page_count')} != {len(pages)} page files")
+          if not man.get("latest_date"):
+              sys.exit("approved manifest missing latest_date")
+          print(f"validated: {len(major['events'])} major, {man.get('total')} approved across {len(pages)} pages")
+          PY
+
+            git add \
+              data/schema-v1-discovery \
+              data/events_discovery_v02_major.json \
+              data/events_schema_v1_major.json \
+              data/events_schema_v1_major_report.json
+            if git diff --cached --quiet; then
+              echo "No discovery feed changes to commit."
+              exit 0
+            fi
+
+            git commit -m "Refresh discovery event feed"
+            if git push origin HEAD:main; then
+              echo "Pushed discovery feed on attempt ${attempt}."
+              exit 0
+            fi
+
+            echo "Push rejected (main advanced since fetch); rebuilding on the new tip (attempt ${attempt} of 3)."
+            sleep $((attempt * 10))
+          done
+
+          echo "::error::Could not push discovery feed after 3 attempts; main kept advancing. Re-run the workflow."
+          exit 1
