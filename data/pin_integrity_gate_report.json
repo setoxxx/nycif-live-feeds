@@ -9,14 +9,14 @@
   "demotion_count": 0,
   "demotion_reason_counts": {},
   "demotions_artifact": "data/pin_integrity_demotions.json",
-  "generated_at_utc": "2026-07-15T01:33:08Z",
+  "generated_at_utc": "2026-07-15T01:38:59Z",
   "location_cache_modified": false,
   "map_ready_after_total": 4290,
   "map_ready_before_total": 4290,
   "notes": "Demotes invalid map_ready to list_only and clears lat/lng on pin path. Swap auto-correct only when as-is OOB and swapped pair is inside NYC box.",
   "pre_fix_audit": {
-    "note": "Before viral pack rebuild, crowd_magnets claimed map_ready without lat/lng (40). Gate demoted them; viral builder now attaches current Money-Day coords only and certifies before map exposure.",
-    "remediation": "scripts/build_photographer_viral_recurrence.py certifies current-side coords; pack keeps certified_pin=true only",
+    "note": "Before viral pack rebuild, crowd_magnets claimed map_ready without lat/lng (40). Gate demoted them; viral builder now attaches current Money-Day coords only.",
+    "remediation": "build_photographer_viral_recurrence certifies current-side coords",
     "viral_map_ready_without_coords_caught": 40
   },
   "promotion_allowed": false,

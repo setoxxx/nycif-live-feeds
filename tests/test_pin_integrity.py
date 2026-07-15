@@ -36,7 +36,7 @@ def test_null_island_rejected():
 
 def test_ocean_oob_rejected():
     # Mid-Atlantic roughly east of NYC
-    lat, lng, ok, reason = certify_nyc_pin(40.5, -70.0)
+    lat, _lng, ok, reason = certify_nyc_pin(40.5, -70.0)
     assert not ok
     assert reason == REASON_OOB
     assert lat is None
@@ -44,7 +44,7 @@ def test_ocean_oob_rejected():
 
 def test_mainland_us_false_pin_rejected():
     # Chicago
-    lat, lng, ok, reason = certify_nyc_pin(41.88, -87.63)
+    _lat, _lng, ok, reason = certify_nyc_pin(41.88, -87.63)
     assert not ok
     assert reason == REASON_OOB
 
@@ -59,7 +59,7 @@ def test_unambiguous_swap_auto_correct():
 
 
 def test_swap_suspected_without_correct_when_disabled():
-    lat, lng, ok, reason = certify_nyc_pin(-73.985, 40.758, allow_swap_correct=False)
+    lat, _lng, ok, reason = certify_nyc_pin(-73.985, 40.758, allow_swap_correct=False)
     assert not ok
     assert reason in {REASON_SWAP_SUSPECTED, REASON_OOB}
     assert lat is None
@@ -105,7 +105,7 @@ def test_green_path_keeps_certified_map_ready():
     assert not result.get("demoted")
     assert event["coordinate_status"] == "map_ready"
     assert event["certified_pin"] is True
-    assert event["latitude"] == 40.7128
+    assert abs(float(event["latitude"]) - 40.7128) < 1e-9
 
 
 def test_shoot_day_magnet_rank_prefers_parade_over_greenmarket():

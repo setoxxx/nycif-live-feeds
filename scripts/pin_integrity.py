@@ -81,11 +81,8 @@ def certify_nyc_pin(
 
     # Swap candidate: values look like they were stored flipped.
     if allow_swap_correct and in_nyc_box(lng_f, lat_f):
-        # Only correct when as-is is clearly wrong for NYC and swap is clearly right.
         return lng_f, lat_f, True, REASON_OK_SWAP
 
-    # If swap would also be out of box, or as-is somehow both look NYC-ish differently,
-    # demote. Mark swap_suspected when numbers resemble a lat/lng flip near NYC ranges.
     looks_swapped = (
         NYC["min_lat"] <= lng_f <= NYC["max_lat"]
         and NYC["min_lng"] <= lat_f <= NYC["max_lng"]
@@ -93,6 +90,53 @@ def certify_nyc_pin(
     if looks_swapped:
         return None, None, False, REASON_SWAP_SUSPECTED
     return None, None, False, REASON_OOB
+
+
+def _set_pin_coords(event: dict[str, Any], lat_f: float | None, lng_f: float | None) -> None:
+    event["latitude"] = lat_f
+    event["longitude"] = lng_f
+    if "lat" in event:
+        event["lat"] = lat_f
+    if "lng" in event:
+        event["lng"] = lng_f
+
+
+def _demote_event(event: dict[str, Any], reason: str) -> None:
+    _set_pin_coords(event, None, None)
+    event["map_link"] = None
+    event["coordinate_status"] = "list_only"
+    event["pin_integrity_reason"] = reason
+    event["certified_pin"] = False
+
+
+def _certify_proposed(
+    event: dict[str, Any],
+    before_lat: Any,
+    before_lng: Any,
+    *,
+    allow_swap_correct: bool,
+) -> dict[str, Any]:
+    lat_f, lng_f, ok, reason = certify_nyc_pin(before_lat, before_lng, allow_swap_correct=allow_swap_correct)
+    if ok:
+        _set_pin_coords(event, lat_f, lng_f)
+        event["pin_integrity_reason"] = reason
+        event["certified_pin"] = False  # proposed ≠ certified map pin
+        return {"changed": False, "reason": REASON_PROPOSED_KEEP, "status": "proposed"}
+    _demote_event(event, reason)
+    return {
+        "changed": True,
+        "reason": reason,
+        "before_status": "proposed",
+        "after_status": "list_only",
+        "before_lat": before_lat,
+        "before_lng": before_lng,
+    }
+
+
+def _missing_claimed_coords(before_status: str, before_lat: Any, before_lng: Any) -> bool:
+    if before_status != "map_ready":
+        return False
+    return before_lat in (None, "") or before_lng in (None, "")
 
 
 def certify_event_pin(event: dict[str, Any], *, allow_swap_correct: bool = True) -> dict[str, Any]:
@@ -105,57 +149,23 @@ def certify_event_pin(event: dict[str, Any], *, allow_swap_correct: bool = True)
     before_lat = event.get("latitude", event.get("lat"))
     before_lng = event.get("longitude", event.get("lng"))
 
-    # proposed stays proposed (review-only); still drop invalid numbers from pin path
     if before_status == "proposed":
-        lat_f, lng_f, ok, reason = certify_nyc_pin(before_lat, before_lng, allow_swap_correct=allow_swap_correct)
-        if ok:
-            event["latitude"] = lat_f
-            event["longitude"] = lng_f
-            if "lat" in event:
-                event["lat"] = lat_f
-            if "lng" in event:
-                event["lng"] = lng_f
-            event["pin_integrity_reason"] = reason
-            event["certified_pin"] = False  # proposed ≠ certified map pin
-            return {"changed": False, "reason": REASON_PROPOSED_KEEP, "status": "proposed"}
-        event["latitude"] = None
-        event["longitude"] = None
-        if "lat" in event:
-            event["lat"] = None
-        if "lng" in event:
-            event["lng"] = None
-        event["map_link"] = None
-        event["coordinate_status"] = "list_only"
-        event["pin_integrity_reason"] = reason
-        event["certified_pin"] = False
-        return {
-            "changed": True,
-            "reason": reason,
-            "before_status": before_status,
-            "after_status": "list_only",
-            "before_lat": before_lat,
-            "before_lng": before_lng,
-        }
+        return _certify_proposed(
+            event, before_lat, before_lng, allow_swap_correct=allow_swap_correct
+        )
 
     lat_f, lng_f, ok, reason = certify_nyc_pin(before_lat, before_lng, allow_swap_correct=allow_swap_correct)
-
-    if before_status == "map_ready" and (before_lat is None or before_lng is None or before_lat == "" or before_lng == ""):
+    if _missing_claimed_coords(before_status, before_lat, before_lng):
         ok = False
         reason = REASON_STATUS_WITHOUT_COORDS
 
     if ok and lat_f is not None and lng_f is not None:
-        event["latitude"] = lat_f
-        event["longitude"] = lng_f
-        if "lat" in event:
-            event["lat"] = lat_f
-        if "lng" in event:
-            event["lng"] = lng_f
+        _set_pin_coords(event, lat_f, lng_f)
         event["coordinate_status"] = "map_ready"
         event["pin_integrity_reason"] = reason
         event["certified_pin"] = True
-        changed = reason == REASON_OK_SWAP
         return {
-            "changed": changed,
+            "changed": reason == REASON_OK_SWAP,
             "reason": reason,
             "status": "map_ready",
             "before_lat": before_lat,
@@ -164,17 +174,7 @@ def certify_event_pin(event: dict[str, Any], *, allow_swap_correct: bool = True)
             "after_lng": lng_f,
         }
 
-    # Demote — clear pin path numbers
-    event["latitude"] = None
-    event["longitude"] = None
-    if "lat" in event:
-        event["lat"] = None
-    if "lng" in event:
-        event["lng"] = None
-    event["map_link"] = None
-    event["coordinate_status"] = "list_only"
-    event["pin_integrity_reason"] = reason
-    event["certified_pin"] = False
+    _demote_event(event, reason)
     return {
         "changed": before_status == "map_ready" or before_lat not in (None, "") or before_lng not in (None, ""),
         "demoted": True,
@@ -189,7 +189,6 @@ def certify_event_pin(event: dict[str, Any], *, allow_swap_correct: bool = True)
 def nested_nycif_certify(event: dict[str, Any], *, allow_swap_correct: bool = True) -> dict[str, Any]:
     """Certify schema events that nest coordinate_status under nycif."""
     nycif = event.get("nycif") if isinstance(event.get("nycif"), dict) else {}
-    # Temporarily flatten for certify_event_pin
     flat = {
         "coordinate_status": nycif.get("coordinate_status") or event.get("coordinate_status"),
         "latitude": event.get("latitude"),

@@ -292,6 +292,12 @@
     const claimedReady = nycif.coordinate_status === 'map_ready';
     // Fail closed: ocean / Null Island / OOB / swap cannot remain mapReady on markers.
     const mapReady = claimedReady && pin.ok;
+    let coordStatus = String(nycif.coordinate_status || 'list_only');
+    if (mapReady) {
+      coordStatus = 'map_ready';
+    } else if (claimedReady) {
+      coordStatus = 'list_only';
+    }
     const layer = String(nycif.data_layer || '');
     const review = layer === 'review_supplemental' || layer === 'civic_review';
     const civicLane = String(nycif.civic_lane || '');
@@ -308,7 +314,7 @@
     const sourceDataset = schemaEvent.source && schemaEvent.source.dataset
       ? String(schemaEvent.source.dataset)
       : '';
-    const coordStatus = mapReady ? 'map_ready' : (claimedReady ? 'list_only' : String(nycif.coordinate_status || 'list_only'));
+    const catKey = catKeyFrom(schemaEvent);
     const e = {
       ...schemaEvent,
       lat: mapReady ? pin.lat : null,
@@ -316,8 +322,8 @@
       latitude: mapReady ? pin.lat : null,
       longitude: mapReady ? pin.lng : null,
       dateKey: eventDate(schemaEvent),
-      categoryKey: catKeyFrom(schemaEvent),
-      categoryMeta: CATEGORY_META[catKeyFrom(schemaEvent)],
+      categoryKey: catKey,
+      categoryMeta: CATEGORY_META[catKey],
       interests,
       tags,
       event_role: schemaEvent.event_role || 'public_event',
@@ -338,7 +344,7 @@
         title,
         location,
         borough,
-        catKeyFrom(schemaEvent),
+        catKey,
         interests.join(' '),
         tags.join(' '),
         schemaEvent.source?.dataset,
@@ -357,8 +363,7 @@
   }
 
   function catKeyFrom(schemaEvent) {
-    const catKey = CATEGORY_META[schemaEvent.category] ? schemaEvent.category : 'general';
-    return catKey;
+    return CATEGORY_META[schemaEvent.category] ? schemaEvent.category : 'general';
   }
 
   function categoryFilterMatch(e) {
