@@ -10,9 +10,11 @@
   "status_summary": "PR #171 merged (386e6ef). Civic people-facing staging live on main. Follow-up maximizes map_ready (farmers coord recovery), writes proposals-only artifact for list_only joins, map coverage report (100% accepted rows classified), and Civic God View admin bookmark. Field Desk human Pages push still required. Phase 2E / public-map publish / location_cache write remain unauthorized. Soup-kitchen citywide pin feed remains known gap.",
   "active_prs": [
     {
+      "number": 172,
       "branch": "cursor/civic-map-coverage-godview-da92",
-      "title": "Civic map coverage report, proposals, God View bookmark",
-      "state": "open_draft_pending"
+      "title": "Civic map coverage report, proposals, and God View bookmark",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/172",
+      "state": "open_ready_for_review"
     }
   ],
   "recent_prs": [
@@ -25,7 +27,7 @@
     },
     {
       "number": 167,
-      "title": "Discovery Taxonomy v02 — full source-to-map handshake",
+      "title": "Discovery Taxonomy v02 \u2014 full source-to-map handshake",
       "url": "https://github.com/setoxxx/nycif-live-feeds/pull/167",
       "state": "merged"
     },
@@ -38,7 +40,7 @@
   ],
   "blockers": [
     "Field-desk admin/map deploy requires human push (403 for cursor bot on nycif-field-desk).",
-    "No official live citywide soup-kitchen/pantry pin SODA feed — data/civic_food_access_gap_note.json.",
+    "No official live citywide soup-kitchen/pantry pin SODA feed \u2014 data/civic_food_access_gap_note.json.",
     "M7-C duplicate-key enforcement remains unauthorized.",
     "Phase 2E location_cache promotion remains unauthorized."
   ],
