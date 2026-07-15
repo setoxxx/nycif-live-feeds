@@ -4,11 +4,19 @@
   "project": "nycif-live-feeds",
   "repository": "setoxxx/nycif-live-feeds",
   "visibility": "public",
-  "current_phase": "Post open-track closure — human field-desk / WP / live-sync follow-through",
-  "completion_percent": 92,
+  "current_phase": "Civic people-facing intake staged (Review / Help) — draft PR",
+  "completion_percent": 93,
   "health": "green",
-  "status_summary": "Open-track closure complete: merged #166, #167, #148, #164, #165, #168, #133. Zero open engineering PRs. Human follow-through remains: field-desk push, optional WP install from #164 package, live-sync-qa. Phase 2E location_cache promotion and M7-C remain unauthorized.",
-  "active_prs": [],
+  "status_summary": "People-facing civic SODA intake staged under Review/Help lanes (Workforce1 historical quarantine noted; OAC dated window + volunteer/markets/help directories). QA pass; promotion_allowed false; protected feeds untouched. Food-access soup-kitchen citywide pin feed remains known gap. Field Desk package civic-people-facing-v01 ready for human Pages push. Phase 2E / M7-C still unauthorized.",
+  "active_prs": [
+    {
+      "number": 171,
+      "branch": "cursor/civic-people-facing-intake-da92",
+      "title": "Civic people-facing intake + date/time/location hardening",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/171",
+      "state": "open_ready_for_review"
+    }
+  ],
   "recent_prs": [
     {
       "number": 133,
@@ -39,35 +47,35 @@
       "title": "Package Field Desk complete event-data access review",
       "url": "https://github.com/setoxxx/nycif-live-feeds/pull/165",
       "state": "merged"
-    },
-    {
-      "number": 164,
-      "title": "Rollback NYCIF map plugin to restored Field Desk runtime",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/164",
-      "state": "merged"
-    },
-    {
-      "number": 148,
-      "title": "M7-B.2 remediation: fix adjudication artifact self-hash lifecycle",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/148",
-      "state": "merged"
     }
   ],
   "blockers": [
     "Field-desk admin/map deploy requires human push (403 for cursor bot on nycif-field-desk).",
     "live-sync-qa workflow dispatch requires human trigger (403 for agent token).",
     "WordPress plugin ZIP install on the live site is human-only (#164 packaging merged; site install not authorized here).",
-    "M7-C duplicate-key enforcement remains unauthorized."
+    "M7-C duplicate-key enforcement remains unauthorized.",
+    "No official live citywide soup-kitchen/pantry pin SODA feed — documented in data/civic_food_access_gap_note.json."
   ],
-  "next_action": "Howard: push field-desk mirrors (schema-v1-major-all + discovery-taxonomy-v02 / admin God View), optionally install WP plugin from merged #164 package, dispatch live-sync-qa. Do not promote location_cache or publish public map without explicit auth.",
+  "next_action": "Review/merge civic intake draft PR when green; Howard push civic-people-facing-v01 Field Desk package. Do not promote location_cache or publish public map without explicit auth.",
   "admin_dashboard_urls": {
     "interim_live": "https://setoxxx.github.io/nycif-live-feeds/admin/index.html",
     "field_desk": "https://setoxxx.github.io/nycif-field-desk/admin/index.html"
   },
   "data_freshness": {
-    "source": "Overnight open-track closure GitHub inventory",
-    "last_verified_at": "2026-07-14T23:35:39.000Z",
-    "notes": "Static status artifact; does not poll GitHub from the browser and does not change feed payloads."
+    "source": "Civic people-facing staging sync + QA",
+    "last_verified_at": "2026-07-15T00:15:00.000Z",
+    "notes": "Static status artifact; civic snapshots under data/civic_*.json; schema-v1-civic-review pages for Field Desk Review/Help union."
+  },
+  "civic_people_facing": {
+    "accepted_count": 5198,
+    "quarantined_count": 6272,
+    "upcoming_next_7_days": 155,
+    "map_ready": 3719,
+    "list_only": 1479,
+    "qa_pass": true,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "location_cache_modified": false
   },
   "safety": {
     "safe_for_public_dashboard": true,
@@ -78,26 +86,8 @@
     "browser_side_github_api_polling": false,
     "write_controls": false,
     "deploy_controls": false,
-    "public_map_runtime_change": false,
-    "production_feed_mutation": false,
-    "wordpress_change": true,
-    "wordpress_deploy_package": "docs/wordpress-plugin-deploy/nycif-events-map/",
-    "public_map_live_refresh": "2026-07-14",
-    "promotion_allowed": false
-  },
-  "generated_at": "2026-07-14T23:35:39.000Z",
-  "milestones": {
-    "m7a_identity_helper_foundation": "complete",
-    "m7b_caller_migration": "complete",
-    "m7b1_snapshot_contract_hardening": "complete",
-    "m7b2_snapshot_bound_count_contract": "complete",
-    "m7b2_adjudication_self_hash_remediation": "complete",
-    "m7c_duplicate_key_enforcement": "not_started_unauthorized",
-    "m8_live_admin_dashboard_multi_source": "complete",
-    "m8b_gps_review_tail_at_scale": "complete_phase_2c_2d_staging",
-    "m9_supplemental_coverage_gaps": "complete",
-    "m10_productionize_resolver": "complete",
-    "discovery_taxonomy_v02": "complete",
-    "schema_v1_field_desk_mirror": "complete"
+    "promotion_allowed_default": false,
+    "phase_2e_authorized": false,
+    "m7c_authorized": false
   }
 }

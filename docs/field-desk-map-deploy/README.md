@@ -1,5 +1,7 @@
 # Field-desk public map deploy (M10 staged live)
 
+Civic people-facing Review/Help package (Jobs / Volunteer / markets / help places): see [`civic-people-facing-v01/README.md`](./civic-people-facing-v01/README.md). That lane stays staging/review-only and does not replace Approved permits.
+
 Copy these files into `nycif-field-desk/` root (and admin panel into `admin/`):
 
 ```bash
