@@ -5,11 +5,13 @@
 (() => {
   const VERSION = "photographer-calendar-panel-v01";
   const LIVE_FEEDS_BASE = "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds";
-  const BRANCH_CANDIDATES = ["main", "cursor/photographer-money-day-desk-v2-da92"];
+  const BRANCH_CANDIDATES = ["main", "cursor/viral-recurrence-memory-da92"];
   const CAL_PATH = "data/photographer_assignment_calendar_2mo.json";
   const TODAY_PATH = "data/photographer_money_day_pack_today.json";
   const TOMORROW_PATH = "data/photographer_money_day_pack_tomorrow.json";
   const QUALITY_PATH = "data/photographer_money_day_quality_report.json";
+  const VIRAL_PATH = "data/photographer_viral_recurrence_pack_next_14d.json";
+  const VIRAL_REPORT_PATH = "data/photographer_viral_recurrence_report.json";
   const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   function esc(value) {
@@ -166,7 +168,30 @@
       </table></div>`;
   }
 
-  function render(root, branch, payload, todayPack, tomorrowPack, quality) {
+  function returningHtml(viralPack, viralReport) {
+    const magnets = (viralPack && viralPack.crowd_magnets) || [];
+    const counts = (viralReport && viralReport.label_counts) || {};
+    const rows = magnets.slice(0, 12).map((m) => {
+      const prior = m.prior_year_title ? `${m.prior_year_title} (${m.prior_year_date || "?"})` : "—";
+      return `<tr>
+        <td>${esc(m.date)}</td>
+        <td>${esc(m.title)}</td>
+        <td>${esc(m.borough || "—")}</td>
+        <td>${esc(m.recurrence_label)} · ${esc(m.match_score)}</td>
+        <td>${esc(prior)}</td>
+        <td><a href="${esc(m.field_desk_link || fieldDeskUrl(m.date))}" target="_blank" rel="noopener noreferrer">Map</a></td>
+      </tr>`;
+    }).join("");
+    return `
+      <h3>Returning from last year (next 14 days)</h3>
+      <div class="notice ok">Viral recurrence memory — ${fmtNum((viralReport && viralReport.match_count) || 0)} matches · returning_likely ${fmtNum(counts.returning_likely)} · next-14d magnets ${fmtNum((viralPack && viralPack.crowd_magnet_count) || magnets.length)}. FOIL org names join later via sapo_foil_operator_index.json (empty until you paste PDFs).</div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Date</th><th>Now</th><th>Borough</th><th>Label/score</th><th>Last year</th><th>Desk</th></tr></thead>
+        <tbody>${rows || '<tr><td colspan="6" class="muted">No recurrence pack loaded yet.</td></tr>'}</tbody>
+      </table></div>`;
+  }
+
+  function render(root, branch, payload, todayPack, tomorrowPack, quality, viralPack, viralReport) {
     const go = (payload.go_shoot_these || []).slice(0, 20);
     const months = payload.months || [];
     const removed = quality?.delta_vs_baseline?.events_removed;
@@ -199,6 +224,7 @@
         <div class="stat"><div class="label">map_ready</div><div class="value">${esc(fmtNum((payload.coordinate_status_counts || {}).map_ready))}</div></div>
         <div class="stat"><div class="label">list_only</div><div class="value">${esc(fmtNum((payload.coordinate_status_counts || {}).list_only))}</div></div>
       </div>
+      ${returningHtml(viralPack, viralReport)}
       <div class="cal-grid">${months.map(monthHtml).join("")}</div>
       <h3>Day detail</h3>
       <div id="photographer-calendar-detail" class="muted">Click a day with events to see money-day coverage.</div>
@@ -236,11 +262,13 @@
     if (!root) return;
     if (status) status.textContent = "Loading photographer money-day desk…";
     try {
-      const [cal, today, tomorrow, quality] = await Promise.all([
+      const [cal, today, tomorrow, quality, viral, viralReport] = await Promise.all([
         fetchJson(CAL_PATH),
         fetchJson(TODAY_PATH).catch(() => ({ branch: "none", payload: null })),
         fetchJson(TOMORROW_PATH).catch(() => ({ branch: "none", payload: null })),
         fetchJson(QUALITY_PATH).catch(() => ({ branch: "none", payload: null })),
+        fetchJson(VIRAL_PATH).catch(() => ({ branch: "none", payload: null })),
+        fetchJson(VIRAL_REPORT_PATH).catch(() => ({ branch: "none", payload: null })),
       ]);
       render(
         root,
@@ -248,7 +276,9 @@
         cal.payload || {},
         today.payload,
         tomorrow.payload,
-        quality.payload
+        quality.payload,
+        viral.payload,
+        viralReport.payload
       );
       if (status) {
         status.textContent = `Money-day desk loaded from ${cal.branch} · ${fmtNum(cal.payload.total_events)} events.`;

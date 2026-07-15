@@ -1,103 +1,22 @@
 {
   "failed_steps": [],
-  "generated_at_utc": "2026-07-15T00:58:47Z",
+  "generated_at_utc": "2026-07-15T01:13:16Z",
   "location_cache_modified": false,
-  "notes": "Money-Day Desk v2 offline rebuild; full daily chain remains Actions.",
+  "notes": "Viral recurrence memory offline validation; full daily chain in Actions.",
   "photographer_calendar": {
-    "days_with_coverage": 37,
-    "events_removed_vs_baseline": 515,
-    "month_counts": [
-      {
-        "days_with_events": 18,
-        "event_count": 223,
-        "label": "July 2026"
-      },
-      {
-        "days_with_events": 19,
-        "event_count": 104,
-        "label": "August 2026"
-      }
-    ],
-    "packs": {
-      "qa_pass": true,
-      "today": {
-        "borough_cluster_count": 4,
-        "date": "2026-07-14",
-        "map_ready_count": 14,
-        "total_events": 14
-      },
-      "tomorrow": {
-        "borough_cluster_count": 4,
-        "date": "2026-07-15",
-        "map_ready_count": 15,
-        "top_go_shoot": [
-          {
-            "borough": "Bronx",
-            "score": 580,
-            "time": "2026-07-15T08:00:00.000",
-            "title": "World Cup Activation"
-          },
-          {
-            "borough": "Brooklyn",
-            "score": 420,
-            "time": "2026-07-15T14:00:00.000",
-            "title": "FIFA26 NYC DOT World Cup Watch Party"
-          },
-          {
-            "borough": "Bronx",
-            "score": 420,
-            "time": "2026-07-15T14:00:00.000",
-            "title": "World Cup Watch Party"
-          },
-          {
-            "borough": "Manhattan",
-            "score": 380,
-            "time": "2026-07-15T08:00:00.000",
-            "title": "SummerStage Festival - July"
-          },
-          {
-            "borough": "Bronx",
-            "score": 370,
-            "time": "2026-07-15T16:00:00.000",
-            "title": "NYC Great Tree 5K Run: Bronx Edition"
-          },
-          {
-            "borough": "Manhattan",
-            "score": 340,
-            "time": "2026-07-15T12:00:00.000",
-            "title": "East 125th Street Farmstand"
-          },
-          {
-            "borough": "Bronx",
-            "score": 340,
-            "time": "2026-07-15T08:00:00.000",
-            "title": "HHFM Hunts Point Market"
-          },
-          {
-            "borough": "Brooklyn",
-            "score": 340,
-            "time": "2026-07-15T08:00:00.000",
-            "title": "HHFM Kings County Hospital Market"
-          },
-          {
-            "borough": "Manhattan",
-            "score": 340,
-            "time": "2026-07-15T08:00:00.000",
-            "title": "Mount Sinai Greenmarket Wednesday"
-          },
-          {
-            "borough": "Manhattan",
-            "score": 340,
-            "time": "2026-07-15T09:00:00.000",
-            "title": "NYP Youth Market - Broadway"
-          }
-        ],
-        "total_events": 15
-      }
-    },
     "qa_pass": true,
-    "quality_qa_pass": true,
-    "total_events": 327
+    "total_events": 327,
+    "viral_recurrence": {
+      "historical_rows": 2450,
+      "label_counts": {
+        "possible": 25,
+        "returning_likely": 279,
+        "weak": 30
+      },
+      "match_count": 334,
+      "next_14d_crowd_magnets": 40,
+      "qa_pass": true
+    }
   },
   "promotion_allowed": false,
   "protected_files_changed": [],
@@ -109,7 +28,7 @@
   "staged_feed_modified": false,
   "steps": [
     {
-      "cmd": "money-day-v2 offline rebuild",
+      "cmd": "viral-recurrence offline",
       "exit_code": 0,
       "ok": true
     }

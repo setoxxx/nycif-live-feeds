@@ -1,0 +1,21 @@
+{
+  "example_operator_row": {
+    "applicant_org": null,
+    "cemsid": null,
+    "event_id": "936942",
+    "foil_request_id": null,
+    "manual_review_status": "pending",
+    "notes": "Paste org name from released application PDF when available",
+    "promotion_allowed": false,
+    "source": "foil"
+  },
+  "foil_portal": "https://a860-openrecords.nyc.gov/request/new",
+  "generated_at_utc": "2026-07-15T01:11:53Z",
+  "location_cache_modified": false,
+  "open_data_note": "tvpp-9vvx / bkfu-528j do not include applicant/company. Join keys: event_id and/or cemsid.",
+  "operators": [],
+  "promotion_allowed": false,
+  "public_map_modified": false,
+  "purpose": "Manual join index for FOIL-derived applicant/org names. Fill after OpenRecords CECM/SAPO PDFs arrive. Never scrape unofficial sites.",
+  "schema_version": "sapo-foil-operator-index-v1"
+}

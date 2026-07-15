@@ -26,6 +26,8 @@ def main() -> int:
     quality = load_json(DATA_DIR / "photographer_money_day_quality_report.json", {})
     packs = load_json(DATA_DIR / "photographer_money_day_pack_report.json", {})
     pack_tom = load_json(DATA_DIR / "photographer_money_day_pack_tomorrow.json", {})
+    viral = load_json(DATA_DIR / "photographer_viral_recurrence_report.json", {})
+    viral_pack = load_json(DATA_DIR / "photographer_viral_recurrence_pack_next_14d.json", {})
     daily = load_json(DATA_DIR / "daily_people_facing_sync_report.json", {})
 
     digest = {
@@ -68,6 +70,9 @@ def main() -> int:
             "photographer_days_with_coverage": photo.get("days_with_coverage"),
             "money_day_today": (packs.get("today") or {}).get("total_events"),
             "money_day_tomorrow": (packs.get("tomorrow") or {}).get("total_events"),
+            "viral_recurrence_matches": viral.get("match_count"),
+            "viral_returning_likely": (viral.get("label_counts") or {}).get("returning_likely"),
+            "viral_next_14d_magnets": viral.get("next_14d_crowd_magnets"),
         },
         "photographer_assignment_calendar": {
             "premium_label": "Photographer Assignment Calendar (premium/operator) — Money-Day Desk v2",
@@ -86,6 +91,18 @@ def main() -> int:
             "tomorrow_pack": packs.get("tomorrow"),
             "tomorrow_top_go_shoot": (pack_tom.get("go_shoot") or [])[:10],
             "go_shoot_these": (photo_full.get("go_shoot_these") or [])[:20],
+            "viral_recurrence": {
+                "qa_pass": viral.get("qa_pass"),
+                "match_count": viral.get("match_count"),
+                "label_counts": viral.get("label_counts"),
+                "next_14d_crowd_magnets": viral.get("next_14d_crowd_magnets"),
+                "top_returning_examples": viral.get("top_returning_examples"),
+                "next_14d_top": (viral_pack.get("crowd_magnets") or [])[:10],
+                "foil_operator_joins": viral.get("foil_operator_joins"),
+                "artifact": "data/photographer_viral_recurrence_matches.json",
+                "pack": "data/photographer_viral_recurrence_pack_next_14d.json",
+                "foil_index": "data/sapo_foil_operator_index.json",
+            },
             "artifact": "data/photographer_assignment_calendar_2mo.json",
             "report": "data/photographer_assignment_calendar_report.json",
             "pack_today": "data/photographer_money_day_pack_today.json",
@@ -139,16 +156,22 @@ def main() -> int:
             "money_day_quality": "data/photographer_money_day_quality_report.json",
             "money_day_pack_today": "data/photographer_money_day_pack_today.json",
             "money_day_pack_tomorrow": "data/photographer_money_day_pack_tomorrow.json",
+            "viral_recurrence_matches": "data/photographer_viral_recurrence_matches.json",
+            "viral_recurrence_pack": "data/photographer_viral_recurrence_pack_next_14d.json",
+            "historical_permits": "data/nyc_permits_historical_snapshot.json",
+            "sapo_foil_operator_index": "data/sapo_foil_operator_index.json",
             "daily_sync_report": "data/daily_people_facing_sync_report.json",
             "status": "status/nycif-project-status.json",
             "merged_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/171",
             "coverage_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/172",
             "photographer_calendar_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/173",
+            "money_day_v2_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/174",
         },
         "next_human_steps": [
             "Push Field Desk civic-people-facing-v01 (+ assignment=1 app JS) to nycif-field-desk Pages",
-            "Push admin photographer-calendar-panel Money-Day Today/Tomorrow cards",
-            "Shoot from Today/Tomorrow packs + filtered 2-month calendar",
+            "Push admin photographer-calendar-panel with Returning from last year section",
+            "Shoot from Today/Tomorrow packs + viral recurrence next-14d magnets",
+            "File FOIL for SAPO/CECM full application PDFs; fill data/sapo_foil_operator_index.json",
             "Confirm daily workflow daily-people-facing-desk-sync is enabled",
             "Do not publish/promote to WordPress public map until explicitly authorized",
         ],
@@ -157,6 +180,7 @@ def main() -> int:
             "Geocoding proposals pending manual review",
             "Historical Workforce1 / Ready NY / MOIA quarantined for upcoming",
             "Food-access soup-kitchen gap",
+            "FOIL applicant/org identity not yet filled (sapo_foil_operator_index empty)",
             "Phase 2E / location_cache write unauthorized",
             "Public WordPress map publish unauthorized by this desk package",
         ],

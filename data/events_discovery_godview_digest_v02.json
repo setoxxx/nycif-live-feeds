@@ -52,15 +52,15 @@
   "civic_people_facing_bookmark": {
     "accepted": 5198,
     "daily_pull": {
-      "last_run_utc": "2026-07-15T00:47:57Z",
-      "last_success_utc": "2026-07-15T00:47:57Z",
+      "last_run_utc": "2026-07-15T00:58:47Z",
+      "last_success_utc": "2026-07-15T00:58:47Z",
       "qa_pass": true,
       "report": "data/daily_people_facing_sync_report.json",
       "workflow": ".github/workflows/daily-people-facing-desk-sync.yml"
     },
     "digest": "data/civic_people_facing_godview_digest.json",
     "field_desk_preview": "?v=civic-people-facing-v01&resetFilters=1&feeds=main",
-    "generated_at_utc": "2026-07-15T00:58:47Z",
+    "generated_at_utc": "2026-07-15T01:13:01Z",
     "list_only": 1295,
     "map_ready": 3903,
     "merged_pr": 171,
@@ -5024,7 +5024,373 @@
         ]
       }
     ],
-    "total_events": 327
+    "total_events": 327,
+    "viral_recurrence": {
+      "artifact": "data/photographer_viral_recurrence_matches.json",
+      "foil_index": "data/sapo_foil_operator_index.json",
+      "foil_operator_joins": 0,
+      "label_counts": {
+        "possible": 25,
+        "returning_likely": 279,
+        "weak": 30
+      },
+      "match_count": 334,
+      "next_14d_crowd_magnets": 40,
+      "next_14d_top": [
+        {
+          "borough": "Queens",
+          "cemsid": null,
+          "coordinate_status": "map_ready",
+          "date": "2026-07-14",
+          "display_location": "41 AVENUE between 80 STREET and 81 STREET",
+          "event_id": "911520",
+          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-14&assignment=1",
+          "foil_operator": null,
+          "map_link": "https://www.google.com/maps?q=40.757795,-73.829374",
+          "match_reasons": [
+            "name_exactish:1.00",
+            "place_strong:0.96",
+            "season_delta_days:1",
+            "event_type_compatible",
+            "historical_street_closure_present"
+          ],
+          "match_score": 103,
+          "prior_event_id": "835487",
+          "prior_year_date": "2025-07-15",
+          "prior_year_title": "Elmhurst Greenmarket Tuesday",
+          "recurrence_label": "returning_likely",
+          "title": "Elmhurst Greenmarket Tuesday"
+        },
+        {
+          "borough": "Manhattan",
+          "cemsid": null,
+          "coordinate_status": "map_ready",
+          "date": "2026-07-14",
+          "display_location": "FT WASHINGTON AVENUE between WEST  168 STREET and WEST  169 STREET",
+          "event_id": "911525",
+          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-14&assignment=1",
+          "foil_operator": null,
+          "map_link": "https://www.google.com/maps?q=40.842318,-73.942117",
+          "match_reasons": [
+            "name_exactish:1.00",
+            "place_strong:0.98",
+            "season_delta_days:1",
+            "event_type_compatible",
+            "historical_street_closure_present"
+          ],
+          "match_score": 103,
+          "prior_event_id": "835493",
+          "prior_year_date": "2025-07-15",
+          "prior_year_title": "Ft Washington Greenmarket Tuesday",
+          "recurrence_label": "returning_likely",
+          "title": "Ft Washington Greenmarket Tuesday"
+        },
+        {
+          "borough": "Bronx",
+          "cemsid": null,
+          "coordinate_status": "map_ready",
+          "date": "2026-07-14",
+          "display_location": "EAST  149 STREET between MORRIS AVENUE and PARK AVENUE",
+          "event_id": "911516",
+          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-14&assignment=1",
+          "foil_operator": null,
+          "map_link": "https://www.google.com/maps?q=40.817183,-73.922377",
+          "match_reasons": [
+            "name_exactish:1.00",
+            "place_strong:0.98",
+            "season_delta_days:3",
+            "event_type_compatible",
+            "historical_street_closure_present"
+          ],
+          "match_score": 103,
+          "prior_event_id": "835486",
+          "prior_year_date": "2025-07-11",
+          "prior_year_title": "Lincoln Hospital Greenmarket Tues  Friday",
+          "recurrence_label": "returning_likely",
+          "title": "Lincoln Hospital Greenmarket Tues  Friday"
+        },
+        {
+          "borough": "Bronx",
+          "cemsid": null,
+          "coordinate_status": "map_ready",
+          "date": "2026-07-14",
+          "display_location": "EAST  192 STREET between GRAND CONCOURSE and VALENTINE AVENUE",
+          "event_id": "911528",
+          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-14&assignment=1",
+          "foil_operator": null,
+          "map_link": "https://www.google.com/maps?q=40.863856,-73.895593",
+          "match_reasons": [
+            "name_exactish:1.00",
+            "place_strong:0.98",
+            "season_delta_days:1",
+            "event_type_compatible",
+            "historical_street_closure_present"
+          ],
+          "match_score": 103,
+          "prior_event_id": "835484",
+          "prior_year_date": "2025-07-15",
+          "prior_year_title": "Poe Park Greenmarket Tuesday",
+          "recurrence_label": "returning_likely",
+          "title": "Poe Park Greenmarket Tuesday"
+        },
+        {
+          "borough": "Manhattan",
+          "cemsid": null,
+          "coordinate_status": "map_ready",
+          "date": "2026-07-15",
+          "display_location": "MADISON AVENUE between EAST   98 STREET and EAST   99 STREET",
+          "event_id": "911512",
+          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-15&assignment=1",
+          "foil_operator": null,
+          "map_link": "https://www.google.com/maps?q=40.7646835,-73.969483",
+          "match_reasons": [
+            "name_exactish:0.95",
+            "place_strong:0.98",
+            "season_delta_days:1",
+            "event_type_compatible",
+            "historical_street_closure_present"
+          ],
+          "match_score": 103,
+          "prior_event_id": "818264",
+          "prior_year_date": "2025-07-16",
+          "prior_year_title": "Mt Sinai Greenmarket Wednesday",
+          "recurrence_label": "returning_likely",
+          "title": "Mount Sinai Greenmarket Wednesday"
+        },
+        {
+          "borough": "Manhattan",
+          "cemsid": null,
+          "coordinate_status": "map_ready",
+          "date": "2026-07-16",
+          "display_location": "WEST  175 STREET between BROADWAY and WADSWORTH AVENUE",
+          "event_id": "911545",
+          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-16&assignment=1",
+          "foil_operator": null,
+          "map_link": "https://www.google.com/maps?q=40.77501,-73.9754755",
+          "match_reasons": [
+            "name_exactish:1.00",
+            "place_strong:0.98",
+            "season_delta_days:1",
+            "event_type_compatible",
+            "historical_street_closure_present"
+          ],
+          "match_score": 103,
+          "prior_event_id": "835482",
+          "prior_year_date": "2025-07-17",
+          "prior_year_title": "175 street Greenmarket Thursday",
+          "recurrence_label": "returning_likely",
+          "title": "175 street Greenmarket Thursday"
+        },
+        {
+          "borough": "Brooklyn",
+          "cemsid": null,
+          "coordinate_status": "map_ready",
+          "date": "2026-07-16",
+          "display_location": "14 AVENUE between 49 STREET and 50 STREET",
+          "event_id": "911549",
+          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-16&assignment=1",
+          "foil_operator": null,
+          "map_link": "https://www.google.com/maps?q=40.70483,-73.9983245",
+          "match_reasons": [
+            "name_exactish:1.00",
+            "place_strong:0.97",
+            "season_delta_days:1",
+            "event_type_compatible",
+            "historical_street_closure_present"
+          ],
+          "match_score": 103,
+          "prior_event_id": "874898",
+          "prior_year_date": "2025-07-17",
+          "prior_year_title": "Borough Park Greenmarket Thursday",
+          "recurrence_label": "returning_likely",
+          "title": "Borough Park Greenmarket Thursday"
+        },
+        {
+          "borough": "Manhattan",
+          "cemsid": null,
+          "coordinate_status": "map_ready",
+          "date": "2026-07-16",
+          "display_location": "BROADWAY between WEST  113 STREET and WEST  116 STREET",
+          "event_id": "898922",
+          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-16&assignment=1",
+          "foil_operator": null,
+          "map_link": "https://www.google.com/maps?q=40.802502,-73.95005",
+          "match_reasons": [
+            "name_exactish:1.00",
+            "place_strong:0.98",
+            "season_delta_days:3",
+            "event_type_compatible",
+            "historical_street_closure_present"
+          ],
+          "match_score": 103,
+          "prior_event_id": "818277",
+          "prior_year_date": "2025-07-13",
+          "prior_year_title": "Columbia Thursday, Sunday Greenmarket",
+          "recurrence_label": "returning_likely",
+          "title": "Columbia Thursday Sunday Greenmarket"
+        },
+        {
+          "borough": "Manhattan",
+          "cemsid": null,
+          "coordinate_status": "map_ready",
+          "date": "2026-07-17",
+          "display_location": "WEST   97 STREET between COLUMBUS AVENUE and AMSTERDAM AVENUE",
+          "event_id": "898931",
+          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-17&assignment=1",
+          "foil_operator": null,
+          "map_link": "https://www.google.com/maps?q=40.793315,-73.967341",
+          "match_reasons": [
+            "name_exactish:1.00",
+            "place_strong:0.98",
+            "season_delta_days:1",
+            "event_type_compatible",
+            "historical_street_closure_present"
+          ],
+          "match_score": 103,
+          "prior_event_id": "818276",
+          "prior_year_date": "2025-07-18",
+          "prior_year_title": "97 Street Greenmarket Friday",
+          "recurrence_label": "returning_likely",
+          "title": "97 Street Greenmarket Friday"
+        },
+        {
+          "borough": "Queens",
+          "cemsid": null,
+          "coordinate_status": "map_ready",
+          "date": "2026-07-17",
+          "display_location": "ROOSEVELT AVENUE between 103 STREET and 104 STREET",
+          "event_id": "911518",
+          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-17&assignment=1",
+          "foil_operator": null,
+          "map_link": "https://www.google.com/maps?q=40.764041,-73.814528",
+          "match_reasons": [
+            "name_exactish:1.00",
+            "place_strong:0.97",
+            "season_delta_days:1",
+            "event_type_compatible",
+            "historical_street_closure_present"
+          ],
+          "match_score": 103,
+          "prior_event_id": "835483",
+          "prior_year_date": "2025-07-18",
+          "prior_year_title": "Corona Greenmarket  Friday",
+          "recurrence_label": "returning_likely",
+          "title": "Corona Greenmarket  Friday"
+        }
+      ],
+      "pack": "data/photographer_viral_recurrence_pack_next_14d.json",
+      "qa_pass": true,
+      "top_returning_examples": [
+        {
+          "borough": "Queens",
+          "date": "2026-07-14",
+          "label": "returning_likely",
+          "prior": "Elmhurst Greenmarket Tuesday",
+          "prior_date": "2025-07-15",
+          "score": 103,
+          "title": "Elmhurst Greenmarket Tuesday"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-14",
+          "label": "returning_likely",
+          "prior": "Ft Washington Greenmarket Tuesday",
+          "prior_date": "2025-07-15",
+          "score": 103,
+          "title": "Ft Washington Greenmarket Tuesday"
+        },
+        {
+          "borough": "Bronx",
+          "date": "2026-07-14",
+          "label": "returning_likely",
+          "prior": "Lincoln Hospital Greenmarket Tues  Friday",
+          "prior_date": "2025-07-11",
+          "score": 103,
+          "title": "Lincoln Hospital Greenmarket Tues  Friday"
+        },
+        {
+          "borough": "Bronx",
+          "date": "2026-07-14",
+          "label": "returning_likely",
+          "prior": "Lincoln Hospital Greenmarket Tues  Friday",
+          "prior_date": "2025-07-15",
+          "score": 103,
+          "title": "Lincoln Hospital Greenmarket Tues  Friday"
+        },
+        {
+          "borough": "Bronx",
+          "date": "2026-07-14",
+          "label": "returning_likely",
+          "prior": "Poe Park Greenmarket Tuesday",
+          "prior_date": "2025-07-15",
+          "score": 103,
+          "title": "Poe Park Greenmarket Tuesday"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-15",
+          "label": "returning_likely",
+          "prior": "Mt Sinai Greenmarket Wednesday",
+          "prior_date": "2025-07-16",
+          "score": 103,
+          "title": "Mount Sinai Greenmarket Wednesday"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-16",
+          "label": "returning_likely",
+          "prior": "175 street Greenmarket Thursday",
+          "prior_date": "2025-07-17",
+          "score": 103,
+          "title": "175 street Greenmarket Thursday"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-07-16",
+          "label": "returning_likely",
+          "prior": "Borough Park Greenmarket Thursday",
+          "prior_date": "2025-07-17",
+          "score": 103,
+          "title": "Borough Park Greenmarket Thursday"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-16",
+          "label": "returning_likely",
+          "prior": "Columbia Thursday, Sunday Greenmarket",
+          "prior_date": "2025-07-13",
+          "score": 103,
+          "title": "Columbia Thursday Sunday Greenmarket"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-16",
+          "label": "returning_likely",
+          "prior": "Columbia Thursday, Sunday Greenmarket",
+          "prior_date": "2025-07-17",
+          "score": 103,
+          "title": "Columbia Thursday Sunday Greenmarket"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-07-17",
+          "label": "returning_likely",
+          "prior": "97 Street Greenmarket Friday",
+          "prior_date": "2025-07-18",
+          "score": 103,
+          "title": "97 Street Greenmarket Friday"
+        },
+        {
+          "borough": "Queens",
+          "date": "2026-07-17",
+          "label": "returning_likely",
+          "prior": "Corona Greenmarket  Friday",
+          "prior_date": "2025-07-18",
+          "score": 103,
+          "title": "Corona Greenmarket  Friday"
+        }
+      ]
+    }
   },
   "pipeline_snapshot": {
     "accepted_canonical_records": 37280,
