@@ -36,6 +36,13 @@
     const name = String(cursor || '').replace(/\.json$/i, '');
     return `${FEED_HOST}/data/${FEED_ROOT}/${layer}/pages/${name}.json`;
   };
+  const EXTRA_REVIEW_ROOTS = Array.isArray(DISCOVERY && DISCOVERY.extraReviewRoots)
+    ? DISCOVERY.extraReviewRoots.filter(v => typeof v === 'string' && /^[A-Za-z0-9._-]+$/.test(v))
+    : [];
+  const HELP_FEED_ROOT = (DISCOVERY && typeof DISCOVERY.helpFeedRoot === 'string'
+    && /^[A-Za-z0-9._-]+$/.test(DISCOVERY.helpFeedRoot))
+    ? DISCOVERY.helpFeedRoot
+    : null;
   const FEEDS = {
     major: FEED_HOST + `/data/${FEED_ROOT}/major/events.json`,
     majorFallback: FEED_HOST + (
@@ -46,7 +53,20 @@
     approvedManifest: FEED_HOST + `/data/${FEED_ROOT}/approved/manifest.json`,
     reviewManifest: FEED_HOST + `/data/${FEED_ROOT}/review/manifest.json`,
     approvedPage: cursor => pageUrl('approved', cursor),
-    reviewPage: cursor => pageUrl('review', cursor)
+    reviewPage: cursor => pageUrl('review', cursor),
+    extraReviewManifest: root => FEED_HOST + `/data/${root}/review/manifest.json`,
+    extraReviewPage: (root, cursor) => {
+      const name = String(cursor || '').replace(/\.json$/i, '');
+      return `${FEED_HOST}/data/${root}/review/pages/${name}.json`;
+    },
+    helpManifest: HELP_FEED_ROOT
+      ? FEED_HOST + `/data/${HELP_FEED_ROOT}/help/manifest.json`
+      : null,
+    helpPage: cursor => {
+      if (!HELP_FEED_ROOT) return '';
+      const name = String(cursor || '').replace(/\.json$/i, '');
+      return `${FEED_HOST}/data/${HELP_FEED_ROOT}/help/pages/${name}.json`;
+    }
   };
   const CATEGORY_META = {
     sports: { emoji: '🏟️', label: 'Sports' },
@@ -101,10 +121,10 @@
     markerObjects: 0,
     peakMarkerObjects: 0,
     indexComplete: false,
-    pagesLoaded: { approved: 0, review: 0 },
-    pagesTotal: { approved: 0, review: 0 },
+    pagesLoaded: { approved: 0, review: 0, help: 0 },
+    pagesTotal: { approved: 0, review: 0, help: 0 },
     loadToken: 0,
-    manifests: { approved: null, review: null }
+    manifests: { approved: null, review: null, extraReview: [], help: null }
   };
 
   const els = {
@@ -252,7 +272,10 @@
     const mapReady = nycif.coordinate_status === 'map_ready'
       && Number.isFinite(schemaEvent.latitude)
       && Number.isFinite(schemaEvent.longitude);
-    const review = (nycif.data_layer || '') === 'review_supplemental';
+    const layer = String(nycif.data_layer || '');
+    const review = layer === 'review_supplemental' || layer === 'civic_review';
+    const civicLane = String(nycif.civic_lane || '');
+    const isHelpPlace = civicLane === 'civic_help_places';
     const title = schemaEvent.title || 'Untitled event';
     const location = schemaEvent.location || '';
     const borough = schemaEvent.borough || '';
@@ -262,6 +285,10 @@
     const tags = Array.isArray(schemaEvent.tags)
       ? schemaEvent.tags.map(v => String(v || '')).filter(Boolean)
       : [];
+    const sourceDataset = schemaEvent.source && schemaEvent.source.dataset
+      ? String(schemaEvent.source.dataset)
+      : '';
+    const coordStatus = String(nycif.coordinate_status || (mapReady ? 'map_ready' : 'list_only'));
     const e = {
       ...schemaEvent,
       lat: schemaEvent.latitude,
@@ -275,6 +302,10 @@
       parent_event_id: schemaEvent.parent_event_id || null,
       mapReady,
       isReview: review,
+      isHelpPlace,
+      civicLane,
+      sourceDataset,
+      coordinateStatus: coordStatus,
       isMajor: schemaEvent.significance === 'major' || !!nycif.is_major,
       photoPick: !!nycif.photo_pick,
       verification_status: nycif.verification_status,
@@ -447,8 +478,9 @@
   }
 
   function dateMatches(e) {
+    // Always-on help places / undated opportunities are schedule directories, not day chips.
     if (!e.dateKey) {
-      return false;
+      return !!(e.isHelpPlace || (e.isReview && e.civicLane === 'civic_review' && !e.start_date_time));
     }
     const { today, end } = dayRange();
     if (state.dateMode === 'next7') {
@@ -474,7 +506,11 @@
       return !e.isReview;
     }
     if (state.sourceFilter === 'review') {
-      return e.isReview;
+      // Calendar/Parks/civic dated+opportunity review — not always-on help directories.
+      return e.isReview && !e.isHelpPlace;
+    }
+    if (state.sourceFilter === 'help') {
+      return !!e.isHelpPlace;
     }
     return true;
   }
@@ -775,12 +811,22 @@
     appendText(top, 'span', `${e.categoryMeta.emoji} ${e.categoryMeta.label}`, 'item-source');
     const tags = document.createElement('span');
     tags.className = 'item-tags';
-    appendText(tags, 'span', e.isReview ? 'REVIEW' : 'LIVE', reviewTagClass(e.isReview));
-    if (!e.mapReady) {
+    appendText(
+      tags,
+      'span',
+      e.isHelpPlace ? 'HELP' : (e.isReview ? 'REVIEW' : 'LIVE'),
+      reviewTagClass(e.isReview || e.isHelpPlace)
+    );
+    if (e.coordinateStatus === 'proposed') {
+      appendText(tags, 'span', 'PROPOSED', 'item-tag nycif-list-only');
+    } else if (!e.mapReady) {
       appendText(tags, 'span', 'LIST ONLY', 'item-tag nycif-list-only');
     }
     if (e.isMajor) {
       appendText(tags, 'span', 'MAJOR', 'item-tag');
+    }
+    if (e.sourceDataset) {
+      appendText(tags, 'span', e.sourceDataset, 'item-tag');
     }
     const dist = milesBetween(state.userLocation, e);
     if (Number.isFinite(dist)) {
@@ -789,8 +835,18 @@
     top.appendChild(tags);
     button.appendChild(top);
     appendText(button, 'strong', e.title);
-    appendText(button, 'span', e.dateKey || 'Date unavailable');
-    appendText(button, 'small', [e.borough, e.location, e.nycif?.event_type].filter(Boolean).join(' • '));
+    const scheduleText = (e.nycif && e.nycif.schedule_text) || e.schedule_text || '';
+    const whenLabel = e.dateKey
+      || (scheduleText ? String(scheduleText) : '')
+      || 'Date / schedule in source';
+    appendText(button, 'span', whenLabel);
+    appendText(
+      button,
+      'small',
+      [e.borough, e.location, e.coordinateStatus, e.sourceDataset || e.nycif?.event_type]
+        .filter(Boolean)
+        .join(' • ')
+    );
     if (e.mapReady) {
       const actions = document.createElement('span');
       actions.className = 'quick-actions';
@@ -1027,7 +1083,10 @@
         return !e.isReview;
       }
       if (state.sourceFilter === 'review') {
-        return e.isReview;
+        return e.isReview && !e.isHelpPlace;
+      }
+      if (state.sourceFilter === 'help') {
+        return !!e.isHelpPlace;
       }
       return true;
     });
@@ -1111,7 +1170,7 @@
     return page.latest_date >= today && page.earliest_date <= end;
   }
 
-  async function loadLayerPages(layer, manifest, token, prioritizeWindow) {
+  async function loadLayerPages(layer, manifest, token, prioritizeWindow, urlForOverride) {
     if (!manifest?.pages?.length) {
       return;
     }
@@ -1122,7 +1181,8 @@
       const bHit = pageOverlapsWindow(b, today, end) ? 0 : 1;
       return aHit - bHit;
     });
-    const urlFor = layer === 'approved' ? FEEDS.approvedPage : FEEDS.reviewPage;
+    const urlFor = urlForOverride || (layer === 'approved' ? FEEDS.approvedPage : FEEDS.reviewPage);
+    const schemaLayer = layer === 'approved' ? 'approved_staged' : 'review_supplemental';
     for (const page of ordered) {
       if (token !== state.loadToken) {
         return;
@@ -1135,9 +1195,9 @@
         if (token !== state.loadToken) {
           return;
         }
-        const envelope = SCHEMA.projectEnvelope(json, layer === 'review' ? 'review_supplemental' : 'approved_staged', json.generated_at_utc);
+        const envelope = SCHEMA.projectEnvelope(json, schemaLayer, json.generated_at_utc);
         upsertEvents(envelope.events);
-        state.pagesLoaded[layer] += 1;
+        state.pagesLoaded[layer] = (state.pagesLoaded[layer] || 0) + 1;
         updateIndexLabel();
         scheduleRender();
       } catch (err) {
@@ -1147,7 +1207,11 @@
   }
 
   async function loadPagesForCurrentWindow(token) {
-    const needReview = state.viewMode === 'all' && (state.sourceFilter === 'all' || state.sourceFilter === 'review');
+    const wantCivicOrReview = state.sourceFilter === 'all'
+      || state.sourceFilter === 'review'
+      || state.sourceFilter === 'help';
+    const needReview = state.viewMode === 'all' && wantCivicOrReview;
+    const needHelp = state.viewMode === 'all' && wantCivicOrReview && !!FEEDS.helpManifest;
     const needApproved = state.viewMode === 'all' || true; // approved pages also enrich major flags/search
     if (needApproved && state.manifests.approved) {
       await loadLayerPages('approved', state.manifests.approved, token, true);
@@ -1155,16 +1219,30 @@
     if (needReview && state.manifests.review) {
       await loadLayerPages('review', state.manifests.review, token, true);
     }
-    if (token === state.loadToken) {
-      state.indexComplete = state.pagesLoaded.approved >= (state.pagesTotal.approved || 0)
-        && (
-          !(state.viewMode === 'all' && (state.sourceFilter === 'all' || state.sourceFilter === 'review'))
-          || state.pagesLoaded.review >= (state.pagesTotal.review || 0)
+    if (needReview && Array.isArray(state.manifests.extraReview)) {
+      for (let i = 0; i < state.manifests.extraReview.length; i += 1) {
+        const root = EXTRA_REVIEW_ROOTS[i];
+        const manifest = state.manifests.extraReview[i];
+        if (!root || !manifest) continue;
+        await loadLayerPages(
+          `extra-review-${root}`,
+          manifest,
+          token,
+          true,
+          cursor => FEEDS.extraReviewPage(root, cursor)
         );
-      // Once approved fully loaded, search is globally complete for approved/major.
-      if (state.pagesLoaded.approved >= (state.pagesTotal.approved || 0) && state.pagesLoaded.review >= (state.pagesTotal.review || 0)) {
-        state.indexComplete = true;
       }
+    }
+    if (needHelp && state.manifests.help) {
+      await loadLayerPages('help', state.manifests.help, token, false, FEEDS.helpPage);
+    }
+    if (token === state.loadToken) {
+      const reviewNeeded = state.viewMode === 'all' && wantCivicOrReview;
+      const reviewDone = !reviewNeeded || (
+        state.pagesLoaded.review >= (state.pagesTotal.review || 0)
+        && (!needHelp || state.pagesLoaded.help >= (state.pagesTotal.help || 0))
+      );
+      state.indexComplete = state.pagesLoaded.approved >= (state.pagesTotal.approved || 0) && reviewDone;
       updateIndexLabel();
       scheduleRender();
     }
@@ -1173,7 +1251,7 @@
   async function bootFeeds() {
     const token = ++state.loadToken;
     state.errors = [];
-    state.pagesLoaded = { approved: 0, review: 0 };
+    state.pagesLoaded = { approved: 0, review: 0, help: 0 };
     state.indexComplete = false;
     status('Loading Major Events…');
     try {
@@ -1207,18 +1285,30 @@
     }
 
     try {
-      status('Loading approved and review page manifests…');
-      const [approvedManifest, reviewManifest] = await Promise.all([
+      status('Loading approved, review, and civic page manifests…');
+      const manifestJobs = [
         fetchJson(FEEDS.approvedManifest, 'approved-manifest'),
-        fetchJson(FEEDS.reviewManifest, 'review-manifest')
-      ]);
+        fetchJson(FEEDS.reviewManifest, 'review-manifest'),
+        ...EXTRA_REVIEW_ROOTS.map((root, i) => fetchJson(FEEDS.extraReviewManifest(root), `extra-review-manifest-${i}`)),
+      ];
+      if (FEEDS.helpManifest) {
+        manifestJobs.push(fetchJson(FEEDS.helpManifest, 'help-manifest'));
+      }
+      const manifests = await Promise.all(manifestJobs);
       if (token !== state.loadToken) {
         return;
       }
+      const approvedManifest = manifests[0];
+      const reviewManifest = manifests[1];
+      const extraReview = manifests.slice(2, 2 + EXTRA_REVIEW_ROOTS.length);
+      const helpManifest = FEEDS.helpManifest ? manifests[2 + EXTRA_REVIEW_ROOTS.length] : null;
       state.manifests.approved = approvedManifest;
       state.manifests.review = reviewManifest;
+      state.manifests.extraReview = extraReview;
+      state.manifests.help = helpManifest;
       state.pagesTotal.approved = approvedManifest.page_count || approvedManifest.pages?.length || 0;
       state.pagesTotal.review = reviewManifest.page_count || reviewManifest.pages?.length || 0;
+      state.pagesTotal.help = helpManifest ? (helpManifest.page_count || helpManifest.pages?.length || 0) : 0;
       await loadPagesForCurrentWindow(token);
     } catch (err) {
       state.errors.push(String(err.message || err));

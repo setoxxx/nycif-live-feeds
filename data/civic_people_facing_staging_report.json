@@ -1,0 +1,131 @@
+{
+  "accepted_count": 5198,
+  "artifacts": [
+    "data/civic_people_facing_staging_feed.json",
+    "data/civic_people_facing_staging_report.json",
+    "data/civic_people_facing_date_time_location_qa.json",
+    "data/civic_people_facing_continuity_report.json",
+    "data/civic_food_access_gap_note.json",
+    "data/civic_help_places_snapshot.json",
+    "data/schema-v1-civic-review/review/manifest.json",
+    "data/schema-v1-civic-review/help/manifest.json"
+  ],
+  "by_source": {
+    "benefits_access_centers": {
+      "accepted": 29,
+      "list_only": 2,
+      "map_ready": 27,
+      "quarantined": 0
+    },
+    "farmers_markets": {
+      "accepted": 1207,
+      "list_only": 658,
+      "map_ready": 549,
+      "quarantined": 0
+    },
+    "homebase_locations": {
+      "accepted": 26,
+      "list_only": 0,
+      "map_ready": 26,
+      "quarantined": 0
+    },
+    "homeless_drop_in_centers": {
+      "accepted": 9,
+      "list_only": 1,
+      "map_ready": 8,
+      "quarantined": 0
+    },
+    "moia_know_your_rights": {
+      "accepted": 0,
+      "list_only": 0,
+      "map_ready": 0,
+      "quarantined": 227
+    },
+    "nyc_aging_providers": {
+      "accepted": 417,
+      "list_only": 0,
+      "map_ready": 417,
+      "quarantined": 0
+    },
+    "nycha_community_facilities": {
+      "accepted": 408,
+      "list_only": 23,
+      "map_ready": 385,
+      "quarantined": 0
+    },
+    "oac_activities": {
+      "accepted": 1945,
+      "list_only": 15,
+      "map_ready": 1930,
+      "quarantined": 304
+    },
+    "ready_ny_events": {
+      "accepted": 0,
+      "list_only": 0,
+      "map_ready": 0,
+      "quarantined": 5021
+    },
+    "snap_centers": {
+      "accepted": 13,
+      "list_only": 0,
+      "map_ready": 13,
+      "quarantined": 0
+    },
+    "social_service_volunteer": {
+      "accepted": 665,
+      "list_only": 665,
+      "map_ready": 0,
+      "quarantined": 0
+    },
+    "volunteer_opportunities": {
+      "accepted": 436,
+      "list_only": 72,
+      "map_ready": 364,
+      "quarantined": 0
+    },
+    "workforce1_events": {
+      "accepted": 0,
+      "list_only": 0,
+      "map_ready": 0,
+      "quarantined": 720
+    },
+    "workforce1_jobs": {
+      "accepted": 43,
+      "list_only": 43,
+      "map_ready": 0,
+      "note": "SODA often pads with empty objects; only nonempty field payloads staged as list_only",
+      "quarantined": 0
+    }
+  },
+  "continuity": {
+    "dated_civic_event_count": 1945,
+    "upcoming_next_30_days": 528,
+    "upcoming_next_7_days": 155
+  },
+  "coordinate_status_counts": {
+    "list_only": 1479,
+    "map_ready": 3719
+  },
+  "cross_source_dedupe_queue_count": 0,
+  "events_count": 1945,
+  "food_access_gap": "known_gap_human_follow_up",
+  "generated_at_utc": "2026-07-15T00:09:58Z",
+  "help_places_count": 2109,
+  "opportunities_count": 1144,
+  "qa_pass": true,
+  "quarantined_count": 6272,
+  "reference_today_nyc": "2026-07-14",
+  "safety": {
+    "approved_permit_lane_untouched": true,
+    "location_cache_modified": false,
+    "production_feed": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "staged_feed_modified": false
+  },
+  "schema_pages": {
+    "help_total": 2109,
+    "review_total": 3089
+  },
+  "schema_version": "civic-people-facing-v1"
+}
