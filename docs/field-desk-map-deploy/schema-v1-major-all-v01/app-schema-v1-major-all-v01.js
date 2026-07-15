@@ -430,6 +430,28 @@
     }
   }
 
+  function applyUrlDeskOverrides() {
+    // Photographer calendar / God View deep-links: ?date=YYYY-MM-DD&mode=all
+    try {
+      const params = new URL(location.href).searchParams;
+      const dateParam = params.get('date');
+      if (dateParam && /^\d{4}-\d{2}-\d{2}$/.test(dateParam)) {
+        state.dateMode = dateParam;
+        state.userChangedFilters = true;
+      }
+      const modeParam = params.get('mode');
+      if (modeParam === 'all' || modeParam === 'major') {
+        state.viewMode = modeParam;
+      }
+      const sourceParam = params.get('source');
+      if (sourceParam && ['all', 'approved', 'review', 'help'].includes(sourceParam)) {
+        state.sourceFilter = sourceParam;
+      }
+    } catch {
+      // ignore malformed URL
+    }
+  }
+
   function loadPrefs() {
     try {
       if (forceReset()) {
@@ -457,9 +479,11 @@
         photoOnly: !!use.photoOnly,
         nypdOnly: !!use.nypdOnly
       });
+      applyUrlDeskOverrides();
       savePrefs();
     } catch {
       Object.assign(state, publicDefaults());
+      applyUrlDeskOverrides();
     }
   }
 

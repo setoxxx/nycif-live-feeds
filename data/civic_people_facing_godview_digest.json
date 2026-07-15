@@ -3,12 +3,16 @@
     "civic_help_manifest": "data/schema-v1-civic-review/help/manifest.json",
     "civic_review_manifest": "data/schema-v1-civic-review/review/manifest.json",
     "continuity": "data/civic_people_facing_continuity_report.json",
+    "coverage_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/172",
+    "daily_sync_report": "data/daily_people_facing_sync_report.json",
     "date_time_location_qa": "data/civic_people_facing_date_time_location_qa.json",
     "food_access_gap": "data/civic_food_access_gap_note.json",
     "geocoding_proposal_report": "data/civic_people_facing_geocoding_proposal_report.json",
     "geocoding_proposals": "data/civic_people_facing_geocoding_proposals.json",
     "map_coverage": "data/civic_people_facing_map_coverage_report.json",
     "merged_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/171",
+    "photographer_calendar": "data/photographer_assignment_calendar_2mo.json",
+    "photographer_calendar_report": "data/photographer_assignment_calendar_report.json",
     "staging_feed": "data/civic_people_facing_staging_feed.json",
     "staging_report": "data/civic_people_facing_staging_report.json",
     "status": "status/nycif-project-status.json"
@@ -101,7 +105,9 @@
     }
   },
   "checkpoint": {
-    "current_phase": "Civic people-facing intake staged (Review / Help) — draft PR",
+    "coverage_merge_commit": "f9df1fd2314b5f921701dc856cc5cb6dd5b1582d",
+    "coverage_pr": 172,
+    "current_phase": "Civic map coverage + God View bookmark (post #171 merge)",
     "health": "green",
     "m7c_authorized": false,
     "merge_commit": "386e6ef4be3dae654f25f2233939223e9a39dac4",
@@ -116,10 +122,19 @@
     "list_only": 1295,
     "map_ready": 3903,
     "opportunities": 1144,
+    "photographer_calendar_events": 842,
+    "photographer_days_with_coverage": 43,
     "proposed": 489,
     "quarantined": 6272,
     "upcoming_next_30_days": 528,
     "upcoming_next_7_days": 155
+  },
+  "daily_pull": {
+    "last_run_utc": "2026-07-15T00:41:50Z",
+    "photographer_calendar_events": 842,
+    "photographer_days_with_coverage": 43,
+    "qa_pass": true,
+    "report": "data/daily_people_facing_sync_report.json"
   },
   "field_desk": {
     "bot_cannot_push_field_desk": true,
@@ -132,20 +147,668 @@
     "honesty": "NYC Open Data does not currently provide a high-quality live citywide soup-kitchen or food-pantry pin feed suitable for map publication.",
     "status": "known_gap_human_follow_up"
   },
-  "generated_at_utc": "2026-07-15T00:29:04Z",
+  "generated_at_utc": "2026-07-15T00:41:53Z",
   "lanes": {
     "Approved": "schema-v1-discovery approved permits (unchanged)",
     "Help Places": "schema-v1-civic-review/help (markets + benefits/SNAP/drop-in/Homebase/aging/NYCHA)",
     "Review": "discovery review (calendar/Parks) UNION schema-v1-civic-review/review"
   },
   "next_human_steps": [
-    "Push Field Desk civic-people-facing-v01 package (bot cannot push nycif-field-desk)",
-    "Smoke: Major+Next7; Review shows calendar/Parks ∪ civic; Help Places directories; Approved unchanged",
-    "Do not publish/promote civic pins until explicitly authorized",
-    "Soup-kitchen citywide live pin feed remains known gap"
+    "Push Field Desk civic-people-facing-v01 (+ photographer calendar handshake) to nycif-field-desk Pages",
+    "Push admin photographer-calendar-panel + civic God View update",
+    "Use Photographer Assignment Calendar for next 2 months of money days",
+    "Confirm daily workflow daily-people-facing-desk-sync is enabled",
+    "Do not publish/promote to WordPress public map until explicitly authorized"
   ],
+  "photographer_assignment_calendar": {
+    "artifact": "data/photographer_assignment_calendar_2mo.json",
+    "days_with_coverage": 43,
+    "go_shoot_these": [
+      {
+        "assignment_score": 830,
+        "borough": "Manhattan",
+        "category": "sports",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Johnny Hartman Plaza: Johnny Hartman Plaza Hamilton Pl between West 143 rd street and amsterdam avenue",
+        "end_date_time": "2026-07-14T18:45:00.000",
+        "id": "tvpp-9vvx:931972@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.752644,
+        "location_cache_modified": false,
+        "longitude": -73.909559,
+        "map_link": "https://www.google.com/maps?q=40.752644,-73.909559",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "931972"
+        },
+        "start_date_time": "2026-07-14T15:00:00.000",
+        "timezone": "America/New_York",
+        "title": "FIFA26 NYC DOT World Cup Watch Party",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_world_cup_fan_zone",
+          "keyword_street_activation"
+        ]
+      },
+      {
+        "assignment_score": 830,
+        "borough": "Bronx",
+        "category": "sports",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Lou Gehrig Plaza: Lou Gehrig Plaza E. 161st Street between Walton Ave and Grand Concourse,  WALTON AVENUE between EAST  161 STREET and EAST  164 STREET",
+        "end_date_time": "2026-07-14T18:00:00.000",
+        "id": "tvpp-9vvx:960865@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.822557,
+        "location_cache_modified": false,
+        "longitude": -73.921533,
+        "map_link": "https://www.google.com/maps?q=40.822557,-73.921533",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "960865"
+        },
+        "start_date_time": "2026-07-14T14:00:00.000",
+        "timezone": "America/New_York",
+        "title": "NYC DOT Soccer Streets World Cup Watch Party - Lou Gehrig Plaza",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_world_cup_fan_zone",
+          "keyword_street_activation"
+        ]
+      },
+      {
+        "assignment_score": 830,
+        "borough": "Bronx",
+        "category": "sports",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Lou Gehrig Plaza: Lou Gehrig Plaza E. 161st Street between Walton Ave and Grand Concourse",
+        "end_date_time": "2026-07-14T20:00:00.000",
+        "id": "tvpp-9vvx:936942@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.822557,
+        "location_cache_modified": false,
+        "longitude": -73.921533,
+        "map_link": "https://www.google.com/maps?q=40.822557,-73.921533",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "936942"
+        },
+        "start_date_time": "2026-07-14T08:00:00.000",
+        "timezone": "America/New_York",
+        "title": "World Cup Activation",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_world_cup_fan_zone",
+          "keyword_street_activation"
+        ]
+      },
+      {
+        "assignment_score": 790,
+        "borough": "Queens",
+        "category": "market",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Frank D. O'Connor Playground: Main Plaza",
+        "end_date_time": "2026-07-14T18:00:00.000",
+        "id": "tvpp-9vvx:914696@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.74421,
+        "location_cache_modified": false,
+        "longitude": -73.88672,
+        "map_link": "https://www.google.com/maps?q=40.74421,-73.88672",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "914696"
+        },
+        "start_date_time": "2026-07-14T17:00:00.000",
+        "timezone": "America/New_York",
+        "title": "2026 Queensboro Dance Festival",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_street_fair_festival",
+          "keyword_street_activation"
+        ]
+      },
+      {
+        "assignment_score": 740,
+        "borough": "Manhattan",
+        "category": "market",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Greeley Square Plaza: Greeley Square (32/33 Broadway) Broadway between W. 32rd Street and W. 33rd Street",
+        "end_date_time": "2026-07-14T21:00:00.000",
+        "id": "tvpp-9vvx:932570@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.74861,
+        "location_cache_modified": false,
+        "longitude": -73.98832,
+        "map_link": "https://www.google.com/maps?q=40.74861,-73.98832",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "932570"
+        },
+        "start_date_time": "2026-07-14T08:00:00.000",
+        "timezone": "America/New_York",
+        "title": "Live Music and Dance Performances and Circus Arts",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_street_activation",
+          "keyword_spectacle"
+        ]
+      },
+      {
+        "assignment_score": 650,
+        "borough": "Brooklyn",
+        "category": "sports",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Parade Ground: Baseball-03",
+        "end_date_time": "2026-07-14T22:00:00.000",
+        "id": "tvpp-9vvx:905241@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.649739,
+        "location_cache_modified": false,
+        "longitude": -73.971016,
+        "map_link": "https://www.google.com/maps?q=40.649739,-73.971016",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "905241"
+        },
+        "start_date_time": "2026-07-14T20:00:00.000",
+        "timezone": "America/New_York",
+        "title": "Baseball - Adults",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 650,
+        "borough": "Brooklyn",
+        "category": "sports",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Parade Ground: Soccer-11",
+        "end_date_time": "2026-07-14T20:00:00.000",
+        "id": "tvpp-9vvx:904712@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.649739,
+        "location_cache_modified": false,
+        "longitude": -73.971016,
+        "map_link": "https://www.google.com/maps?q=40.649739,-73.971016",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "904712"
+        },
+        "start_date_time": "2026-07-14T16:00:00.000",
+        "timezone": "America/New_York",
+        "title": "Soccer - Non Regulation",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 650,
+        "borough": "Brooklyn",
+        "category": "sports",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Parade Ground: Soccer-10",
+        "end_date_time": "2026-07-14T20:00:00.000",
+        "id": "tvpp-9vvx:904707@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.649739,
+        "location_cache_modified": false,
+        "longitude": -73.971016,
+        "map_link": "https://www.google.com/maps?q=40.649739,-73.971016",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "904707"
+        },
+        "start_date_time": "2026-07-14T17:00:00.000",
+        "timezone": "America/New_York",
+        "title": "Soccer - Non Regulation",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 650,
+        "borough": "Brooklyn",
+        "category": "sports",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Parade Ground: Soccer-08",
+        "end_date_time": "2026-07-14T20:00:00.000",
+        "id": "tvpp-9vvx:905228@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.649739,
+        "location_cache_modified": false,
+        "longitude": -73.971016,
+        "map_link": "https://www.google.com/maps?q=40.649739,-73.971016",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "905228"
+        },
+        "start_date_time": "2026-07-14T18:00:00.000",
+        "timezone": "America/New_York",
+        "title": "Soccer -Regulation",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 620,
+        "borough": "Manhattan",
+        "category": "parks",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Central Park: Bethesda Fountain Terrace",
+        "end_date_time": "2026-07-14T23:55:00.000",
+        "id": "tvpp-9vvx:895600@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.772148,
+        "location_cache_modified": false,
+        "longitude": -73.977782,
+        "map_link": "https://www.google.com/maps?q=40.772148,-73.977782",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "895600"
+        },
+        "start_date_time": "2026-07-14T00:00:00.000",
+        "timezone": "America/New_York",
+        "title": "closed",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_spectator_race"
+        ]
+      },
+      {
+        "assignment_score": 610,
+        "borough": "Manhattan",
+        "category": "market",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Bowling Green: Subway Plaza (Cobblestone)",
+        "end_date_time": "2026-07-14T23:55:00.000",
+        "id": "tvpp-9vvx:887399@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.704083,
+        "location_cache_modified": false,
+        "longitude": -74.013754,
+        "map_link": "https://www.google.com/maps?q=40.704083,-74.013754",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "887399"
+        },
+        "start_date_time": "2026-07-14T00:00:00.000",
+        "timezone": "America/New_York",
+        "title": "Green Market",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_street_activation"
+        ]
+      },
+      {
+        "assignment_score": 610,
+        "borough": "Manhattan",
+        "category": "market",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Times Square: 46/47 Broadway Pedestrian Plaza (Times Sq) BROADWAY between WEST   46 STREET and WEST   47 STREET",
+        "end_date_time": "2026-07-14T20:00:00.000",
+        "id": "tvpp-9vvx:941768@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.7562,
+        "location_cache_modified": false,
+        "longitude": -73.98653,
+        "map_link": "https://www.google.com/maps?q=40.7562,-73.98653",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "941768"
+        },
+        "start_date_time": "2026-07-14T09:00:00.000",
+        "timezone": "America/New_York",
+        "title": "LAYS BANDWAGON",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_street_activation"
+        ]
+      },
+      {
+        "assignment_score": 610,
+        "borough": "Manhattan",
+        "category": "market",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Stuyvesant Square: Flagpole Plaza West",
+        "end_date_time": "2026-07-14T20:00:00.000",
+        "id": "tvpp-9vvx:951059@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.73383,
+        "location_cache_modified": false,
+        "longitude": -73.98443,
+        "map_link": "https://www.google.com/maps?q=40.73383,-73.98443",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "951059"
+        },
+        "start_date_time": "2026-07-14T19:00:00.000",
+        "timezone": "America/New_York",
+        "title": "Party",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_street_activation"
+        ]
+      },
+      {
+        "assignment_score": 610,
+        "borough": "Manhattan",
+        "category": "market",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Times Square: 45/46 Broadway Pedestrian Plaza (Times Sq) BROADWAY between WEST   45 STREET and WEST   46 STREET,  WEST   46 STREET between 7 AVENUE and 8 AVENUE",
+        "end_date_time": "2026-07-14T21:00:00.000",
+        "id": "tvpp-9vvx:898494@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.7562,
+        "location_cache_modified": false,
+        "longitude": -73.98653,
+        "map_link": "https://www.google.com/maps?q=40.7562,-73.98653",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "898494"
+        },
+        "start_date_time": "2026-07-14T12:00:00.000",
+        "timezone": "America/New_York",
+        "title": "TSQ LIVE: 45/46 Plaza Programming",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_street_activation"
+        ]
+      },
+      {
+        "assignment_score": 610,
+        "borough": "Manhattan",
+        "category": "market",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Washington Square Park: Holley Plaza",
+        "end_date_time": "2026-07-14T17:30:00.000",
+        "id": "tvpp-9vvx:890662@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.73089,
+        "location_cache_modified": false,
+        "longitude": -73.9976,
+        "map_link": "https://www.google.com/maps?q=40.73089,-73.9976",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "890662"
+        },
+        "start_date_time": "2026-07-14T13:00:00.000",
+        "timezone": "America/New_York",
+        "title": "TUESDAY ADULT RECREATION",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_street_activation"
+        ]
+      },
+      {
+        "assignment_score": 610,
+        "borough": "Manhattan",
+        "category": "market",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Central Park: Bandshell Plaza",
+        "end_date_time": "2026-07-14T20:00:00.000",
+        "id": "tvpp-9vvx:919038@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.772148,
+        "location_cache_modified": false,
+        "longitude": -73.977782,
+        "map_link": "https://www.google.com/maps?q=40.772148,-73.977782",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "919038"
+        },
+        "start_date_time": "2026-07-14T18:00:00.000",
+        "timezone": "America/New_York",
+        "title": "The Magic Raven Theater Company Presents - The Four Little Girls By Pablo Picasso",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_street_activation"
+        ]
+      },
+      {
+        "assignment_score": 610,
+        "borough": "Manhattan",
+        "category": "market",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "Washington Square Park: Garibaldi Plaza",
+        "end_date_time": "2026-07-14T11:00:00.000",
+        "id": "tvpp-9vvx:890319@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.73089,
+        "location_cache_modified": false,
+        "longitude": -73.9976,
+        "map_link": "https://www.google.com/maps?q=40.73089,-73.9976",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "890319"
+        },
+        "start_date_time": "2026-07-14T08:00:00.000",
+        "timezone": "America/New_York",
+        "title": "Tuesday AM Adult Fitness - Bodyroll",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_street_activation"
+        ]
+      },
+      {
+        "assignment_score": 590,
+        "borough": "Queens",
+        "category": "market",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "41 AVENUE between 80 STREET and 81 STREET",
+        "end_date_time": "2026-07-14T17:00:00.000",
+        "id": "tvpp-9vvx:911520@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.757795,
+        "location_cache_modified": false,
+        "longitude": -73.829374,
+        "map_link": "https://www.google.com/maps?q=40.757795,-73.829374",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "911520"
+        },
+        "start_date_time": "2026-07-14T08:00:00.000",
+        "timezone": "America/New_York",
+        "title": "Elmhurst Greenmarket Tuesday",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_market"
+        ]
+      },
+      {
+        "assignment_score": 590,
+        "borough": "Manhattan",
+        "category": "market",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "FT WASHINGTON AVENUE between WEST  168 STREET and WEST  169 STREET",
+        "end_date_time": "2026-07-14T18:00:00.000",
+        "id": "tvpp-9vvx:911525@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.842318,
+        "location_cache_modified": false,
+        "longitude": -73.942117,
+        "map_link": "https://www.google.com/maps?q=40.842318,-73.942117",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "911525"
+        },
+        "start_date_time": "2026-07-14T08:00:00.000",
+        "timezone": "America/New_York",
+        "title": "Ft Washington Greenmarket Tuesday",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_market"
+        ]
+      },
+      {
+        "assignment_score": 590,
+        "borough": "Bronx",
+        "category": "market",
+        "coordinate_status": "map_ready",
+        "date": "2026-07-14",
+        "display_location": "EAST  149 STREET between MORRIS AVENUE and PARK AVENUE",
+        "end_date_time": "2026-07-14T17:00:00.000",
+        "id": "tvpp-9vvx:911516@2026-07-14",
+        "lane": "approved_major",
+        "latitude": 40.817183,
+        "location_cache_modified": false,
+        "longitude": -73.922377,
+        "map_link": "https://www.google.com/maps?q=40.817183,-73.922377",
+        "photo_pick": false,
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "911516"
+        },
+        "start_date_time": "2026-07-14T08:00:00.000",
+        "timezone": "America/New_York",
+        "title": "Lincoln Hospital Greenmarket Tues  Friday",
+        "why_selected": [
+          "significance_major",
+          "carried_major_score:450",
+          "keyword_market"
+        ]
+      }
+    ],
+    "month_counts": [
+      {
+        "days_with_events": 18,
+        "event_count": 509,
+        "label": "July 2026"
+      },
+      {
+        "days_with_events": 25,
+        "event_count": 333,
+        "label": "August 2026"
+      }
+    ],
+    "premium_label": "Photographer Assignment Calendar (premium/operator)",
+    "qa_pass": true,
+    "report": "data/photographer_assignment_calendar_report.json",
+    "total_events": 842
+  },
   "public_map_policy": "Civic rows are Review/Help staging only. Not silent public-map promotion.",
-  "purpose": "Operator bookmark: where civic people-facing intake stands. Read-only. Not a publish control.",
+  "purpose": "Operator bookmark: civic intake + photographer assignment calendar. Read-only. Not a publish control.",
   "qa": {
     "date_time_location_qa_pass": true,
     "every_accepted_row_classified": true,
@@ -158,7 +821,8 @@
     "Geocoding proposals pending manual review",
     "Historical Workforce1 / Ready NY / MOIA quarantined for upcoming",
     "Food-access soup-kitchen gap",
-    "Phase 2E / location_cache write unauthorized"
+    "Phase 2E / location_cache write unauthorized",
+    "Public WordPress map publish unauthorized by this desk package"
   ],
   "safety": {
     "approved_permit_lane_untouched": true,

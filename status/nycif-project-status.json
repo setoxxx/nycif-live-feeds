@@ -4,83 +4,78 @@
   "project": "nycif-live-feeds",
   "repository": "setoxxx/nycif-live-feeds",
   "visibility": "public",
-  "current_phase": "Civic map coverage + God View bookmark (post #171 merge)",
-  "completion_percent": 95,
+  "current_phase": "Photographer 2-month calendar + daily desk sync",
+  "completion_percent": 96,
   "health": "green",
-  "status_summary": "PR #171 merged (386e6ef). Civic people-facing staging live on main. Follow-up maximizes map_ready (farmers coord recovery), writes proposals-only artifact for list_only joins, map coverage report (100% accepted rows classified), and Civic God View admin bookmark. Field Desk human Pages push still required. Phase 2E / public-map publish / location_cache write remain unauthorized. Soup-kitchen citywide pin feed remains known gap.",
+  "status_summary": "PR #171 and #172 merged. Photographer Assignment Calendar (premium/operator) built for July–August 2026 money days (842 assignment-grade events / 43 days). Daily GitHub Actions workflow daily-people-facing-desk-sync auto-pulls civic/calendar/parks JSON without mutating protected staged production feeds. God View monthly UI + Field Desk ?date= handshake packaged. WordPress public-map publish still NOT authorized. Phase 2E / location_cache still unauthorized.",
   "active_prs": [
     {
-      "number": 172,
-      "branch": "cursor/civic-map-coverage-godview-da92",
-      "title": "Civic map coverage report, proposals, and God View bookmark",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/172",
-      "state": "open_ready_for_review"
+      "branch": "cursor/photographer-calendar-daily-pull-da92",
+      "title": "Photographer calendar, daily desk sync, Field Desk date handshake",
+      "state": "open_draft_pending"
     }
   ],
   "recent_prs": [
+    {
+      "number": 172,
+      "title": "Civic map coverage report, proposals, and God View bookmark",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/172",
+      "state": "merged",
+      "merge_commit": "f9df1fd2314b5f921701dc856cc5cb6dd5b1582d"
+    },
     {
       "number": 171,
       "title": "Civic people-facing intake + date/time/location hardening",
       "url": "https://github.com/setoxxx/nycif-live-feeds/pull/171",
       "state": "merged",
       "merge_commit": "386e6ef4be3dae654f25f2233939223e9a39dac4"
-    },
-    {
-      "number": 167,
-      "title": "Discovery Taxonomy v02 \u2014 full source-to-map handshake",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/167",
-      "state": "merged"
-    },
-    {
-      "number": 166,
-      "title": "Fix schema-v1 quality gates and unified Major/All Field Desk mirror",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/166",
-      "state": "merged"
     }
   ],
   "blockers": [
     "Field-desk admin/map deploy requires human push (403 for cursor bot on nycif-field-desk).",
-    "No official live citywide soup-kitchen/pantry pin SODA feed \u2014 data/civic_food_access_gap_note.json.",
-    "M7-C duplicate-key enforcement remains unauthorized.",
-    "Phase 2E location_cache promotion remains unauthorized."
+    "Public WordPress /nycinfocus.com map publish not authorized.",
+    "No official live citywide soup-kitchen/pantry pin SODA feed.",
+    "Phase 2E location_cache promotion remains unauthorized.",
+    "Full permit→staged production refresh still requires live-sync-qa manual dispatch (by design)."
   ],
-  "next_action": "Merge civic map-coverage/God View follow-up when green; Howard push civic-people-facing-v01 + admin civic-godview-panel-v01 to field-desk Pages with ?v=civic-people-facing-v01&resetFilters=1&feeds=main. Do not publish civic pins to public map without explicit auth.",
+  "next_action": "Merge photographer-calendar daily-pull PR when green; Howard push Field Desk + admin calendar panels; confirm Actions workflow enabled. Shoot from Photographer Assignment Calendar.",
   "admin_dashboard_urls": {
     "interim_live": "https://setoxxx.github.io/nycif-live-feeds/admin/index.html",
-    "field_desk": "https://setoxxx.github.io/nycif-field-desk/admin/index.html"
+    "field_desk": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main"
   },
   "data_freshness": {
-    "source": "Post-#171 civic map coverage + godview digest",
-    "last_verified_at": "2026-07-15T00:35:00.000Z",
-    "notes": "Staging accepted 5198; map_ready 3903; list_only 1295; proposed 489 (review-only). Coverage qa_pass true."
+    "source": "Photographer calendar build + offline daily desk sync",
+    "last_verified_at": "2026-07-15T00:45:00.000Z",
+    "notes": "842 assignment events Jul–Aug 2026; daily workflow cron 15 11 * * * UTC."
+  },
+  "photographer_assignment_calendar": {
+    "total_events": 842,
+    "days_with_coverage": 43,
+    "july_2026_events": 509,
+    "august_2026_events": 333,
+    "artifact": "data/photographer_assignment_calendar_2mo.json",
+    "workflow": ".github/workflows/daily-people-facing-desk-sync.yml",
+    "promotion_allowed": false,
+    "public_map_modified": false
   },
   "civic_people_facing": {
     "merged_pr": 171,
-    "merge_commit": "386e6ef4be3dae654f25f2233939223e9a39dac4",
+    "coverage_pr": 172,
     "accepted_count": 5198,
-    "quarantined_count": 6272,
-    "upcoming_next_7_days": 155,
     "map_ready": 3903,
     "list_only": 1295,
     "proposed": 489,
     "qa_pass": true,
-    "promotion_allowed": false,
-    "public_map_modified": false,
-    "location_cache_modified": false,
-    "godview_digest": "data/civic_people_facing_godview_digest.json",
-    "field_desk_preview": "?v=civic-people-facing-v01&resetFilters=1&feeds=main"
+    "promotion_allowed": false
   },
   "safety": {
     "safe_for_public_dashboard": true,
     "contains_secrets": false,
-    "contains_private_repo_internals": false,
-    "contains_credentials": false,
-    "contains_tokens": false,
-    "browser_side_github_api_polling": false,
     "write_controls": false,
     "deploy_controls": false,
     "promotion_allowed_default": false,
     "phase_2e_authorized": false,
-    "m7c_authorized": false
+    "m7c_authorized": false,
+    "wordpress_public_map_publish_authorized": false
   }
 }
