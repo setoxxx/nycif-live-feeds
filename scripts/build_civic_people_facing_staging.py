@@ -41,6 +41,7 @@ from schema_v1_common import (  # noqa: E402
     event_date_key,
     project_event,
     reset_stable_id_registry,
+    valid_nyc_coords,
     write_repo_json,
 )
 
@@ -429,29 +430,54 @@ def normalize_ss_volunteer() -> list[dict]:
     return out
 
 
+def _farmers_coord_candidates(raw: dict[str, Any]) -> list[tuple[Any, Any, str]]:
+    """Return (lat, lng, reason) candidates for a market row, including swap recovery."""
+    lat, lng = raw.get("latitude"), raw.get("longitude")
+    return [
+        (lat, lng, "native_source_coords"),
+        # SODA historical rows sometimes store lng/lat swapped.
+        (lng, lat, "native_source_coords_swapped_axes"),
+    ]
+
+
+def _pick_farmers_lat_lng(raws: list[dict[str, Any]]) -> tuple[Any, Any, str | None, str]:
+    """Prefer newest year with valid NYC coords; never invent pins."""
+    ordered = sorted(raws, key=lambda r: int(str(r.get("year") or "0") or 0), reverse=True)
+    for raw in ordered:
+        for lat, lng, axis_reason in _farmers_coord_candidates(raw):
+            lat_f, lng_f, ok = valid_nyc_coords(lat, lng)
+            if ok:
+                return lat_f, lng_f, str(raw.get("year") or None), axis_reason
+    newest = ordered[0]
+    return (
+        newest.get("latitude"),
+        newest.get("longitude"),
+        str(newest.get("year") or None),
+        "native_source_coords",
+    )
+
+
 def normalize_farmers_markets() -> list[dict]:
-    # Dedupe by market+address; keep highest year.
-    best: dict[str, dict[str, Any]] = {}
+    # Dedupe by market+address; among years, prefer valid NYC coordinates.
+    groups: dict[str, list[dict[str, Any]]] = {}
     for raw in load_snapshot_rows("farmers_markets"):
         name = str(raw.get("marketname") or "").strip()
         addr = str(raw.get("streetaddress") or "").strip()
         if not name:
             continue
         key = f"{name.lower()}|{addr.lower()}"
-        year = int(str(raw.get("year") or "0") or 0)
-        prev = best.get(key)
-        if prev and int(str(prev.get("year") or "0") or 0) >= year:
-            continue
-        best[key] = raw
+        groups.setdefault(key, []).append(raw)
 
     out: list[dict] = []
-    for raw in best.values():
-        name = str(raw.get("marketname") or "").strip()
-        addr = str(raw.get("streetaddress") or "").strip() or None
-        days = str(raw.get("daysoperation") or "").strip()
-        hours = str(raw.get("hoursoperations") or "").strip()
+    for raws in groups.values():
+        newest = max(raws, key=lambda r: int(str(r.get("year") or "0") or 0))
+        name = str(newest.get("marketname") or "").strip()
+        addr = str(newest.get("streetaddress") or "").strip() or None
+        days = str(newest.get("daysoperation") or "").strip()
+        hours = str(newest.get("hoursoperations") or "").strip()
         schedule = " · ".join(p for p in (days, hours) if p) or None
-        sid = stable_hash(name, addr, raw.get("borough"))
+        lat, lng, year_used, axis_reason = _pick_farmers_lat_lng(raws)
+        sid = stable_hash(name, addr, newest.get("borough"))
         out.append(
             _base_row(
                 source_key="farmers_markets",
@@ -461,19 +487,22 @@ def normalize_farmers_markets() -> list[dict]:
                 lane="civic_help_places",
                 category="market",
                 interests=["market", "services"],
-                borough=normalize_borough(raw.get("borough")),
+                borough=normalize_borough(newest.get("borough")),
                 display_location=addr,
                 address=addr,
-                lat=raw.get("latitude"),
-                lng=raw.get("longitude"),
+                lat=lat,
+                lng=lng,
                 start_date_time=None,
                 end_date_time=None,
                 schedule_text=schedule,
-                confidence_reason="directory_place_with_recurring_schedule_text_no_fake_one_off",
+                confidence_reason=(
+                    "directory_place_with_recurring_schedule_text_no_fake_one_off;"
+                    f" {axis_reason}"
+                ),
                 extra={
-                    "accepts_ebt": raw.get("accepts_ebt"),
-                    "open_year_round": raw.get("open_year_round"),
-                    "source_year": raw.get("year"),
+                    "accepts_ebt": newest.get("accepts_ebt"),
+                    "open_year_round": newest.get("open_year_round"),
+                    "source_year": year_used or newest.get("year"),
                     "time_precision": "recurring_schedule_text",
                     "help_place_type": "farmers_market",
                 },

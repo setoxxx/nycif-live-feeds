@@ -43,10 +43,16 @@ List cards show **source dataset**, **date/schedule**, and **coordinate_status**
 
 After copy, change any `../schema-v1-major-all-v01/` or `../discovery-taxonomy-v02/` script `src` values to local `./` paths as needed.
 
-Preview:
+Preview (PR #171 merged — use `main` feeds):
 
 ```text
-?v=civic-people-facing-v01&resetFilters=1&feeds=cursor/civic-people-facing-intake-da92
+?v=civic-people-facing-v01&resetFilters=1&feeds=main
+```
+
+Temporary branch feeds (only if testing an open follow-up PR):
+
+```text
+?v=civic-people-facing-v01&resetFilters=1&feeds=cursor/civic-map-coverage-godview-da92
 ```
 
 Checklist after Pages deploy:
