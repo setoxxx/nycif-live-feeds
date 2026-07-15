@@ -42,7 +42,7 @@ Replacing `204` with `155` in source constants would merely encode today's snaps
 | `scripts/generate_gps_staged_feed_integration_adjudication_summary.py` | `EXPECTED_SAFE_UPDATE_READY_COUNT = 204` | C (runtime gate) | **Removed** — replaced by `safe_update_count_contract` |
 | same | `EXPECTED_NO_SAFE_MATCH_PROMOTED_KEY_COUNT = 20` | C | **Removed** — contract-bound |
 | `scripts/apply_gps_staged_feed_integration_update.py` | same constants + `_is_204` validated_conditions | C | **Removed** — contract validation after snapshot preflight |
-| `scripts/generate_gps_staged_feed_integration_match_diagnostic.py` | `EXPECTED_STAGED_MATCHES = 430` | F (dry-run legacy target) | **Preserved** — informational dry-run baseline, not apply gate |
+| `scripts/generate_gps_staged_feed_integration_match_diagnostic.py` | `EXPECTED_STAGED_MATCHES = 430`, `EXPECTED_PROMOTED_CACHE_KEYS = 25` | C (runtime gate) | **Removed** — these were active `stable_identity_ready` gates (`selected_count == expected_count`, `len(promoted) == 25`). The diagnostic now reports readiness from internal consistency (unique identities, zero multi-key conflicts, non-empty selection); the old dry-run target is carried as informational context only, never as a gate. |
 | `data/gps_staged_feed_integration_*` artifacts | 204 counts | A (historical evidence) | **Preserved** — not modified |
 | `tests/registry/test_canonical_milestone_7b1_snapshot_contract_hardening.py` | 204 fixtures | B/D | **Preserved** as historical incident fixtures; helpers extended with count contract |
 | `docs/canonical_milestone_7b1_snapshot_contract_hardening.md` | 204 incident facts | A/E | **Preserved** — historical context |
@@ -185,7 +185,8 @@ Not performed: geocode, promote, publish, auto-approve, M7-C work.
 
 ## Residual risks
 
-- Diagnostic dry-run target (`430`) remains informational; operators must regenerate diagnostic/adjudication after staged-feed advances.
+- The diagnostic's former `430`/`25` gates are removed; the dry-run target survives only as informational context. Operators must still regenerate diagnostic/adjudication after the staged feed advances.
+- A full-chain regression test (`test_no_historical_count_constant_remains_in_active_chain`) locks in that no historical count constant is referenced outside comments in the diagnostic, adjudication, apply, or count-contract modules.
 - Count contract self-hash depends on canonical JSON serialization; whitespace-only on-disk changes alter adjudication self-hash by design.
 - Phase 2E promotion scripts retain their own unrelated count gates (`25` approved rows).
 

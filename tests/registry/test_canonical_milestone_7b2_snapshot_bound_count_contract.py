@@ -560,3 +560,84 @@ def test_direct_script_execution_imports_count_contract_helper() -> None:
 
 def test_snapshot_regenerate_next_step_differs_from_count_contract_next_step() -> None:
     assert REGENERATE_ARTIFACTS_NEXT_STEP != REGENERATE_COUNT_CONTRACT_NEXT_STEP
+
+
+def test_no_historical_count_constant_remains_in_active_chain() -> None:
+    """Full-chain completion (M7-B.2): the diagnostic, adjudication, apply, and
+    count-contract modules must not reference the historical hard-coded count
+    constants outside comments — including the diagnostic's 430/25 gates."""
+    for rel in (
+        "scripts/generate_gps_staged_feed_integration_match_diagnostic.py",
+        "scripts/generate_gps_staged_feed_integration_adjudication_summary.py",
+        "scripts/apply_gps_staged_feed_integration_update.py",
+        "scripts/gps_count_contract.py",
+    ):
+        code = "\n".join(
+            line
+            for line in (REPO_ROOT / rel).read_text(encoding="utf-8").splitlines()
+            if not line.lstrip().startswith("#")
+        )
+        for token in (
+            "EXPECTED_SAFE_UPDATE_READY_COUNT",
+            "EXPECTED_NO_SAFE_MATCH_PROMOTED_KEY_COUNT",
+            "EXPECTED_STAGED_MATCHES",
+            "EXPECTED_PROMOTED_CACHE_KEYS",
+        ):
+            assert token not in code, f"{rel} still references {token} outside comments"
+
+
+def test_adjudication_self_hash_round_trips_through_persisted_summary(tmp_path: Path) -> None:
+    """Regression (Canonical Milestone 7-B.2): the adjudication self-hash must be
+    computed over the COMPLETE persisted summary, so the apply-time validator
+    reproduces it exactly. Previously it was computed over an intermediate dict
+    lacking qa_pass/recommended_next_action/validated_conditions, so every real
+    producer->disk->apply round-trip failed with count_contract_provenance_mismatch."""
+    feed = tmp_path / "feed.json"
+    write_json(feed, build_staged_feed([]))
+    diagnostic_path = tmp_path / "diagnostic.json"
+    summary_path = tmp_path / "summary.json"
+    write_json(
+        diagnostic_path,
+        {
+            "dry_run_expected_matched_staged_event_count": 430,
+            "multi_key_conflict_count": 0,
+            "near_miss_diagnostics_by_promoted_cache_key": {},
+            "selected_candidate_count": 155,
+            "selected_stable_event_identity_count": 155,
+            "selected_stable_identity_rows": [
+                {
+                    "stable_event_identity": f"id-{index}",
+                    "source_event_id": f"EV-{index}",
+                    "display_location": f"Park {index}",
+                    "source_cemsid": [f"CEM-{index}"],
+                    "promoted_cache_key": f"group:test|{index}",
+                    "promoted_lat": 40.75,
+                    "promoted_lng": -73.95,
+                }
+                for index in range(155)
+            ],
+            "staged_feed_provenance": file_provenance(
+                feed,
+                producer_script="scripts/generate_gps_staged_feed_integration_match_diagnostic.py",
+                repo_root=tmp_path,
+            ),
+            "unmatched_promoted_cache_key_count": 20,
+            "unmatched_promoted_cache_keys": [],
+        },
+    )
+    adjudication = importlib.import_module("scripts.generate_gps_staged_feed_integration_adjudication_summary")
+    adjudication.ROOT = tmp_path
+    adjudication.DIAGNOSTIC_PATH = diagnostic_path
+    adjudication.SUMMARY_PATH = summary_path
+    assert adjudication.main() == 0
+
+    persisted = read_json(summary_path)
+    stored = persisted["safe_update_count_contract"]["adjudication_artifact_sha256"]
+    assert stored is not None
+    # The exact round-trip the apply-time validator performs:
+    assert compute_adjudication_self_hash(persisted) == stored
+    # And the persisted summary must actually contain the fields the old code
+    # omitted from the hash input.
+    assert "qa_pass" in persisted
+    assert "validated_conditions" in persisted
+    assert "recommended_next_action" in persisted

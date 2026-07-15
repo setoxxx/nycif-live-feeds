@@ -261,7 +261,13 @@ def main() -> int:
     }
 
     if safe_update_count_contract is not None:
-        finalize_count_contract_adjudication_hash(summary_without_hash)
+        # Internal count validation runs on the pre-hash summary (the self-hash
+        # is not one of the internal invariants). The adjudication self-hash is
+        # finalized later, over the COMPLETE saved summary, so it round-trips
+        # through the apply-time validator (Canonical Milestone 7-B.2 fix:
+        # previously it was computed over this intermediate dict, which omits
+        # qa_pass/recommended_next_action/validated_conditions and therefore
+        # never matched the persisted summary at apply time).
         count_validation = validate_count_contract_internal(
             safe_update_count_contract,
             summary_without_hash,
@@ -326,6 +332,12 @@ def main() -> int:
             "staged_feed_modified_false": staged_feed_modified is False,
         },
     }
+
+    if safe_update_count_contract is not None:
+        # Finalize the adjudication self-hash over the COMPLETE summary that is
+        # actually persisted, so compute_adjudication_self_hash() reproduces it
+        # exactly at apply time.
+        finalize_count_contract_adjudication_hash(summary)
 
     save_json(SUMMARY_PATH, summary)
     printable = {k: v for k, v in summary.items() if k not in {"safe_update_ready_rows", "no_safe_staged_match_adjudication"}}
