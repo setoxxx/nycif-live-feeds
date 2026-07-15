@@ -35,8 +35,8 @@ List cards show **source dataset**, **date/schedule**, and **coordinate_status**
 |----------------------|-----------------|
 | `docs/field-desk-map-deploy/civic-people-facing-v01/index.html` | `index.html` (or civic review path) |
 | `docs/field-desk-map-deploy/civic-people-facing-v01/civic-patch-v01.js` | `./civic-patch-v01.js` |
-| `docs/field-desk-map-deploy/civic-people-facing-v01/public-map-defaults-v01.js` | `./public-map-defaults-v01.js` |
-| `docs/field-desk-map-deploy/civic-people-facing-v01/service-worker.js` | `./service-worker.js` |
+| `docs/field-desk-map-deploy/civic-people-facing-v01/public-map-defaults-v01.js` | `./public-map-defaults-v01.js` (civic-specific; not a discovery copy) |
+| `docs/field-desk-map-deploy/civic-people-facing-v01/service-worker.js` | `./service-worker.js` (thin civic shell SW) |
 | `docs/field-desk-map-deploy/schema-v1-major-all-v01/app-schema-v1-major-all-v01.js` | `./app-schema-v1-major-all-v01.js` (**required** — civic feed hooks) |
 | `docs/field-desk-map-deploy/schema-v1-major-all-v01/event-feed-schema-v1.js` | `./event-feed-schema-v1.js` |
 | CSS/overlay siblings from `discovery-taxonomy-v02/` if not already on Pages | local `./` copies |

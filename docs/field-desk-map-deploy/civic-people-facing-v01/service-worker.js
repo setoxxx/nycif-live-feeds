@@ -1,54 +1,56 @@
-const CACHE_NAME = 'nycif-v019-civic-people-facing-v01';
-const APP_SHELL = [
-  './',
-  './index.html',
-  './style.css',
-  './fielddesk-v02.css',
-  './weekstrip-v06-safe.css',
-  './public-map-v01.css',
-  './public-approved-overlays-capture-v01.js',
-  './public-map-defaults-v01.js',
-  './discovery-patch-v02.js',
-  './public-approved-overlays-v01.js',
-  './service-worker.js'
+/**
+ * Thin SW for civic-people-facing-v01 package preview.
+ * Shell assets mostly live in sibling discovery-taxonomy-v02 / schema-v1-major-all-v01 folders.
+ */
+var CIVIC_CACHE = "nycif-civic-people-facing-v01-shell";
+var CIVIC_SHELL = [
+  "./index.html",
+  "./civic-patch-v01.js",
+  "./public-map-defaults-v01.js",
+  "./service-worker.js"
 ];
 
-const NETWORK_FIRST_RE = /\/(?:index\.html|discovery-patch-v02\.js|public-map-defaults-v01\.js|service-worker\.js|public-approved-overlays-v01\.js|public-approved-overlays-capture-v01\.js|app-schema-v1-major-all-v01\.js|event-feed-schema-v1\.js)$/;
-
-function isNetworkFirst(url) {
-  return (url.origin === location.origin && NETWORK_FIRST_RE.test(url.pathname)) || url.hostname === 'raw.githubusercontent.com';
-}
-
-self.addEventListener('install', event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)));
-  self.skipWaiting();
+self.addEventListener("install", function (event) {
+  event.waitUntil(
+    caches.open(CIVIC_CACHE).then(function (cache) {
+      return cache.addAll(CIVIC_SHELL);
+    }).then(function () {
+      return self.skipWaiting();
+    })
+  );
 });
 
-self.addEventListener('activate', event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))));
-  self.clients.claim();
+self.addEventListener("activate", function (event) {
+  event.waitUntil(
+    caches.keys().then(function (keys) {
+      return Promise.all(keys.filter(function (k) { return k !== CIVIC_CACHE; }).map(function (k) {
+        return caches.delete(k);
+      }));
+    }).then(function () {
+      return self.clients.claim();
+    })
+  );
 });
 
-self.addEventListener('fetch', event => {
-  const url = new URL(event.request.url);
-  if (url.origin !== location.origin && url.hostname !== 'raw.githubusercontent.com') return;
-
-  if (isNetworkFirst(url)) {
-    event.respondWith(
-      fetch(event.request).then(response => {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
-        return response;
-      }).catch(() => caches.match(event.request))
-    );
+self.addEventListener("fetch", function (event) {
+  var req = event.request;
+  var url = new URL(req.url);
+  var isFeedHost = url.hostname === "raw.githubusercontent.com";
+  var isLocal = url.origin === self.location.origin;
+  if (!isLocal && !isFeedHost) {
     return;
   }
 
+  // Network-first for package JS/HTML and GitHub feed JSON; cache fallback offline.
   event.respondWith(
-    caches.match(event.request).then(cached => cached || fetch(event.request).then(response => {
-      const copy = response.clone();
-      caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
-      return response;
-    }))
+    fetch(req).then(function (res) {
+      if (isLocal && res && res.ok) {
+        var copy = res.clone();
+        caches.open(CIVIC_CACHE).then(function (cache) { cache.put(req, copy); });
+      }
+      return res;
+    }).catch(function () {
+      return caches.match(req);
+    })
   );
 });

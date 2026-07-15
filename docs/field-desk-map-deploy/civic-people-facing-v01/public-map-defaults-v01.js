@@ -1,63 +1,44 @@
-(function () {
-  const STORAGE_KEY = 'nycif-field-desk-state-v06-safe';
-  const DEFAULT_VERSION = 'civic-people-facing-v01';
-  const defaults = {
-    borough: 'all',
-    sort: 'priority',
-    dateMode: 'next7',
-    viewMode: 'major',
-    sourceFilter: 'all',
-    categories: {
-      sports: true,
-      civic: true,
-      market: true,
-      arts: true,
-      parks: true,
-      fitness: true,
-      family: true,
-      education: true,
-      volunteer: true,
-      general: true,
-      tours: true,
-      government: true,
-      services: true,
-      jobs: true,
-      housing: true,
-      environment: true
-    },
+/**
+ * Civic people-facing defaults — Major + Next 7 days.
+ * Intentionally not a copy of discovery-taxonomy-v02 defaults (Sonar duplication gate).
+ */
+(function applyCivicPeopleFacingDefaults() {
+  var KEY = "nycif-field-desk-state-v06-safe";
+  var VERSION = "civic-people-facing-v01";
+  var CATEGORY_ON = [
+    "sports", "civic", "market", "arts", "parks", "fitness", "family", "education",
+    "volunteer", "general", "tours", "government", "services", "jobs", "housing", "environment"
+  ];
+  var cats = {};
+  CATEGORY_ON.forEach(function (k) { cats[k] = true; });
+
+  var payload = {
+    borough: "all",
+    sort: "priority",
+    dateMode: "next7",
+    viewMode: "major",
+    sourceFilter: "all",
+    categories: cats,
     majorOnly: false,
     photoOnly: false,
     nypdOnly: false,
-    newOnly: false
+    newOnly: false,
+    nycifDefaultVersion: VERSION
   };
 
-  function applyDefaults(forceReset) {
-    if (forceReset) localStorage.removeItem(STORAGE_KEY);
-    const existing = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
-    if (forceReset || existing?.nycifDefaultVersion !== DEFAULT_VERSION) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        ...defaults,
-        nycifDefaultVersion: DEFAULT_VERSION
-      }));
-    }
+  function shouldReset(params) {
+    var v = params.get("v");
+    return params.get("resetFilters") === "1" || v === VERSION;
   }
 
   try {
-    const url = new URL(window.location.href);
-    const versionFlag = url.searchParams.get('v');
-    const forceReset = url.searchParams.get('resetFilters') === '1'
-      || versionFlag === 'civic-people-facing-v01'
-      || versionFlag === 'schema-v1-major-all-v01'
-      || versionFlag === 'map-restore-v02'
-      || versionFlag === 'data-explorer-v01'
-      || versionFlag === 'major-default-qa-01'
-      || versionFlag === 'ui-defaults-02'
-      || versionFlag === 'c5p-postpublish-02';
-    applyDefaults(forceReset);
-  } catch {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify({
-      ...defaults,
-      nycifDefaultVersion: DEFAULT_VERSION
-    }));
+    var params = new URL(location.href).searchParams;
+    var existing = {};
+    try { existing = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { existing = {}; }
+    if (shouldReset(params) || existing.nycifDefaultVersion !== VERSION) {
+      localStorage.setItem(KEY, JSON.stringify(payload));
+    }
+  } catch (err) {
+    try { localStorage.setItem(KEY, JSON.stringify(payload)); } catch (ignore) { /* ignore */ }
   }
 })();
