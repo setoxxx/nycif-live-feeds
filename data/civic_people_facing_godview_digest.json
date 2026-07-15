@@ -1,0 +1,171 @@
+{
+  "artifact_links": {
+    "civic_help_manifest": "data/schema-v1-civic-review/help/manifest.json",
+    "civic_review_manifest": "data/schema-v1-civic-review/review/manifest.json",
+    "continuity": "data/civic_people_facing_continuity_report.json",
+    "date_time_location_qa": "data/civic_people_facing_date_time_location_qa.json",
+    "food_access_gap": "data/civic_food_access_gap_note.json",
+    "geocoding_proposal_report": "data/civic_people_facing_geocoding_proposal_report.json",
+    "geocoding_proposals": "data/civic_people_facing_geocoding_proposals.json",
+    "map_coverage": "data/civic_people_facing_map_coverage_report.json",
+    "merged_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/171",
+    "staging_feed": "data/civic_people_facing_staging_feed.json",
+    "staging_report": "data/civic_people_facing_staging_report.json",
+    "status": "status/nycif-project-status.json"
+  },
+  "by_source": {
+    "benefits_access_centers": {
+      "accepted": 29,
+      "list_only": 2,
+      "map_ready": 27,
+      "quarantined": 0
+    },
+    "farmers_markets": {
+      "accepted": 1207,
+      "list_only": 474,
+      "map_ready": 733,
+      "quarantined": 0
+    },
+    "homebase_locations": {
+      "accepted": 26,
+      "list_only": 0,
+      "map_ready": 26,
+      "quarantined": 0
+    },
+    "homeless_drop_in_centers": {
+      "accepted": 9,
+      "list_only": 1,
+      "map_ready": 8,
+      "quarantined": 0
+    },
+    "moia_know_your_rights": {
+      "accepted": 0,
+      "list_only": 0,
+      "map_ready": 0,
+      "quarantined": 227
+    },
+    "nyc_aging_providers": {
+      "accepted": 417,
+      "list_only": 0,
+      "map_ready": 417,
+      "quarantined": 0
+    },
+    "nycha_community_facilities": {
+      "accepted": 408,
+      "list_only": 23,
+      "map_ready": 385,
+      "quarantined": 0
+    },
+    "oac_activities": {
+      "accepted": 1945,
+      "list_only": 15,
+      "map_ready": 1930,
+      "quarantined": 304
+    },
+    "ready_ny_events": {
+      "accepted": 0,
+      "list_only": 0,
+      "map_ready": 0,
+      "quarantined": 5021
+    },
+    "snap_centers": {
+      "accepted": 13,
+      "list_only": 0,
+      "map_ready": 13,
+      "quarantined": 0
+    },
+    "social_service_volunteer": {
+      "accepted": 665,
+      "list_only": 665,
+      "map_ready": 0,
+      "quarantined": 0
+    },
+    "volunteer_opportunities": {
+      "accepted": 436,
+      "list_only": 72,
+      "map_ready": 364,
+      "quarantined": 0
+    },
+    "workforce1_events": {
+      "accepted": 0,
+      "list_only": 0,
+      "map_ready": 0,
+      "quarantined": 720
+    },
+    "workforce1_jobs": {
+      "accepted": 43,
+      "list_only": 43,
+      "map_ready": 0,
+      "note": "SODA often pads with empty objects; only nonempty field payloads staged as list_only",
+      "quarantined": 0
+    }
+  },
+  "checkpoint": {
+    "current_phase": "Civic people-facing intake staged (Review / Help) — draft PR",
+    "health": "green",
+    "m7c_authorized": false,
+    "merge_commit": "386e6ef4be3dae654f25f2233939223e9a39dac4",
+    "merged_pr": 171,
+    "phase_2e_authorized": false,
+    "promotion_allowed": false
+  },
+  "counts": {
+    "accepted": 5198,
+    "events": 1945,
+    "help_places": 2109,
+    "list_only": 1295,
+    "map_ready": 3903,
+    "opportunities": 1144,
+    "proposed": 489,
+    "quarantined": 6272,
+    "upcoming_next_30_days": 528,
+    "upcoming_next_7_days": 155
+  },
+  "field_desk": {
+    "bot_cannot_push_field_desk": true,
+    "human_push_required": true,
+    "package": "docs/field-desk-map-deploy/civic-people-facing-v01/",
+    "preview_after_merge": "?v=civic-people-facing-v01&resetFilters=1&feeds=main"
+  },
+  "food_access_gap": {
+    "artifact": "data/civic_food_access_gap_note.json",
+    "honesty": "NYC Open Data does not currently provide a high-quality live citywide soup-kitchen or food-pantry pin feed suitable for map publication.",
+    "status": "known_gap_human_follow_up"
+  },
+  "generated_at_utc": "2026-07-15T00:29:04Z",
+  "lanes": {
+    "Approved": "schema-v1-discovery approved permits (unchanged)",
+    "Help Places": "schema-v1-civic-review/help (markets + benefits/SNAP/drop-in/Homebase/aging/NYCHA)",
+    "Review": "discovery review (calendar/Parks) UNION schema-v1-civic-review/review"
+  },
+  "next_human_steps": [
+    "Push Field Desk civic-people-facing-v01 package (bot cannot push nycif-field-desk)",
+    "Smoke: Major+Next7; Review shows calendar/Parks ∪ civic; Help Places directories; Approved unchanged",
+    "Do not publish/promote civic pins until explicitly authorized",
+    "Soup-kitchen citywide live pin feed remains known gap"
+  ],
+  "public_map_policy": "Civic rows are Review/Help staging only. Not silent public-map promotion.",
+  "purpose": "Operator bookmark: where civic people-facing intake stands. Read-only. Not a publish control.",
+  "qa": {
+    "date_time_location_qa_pass": true,
+    "every_accepted_row_classified": true,
+    "map_coverage_qa_pass": true,
+    "staging_qa_pass": true,
+    "sync_summary_qa_pass": true
+  },
+  "remain_unapproved_unpromoted": [
+    "All civic Review/Help rows (promotion_allowed false)",
+    "Geocoding proposals pending manual review",
+    "Historical Workforce1 / Ready NY / MOIA quarantined for upcoming",
+    "Food-access soup-kitchen gap",
+    "Phase 2E / location_cache write unauthorized"
+  ],
+  "safety": {
+    "approved_permit_lane_untouched": true,
+    "location_cache_modified": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "staged_feed_modified": false
+  },
+  "schema_version": "civic-people-facing-godview-v1"
+}

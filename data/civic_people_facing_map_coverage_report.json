@@ -1,0 +1,120 @@
+{
+  "accepted_count": 5198,
+  "by_source": {
+    "59c7-f2p9": {
+      "accepted": 665,
+      "list_only": 665
+    },
+    "8vwk-6iz2": {
+      "accepted": 1207,
+      "list_only": 474,
+      "map_ready": 733
+    },
+    "9d9t-bmk7": {
+      "accepted": 29,
+      "list_only": 2,
+      "map_ready": 27
+    },
+    "ay9k-vznm": {
+      "accepted": 43,
+      "list_only": 43
+    },
+    "bmxf-3rd4": {
+      "accepted": 9,
+      "list_only": 1,
+      "map_ready": 8
+    },
+    "crns-fw6u": {
+      "accepted": 408,
+      "list_only": 23,
+      "map_ready": 385
+    },
+    "fzy4-e84j": {
+      "accepted": 1945,
+      "list_only": 15,
+      "map_ready": 1930
+    },
+    "moia_know_your_rights": {
+      "quarantined": 227
+    },
+    "ntcm-2w4k": {
+      "accepted": 26,
+      "map_ready": 26
+    },
+    "oac_activities": {
+      "quarantined": 304
+    },
+    "ready_ny_events": {
+      "quarantined": 5021
+    },
+    "shpd-5q9m": {
+      "accepted": 436,
+      "list_only": 72,
+      "map_ready": 364
+    },
+    "tc6u-8rnp": {
+      "accepted": 13,
+      "map_ready": 13
+    },
+    "u7wp-np5k": {
+      "accepted": 417,
+      "map_ready": 417
+    },
+    "workforce1_events": {
+      "quarantined": 720
+    }
+  },
+  "continuity": {
+    "upcoming_next_30_days": 528,
+    "upcoming_next_7_days": 155
+  },
+  "coordinate_status_counts_staging": {
+    "list_only": 1295,
+    "map_ready": 3903
+  },
+  "effective_accounted_with_proposals": {
+    "equals_accepted": true,
+    "list_only": 806,
+    "map_ready": 3903,
+    "proposed": 489,
+    "sum": 5198
+  },
+  "every_accepted_row_classified": true,
+  "food_access_gap": "known_gap_human_follow_up",
+  "generated_at_utc": "2026-07-15T00:29:04Z",
+  "lane_counts": {
+    "civic_help_places": 2109,
+    "civic_review_events": 1945,
+    "civic_review_opportunities": 1144
+  },
+  "missing_coordinate_status_ids": [],
+  "percent_accepted_with_coordinate_status": 100.0,
+  "proposals_artifact": {
+    "path": "data/civic_people_facing_geocoding_proposals.json",
+    "proposed_count": 489,
+    "remain_list_only_count": 806
+  },
+  "protected_files": {
+    "location_cache_modified": false,
+    "public_map_modified": false,
+    "staged_feed_modified": false,
+    "untouched": [
+      "data/location_cache.json",
+      "data/nycif_staged_live_events.json",
+      "data/staged_live_manifest.json",
+      "data/previous_staged_live_events_snapshot.json"
+    ]
+  },
+  "purpose": "Prove every accepted civic row is map_ready OR list_only (staging) with optional proposed in proposals artifact.",
+  "qa": {
+    "all_promotion_allowed_false": true,
+    "date_time_location_qa_pass": true,
+    "invented_time_ids_sample": [],
+    "no_invented_times": true,
+    "promotion_leak_ids_sample": []
+  },
+  "qa_pass": true,
+  "quarantined_count": 6272,
+  "schema_version": "civic-people-facing-v1",
+  "silent_drops": 0
+}

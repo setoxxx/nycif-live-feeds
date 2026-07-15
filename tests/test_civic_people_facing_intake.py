@@ -160,3 +160,44 @@ def test_committed_qa_reports_pass_when_present():
     assert continuity.get("upcoming_next_7_days", 0) >= 0
     gap = json.loads((ROOT / "data" / "civic_food_access_gap_note.json").read_text())
     assert gap.get("status") == "known_gap_human_follow_up"
+
+
+def test_map_coverage_accounts_for_every_accepted_row():
+    path = ROOT / "data" / "civic_people_facing_map_coverage_report.json"
+    if not path.exists():
+        pytest.skip("coverage report not generated")
+    report = json.loads(path.read_text())
+    assert report.get("qa_pass") is True
+    assert report.get("every_accepted_row_classified") is True
+    effective = report.get("effective_accounted_with_proposals") or {}
+    assert effective.get("equals_accepted") is True
+    assert report.get("protected_files", {}).get("location_cache_modified") is False
+    proposals = json.loads(
+        (ROOT / "data" / "civic_people_facing_geocoding_proposals.json").read_text()
+    )
+    assert proposals.get("promotion_allowed") is False
+    for row in proposals.get("proposals") or []:
+        assert row.get("promotion_allowed") is False
+        assert row.get("manual_review_status") == "pending"
+        assert row.get("coordinate_status") in {"proposed", "list_only"}
+
+
+def test_civic_godview_digest_bookmarks_project():
+    path = ROOT / "data" / "civic_people_facing_godview_digest.json"
+    if not path.exists():
+        pytest.skip("godview digest not generated")
+    digest = json.loads(path.read_text())
+    assert digest.get("checkpoint", {}).get("merged_pr") == 171
+    assert digest.get("safety", {}).get("promotion_allowed") is False
+    assert "feeds=main" in (digest.get("field_desk") or {}).get("preview_after_merge", "")
+    panel = (
+        ROOT
+        / "docs"
+        / "field-desk-admin-deploy"
+        / "admin"
+        / "civic-godview-panel-v01.js"
+    )
+    assert panel.exists()
+    admin = (ROOT / "docs" / "field-desk-admin-deploy" / "admin" / "index.html").read_text()
+    assert "civic-godview-panel-v01.js" in admin
+    assert "civic-god-view-section" in admin
