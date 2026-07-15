@@ -1,0 +1,121 @@
+name: Daily people-facing desk sync
+
+# Safe daily auto-pull for civic snapshots, photographer calendar, and God View digests.
+# Does NOT rebuild location_cache / nycif_staged_live_events / staged manifests.
+# Full permit→staged production refresh remains NYCIF Live Sync QA (manual dispatch).
+
+on:
+  schedule:
+    # ~07:15 America/New_York (EDT=11:15 UTC, EST=12:15 UTC). Prefer EDT window.
+    - cron: "15 11 * * *"
+  workflow_dispatch:
+    inputs:
+      skip_network_sync:
+        description: "Set true to rebuild from committed snapshots only (no live SODA fetch)"
+        required: false
+        default: "false"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: nycif-daily-people-facing-desk-sync
+  cancel-in-progress: false
+
+jobs:
+  daily-desk-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Capture protected file fingerprints (pre)
+        id: pre
+        run: |
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          paths = [
+            "data/location_cache.json",
+            "data/nycif_staged_live_events.json",
+            "data/staged_live_manifest.json",
+            "data/previous_staged_live_events_snapshot.json",
+          ]
+          out = {}
+          for p in paths:
+            path = Path(p)
+            if path.exists():
+              out[p] = hashlib.sha256(path.read_bytes()).hexdigest()
+            else:
+              out[p] = None
+          Path("/tmp/protected_pre.json").write_text(json.dumps(out, indent=2))
+          print(json.dumps(out, indent=2))
+          PY
+
+      - name: Run daily people-facing desk sync
+        env:
+          NYCIF_ALLOW_LIVE_GEOSEARCH: "yes"
+        run: |
+          EXTRA=""
+          if [ "${{ github.event.inputs.skip_network_sync }}" = "true" ]; then
+            EXTRA="--skip-network-sync"
+          fi
+          python scripts/run_daily_people_facing_desk_sync.py $EXTRA
+
+      - name: Civic + photographer fixture tests
+        run: python -m pytest tests/test_civic_people_facing_intake.py tests/test_photographer_assignment_calendar.py -q
+
+      - name: Enforce protected files untouched
+        run: |
+          python - <<'PY'
+          import hashlib, json, sys
+          from pathlib import Path
+          pre = json.loads(Path("/tmp/protected_pre.json").read_text())
+          bad = []
+          for p, before in pre.items():
+            path = Path(p)
+            after = hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
+            if before != after:
+              bad.append(p)
+          if bad:
+            print("PROTECTED FILES CHANGED:", bad)
+            sys.exit(1)
+          print("Protected files untouched.")
+          PY
+
+      - name: Commit refreshed desk artifacts when changed
+        run: |
+          git config user.name "nycif-daily-desk-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            data/civic_*.json \
+            data/photographer_assignment_calendar_*.json \
+            data/daily_people_facing_sync_report.json \
+            data/events_discovery_godview_digest_v02.json \
+            data/nyc_citywide_events_calendar_snapshot.json \
+            data/nyc_citywide_events_calendar_sync_report.json \
+            data/nyc_parks_bigapps_events_snapshot.json \
+            data/nyc_parks_bigapps_events_sync_report.json \
+            data/raw_nyc_open_data_snapshot.json \
+            data/live_sync_report.json \
+            data/events_schema_v1_civic_*.json \
+            data/schema-v1-civic-review \
+            || true
+          if git diff --cached --quiet; then
+            echo "No desk artifact changes to commit."
+            exit 0
+          fi
+          # Refuse if protected paths staged
+          if git diff --cached --name-only | grep -E '^(data/location_cache\.json|data/nycif_staged_live_events\.json|data/staged_live_manifest\.json|data/previous_staged_live_events_snapshot\.json)$'; then
+            echo "Refusing to commit protected production feed mutations."
+            exit 1
+          fi
+          git commit -m "Daily people-facing desk sync artifacts"
+          git push

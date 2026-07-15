@@ -21,20 +21,33 @@ def main() -> int:
     gap = load_json(DATA_DIR / "civic_food_access_gap_note.json", {})
     sync = load_json(DATA_DIR / "civic_people_facing_sync_summary.json", {})
     status = load_json(ROOT / "status" / "nycif-project-status.json", {})
+    photo = load_json(DATA_DIR / "photographer_assignment_calendar_report.json", {})
+    photo_full = load_json(DATA_DIR / "photographer_assignment_calendar_2mo.json", {})
+    daily = load_json(DATA_DIR / "daily_people_facing_sync_report.json", {})
 
     digest = {
         "schema_version": "civic-people-facing-godview-v1",
         "generated_at_utc": utc_now(),
-        "purpose": "Operator bookmark: where civic people-facing intake stands. Read-only. Not a publish control.",
+        "purpose": "Operator bookmark: civic intake + photographer assignment calendar. Read-only. Not a publish control.",
         "public_map_policy": "Civic rows are Review/Help staging only. Not silent public-map promotion.",
         "checkpoint": {
             "merged_pr": 171,
             "merge_commit": "386e6ef4be3dae654f25f2233939223e9a39dac4",
-            "current_phase": status.get("current_phase") or "Civic people-facing coverage / Field Desk push",
+            "coverage_pr": 172,
+            "coverage_merge_commit": "f9df1fd2314b5f921701dc856cc5cb6dd5b1582d",
+            "current_phase": status.get("current_phase")
+            or "Photographer calendar + daily desk sync",
             "health": status.get("health"),
             "promotion_allowed": False,
             "phase_2e_authorized": False,
             "m7c_authorized": False,
+        },
+        "daily_pull": {
+            "last_success_utc": daily.get("generated_at_utc") if daily.get("qa_pass") else None,
+            "last_run_utc": daily.get("generated_at_utc"),
+            "qa_pass": daily.get("qa_pass"),
+            "report": "data/daily_people_facing_sync_report.json",
+            "workflow": ".github/workflows/daily-people-facing-desk-sync.yml",
         },
         "counts": {
             "accepted": staging.get("accepted_count"),
@@ -47,6 +60,18 @@ def main() -> int:
             "proposed": (proposals.get("proposed_count")),
             "upcoming_next_7_days": continuity.get("upcoming_next_7_days"),
             "upcoming_next_30_days": continuity.get("upcoming_next_30_days"),
+            "photographer_calendar_events": photo.get("total_events"),
+            "photographer_days_with_coverage": photo.get("days_with_coverage"),
+        },
+        "photographer_assignment_calendar": {
+            "premium_label": "Photographer Assignment Calendar (premium/operator)",
+            "qa_pass": photo.get("qa_pass"),
+            "total_events": photo.get("total_events"),
+            "days_with_coverage": photo.get("days_with_coverage"),
+            "month_counts": photo.get("month_counts"),
+            "go_shoot_these": (photo_full.get("go_shoot_these") or [])[:20],
+            "artifact": "data/photographer_assignment_calendar_2mo.json",
+            "report": "data/photographer_assignment_calendar_report.json",
         },
         "by_source": staging.get("by_source") or {},
         "lanes": {
@@ -90,14 +115,19 @@ def main() -> int:
             "food_access_gap": "data/civic_food_access_gap_note.json",
             "civic_review_manifest": "data/schema-v1-civic-review/review/manifest.json",
             "civic_help_manifest": "data/schema-v1-civic-review/help/manifest.json",
+            "photographer_calendar": "data/photographer_assignment_calendar_2mo.json",
+            "photographer_calendar_report": "data/photographer_assignment_calendar_report.json",
+            "daily_sync_report": "data/daily_people_facing_sync_report.json",
             "status": "status/nycif-project-status.json",
             "merged_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/171",
+            "coverage_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/172",
         },
         "next_human_steps": [
-            "Push Field Desk civic-people-facing-v01 package (bot cannot push nycif-field-desk)",
-            "Smoke: Major+Next7; Review shows calendar/Parks ∪ civic; Help Places directories; Approved unchanged",
-            "Do not publish/promote civic pins until explicitly authorized",
-            "Soup-kitchen citywide live pin feed remains known gap",
+            "Push Field Desk civic-people-facing-v01 (+ photographer calendar handshake) to nycif-field-desk Pages",
+            "Push admin photographer-calendar-panel + civic God View update",
+            "Use Photographer Assignment Calendar for next 2 months of money days",
+            "Confirm daily workflow daily-people-facing-desk-sync is enabled",
+            "Do not publish/promote to WordPress public map until explicitly authorized",
         ],
         "remain_unapproved_unpromoted": [
             "All civic Review/Help rows (promotion_allowed false)",
@@ -105,6 +135,7 @@ def main() -> int:
             "Historical Workforce1 / Ready NY / MOIA quarantined for upcoming",
             "Food-access soup-kitchen gap",
             "Phase 2E / location_cache write unauthorized",
+            "Public WordPress map publish unauthorized by this desk package",
         ],
     }
     save_json(DATA_DIR / "civic_people_facing_godview_digest.json", digest)
@@ -120,16 +151,21 @@ def main() -> int:
             "list_only": digest["counts"]["list_only"],
             "proposed": digest["counts"]["proposed"],
             "upcoming_next_7_days": digest["counts"]["upcoming_next_7_days"],
+            "photographer_calendar_events": digest["counts"].get("photographer_calendar_events"),
+            "photographer_days_with_coverage": digest["counts"].get("photographer_days_with_coverage"),
+            "daily_pull": digest.get("daily_pull"),
             "qa_pass": digest["qa"],
             "digest": "data/civic_people_facing_godview_digest.json",
             "field_desk_preview": digest["field_desk"]["preview_after_merge"],
             "public_map_policy": digest["public_map_policy"],
         }
+        discovery["photographer_assignment_bookmark"] = digest["photographer_assignment_calendar"]
         save_json(DATA_DIR / "events_discovery_godview_digest_v02.json", discovery)
 
     print(
         f"godview digest accepted={digest['counts']['accepted']} "
-        f"map_ready={digest['counts']['map_ready']} proposed={digest['counts']['proposed']}"
+        f"map_ready={digest['counts']['map_ready']} "
+        f"photo_events={digest['counts'].get('photographer_calendar_events')}"
     )
     return 0
 

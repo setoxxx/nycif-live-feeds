@@ -430,6 +430,36 @@
     }
   }
 
+  function applyUrlDeskOverrides() {
+    // Photographer calendar / God View deep-links: ?date=YYYY-MM-DD&mode=all
+    // Strict allowlist only — never persist unsanitized query strings to storage.
+    try {
+      const params = new URL(location.href).searchParams;
+      const dateParam = String(params.get('date') || '');
+      const dateOk = /^\d{4}-\d{2}-\d{2}$/.test(dateParam)
+        && Number(dateParam.slice(0, 4)) >= 2020
+        && Number(dateParam.slice(0, 4)) <= 2100
+        && Number(dateParam.slice(5, 7)) >= 1
+        && Number(dateParam.slice(5, 7)) <= 12
+        && Number(dateParam.slice(8, 10)) >= 1
+        && Number(dateParam.slice(8, 10)) <= 31;
+      if (dateOk) {
+        state.dateMode = dateParam;
+        state.userChangedFilters = true;
+      }
+      const modeParam = String(params.get('mode') || '');
+      if (modeParam === 'all' || modeParam === 'major') {
+        state.viewMode = modeParam;
+      }
+      const sourceParam = String(params.get('source') || '');
+      if (sourceParam === 'all' || sourceParam === 'approved' || sourceParam === 'review' || sourceParam === 'help') {
+        state.sourceFilter = sourceParam;
+      }
+    } catch {
+      // ignore malformed URL
+    }
+  }
+
   function loadPrefs() {
     try {
       if (forceReset()) {
@@ -457,9 +487,13 @@
         photoOnly: !!use.photoOnly,
         nypdOnly: !!use.nypdOnly
       });
+      // Persist storage-derived prefs only. URL desk knobs stay session-only
+      // so query params never write to localStorage (jssecurity:S8475).
       savePrefs();
+      applyUrlDeskOverrides();
     } catch {
       Object.assign(state, publicDefaults());
+      applyUrlDeskOverrides();
     }
   }
 

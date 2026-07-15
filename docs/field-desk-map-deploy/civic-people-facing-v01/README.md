@@ -43,17 +43,20 @@ List cards show **source dataset**, **date/schedule**, and **coordinate_status**
 
 After copy, change any `../schema-v1-major-all-v01/` or `../discovery-taxonomy-v02/` script `src` values to local `./` paths as needed.
 
-Preview (PR #171 merged — use `main` feeds):
+Preview (PR #171/#172 merged — use `main` feeds):
 
 ```text
 ?v=civic-people-facing-v01&resetFilters=1&feeds=main
 ```
 
-Temporary branch feeds (only if testing an open follow-up PR):
+Photographer calendar day deep-link (from God View “Map day”):
 
 ```text
-?v=civic-people-facing-v01&resetFilters=1&feeds=cursor/civic-map-coverage-godview-da92
+?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-20
 ```
+
+Daily auto-pull workflow (live-feeds repo): `.github/workflows/daily-people-facing-desk-sync.yml`  
+Artifacts: `data/photographer_assignment_calendar_2mo.json`, `data/daily_people_facing_sync_report.json`
 
 Checklist after Pages deploy:
 
