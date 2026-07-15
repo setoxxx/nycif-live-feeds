@@ -55,8 +55,20 @@ Photographer calendar day deep-link (from God View “Map day”):
 ?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-20
 ```
 
+**Assignment Mode** (Money-Day Desk v2 — curated pins/list only for that date):
+
+```text
+?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-20&assignment=1
+```
+
+Optional borough chip (from God View Today/Tomorrow packs):
+
+```text
+?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-20&assignment=1&borough=Brooklyn
+```
+
 Daily auto-pull workflow (live-feeds repo): `.github/workflows/daily-people-facing-desk-sync.yml`  
-Artifacts: `data/photographer_assignment_calendar_2mo.json`, `data/daily_people_facing_sync_report.json`
+Artifacts: `data/photographer_assignment_calendar_2mo.json`, `data/photographer_money_day_quality_report.json`, `data/photographer_money_day_pack_today.json`, `data/photographer_money_day_pack_tomorrow.json`, `data/daily_people_facing_sync_report.json`
 
 Checklist after Pages deploy:
 
@@ -64,8 +76,9 @@ Checklist after Pages deploy:
 2. All Events → Review shows calendar/Parks **and** civic rows (OAC / volunteer)
 3. Help Places / Markets shows directories; pins only when `map_ready`
 4. List item shows dataset id + coordinate status
-5. Approved permit lane unchanged
-6. Incognito + mobile smoke
+5. Assignment Mode deep-link narrows to money-day ids for the date (fail soft if calendar missing)
+6. Approved permit lane unchanged
+7. Incognito + mobile smoke
 
 ## Safety
 

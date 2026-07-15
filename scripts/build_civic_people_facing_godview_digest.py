@@ -23,20 +23,24 @@ def main() -> int:
     status = load_json(ROOT / "status" / "nycif-project-status.json", {})
     photo = load_json(DATA_DIR / "photographer_assignment_calendar_report.json", {})
     photo_full = load_json(DATA_DIR / "photographer_assignment_calendar_2mo.json", {})
+    quality = load_json(DATA_DIR / "photographer_money_day_quality_report.json", {})
+    packs = load_json(DATA_DIR / "photographer_money_day_pack_report.json", {})
+    pack_tom = load_json(DATA_DIR / "photographer_money_day_pack_tomorrow.json", {})
     daily = load_json(DATA_DIR / "daily_people_facing_sync_report.json", {})
 
     digest = {
         "schema_version": "civic-people-facing-godview-v1",
         "generated_at_utc": utc_now(),
-        "purpose": "Operator bookmark: civic intake + photographer assignment calendar. Read-only. Not a publish control.",
+        "purpose": "Operator bookmark: civic intake + photographer Money-Day Desk v2. Read-only. Not a publish control.",
         "public_map_policy": "Civic rows are Review/Help staging only. Not silent public-map promotion.",
         "checkpoint": {
             "merged_pr": 171,
             "merge_commit": "386e6ef4be3dae654f25f2233939223e9a39dac4",
             "coverage_pr": 172,
             "coverage_merge_commit": "f9df1fd2314b5f921701dc856cc5cb6dd5b1582d",
+            "photographer_calendar_pr": 173,
             "current_phase": status.get("current_phase")
-            or "Photographer calendar + daily desk sync",
+            or "Photographer Money-Day Desk v2",
             "health": status.get("health"),
             "promotion_allowed": False,
             "phase_2e_authorized": False,
@@ -62,16 +66,30 @@ def main() -> int:
             "upcoming_next_30_days": continuity.get("upcoming_next_30_days"),
             "photographer_calendar_events": photo.get("total_events"),
             "photographer_days_with_coverage": photo.get("days_with_coverage"),
+            "money_day_today": (packs.get("today") or {}).get("total_events"),
+            "money_day_tomorrow": (packs.get("tomorrow") or {}).get("total_events"),
         },
         "photographer_assignment_calendar": {
-            "premium_label": "Photographer Assignment Calendar (premium/operator)",
+            "premium_label": "Photographer Assignment Calendar (premium/operator) — Money-Day Desk v2",
             "qa_pass": photo.get("qa_pass"),
             "total_events": photo.get("total_events"),
             "days_with_coverage": photo.get("days_with_coverage"),
             "month_counts": photo.get("month_counts"),
+            "coordinate_status_counts": photo.get("coordinate_status_counts"),
+            "quality": {
+                "qa_pass": quality.get("qa_pass"),
+                "events_removed_vs_baseline": (quality.get("delta_vs_baseline") or {}).get("events_removed"),
+                "top_exclude_reasons": quality.get("top_exclude_reasons"),
+                "report": "data/photographer_money_day_quality_report.json",
+            },
+            "today_pack": packs.get("today"),
+            "tomorrow_pack": packs.get("tomorrow"),
+            "tomorrow_top_go_shoot": (pack_tom.get("go_shoot") or [])[:10],
             "go_shoot_these": (photo_full.get("go_shoot_these") or [])[:20],
             "artifact": "data/photographer_assignment_calendar_2mo.json",
             "report": "data/photographer_assignment_calendar_report.json",
+            "pack_today": "data/photographer_money_day_pack_today.json",
+            "pack_tomorrow": "data/photographer_money_day_pack_tomorrow.json",
         },
         "by_source": staging.get("by_source") or {},
         "lanes": {
@@ -94,6 +112,7 @@ def main() -> int:
         "field_desk": {
             "package": "docs/field-desk-map-deploy/civic-people-facing-v01/",
             "preview_after_merge": "?v=civic-people-facing-v01&resetFilters=1&feeds=main",
+            "assignment_mode_preview": "?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=YYYY-MM-DD&assignment=1",
             "human_push_required": True,
             "bot_cannot_push_field_desk": True,
         },
@@ -117,15 +136,19 @@ def main() -> int:
             "civic_help_manifest": "data/schema-v1-civic-review/help/manifest.json",
             "photographer_calendar": "data/photographer_assignment_calendar_2mo.json",
             "photographer_calendar_report": "data/photographer_assignment_calendar_report.json",
+            "money_day_quality": "data/photographer_money_day_quality_report.json",
+            "money_day_pack_today": "data/photographer_money_day_pack_today.json",
+            "money_day_pack_tomorrow": "data/photographer_money_day_pack_tomorrow.json",
             "daily_sync_report": "data/daily_people_facing_sync_report.json",
             "status": "status/nycif-project-status.json",
             "merged_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/171",
             "coverage_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/172",
+            "photographer_calendar_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/173",
         },
         "next_human_steps": [
-            "Push Field Desk civic-people-facing-v01 (+ photographer calendar handshake) to nycif-field-desk Pages",
-            "Push admin photographer-calendar-panel + civic God View update",
-            "Use Photographer Assignment Calendar for next 2 months of money days",
+            "Push Field Desk civic-people-facing-v01 (+ assignment=1 app JS) to nycif-field-desk Pages",
+            "Push admin photographer-calendar-panel Money-Day Today/Tomorrow cards",
+            "Shoot from Today/Tomorrow packs + filtered 2-month calendar",
             "Confirm daily workflow daily-people-facing-desk-sync is enabled",
             "Do not publish/promote to WordPress public map until explicitly authorized",
         ],

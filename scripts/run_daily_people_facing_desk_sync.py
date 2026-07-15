@@ -39,6 +39,7 @@ ALLOWED_SCRIPTS = frozenset(
         "scripts/build_civic_people_facing_staging.py",
         "scripts/build_civic_people_facing_map_coverage.py",
         "scripts/build_photographer_assignment_calendar.py",
+        "scripts/build_photographer_money_day_packs.py",
         "scripts/build_events_discovery_godview_digest_v02.py",
         "scripts/build_civic_people_facing_godview_digest.py",
     }
@@ -144,6 +145,7 @@ def main() -> int:
     steps.append(run_step(safe_python_script("scripts/build_civic_people_facing_staging.py", *ref_args)))
     steps.append(run_step(safe_python_script("scripts/build_civic_people_facing_map_coverage.py")))
     steps.append(run_step(safe_python_script("scripts/build_photographer_assignment_calendar.py", *ref_args)))
+    steps.append(run_step(safe_python_script("scripts/build_photographer_money_day_packs.py", *ref_args)))
     # Discovery first, then civic God View so civic bookmark is re-injected last.
     if (ROOT / "scripts" / "build_events_discovery_godview_digest_v02.py").exists():
         steps.append(run_step(safe_python_script("scripts/build_events_discovery_godview_digest_v02.py")))
@@ -155,6 +157,8 @@ def main() -> int:
     staging_qa = load_json(DATA_DIR / "civic_people_facing_date_time_location_qa.json", {})
     coverage = load_json(DATA_DIR / "civic_people_facing_map_coverage_report.json", {})
     photo_report = load_json(DATA_DIR / "photographer_assignment_calendar_report.json", {})
+    quality_report = load_json(DATA_DIR / "photographer_money_day_quality_report.json", {})
+    pack_report = load_json(DATA_DIR / "photographer_money_day_pack_report.json", {})
 
     qa_pass = (
         all(s.get("ok") for s in steps)
@@ -162,6 +166,8 @@ def main() -> int:
         and bool(staging_qa.get("qa_pass", True))
         and bool(coverage.get("qa_pass", True))
         and bool(photo_report.get("qa_pass", False))
+        and bool(quality_report.get("qa_pass", False))
+        and bool(pack_report.get("qa_pass", False))
     )
 
     report = {
@@ -187,6 +193,15 @@ def main() -> int:
             "total_events": photo_report.get("total_events"),
             "days_with_coverage": photo_report.get("days_with_coverage"),
             "month_counts": photo_report.get("month_counts"),
+            "quality_qa_pass": quality_report.get("qa_pass"),
+            "events_removed_vs_baseline": (quality_report.get("delta_vs_baseline") or {}).get(
+                "events_removed"
+            ),
+            "packs": {
+                "qa_pass": pack_report.get("qa_pass"),
+                "today": pack_report.get("today"),
+                "tomorrow": pack_report.get("tomorrow"),
+            },
         },
         "promotion_allowed": False,
         "public_map_modified": False,
