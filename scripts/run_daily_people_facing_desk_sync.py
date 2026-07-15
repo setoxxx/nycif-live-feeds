@@ -40,6 +40,8 @@ ALLOWED_SCRIPTS = frozenset(
         "scripts/build_civic_people_facing_map_coverage.py",
         "scripts/build_photographer_assignment_calendar.py",
         "scripts/build_photographer_money_day_packs.py",
+        "scripts/sync_nyc_permits_historical.py",
+        "scripts/build_photographer_viral_recurrence.py",
         "scripts/build_events_discovery_godview_digest_v02.py",
         "scripts/build_civic_people_facing_godview_digest.py",
     }
@@ -95,6 +97,9 @@ def run_step(cmd: list[str], *, env_extra: dict[str, str] | None = None) -> dict
                 raise SystemExit("Invalid --reference-today in argv")
             i += 2
             continue
+        if token == "--skip-network":
+            i += 1
+            continue
         if token.startswith("--"):
             raise SystemExit(f"Unsupported flag in daily sync argv: {token}")
         raise SystemExit(f"Unsupported positional arg in daily sync argv: {token}")
@@ -146,6 +151,11 @@ def main() -> int:
     steps.append(run_step(safe_python_script("scripts/build_civic_people_facing_map_coverage.py")))
     steps.append(run_step(safe_python_script("scripts/build_photographer_assignment_calendar.py", *ref_args)))
     steps.append(run_step(safe_python_script("scripts/build_photographer_money_day_packs.py", *ref_args)))
+    hist_args = list(ref_args)
+    if args.skip_network_sync:
+        hist_args.append("--skip-network")
+    steps.append(run_step(safe_python_script("scripts/sync_nyc_permits_historical.py", *hist_args)))
+    steps.append(run_step(safe_python_script("scripts/build_photographer_viral_recurrence.py", *ref_args)))
     # Discovery first, then civic God View so civic bookmark is re-injected last.
     if (ROOT / "scripts" / "build_events_discovery_godview_digest_v02.py").exists():
         steps.append(run_step(safe_python_script("scripts/build_events_discovery_godview_digest_v02.py")))
@@ -159,6 +169,8 @@ def main() -> int:
     photo_report = load_json(DATA_DIR / "photographer_assignment_calendar_report.json", {})
     quality_report = load_json(DATA_DIR / "photographer_money_day_quality_report.json", {})
     pack_report = load_json(DATA_DIR / "photographer_money_day_pack_report.json", {})
+    viral_report = load_json(DATA_DIR / "photographer_viral_recurrence_report.json", {})
+    hist_report = load_json(DATA_DIR / "nyc_permits_historical_sync_report.json", {})
 
     qa_pass = (
         all(s.get("ok") for s in steps)
@@ -168,6 +180,8 @@ def main() -> int:
         and bool(photo_report.get("qa_pass", False))
         and bool(quality_report.get("qa_pass", False))
         and bool(pack_report.get("qa_pass", False))
+        and bool(hist_report.get("qa_pass", False))
+        and bool(viral_report.get("qa_pass", False))
     )
 
     report = {
@@ -201,6 +215,13 @@ def main() -> int:
                 "qa_pass": pack_report.get("qa_pass"),
                 "today": pack_report.get("today"),
                 "tomorrow": pack_report.get("tomorrow"),
+            },
+            "viral_recurrence": {
+                "qa_pass": viral_report.get("qa_pass"),
+                "match_count": viral_report.get("match_count"),
+                "label_counts": viral_report.get("label_counts"),
+                "next_14d_crowd_magnets": viral_report.get("next_14d_crowd_magnets"),
+                "historical_rows": hist_report.get("compact_row_count"),
             },
         },
         "promotion_allowed": False,

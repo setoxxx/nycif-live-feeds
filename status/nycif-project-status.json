@@ -4,14 +4,14 @@
   "project": "nycif-live-feeds",
   "repository": "setoxxx/nycif-live-feeds",
   "visibility": "public",
-  "current_phase": "Photographer Money-Day Desk v2",
-  "completion_percent": 97,
+  "current_phase": "Viral Recurrence Memory",
+  "completion_percent": 98,
   "health": "green",
-  "status_summary": "Money-Day Desk v2: quality filter cuts #173 calendar noise (842\u2192327 money-day events). Today/Tomorrow GO SHOOT packs + God View cards + Field Desk assignment=1 mode. Daily desk sync wires packs/quality. WordPress public publish + Phase 2E still unauthorized.",
+  "status_summary": "Viral Recurrence Memory matches Money-Day calendar to prior-year bkfu-528j permits (334 matches, 279 returning_likely). FOIL operator index stub ready. No applicant in Open Data. Public map still unauthorized.",
   "active_prs": [
     {
-      "branch": "cursor/photographer-money-day-desk-v2-da92",
-      "title": "Money-Day Desk v2 quality filter + today/tomorrow packs",
+      "branch": "cursor/viral-recurrence-memory-da92",
+      "title": "Viral Recurrence Memory",
       "state": "open_draft"
     }
   ],
@@ -34,11 +34,11 @@
   "blockers": [
     "Field-desk admin/map deploy requires human push (403 for cursor bot on nycif-field-desk).",
     "Public WordPress /nycinfocus.com map publish not authorized.",
+    "FOIL applicant/org identity not yet filled (sapo_foil_operator_index empty).",
     "No official live citywide soup-kitchen/pantry pin SODA feed.",
-    "Phase 2E location_cache promotion remains unauthorized.",
-    "Full permit\u2192staged production refresh still requires live-sync-qa manual dispatch (by design)."
+    "Phase 2E location_cache promotion remains unauthorized."
   ],
-  "next_action": "Merge Money-Day Desk v2 when CI green; Howard push Field Desk app JS + admin panel; shoot from Today/Tomorrow packs.",
+  "next_action": "Merge viral recurrence PR when green; Howard push admin panel; file FOIL for SAPO PDFs.",
   "admin_dashboard_urls": {
     "interim_live": "https://setoxxx.github.io/nycif-live-feeds/admin/index.html",
     "field_desk": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main"
@@ -77,5 +77,12 @@
     "phase_2e_authorized": false,
     "m7c_authorized": false,
     "wordpress_public_map_publish_authorized": false
+  },
+  "viral_recurrence_memory": {
+    "branch": "cursor/viral-recurrence-memory-da92",
+    "historical_rows": 2450,
+    "match_count": 334,
+    "returning_likely": 279,
+    "next_14d_magnets": 40
   }
 }
