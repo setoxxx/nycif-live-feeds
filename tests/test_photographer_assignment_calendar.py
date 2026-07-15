@@ -28,7 +28,7 @@ def test_score_flags_parade_and_excludes_routine_class():
         "location": "ZIP 11226",
         "nycif": {"coordinate_status": "list_only"},
     }
-    score2, rules2, excluded2 = cal.score_row(yoga, lane="review_high_signal")
+    _, rules2, excluded2 = cal.score_row(yoga, lane="review_high_signal")
     assert excluded2
     assert "routine_activity_excluded" in rules2 or "list_only_thin_location_excluded" in rules2
 

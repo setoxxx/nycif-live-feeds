@@ -10,8 +10,10 @@ Writes data/daily_people_facing_sync_report.json.
 from __future__ import annotations
 
 import argparse
+import re
 import subprocess
 import sys
+from datetime import date
 from pathlib import Path
 from typing import Any
 
@@ -28,6 +30,45 @@ PROTECTED = [
 ]
 
 
+ALLOWED_SCRIPTS = frozenset(
+    {
+        "scripts/sync_nyc_open_data.py",
+        "scripts/sync_nyc_citywide_events_calendar.py",
+        "scripts/sync_nyc_parks_bigapps_events.py",
+        "scripts/sync_civic_people_facing_sources.py",
+        "scripts/build_civic_people_facing_staging.py",
+        "scripts/build_civic_people_facing_map_coverage.py",
+        "scripts/build_photographer_assignment_calendar.py",
+        "scripts/build_events_discovery_godview_digest_v02.py",
+        "scripts/build_civic_people_facing_godview_digest.py",
+    }
+)
+
+
+def validated_reference_today(value: str | None) -> str | None:
+    """Return YYYY-MM-DD or None. Rejects any non-ISO value before OS exec."""
+    if value is None or value == "":
+        return None
+    cleaned = str(value).strip()
+    if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", cleaned):
+        raise SystemExit("Invalid --reference-today (expected YYYY-MM-DD)")
+    try:
+        parsed = date.fromisoformat(cleaned)
+    except ValueError as exc:
+        raise SystemExit("Invalid --reference-today date") from exc
+    if parsed.year < 2020 or parsed.year > 2100:
+        raise SystemExit("Invalid --reference-today year")
+    return parsed.isoformat()
+
+
+def safe_python_script(script: str, *extra: str) -> list[str]:
+    if script not in ALLOWED_SCRIPTS:
+        raise SystemExit(f"Refusing non-allowlisted script: {script}")
+    argv = [sys.executable, script, *extra]
+    return argv
+
+
+
 def file_fingerprint(path: Path) -> tuple[int, int] | None:
     if not path.exists():
         return None
@@ -38,6 +79,24 @@ def file_fingerprint(path: Path) -> tuple[int, int] | None:
 def run_step(cmd: list[str], *, env_extra: dict[str, str] | None = None) -> dict[str, Any]:
     import os
 
+    if not cmd or not isinstance(cmd, list) or any(not isinstance(x, str) for x in cmd):
+        raise SystemExit("run_step requires a list[str] argv")
+    if Path(cmd[0]).resolve() != Path(sys.executable).resolve():
+        raise SystemExit("run_step may only invoke this Python interpreter")
+    if len(cmd) < 2 or cmd[1] not in ALLOWED_SCRIPTS:
+        raise SystemExit("run_step script is not allowlisted")
+    # Extra args: only fixed flags + validated ISO dates (pythonsecurity:S8705).
+    i = 2
+    while i < len(cmd):
+        token = cmd[i]
+        if token == "--reference-today":
+            if i + 1 >= len(cmd) or validated_reference_today(cmd[i + 1]) is None:
+                raise SystemExit("Invalid --reference-today in argv")
+            i += 2
+            continue
+        if token.startswith("--"):
+            raise SystemExit(f"Unsupported flag in daily sync argv: {token}")
+        raise SystemExit(f"Unsupported positional arg in daily sync argv: {token}")
     env = os.environ.copy()
     if env_extra:
         env.update(env_extra)
@@ -48,6 +107,7 @@ def run_step(cmd: list[str], *, env_extra: dict[str, str] | None = None) -> dict
         capture_output=True,
         text=True,
         check=False,
+        shell=False,
     )
     return {
         "cmd": " ".join(cmd),
@@ -72,26 +132,22 @@ def main() -> int:
     steps: list[dict[str, Any]] = []
     generated = utc_now()
 
+    reference_today = validated_reference_today(args.reference_today)
+    ref_args = ["--reference-today", reference_today] if reference_today else []
+
     if not args.skip_network_sync:
-        steps.append(run_step([sys.executable, "scripts/sync_nyc_open_data.py"]))
-        steps.append(run_step([sys.executable, "scripts/sync_nyc_citywide_events_calendar.py"]))
-        steps.append(run_step([sys.executable, "scripts/sync_nyc_parks_bigapps_events.py"]))
-        steps.append(run_step([sys.executable, "scripts/sync_civic_people_facing_sources.py"]))
+        steps.append(run_step(safe_python_script("scripts/sync_nyc_open_data.py")))
+        steps.append(run_step(safe_python_script("scripts/sync_nyc_citywide_events_calendar.py")))
+        steps.append(run_step(safe_python_script("scripts/sync_nyc_parks_bigapps_events.py")))
+        steps.append(run_step(safe_python_script("scripts/sync_civic_people_facing_sources.py")))
 
-    civic_build = [sys.executable, "scripts/build_civic_people_facing_staging.py"]
-    if args.reference_today:
-        civic_build += ["--reference-today", args.reference_today]
-    steps.append(run_step(civic_build))
-    steps.append(run_step([sys.executable, "scripts/build_civic_people_facing_map_coverage.py"]))
-
-    photo = [sys.executable, "scripts/build_photographer_assignment_calendar.py"]
-    if args.reference_today:
-        photo += ["--reference-today", args.reference_today]
-    steps.append(run_step(photo))
+    steps.append(run_step(safe_python_script("scripts/build_civic_people_facing_staging.py", *ref_args)))
+    steps.append(run_step(safe_python_script("scripts/build_civic_people_facing_map_coverage.py")))
+    steps.append(run_step(safe_python_script("scripts/build_photographer_assignment_calendar.py", *ref_args)))
     # Discovery first, then civic God View so civic bookmark is re-injected last.
     if (ROOT / "scripts" / "build_events_discovery_godview_digest_v02.py").exists():
-        steps.append(run_step([sys.executable, "scripts/build_events_discovery_godview_digest_v02.py"]))
-    steps.append(run_step([sys.executable, "scripts/build_civic_people_facing_godview_digest.py"]))
+        steps.append(run_step(safe_python_script("scripts/build_events_discovery_godview_digest_v02.py")))
+    steps.append(run_step(safe_python_script("scripts/build_civic_people_facing_godview_digest.py")))
 
     after = {str(p): file_fingerprint(p) for p in PROTECTED}
     protected_changed = [p for p in after if before.get(p) != after.get(p)]

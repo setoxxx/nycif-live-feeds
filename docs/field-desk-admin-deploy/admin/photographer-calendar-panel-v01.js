@@ -49,30 +49,32 @@
     return `${base}?${params.toString()}`;
   }
 
-  function monthHtml(month) {
-    if (!month) return "";
-    const head = DAY_NAMES.map((d) => `<th>${d}</th>`).join("");
-    const body = (month.weeks || [])
-      .map((week) => {
-        const cells = week
-          .map((day) => {
-            if (!day) return `<td class="cal-empty"></td>`;
-            const count = day.count || 0;
-            const cls = count ? "cal-day has-events" : "cal-day";
-            const title = (day.top_events || [])
-              .map((e) => `${e.title || ""} (${e.borough || "?"})`)
-              .join(" · ");
-            return `<td class="${cls}" data-date="${esc(day.date)}" title="${esc(title)}">
+  function topEventTitle(day) {
+    return (day.top_events || [])
+      .map((e) => `${e.title || ""} (${e.borough || "?"})`)
+      .join(" · ");
+  }
+
+  function dayCellHtml(day) {
+    if (!day) return `<td class="cal-empty"></td>`;
+    const count = day.count || 0;
+    const cls = count ? "cal-day has-events" : "cal-day";
+    return `<td class="${cls}" data-date="${esc(day.date)}" title="${esc(topEventTitle(day))}">
               <button type="button" class="cal-day-btn" data-date="${esc(day.date)}">
                 <span class="cal-date-num">${esc(String(day.date).slice(8))}</span>
                 <span class="cal-count">${count ? fmtNum(count) : "—"}</span>
               </button>
             </td>`;
-          })
-          .join("");
-        return `<tr>${cells}</tr>`;
-      })
-      .join("");
+  }
+
+  function weekRowHtml(week) {
+    return `<tr>${(week || []).map(dayCellHtml).join("")}</tr>`;
+  }
+
+  function monthHtml(month) {
+    if (!month) return "";
+    const head = DAY_NAMES.map((d) => `<th>${d}</th>`).join("");
+    const body = (month.weeks || []).map(weekRowHtml).join("");
     return `
       <div class="cal-month">
         <h3>${esc(month.label)}</h3>
@@ -102,7 +104,7 @@
       .map((e) => {
         const why = (e.why_selected || []).slice(0, 3).join(", ");
         const when = e.start_date_time || day;
-        const src = (e.source && e.source.dataset) || "—";
+        const src = e.source?.dataset || "—";
         const map = e.map_link
           ? `<a href="${esc(e.map_link)}" target="_blank" rel="noopener noreferrer">Map</a>`
           : esc(e.coordinate_status || "list_only");
@@ -176,7 +178,7 @@
 
     root.querySelectorAll(".cal-day-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        const dateKey = btn.getAttribute("data-date");
+        const dateKey = btn.dataset.date;
         renderDetail(dateKey, payload);
       });
     });
@@ -194,7 +196,7 @@
         status.textContent = `Photographer calendar loaded from ${branch} · ${fmtNum(payload.total_events)} events.`;
       }
     } catch (error) {
-      root.innerHTML = `<div class="notice danger">Could not load photographer calendar.<br><br>${esc(error.message || error)}</div>`;
+      root.innerHTML = `<div class="notice danger">Could not load photographer calendar.<br><br>${esc(error?.message || error)}</div>`;
       if (status) status.textContent = "Photographer calendar unavailable.";
     }
   }

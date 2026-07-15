@@ -74,12 +74,10 @@ def scoring_text(row: dict[str, Any]) -> str:
     return " ".join(str(p or "") for p in parts).lower()
 
 
-def score_row(row: dict[str, Any], *, lane: str) -> tuple[int, list[str], bool]:
+def _base_assignment_score(row: dict[str, Any], text: str) -> tuple[int, list[str]]:
     rules: list[str] = []
     score = 0
-    text = scoring_text(row)
     nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
-
     if row.get("significance") == "major" or nycif.get("is_major"):
         score += 200
         rules.append("significance_major")
@@ -95,24 +93,42 @@ def score_row(row: dict[str, Any], *, lane: str) -> tuple[int, list[str], bool]:
         if re.search(pattern, text):
             score += points
             rules.append(rule)
+    return score, rules
 
-    excluded = False
+
+def _should_exclude(
+    row: dict[str, Any],
+    *,
+    lane: str,
+    text: str,
+    score: int,
+    rules: list[str],
+) -> tuple[bool, list[str]]:
+    extra: list[str] = []
     if EXCLUDE_ROUTINES.search(text) and score < 220 and "significance_major" not in rules:
-        excluded = True
-        rules.append("routine_activity_excluded")
-
-    # ZIP-only / thin list_only fluff out of review secondary lane
+        return True, ["routine_activity_excluded"]
+    nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
     coord = nycif.get("coordinate_status") or (
         "map_ready" if row.get("latitude") is not None else "list_only"
     )
     loc = str(row.get("location") or row.get("display_location") or "")
-    if lane != "approved_major" and coord == "list_only" and (
-        loc.upper().startswith("ZIP ") or len(loc.strip()) < 4
-    ):
-        if score < 220:
-            excluded = True
-            rules.append("list_only_thin_location_excluded")
+    thin_list = (
+        lane != "approved_major"
+        and coord == "list_only"
+        and (loc.upper().startswith("ZIP ") or len(loc.strip()) < 4)
+        and score < 220
+    )
+    if thin_list:
+        return True, ["list_only_thin_location_excluded"]
+    return False, extra
 
+
+def score_row(row: dict[str, Any], *, lane: str) -> tuple[int, list[str], bool]:
+    text = scoring_text(row)
+    score, rules = _base_assignment_score(row, text)
+    excluded, excl_rules = _should_exclude(row, lane=lane, text=text, score=score, rules=rules)
+    if excl_rules:
+        rules = [*rules, *excl_rules]
     return score, rules, excluded
 
 
@@ -254,63 +270,61 @@ def month_grid(year: int, month: int, by_day: dict[str, list[dict[str, Any]]]) -
     }
 
 
-def main() -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--reference-today", default=None)
-    args = parser.parse_args()
-    today = date.fromisoformat(args.reference_today) if args.reference_today else today_nyc()
-    start, end, m1, m2 = window_bounds(today)
+def _in_window(day: str | None, today: date, end: date) -> bool:
+    if not day:
+        return False
+    d = date.fromisoformat(day)
+    return today <= d <= end
 
-    selected: list[dict[str, Any]] = []
-    seen_ids: set[str] = set()
 
-    for row in load_major_events():
+def collect_assignments(
+    rows: list[dict[str, Any]],
+    *,
+    lane: str,
+    min_score: int,
+    today: date,
+    end: date,
+    seen_ids: set[str],
+) -> list[dict[str, Any]]:
+    out: list[dict[str, Any]] = []
+    for row in rows:
         day = event_day(row)
-        if not day:
+        if not _in_window(day, today, end):
             continue
-        d = date.fromisoformat(day)
-        if d < today or d > end:
+        score, rules, excluded = score_row(row, lane=lane)
+        if excluded or score < min_score:
             continue
-        score, rules, excluded = score_row(row, lane="approved_major")
-        if excluded or score < MIN_MAJOR_SCORE:
-            continue
-        item = normalize_assignment(row, lane="approved_major", score=score, rules=rules)
-        if not item or item["id"] in seen_ids:
-            continue
-        seen_ids.add(str(item["id"]))
-        selected.append(item)
-
-    for row in load_review_candidates():
-        day = event_day(row)
-        if not day:
-            continue
-        d = date.fromisoformat(day)
-        if d < today or d > end:
-            continue
-        score, rules, excluded = score_row(row, lane="review_high_signal")
-        if excluded or score < MIN_REVIEW_SCORE:
-            continue
-        # Prefer not to duplicate an already-selected major id
         rid = str(row.get("id") or "")
-        if rid in seen_ids:
+        if rid and rid in seen_ids:
             continue
-        item = normalize_assignment(row, lane="review_high_signal", score=score, rules=rules)
-        if not item:
+        item = normalize_assignment(row, lane=lane, score=score, rules=rules)
+        if not item or str(item["id"]) in seen_ids:
             continue
         seen_ids.add(str(item["id"]))
-        selected.append(item)
+        out.append(item)
+    return out
 
-    selected.sort(key=lambda e: (e["date"], -(e.get("assignment_score") or 0), e.get("title") or ""))
+
+def build_calendar_payload(
+    selected: list[dict[str, Any]],
+    *,
+    today: date,
+    end: date,
+    m1: date,
+    m2: date,
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    selected = sorted(
+        selected,
+        key=lambda e: (e["date"], -(e.get("assignment_score") or 0), e.get("title") or ""),
+    )
     by_day: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for e in selected:
         by_day[e["date"]].append(e)
-
     months = [
         month_grid(m1.year, m1.month, by_day),
         month_grid(m2.year, m2.month, by_day),
     ]
     go_shoot = selected[:20]
-
     payload = {
         "schema_version": "photographer-assignment-calendar-v1",
         "generated_at_utc": utc_now(),
@@ -337,8 +351,6 @@ def main() -> int:
             "Never invent HH:MM; start/end are source-native or null.",
         ],
     }
-    save_json(DATA_DIR / "photographer_assignment_calendar_2mo.json", payload)
-
     report = {
         "schema_version": "photographer-assignment-calendar-v1",
         "generated_at_utc": payload["generated_at_utc"],
@@ -366,6 +378,37 @@ def main() -> int:
         "location_cache_modified": False,
         "protected_files_untouched": True,
     }
+    return payload, report
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--reference-today", default=None)
+    args = parser.parse_args()
+    today = date.fromisoformat(args.reference_today) if args.reference_today else today_nyc()
+    _, end, m1, m2 = window_bounds(today)
+
+    seen_ids: set[str] = set()
+    selected = collect_assignments(
+        load_major_events(),
+        lane="approved_major",
+        min_score=MIN_MAJOR_SCORE,
+        today=today,
+        end=end,
+        seen_ids=seen_ids,
+    )
+    selected.extend(
+        collect_assignments(
+            load_review_candidates(),
+            lane="review_high_signal",
+            min_score=MIN_REVIEW_SCORE,
+            today=today,
+            end=end,
+            seen_ids=seen_ids,
+        )
+    )
+    payload, report = build_calendar_payload(selected, today=today, end=end, m1=m1, m2=m2)
+    save_json(DATA_DIR / "photographer_assignment_calendar_2mo.json", payload)
     save_json(DATA_DIR / "photographer_assignment_calendar_report.json", report)
     print(
         json.dumps(
