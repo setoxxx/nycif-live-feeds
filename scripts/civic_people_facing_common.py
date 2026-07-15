@@ -312,12 +312,23 @@ def safety_fields() -> dict[str, Any]:
 def resolve_coordinate_status(
     lat: Any, lng: Any, *, proposed: bool = False
 ) -> tuple[float | None, float | None, str, str]:
-    lat_f, lng_f, ok = valid_nyc_coords(lat, lng)
+    """Fail-closed: map_ready only after NYC pin certification (pin_integrity)."""
+    try:
+        from pin_integrity import certify_nyc_pin
+    except ImportError:  # pragma: no cover - scripts path normally present
+        lat_f, lng_f, ok = valid_nyc_coords(lat, lng)
+        if ok and lat_f is not None and lng_f is not None:
+            if proposed:
+                return lat_f, lng_f, "proposed", "coords_proposed_nyc_bounds_not_native_map_ready"
+            return lat_f, lng_f, "map_ready", "native_source_coords_inside_nyc_bounds"
+        return None, None, "list_only", "no_valid_nyc_coords_list_only"
+
+    lat_f, lng_f, ok, reason = certify_nyc_pin(lat, lng, allow_swap_correct=True)
     if ok and lat_f is not None and lng_f is not None:
         if proposed:
-            return lat_f, lng_f, "proposed", "coords_proposed_nyc_bounds_not_native_map_ready"
-        return lat_f, lng_f, "map_ready", "native_source_coords_inside_nyc_bounds"
-    return None, None, "list_only", "no_valid_nyc_coords_list_only"
+            return lat_f, lng_f, "proposed", f"coords_proposed_nyc_certified:{reason}"
+        return lat_f, lng_f, "map_ready", f"native_source_coords_nyc_certified:{reason}"
+    return None, None, "list_only", f"pin_integrity:{reason}"
 
 
 def normalize_borough(value: Any) -> str | None:

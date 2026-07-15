@@ -191,6 +191,12 @@ def is_zero_coord_pair(lat_f: float, lng_f: float) -> bool:
 
 
 def valid_nyc_coords(lat: Any, lng: Any) -> tuple[float | None, float | None, bool]:
+    """Geometric NYC envelope check (no swap correction).
+
+    Desk map_ready certification with reason codes / swap recovery lives in
+    scripts/pin_integrity.certify_nyc_pin — prefer that for Money-Day / Viral /
+    civic staging pin paths.
+    """
     if lat is None or lng is None or lat == "" or lng == "":
         return None, None, False
     try:

@@ -1,0 +1,91 @@
+{
+  "bounds": {
+    "label": "NYC metro envelope (schema_v1_common.NYC)",
+    "max_lat": 40.9176,
+    "max_lng": -73.7004,
+    "min_lat": 40.4774,
+    "min_lng": -74.2591
+  },
+  "demotion_count": 0,
+  "demotion_reason_counts": {},
+  "demotions_artifact": "data/pin_integrity_demotions.json",
+  "generated_at_utc": "2026-07-15T01:33:08Z",
+  "location_cache_modified": false,
+  "map_ready_after_total": 4290,
+  "map_ready_before_total": 4290,
+  "notes": "Demotes invalid map_ready to list_only and clears lat/lng on pin path. Swap auto-correct only when as-is OOB and swapped pair is inside NYC box.",
+  "pre_fix_audit": {
+    "note": "Before viral pack rebuild, crowd_magnets claimed map_ready without lat/lng (40). Gate demoted them; viral builder now attaches current Money-Day coords only and certifies before map exposure.",
+    "remediation": "scripts/build_photographer_viral_recurrence.py certifies current-side coords; pack keeps certified_pin=true only",
+    "viral_map_ready_without_coords_caught": 40
+  },
+  "promotion_allowed": false,
+  "protected_files_untouched": true,
+  "public_map_modified": false,
+  "qa_pass": true,
+  "remaining_bad_count": 0,
+  "remaining_bad_map_ready": [],
+  "rule": "ZERO map_ready rows may fail NYC certification after gate",
+  "schema_version": "pin-integrity-gate-v1",
+  "staged_feed_modified": false,
+  "surfaces": [
+    {
+      "artifact": "data/photographer_assignment_calendar_2mo.json",
+      "demotion_count": 0,
+      "map_ready_after": 318,
+      "map_ready_before": 318,
+      "reason_counts": {
+        "missing_coords": 9,
+        "ok_nyc_certified": 318
+      },
+      "remaining_bad_map_ready": [],
+      "surface": "money_day"
+    },
+    {
+      "demotion_count": 0,
+      "map_ready_after": 29,
+      "map_ready_before": 29,
+      "packs": [
+        {
+          "demotions": 0,
+          "file": "photographer_money_day_pack_today.json",
+          "map_ready_after": 14,
+          "map_ready_before": 14
+        },
+        {
+          "demotions": 0,
+          "file": "photographer_money_day_pack_tomorrow.json",
+          "map_ready_after": 15,
+          "map_ready_before": 15
+        }
+      ],
+      "surface": "money_day_packs"
+    },
+    {
+      "artifact": "data/photographer_viral_recurrence_pack_next_14d.json",
+      "demotion_count": 0,
+      "map_ready_after": 40,
+      "map_ready_before": 40,
+      "surface": "viral"
+    },
+    {
+      "artifact": "data/civic_people_facing_staging_feed.json",
+      "demotion_count": 0,
+      "map_ready_after": 3903,
+      "map_ready_before": 3903,
+      "reason_counts": {
+        "missing_coords": 1295,
+        "ok_nyc_certified": 3903
+      },
+      "surface": "civic"
+    },
+    {
+      "artifact": "data/schema-v1-discovery/major/events.json",
+      "map_ready_scanned": 910,
+      "note": "Major feed scan is report-only here; Field Desk JS also refuses non-NYC pins at render.",
+      "surface": "field_desk_feed",
+      "would_demote_count": 0,
+      "would_demote_examples": []
+    }
+  ]
+}

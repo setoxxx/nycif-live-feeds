@@ -28,12 +28,15 @@ def main() -> int:
     pack_tom = load_json(DATA_DIR / "photographer_money_day_pack_tomorrow.json", {})
     viral = load_json(DATA_DIR / "photographer_viral_recurrence_report.json", {})
     viral_pack = load_json(DATA_DIR / "photographer_viral_recurrence_pack_next_14d.json", {})
+    pin = load_json(DATA_DIR / "pin_integrity_gate_report.json", {})
+    shoot = load_json(DATA_DIR / "photographer_shoot_day_certified_report.json", {})
+    shoot_pack = load_json(DATA_DIR / "photographer_shoot_day_certified_pack.json", {})
     daily = load_json(DATA_DIR / "daily_people_facing_sync_report.json", {})
 
     digest = {
         "schema_version": "civic-people-facing-godview-v1",
         "generated_at_utc": utc_now(),
-        "purpose": "Operator bookmark: civic intake + photographer Money-Day Desk v2. Read-only. Not a publish control.",
+        "purpose": "Operator bookmark: civic intake + photographer Money-Day Desk + pin integrity. Read-only. Not a publish control.",
         "public_map_policy": "Civic rows are Review/Help staging only. Not silent public-map promotion.",
         "checkpoint": {
             "merged_pr": 171,
@@ -42,7 +45,7 @@ def main() -> int:
             "coverage_merge_commit": "f9df1fd2314b5f921701dc856cc5cb6dd5b1582d",
             "photographer_calendar_pr": 173,
             "current_phase": status.get("current_phase")
-            or "Photographer Money-Day Desk v2",
+            or "Pin Integrity + Shoot Day Certified Gate",
             "health": status.get("health"),
             "promotion_allowed": False,
             "phase_2e_authorized": False,
@@ -73,6 +76,35 @@ def main() -> int:
             "viral_recurrence_matches": viral.get("match_count"),
             "viral_returning_likely": (viral.get("label_counts") or {}).get("returning_likely"),
             "viral_next_14d_magnets": viral.get("next_14d_crowd_magnets"),
+            "pin_map_ready_certified": pin.get("map_ready_after_total"),
+            "pin_demotions": pin.get("demotion_count"),
+            "shoot_day_today_certified": shoot.get("today_certified_pins"),
+            "shoot_day_tomorrow_certified": shoot.get("tomorrow_certified_pins"),
+        },
+        "pin_integrity": {
+            "qa_pass": pin.get("qa_pass"),
+            "map_ready_before_total": pin.get("map_ready_before_total"),
+            "map_ready_after_total": pin.get("map_ready_after_total"),
+            "demotion_count": pin.get("demotion_count"),
+            "demotion_reason_counts": pin.get("demotion_reason_counts"),
+            "bounds": pin.get("bounds"),
+            "report": "data/pin_integrity_gate_report.json",
+            "demotions": "data/pin_integrity_demotions.json",
+            "rule": "ZERO map_ready rows may fail NYC certification",
+        },
+        "shoot_day_certified": {
+            "premium_label": "Shoot Day Certified Pack (premium/operator)",
+            "qa_pass": shoot.get("qa_pass"),
+            "today_certified_pins": shoot.get("today_certified_pins"),
+            "tomorrow_certified_pins": shoot.get("tomorrow_certified_pins"),
+            "today_needs_location": shoot.get("today_needs_location"),
+            "tomorrow_needs_location": shoot.get("tomorrow_needs_location"),
+            "today_top": shoot.get("today_top"),
+            "tomorrow_top": shoot.get("tomorrow_top"),
+            "today_field_desk_link": (shoot_pack.get("today") or {}).get("field_desk_link"),
+            "tomorrow_field_desk_link": (shoot_pack.get("tomorrow") or {}).get("field_desk_link"),
+            "pack": "data/photographer_shoot_day_certified_pack.json",
+            "report": "data/photographer_shoot_day_certified_report.json",
         },
         "photographer_assignment_calendar": {
             "premium_label": "Photographer Assignment Calendar (premium/operator) — Money-Day Desk v2",
@@ -120,6 +152,8 @@ def main() -> int:
             "map_coverage_qa_pass": coverage.get("qa_pass"),
             "every_accepted_row_classified": coverage.get("every_accepted_row_classified"),
             "sync_summary_qa_pass": sync.get("qa_pass"),
+            "pin_integrity_qa_pass": pin.get("qa_pass"),
+            "shoot_day_certified_qa_pass": shoot.get("qa_pass"),
         },
         "food_access_gap": {
             "status": gap.get("status"),
@@ -132,6 +166,7 @@ def main() -> int:
             "assignment_mode_preview": "?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=YYYY-MM-DD&assignment=1",
             "human_push_required": True,
             "bot_cannot_push_field_desk": True,
+            "pin_integrity_note": "Markers refuse non-NYC-certified pins; ocean/swap/Null Island impossible when daily pin gate is green.",
         },
         "safety": {
             "promotion_allowed": False,
@@ -160,6 +195,10 @@ def main() -> int:
             "viral_recurrence_pack": "data/photographer_viral_recurrence_pack_next_14d.json",
             "historical_permits": "data/nyc_permits_historical_snapshot.json",
             "sapo_foil_operator_index": "data/sapo_foil_operator_index.json",
+            "pin_integrity_gate": "data/pin_integrity_gate_report.json",
+            "pin_integrity_demotions": "data/pin_integrity_demotions.json",
+            "shoot_day_certified_pack": "data/photographer_shoot_day_certified_pack.json",
+            "shoot_day_certified_report": "data/photographer_shoot_day_certified_report.json",
             "daily_sync_report": "data/daily_people_facing_sync_report.json",
             "status": "status/nycif-project-status.json",
             "merged_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/171",
@@ -168,11 +207,11 @@ def main() -> int:
             "money_day_v2_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/174",
         },
         "next_human_steps": [
-            "Push Field Desk civic-people-facing-v01 (+ assignment=1 app JS) to nycif-field-desk Pages",
-            "Push admin photographer-calendar-panel with Returning from last year section",
-            "Shoot from Today/Tomorrow packs + viral recurrence next-14d magnets",
+            "Push Field Desk civic-people-facing-v01 (+ assignment=1 app JS with pin integrity) to nycif-field-desk Pages",
+            "Push admin photographer-calendar-panel with Pin Integrity KPI + Shoot Day Certified cards",
+            "Shoot from Shoot Day Certified pack (today/tomorrow) when pin QA is green",
             "File FOIL for SAPO/CECM full application PDFs; fill data/sapo_foil_operator_index.json",
-            "Confirm daily workflow daily-people-facing-desk-sync is enabled",
+            "Confirm daily workflow daily-people-facing-desk-sync is enabled (fail-closed on pin gate)",
             "Do not publish/promote to WordPress public map until explicitly authorized",
         ],
         "remain_unapproved_unpromoted": [
@@ -180,9 +219,10 @@ def main() -> int:
             "Geocoding proposals pending manual review",
             "Historical Workforce1 / Ready NY / MOIA quarantined for upcoming",
             "Food-access soup-kitchen gap",
-            "FOIL applicant/org identity not yet filled (sapo_foil_operator_index empty)",
+            "FOIL applicant/org identity not yet filled (sapo_foil_operator_index empty — human)",
             "Phase 2E / location_cache write unauthorized",
             "Public WordPress map publish unauthorized by this desk package",
+            "list_only money-day / viral rows demoted by pin integrity (needs location appendix)",
         ],
     }
     save_json(DATA_DIR / "civic_people_facing_godview_digest.json", digest)

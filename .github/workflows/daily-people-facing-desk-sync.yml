@@ -70,7 +70,7 @@ jobs:
           python scripts/run_daily_people_facing_desk_sync.py $EXTRA
 
       - name: Civic + photographer fixture tests
-        run: python -m pytest tests/test_civic_people_facing_intake.py tests/test_photographer_assignment_calendar.py -q
+        run: python -m pytest tests/test_civic_people_facing_intake.py tests/test_photographer_assignment_calendar.py tests/test_pin_integrity.py -q
 
       - name: Enforce protected files untouched
         run: |
@@ -97,6 +97,12 @@ jobs:
           git add \
             data/civic_*.json \
             data/photographer_assignment_calendar_*.json \
+            data/photographer_money_day_*.json \
+            data/photographer_viral_recurrence_*.json \
+            data/photographer_shoot_day_certified_*.json \
+            data/pin_integrity_*.json \
+            data/nyc_permits_historical_*.json \
+            data/sapo_foil_operator_index.json \
             data/daily_people_facing_sync_report.json \
             data/events_discovery_godview_digest_v02.json \
             data/nyc_citywide_events_calendar_snapshot.json \

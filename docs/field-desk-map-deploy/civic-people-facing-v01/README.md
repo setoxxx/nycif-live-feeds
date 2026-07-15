@@ -68,7 +68,11 @@ Optional borough chip (from God View Today/Tomorrow packs):
 ```
 
 Daily auto-pull workflow (live-feeds repo): `.github/workflows/daily-people-facing-desk-sync.yml`  
-Artifacts: `data/photographer_assignment_calendar_2mo.json`, `data/photographer_money_day_quality_report.json`, `data/photographer_money_day_pack_today.json`, `data/photographer_money_day_pack_tomorrow.json`, `data/daily_people_facing_sync_report.json`
+Artifacts: `data/photographer_assignment_calendar_2mo.json`, `data/photographer_money_day_quality_report.json`, `data/photographer_money_day_pack_today.json`, `data/photographer_money_day_pack_tomorrow.json`, `data/pin_integrity_gate_report.json`, `data/photographer_shoot_day_certified_pack.json`, `data/daily_people_facing_sync_report.json`
+
+### Pin integrity (hard law)
+
+Pins are integrity-gated via `scripts/pin_integrity.py` (NYC metro box lat 40.4774–40.9176, lng −74.2591–−73.7004). Ocean / Null Island / lat-lng swap / OOB cannot remain `map_ready` if the daily pin gate is green — bad rows demote to `list_only` with a clear reason and cleared coordinates. Field Desk Assignment Mode + money-day deep links refuse to plot non-certified pins; LIST ONLY stays visible in lists with the LIST ONLY badge.
 
 Checklist after Pages deploy:
 
@@ -77,7 +81,8 @@ Checklist after Pages deploy:
 3. Help Places / Markets shows directories; pins only when `map_ready`
 4. List item shows dataset id + coordinate status
 5. Assignment Mode deep-link narrows to money-day ids for the date (fail soft if calendar missing)
-6. Approved permit lane unchanged
+6. Ocean / (0,0) / swapped / OOB pins never render as markers when pin gate is green
+7. Approved permit lane unchanged
 7. Incognito + mobile smoke
 
 ## Safety

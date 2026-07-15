@@ -240,6 +240,8 @@ def normalize_assignment(
     score: int,
     rules: list[str],
 ) -> dict[str, Any] | None:
+    from pin_integrity import certify_nyc_pin
+
     day = event_day(row)
     if not day:
         return None
@@ -248,6 +250,31 @@ def normalize_assignment(
     coord = nycif.get("coordinate_status")
     if not coord:
         coord = "map_ready" if row.get("latitude") is not None else "list_only"
+    lat = row.get("latitude")
+    lng = row.get("longitude")
+    # Fail closed: never leave map_ready without NYC-certified coords.
+    if coord == "map_ready" or (lat is not None and lng is not None and coord != "proposed"):
+        clat, clng, pin_ok, pin_reason = certify_nyc_pin(lat, lng, allow_swap_correct=True)
+        if pin_ok and clat is not None and clng is not None:
+            lat, lng = clat, clng
+            if coord != "proposed":
+                coord = "map_ready"
+            certified_pin = coord == "map_ready"
+            pin_integrity_reason = pin_reason
+        else:
+            if coord == "proposed":
+                lat, lng = None, None
+                certified_pin = False
+                pin_integrity_reason = pin_reason
+            else:
+                coord = "list_only"
+                lat, lng = None, None
+                certified_pin = False
+                pin_integrity_reason = pin_reason
+    else:
+        lat, lng = None, None
+        certified_pin = False
+        pin_integrity_reason = "not_map_ready"
     start = row.get("start_date_time")
     end = row.get("end_date_time")
     return {
@@ -260,9 +287,11 @@ def normalize_assignment(
         "borough": row.get("borough"),
         "display_location": row.get("location") or row.get("display_location"),
         "coordinate_status": coord,
-        "latitude": row.get("latitude"),
-        "longitude": row.get("longitude"),
-        "map_link": map_link(row.get("latitude"), row.get("longitude")) if coord == "map_ready" else None,
+        "latitude": lat,
+        "longitude": lng,
+        "certified_pin": certified_pin,
+        "pin_integrity_reason": pin_integrity_reason,
+        "map_link": map_link(lat, lng) if coord == "map_ready" and certified_pin else None,
         "field_desk_link": field_desk_link(day),
         "category": row.get("category"),
         "lane": lane,

@@ -5,13 +5,15 @@
 (() => {
   const VERSION = "photographer-calendar-panel-v01";
   const LIVE_FEEDS_BASE = "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds";
-  const BRANCH_CANDIDATES = ["main", "cursor/viral-recurrence-memory-da92"];
+  const BRANCH_CANDIDATES = ["main", "cursor/pin-integrity-shoot-day-gate-da92"];
   const CAL_PATH = "data/photographer_assignment_calendar_2mo.json";
   const TODAY_PATH = "data/photographer_money_day_pack_today.json";
   const TOMORROW_PATH = "data/photographer_money_day_pack_tomorrow.json";
   const QUALITY_PATH = "data/photographer_money_day_quality_report.json";
   const VIRAL_PATH = "data/photographer_viral_recurrence_pack_next_14d.json";
   const VIRAL_REPORT_PATH = "data/photographer_viral_recurrence_report.json";
+  const PIN_PATH = "data/pin_integrity_gate_report.json";
+  const SHOOT_PATH = "data/photographer_shoot_day_certified_pack.json";
   const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   function esc(value) {
@@ -191,7 +193,52 @@
       </table></div>`;
   }
 
-  function render(root, branch, payload, todayPack, tomorrowPack, quality, viralPack, viralReport) {
+  function pinIntegrityHtml(pinReport) {
+    if (!pinReport) {
+      return `<div class="notice warn">Pin integrity report unavailable.</div>`;
+    }
+    const pass = !!pinReport.qa_pass;
+    const badge = pass
+      ? `<span class="notice ok">PIN QA PASS</span>`
+      : `<span class="notice danger">PIN QA FAIL</span>`;
+    return `
+      <h3>Pin Integrity (fail-closed)</h3>
+      <div class="grid">
+        <div class="stat"><div class="label">map_ready certified</div><div class="value">${esc(fmtNum(pinReport.map_ready_after_total))}</div><div class="detail">before ${esc(fmtNum(pinReport.map_ready_before_total))}</div></div>
+        <div class="stat"><div class="label">Demotions today</div><div class="value">${esc(fmtNum(pinReport.demotion_count))}</div><div class="detail">Prefer list_only over ocean pins</div></div>
+        <div class="stat"><div class="label">Gate</div><div class="value">${pass ? "PASS" : "FAIL"}</div><div class="detail">${badge}</div></div>
+      </div>
+      <div class="muted detail">Bounds lat ${esc(String((pinReport.bounds || {}).min_lat))}–${esc(String((pinReport.bounds || {}).max_lat))}, lng ${esc(String((pinReport.bounds || {}).min_lng))}–${esc(String((pinReport.bounds || {}).max_lng))}. ZERO bad map_ready required.</div>`;
+  }
+
+  function shootDayCardHtml(section, heading) {
+    if (!section) {
+      return `<div class="md-card"><h3>${esc(heading)}</h3><div class="muted">Certified pack unavailable.</div></div>`;
+    }
+    const tops = (section.go_shoot_certified || [])
+      .slice(0, 6)
+      .map(
+        (e) =>
+          `<li><strong>${esc(e.title)}</strong> · ${esc(e.borough || "—")} · ${esc(e.recurrence_label || "money-day")}${e.certified_pin ? " · certified" : ""}</li>`
+      )
+      .join("");
+    const needs = fmtNum(section.needs_location_count);
+    return `
+      <div class="md-card">
+        <h3>${esc(heading)} — ${esc(section.date)}</h3>
+        <div class="muted">${fmtNum(section.certified_pin_count)} certified pins · ${needs} needs location (list only — never fake pins)</div>
+        <div class="md-chips">${(section.borough_clusters || [])
+          .map(
+            (c) =>
+              `<a class="md-chip" href="${esc(c.field_desk_link || fieldDeskUrl(section.date, c.borough))}" target="_blank" rel="noopener noreferrer">${esc(c.borough)} · ${fmtNum(c.count)}</a>`
+          )
+          .join("") || '<span class="muted">No certified pins</span>'}</div>
+        <ol class="md-go">${tops || '<li class="muted">No certified go-shoot rows</li>'}</ol>
+        <p><a href="${esc(section.field_desk_link || fieldDeskUrl(section.date))}" target="_blank" rel="noopener noreferrer">Open Field Desk Assignment Mode</a></p>
+      </div>`;
+  }
+
+  function render(root, branch, payload, todayPack, tomorrowPack, quality, viralPack, viralReport, pinReport, shootPack) {
     const go = (payload.go_shoot_these || []).slice(0, 20);
     const months = payload.months || [];
     const removed = quality?.delta_vs_baseline?.events_removed;
@@ -214,6 +261,11 @@
       </style>
       <div class="notice violet">Photographer Money-Day Desk ${esc(VERSION)} — premium/operator. Read-only. Not a WordPress publish control.</div>
       <div class="notice ok">Loaded from <code>${esc(branch)}</code>. ${esc(payload.premium_label || "")} · ${fmtNum(payload.total_events)} money-day events / ${fmtNum(payload.days_with_coverage)} days${removed != null ? ` · removed ${fmtNum(removed)} vs #173 baseline` : ""}.</div>
+      ${pinIntegrityHtml(pinReport)}
+      <div class="md-packs">
+        ${shootDayCardHtml(shootPack && shootPack.today, "SHOOT DAY CERTIFIED — TODAY")}
+        ${shootDayCardHtml(shootPack && shootPack.tomorrow, "SHOOT DAY CERTIFIED — TOMORROW")}
+      </div>
       <div class="md-packs">
         ${packCardHtml(todayPack, "TODAY — GO SHOOT")}
         ${packCardHtml(tomorrowPack, "TOMORROW — GO SHOOT")}
@@ -262,13 +314,15 @@
     if (!root) return;
     if (status) status.textContent = "Loading photographer money-day desk…";
     try {
-      const [cal, today, tomorrow, quality, viral, viralReport] = await Promise.all([
+      const [cal, today, tomorrow, quality, viral, viralReport, pin, shoot] = await Promise.all([
         fetchJson(CAL_PATH),
         fetchJson(TODAY_PATH).catch(() => ({ branch: "none", payload: null })),
         fetchJson(TOMORROW_PATH).catch(() => ({ branch: "none", payload: null })),
         fetchJson(QUALITY_PATH).catch(() => ({ branch: "none", payload: null })),
         fetchJson(VIRAL_PATH).catch(() => ({ branch: "none", payload: null })),
         fetchJson(VIRAL_REPORT_PATH).catch(() => ({ branch: "none", payload: null })),
+        fetchJson(PIN_PATH).catch(() => ({ branch: "none", payload: null })),
+        fetchJson(SHOOT_PATH).catch(() => ({ branch: "none", payload: null })),
       ]);
       render(
         root,
@@ -278,10 +332,12 @@
         tomorrow.payload,
         quality.payload,
         viral.payload,
-        viralReport.payload
+        viralReport.payload,
+        pin.payload,
+        shoot.payload
       );
       if (status) {
-        status.textContent = `Money-day desk loaded from ${cal.branch} · ${fmtNum(cal.payload.total_events)} events.`;
+        status.textContent = `Money-day desk loaded from ${cal.branch} · ${fmtNum(cal.payload.total_events)} events · pin QA ${pin.payload && pin.payload.qa_pass ? "PASS" : "CHECK"}.`;
       }
     } catch (error) {
       root.innerHTML = `<div class="notice danger">Could not load photographer calendar.<br><br>${esc(error?.message || error)}</div>`;

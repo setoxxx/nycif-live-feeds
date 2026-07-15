@@ -18,8 +18,21 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from civic_people_facing_common import DATA_DIR, load_json, save_json, today_nyc, utc_now  # noqa: E402
+from pin_integrity import certify_nyc_pin  # noqa: E402
 
 BOROUGH_KEYS = ("Manhattan", "Brooklyn", "Queens", "Bronx", "Staten Island")
+
+
+def is_certified_map_ready(e: dict[str, Any]) -> bool:
+    if e.get("coordinate_status") != "map_ready":
+        return False
+    lat_f, lng_f, ok, _reason = certify_nyc_pin(e.get("latitude"), e.get("longitude"), allow_swap_correct=True)
+    if not ok:
+        return False
+    e["latitude"] = lat_f
+    e["longitude"] = lng_f
+    e["certified_pin"] = True
+    return True
 
 
 def normalize_borough(value: Any) -> str:
@@ -64,8 +77,9 @@ def pack_event(e: dict[str, Any]) -> dict[str, Any]:
         "why_selected": e.get("why_selected"),
         "map_link": e.get("map_link"),
         "field_desk_link": e.get("field_desk_link") or field_desk_link(str(e.get("date") or "")),
-        "latitude": e.get("latitude"),
-        "longitude": e.get("longitude"),
+        "latitude": e.get("latitude") if e.get("coordinate_status") == "map_ready" else None,
+        "longitude": e.get("longitude") if e.get("coordinate_status") == "map_ready" else None,
+        "certified_pin": bool(e.get("certified_pin") and e.get("coordinate_status") == "map_ready"),
         "promotion_allowed": False,
         "public_map_modified": False,
         "location_cache_modified": False,
@@ -76,7 +90,17 @@ def build_pack(events: list[dict[str, Any]], *, day: date, reference_today: date
     day_s = day.isoformat()
     day_events = [e for e in events if e.get("date") == day_s]
     day_events.sort(key=lambda e: (-(e.get("assignment_score") or 0), e.get("title") or ""))
-    map_ready = [e for e in day_events if e.get("coordinate_status") == "map_ready"]
+    # Pin clusters: NYC-certified map_ready only. Prefer demote over wrong pin.
+    map_ready = []
+    for e in day_events:
+        if is_certified_map_ready(e):
+            map_ready.append(e)
+        elif e.get("coordinate_status") == "map_ready":
+            e["coordinate_status"] = "list_only"
+            e["latitude"] = None
+            e["longitude"] = None
+            e["map_link"] = None
+            e["certified_pin"] = False
     clusters: dict[str, list[dict[str, Any]]] = {b: [] for b in BOROUGH_KEYS}
     clusters["Unknown"] = []
     for e in map_ready:

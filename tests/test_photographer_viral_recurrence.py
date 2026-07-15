@@ -109,7 +109,9 @@ def test_committed_artifacts_when_present():
     pack = json.loads((ROOT / "data" / "photographer_viral_recurrence_pack_next_14d.json").read_text())
     assert pack.get("crowd_magnet_count", 0) > 0
     for m in pack.get("crowd_magnets") or []:
-        assert m.get("coordinate_status") in (None, "map_ready", "list_only")
+        assert m.get("coordinate_status") == "map_ready"
+        assert m.get("certified_pin") is True
+        assert m.get("latitude") is not None and m.get("longitude") is not None
 
 
 def test_admin_panel_has_returning_section():
@@ -125,3 +127,28 @@ def test_daily_sync_allowlists_viral_scripts():
     text = (ROOT / "scripts" / "run_daily_people_facing_desk_sync.py").read_text()
     assert "sync_nyc_permits_historical.py" in text
     assert "build_photographer_viral_recurrence.py" in text
+    assert "build_pin_integrity_gate.py" in text
+    assert "build_photographer_shoot_day_certified.py" in text
+    assert "pin_report.get(\"qa_pass\"" in text or 'pin_report.get("qa_pass"' in text
+
+
+def test_admin_panel_has_pin_integrity_and_shoot_day():
+    panel = (
+        ROOT / "docs" / "field-desk-admin-deploy" / "admin" / "photographer-calendar-panel-v01.js"
+    ).read_text()
+    assert "Pin Integrity" in panel
+    assert "SHOOT DAY CERTIFIED" in panel
+    assert "pin_integrity_gate_report.json" in panel
+    assert "photographer_shoot_day_certified_pack.json" in panel
+    assert "->" not in panel
+
+
+def test_field_desk_refuses_oob_pins():
+    app = (
+        ROOT / "docs" / "field-desk-map-deploy" / "schema-v1-major-all-v01" / "app-schema-v1-major-all-v01.js"
+    ).read_text()
+    assert "nycCertifiedPin" in app
+    assert "NYC_BOX" in app
+    assert "swap_suspected" in app
+    assert "LIST ONLY never get fake markers" in app
+
