@@ -4,15 +4,15 @@
   "project": "nycif-live-feeds",
   "repository": "setoxxx/nycif-live-feeds",
   "visibility": "public",
-  "current_phase": "Photographer 2-month calendar + daily desk sync",
-  "completion_percent": 96,
+  "current_phase": "Photographer Money-Day Desk v2",
+  "completion_percent": 97,
   "health": "green",
-  "status_summary": "PR #171 and #172 merged. Photographer Assignment Calendar (premium/operator) built for July\u2013August 2026 money days (842 assignment-grade events / 43 days). Daily GitHub Actions workflow daily-people-facing-desk-sync auto-pulls civic/calendar/parks JSON without mutating protected staged production feeds. God View monthly UI + Field Desk ?date= handshake packaged. WordPress public-map publish still NOT authorized. Phase 2E / location_cache still unauthorized.",
+  "status_summary": "Money-Day Desk v2: quality filter cuts #173 calendar noise (842\u2192327 money-day events). Today/Tomorrow GO SHOOT packs + God View cards + Field Desk assignment=1 mode. Daily desk sync wires packs/quality. WordPress public publish + Phase 2E still unauthorized.",
   "active_prs": [
     {
-      "branch": "cursor/photographer-calendar-daily-pull-da92",
-      "title": "Photographer calendar, daily desk sync, Field Desk date handshake",
-      "state": "open_draft_pending"
+      "branch": "cursor/photographer-money-day-desk-v2-da92",
+      "title": "Money-Day Desk v2 quality filter + today/tomorrow packs",
+      "state": "open_draft"
     }
   ],
   "recent_prs": [
@@ -38,7 +38,7 @@
     "Phase 2E location_cache promotion remains unauthorized.",
     "Full permit\u2192staged production refresh still requires live-sync-qa manual dispatch (by design)."
   ],
-  "next_action": "Merge photographer-calendar daily-pull PR when green; Howard push Field Desk + admin calendar panels; confirm Actions workflow enabled. Shoot from Photographer Assignment Calendar.",
+  "next_action": "Merge Money-Day Desk v2 when CI green; Howard push Field Desk app JS + admin panel; shoot from Today/Tomorrow packs.",
   "admin_dashboard_urls": {
     "interim_live": "https://setoxxx.github.io/nycif-live-feeds/admin/index.html",
     "field_desk": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main"
@@ -49,24 +49,14 @@
     "notes": "842 assignment events Jul\u2013Aug 2026; daily workflow cron 15 11 * * * UTC."
   },
   "photographer_assignment_calendar": {
-    "pr": 173,
-    "branch": "cursor/photographer-calendar-daily-pull-da92",
-    "workflow": "daily-people-facing-desk-sync.yml",
-    "cron_utc": "15 11 * * *",
-    "artifact": "data/photographer_assignment_calendar_2mo.json",
-    "status": "sonar_security_fixes_pending_ci",
-    "counts_reference_2026_07_14": {
-      "total_events": 842,
-      "days_with_coverage": 43,
-      "july": {
-        "events": 509,
-        "days": 18
-      },
-      "august": {
-        "events": 333,
-        "days": 25
-      }
-    }
+    "pr173_merged": true,
+    "money_day_v2_branch": "cursor/photographer-money-day-desk-v2-da92",
+    "baseline_v1_events": 842,
+    "v2_events": 327,
+    "v2_days_with_coverage": 37,
+    "today_pack_events": 14,
+    "tomorrow_pack_events": 15,
+    "workflow": "daily-people-facing-desk-sync.yml"
   },
   "civic_people_facing": {
     "merged_pr": 171,

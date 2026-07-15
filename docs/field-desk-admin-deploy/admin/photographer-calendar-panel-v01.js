@@ -1,12 +1,15 @@
 /**
- * Photographer Assignment Calendar (premium/operator) — Evently-style 2-month God View.
- * Read-only. Clicking a day opens Field Desk focused on that date when possible.
+ * Photographer Assignment Calendar (premium/operator) — Money-Day Desk v2.
+ * Today/Tomorrow packs + Evently-style 2-month God View. Read-only.
  */
 (() => {
   const VERSION = "photographer-calendar-panel-v01";
   const LIVE_FEEDS_BASE = "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds";
-  const BRANCH_CANDIDATES = ["main", "cursor/photographer-calendar-daily-pull-da92"];
-  const PATH = "data/photographer_assignment_calendar_2mo.json";
+  const BRANCH_CANDIDATES = ["main", "cursor/photographer-money-day-desk-v2-da92"];
+  const CAL_PATH = "data/photographer_assignment_calendar_2mo.json";
+  const TODAY_PATH = "data/photographer_money_day_pack_today.json";
+  const TOMORROW_PATH = "data/photographer_money_day_pack_tomorrow.json";
+  const QUALITY_PATH = "data/photographer_money_day_quality_report.json";
   const DAY_NAMES = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 
   function esc(value) {
@@ -19,14 +22,14 @@
     return Number.isFinite(Number(value)) ? Number(value).toLocaleString() : "0";
   }
 
-  async function fetchCalendar() {
+  async function fetchJson(path) {
     let lastError = null;
     for (const branch of BRANCH_CANDIDATES) {
       try {
-        const url = `${LIVE_FEEDS_BASE}/${branch}/${PATH}?v=${Date.now()}`;
+        const url = `${LIVE_FEEDS_BASE}/${branch}/${path}?v=${Date.now()}`;
         const response = await fetch(url, { cache: "no-store" });
         if (!response.ok) {
-          lastError = new Error(`${branch}/${PATH}: HTTP ${response.status}`);
+          lastError = new Error(`${branch}/${path}: HTTP ${response.status}`);
           continue;
         }
         return { branch, payload: await response.json() };
@@ -34,10 +37,10 @@
         lastError = error;
       }
     }
-    throw lastError || new Error(`Could not load ${PATH}`);
+    throw lastError || new Error(`Could not load ${path}`);
   }
 
-  function fieldDeskUrl(dateKey) {
+  function fieldDeskUrl(dateKey, borough) {
     const base = "https://setoxxx.github.io/nycif-field-desk/";
     const params = new URLSearchParams({
       v: "civic-people-facing-v01",
@@ -45,7 +48,9 @@
       feeds: "main",
       date: dateKey || "",
       mode: "all",
+      assignment: "1",
     });
+    if (borough) params.set("borough", borough);
     return `${base}?${params.toString()}`;
   }
 
@@ -87,16 +92,47 @@
       </div>`;
   }
 
+  function boroughChipsHtml(pack) {
+    const chips = (pack.borough_clusters || [])
+      .map(
+        (c) =>
+          `<a class="md-chip" href="${esc(c.field_desk_link || fieldDeskUrl(pack.pack_date, c.borough))}" target="_blank" rel="noopener noreferrer">${esc(c.borough)} · ${fmtNum(c.count)}</a>`
+      )
+      .join("");
+    return chips || `<span class="muted">No map_ready money-day pins</span>`;
+  }
+
+  function packCardHtml(pack, heading) {
+    if (!pack) {
+      return `<div class="md-card"><h3>${esc(heading)}</h3><div class="muted">Pack unavailable.</div></div>`;
+    }
+    const tops = (pack.go_shoot || [])
+      .slice(0, 5)
+      .map(
+        (e) =>
+          `<li><strong>${esc(e.title)}</strong> · ${esc(e.borough || "—")} · score ${esc(e.assignment_score)} · ${esc(e.start_date_time || "time TBD")}</li>`
+      )
+      .join("");
+    return `
+      <div class="md-card">
+        <h3>${esc(heading)} — ${esc(pack.pack_date)}</h3>
+        <div class="muted">${fmtNum(pack.total_events)} money-day · ${fmtNum(pack.map_ready_count)} map_ready</div>
+        <div class="md-chips">${boroughChipsHtml(pack)}</div>
+        <ol class="md-go">${tops || "<li class=\\"muted\\">No go-shoot rows</li>"}</ol>
+        <p><a href="${esc(pack.field_desk_link || fieldDeskUrl(pack.pack_date))}" target="_blank" rel="noopener noreferrer">Open Field Desk Assignment Mode</a></p>
+      </div>`;
+  }
+
   function renderDetail(day, payload) {
     const box = document.getElementById("photographer-calendar-detail");
     if (!box) return;
     if (!day) {
-      box.innerHTML = `<div class="muted">Click a day with events to see assignment-grade coverage.</div>`;
+      box.innerHTML = `<div class="muted">Click a day with events to see money-day coverage.</div>`;
       return;
     }
     const events = (payload.events || []).filter((e) => e.date === day);
     if (!events.length) {
-      box.innerHTML = `<div class="muted">No assignment-grade events on ${esc(day)}.</div>`;
+      box.innerHTML = `<div class="muted">No money-day events on ${esc(day)}.</div>`;
       return;
     }
     const rows = events
@@ -121,8 +157,8 @@
       })
       .join("");
     box.innerHTML = `
-      <div class="notice ok"><strong>${esc(day)}</strong> — ${fmtNum(events.length)} assignment events ·
-        <a href="${esc(fieldDeskUrl(day))}" target="_blank" rel="noopener noreferrer">Open Field Desk map for this day</a>
+      <div class="notice ok"><strong>${esc(day)}</strong> — ${fmtNum(events.length)} money-day events ·
+        <a href="${esc(fieldDeskUrl(day))}" target="_blank" rel="noopener noreferrer">Open Field Desk Assignment Mode</a>
       </div>
       <div class="table-wrap"><table>
         <thead><tr><th>When</th><th>Title</th><th>Borough</th><th>Location</th><th>Source</th><th>Lane/score</th><th>Why</th><th>Pin</th></tr></thead>
@@ -130,12 +166,18 @@
       </table></div>`;
   }
 
-  function render(root, branch, payload) {
+  function render(root, branch, payload, todayPack, tomorrowPack, quality) {
     const go = (payload.go_shoot_these || []).slice(0, 20);
     const months = payload.months || [];
+    const removed = quality?.delta_vs_baseline?.events_removed;
     root.innerHTML = `
       <style>
         .cal-grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))}
+        .md-packs{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));margin:12px 0}
+        .md-card{border:1px solid rgba(148,163,184,.28);border-radius:12px;padding:12px;background:rgba(15,23,42,.35)}
+        .md-chips{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+        .md-chip{display:inline-block;padding:6px 10px;border-radius:999px;border:1px solid rgba(96,165,250,.45);color:#e2e8f0;text-decoration:none;font-size:12px}
+        .md-go{margin:8px 0 0;padding-left:18px;display:grid;gap:6px}
         .cal-table{min-width:0;width:100%}
         .cal-table th,.cal-table td{text-align:center;padding:6px 4px}
         .cal-day-btn{width:100%;min-height:52px;border:1px solid var(--line);border-radius:10px;background:#0f172a;color:inherit;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
@@ -145,17 +187,21 @@
         .cal-count{font-size:12px;color:var(--muted)}
         .cal-empty{opacity:.35}
       </style>
-      <div class="notice violet">Photographer Assignment Calendar ${esc(VERSION)} — premium/operator money days for the next ~2 months. Read-only. Not a public-map publish control.</div>
-      <div class="notice ok">Loaded from <code>${esc(branch)}</code>. ${esc(payload.premium_label || "")} · window ${esc(payload.window_start)} → ${esc(payload.window_end)} · ${fmtNum(payload.total_events)} events across ${fmtNum(payload.days_with_coverage)} days.</div>
+      <div class="notice violet">Photographer Money-Day Desk ${esc(VERSION)} — premium/operator. Read-only. Not a WordPress publish control.</div>
+      <div class="notice ok">Loaded from <code>${esc(branch)}</code>. ${esc(payload.premium_label || "")} · ${fmtNum(payload.total_events)} money-day events / ${fmtNum(payload.days_with_coverage)} days${removed != null ? ` · removed ${fmtNum(removed)} vs #173 baseline` : ""}.</div>
+      <div class="md-packs">
+        ${packCardHtml(todayPack, "TODAY — GO SHOOT")}
+        ${packCardHtml(tomorrowPack, "TOMORROW — GO SHOOT")}
+      </div>
       <div class="grid">
-        <div class="stat"><div class="label">Assignment events (2 mo)</div><div class="value">${esc(fmtNum(payload.total_events))}</div></div>
+        <div class="stat"><div class="label">Money-day events (2 mo)</div><div class="value">${esc(fmtNum(payload.total_events))}</div></div>
         <div class="stat"><div class="label">Days with coverage</div><div class="value">${esc(fmtNum(payload.days_with_coverage))}</div></div>
         <div class="stat"><div class="label">map_ready</div><div class="value">${esc(fmtNum((payload.coordinate_status_counts || {}).map_ready))}</div></div>
         <div class="stat"><div class="label">list_only</div><div class="value">${esc(fmtNum((payload.coordinate_status_counts || {}).list_only))}</div></div>
       </div>
       <div class="cal-grid">${months.map(monthHtml).join("")}</div>
       <h3>Day detail</h3>
-      <div id="photographer-calendar-detail" class="muted">Click a day with events to see assignment-grade coverage.</div>
+      <div id="photographer-calendar-detail" class="muted">Click a day with events to see money-day coverage.</div>
       <h3>Go shoot these (top 20 upcoming)</h3>
       <div class="table-wrap"><table>
         <thead><tr><th>Date</th><th>Title</th><th>Borough</th><th>Score</th><th>Why</th><th>Desk</th></tr></thead>
@@ -188,12 +234,24 @@
     const root = document.getElementById("photographer-calendar-view");
     const status = document.getElementById("photographer-calendar-status");
     if (!root) return;
-    if (status) status.textContent = "Loading photographer assignment calendar…";
+    if (status) status.textContent = "Loading photographer money-day desk…";
     try {
-      const { branch, payload } = await fetchCalendar();
-      render(root, branch, payload || {});
+      const [cal, today, tomorrow, quality] = await Promise.all([
+        fetchJson(CAL_PATH),
+        fetchJson(TODAY_PATH).catch(() => ({ branch: "none", payload: null })),
+        fetchJson(TOMORROW_PATH).catch(() => ({ branch: "none", payload: null })),
+        fetchJson(QUALITY_PATH).catch(() => ({ branch: "none", payload: null })),
+      ]);
+      render(
+        root,
+        cal.branch,
+        cal.payload || {},
+        today.payload,
+        tomorrow.payload,
+        quality.payload
+      );
       if (status) {
-        status.textContent = `Photographer calendar loaded from ${branch} · ${fmtNum(payload.total_events)} events.`;
+        status.textContent = `Money-day desk loaded from ${cal.branch} · ${fmtNum(cal.payload.total_events)} events.`;
       }
     } catch (error) {
       root.innerHTML = `<div class="notice danger">Could not load photographer calendar.<br><br>${esc(error?.message || error)}</div>`;

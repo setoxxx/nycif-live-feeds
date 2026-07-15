@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Build Howard's premium photographer assignment calendar (next ~2 months).
 
+Money-Day Desk v2: keep REAL photo-money days only (parades, festivals,
+street fairs, markets/popups, fan zones, large activations, crowd draws).
+Exclude routine sports/fitness even when carried major_score is high.
+
 Read-only staging artifact for God View / Field Desk. Not a public-map publish.
 Never invents HH:MM. Never writes location_cache or Approved production feeds.
 """
@@ -13,7 +17,7 @@ import json
 import re
 import sys
 from collections import Counter, defaultdict
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 from pathlib import Path
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -26,23 +30,47 @@ from schema_v1_common import DEFAULT_TIMEZONE, extract_events  # noqa: E402
 
 NY_TZ = ZoneInfo(DEFAULT_TIMEZONE)
 
-# Deterministic assignment-grade keyword scoring (mirrors major-feed intent).
+# Baseline from merged #173 (reference_today 2026-07-14) for quality report.
+BASELINE_V1 = {
+    "reference_today_nyc": "2026-07-14",
+    "total_events": 842,
+    "days_with_coverage": 43,
+    "month_counts": [
+        {"label": "July 2026", "event_count": 509, "days_with_events": 18},
+        {"label": "August 2026", "event_count": 333, "days_with_events": 25},
+    ],
+}
+
+# Title/category keyword rules only — never score on display location
+# (avoids "Parade Ground" false positives for league sports).
 KEYWORD_RULES: list[tuple[int, str, str]] = [
-    (220, r"world cup|fifa|fan zone", "keyword_world_cup_fan_zone"),
+    (220, r"world cup|fifa|fan zone|watch party", "keyword_world_cup_fan_zone"),
     (200, r"\bpride\b", "keyword_pride"),
     (200, r"\bparade\b|\bmarch\b|\brally\b|\bvigil\b|\bceremony\b", "keyword_civic_gathering"),
     (180, r"street fair|festival|merchandise fair|feast|block party", "keyword_street_fair_festival"),
-    (170, r"marathon|criterium|\b5k\b|\b10k\b|half marathon|tour|race", "keyword_spectator_race"),
-    (160, r"street closure|open street|plaza|activation", "keyword_street_activation"),
-    (140, r"farmers market|greenmarket|street market|flea market", "keyword_market"),
-    (130, r"concert|performance|fireworks|carnival", "keyword_spectacle"),
+    (170, r"marathon|criterium|\b5k\b|\b10k\b|half marathon", "keyword_spectator_race"),
+    (160, r"street closure|open street|street activation|\bactivation\b", "keyword_street_activation"),
+    (140, r"farmers market|greenmarket|street market|flea market|farmstand|\bmarket\b", "keyword_market"),
+    (130, r"concert|fireworks|carnival|\bperformance\b|circus", "keyword_spectacle"),
     (120, r"protest|demonstration", "keyword_civic_action"),
+    (110, r"popup|pop-up|plaza programming|times square|tsq live", "keyword_plaza_programming"),
 ]
 
+MONEY_DAY_RULES = frozenset(rule for _, _, rule in KEYWORD_RULES)
+
+# Hard exclude routine / league noise even when significance_major + high major_score.
 EXCLUDE_ROUTINES = re.compile(
-    r"sport - youth|sport - adult|softball practice|baseball practice|"
-    r"basketball practice|soccer practice|learn to swim|shape up|"
-    r"fitness class|chair yoga|tai chi|esl class|computer class",
+    r"sport\s*-\s*youth|sport\s*-\s*adult|softball|baseball|basketball|volleyball|"
+    r"soccer\s*-|soccer practice|learn to swim|shape up|fitness|chair yoga|tai chi|"
+    r"bodyroll|adult recreation|adult fitness|esl class|computer class|"
+    r"\btennis\b|\bhockey\b|\blacrosse\b|practice\b|fitness class|"
+    r"fishing clinic|\bclinic\b|\bleague\b|\bscrimmage\b",
+    re.I,
+)
+
+# Titles that are not shootable money days even if keyword-adjacent.
+EXCLUDE_TITLE_ONLY = re.compile(
+    r"^(closed|party|field day|fwc\d*|soccer\b|tennis\b|softball\b|baseball\b).*$",
     re.I,
 )
 
@@ -61,11 +89,13 @@ def event_day(row: dict[str, Any]) -> str | None:
     return None
 
 
-def scoring_text(row: dict[str, Any]) -> str:
+def title_only_text(row: dict[str, Any]) -> str:
+    return str(row.get("title") or "").strip().lower()
+
+
+def meta_text(row: dict[str, Any]) -> str:
     parts = [
-        row.get("title"),
         row.get("category"),
-        row.get("location"),
         row.get("event_type"),
         row.get("type"),
         ((row.get("nycif") or {}) if isinstance(row.get("nycif"), dict) else {}).get("event_type"),
@@ -74,39 +104,58 @@ def scoring_text(row: dict[str, Any]) -> str:
     return " ".join(str(p or "") for p in parts).lower()
 
 
-def _base_assignment_score(row: dict[str, Any], text: str) -> tuple[int, list[str]]:
+def scoring_text(row: dict[str, Any]) -> str:
+    """Title + light meta (tests / debugging). Keep signals use title only."""
+    return f"{title_only_text(row)} {meta_text(row)}".strip()
+
+
+def _base_assignment_score(row: dict[str, Any], title: str) -> tuple[int, list[str]]:
     rules: list[str] = []
     score = 0
     nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
     if row.get("significance") == "major" or nycif.get("is_major"):
-        score += 200
-        rules.append("significance_major")
+        score += 80  # floor only — not enough alone to keep
+        rules.append("significance_major_floor")
     carried = nycif.get("major_score")
     if isinstance(carried, (int, float)) and carried:
-        bonus = int(carried)
-        score = max(score, bonus)
-        rules.append(f"carried_major_score:{bonus}")
+        # Cap contribution so league rows with major_score=450 cannot dominate.
+        bonus = min(int(carried), 120)
+        score += bonus
+        rules.append(f"carried_major_score_capped:{bonus}")
     if nycif.get("photo_pick") or nycif.get("field_default") or nycif.get("assignment_feed"):
         score += 80
         rules.append("assignment_or_photo_flag")
+    # Money-day keyword matches MUST be title-based (category alone is unreliable).
     for points, pattern, rule in KEYWORD_RULES:
-        if re.search(pattern, text):
+        if re.search(pattern, title):
             score += points
             rules.append(rule)
     return score, rules
+
+
+def has_money_day_signal(rules: list[str]) -> bool:
+    return any(r in MONEY_DAY_RULES or r == "assignment_or_photo_flag" for r in rules)
 
 
 def _should_exclude(
     row: dict[str, Any],
     *,
     lane: str,
-    text: str,
+    title: str,
     score: int,
     rules: list[str],
 ) -> tuple[bool, list[str]]:
-    extra: list[str] = []
-    if EXCLUDE_ROUTINES.search(text) and score < 220 and "significance_major" not in rules:
+    raw_title = str(row.get("title") or "").strip()
+    if EXCLUDE_TITLE_ONLY.match(raw_title):
+        return True, ["thin_or_non_money_title_excluded"]
+
+    # Routine sports/fitness: exclude even with high carried major_score,
+    # unless a real money-day keyword is present on the TITLE.
+    if EXCLUDE_ROUTINES.search(title) and not has_money_day_signal(rules):
         return True, ["routine_activity_excluded"]
+
+    if not has_money_day_signal(rules):
+        return True, ["no_money_day_keyword_signal"]
     nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
     coord = nycif.get("coordinate_status") or (
         "map_ready" if row.get("latitude") is not None else "list_only"
@@ -120,13 +169,13 @@ def _should_exclude(
     )
     if thin_list:
         return True, ["list_only_thin_location_excluded"]
-    return False, extra
+    return False, []
 
 
 def score_row(row: dict[str, Any], *, lane: str) -> tuple[int, list[str], bool]:
-    text = scoring_text(row)
-    score, rules = _base_assignment_score(row, text)
-    excluded, excl_rules = _should_exclude(row, lane=lane, text=text, score=score, rules=rules)
+    title = title_only_text(row)
+    score, rules = _base_assignment_score(row, title)
+    excluded, excl_rules = _should_exclude(row, lane=lane, title=title, score=score, rules=rules)
     if excl_rules:
         rules = [*rules, *excl_rules]
     return score, rules, excluded
@@ -145,10 +194,8 @@ def load_major_events() -> list[dict[str, Any]]:
 
 def load_review_candidates() -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
-    # Civic dated review events (OAC etc.)
     civic = load_json(DATA_DIR / "events_schema_v1_civic_review.json", {})
     rows.extend(extract_events(civic))
-    # Existing supplemental review if present
     supp = DATA_DIR / "events_schema_v1_supplemental_review.json"
     if supp.exists():
         rows.extend(extract_events(load_json(supp, {})))
@@ -179,6 +226,13 @@ def map_link(lat: Any, lng: Any) -> str | None:
     return f"https://www.google.com/maps?q={lat_f},{lng_f}"
 
 
+def field_desk_link(day: str) -> str:
+    return (
+        "https://setoxxx.github.io/nycif-field-desk/"
+        f"?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date={day}&assignment=1"
+    )
+
+
 def normalize_assignment(
     row: dict[str, Any],
     *,
@@ -196,7 +250,6 @@ def normalize_assignment(
         coord = "map_ready" if row.get("latitude") is not None else "list_only"
     start = row.get("start_date_time")
     end = row.get("end_date_time")
-    # Preserve source times only; do not invent clock fields.
     return {
         "id": row.get("id"),
         "title": row.get("title") or "Untitled event",
@@ -210,6 +263,7 @@ def normalize_assignment(
         "latitude": row.get("latitude"),
         "longitude": row.get("longitude"),
         "map_link": map_link(row.get("latitude"), row.get("longitude")) if coord == "map_ready" else None,
+        "field_desk_link": field_desk_link(day),
         "category": row.get("category"),
         "lane": lane,
         "source": {
@@ -217,7 +271,8 @@ def normalize_assignment(
             "source_event_id": source.get("source_event_id"),
         },
         "assignment_score": score,
-        "why_selected": rules[:6],
+        "why_selected": [r for r in rules if not r.endswith("_excluded") and r != "no_money_day_keyword_signal"][:8],
+        "money_day": True,
         "photo_pick": bool(nycif.get("photo_pick")),
         "promotion_allowed": False,
         "public_map_modified": False,
@@ -255,6 +310,7 @@ def month_grid(year: int, month: int, by_day: dict[str, list[dict[str, Any]]]) -
                             "start_date_time": e.get("start_date_time"),
                             "display_location": e.get("display_location"),
                             "map_link": e.get("map_link"),
+                            "field_desk_link": e.get("field_desk_link"),
                             "source": e.get("source"),
                         }
                         for e in top
@@ -285,17 +341,28 @@ def collect_assignments(
     today: date,
     end: date,
     seen_ids: set[str],
+    exclude_counter: Counter,
+    considered_counter: list[int],
 ) -> list[dict[str, Any]]:
     out: list[dict[str, Any]] = []
     for row in rows:
         day = event_day(row)
         if not _in_window(day, today, end):
             continue
+        considered_counter[0] += 1
         score, rules, excluded = score_row(row, lane=lane)
         if excluded or score < min_score:
+            reason = next(
+                (r for r in rules if r.endswith("_excluded") or r == "no_money_day_keyword_signal"),
+                "below_score_threshold" if score < min_score else "excluded",
+            )
+            if score < min_score and not excluded:
+                reason = "below_score_threshold"
+            exclude_counter[reason] += 1
             continue
         rid = str(row.get("id") or "")
         if rid and rid in seen_ids:
+            exclude_counter["duplicate_id"] += 1
             continue
         item = normalize_assignment(row, lane=lane, score=score, rules=rules)
         if not item or str(item["id"]) in seen_ids:
@@ -325,10 +392,11 @@ def build_calendar_payload(
         month_grid(m2.year, m2.month, by_day),
     ]
     go_shoot = selected[:20]
+    money_day_ids = [e.get("id") for e in selected if e.get("id")]
     payload = {
-        "schema_version": "photographer-assignment-calendar-v1",
+        "schema_version": "photographer-assignment-calendar-v2-money-day",
         "generated_at_utc": utc_now(),
-        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "premium_label": "Photographer Assignment Calendar (premium/operator) — Money-Day Desk v2",
         "timezone": DEFAULT_TIMEZONE,
         "reference_today_nyc": today.isoformat(),
         "window_start": today.isoformat(),
@@ -340,19 +408,21 @@ def build_calendar_payload(
         "months": months,
         "go_shoot_these": go_shoot,
         "events": selected,
+        "money_day_ids": money_day_ids,
+        "money_day_ids_by_date": {d: [e.get("id") for e in evs] for d, evs in by_day.items()},
         "promotion_allowed": False,
         "public_map_modified": False,
         "location_cache_modified": False,
         "staged_feed_modified": False,
         "selection_rules_documentation": [
-            "Primary: Approved/Major permits with score >= 160 (significance/major_score/keywords).",
-            "Secondary: Review/civic high-signal with score >= 180 and location not ZIP-only fluff.",
-            "Routine sports/classes suppressed unless overwhelmingly major.",
+            "Money-Day v2: title/category keyword signal required (parade/festival/market/fan-zone/activation/crowd).",
+            "Routine sports/fitness/practice/class excluded even with high carried major_score.",
+            "Keywords scored on title/category only — not location (avoids Parade Ground false positives).",
             "Never invent HH:MM; start/end are source-native or null.",
         ],
     }
     report = {
-        "schema_version": "photographer-assignment-calendar-v1",
+        "schema_version": "photographer-assignment-calendar-v2-money-day",
         "generated_at_utc": payload["generated_at_utc"],
         "qa_pass": len(selected) > 0 and all(e.get("date") for e in selected),
         "reference_today_nyc": today.isoformat(),
@@ -381,6 +451,54 @@ def build_calendar_payload(
     return payload, report
 
 
+def write_quality_report(
+    *,
+    today: date,
+    payload: dict[str, Any],
+    report: dict[str, Any],
+    considered: int,
+    kept: int,
+    exclude_counter: Counter,
+) -> dict[str, Any]:
+    quality = {
+        "schema_version": "photographer-money-day-quality-v1",
+        "generated_at_utc": utc_now(),
+        "reference_today_nyc": today.isoformat(),
+        "baseline_v1_pr173": BASELINE_V1,
+        "after_v2": {
+            "total_events": report.get("total_events"),
+            "days_with_coverage": report.get("days_with_coverage"),
+            "month_counts": report.get("month_counts"),
+            "coordinate_status_counts": report.get("coordinate_status_counts"),
+            "lane_counts": report.get("lane_counts"),
+        },
+        "delta_vs_baseline": {
+            "events_removed": BASELINE_V1["total_events"] - int(report.get("total_events") or 0),
+            "events_kept": report.get("total_events"),
+            "days_coverage_before": BASELINE_V1["days_with_coverage"],
+            "days_coverage_after": report.get("days_with_coverage"),
+        },
+        "considered_in_window": considered,
+        "kept": kept,
+        "excluded": considered - kept,
+        "top_exclude_reasons": exclude_counter.most_common(20),
+        "filter_rules": [
+            "Require money-day keyword signal on title/category (not location).",
+            "Exclude routine sports/fitness even when major_score is high.",
+            "Cap carried major_score contribution; significance alone is not enough.",
+        ],
+        "qa_pass": bool(report.get("qa_pass"))
+        and int(report.get("total_events") or 0) < BASELINE_V1["total_events"]
+        and int(report.get("total_events") or 0) > 0,
+        "promotion_allowed": False,
+        "public_map_modified": False,
+        "location_cache_modified": False,
+        "protected_files_untouched": True,
+    }
+    save_json(DATA_DIR / "photographer_money_day_quality_report.json", quality)
+    return quality
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--reference-today", default=None)
@@ -389,6 +507,8 @@ def main() -> int:
     _, end, m1, m2 = window_bounds(today)
 
     seen_ids: set[str] = set()
+    exclude_counter: Counter = Counter()
+    considered = [0]
     selected = collect_assignments(
         load_major_events(),
         lane="approved_major",
@@ -396,6 +516,8 @@ def main() -> int:
         today=today,
         end=end,
         seen_ids=seen_ids,
+        exclude_counter=exclude_counter,
+        considered_counter=considered,
     )
     selected.extend(
         collect_assignments(
@@ -405,9 +527,26 @@ def main() -> int:
             today=today,
             end=end,
             seen_ids=seen_ids,
+            exclude_counter=exclude_counter,
+            considered_counter=considered,
         )
     )
     payload, report = build_calendar_payload(selected, today=today, end=end, m1=m1, m2=m2)
+    quality = write_quality_report(
+        today=today,
+        payload=payload,
+        report=report,
+        considered=considered[0],
+        kept=len(selected),
+        exclude_counter=exclude_counter,
+    )
+    # Fold quality summary into calendar report
+    report["money_day_quality"] = {
+        "qa_pass": quality.get("qa_pass"),
+        "events_removed_vs_baseline": quality["delta_vs_baseline"]["events_removed"],
+        "top_exclude_reasons": quality.get("top_exclude_reasons"),
+        "report": "data/photographer_money_day_quality_report.json",
+    }
     save_json(DATA_DIR / "photographer_assignment_calendar_2mo.json", payload)
     save_json(DATA_DIR / "photographer_assignment_calendar_report.json", report)
     print(
@@ -417,11 +556,14 @@ def main() -> int:
                 "days_with_coverage": report["days_with_coverage"],
                 "month_counts": report["month_counts"],
                 "qa_pass": report["qa_pass"],
+                "quality_qa_pass": quality.get("qa_pass"),
+                "removed_vs_baseline": quality["delta_vs_baseline"]["events_removed"],
+                "top_exclude_reasons": quality.get("top_exclude_reasons")[:8],
             },
             indent=2,
         )
     )
-    return 0 if report["qa_pass"] else 1
+    return 0 if report["qa_pass"] and quality.get("qa_pass") else 1
 
 
 if __name__ == "__main__":

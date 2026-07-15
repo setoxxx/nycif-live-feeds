@@ -124,7 +124,11 @@
     pagesLoaded: { approved: 0, review: 0, help: 0 },
     pagesTotal: { approved: 0, review: 0, help: 0 },
     loadToken: 0,
-    manifests: { approved: null, review: null, extraReview: [], help: null }
+    manifests: { approved: null, review: null, extraReview: [], help: null },
+    assignmentMode: false,
+    moneyDayIds: null,
+    moneyDayIdsByDate: null,
+    moneyDayReady: false
   };
 
   const els = {
@@ -430,6 +434,42 @@
     }
   }
 
+  async function loadMoneyDayCalendar() {
+    if (!state.assignmentMode) return;
+    try {
+      const url = `${FEED_HOST}/data/photographer_assignment_calendar_2mo.json?v=${Date.now()}`;
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) throw new Error('money-day calendar HTTP ' + res.status);
+      const payload = await res.json();
+      const ids = new Set((payload.money_day_ids || []).map(String));
+      const byDate = Object.create(null);
+      const src = payload.money_day_ids_by_date || {};
+      Object.keys(src).forEach(day => {
+        byDate[day] = new Set((src[day] || []).map(String));
+      });
+      // Also index events for date if ids lists empty.
+      (payload.events || []).forEach(e => {
+        if (!e || !e.id || !e.date) return;
+        ids.add(String(e.id));
+        if (!byDate[e.date]) byDate[e.date] = new Set();
+        byDate[e.date].add(String(e.id));
+      });
+      state.moneyDayIds = ids;
+      state.moneyDayIdsByDate = byDate;
+      state.moneyDayReady = true;
+      if (els.banner) {
+        setBanner(`Assignment Mode: money-day pins only (${ids.size.toLocaleString()} curated ids).`);
+      }
+    } catch (err) {
+      // Fail soft — keep date filter without wiping map.
+      state.moneyDayReady = false;
+      state.moneyDayIds = null;
+      if (typeof setBanner === 'function') {
+        setBanner('Assignment Mode requested, but money-day calendar unavailable — showing date filter only.');
+      }
+    }
+  }
+
   function applyUrlDeskOverrides() {
     // Photographer calendar / God View deep-links: ?date=YYYY-MM-DD&mode=all
     // Strict allowlist only — never persist unsanitized query strings to storage.
@@ -454,6 +494,19 @@
       const sourceParam = String(params.get('source') || '');
       if (sourceParam === 'all' || sourceParam === 'approved' || sourceParam === 'review' || sourceParam === 'help') {
         state.sourceFilter = sourceParam;
+      }
+      const assignment = String(params.get('assignment') || '').trim();
+      const desk = String(params.get('desk') || '').trim().toLowerCase();
+      if (assignment === '1' || desk === 'money') {
+        state.assignmentMode = true;
+        state.viewMode = 'all';
+        state.userChangedFilters = true;
+      }
+      const boroughParam = String(params.get('borough') || '').trim();
+      const boroughOk = ['Manhattan', 'Brooklyn', 'Queens', 'Bronx', 'Staten Island'].includes(boroughParam);
+      if (boroughOk) {
+        state.borough = boroughParam;
+        state.userChangedFilters = true;
       }
     } catch {
       // ignore malformed URL
@@ -549,9 +602,29 @@
     return true;
   }
 
+  function assignmentMatches(e) {
+    if (!state.assignmentMode) return true;
+    // Fail soft: until money-day ids load, do not wipe the map.
+    if (!state.moneyDayReady || !state.moneyDayIds) return true;
+    const id = String(e.id || '');
+    if (state.moneyDayIds.has(id)) return true;
+    // Date-scoped id forms used by calendar (id@YYYY-MM-DD)
+    if (/^\d{4}-\d{2}-\d{2}$/.test(String(state.dateMode || ''))) {
+      const dayIds = state.moneyDayIdsByDate && state.moneyDayIdsByDate[state.dateMode];
+      if (dayIds && dayIds.has(id)) return true;
+      if (dayIds && dayIds.has(id + '@' + state.dateMode)) return true;
+      // suffix match
+      for (const mid of dayIds) {
+        if (String(mid).startsWith(id + '@') || String(mid) === id) return true;
+      }
+    }
+    return false;
+  }
+
   function eventMatches(e) {
     return sourceMatches(e)
       && dateMatches(e)
+      && assignmentMatches(e)
       && categoryFilterMatch(e)
       && (!state.photoOnly || e.photoPick)
       && (!state.nypdOnly || e.verification_status === 'nypd_field_intel')
@@ -562,6 +635,7 @@
   function eventMatchesIgnoringCategory(e) {
     return sourceMatches(e)
       && dateMatches(e)
+      && assignmentMatches(e)
       && (!state.photoOnly || e.photoPick)
       && (!state.nypdOnly || e.verification_status === 'nypd_field_intel')
       && (state.borough === 'all' || e.borough === state.borough)
@@ -1491,6 +1565,7 @@
       swRegistered = true;
       navigator.serviceWorker.register('./service-worker.js').catch(() => { /* optional */ });
     }
+    await loadMoneyDayCalendar();
     await bootFeeds();
     window.NYCIF_UNIFIED_VIEWER = {
       version: VERSION,
