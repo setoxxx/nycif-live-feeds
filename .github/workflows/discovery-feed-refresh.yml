@@ -54,6 +54,8 @@ jobs:
             # key set that the discovery projector reads to flag Featured
             # events; the projector then writes data/schema-v1-discovery/**.
             python scripts/build_events_schema_v1_major.py
+            # Offline feast/festival harvest from committed snapshots (no city pull).
+            python scripts/build_street_festivals_feed.py
             python scripts/project_events_discovery_v02.py
 
             # "What's New" diff + category coverage over the full staged

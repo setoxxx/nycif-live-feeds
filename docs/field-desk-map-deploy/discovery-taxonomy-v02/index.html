@@ -6,44 +6,18 @@
   <meta name="theme-color" content="#05070b">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="NYCIF Map">
-  <title>NYC In Focus Event Map · discovery-taxonomy-v02</title>
+  <meta name="apple-mobile-web-app-title" content="NYC In Focus">
+  <title>NYC In Focus · NYC Event Map</title>
 
   <link rel="preconnect" href="https://raw.githubusercontent.com">
   <link rel="preconnect" href="https://{s}.tile.openstreetmap.org">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" integrity="sha384-pmjIAcz2bAn0xukfxADbZIb3t8oRT9Sv0rvO+BR5Csr6Dhqq+nZs59P0pPKQJkEV" crossorigin="anonymous">
   <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" integrity="sha384-wgw+aLYNQ7dlhK47ZPK7FRACiq7ROZwgFNg0m04avm4CaXS+Z9Y7nMu8yNjBKYC+" crossorigin="anonymous">
-  <link rel="stylesheet" href="./style.css?v=discovery-taxonomy-v02">
-  <link rel="stylesheet" href="./fielddesk-v02.css?v=discovery-taxonomy-v02">
-  <link rel="stylesheet" href="./weekstrip-v06-safe.css?v=discovery-taxonomy-v02">
-  <link rel="stylesheet" href="./public-map-v01.css?v=discovery-taxonomy-v02">
-  <style>
-    .explore-more-block { margin: 0.55rem 0 0.25rem; }
-    #explore-more-toggle {
-      width: 100%;
-      text-align: left;
-      cursor: pointer;
-      font-weight: 700;
-      border: 1px solid rgba(255,255,255,.22);
-      background: rgba(255,255,255,.06);
-      color: inherit;
-      border-radius: 10px;
-      padding: 0.55rem 0.7rem;
-    }
-    #explore-more-toggle:focus-visible {
-      outline: 2px solid #7eb6ff;
-      outline-offset: 2px;
-    }
-    #explore-more-panel { margin-top: 0.45rem; display: grid; gap: 0.35rem; }
-    #explore-more-panel[hidden] { display: none !important; }
-    .filter-count {
-      font-style: normal;
-      font-weight: 600;
-      opacity: 0.72;
-      margin-left: 0.2rem;
-    }
-  </style>
+  <link rel="stylesheet" href="./style.css?v=public-map-v07">
+  <link rel="stylesheet" href="./fielddesk-v02.css?v=public-map-v07">
+  <link rel="stylesheet" href="./weekstrip-v06-safe.css?v=public-map-v07">
+  <link rel="stylesheet" href="./public-map-v01.css?v=public-map-v07">
 </head>
 <body class="public-map-page">
   <main id="app" class="app">
@@ -53,79 +27,73 @@
       <div class="brand-card" aria-label="NYC In Focus Event Map status">
         <div class="brand-mark">NYCIF</div>
         <div>
-          <strong>Field</strong>
+          <strong>NYC</strong>
           <span id="brandCount">Loading NYC events…</span>
         </div>
       </div>
 
-      <fieldset class="mode-toggle">
-        <legend class="sr-only">Event mode</legend>
-        <button id="modeMajor" type="button" class="mode-btn active" aria-pressed="true">Major Events</button>
-        <button id="modeAll" type="button" class="mode-btn" aria-pressed="false">All Events</button>
-      </fieldset>
-
       <div id="viewBanner" class="view-banner" hidden></div>
       <div id="indexStatus" class="index-status" hidden></div>
 
-      <div id="dateChips" class="date-chips" aria-label="Date filters"></div>
+      <div id="dateChips" class="date-chips" aria-label="Choose a day"></div>
 
-      <button id="layersBtn" class="pill layers-pill" type="button" aria-expanded="false" aria-controls="layersPanel">
-        <span>☰</span><b>Filters</b>
-      </button>
+      <div class="map-controls" aria-label="Map controls">
+        <button id="layersBtn" class="pill layers-pill" type="button" aria-expanded="false" aria-controls="layersPanel">
+          <span>☰</span><b>Filters</b>
+        </button>
+        <button id="nearMeBtn" class="near-me-btn" type="button" aria-label="Sort events near me" title="Near me">Near Me</button>
+        <button id="locateBtn" class="locate-btn" type="button" aria-label="Show my location" title="Show my location">⌖</button>
+        <button id="bugBtn" class="bug-btn" type="button" aria-label="Report a problem" title="Report a problem">🐞</button>
+      </div>
 
-      <aside id="layersPanel" class="layers-panel" aria-label="Map filters" hidden>
-        <p class="panel-label">⭐ Major events only (use Major / All toggle)</p>
+      <aside id="layersPanel" class="layers-panel" aria-label="Choose what to show" hidden>
+        <p class="panel-label">Choose what to show</p>
 
-        <label class="sort source-filter-label">
-          <span>All Events source</span>
-          <select id="sourceFilter">
-            <option value="all">All Sources</option>
-            <option value="approved">Approved</option>
-            <option value="review">Review</option>
-          </select>
-        </label>
+        <div class="editors-block">
+          <label class="check newsdesk-check"><input type="checkbox" id="newsDeskToggle" checked> <span>📰 News Desk <small>money shots + viral</small></span></label>
+          <label class="editors-pick">
+            <span>🏅 Editor's Picks</span>
+            <select id="editorsPicksSelect" aria-label="Editor's Picks medal filter">
+              <option value="all">Show all events</option>
+              <option value="medaled">Medals only 🥇🥈🥉</option>
+              <option value="gold">Gold only 🥇</option>
+            </select>
+          </label>
+        </div>
 
-        <button id="resetFiltersBtn" class="load-all" type="button">Reset Filters</button>
-        <button id="retryFeedBtn" class="load-all" type="button">Retry Feed</button>
-        <button id="enableAllCategoriesBtn" class="load-all" type="button">Enable All Categories</button>
-        <button id="showAllUpcomingBtn" class="load-all" type="button">Show All Upcoming</button>
-
-        <hr>
-
-        <p class="panel-label">Main categories (inclusive OR with interests)</p>
-        <label class="check"><input type="checkbox" data-cat="sports" checked> <span>🏟️ Sports <em class="filter-count" data-cat-count="sports">(0)</em></span></label>
-        <label class="check"><input type="checkbox" data-cat="civic" checked> <span>📣 Parades / civic <em class="filter-count" data-cat-count="civic">(0)</em></span></label>
-        <label class="check"><input type="checkbox" data-cat="market" checked> <span>🛍️ Street fairs / markets <em class="filter-count" data-cat-count="market">(0)</em></span></label>
-        <label class="check"><input type="checkbox" data-cat="arts" checked> <span>🎭 Arts / performance <em class="filter-count" data-cat-count="arts">(0)</em></span></label>
-        <label class="check"><input type="checkbox" data-cat="parks" checked> <span>🌳 Parks / outdoors <em class="filter-count" data-cat-count="parks">(0)</em></span></label>
-        <label class="check"><input type="checkbox" data-cat="fitness" checked> <span>💪 Fitness / wellness <em class="filter-count" data-cat-count="fitness">(0)</em></span></label>
-        <label class="check"><input type="checkbox" data-cat="family" checked> <span>👨‍👩‍👧 Kids / family <em class="filter-count" data-cat-count="family">(0)</em></span></label>
-        <label class="check"><input type="checkbox" data-cat="education" checked> <span>📚 Classes / workshops <em class="filter-count" data-cat-count="education">(0)</em></span></label>
-        <label class="check"><input type="checkbox" data-cat="volunteer" checked> <span>🙋 Volunteer opportunities <em class="filter-count" data-cat-count="volunteer">(0)</em></span></label>
-        <label class="check"><input type="checkbox" data-cat="general" checked> <span>📍 General <em class="filter-count" data-cat-count="general">(0)</em></span></label>
+        <label class="check"><input type="checkbox" data-cat="sports" checked> <span>🏟️ Sports</span></label>
+        <label class="check"><input type="checkbox" data-cat="fitness" checked> <span>💪 Fitness / wellness</span></label>
+        <label class="check"><input type="checkbox" data-cat="parks" checked> <span>🌳 Parks / outdoors</span></label>
+        <label class="check"><input type="checkbox" data-cat="arts" checked> <span>🎭 Arts / culture</span></label>
+        <label class="check"><input type="checkbox" data-cat="market" checked> <span>🛍️ Markets / street fairs</span></label>
+        <label class="check"><input type="checkbox" data-cat="civic" checked> <span>📣 Civic / neighborhood</span></label>
+        <label class="check"><input type="checkbox" data-cat="family" checked> <span>👨‍👩‍👧 Kids / family</span></label>
+        <label class="check"><input type="checkbox" data-cat="education" checked> <span>📚 Classes / workshops</span></label>
+        <label class="check"><input type="checkbox" data-cat="volunteer" checked> <span>🙋 Volunteer opportunities</span></label>
+        <label class="check"><input type="checkbox" data-cat="general" checked> <span>📍 General</span></label>
 
         <div class="explore-more-block">
           <button id="explore-more-toggle" type="button" aria-expanded="false" aria-controls="explore-more-panel">
             🧭 Explore More
           </button>
           <div id="explore-more-panel" hidden>
-            <label class="check"><input type="checkbox" data-cat="tours" checked> <span>🗺️ Tours / history <em class="filter-count" data-cat-count="tours">(0)</em></span></label>
-            <label class="check"><input type="checkbox" data-cat="government" checked> <span>🏛️ Government / meetings <em class="filter-count" data-cat-count="government">(0)</em></span></label>
-            <label class="check"><input type="checkbox" data-cat="services" checked> <span>🤝 Health / benefits <em class="filter-count" data-cat-count="services">(0)</em></span></label>
-            <label class="check"><input type="checkbox" data-cat="jobs" checked> <span>💼 Jobs / career <em class="filter-count" data-cat-count="jobs">(0)</em></span></label>
-            <label class="check"><input type="checkbox" data-cat="housing" checked> <span>🏠 Housing / tenant help <em class="filter-count" data-cat-count="housing">(0)</em></span></label>
-            <label class="check"><input type="checkbox" data-cat="environment" checked> <span>🌎 Environment / nature <em class="filter-count" data-cat-count="environment">(0)</em></span></label>
+            <label class="check"><input type="checkbox" data-cat="media" checked> <span>🎬 Film / production</span></label>
+            <label class="check"><input type="checkbox" data-cat="tours" checked> <span>🗺️ Tours / history</span></label>
+            <label class="check"><input type="checkbox" data-cat="government" checked> <span>🏛️ Government / meetings</span></label>
+            <label class="check"><input type="checkbox" data-cat="services" checked> <span>🤝 Health / benefits</span></label>
+            <label class="check"><input type="checkbox" data-cat="jobs" checked> <span>💼 Jobs / career</span></label>
+            <label class="check"><input type="checkbox" data-cat="housing" checked> <span>🏠 Housing / tenant help</span></label>
+            <label class="check"><input type="checkbox" data-cat="environment" checked> <span>🌎 Environment / nature</span></label>
           </div>
         </div>
 
         <hr>
 
-        <label class="check"><input type="checkbox" id="photoOnly"> <span>📸 Photo-friendly picks</span></label>
-        <label class="check"><input type="checkbox" id="nypdOnly"> <span>🚨 Public safety / field intel</span></label>
+        <button id="enableAllCategoriesBtn" class="load-all panel-action" type="button">Enable All</button>
+        <button id="resetFiltersBtn" class="load-all panel-action" type="button">Clear Filters</button>
+        <button id="retryFeedBtn" class="load-all panel-action" type="button">Retry Events</button>
       </aside>
 
-      <button id="locateBtn" class="locate-btn" type="button" aria-label="Show my location" title="Show my location">🗽</button>
-      <button id="nearMeBtn" class="near-me-btn" type="button" aria-label="Sort events near me" title="Near me">Near Me</button>
       <button id="deskBtn" class="desk-btn" type="button" aria-expanded="false" aria-controls="deskDrawer">Event List</button>
 
       <aside id="deskDrawer" class="desk-drawer" aria-label="Event list" hidden>
@@ -139,7 +107,7 @@
 
         <label class="search">
           <span class="sr-only">Search events</span>
-          <input id="searchInput" type="search" placeholder="Search title, location, borough, type" autocomplete="off">
+          <input id="searchInput" type="search" placeholder="Search title, location, borough" autocomplete="off">
         </label>
 
         <div class="boroughs" id="boroughs"></div>
@@ -147,7 +115,7 @@
         <label class="sort">
           <span>Sort</span>
           <select id="sortSelect">
-            <option value="priority">Priority</option>
+            <option value="priority">Highlights</option>
             <option value="near">Near me</option>
             <option value="time">Time</option>
             <option value="borough">Borough</option>
@@ -157,23 +125,26 @@
 
         <div id="listMeta" class="list-meta">Loading events...</div>
         <div id="eventList" class="event-list"></div>
-        <button id="loadMoreBtn" class="load-all" type="button" hidden>Load 100 more</button>
+        <button id="loadMoreBtn" class="load-all" type="button" hidden>Show 100 more</button>
       </aside>
 
-      <div class="public-intro-v01"><strong>NYC In Focus:</strong> Major Events by default with discovery taxonomy feeds. REVIEW and LIST ONLY labels remain clear. Confirm details before traveling.</div>
-      <div id="status" class="status">Loading NYC In Focus event map…</div>
+      <div class="public-intro-v01"><strong>NYC In Focus:</strong> Discover public events across the five boroughs — today and the week ahead. Confirm details before you go.</div>
+      <div id="status" class="status">Loading the NYC In Focus event map…</div>
       <pre id="debugPanel" class="debug-panel" hidden></pre>
     </section>
   </main>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js" integrity="sha384-eXVCORTRlv4FUUgS/xmOyr66XBVraen8ATNLMESp92FKXLAMiKkerixTiBvXriZr" crossorigin="anonymous"></script>
-  <script src="./public-approved-overlays-capture-v01.js?v=discovery-taxonomy-v02"></script>
-  <script src="./public-map-defaults-v01.js?v=discovery-taxonomy-v02"></script>
-  <script src="./discovery-patch-v02.js?v=discovery-taxonomy-v02"></script>
-  <script src="../schema-v1-major-all-v01/event-feed-schema-v1.js?v=discovery-taxonomy-v02"></script>
-  <script src="../schema-v1-major-all-v01/app-schema-v1-major-all-v01.js?v=discovery-taxonomy-v02"></script>
-  <script src="./public-approved-overlays-v01.js?v=discovery-taxonomy-v02"></script>
+  <script src="./public-approved-overlays-capture-v01.js?v=public-map-v07"></script>
+  <script src="./public-map-defaults-v01.js?v=public-map-v07"></script>
+  <script src="./discovery-patch-v02.js?v=public-map-v07"></script>
+  <script src="./event-feed-schema-v1.js?v=public-map-v07"></script>
+  <script src="./news-desk-editors-picks-v01.js?v=public-map-v07"></script>
+  <script src="./app-schema-v1-major-all-v01.js?v=public-map-v07"></script>
+  <script src="./public-approved-overlays-v01.js?v=public-map-v07"></script>
+  <script src="./field-desk-operator-layer-v01.js?v=public-map-v07"></script>
+  <script src="./admin-whats-new-v01.js?v=public-map-v07"></script>
   <script>
     (function () {
       var btn = document.getElementById("explore-more-toggle");
@@ -183,31 +154,14 @@
       var mobile = window.matchMedia("(max-width: 719px)").matches;
       panel.hidden = mobile;
       btn.setAttribute("aria-expanded", mobile ? "false" : "true");
-      if (!mobile) panel.hidden = false;
       btn.addEventListener("click", function () {
         var open = panel.hidden;
         panel.hidden = !open;
         btn.setAttribute("aria-expanded", open ? "true" : "false");
       });
-      var enableAll = document.getElementById("enableAllCategoriesBtn");
-      if (enableAll) {
-        enableAll.addEventListener("click", function () {
-          document.querySelectorAll('#layersPanel input[data-cat]').forEach(function (input) {
-            input.checked = true;
-            input.dispatchEvent(new Event("change", { bubbles: true }));
-          });
-        });
-      }
-      var showUpcoming = document.getElementById("showAllUpcomingBtn");
-      if (showUpcoming) {
-        showUpcoming.addEventListener("click", function () {
-          var allChip = document.querySelector('#dateChips [data-mode="all"]');
-          if (allChip) allChip.click();
-        });
-      }
     })();
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("./service-worker.js?v=discovery-taxonomy-v02").catch(function () {});
+      navigator.serviceWorker.register("./service-worker.js").catch(function () {});
     }
   </script>
 </body>

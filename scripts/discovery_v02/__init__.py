@@ -552,7 +552,7 @@ def classify_record(row: dict[str, Any]) -> dict[str, Any]:
         ),
         (
             "housing",
-            r"tenant resource fair|housing ambassador|rent assistance|property-owner clinic|landlord clinic|hpd housing|tenant-rights workshop",
+            r"tenant resource fair|housing ambassador|rent assistance|property-owner clinic|landlord clinic|hpd housing|tenant-rights workshop|hpd outreach|housing resources",
             ["housing"],
             [],
             "high_confidence_semantic_housing",
@@ -570,6 +570,28 @@ def classify_record(row: dict[str, Any]) -> dict[str, Any]:
             ["volunteer"],
             [],
             "high_confidence_semantic_volunteer",
+        ),
+        (
+            "family",
+            r"story ?time|kids excursion|children'?s programming|\bkids\b|\bchildren\b|toddler|family day|family program|parent and child",
+            ["family"],
+            ["kids", "family-friendly"],
+            "high_confidence_semantic_family",
+        ),
+        (
+            "education",
+            r"bike safety class|\blesson\b|literacy|after[- ]school|homework help|learn to\b|"
+            r"(?<!painting )(?<!art )(?<!arts )\bworkshop\b",
+            ["education"],
+            ["workshop"],
+            "high_confidence_semantic_education",
+        ),
+        (
+            "arts",
+            r"\bfeast\b|street festival|san gennaro|giglio|summerstage|outdoor movie|film festival",
+            ["arts"],
+            [],
+            "high_confidence_semantic_festival_arts",
         ),
     ]
     for cat, pattern, interests, tags, reason in semantic_overrides:

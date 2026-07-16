@@ -885,9 +885,48 @@ def main() -> int:
     }
     write_json("data/events_discovery_taxonomy_v02_audit.json", audit)
 
-    # Persist discovery feeds for frontend (approved + review split)
+    # Persist discovery feeds for frontend (approved + review split).
+    # Fold public-safe calendar/parks supplemental rows for underlit people-facing
+    # lanes into the approved pages the map already loads — these are official
+    # NYC public listings (NOT GPS-review artifacts). Stamp provenance so the
+    # frontend can style them without hiding them as isReview.
+    PUBLIC_SUPPLEMENTAL_CATEGORIES = {
+        "housing",
+        "tours",
+        "jobs",
+        "government",
+        "services",
+        "education",
+        "family",
+        "media",
+        "civic",
+        "arts",
+        "environment",
+        "volunteer",
+    }
     approved = [e for e in accepted if e["nycif"]["data_layer"] == "approved_staged"]
     review = [e for e in accepted if e["nycif"]["data_layer"] != "approved_staged"]
+    seen_approved_ids = {e.get("id") for e in approved}
+    folded = 0
+    for e in review:
+        if e.get("event_role") != "public_event":
+            continue
+        if e.get("category") not in PUBLIC_SUPPLEMENTAL_CATEGORIES:
+            continue
+        eid = e.get("id")
+        if not eid or eid in seen_approved_ids:
+            continue
+        # Shallow copy so the review feed keeps original data_layer.
+        pub = dict(e)
+        pub_nycif = dict(e.get("nycif") or {})
+        pub_nycif["public_supplemental"] = True
+        pub_nycif["supplemental_from"] = pub_nycif.get("data_layer") or "review_supplemental"
+        pub_nycif["data_layer"] = "approved_staged"
+        pub["nycif"] = pub_nycif
+        approved.append(pub)
+        seen_approved_ids.add(eid)
+        folded += 1
+    print(json.dumps({"public_supplemental_folded_into_approved": folded}))
     major = [
         e
         for e in approved
