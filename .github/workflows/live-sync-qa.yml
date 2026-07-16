@@ -104,6 +104,15 @@ jobs:
       - name: Build supplemental events staging feed
         run: python scripts/build_supplemental_events_staging_feed.py
 
+      - name: Build supplemental manual approval queue (M11)
+        run: python scripts/build_supplemental_manual_approval_queue.py
+
+      - name: Validate supplemental manual approvals (M11)
+        run: python scripts/validate_supplemental_manual_approvals.py
+
+      - name: Build supplemental manual review sheet (M11)
+        run: python scripts/build_supplemental_manual_review_sheet.py
+
       - name: Build public map feeds from test enriched
         run: python scripts/build_public_map_feeds.py
 

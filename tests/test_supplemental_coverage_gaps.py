@@ -359,5 +359,100 @@ class SupplementalStagingFeedTests(unittest.TestCase):
                     setattr(staging_mod, name, value)
 
 
+class SupplementalManualApprovalTests(unittest.TestCase):
+    def test_m11_manual_approval_package(self) -> None:
+        from scripts import build_supplemental_manual_approval_queue as queue_mod
+        from scripts import build_supplemental_manual_review_sheet as sheet_mod
+        from scripts import validate_supplemental_manual_approvals as validate_mod
+
+        with tempfile.TemporaryDirectory() as tmp:
+            data_dir = Path(tmp) / "data"
+            data_dir.mkdir()
+            feed_path = data_dir / "supplemental_events_staging_feed.json"
+            feed_path.write_text(
+                json.dumps(
+                    {
+                        "events": [
+                            {
+                                "overlap_key": "park hike|2099-01-02",
+                                "intake_type": "parks_only",
+                                "title": "Park Hike",
+                                "start_date_time": "2099-01-02T09:00:00",
+                                "date": "2099-01-02",
+                                "display_location": "Central Park",
+                                "borough": "Manhattan",
+                                "proposed_lat": 40.7812,
+                                "proposed_lng": -73.9665,
+                                "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+                                "geocoder_confidence": "high",
+                                "confidence_reason": "test",
+                                "calendar_title_date_match": False,
+                                "source_event_id": "p1",
+                            },
+                            {
+                                "overlap_key": "cal fair|2099-01-03",
+                                "intake_type": "calendar_only",
+                                "title": "Cal Fair",
+                                "start_date_time": "2099-01-03T10:00:00",
+                                "date": "2099-01-03",
+                                "display_location": "123 Main St",
+                                "borough": "Brooklyn",
+                                "proposed_lat": None,
+                                "proposed_lng": None,
+                                "parks_title_date_match": False,
+                                "source_event_id": "c1",
+                            },
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            originals = {
+                "STAGING_FEED_PATH": queue_mod.STAGING_FEED_PATH,
+                "APPROVAL_QUEUE_PATH": queue_mod.APPROVAL_QUEUE_PATH,
+                "APPROVAL_QUEUE_REPORT_PATH": queue_mod.APPROVAL_QUEUE_REPORT_PATH,
+            }
+            sheet_originals = {
+                "APPROVAL_QUEUE_PATH": sheet_mod.APPROVAL_QUEUE_PATH,
+                "REVIEW_SHEET_JSON_PATH": sheet_mod.REVIEW_SHEET_JSON_PATH,
+                "REVIEW_SHEET_CSV_PATH": sheet_mod.REVIEW_SHEET_CSV_PATH,
+                "REVIEW_SHEET_REPORT_PATH": sheet_mod.REVIEW_SHEET_REPORT_PATH,
+            }
+            validate_originals = {
+                "APPROVAL_QUEUE_PATH": validate_mod.APPROVAL_QUEUE_PATH,
+                "VALIDATION_REPORT_PATH": validate_mod.VALIDATION_REPORT_PATH,
+            }
+            try:
+                queue_mod.STAGING_FEED_PATH = feed_path
+                queue_mod.APPROVAL_QUEUE_PATH = data_dir / "supplemental_manual_approval_queue.json"
+                queue_mod.APPROVAL_QUEUE_REPORT_PATH = data_dir / "supplemental_manual_approval_queue_report.json"
+                self.assertEqual(queue_mod.main(), 0)
+                queue_report = json.loads(queue_mod.APPROVAL_QUEUE_REPORT_PATH.read_text(encoding="utf-8"))
+                self.assertEqual(queue_report["approval_queue_count"], 2)
+                self.assertEqual(queue_report["pending_count"], 2)
+                self.assertTrue(queue_report["qa_pass"])
+
+                validate_mod.APPROVAL_QUEUE_PATH = queue_mod.APPROVAL_QUEUE_PATH
+                validate_mod.VALIDATION_REPORT_PATH = data_dir / "supplemental_manual_approval_validation_report.json"
+                self.assertEqual(validate_mod.main(), 0)
+                validation = json.loads(validate_mod.VALIDATION_REPORT_PATH.read_text(encoding="utf-8"))
+                self.assertTrue(validation["qa_pass"])
+
+                sheet_mod.APPROVAL_QUEUE_PATH = queue_mod.APPROVAL_QUEUE_PATH
+                sheet_mod.REVIEW_SHEET_JSON_PATH = data_dir / "supplemental_manual_approval_review_sheet.json"
+                sheet_mod.REVIEW_SHEET_CSV_PATH = data_dir / "supplemental_manual_approval_review_sheet.csv"
+                sheet_mod.REVIEW_SHEET_REPORT_PATH = data_dir / "supplemental_manual_approval_review_sheet_report.json"
+                self.assertEqual(sheet_mod.main(), 0)
+                sheet_report = json.loads(sheet_mod.REVIEW_SHEET_REPORT_PATH.read_text(encoding="utf-8"))
+                self.assertEqual(sheet_report["review_sheet_count"], 2)
+            finally:
+                for name, value in originals.items():
+                    setattr(queue_mod, name, value)
+                for name, value in sheet_originals.items():
+                    setattr(sheet_mod, name, value)
+                for name, value in validate_originals.items():
+                    setattr(validate_mod, name, value)
+
+
 if __name__ == "__main__":
     unittest.main()
