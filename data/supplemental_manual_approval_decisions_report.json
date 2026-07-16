@@ -3,6 +3,13 @@
     {
       "match": [
         "review_rank",
+        1
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
         2
       ],
       "status": "rejected"
@@ -17,9 +24,240 @@
     {
       "match": [
         "review_rank",
+        4
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        5
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        6
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        7
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        8
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        9
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        10
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
         11
       ],
       "status": "rejected"
+    },
+    {
+      "match": [
+        "review_rank",
+        12
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        13
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        14
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        15
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        16
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        17
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        18
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        19
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        20
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        21
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        22
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        23
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        24
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        25
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        26
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        27
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        28
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        29
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        30
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        31
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        32
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        33
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        34
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        35
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        36
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        37
+      ],
+      "status": "approved"
     },
     {
       "match": [
@@ -30,22 +268,23 @@
     }
   ],
   "approval_queue_count": 3457,
-  "approved_count": 0,
-  "decisions_applied": 4,
-  "decisions_requested": 4,
+  "approved_count": 34,
+  "decisions_applied": 38,
+  "decisions_requested": 38,
   "decisions_source": "data/supplemental_manual_approval_decisions.json",
   "decisions_unmatched": 0,
-  "generated_at_utc": "2026-07-16T21:41:21.261630+00:00",
+  "generated_at_utc": "2026-07-16T22:23:12.825169+00:00",
   "location_cache_modified": false,
   "next_required_step": "Run validate_supplemental_manual_approvals.py. Public map merge still requires explicit authorization.",
-  "pending_count": 3453,
+  "pending_count": 3419,
   "phase": "m11_supplemental_manual_approval_decisions_applied",
   "promotion_allowed_count": 0,
   "public_map_modified": false,
   "rejected_count": 4,
   "staged_feed_modified": false,
   "status_counts": {
-    "pending": 3453,
+    "approved": 34,
+    "pending": 3419,
     "rejected": 4
   },
   "unmatched": []
