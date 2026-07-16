@@ -20,7 +20,6 @@ Or open a Cloud Agent **on the field-desk repo** (not live-feeds) and run the sa
 - `discovery-taxonomy-v02/discovery-patch-v02.js`
 - `schema-v1-major-all-v01/index.html` (`?v=public-map-v07`)
 
-Patch: `COMPLETE_MAP_PAGES_HANDSHAKE.patch`  
 Issues: https://github.com/setoxxx/nycif-field-desk/issues/127 https://github.com/setoxxx/nycif-field-desk/issues/128
 
 ---
