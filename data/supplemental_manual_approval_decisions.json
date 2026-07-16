@@ -1,0 +1,32 @@
+{
+  "schema_version": "1.0.0",
+  "phase": "m11_supplemental_manual_approval_decisions",
+  "manual_reviewer": "Howard Weiss",
+  "instructions": "Add decisions here. Do NOT edit supplemental_manual_approval_queue.json directly. Run: python3 scripts/apply_supplemental_manual_approval_decisions.py",
+  "decisions": [
+    {
+      "review_rank": 2,
+      "manual_review_status": "rejected",
+      "approval_decision_reason": "Canceled per Parks feed title (CANCELED: Full Body Circuit Training).",
+      "manual_review_notes": "Batch 1 auto-reject — canceled event."
+    },
+    {
+      "review_rank": 3,
+      "manual_review_status": "rejected",
+      "approval_decision_reason": "Canceled per Parks feed title (CANCELED: Functional Yoga).",
+      "manual_review_notes": "Batch 1 auto-reject — canceled event."
+    },
+    {
+      "review_rank": 11,
+      "manual_review_status": "rejected",
+      "approval_decision_reason": "Canceled per Parks feed title (CANCELLED: Dance in the Park: Salsa).",
+      "manual_review_notes": "Batch 1 auto-reject — canceled event."
+    },
+    {
+      "review_rank": 38,
+      "manual_review_status": "rejected",
+      "approval_decision_reason": "Canceled per Parks feed title (CANCELED: Functional Yoga, recurring instance).",
+      "manual_review_notes": "Batch 1 auto-reject — canceled event."
+    }
+  ]
+}

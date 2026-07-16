@@ -38,6 +38,8 @@
     ],
     "m11_manual_approval": [
       "data/supplemental_manual_approval_queue.json",
+      "data/supplemental_manual_approval_decisions.json",
+      "data/supplemental_manual_approval_decisions_report.json",
       "data/supplemental_manual_approval_queue_report.json",
       "data/supplemental_manual_approval_validation_report.json",
       "data/supplemental_manual_approval_review_sheet.json",
@@ -51,7 +53,8 @@
     "scripts/build_coverage_gap_review_findings.py",
     "scripts/build_supplemental_manual_approval_queue.py",
     "scripts/validate_supplemental_manual_approvals.py",
-    "scripts/build_supplemental_manual_review_sheet.py"
+    "scripts/build_supplemental_manual_review_sheet.py",
+    "scripts/apply_supplemental_manual_approval_decisions.py"
   ],
   "workflow_wired": [
     ".github/workflows/live-sync-qa.yml"
@@ -62,7 +65,7 @@
     "validation_qa_pass": true,
     "review_sheet_qa_pass": true
   },
-  "next_required_step": "Human review via supplemental_manual_approval_review_sheet.csv. Do not merge into feeds=main without explicit authorization.",
+  "next_required_step": "Human review via supplemental_manual_approval_review_sheet.csv. Patch decisions in supplemental_manual_approval_decisions.json; run apply_supplemental_manual_approval_decisions.py. Do not edit the full queue file in ChatGPT.",
   "safety": {
     "public_map_modified": false,
     "location_cache_modified": false,
