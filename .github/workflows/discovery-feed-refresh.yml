@@ -54,6 +54,8 @@ jobs:
             # key set that the discovery projector reads to flag Featured
             # events; the projector then writes data/schema-v1-discovery/**.
             python scripts/build_events_schema_v1_major.py
+            # Offline feast/festival harvest from committed snapshots (no city pull).
+            python scripts/build_street_festivals_feed.py
             python scripts/project_events_discovery_v02.py
 
             # "What's New" diff + category coverage over the full staged
@@ -94,6 +96,7 @@ jobs:
               data/nycif_new_events.json \
               data/comprehensive_feed_report.json \
               data/_event_seen_index.json \
+              data/nycif_street_festivals_feed.json \
               data/events_discovery_contract_v02.json \
               data/events_discovery_v02_approved.json \
               data/events_discovery_v02_review.json \
@@ -104,7 +107,8 @@ jobs:
               data/events_discovery_schema_validation_v02.json \
               data/events_schema_v1_major.json \
               data/events_schema_v1_major_report.json \
-              docs/events-discovery-taxonomy-v02.md
+              docs/events-discovery-taxonomy-v02.md \
+              docs/field-desk-map-deploy
             if git diff --cached --quiet; then
               echo "No discovery feed changes to commit."
               exit 0

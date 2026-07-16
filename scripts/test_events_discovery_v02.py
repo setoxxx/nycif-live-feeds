@@ -86,6 +86,16 @@ def main() -> int:
             {"title": "Neighborhood Clean-Up", "category": "general", "event_type": "Clean-Up"},
             "environment",
         ),
+        ({"title": "Storytime at the park", "category": "parks"}, "family"),
+        ({"title": "Bike Safety Class - Crotona - July 2026", "category": "parks"}, "education"),
+        ({"title": "Giglio Feast on Havemeyer", "category": "general"}, "arts"),
+        (
+            {
+                "title": "HPD Outreach Housing Resources in Your Neighborhood",
+                "category": "general",
+            },
+            "housing",
+        ),
     ]
     for row, expected in samples:
         got = classify_record(row)["category"]
