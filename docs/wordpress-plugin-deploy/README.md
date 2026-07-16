@@ -1,5 +1,7 @@
 # NYCIF Events Map — WordPress plugin deploy
 
+> **Production `/map/` page (FROZEN):** read [`nycinfocus-map-page-v1-freeze.md`](./nycinfocus-map-page-v1-freeze.md) before any WordPress or embed change. That doc is the signed-off fullscreen display contract for https://nycinfocus.com/map/.
+
 Copy `nycif-events-map/` into your WordPress plugins directory:
 
 ```bash
@@ -9,7 +11,7 @@ cp -r docs/wordpress-plugin-deploy/nycif-events-map /path/to/wp-content/plugins/
 
 ## Usage
 
-Page or post shortcode:
+Page or post shortcode (for **in-article** embeds — **not** for `/map/`):
 
 ```
 [nycif_events_map]
@@ -18,7 +20,7 @@ Page or post shortcode:
 
 Settings: **WP Admin → Settings → NYCIF Events Map**
 
-## Canonical embed (2026-07-16 — Complete-the-Map / public-map-v07)
+## Canonical embed URL (2026-07-16 — Complete-the-Map / public-map-v07)
 
 Approved public discovery feed on GitHub Pages:
 
@@ -28,20 +30,11 @@ https://setoxxx.github.io/nycif-field-desk/?v=public-map-v07&resetFilters=1&feed
 
 **Retire** legacy params: `?feed=staged&v=nycif-map-publish-02` (misleading; runtime ignores staged autoload on current index).
 
-## nycinfocus.com/map/ update (human deploy)
+## nycinfocus.com/map/ (production — use freeze doc)
 
-If the site uses a raw iframe in a page template instead of this plugin:
+Do **not** use the plugin shortcode or a bare 85vh iframe on `/map/`.
 
-```html
-<iframe
-  title="NYC In Focus Event Map"
-  src="https://setoxxx.github.io/nycif-field-desk/?v=public-map-v07&resetFilters=1&feeds=main"
-  style="width:100%;height:85vh;border:0;"
-  loading="lazy"
-  allow="geolocation"></iframe>
-```
-
-WordPress block editor: edit the Map page → Custom HTML or iframe block → replace `src` → Update.
+The live page uses a Custom HTML fullscreen shell (`#nycifMapAppShell`) documented in [`nycinfocus-map-page-v1-freeze.md`](./nycinfocus-map-page-v1-freeze.md). Copy that file’s HTML block verbatim when restoring or updating the page.
 
 ## Safety
 
