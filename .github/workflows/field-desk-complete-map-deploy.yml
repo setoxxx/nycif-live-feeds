@@ -1,4 +1,4 @@
-name: Deploy Complete-the-Map to Field Desk
+name: Deploy to Field Desk Pages
 
 on:
   workflow_dispatch:
@@ -7,6 +7,7 @@ on:
     paths:
       - "docs/field-desk-map-deploy/schema-v1-major-all-v01/**"
       - "docs/field-desk-map-deploy/discovery-taxonomy-v02/discovery-patch-v02.js"
+      - "docs/field-desk-admin-deploy/admin/**"
       - ".github/workflows/field-desk-complete-map-deploy.yml"
 
 permissions:
@@ -19,18 +20,18 @@ jobs:
       - name: Checkout live-feeds canonical deploy sources
         uses: actions/checkout@v4
 
-      - name: Sync Complete-the-Map runtime to field-desk
+      - name: Sync map + admin runtime to field-desk
         env:
           FIELD_DESK_TOKEN: ${{ secrets.FIELD_DESK_DEPLOY_TOKEN }}
         run: |
           set -euo pipefail
           if [ -z "${FIELD_DESK_TOKEN:-}" ]; then
             echo "::error::FIELD_DESK_DEPLOY_TOKEN secret is not configured on nycif-live-feeds."
-            echo "::error::Mobile setup: github.com/setoxxx/nycif-live-feeds/settings/secrets/actions"
             exit 1
           fi
 
-          SRC="$GITHUB_WORKSPACE/docs/field-desk-map-deploy"
+          MAP_SRC="$GITHUB_WORKSPACE/docs/field-desk-map-deploy"
+          ADMIN_SRC="$GITHUB_WORKSPACE/docs/field-desk-admin-deploy/admin"
           git clone "https://x-access-token:${FIELD_DESK_TOKEN}@github.com/setoxxx/nycif-field-desk.git" /tmp/field-desk
           cd /tmp/field-desk
           git config user.name "github-actions[bot]"
@@ -38,9 +39,15 @@ jobs:
           git checkout main
           git pull origin main
 
-          cp "$SRC/schema-v1-major-all-v01/app-schema-v1-major-all-v01.js" ./app-schema-v1-major-all-v01.js
-          cp "$SRC/discovery-taxonomy-v02/discovery-patch-v02.js" ./discovery-patch-v02.js
-          cp "$SRC/schema-v1-major-all-v01/index.html" ./index.html
+          cp "$MAP_SRC/schema-v1-major-all-v01/app-schema-v1-major-all-v01.js" ./app-schema-v1-major-all-v01.js
+          cp "$MAP_SRC/discovery-taxonomy-v02/discovery-patch-v02.js" ./discovery-patch-v02.js
+          cp "$MAP_SRC/schema-v1-major-all-v01/index.html" ./index.html
+
+          cp "$ADMIN_SRC/index.html" ./admin/index.html
+          cp "$ADMIN_SRC/live-pipeline-panel-v02.js" ./admin/live-pipeline-panel-v02.js
+          cp "$ADMIN_SRC/discovery-godview-panel-v02.js" ./admin/discovery-godview-panel-v02.js
+          cp "$ADMIN_SRC/civic-godview-panel-v01.js" ./admin/civic-godview-panel-v01.js
+          cp "$ADMIN_SRC/photographer-calendar-panel-v01.js" ./admin/photographer-calendar-panel-v01.js
 
           grep -q "[/basketball/i, '🏀']" app-schema-v1-major-all-v01.js
           grep -q reviewManifest app-schema-v1-major-all-v01.js
@@ -52,10 +59,28 @@ jobs:
           node --check app-schema-v1-major-all-v01.js
           node --check discovery-patch-v02.js
 
-          git add app-schema-v1-major-all-v01.js discovery-patch-v02.js index.html
+          grep -q discovery-godview-panel-v02 admin/index.html
+          grep -q live-pipeline-panel-v02 admin/index.html
+          grep -q god-view-project-control-v01 admin/index.html
+          grep -q legacy-admin-data-v01 admin/index.html
+          node --check admin/live-pipeline-panel-v02.js
+          node --check admin/discovery-godview-panel-v02.js
+          node --check admin/civic-godview-panel-v01.js
+          node --check admin/photographer-calendar-panel-v01.js
+
+          git add \
+            app-schema-v1-major-all-v01.js \
+            discovery-patch-v02.js \
+            index.html \
+            admin/index.html \
+            admin/live-pipeline-panel-v02.js \
+            admin/discovery-godview-panel-v02.js \
+            admin/civic-godview-panel-v01.js \
+            admin/photographer-calendar-panel-v01.js
+
           if git diff --cached --quiet; then
-            echo "Field-desk already has canonical Complete-the-Map runtime."
+            echo "Field-desk already has canonical map + admin runtime."
             exit 0
           fi
-          git commit -m "Ship Complete-the-Map handshake: public-map-v07 from live-feeds canonical deploy"
+          git commit -m "Ship Admin God View handshake: v02 panels + God View project control"
           git push origin main
