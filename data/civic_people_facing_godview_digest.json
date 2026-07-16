@@ -16,6 +16,11 @@
     "money_day_pack_tomorrow": "data/photographer_money_day_pack_tomorrow.json",
     "money_day_quality": "data/photographer_money_day_quality_report.json",
     "money_day_v2_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/174",
+    "news_desk_checklist": "data/news_desk_assignment_checklist.json",
+    "news_desk_checklist_csv": "data/news_desk_assignment_checklist.csv",
+    "news_desk_checklist_report": "data/news_desk_assignment_checklist_report.json",
+    "parade_census": "data/citywide_parade_census_snapshot.json",
+    "parade_census_report": "data/citywide_parade_census_report.json",
     "photographer_calendar": "data/photographer_assignment_calendar_2mo.json",
     "photographer_calendar_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/173",
     "photographer_calendar_report": "data/photographer_assignment_calendar_report.json",
@@ -120,7 +125,7 @@
   "checkpoint": {
     "coverage_merge_commit": "f9df1fd2314b5f921701dc856cc5cb6dd5b1582d",
     "coverage_pr": 172,
-    "current_phase": "Viral Recurrence Memory",
+    "current_phase": "News Desk + Parade Census (staging)",
     "health": "green",
     "m7c_authorized": false,
     "merge_commit": "386e6ef4be3dae654f25f2233939223e9a39dac4",
@@ -172,20 +177,44 @@
     "honesty": "NYC Open Data does not currently provide a high-quality live citywide soup-kitchen or food-pantry pin feed suitable for map publication.",
     "status": "known_gap_human_follow_up"
   },
-  "generated_at_utc": "2026-07-15T01:39:03Z",
+  "generated_at_utc": "2026-07-16T16:02:58Z",
   "lanes": {
     "Approved": "schema-v1-discovery approved permits (unchanged)",
     "Help Places": "schema-v1-civic-review/help (markets + benefits/SNAP/drop-in/Homebase/aging/NYCHA)",
     "Review": "discovery review (calendar/Parks) UNION schema-v1-civic-review/review"
   },
+  "news_desk_checklist": {
+    "artifact": "data/news_desk_assignment_checklist.json",
+    "assignment_mode_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&assignment=1",
+    "csv": "data/news_desk_assignment_checklist.csv",
+    "map_ready_count": 350,
+    "priority_unchecked_count": 404,
+    "public_map_policy": "Editorial assignment lane — map_eligible false until promotion",
+    "qa_pass": true,
+    "report": "data/news_desk_assignment_checklist_report.json",
+    "today_count": 15,
+    "total_rows": 549
+  },
   "next_human_steps": [
-    "Push Field Desk civic-people-facing-v01 (+ assignment=1 app JS with pin integrity) to nycif-field-desk Pages",
-    "Push admin photographer-calendar-panel with Pin Integrity KPI + Shoot Day Certified cards",
+    "Merge live-feeds PR #179 (News Desk checklist + parade census + God View wiring) when CI green",
+    "Push Field Desk civic-people-facing-v01 (+ field-desk-news-desk-v01.js + operator-layer + assignment=1) to nycif-field-desk Pages",
+    "Push admin news-desk-godview-panel-v01.js + updated index.html; verify News Desk KPIs load",
+    "QA ?assignment=1 shows News Desk UI; public map without assignment shows none",
     "Shoot from Shoot Day Certified pack (today/tomorrow) when pin QA is green",
     "File FOIL for SAPO/CECM full application PDFs; fill data/sapo_foil_operator_index.json",
-    "Confirm daily workflow daily-people-facing-desk-sync is enabled (fail-closed on pin gate)",
+    "Confirm daily workflow daily-people-facing-desk-sync commits parade/news_desk artifacts fail-closed",
     "Do not publish/promote to WordPress public map until explicitly authorized"
   ],
+  "parade_census": {
+    "anchor_permit_matches": 11,
+    "anchor_registry": "data/nycif_citywide_parade_anchor_registry.json",
+    "artifact": "data/citywide_parade_census_snapshot.json",
+    "merged_total": 233,
+    "priority_event_count": 88,
+    "public_map_policy": "Staging census — not public promoted data",
+    "qa_pass": true,
+    "report": "data/citywide_parade_census_report.json"
+  },
   "photographer_assignment_calendar": {
     "artifact": "data/photographer_assignment_calendar_2mo.json",
     "coordinate_status_counts": {
@@ -1759,6 +1788,7 @@
   },
   "remain_unapproved_unpromoted": [
     "All civic Review/Help rows (promotion_allowed false)",
+    "All News Desk checklist + parade census rows (map_eligible false)",
     "Geocoding proposals pending manual review",
     "Historical Workforce1 / Ready NY / MOIA quarantined for upcoming",
     "Food-access soup-kitchen gap",

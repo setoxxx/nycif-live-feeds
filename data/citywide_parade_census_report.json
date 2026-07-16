@@ -1,0 +1,111 @@
+{
+  "anchor_count": 47,
+  "anchor_permit_matches": 11,
+  "anchor_registry_path": "data/nycif_citywide_parade_anchor_registry.json",
+  "anchor_watchlist_count": 36,
+  "borough_counts": {
+    "Bronx": 14,
+    "Brooklyn": 40,
+    "Manhattan": 66,
+    "Multi-borough": 44,
+    "Queens": 64,
+    "Staten Island": 5
+  },
+  "calendar_eligible_count": 233,
+  "calendar_extracted_count": 86,
+  "calendar_merged_count": 86,
+  "calendar_reject_reasons": {
+    "no_match": 2315,
+    "outside_window": 380
+  },
+  "checks": {
+    "all_map_eligible_false": true,
+    "anchors_present": true,
+    "confidence_values_valid": true,
+    "multi_source_ingestion": true,
+    "permit_extraction_ran": true
+  },
+  "confidence_counts": {
+    "confirmed": 2,
+    "historical_pattern_only": 17,
+    "permit_confirmed": 77,
+    "provisional": 120,
+    "strongly_supported": 17
+  },
+  "editorial_priority_counts": {
+    "high": 46,
+    "highest": 42,
+    "normal": 145
+  },
+  "event_kind_counts": {
+    "balloon_inflation": 1,
+    "carnival": 2,
+    "ceremonial_race": 110,
+    "cultural_march": 1,
+    "fan_festival": 1,
+    "halloween_parade": 4,
+    "holiday_parade": 3,
+    "lantern_procession": 2,
+    "march": 2,
+    "marching_band_event": 1,
+    "new_years_gathering": 2,
+    "parade": 74,
+    "pet_parade": 1,
+    "political_march": 1,
+    "pride_march": 10,
+    "procession": 1,
+    "religious_procession": 10,
+    "school_parade": 2,
+    "street_co_naming": 1,
+    "street_festival_procession": 3,
+    "veterans_procession": 1
+  },
+  "foil_operator_joins": 0,
+  "generated_at_utc": "2026-07-16T16:01:48Z",
+  "historical_tba_annotations": 30,
+  "location_cache_modified": false,
+  "map_eligible_count": 0,
+  "merged_total": 233,
+  "next_steps": [
+    "Refresh permit snapshot daily via sync_nyc_open_data.py",
+    "Re-run build_citywide_parade_census.py after each permit refresh",
+    "Expand anchor registry as organizers confirm 2026 dates",
+    "Do not set map_eligible=true without explicit promotion authorization"
+  ],
+  "parks_extracted_count": 33,
+  "parks_merged_count": 33,
+  "parks_reject_reasons": {
+    "no_match": 1259,
+    "outside_window": 360,
+    "parade_ground_excluded": 1,
+    "rehearsal_or_closed_excluded": 1
+  },
+  "permit_extracted_count": 67,
+  "permit_reject_reasons": {
+    "no_match": 30048,
+    "outside_window": 4616,
+    "parade_ground_excluded": 644,
+    "rehearsal_or_closed_excluded": 59
+  },
+  "permit_snapshot_path": "data/raw_nyc_open_data_snapshot.json",
+  "permit_status_counts": {
+    "not_yet_matched": 155,
+    "permit_matched": 11,
+    "permit_only": 67
+  },
+  "priority_event_count": 88,
+  "promotion_allowed": false,
+  "public_map_modified": false,
+  "qa_pass": true,
+  "schema_version": "citywide-parade-census-report-v2",
+  "snapshot_path": "data/citywide_parade_census_snapshot.json",
+  "source_layer_counts": {
+    "citywide_calendar": 86,
+    "editorial_anchor": 47,
+    "parks_bigapps": 33,
+    "permit_extract": 67
+  },
+  "staged_feed_modified": false,
+  "window_end": "2026-12-31",
+  "window_start": "2026-07-16"
+}

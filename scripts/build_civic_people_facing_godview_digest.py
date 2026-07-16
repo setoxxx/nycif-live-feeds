@@ -32,6 +32,8 @@ def main() -> int:
     shoot = load_json(DATA_DIR / "photographer_shoot_day_certified_report.json", {})
     shoot_pack = load_json(DATA_DIR / "photographer_shoot_day_certified_pack.json", {})
     daily = load_json(DATA_DIR / "daily_people_facing_sync_report.json", {})
+    parade_census = load_json(DATA_DIR / "citywide_parade_census_report.json", {})
+    news_desk = load_json(DATA_DIR / "news_desk_assignment_checklist_report.json", {})
 
     digest = {
         "schema_version": "civic-people-facing-godview-v1",
@@ -105,6 +107,31 @@ def main() -> int:
             "tomorrow_field_desk_link": (shoot_pack.get("tomorrow") or {}).get("field_desk_link"),
             "pack": "data/photographer_shoot_day_certified_pack.json",
             "report": "data/photographer_shoot_day_certified_report.json",
+        },
+        "parade_census": {
+            "qa_pass": parade_census.get("qa_pass"),
+            "merged_total": parade_census.get("merged_total"),
+            "priority_event_count": parade_census.get("priority_event_count"),
+            "anchor_permit_matches": parade_census.get("anchor_permit_matches"),
+            "artifact": "data/citywide_parade_census_snapshot.json",
+            "report": "data/citywide_parade_census_report.json",
+            "anchor_registry": "data/nycif_citywide_parade_anchor_registry.json",
+            "public_map_policy": "Staging census — not public promoted data",
+        },
+        "news_desk_checklist": {
+            "qa_pass": news_desk.get("qa_pass"),
+            "total_rows": news_desk.get("total_rows"),
+            "today_count": news_desk.get("today_count"),
+            "priority_unchecked_count": news_desk.get("priority_unchecked_count"),
+            "map_ready_count": news_desk.get("map_ready_count"),
+            "artifact": "data/news_desk_assignment_checklist.json",
+            "csv": "data/news_desk_assignment_checklist.csv",
+            "report": "data/news_desk_assignment_checklist_report.json",
+            "assignment_mode_link": (
+                "https://setoxxx.github.io/nycif-field-desk/"
+                "?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&assignment=1"
+            ),
+            "public_map_policy": "Editorial assignment lane — map_eligible false until promotion",
         },
         "photographer_assignment_calendar": {
             "premium_label": "Photographer Assignment Calendar (premium/operator) — Money-Day Desk v2",
@@ -200,6 +227,11 @@ def main() -> int:
             "shoot_day_certified_pack": "data/photographer_shoot_day_certified_pack.json",
             "shoot_day_certified_report": "data/photographer_shoot_day_certified_report.json",
             "daily_sync_report": "data/daily_people_facing_sync_report.json",
+            "parade_census": "data/citywide_parade_census_snapshot.json",
+            "parade_census_report": "data/citywide_parade_census_report.json",
+            "news_desk_checklist": "data/news_desk_assignment_checklist.json",
+            "news_desk_checklist_report": "data/news_desk_assignment_checklist_report.json",
+            "news_desk_checklist_csv": "data/news_desk_assignment_checklist.csv",
             "status": "status/nycif-project-status.json",
             "merged_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/171",
             "coverage_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/172",
@@ -207,15 +239,18 @@ def main() -> int:
             "money_day_v2_pr": "https://github.com/setoxxx/nycif-live-feeds/pull/174",
         },
         "next_human_steps": [
-            "Push Field Desk civic-people-facing-v01 (+ assignment=1 app JS with pin integrity) to nycif-field-desk Pages",
-            "Push admin photographer-calendar-panel with Pin Integrity KPI + Shoot Day Certified cards",
+            "Merge live-feeds PR #179 (News Desk checklist + parade census + God View wiring) when CI green",
+            "Push Field Desk civic-people-facing-v01 (+ field-desk-news-desk-v01.js + operator-layer + assignment=1) to nycif-field-desk Pages",
+            "Push admin news-desk-godview-panel-v01.js + updated index.html; verify News Desk KPIs load",
+            "QA ?assignment=1 shows News Desk UI; public map without assignment shows none",
             "Shoot from Shoot Day Certified pack (today/tomorrow) when pin QA is green",
             "File FOIL for SAPO/CECM full application PDFs; fill data/sapo_foil_operator_index.json",
-            "Confirm daily workflow daily-people-facing-desk-sync is enabled (fail-closed on pin gate)",
+            "Confirm daily workflow daily-people-facing-desk-sync commits parade/news_desk artifacts fail-closed",
             "Do not publish/promote to WordPress public map until explicitly authorized",
         ],
         "remain_unapproved_unpromoted": [
             "All civic Review/Help rows (promotion_allowed false)",
+            "All News Desk checklist + parade census rows (map_eligible false)",
             "Geocoding proposals pending manual review",
             "Historical Workforce1 / Ready NY / MOIA quarantined for upcoming",
             "Food-access soup-kitchen gap",
@@ -245,6 +280,8 @@ def main() -> int:
             "digest": "data/civic_people_facing_godview_digest.json",
             "field_desk_preview": digest["field_desk"]["preview_after_merge"],
             "public_map_policy": digest["public_map_policy"],
+            "parade_census": digest.get("parade_census"),
+            "news_desk_checklist": digest.get("news_desk_checklist"),
         }
         discovery["photographer_assignment_bookmark"] = digest["photographer_assignment_calendar"]
         save_json(DATA_DIR / "events_discovery_godview_digest_v02.json", discovery)

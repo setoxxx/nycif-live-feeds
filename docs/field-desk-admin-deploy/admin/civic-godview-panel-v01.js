@@ -5,7 +5,7 @@
 (() => {
   const VERSION = "civic-godview-panel-v01";
   const LIVE_FEEDS_BASE = "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds";
-  const BRANCH_CANDIDATES = ["main", "cursor/pin-integrity-shoot-day-gate-da92"];
+  const BRANCH_CANDIDATES = ["main", "cursor/citywide-parade-census-bfb8"];
   const DIGEST_PATH = "data/civic_people_facing_godview_digest.json";
 
   function esc(value) {
@@ -72,6 +72,19 @@
         ${shoot.today_field_desk_link ? `<a href="${esc(shoot.today_field_desk_link)}" target="_blank" rel="noopener noreferrer">Field Desk today (assignment=1)</a>` : ""}
         ${shoot.tomorrow_field_desk_link ? `<a href="${esc(shoot.tomorrow_field_desk_link)}" target="_blank" rel="noopener noreferrer">Field Desk tomorrow (assignment=1)</a>` : ""}
         <a href="https://github.com/setoxxx/nycif-live-feeds/blob/${encodeURIComponent(branch)}/data/photographer_shoot_day_certified_pack.json" target="_blank" rel="noopener noreferrer">Shoot Day Certified pack JSON</a>
+      </div>
+
+      <h3>News Desk + Parade Census (staging)</h3>
+      <div class="grid">
+        <div class="stat"><div class="label">Checklist QA</div><div class="value">${(digest.news_desk_checklist || {}).qa_pass ? "PASS" : "CHECK"}</div><div class="detail">priority unchecked ${esc(fmtNum((digest.news_desk_checklist || {}).priority_unchecked_count))}</div></div>
+        <div class="stat"><div class="label">Checklist today</div><div class="value">${esc(fmtNum((digest.news_desk_checklist || {}).today_count))}</div><div class="detail">total ${esc(fmtNum((digest.news_desk_checklist || {}).total_rows))}</div></div>
+        <div class="stat"><div class="label">Parade census QA</div><div class="value">${(digest.parade_census || {}).qa_pass ? "PASS" : "CHECK"}</div><div class="detail">priority ${esc(fmtNum((digest.parade_census || {}).priority_event_count))}</div></div>
+        <div class="stat"><div class="label">Anchor matches</div><div class="value">${esc(fmtNum((digest.parade_census || {}).anchor_permit_matches))}</div><div class="detail">merged ${esc(fmtNum((digest.parade_census || {}).merged_total))}</div></div>
+      </div>
+      <div class="links">
+        <a href="https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&assignment=1" target="_blank" rel="noopener noreferrer">Assignment mode (News Desk overlay)</a>
+        <a href="https://github.com/setoxxx/nycif-live-feeds/blob/${encodeURIComponent(branch)}/data/news_desk_assignment_checklist.json" target="_blank" rel="noopener noreferrer">News Desk checklist JSON</a>
+        <a href="https://github.com/setoxxx/nycif-live-feeds/blob/${encodeURIComponent(branch)}/data/citywide_parade_census_snapshot.json" target="_blank" rel="noopener noreferrer">Parade census snapshot JSON</a>
       </div>
 
       <h3>Where we are</h3>

@@ -36,7 +36,8 @@ def test_coordinate_status_map_ready_and_list_only():
     assert status == "map_ready" and lat is not None
     lat, lng, status, reason = resolve_coordinate_status(None, None)
     assert status == "list_only" and lat is None
-    assert "list_only" in reason
+    # Fail-closed pin integrity reason (status remains list_only; coords cleared).
+    assert reason.startswith("pin_integrity:") or "list_only" in reason
 
 
 def test_no_invented_times_when_clock_missing():

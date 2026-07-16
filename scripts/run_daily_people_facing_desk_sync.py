@@ -42,6 +42,9 @@ ALLOWED_SCRIPTS = frozenset(
         "scripts/build_photographer_money_day_packs.py",
         "scripts/sync_nyc_permits_historical.py",
         "scripts/build_photographer_viral_recurrence.py",
+        "scripts/build_citywide_parade_census.py",
+        "scripts/build_news_desk_assignment_checklist.py",
+        "scripts/build_major_radar_map_events.py",
         "scripts/build_pin_integrity_gate.py",
         "scripts/build_photographer_shoot_day_certified.py",
         "scripts/build_events_discovery_godview_digest_v02.py",
@@ -158,6 +161,9 @@ def main() -> int:
         hist_args.append("--skip-network")
     steps.append(run_step(safe_python_script("scripts/sync_nyc_permits_historical.py", *hist_args)))
     steps.append(run_step(safe_python_script("scripts/build_photographer_viral_recurrence.py", *ref_args)))
+    steps.append(run_step(safe_python_script("scripts/build_citywide_parade_census.py")))
+    steps.append(run_step(safe_python_script("scripts/build_news_desk_assignment_checklist.py")))
+    steps.append(run_step(safe_python_script("scripts/build_major_radar_map_events.py")))
     # Pin integrity fail-closed: after calendar/packs/viral/civic coverage rebuilds.
     steps.append(run_step(safe_python_script("scripts/build_pin_integrity_gate.py")))
     steps.append(run_step(safe_python_script("scripts/build_photographer_shoot_day_certified.py", *ref_args)))
@@ -175,6 +181,8 @@ def main() -> int:
     quality_report = load_json(DATA_DIR / "photographer_money_day_quality_report.json", {})
     pack_report = load_json(DATA_DIR / "photographer_money_day_pack_report.json", {})
     viral_report = load_json(DATA_DIR / "photographer_viral_recurrence_report.json", {})
+    parade_census_report = load_json(DATA_DIR / "citywide_parade_census_report.json", {})
+    news_desk_report = load_json(DATA_DIR / "news_desk_assignment_checklist_report.json", {})
     hist_report = load_json(DATA_DIR / "nyc_permits_historical_sync_report.json", {})
     pin_report = load_json(DATA_DIR / "pin_integrity_gate_report.json", {})
     shoot_report = load_json(DATA_DIR / "photographer_shoot_day_certified_report.json", {})
@@ -189,6 +197,8 @@ def main() -> int:
         and bool(pack_report.get("qa_pass", False))
         and bool(hist_report.get("qa_pass", False))
         and bool(viral_report.get("qa_pass", False))
+        and bool(parade_census_report.get("qa_pass", False))
+        and bool(news_desk_report.get("qa_pass", False))
         and bool(pin_report.get("qa_pass", False))
         and bool(shoot_report.get("qa_pass", False))
     )
@@ -231,6 +241,23 @@ def main() -> int:
                 "label_counts": viral_report.get("label_counts"),
                 "next_14d_crowd_magnets": viral_report.get("next_14d_crowd_magnets"),
                 "historical_rows": hist_report.get("compact_row_count"),
+            },
+            "parade_census": {
+                "qa_pass": parade_census_report.get("qa_pass"),
+                "anchor_count": parade_census_report.get("anchor_count"),
+                "permit_extracted_count": parade_census_report.get("permit_extracted_count"),
+                "merged_total": parade_census_report.get("merged_total"),
+                "anchor_permit_matches": parade_census_report.get("anchor_permit_matches"),
+                "report": "data/citywide_parade_census_report.json",
+            },
+            "news_desk_checklist": {
+                "qa_pass": news_desk_report.get("qa_pass"),
+                "total_rows": news_desk_report.get("total_rows"),
+                "today_count": news_desk_report.get("today_count"),
+                "priority_unchecked_count": news_desk_report.get("priority_unchecked_count"),
+                "map_ready_count": news_desk_report.get("map_ready_count"),
+                "artifact": "data/news_desk_assignment_checklist.json",
+                "csv": "data/news_desk_assignment_checklist.csv",
             },
             "pin_integrity": {
                 "qa_pass": pin_report.get("qa_pass"),

@@ -84,6 +84,15 @@ jobs:
       - name: Sync NYC Parks BigApps events (staging)
         run: python scripts/sync_nyc_parks_bigapps_events.py
 
+      - name: Build citywide parade census (staging)
+        run: python3 scripts/build_citywide_parade_census.py
+
+      - name: Build news desk assignment checklist (staging)
+        run: python3 scripts/build_news_desk_assignment_checklist.py
+
+      - name: Rebuild major radar from desk priority rules
+        run: python3 scripts/build_major_radar_map_events.py
+
       - name: Build NYC Parks facility reference (staging)
         run: python scripts/build_nyc_parks_facility_reference.py
 
