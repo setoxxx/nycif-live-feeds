@@ -269,15 +269,44 @@ KEYWORD_PRIMARY: list[tuple[str, str, str]] = [
     ("services", r"benefit|resource fair|outreach|health screening|social service|clinic", "keyword_services"),
 ]
 
+# Official NYC Street Activity Permit types → discovery category.
+# Keep this aligned with scripts/build_comprehensive_event_feed.py NYC_TYPE_CATEGORY
+# so the map lanes and the coverage report agree. "media" is the film/production/
+# press family (operator money-shots lane) that has no home in the older taxonomy.
 EVENT_TYPE_MAP = {
-    "parade": ("civic", ["civic"], "event_type_parade"),
+    "open culture": ("arts", ["arts"], "event_type_open_culture"),
+    "public program/exhibitions": ("arts", ["arts"], "event_type_public_program"),
+    "concert": ("arts", ["arts"], "event_type_concert"),
+    "single block festival": ("arts", ["arts"], "event_type_single_block_festival"),
+    "street festival": ("arts", ["arts"], "event_type_street_festival"),
+    "athletic-charitable": ("sports", ["sports"], "event_type_athletic_charitable"),
     "athletic race / tour": ("sports", ["sports"], "event_type_athletic_race"),
-    "farmers market": ("market", ["market"], "event_type_farmers_market"),
-    "block party": ("civic", ["civic"], "event_type_block_party"),
-    "street event": ("civic", ["civic"], "event_type_street_event"),
-    "religious event": ("civic", ["civic"], "event_type_religious_event"),
+    "athletic race/tour": ("sports", ["sports"], "event_type_athletic_race"),
+    "marathon": ("sports", ["sports"], "event_type_marathon"),
     "sport - youth": ("sports", ["sports"], "event_type_sport_youth"),
     "sport - adult": ("sports", ["sports"], "event_type_sport_adult"),
+    "farmers market": ("market", ["market"], "event_type_farmers_market"),
+    "sidewalk sale": ("market", ["market"], "event_type_sidewalk_sale"),
+    "block party": ("civic", ["civic"], "event_type_block_party"),
+    "parade": ("civic", ["civic"], "event_type_parade"),
+    "play streets": ("civic", ["civic"], "event_type_play_streets"),
+    "street event": ("civic", ["civic"], "event_type_street_event"),
+    "open street partner event": ("civic", ["civic"], "event_type_open_street_partner"),
+    "religious event": ("civic", ["civic"], "event_type_religious_event"),
+    "rally": ("civic", ["civic"], "event_type_rally"),
+    "stationary demonstration": ("civic", ["civic"], "event_type_stationary_demonstration"),
+    "clean-up": ("environment", ["environment"], "event_type_clean_up"),
+    "health fair": ("services", ["services"], "event_type_health_fair"),
+    "mobile unit": ("services", ["services"], "event_type_mobile_unit"),
+    "plaza event": ("parks", ["parks"], "event_type_plaza_event"),
+    "plaza partner event": ("parks", ["parks"], "event_type_plaza_partner"),
+    "dcas prep/shoot/wrap permit": ("media", ["media"], "event_type_dcas_shoot"),
+    "press conference": ("media", ["media"], "event_type_press_conference"),
+    "production event": ("media", ["media"], "event_type_production_event"),
+    "red carpet event": ("media", ["media"], "event_type_red_carpet"),
+    "rigging permit": ("media", ["media"], "event_type_rigging"),
+    "shooting permit": ("media", ["media"], "event_type_shooting"),
+    "theater load in and load outs": ("media", ["media"], "event_type_theater_load"),
 }
 
 CATEGORY_ALIASES = {
@@ -303,6 +332,10 @@ CATEGORY_ALIASES = {
     "jobs": "jobs",
     "housing": "housing",
     "environment": "environment",
+    "media": "media",
+    "film": "media",
+    "film / production": "media",
+    "production": "media",
     "general": "general",
 }
 
@@ -418,11 +451,61 @@ def infer_event_role(row: dict[str, Any], text: str) -> tuple[str, str]:
     return "public_event", "role_default_public_event"
 
 
+def _classified(
+    *,
+    category: str,
+    interests: list[str],
+    tags: list[str],
+    event_role: str,
+    reason: str,
+    confidence: str,
+    raw_category: str | None,
+    raw_cats: list[str],
+    role_reason: str,
+) -> dict[str, Any]:
+    return {
+        "category": category,
+        "interests": interests,
+        "tags": tags[:12],
+        "event_role": event_role,
+        "classification_reason": reason,
+        "classification_confidence": confidence,
+        "raw_category": raw_category,
+        "raw_categories": raw_cats,
+        "role_reason": role_reason,
+    }
+
+
 def classify_record(row: dict[str, Any]) -> dict[str, Any]:
     text = classification_blob(row)
     raw_cats = raw_categories(row)
     raw_category = raw_cats[0] if raw_cats else None
     event_role, role_reason = infer_event_role(row, text)
+
+    # 0 Official NYC permit type wins first.
+    # Staged rows often carry a coarse/wrong category (e.g. Production Event
+    # labeled "market"), and title overrides like FIFA must not steal film/
+    # production permits into sports. Special Event is intentionally absent
+    # from EVENT_TYPE_MAP so program/keyword rules still refine those.
+    mapped = EVENT_TYPE_MAP.get(norm_text(row.get("event_type") or row.get("type")))
+    if mapped:
+        cat, interest_seed, reason = mapped
+        tags = infer_tags(cat, text, event_role)
+        interests = infer_interests(cat, text, tags)
+        for interest in interest_seed:
+            if interest not in interests:
+                interests.insert(0, interest)
+        return _classified(
+            category=cat,
+            interests=interests,
+            tags=tags,
+            event_role=event_role,
+            reason=reason,
+            confidence="high",
+            raw_category=raw_category,
+            raw_cats=raw_cats,
+            role_reason=role_reason,
+        )
 
     # 1-4 high confidence program overrides
     for pattern, cat, interests, tags, reason in PROGRAM_OVERRIDES:
@@ -439,17 +522,17 @@ def classify_record(row: dict[str, Any]) -> dict[str, Any]:
             if re.search(r"\bpark\b|outdoor", text) and "parks" not in interests_final:
                 interests_final.append("parks")
             tags_final = list(tags) + infer_tags(cat, text, event_role)
-            return {
-                "category": cat,
-                "interests": interests_final,
-                "tags": tags_final[:12],
-                "event_role": event_role,
-                "classification_reason": reason,
-                "classification_confidence": "high",
-                "raw_category": raw_category,
-                "raw_categories": raw_cats,
-                "role_reason": role_reason,
-            }
+            return _classified(
+                category=cat,
+                interests=interests_final,
+                tags=tags_final,
+                event_role=event_role,
+                reason=reason,
+                confidence="high",
+                raw_category=raw_category,
+                raw_cats=raw_cats,
+                role_reason=role_reason,
+            )
 
     # 4 high-confidence semantic overrides (before raw source category)
     semantic_overrides = [
@@ -509,70 +592,52 @@ def classify_record(row: dict[str, Any]) -> dict[str, Any]:
             }
 
     # 5 specific authoritative source category if specific
+    # (EVENT_TYPE_MAP already applied at step 0 for known NYC permit types.)
     direct = CATEGORY_ALIASES.get(norm_text(raw_category))
     if direct and direct != "general":
         tags = infer_tags(direct, text, event_role)
         interests = infer_interests(direct, text, tags)
-        # education interest for workshops without forcing category change
-        return {
-            "category": direct,
-            "interests": interests,
-            "tags": tags,
-            "event_role": event_role,
-            "classification_reason": "authoritative_source_category",
-            "classification_confidence": "medium",
-            "raw_category": raw_category,
-            "raw_categories": raw_cats,
-            "role_reason": role_reason,
-        }
+        return _classified(
+            category=direct,
+            interests=interests,
+            tags=tags,
+            event_role=event_role,
+            reason="authoritative_source_category",
+            confidence="medium",
+            raw_category=raw_category,
+            raw_cats=raw_cats,
+            role_reason=role_reason,
+        )
 
-    # 6 event-type mapping
-    mapped = EVENT_TYPE_MAP.get(norm_text(row.get("event_type") or row.get("type")))
-    if mapped:
-        cat, interests, reason = mapped
-        tags = infer_tags(cat, text, event_role)
-        interests = infer_interests(cat, text, tags)
-        return {
-            "category": cat,
-            "interests": interests,
-            "tags": tags,
-            "event_role": event_role,
-            "classification_reason": reason,
-            "classification_confidence": "high",
-            "raw_category": raw_category,
-            "raw_categories": raw_cats,
-            "role_reason": role_reason,
-        }
-
-    # 7 keyword fallback
+    # 6 keyword fallback
     for cat, pattern, reason in KEYWORD_PRIMARY:
         if re.search(pattern, text):
             tags = infer_tags(cat, text, event_role)
             interests = infer_interests(cat, text, tags)
-            return {
-                "category": cat,
-                "interests": interests,
-                "tags": tags,
-                "event_role": event_role,
-                "classification_reason": reason,
-                "classification_confidence": "medium",
-                "raw_category": raw_category,
-                "raw_categories": raw_cats,
-                "role_reason": role_reason,
-            }
+            return _classified(
+                category=cat,
+                interests=interests,
+                tags=tags,
+                event_role=event_role,
+                reason=reason,
+                confidence="medium",
+                raw_category=raw_category,
+                raw_cats=raw_cats,
+                role_reason=role_reason,
+            )
 
     tags = infer_tags("general", text, event_role)
-    return {
-        "category": "general",
-        "interests": ["general"],
-        "tags": tags,
-        "event_role": event_role,
-        "classification_reason": "fallback_general_no_documented_rule",
-        "classification_confidence": "low",
-        "raw_category": raw_category,
-        "raw_categories": raw_cats,
-        "role_reason": role_reason,
-    }
+    return _classified(
+        category="general",
+        interests=["general"],
+        tags=tags,
+        event_role=event_role,
+        reason="fallback_general_no_documented_rule",
+        confidence="low",
+        raw_category=raw_category,
+        raw_cats=raw_cats,
+        role_reason=role_reason,
+    )
 
 
 def match_recurring_registry(row: dict[str, Any]) -> tuple[dict[str, Any] | None, int, list[str]]:
