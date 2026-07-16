@@ -1,40 +1,36 @@
 #!/usr/bin/env python3
-"""Build the comprehensive, categorized public event feed ("100% of the city").
+"""Compute the "What's New" diff + category coverage over the full city feed.
 
-The public map historically shows only the ~800 "major" discovery events. This
-builder takes the FULL already-coordinated staged live feed (every NYC permitted
-event, all 31 event types) and turns it into one public feed the frontend can
-show in full, organized into the existing category taxonomy with a raw
-event_type preserved for rich filtering.
+The frontend already loads 100% of the permitted events via the discovery
+"approved" pages, so this builder deliberately does NOT emit a second copy of
+every event. It scans the full already-coordinated staged snapshot (every NYC
+permitted event, all 31 event types) to produce two small, non-redundant
+artifacts the map/admin need on top of the events they already have:
 
-What it adds on top of the staged rows:
-  * category            — every one of NYC's 31 permit types mapped to a
-                          category slug (see NYC_TYPE_CATEGORY). Types with no
-                          natural home fall back to the staged row's own
-                          category, then "general". Nothing is dropped.
-  * event_type          — the raw NYC permit type, so the frontend can build a
-                          fine-grained filter and gray out empty lanes.
-  * multi_day / span    — true start_date -> end_date span.
-  * is_past             — end_date < today at build time (a hint; the frontend
-                          recomputes this live against the viewer's date so
-                          "past = grayed" is always accurate without a rebuild).
-  * first_seen_utc / is_new
-                        — stable per-event first-seen stamp via a persisted
-                          seen-index, so the admin "What's New" panel can
-                          separate already-tracked events from newly-arrived
-                          permits. is_new = event_id not tracked before this run.
+  1. What's New (data/nycif_new_events.json) — the permits that arrived since
+     the last refresh, so the admin panel can separate already-tracked events
+     from newly-arrived ones. "New" = an event_id (keyed per day-instance,
+     permit-id@start-day, since the staged feed files one row per event-day)
+     not tracked before this run, via a persisted seen-index. The first build
+     is a clean baseline (0 new); real deltas surface from the second run.
+
+  2. Category coverage (data/comprehensive_feed_report.json) — how NYC's 31
+     permit types fold into our category taxonomy and which lanes have data, so
+     the frontend can gray out the empty ones. Adds one "media" lane for the
+     production/film/press family, which has no home in the base taxonomy.
+     Nothing is orphaned: unknown types fall back to the row category, then
+     "general".
+
+Coordinate certification (NYC box, no invented pins) still runs so the report's
+map_ready / list_only counts are honest.
 
 Safety: reads only the staged feed + its own seen-index. Does NOT touch
-location_cache.json, GPS/approval artifacts, or raw source datasets. Coordinates
-are never invented — a row whose coordinates are missing or outside the NYC box
-is emitted list_only (no pin), never relocated.
+location_cache.json, GPS/approval artifacts, or raw source datasets.
 
 Outputs:
-  data/schema-v1-discovery/all/events.json    comprehensive feed (major-shaped)
-  data/schema-v1-discovery/all/manifest.json  small manifest
-  data/nycif_new_events.json                  admin "What's New" diff
-  data/comprehensive_feed_report.json         per-category / per-type counts
-  data/_event_seen_index.json                 persisted first-seen index
+  data/nycif_new_events.json            admin "What's New" diff
+  data/comprehensive_feed_report.json   per-category / per-type coverage counts
+  data/_event_seen_index.json           persisted first-seen index
 """
 from __future__ import annotations
 
@@ -47,18 +43,23 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 STAGED = DATA / "nycif_staged_live_events.json"
 
-OUT_DIR = DATA / "schema-v1-discovery" / "all"
-OUT_FEED = OUT_DIR / "events.json"
-OUT_MANIFEST = OUT_DIR / "manifest.json"
 OUT_NEW = DATA / "nycif_new_events.json"
 OUT_REPORT = DATA / "comprehensive_feed_report.json"
 SEEN_INDEX = DATA / "_event_seen_index.json"
 
-# Keep recent past (grayed) + everything forward. Bounds "100%" so the feed and
-# the daily refresh stay cheap; older-than-PAST_WINDOW permits drop off.
+# Keep recent past (grayed) + everything forward. Bounds the diff/coverage scan;
+# older-than-PAST_WINDOW permits drop off.
 PAST_WINDOW_DAYS = 14
 
 NYC = {"min_lat": 40.4774, "max_lat": 40.9176, "min_lng": -74.2591, "max_lng": -73.7004}
+
+# The full category set the frontend can render, so coverage lists the empty
+# lanes (count 0) the map should gray out. Mirrors the runtime CATEGORY_META.
+TARGET_CATEGORIES = {
+    "sports", "fitness", "parks", "arts", "market", "civic", "government",
+    "education", "family", "services", "environment", "volunteer", "jobs",
+    "housing", "media", "general",
+}
 
 # Complete map of NYC's published permit types -> our existing category slugs.
 # "media" is the one added lane: the production / film / press family is a
@@ -280,33 +281,21 @@ def main() -> int:
     all_events = events + list_only
     save_json(SEEN_INDEX, seen)
 
-    payload = {
-        "schema_version": "comprehensive-v1",
-        "generated_at_utc": generated,
-        "classification_version": "categories-v01+nyc-types",
-        "window": {"past_floor": floor_day, "today": today_iso},
-        "total": len(all_events),
-        "map_ready": len(events),
-        "list_only": len(list_only),
-        "new_this_run": len(new_events),
-        "category_counts": dict(by_cat),
-        "event_type_counts": dict(by_type),
-        "events": all_events,
+    # Category coverage: which lanes have data (so the frontend can gray out the
+    # empty ones) and which NYC permit type feeds each. The frontend already
+    # loads the full event set via the discovery "approved" pages, so we do NOT
+    # emit a second copy of every event here — only the diff + coverage.
+    coverage = {
+        cat: {"count": by_cat.get(cat, 0),
+              "event_types": sorted(t for t in by_type
+                                    if category_for({"event_type": t}) == cat)}
+        for cat in sorted(set(by_cat) | set(TARGET_CATEGORIES))
     }
-    save_json(OUT_FEED, payload)
-    save_json(OUT_MANIFEST, {
-        "schema_version": "comprehensive-v1",
-        "generated_at_utc": generated,
-        "total": len(all_events),
-        "map_ready": len(events),
-        "list_only": len(list_only),
-        "new_this_run": len(new_events),
-        "feed": "schema-v1-discovery/all/events.json",
-    })
     save_json(OUT_NEW, {
         "generated_at_utc": generated,
         "new_definition": "event_id not tracked before this refresh run",
         "baseline_run": baseline_run,
+        "window": {"past_floor": floor_day, "today": today_iso},
         "total_tracked": len(all_events),
         "new_this_run": len(new_events),
         "events": sorted(new_events, key=lambda e: e["start_date"]),
@@ -323,13 +312,14 @@ def main() -> int:
         "new_this_run": len(new_events),
         "category_counts": dict(by_cat),
         "event_type_counts": dict(by_type),
-        "qa_pass": len(events) > 0,
+        "category_coverage": coverage,
+        "qa_pass": len(all_events) > 0,
     })
     print(json.dumps({
         "source_rows": len(rows), "kept": len(all_events),
         "map_ready": len(events), "list_only": len(list_only),
         "multi_day": payload_multi(all_events), "new_this_run": len(new_events),
-        "categories": len(by_cat), "event_types": len(by_type),
+        "categories_with_data": len(by_cat), "event_types": len(by_type),
     }, indent=1))
     return 0
 

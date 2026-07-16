@@ -75,39 +75,33 @@ def test_coordinate_certification() -> None:
         fail("missing coords accepted")
 
 
-def test_built_artifact_invariants() -> None:
-    feed_path = ROOT / "data" / "schema-v1-discovery" / "all" / "events.json"
-    if not feed_path.exists():
-        print("  (skip) comprehensive feed not built yet")
+def test_built_artifacts() -> None:
+    report_path = ROOT / "data" / "comprehensive_feed_report.json"
+    new_path = ROOT / "data" / "nycif_new_events.json"
+    if not report_path.exists() or not new_path.exists():
+        print("  (skip) artifacts not built yet")
         return
-    feed = json.loads(feed_path.read_text(encoding="utf-8"))
-    events = feed["events"]
+    rep = json.loads(report_path.read_text(encoding="utf-8"))
+    nw = json.loads(new_path.read_text(encoding="utf-8"))
 
-    ids = [e["id"] for e in events]
-    if len(ids) != len(set(ids)):
-        fail("comprehensive feed has duplicate event ids")
-
-    for e in events:
-        if e["category"] not in ALLOWED:
-            fail(f"event {e['id']} has category {e['category']!r} outside taxonomy")
-        status = e["nycif"]["coordinate_status"]
-        if status == "map_ready":
-            if not mod.valid_coord(e["latitude"], e["longitude"]):
-                fail(f"map_ready event {e['id']} has an uncertified coord")
-        elif status == "list_only":
-            if e["latitude"] is not None or e["longitude"] is not None:
-                fail(f"list_only event {e['id']} still carries coordinates")
-        else:
-            fail(f"event {e['id']} has unexpected coordinate_status {status!r}")
-        # is_past must agree with end_date < today window snapshot
-        if e["is_past"] and e["end_date"] >= feed["window"]["today"]:
-            fail(f"event {e['id']} flagged past but ends today/future")
-
-    if feed["map_ready"] < 1:
-        fail("comprehensive feed has no map-ready events")
-    print(f"  artifact ok: {feed['total']} events, {feed['map_ready']} map_ready, "
-          f"{len(feed['category_counts'])} categories, "
-          f"{feed['new_this_run']} new this run")
+    # every category in the coverage report is a real taxonomy slug
+    for cat in rep["category_coverage"]:
+        if cat not in ALLOWED:
+            fail(f"coverage lists category {cat!r} outside taxonomy")
+    # every NYC type present routes to the category its coverage claims
+    for cat, info in rep["category_coverage"].items():
+        for etype in info["event_types"]:
+            if mod.category_for({"event_type": etype}) != cat:
+                fail(f"coverage puts {etype!r} under {cat!r} but it maps elsewhere")
+    if rep["map_ready"] < 1 or not rep["qa_pass"]:
+        fail("coverage report has no map-ready events / failed QA")
+    # What's-New diff shape
+    for e in nw["events"]:
+        if e["id"].count("@") != 1:
+            fail(f"new event id {e['id']!r} is not per-day-instance keyed")
+    print(f"  artifacts ok: {rep['kept']} scanned, {rep['map_ready']} map_ready, "
+          f"{len(rep['category_counts'])} categories with data, "
+          f"{nw['new_this_run']} new this run")
 
 
 def main() -> int:
@@ -115,7 +109,7 @@ def main() -> int:
         test_every_nyc_type_maps_to_a_valid_category,
         test_media_lane_covers_production_family,
         test_coordinate_certification,
-        test_built_artifact_invariants,
+        test_built_artifacts,
     ]
     for t in tests:
         t()
