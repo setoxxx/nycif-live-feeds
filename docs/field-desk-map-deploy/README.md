@@ -1,3 +1,30 @@
+# Field-desk public map deploy
+
+## Complete-the-Map Pages handshake (READY — apply to field-desk)
+
+Backend feed side is already live on `nycif-live-feeds` main (#185).  
+GitHub Pages still needs these three files copied into `nycif-field-desk`:
+
+```bash
+# From a machine/agent WITH write access to nycif-field-desk:
+./scripts/sync_complete_map_to_field_desk.sh /path/to/nycif-field-desk
+cd /path/to/nycif-field-desk
+git push -u origin HEAD
+gh pr create --title "Deploy Complete-the-Map runtime to Pages" --body "Sport emojis + lane handshake."
+gh pr merge --squash
+```
+
+Or open a Cloud Agent **on the field-desk repo** (not live-feeds) and run the same copy from:
+
+- `schema-v1-major-all-v01/app-schema-v1-major-all-v01.js`
+- `discovery-taxonomy-v02/discovery-patch-v02.js`
+- `schema-v1-major-all-v01/index.html` (`?v=public-map-v07`)
+
+Patch: `COMPLETE_MAP_PAGES_HANDSHAKE.patch`  
+Issues: https://github.com/setoxxx/nycif-field-desk/issues/127 https://github.com/setoxxx/nycif-field-desk/issues/128
+
+---
+
 # Field-desk public map deploy (M10 staged live)
 
 Civic people-facing Review/Help package (Jobs / Volunteer / markets / help places): see [`civic-people-facing-v01/README.md`](./civic-people-facing-v01/README.md). That lane stays staging/review-only and does not replace Approved permits.
