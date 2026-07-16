@@ -57,11 +57,42 @@ def main() -> int:
         ({"title": "FIFA Fan Festival", "category": "general"}, "sports"),
         ({"title": "Tenant resource fair", "category": "general"}, "housing"),
         ({"title": "City Job Fair", "category": "general"}, "jobs"),
+        # Official NYC permit type wins over wrong staged category + FIFA title.
+        (
+            {
+                "title": "Odyssey Private Event at Maximes",
+                "category": "market",
+                "event_type": "Production Event",
+            },
+            "media",
+        ),
+        (
+            {
+                "title": "FIFA House Installation at GH on the Park",
+                "category": "market",
+                "event_type": "Production Event",
+            },
+            "media",
+        ),
+        (
+            {
+                "title": "Plaza Partner Activation",
+                "category": "general",
+                "event_type": "Plaza Partner Event",
+            },
+            "parks",
+        ),
+        (
+            {"title": "Neighborhood Clean-Up", "category": "general", "event_type": "Clean-Up"},
+            "environment",
+        ),
     ]
     for row, expected in samples:
         got = classify_record(row)["category"]
         if got != expected:
             errors.append(f"classify {row.get('title')}: expected {expected} got {got}")
+    if "media" not in contract["categories"]:
+        errors.append("contract missing media category")
 
     # Interests include education for workshop while primary arts
     yoga = classify_record({"title": "Yoga class beginner session", "category": "general"})

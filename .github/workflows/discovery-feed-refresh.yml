@@ -94,9 +94,17 @@ jobs:
               data/nycif_new_events.json \
               data/comprehensive_feed_report.json \
               data/_event_seen_index.json \
+              data/events_discovery_contract_v02.json \
+              data/events_discovery_v02_approved.json \
+              data/events_discovery_v02_review.json \
               data/events_discovery_v02_major.json \
+              data/events_discovery_taxonomy_v02_audit.json \
+              data/events_discovery_reconciliation_v02.json \
+              data/events_discovery_grouping_v02_report.json \
+              data/events_discovery_schema_validation_v02.json \
               data/events_schema_v1_major.json \
-              data/events_schema_v1_major_report.json
+              data/events_schema_v1_major_report.json \
+              docs/events-discovery-taxonomy-v02.md
             if git diff --cached --quiet; then
               echo "No discovery feed changes to commit."
               exit 0

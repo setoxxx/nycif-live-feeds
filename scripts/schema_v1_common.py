@@ -40,6 +40,7 @@ VALID_CATEGORIES = {
     "volunteer",
     "jobs",
     "housing",
+    "media",
     "general",
 }
 
@@ -72,6 +73,10 @@ CATEGORY_ALIASES = {
     "housing": "housing",
     "housing and tenant assistance": "housing",
     "housing and tenant help": "housing",
+    "media": "media",
+    "film": "media",
+    "film / production": "media",
+    "production": "media",
     "general": "general",
 }
 
@@ -158,12 +163,28 @@ KEYWORD_CATEGORY_RULES: list[tuple[str, str, str]] = [
 EVENT_TYPE_CATEGORY = {
     "parade": ("civic", "event_type_parade"),
     "athletic race / tour": ("sports", "event_type_athletic_race"),
+    "athletic race/tour": ("sports", "event_type_athletic_race"),
     "farmers market": ("market", "event_type_farmers_market"),
+    "sidewalk sale": ("market", "event_type_sidewalk_sale"),
     "block party": ("civic", "event_type_block_party"),
     "street event": ("civic", "event_type_street_event"),
+    "open street partner event": ("civic", "event_type_open_street_partner"),
     "religious event": ("civic", "event_type_religious_event"),
     "sport - youth": ("sports", "event_type_sport_youth"),
     "sport - adult": ("sports", "event_type_sport_adult"),
+    "plaza event": ("parks", "event_type_plaza_event"),
+    "plaza partner event": ("parks", "event_type_plaza_partner"),
+    "clean-up": ("environment", "event_type_clean_up"),
+    "health fair": ("services", "event_type_health_fair"),
+    "open culture": ("arts", "event_type_open_culture"),
+    "street festival": ("arts", "event_type_street_festival"),
+    "production event": ("media", "event_type_production_event"),
+    "press conference": ("media", "event_type_press_conference"),
+    "shooting permit": ("media", "event_type_shooting"),
+    "rigging permit": ("media", "event_type_rigging"),
+    "red carpet event": ("media", "event_type_red_carpet"),
+    "dcas prep/shoot/wrap permit": ("media", "event_type_dcas_shoot"),
+    "theater load in and load outs": ("media", "event_type_theater_load"),
 }
 
 _STABLE_ID_SEEN: dict[str, int] = {}
