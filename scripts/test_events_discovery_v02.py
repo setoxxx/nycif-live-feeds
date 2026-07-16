@@ -169,11 +169,12 @@ def main() -> int:
                 errors.append(f"missing nycif.{key}")
                 break
 
-    # Frontend thin mirror + shared major-all runtime with discovery hooks
+    # Frontend thin mirror + shared major-all runtime with discovery hooks.
+    # Canonical index.html lives under schema-v1-major-all-v01/ only (no duplicate
+    # under discovery-taxonomy-v02 — that trips Sonar new-code duplication >3%).
     mirror = ROOT / "docs" / "field-desk-map-deploy" / "discovery-taxonomy-v02"
     major_all = ROOT / "docs" / "field-desk-map-deploy" / "schema-v1-major-all-v01"
     for name in (
-        "index.html",
         "discovery-patch-v02.js",
         "public-map-defaults-v01.js",
         "service-worker.js",
@@ -182,7 +183,7 @@ def main() -> int:
     ):
         if not (mirror / name).exists():
             errors.append(f"missing mirror file {name}")
-    for name in ("app-schema-v1-major-all-v01.js", "event-feed-schema-v1.js"):
+    for name in ("index.html", "app-schema-v1-major-all-v01.js", "event-feed-schema-v1.js"):
         if not (major_all / name).exists():
             errors.append(f"missing shared runtime {name}")
 
@@ -195,22 +196,24 @@ def main() -> int:
         "NYCIF_DISCOVERY_V02",
         "categoryFilterMatch",
         "markerEligible",
-        "Indexing more events",
-        "updateCategoryFilterCounts",
+        "Finding more events",
+        "updateCategoryAvailability",
     ):
         if needle not in app_js:
             errors.append(f"shared app missing discovery hook: {needle}")
 
-    if (mirror / "index.html").exists():
-        html = (mirror / "index.html").read_text(encoding="utf-8")
-        for needle in ("Kids / family", "Classes / workshops", "Volunteer", "Explore More", "Parks / outdoors", "data-cat-count"):
+    index_html = major_all / "index.html"
+    if index_html.exists():
+        html = index_html.read_text(encoding="utf-8")
+        # Counts are injected by updateCategoryAvailability() as .check-count;
+        # static data-cat-count badges are not used in the Complete-the-Map index.
+        for needle in ("Kids / family", "Classes / workshops", "Volunteer", "Explore More", "Parks / outdoors", 'data-cat="media"'):
             if needle not in html:
                 errors.append(f"index missing {needle}")
         if 'data-cat="parade"' in html:
             errors.append("obsolete parade slug present")
         if "discovery-patch-v02.js" not in html:
             errors.append("index missing discovery-patch script")
-
     godview = ROOT / "docs" / "field-desk-admin-deploy" / "admin" / "discovery-godview-panel-v02.js"
     if godview.exists():
         godview_src = godview.read_text(encoding="utf-8")

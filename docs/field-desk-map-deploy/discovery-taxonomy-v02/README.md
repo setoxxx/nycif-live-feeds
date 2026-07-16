@@ -12,11 +12,14 @@ docs/field-desk-map-deploy/schema-v1-major-all-v01/
 
 ## Push / copy instructions (Field Desk)
 
+> Keep a **single** `index.html` under `schema-v1-major-all-v01/` only. A second copy here trips SonarCloud “Duplication on New Code” (>3%).
+
+
 `cursor[bot]` cannot push `setoxxx/nycif-field-desk`. Howard must copy:
 
 | Copy from live-feeds | Into field-desk |
 |----------------------|-----------------|
-| `discovery-taxonomy-v02/index.html` | `index.html` (or review path) |
+| `schema-v1-major-all-v01/index.html` | `./index.html` (canonical; do not duplicate under this folder) |
 | `discovery-taxonomy-v02/discovery-patch-v02.js` | `./discovery-patch-v02.js` |
 | `discovery-taxonomy-v02/public-map-defaults-v01.js` | `./public-map-defaults-v01.js` |
 | `discovery-taxonomy-v02/public-map-v01.css` | merge / replace |
