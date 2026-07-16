@@ -1,0 +1,37 @@
+# Holiday organizer monitors. Prefer offline_html when robots blocks live HTML.
+# Put saved official pages under data/raw/offline/ and set offline_html.
+
+- id: rockefeller_tree
+  name: Rockefeller Center Tree Lighting
+  kind: holiday
+  borough: Manhattan
+  category: Holiday
+  subcategory: Tree Lighting
+  url: https://www.rockefellercenter.com/holidays/
+  offline_html: data/raw/offline/rockefeller_holidays.html
+  authority: official_institution
+  confidence: High
+  method: html_jsonld_ical
+
+- id: bryant_park_winter
+  name: Bryant Park Winter Village
+  kind: holiday
+  borough: Manhattan
+  category: Holiday
+  subcategory: Holiday Market
+  url: https://bryantpark.org/activities/winter-village
+  offline_html: data/raw/offline/bryant_park_winter.html
+  authority: official_local
+  confidence: High
+  method: html_jsonld_ical
+
+- id: times_square_nye
+  name: Times Square New Year's Eve
+  kind: holiday
+  borough: Manhattan
+  category: Holiday
+  subcategory: New Year
+  url: https://www.timessquarenyc.org/times-square-new-years-eve
+  authority: official_local
+  confidence: High
+  method: html_jsonld_ical

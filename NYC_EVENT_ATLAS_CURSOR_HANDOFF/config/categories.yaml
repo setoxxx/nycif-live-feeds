@@ -1,0 +1,39 @@
+permit_event_type_map:
+  Street Festival: [Street Fair, Street Festival]
+  Religious Event: [Religious Event, Religious Event]
+  Parade: [Parade, Parade]
+  Single Block Festival: [Community Festival, Single Block Festival]
+  Farmers Market: [Farmers Market, Farmers Market]
+  Open Street Partner Event: [Open Streets, Open Street Partner Event]
+  Street Event: [Community Festival, Street Event]
+  Block Party: [Block Party, Public Block Party]
+  Athletic Race / Tour: [Race, Athletic Race / Tour]
+  Open Culture: [Public Performance, Open Culture]
+  Plaza Event: [Community Program, Plaza Event]
+  Plaza Partner Event: [Community Program, Plaza Partner Event]
+  Special Event: [Community Program, Special Event]
+
+permit_reject_name_patterns:
+  - '^Soccer'
+  - '^Softball'
+  - '^Baseball'
+  - '^Basketball$'
+  - '^Tennis$'
+  - '^Football'
+  - '^Volleyball$'
+  - '^Cricket$'
+  - '^Picnic$'
+  - '^Barbecue$'
+  - '^Party$'
+  - '^Kickball$'
+  - '^Track and Field$'
+  - '^Miscellaneous$'
+
+borough_codes:
+  Manhattan: MN
+  Brooklyn: BK
+  Queens: QN
+  The Bronx: BX
+  Staten Island: SI
+  Citywide: CW
+  NYC-adjacent: ADJ

@@ -1,0 +1,9 @@
+# Santa Rosalia / 18th Avenue Feast — direct-source monitor seeds.
+# Replace URL with the feast's durable 2026 official page when confirmed.
+# Use offline_html when live fetch is robots-blocked.
+
+- id: santa_rosalia_primary
+  name: Santa Rosalia / 18th Avenue Feast research page
+  url: https://www.18thavenuefeast.com/
+  offline_html: data/raw/offline/santa_rosalia.html
+  note: Save the official 2026 announcement HTML to offline_html when available.

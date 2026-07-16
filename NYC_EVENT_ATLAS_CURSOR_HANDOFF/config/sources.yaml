@@ -1,0 +1,65 @@
+sources:
+  - id: nyc_permitted_events
+    name: NYC Permitted Event Information
+    authority: official_government
+    confidence: High
+    method: socrata
+    dataset_id: tvpp-9vvx
+    base_url: https://data.cityofnewyork.us
+    refresh: daily
+
+  - id: nyc_permitted_events_historical
+    name: NYC Permitted Event Information Historical
+    authority: official_government
+    confidence: High
+    method: socrata
+    dataset_id: bkfu-528j
+    base_url: https://data.cityofnewyork.us
+    refresh: monthly
+
+  - id: sapo_find_events
+    name: SAPO / E-Apply Find Events
+    authority: official_government
+    confidence: High
+    method: browser_search
+    url: https://nyceventpermits.nyc.gov/cems/findevents
+    refresh: daily
+
+  - id: nyc_parks_events
+    name: NYC Parks Events
+    authority: official_government
+    confidence: High
+    method: html_jsonld
+    url: https://www.nycgovparks.org/events
+    refresh: daily
+
+  - id: nyc_public_events
+    name: NYC Upcoming Public Events
+    authority: official_government
+    confidence: High
+    method: api_or_html
+    url: https://www.nyc.gov/main/events/
+    refresh: daily
+
+  - id: clearview
+    name: Clearview Festival Productions
+    authority: official_promoter
+    confidence: High
+    method: html_table
+    url: https://vendors.clearviewfestival.com/StreetFairsSchedule.aspx
+    refresh: every_3_days
+
+  - id: nyc_street_fairs
+    name: NYC Street Fairs / Mardi Gras
+    authority: official_promoter
+    confidence: High
+    method: pdf_or_html
+    url: https://nycstreetfairs.com/event-schedule/
+    refresh: every_3_days
+
+  - id: community_sources
+    name: Community Boards, BIDs, chambers, parishes and civic groups
+    authority: official_local
+    confidence: High
+    method: discovered_per_domain
+    refresh: weekly
