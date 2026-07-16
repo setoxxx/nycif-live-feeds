@@ -1,0 +1,38 @@
+{
+  "artifact_type": "nycif_map_v1_freeze",
+  "schema_version": "1.0.0",
+  "signed_off_at_utc": "2026-07-16T21:16:08Z",
+  "freeze_doc": "docs/wordpress-plugin-deploy/nycinfocus-map-page-v1-freeze.md",
+  "live_qa": {
+    "wordpress_map": "PASS",
+    "field_desk_pages": "PASS",
+    "verified_at_utc": "2026-07-16T21:21:00Z"
+  },
+  "surfaces": {
+    "wordpress_map_url": "https://nycinfocus.com/map/",
+    "field_desk_pages_url": "https://setoxxx.github.io/nycif-field-desk/",
+    "field_desk_admin_url": "https://setoxxx.github.io/nycif-field-desk/admin/",
+    "canonical_iframe_src": "https://setoxxx.github.io/nycif-field-desk/?v=public-map-v07&resetFilters=1&feeds=main"
+  },
+  "handshake_prs_merged": {
+    "live_feeds": [186, 187, 188, 189, 190, 192, 193, 194],
+    "field_desk_issues_closed": [127, 128]
+  },
+  "deploy_automation": {
+    "workflow": ".github/workflows/field-desk-complete-map-deploy.yml",
+    "workflow_name": "Deploy to Field Desk Pages",
+    "trigger": "push to canonical deploy paths on main"
+  },
+  "still_gated": {
+    "supplemental_calendar_parks_on_public_map": "pending M11 human review — not on feeds=main until approved",
+    "phase_2e_location_cache_promotion": "unauthorized",
+    "gps_review_artifact_public_exposure": "forbidden"
+  },
+  "safety": {
+    "public_map_modified_by_this_freeze": false,
+    "location_cache_modified": false,
+    "staged_feed_modified": false,
+    "promotion_allowed": false,
+    "note": "WordPress shell deploy is display-only; feed remains approved discovery via feeds=main"
+  }
+}

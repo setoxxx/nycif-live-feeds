@@ -4,10 +4,10 @@
   "project": "nycif-live-feeds",
   "repository": "setoxxx/nycif-live-feeds",
   "visibility": "public",
-  "current_phase": "Viral Recurrence Memory",
-  "completion_percent": 98,
+  "current_phase": "Map v1 frozen — M11 supplemental review next",
+  "completion_percent": 99,
   "health": "green",
-  "status_summary": "Viral Recurrence Memory matches Money-Day calendar to prior-year bkfu-528j permits (334 matches, 279 returning_likely). FOIL operator index stub ready. No applicant in Open Data. Public map still unauthorized.",
+  "status_summary": "Complete-the-Map handshake done: Field Desk Pages public-map-v07 live, Admin God View v02 panels live, WordPress /map/ fullscreen shell frozen (PR #194). Permit discovery feed on feeds=main. Supplemental calendar+Parks (4,032 rows) still pending human review before map merge.",
   "active_prs": [
     {
       "branch": "cursor/viral-recurrence-memory-da92",
@@ -17,36 +17,52 @@
   ],
   "recent_prs": [
     {
-      "number": 172,
-      "title": "Civic map coverage report, proposals, and God View bookmark",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/172",
+      "number": 194,
+      "title": "Document Map v1 WordPress fullscreen display freeze",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/194",
       "state": "merged",
-      "merge_commit": "f9df1fd2314b5f921701dc856cc5cb6dd5b1582d"
+      "merge_commit": "8546742"
     },
     {
-      "number": 171,
-      "title": "Civic people-facing intake + date/time/location hardening",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/171",
-      "state": "merged",
-      "merge_commit": "386e6ef4be3dae654f25f2233939223e9a39dac4"
+      "number": 193,
+      "title": "Align WordPress plugin deploy kit to public-map-v07 approved feed",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/193",
+      "state": "merged"
+    },
+    {
+      "number": 192,
+      "title": "Ship Admin God View handshake: v02 panels + deploy workflow",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/192",
+      "state": "merged"
     }
   ],
   "blockers": [
-    "Field-desk admin/map deploy requires human push (403 for cursor bot on nycif-field-desk).",
-    "Public WordPress /nycinfocus.com map publish not authorized.",
+    "M11: 4,032 supplemental calendar+Parks rows need human review before any public map merge.",
     "FOIL applicant/org identity not yet filled (sapo_foil_operator_index empty).",
     "No official live citywide soup-kitchen/pantry pin SODA feed.",
     "Phase 2E location_cache promotion remains unauthorized."
   ],
-  "next_action": "Merge viral recurrence PR when green; Howard push admin panel; file FOIL for SAPO PDFs.",
+  "resolved_blockers": [
+    "Field-desk Pages deploy — FIELD_DESK_DEPLOY_TOKEN workflow live (issues #127/#128 closed).",
+    "WordPress /map/ fullscreen shell — live QA PASS 2026-07-16; freeze doc on main."
+  ],
+  "next_action": "M11 supplemental review queue artifacts; optional merge viral recurrence PR when green.",
+  "map_v1": {
+    "frozen": true,
+    "freeze_artifact": "status/nycif-map-v1-freeze.json",
+    "freeze_doc": "docs/wordpress-plugin-deploy/nycinfocus-map-page-v1-freeze.md",
+    "signed_off_at_utc": "2026-07-16T21:16:08Z"
+  },
   "admin_dashboard_urls": {
     "interim_live": "https://setoxxx.github.io/nycif-live-feeds/admin/index.html",
-    "field_desk": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main"
+    "field_desk_map": "https://setoxxx.github.io/nycif-field-desk/?v=public-map-v07&resetFilters=1&feeds=main",
+    "field_desk_admin": "https://setoxxx.github.io/nycif-field-desk/admin/",
+    "wordpress_public_map": "https://nycinfocus.com/map/"
   },
   "data_freshness": {
     "source": "Photographer calendar build + offline daily desk sync",
-    "last_verified_at": "2026-07-15T00:45:00.000Z",
-    "notes": "842 assignment events Jul\u2013Aug 2026; daily workflow cron 15 11 * * * UTC."
+    "last_verified_at": "2026-07-16T21:21:00.000Z",
+    "notes": "Map v1 housekeeping verification; live-sync-qa snapshot datastore on main."
   },
   "photographer_assignment_calendar": {
     "pr173_merged": true,
@@ -76,7 +92,8 @@
     "promotion_allowed_default": false,
     "phase_2e_authorized": false,
     "m7c_authorized": false,
-    "wordpress_public_map_publish_authorized": false
+    "map_v1_shell_live": true,
+    "supplemental_public_map_merge_authorized": false
   },
   "viral_recurrence_memory": {
     "branch": "cursor/viral-recurrence-memory-da92",
