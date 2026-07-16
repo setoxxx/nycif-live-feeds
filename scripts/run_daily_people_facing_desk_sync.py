@@ -162,6 +162,7 @@ def main() -> int:
     steps.append(run_step(safe_python_script("scripts/build_photographer_viral_recurrence.py", *ref_args)))
     steps.append(run_step(safe_python_script("scripts/build_citywide_parade_census.py")))
     steps.append(run_step(safe_python_script("scripts/build_news_desk_assignment_checklist.py")))
+    steps.append(run_step(safe_python_script("scripts/build_major_radar_map_events.py")))
     # Pin integrity fail-closed: after calendar/packs/viral/civic coverage rebuilds.
     steps.append(run_step(safe_python_script("scripts/build_pin_integrity_gate.py")))
     steps.append(run_step(safe_python_script("scripts/build_photographer_shoot_day_certified.py", *ref_args)))

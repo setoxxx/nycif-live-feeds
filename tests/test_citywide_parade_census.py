@@ -161,6 +161,8 @@ def test_production_build_passes_qa():
     assert report["qa_pass"] is True
     assert report["map_eligible_count"] == 0
     assert snapshot["promotion_allowed"] is False
+    assert snapshot.get("anchor_watchlist") is not None
+    assert "source_layer_counts" in report
     odb = next(
         (e for e in snapshot["entries"] if e.get("anchor_key") == "odb-street-co-naming"),
         None,
@@ -171,3 +173,56 @@ def test_production_build_passes_qa():
     assert any(
         e.get("name") == odb.get("name") for e in snapshot.get("priority_events", [])
     )
+
+
+def test_calendar_and_parks_supplemental_merge(tmp_path):
+    permit_path = tmp_path / "permits.json"
+    permit_path.write_text(json.dumps(FIXTURE_PERMIT_ROWS), encoding="utf-8")
+    calendar_path = tmp_path / "calendar.json"
+    calendar_path.write_text(
+        json.dumps(
+            [
+                {
+                    "title": "West Indian Day Parade Community Preview",
+                    "start_date_time": "2026-09-01T10:00:00.000-04:00",
+                    "boroughs": ["Bk"],
+                    "address": "Eastern Parkway",
+                    "canceled": False,
+                    "source_event_id": "cal-001",
+                }
+            ]
+        ),
+        encoding="utf-8",
+    )
+    parks_path = tmp_path / "parks.json"
+    parks_path.write_text(
+        json.dumps(
+            {
+                "events": [
+                    {
+                        "title": "Halloween Parade at Forest Park",
+                        "start_date": "2026-10-31",
+                        "start_date_time": "2026-10-31T6:00 pm",
+                        "location": "Forest Park",
+                        "lat": 40.7,
+                        "lng": -73.85,
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    registry_path = ROOT / "data" / "nycif_citywide_parade_anchor_registry.json"
+    snapshot, report = build.build_census(
+        anchor_registry_path=registry_path,
+        permit_snapshot_path=permit_path,
+        calendar_path=calendar_path,
+        parks_path=parks_path,
+        historical_path=tmp_path / "missing.json",
+        foil_path=tmp_path / "missing.json",
+    )
+    layers = {e.get("source_layer") for e in snapshot["entries"]}
+    assert "citywide_calendar" in layers
+    assert "parks_bigapps" in layers
+    assert report["calendar_merged_count"] >= 1
+    assert report["parks_merged_count"] >= 1

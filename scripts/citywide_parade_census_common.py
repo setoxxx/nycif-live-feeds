@@ -18,6 +18,11 @@ ANCHOR_REGISTRY_PATH = DATA_DIR / "nycif_citywide_parade_anchor_registry.json"
 PERMIT_SNAPSHOT_PATH = DATA_DIR / "raw_nyc_open_data_snapshot.json"
 MAJOR_RADAR_PATH = ROOT / "nycif_major_radar_map_events.json"
 PHOTOGRAPHER_CALENDAR_PATH = DATA_DIR / "photographer_assignment_calendar_2mo.json"
+CITYWIDE_CALENDAR_PATH = DATA_DIR / "nyc_citywide_events_calendar_snapshot.json"
+PARKS_BIGAPPS_PATH = DATA_DIR / "nyc_parks_bigapps_events_snapshot.json"
+HISTORICAL_PERMITS_PATH = DATA_DIR / "nyc_permits_historical_snapshot.json"
+SAPO_FOIL_PATH = DATA_DIR / "sapo_foil_operator_index.json"
+ALL_RADAR_PATH = ROOT / "nycif_all_radar_map_events.json"
 
 EDITORIAL_PRIORITY_RANK = {"highest": 0, "high": 1, "normal": 2, "low": 3}
 
@@ -564,3 +569,283 @@ def priority_queue(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
         if str(e.get("editorial_priority") or "normal") in {"highest", "high"}
     ]
     return _sort_entries(flagged)
+
+
+def load_calendar_rows(path: Path | None = None) -> list[dict[str, Any]]:
+    payload = json.loads((path or CITYWIDE_CALENDAR_PATH).read_text(encoding="utf-8"))
+    if isinstance(payload, list):
+        return [r for r in payload if isinstance(r, dict)]
+    rows = payload.get("events") or payload.get("rows") or []
+    return [r for r in rows if isinstance(r, dict)]
+
+
+def load_parks_rows(path: Path | None = None) -> list[dict[str, Any]]:
+    payload = json.loads((path or PARKS_BIGAPPS_PATH).read_text(encoding="utf-8"))
+    if isinstance(payload, list):
+        return [r for r in payload if isinstance(r, dict)]
+    rows = payload.get("events") or payload.get("rows") or []
+    return [r for r in rows if isinstance(r, dict)]
+
+
+def load_historical_rows(path: Path | None = None) -> list[dict[str, Any]]:
+    if not (path or HISTORICAL_PERMITS_PATH).exists():
+        return []
+    payload = json.loads((path or HISTORICAL_PERMITS_PATH).read_text(encoding="utf-8"))
+    if isinstance(payload, list):
+        return [r for r in payload if isinstance(r, dict)]
+    rows = payload.get("rows") or []
+    return [r for r in rows if isinstance(r, dict)]
+
+
+def load_foil_operators(path: Path | None = None) -> dict[str, dict[str, Any]]:
+    foil_path = path or SAPO_FOIL_PATH
+    if not foil_path.exists():
+        return {}
+    payload = json.loads(foil_path.read_text(encoding="utf-8"))
+    operators = payload.get("operators") or []
+    index: dict[str, dict[str, Any]] = {}
+    for row in operators:
+        if not isinstance(row, dict):
+            continue
+        for key in ("event_id", "permit_event_id", "source_event_id"):
+            pid = str(row.get(key) or "").strip()
+            if pid:
+                index[pid] = row
+    return index
+
+
+def calendar_borough(row: dict[str, Any]) -> str:
+    boroughs = row.get("boroughs")
+    if isinstance(boroughs, list) and boroughs:
+        if len(boroughs) > 1:
+            return "Multi-borough"
+        return queue_borough(boroughs[0])
+    return queue_borough(row.get("borough") or row.get("address"))
+
+
+def calendar_blob(row: dict[str, Any]) -> str:
+    parts = [
+        row.get("title"),
+        row.get("short_description"),
+        row.get("address"),
+        row.get("categories"),
+    ]
+    return norm_text(" ".join(str(p) for p in parts if p))
+
+
+def is_calendar_candidate(row: dict[str, Any]) -> tuple[bool, str]:
+    if row.get("canceled"):
+        return False, "canceled"
+    day = parse_iso_day(row.get("start_date_time"))
+    if not in_census_window(day):
+        return False, "outside_window"
+    blob = calendar_blob(row)
+    if EXCLUDE_LOCATION_RE.search(blob):
+        return False, "parade_ground_excluded"
+    if EXCLUDE_TITLE_RE.search(norm_text(str(row.get("title") or ""))):
+        return False, "rehearsal_or_closed_excluded"
+    if CENSUS_INCLUDE_RE.search(blob):
+        return True, "calendar_census_keyword"
+    return False, "no_match"
+
+
+def is_parks_candidate(row: dict[str, Any]) -> tuple[bool, str]:
+    day = parse_iso_day(row.get("start_date_time") or row.get("start_date"))
+    if not in_census_window(day):
+        return False, "outside_window"
+    blob = norm_text(
+        " ".join(
+            str(p)
+            for p in (
+                row.get("title"),
+                row.get("description"),
+                row.get("location"),
+                row.get("display_location"),
+                row.get("categories"),
+            )
+            if p
+        )
+    )
+    if EXCLUDE_LOCATION_RE.search(blob):
+        return False, "parade_ground_excluded"
+    if EXCLUDE_TITLE_RE.search(norm_text(str(row.get("title") or ""))):
+        return False, "rehearsal_or_closed_excluded"
+    if CENSUS_INCLUDE_RE.search(blob):
+        return True, "parks_census_keyword"
+    return False, "no_match"
+
+
+def entry_dedupe_key(entry: dict[str, Any]) -> str:
+    pid = str(entry.get("permit_event_id") or "").strip()
+    day = str(entry.get("date") or "")
+    if pid and day:
+        return f"permit:{pid}@{day}"
+    anchor = entry.get("anchor_key")
+    if anchor and day:
+        return f"anchor:{anchor}@{day}"
+    return f"title:{norm_text(str(entry.get('name') or ''))}@{day}@{norm_text(str(entry.get('borough') or ''))}"
+
+
+def census_entry_from_calendar(
+    row: dict[str, Any],
+    *,
+    match_reason: str,
+    priority_ref: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    day = parse_iso_day(row.get("start_date_time"))
+    blob = calendar_blob(row)
+    entry = {
+        "name": str(row.get("title") or "").strip(),
+        "date": day.isoformat() if day else None,
+        "start_time": hhmm_from_datetime(row.get("start_date_time")),
+        "end_time": hhmm_from_datetime(row.get("end_date_time")),
+        "borough": calendar_borough(row),
+        "neighborhood": None,
+        "route": str(row.get("address") or "").strip() or None,
+        "event_kind": infer_event_kind(blob),
+        "permit_event_id": None,
+        "permit_status": "not_yet_matched",
+        "official_source": "nyc_citywide_events_calendar",
+        "confidence": "provisional",
+        "editorial_priority": "normal",
+        "calendar_eligible": True,
+        "map_eligible": False,
+        "source_layer": "citywide_calendar",
+        "match_reason": match_reason,
+        "source_event_id": str(row.get("source_event_id") or "").strip() or None,
+        "permalink": row.get("permalink"),
+    }
+    return apply_editorial_priority(entry, priority_ref)
+
+
+def census_entry_from_parks(
+    row: dict[str, Any],
+    *,
+    match_reason: str,
+    priority_ref: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    day = parse_iso_day(row.get("start_date_time") or row.get("start_date"))
+    blob = norm_text(
+        " ".join(
+            str(p)
+            for p in (row.get("title"), row.get("description"), row.get("location"))
+            if p
+        )
+    )
+    entry = {
+        "name": str(row.get("title") or "").strip(),
+        "date": day.isoformat() if day else None,
+        "start_time": hhmm_from_datetime(row.get("start_date_time")),
+        "end_time": hhmm_from_datetime(row.get("end_date_time")),
+        "borough": queue_borough(row.get("borough")),
+        "neighborhood": None,
+        "route": str(row.get("display_location") or row.get("location") or "").strip() or None,
+        "event_kind": infer_event_kind(blob),
+        "permit_event_id": None,
+        "permit_status": "not_yet_matched",
+        "official_source": "nyc_parks_bigapps",
+        "confidence": "provisional",
+        "editorial_priority": "normal",
+        "calendar_eligible": True,
+        "map_eligible": False,
+        "source_layer": "parks_bigapps",
+        "match_reason": match_reason,
+        "source_event_id": str(row.get("source_event_id") or "").strip() or None,
+        "latitude": row.get("lat"),
+        "longitude": row.get("lng"),
+    }
+    return apply_editorial_priority(entry, priority_ref)
+
+
+def merge_supplemental_entries(
+    existing: list[dict[str, Any]], supplemental: list[dict[str, Any]]
+) -> tuple[list[dict[str, Any]], int]:
+    """Merge supplemental rows without duplicating permit/anchor matches."""
+    seen = {entry_dedupe_key(e) for e in existing}
+    added = 0
+    merged = list(existing)
+    for entry in supplemental:
+        key = entry_dedupe_key(entry)
+        if key in seen:
+            continue
+        seen.add(key)
+        merged.append(entry)
+        added += 1
+    return merged, added
+
+
+def apply_historical_tba_inference(
+    entries: list[dict[str, Any]],
+    historical_rows: list[dict[str, Any]],
+    *,
+    anchor_registry: dict[str, Any] | None = None,
+) -> int:
+    """Use prior-year permits to annotate unmatched anchors — never add standalone rows."""
+    if not historical_rows:
+        return 0
+    alias_by_key: dict[str, list[str]] = {}
+    if anchor_registry:
+        for anchor in anchor_registry.get("anchors") or []:
+            key = anchor.get("anchor_key")
+            if key:
+                alias_by_key[str(key)] = list(anchor.get("match_aliases") or [])
+    updated = 0
+    for entry in entries:
+        if not entry.get("anchor_key"):
+            continue
+        if entry.get("permit_status") not in {"not_yet_matched", "anchor_only"}:
+            continue
+        anchor_name = str(entry.get("name") or "")
+        anchor_ctx = {
+            "name": anchor_name,
+            "match_aliases": alias_by_key.get(str(entry.get("anchor_key")), []),
+        }
+        for hist in historical_rows:
+            hist_name = str(hist.get("event_name") or "")
+            if not _alias_hit(anchor_ctx, hist_name):
+                continue
+            hist_day = parse_iso_day(hist.get("start_date_time"))
+            if hist_day is None:
+                continue
+            note = (
+                f"Historical pattern: prior-year permit on {hist_day.month}/{hist_day.day} "
+                f"(event_id {hist.get('event_id') or hist.get('source_event_id') or 'unknown'})"
+            )
+            entry["status_note"] = note
+            if entry.get("confidence") in {None, "provisional"}:
+                entry["confidence"] = "historical_pattern_only"
+            entry["historical_reference_event_id"] = str(
+                hist.get("event_id") or hist.get("source_event_id") or ""
+            ).strip() or None
+            updated += 1
+            break
+    return updated
+
+
+def apply_foil_operator_joins(
+    entries: list[dict[str, Any]], foil_index: dict[str, dict[str, Any]]
+) -> int:
+    if not foil_index:
+        return 0
+    joins = 0
+    for entry in entries:
+        pid = str(entry.get("permit_event_id") or "").strip()
+        if not pid or pid not in foil_index:
+            continue
+        foil = foil_index[pid]
+        org = foil.get("applicant_org") or foil.get("operator_org")
+        if org:
+            entry["foil_applicant_org"] = org
+            joins += 1
+    return joins
+
+
+def anchor_watchlist(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Unmatched editorial anchors awaiting permit/organizer confirmation."""
+    rows = [
+        e
+        for e in entries
+        if e.get("anchor_key")
+        and e.get("permit_status") in {"not_yet_matched", "anchor_only"}
+    ]
+    return _sort_entries(rows)

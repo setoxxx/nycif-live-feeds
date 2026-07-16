@@ -177,7 +177,7 @@
     "honesty": "NYC Open Data does not currently provide a high-quality live citywide soup-kitchen or food-pantry pin feed suitable for map publication.",
     "status": "known_gap_human_follow_up"
   },
-  "generated_at_utc": "2026-07-16T05:19:43Z",
+  "generated_at_utc": "2026-07-16T05:24:39Z",
   "lanes": {
     "Approved": "schema-v1-discovery approved permits (unchanged)",
     "Help Places": "schema-v1-civic-review/help (markets + benefits/SNAP/drop-in/Homebase/aging/NYCHA)",
@@ -188,12 +188,12 @@
     "assignment_mode_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&assignment=1",
     "csv": "data/news_desk_assignment_checklist.csv",
     "map_ready_count": 497,
-    "priority_unchecked_count": 492,
+    "priority_unchecked_count": 514,
     "public_map_policy": "Editorial assignment lane — map_eligible false until promotion",
     "qa_pass": true,
     "report": "data/news_desk_assignment_checklist_report.json",
-    "today_count": 16,
-    "total_rows": 542
+    "today_count": 17,
+    "total_rows": 661
   },
   "next_human_steps": [
     "Push Field Desk civic-people-facing-v01 (+ assignment=1 app JS with pin integrity) to nycif-field-desk Pages",
@@ -207,8 +207,8 @@
     "anchor_permit_matches": 11,
     "anchor_registry": "data/nycif_citywide_parade_anchor_registry.json",
     "artifact": "data/citywide_parade_census_snapshot.json",
-    "merged_total": 114,
-    "priority_event_count": 64,
+    "merged_total": 233,
+    "priority_event_count": 86,
     "public_map_policy": "Staging census — not public promoted data",
     "qa_pass": true,
     "report": "data/citywide_parade_census_report.json"
