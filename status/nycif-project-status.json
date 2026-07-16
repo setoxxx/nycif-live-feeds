@@ -4,10 +4,10 @@
   "project": "nycif-live-feeds",
   "repository": "setoxxx/nycif-live-feeds",
   "visibility": "public",
-  "current_phase": "Map v1 frozen — M11 supplemental review next",
+  "current_phase": "M11 supplemental review queue ready — human review next",
   "completion_percent": 99,
   "health": "green",
-  "status_summary": "Complete-the-Map handshake done: Field Desk Pages public-map-v07 live, Admin God View v02 panels live, WordPress /map/ fullscreen shell frozen (PR #194). Permit discovery feed on feeds=main. Supplemental calendar+Parks (4,032 rows) still pending human review before map merge.",
+  "status_summary": "Map v1 frozen. M11 supplemental manual approval queue generated: 3,457 pending rows (2,210 calendar-only, 1,247 parks-only); validation PASS. Not on feeds=main until explicitly approved.",
   "active_prs": [
     {
       "branch": "cursor/viral-recurrence-memory-da92",
@@ -37,7 +37,7 @@
     }
   ],
   "blockers": [
-    "M11: 4,032 supplemental calendar+Parks rows need human review before any public map merge.",
+    "M11: 3,457 supplemental rows in supplemental_manual_approval_queue — human review required before public map merge.",
     "FOIL applicant/org identity not yet filled (sapo_foil_operator_index empty).",
     "No official live citywide soup-kitchen/pantry pin SODA feed.",
     "Phase 2E location_cache promotion remains unauthorized."
@@ -46,7 +46,7 @@
     "Field-desk Pages deploy — FIELD_DESK_DEPLOY_TOKEN workflow live (issues #127/#128 closed).",
     "WordPress /map/ fullscreen shell — live QA PASS 2026-07-16; freeze doc on main."
   ],
-  "next_action": "M11 supplemental review queue artifacts; optional merge viral recurrence PR when green.",
+  "next_action": "Human review supplemental_manual_approval_review_sheet.csv; optional viral recurrence PR when green.",
   "map_v1": {
     "frozen": true,
     "freeze_artifact": "status/nycif-map-v1-freeze.json",

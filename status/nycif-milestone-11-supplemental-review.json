@@ -1,0 +1,74 @@
+{
+  "artifact_type": "nycif_milestone_11_supplemental_review",
+  "schema_version": "1.0.0",
+  "generated_at_utc": "2026-07-16T21:24:50.021418+00:00",
+  "milestone": "M11 — Supplemental manual review queue",
+  "headline": "3,457 current/future supplemental calendar+Parks rows queued for human review; 0 approved; validation PASS.",
+  "counts": {
+    "total_pending": 3457,
+    "calendar_only": 2210,
+    "parks_only": 1247,
+    "with_coordinates": 2402,
+    "without_coordinates": 1055,
+    "approved": 0,
+    "rejected": 0,
+    "promotion_allowed": 0
+  },
+  "note_on_count_drift": "Historical M10 figure was 4,032 rows (2026-07-14 snapshot). Current/future filter as of 2026-07-16 yields 3,457 rows as past-dated events drop out.",
+  "artifacts": {
+    "review_queues": [
+      "data/supplemental_calendar_only_review_queue.json",
+      "data/supplemental_calendar_only_review_queue.csv",
+      "data/supplemental_calendar_only_review_queue_report.json",
+      "data/supplemental_parks_only_review_queue.json",
+      "data/supplemental_parks_only_review_queue.csv",
+      "data/supplemental_parks_only_review_queue_report.json",
+      "data/calendar_parks_coord_match_proposals.json",
+      "data/calendar_parks_coord_match_proposals_report.json"
+    ],
+    "staging_intake": [
+      "data/supplemental_events_staging_feed.json",
+      "data/supplemental_events_staging_manifest.json",
+      "data/supplemental_events_staging_report.json"
+    ],
+    "findings": [
+      "data/supplemental_calendar_only_review_findings.json",
+      "data/supplemental_calendar_only_priority_review.csv",
+      "data/supplemental_parks_only_review_findings.json"
+    ],
+    "m11_manual_approval": [
+      "data/supplemental_manual_approval_queue.json",
+      "data/supplemental_manual_approval_queue_report.json",
+      "data/supplemental_manual_approval_validation_report.json",
+      "data/supplemental_manual_approval_review_sheet.json",
+      "data/supplemental_manual_approval_review_sheet.csv",
+      "data/supplemental_manual_approval_review_sheet_report.json"
+    ]
+  },
+  "scripts": [
+    "scripts/build_supplemental_coverage_review_queues.py",
+    "scripts/build_supplemental_events_staging_feed.py",
+    "scripts/build_coverage_gap_review_findings.py",
+    "scripts/build_supplemental_manual_approval_queue.py",
+    "scripts/validate_supplemental_manual_approvals.py",
+    "scripts/build_supplemental_manual_review_sheet.py"
+  ],
+  "workflow_wired": [
+    ".github/workflows/live-sync-qa.yml"
+  ],
+  "qa": {
+    "staging_feed_qa_pass": true,
+    "manual_approval_queue_qa_pass": true,
+    "validation_qa_pass": true,
+    "review_sheet_qa_pass": true
+  },
+  "next_required_step": "Human review via supplemental_manual_approval_review_sheet.csv. Do not merge into feeds=main without explicit authorization.",
+  "safety": {
+    "public_map_modified": false,
+    "location_cache_modified": false,
+    "staged_feed_modified": false,
+    "promotion_allowed": false,
+    "manual_review_status": "pending",
+    "wordpress_map_touched": false
+  }
+}
