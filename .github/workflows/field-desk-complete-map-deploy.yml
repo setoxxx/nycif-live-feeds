@@ -26,6 +26,7 @@ jobs:
           set -euo pipefail
           if [ -z "${FIELD_DESK_TOKEN:-}" ]; then
             echo "::error::FIELD_DESK_DEPLOY_TOKEN secret is not configured on nycif-live-feeds."
+            echo "::error::Mobile setup: github.com/setoxxx/nycif-live-feeds/settings/secrets/actions"
             exit 1
           fi
 
@@ -36,7 +37,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout main
           git pull origin main
-          git checkout -B cursor/complete-map-pages-handshake-d65d
 
           cp "$SRC/schema-v1-major-all-v01/app-schema-v1-major-all-v01.js" ./app-schema-v1-major-all-v01.js
           cp "$SRC/discovery-taxonomy-v02/discovery-patch-v02.js" ./discovery-patch-v02.js
@@ -54,26 +54,8 @@ jobs:
 
           git add app-schema-v1-major-all-v01.js discovery-patch-v02.js index.html
           if git diff --cached --quiet; then
-            echo "No field-desk changes to commit."
-          else
-            git commit -m "Ship Complete-the-Map handshake: public-map-v07 from live-feeds canonical deploy"
+            echo "Field-desk already has canonical Complete-the-Map runtime."
+            exit 0
           fi
-          git push -u origin cursor/complete-map-pages-handshake-d65d
-
-      - name: Merge PR to main
-        env:
-          FIELD_DESK_TOKEN: ${{ secrets.FIELD_DESK_DEPLOY_TOKEN }}
-          GH_TOKEN: ${{ secrets.FIELD_DESK_DEPLOY_TOKEN }}
-        run: |
-          set -euo pipefail
-          PR_URL="$(gh pr list -R setoxxx/nycif-field-desk --head cursor/complete-map-pages-handshake-d65d --json url --jq '.[0].url' || true)"
-          if [ -z "$PR_URL" ] || [ "$PR_URL" = "null" ]; then
-            gh pr create -R setoxxx/nycif-field-desk \
-              --base main \
-              --head cursor/complete-map-pages-handshake-d65d \
-              --title "Ship Complete-the-Map handshake: public-map-v07 from live-feeds canonical deploy" \
-              --body "Automated deploy from nycif-live-feeds workflow. Sport-true emojis, discovery taxonomy lanes, public-map-v07 cache bust. Closes #127 and #128."
-          else
-            echo "PR already exists: $PR_URL"
-          fi
-          gh pr merge -R setoxxx/nycif-field-desk cursor/complete-map-pages-handshake-d65d --squash --delete-branch
+          git commit -m "Ship Complete-the-Map handshake: public-map-v07 from live-feeds canonical deploy"
+          git push origin main
