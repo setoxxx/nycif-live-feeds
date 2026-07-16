@@ -56,6 +56,13 @@ jobs:
             python scripts/build_events_schema_v1_major.py
             python scripts/project_events_discovery_v02.py
 
+            # Comprehensive "100% of the city" feed: categorizes the full staged
+            # snapshot into the frontend taxonomy, flags past + newly-arrived
+            # permits, and emits the admin "What's New" diff. Derived from the
+            # committed staged snapshot (the live city pull itself is the
+            # human-gated live-sync-qa workflow, not this scheduled job).
+            python scripts/build_comprehensive_event_feed.py
+
             # Fail closed: never commit an empty or malformed public feed.
             python - <<'PY'
           import json, glob, sys
@@ -68,11 +75,22 @@ jobs:
               sys.exit(f"approved manifest page_count {man.get('page_count')} != {len(pages)} page files")
           if not man.get("latest_date"):
               sys.exit("approved manifest missing latest_date")
-          print(f"validated: {len(major['events'])} major, {man.get('total')} approved across {len(pages)} pages")
+          comp = json.load(open("data/schema-v1-discovery/all/events.json"))
+          if not comp.get("events") or not comp.get("map_ready"):
+              sys.exit("comprehensive feed has no map-ready events")
+          ids = [e["id"] for e in comp["events"]]
+          if len(ids) != len(set(ids)):
+              sys.exit("comprehensive feed has duplicate event ids")
+          print(f"validated: {len(major['events'])} major, {man.get('total')} approved "
+                f"across {len(pages)} pages, {comp['total']} comprehensive "
+                f"({comp['new_this_run']} new this run)")
           PY
 
             git add \
               data/schema-v1-discovery \
+              data/nycif_new_events.json \
+              data/comprehensive_feed_report.json \
+              data/_event_seen_index.json \
               data/events_discovery_v02_major.json \
               data/events_schema_v1_major.json \
               data/events_schema_v1_major_report.json
