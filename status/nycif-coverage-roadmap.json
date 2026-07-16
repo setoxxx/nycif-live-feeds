@@ -1,7 +1,7 @@
 {
   "artifact_type": "nycif_coverage_roadmap",
   "schema_version": "1.0.0",
-  "generated_at_utc": "2026-07-14T01:45:00.000Z",
+  "generated_at_utc": "2026-07-16T21:21:00.000Z",
   "live_audit_snapshot": {
     "permit_current_future_rows": 33084,
     "calendar_current_future_rows": 2708,
@@ -64,38 +64,24 @@
       "note": "Permits + calendar + Parks BigApps staged; supplemental review queues generated for 2,502 calendar-only and 1,530 Parks-only current/future keys"
     },
     "live_map_publish": {
-      "percent": 0,
-      "status": "gated",
-      "note": "Requires explicit publish/promote authorization; staged feed is display-ready for field desk QA"
+      "percent": 85,
+      "status": "map_v1_frozen",
+      "note": "Permit discovery map live on Field Desk Pages + WordPress /map/ (public-map-v07, feeds=main). Supplemental calendar+Parks merge still gated on M11 human review."
     }
   },
   "path_to_100_percent": [
     {
       "step": 1,
-      "action": "Merge field-desk Live Pipeline admin panel PR",
-      "artifacts": ["docs/field-desk-admin-deploy/admin/*"],
-      "target": "Admin dashboard shows live counts from nycif-live-feeds main"
+      "action": "Map v1 freeze — COMPLETE (2026-07-16)",
+      "artifacts": [
+        "docs/wordpress-plugin-deploy/nycinfocus-map-page-v1-freeze.md",
+        "status/nycif-map-v1-freeze.json"
+      ],
+      "target": "Field Desk Pages + WordPress /map/ fullscreen shell; do not regress"
     },
     {
       "step": 2,
-      "action": "Use Parks facility reference in Phase 2C geocoder fill",
-      "commands": ["python3 scripts/build_gps_geocoding_filled_proposals.py"],
-      "target": "Reduce GPS review tail using official Parks coordinates"
-    },
-    {
-      "step": 3,
-      "action": "Run multi-source coverage audit weekly",
-      "commands": [
-        "python3 scripts/sync_nyc_citywide_events_calendar.py",
-        "python3 scripts/sync_nyc_parks_bigapps_events.py",
-        "python3 scripts/build_nyc_parks_facility_reference.py",
-        "python3 scripts/audit_multi_source_coverage.py"
-      ],
-      "target": "Track calendar-only and Parks-only gaps vs permits"
-    },
-    {
-      "step": 4,
-      "action": "Review supplemental intake staging feed (M10)",
+      "action": "M11 supplemental review queue",
       "artifacts": [
         "data/supplemental_events_staging_feed.json",
         "data/supplemental_events_staging_manifest.json",
@@ -104,16 +90,16 @@
       "target": "Human review for 4,032 calendar+Parks supplemental rows before any map merge"
     },
     {
-      "step": 5,
+      "step": 3,
       "action": "Optional Phase 2E location_cache promotion",
       "requires": "Explicit human authorization to promote approved resolver rows",
       "target": "~16.5k resolver keys proven in QA but not yet written to location_cache.json"
     },
     {
-      "step": 6,
-      "action": "Explicit publish authorization only",
+      "step": 4,
+      "action": "Explicit supplemental publish authorization only",
       "requires": "Human says promote/publish approved rows",
-      "target": "Live map publish"
+      "target": "Merge approved supplemental rows onto public map feed"
     }
   ],
   "safety": {
