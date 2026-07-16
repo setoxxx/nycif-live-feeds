@@ -454,5 +454,78 @@ class SupplementalManualApprovalTests(unittest.TestCase):
                     setattr(validate_mod, name, value)
 
 
+class SupplementalDecisionsPatchTests(unittest.TestCase):
+    def test_apply_decisions_patch_by_review_rank(self) -> None:
+        from scripts import apply_supplemental_manual_approval_decisions as apply_mod
+
+        with tempfile.TemporaryDirectory() as tmp:
+            data_dir = Path(tmp) / "data"
+            data_dir.mkdir()
+            queue_path = data_dir / "supplemental_manual_approval_queue.json"
+            queue_path.write_text(
+                json.dumps(
+                    {
+                        "approval_queue": [
+                            {
+                                "review_rank": 1,
+                                "overlap_key": "active hike|2099-01-01",
+                                "title": "Active Hike",
+                                "manual_review_status": "pending",
+                                "promotion_allowed": False,
+                            },
+                            {
+                                "review_rank": 2,
+                                "overlap_key": "canceled yoga|2099-01-02",
+                                "title": "CANCELED: Yoga",
+                                "manual_review_status": "pending",
+                                "promotion_allowed": False,
+                            },
+                        ]
+                    }
+                ),
+                encoding="utf-8",
+            )
+            decisions_path = data_dir / "supplemental_manual_approval_decisions.json"
+            decisions_path.write_text(
+                json.dumps(
+                    {
+                        "manual_reviewer": "test-reviewer",
+                        "decisions": [
+                            {
+                                "review_rank": 2,
+                                "manual_review_status": "rejected",
+                                "approval_decision_reason": "Canceled in title.",
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            originals = {
+                "APPROVAL_QUEUE_PATH": apply_mod.APPROVAL_QUEUE_PATH,
+                "DECISIONS_PATH": apply_mod.DECISIONS_PATH,
+                "DECISIONS_REPORT_PATH": apply_mod.DECISIONS_REPORT_PATH,
+            }
+            try:
+                apply_mod.APPROVAL_QUEUE_PATH = queue_path
+                apply_mod.DECISIONS_PATH = decisions_path
+                apply_mod.DECISIONS_REPORT_PATH = data_dir / "supplemental_manual_approval_decisions_report.json"
+                self.assertEqual(
+                    apply_mod.run(
+                        decisions_path=decisions_path,
+                        dry_run=False,
+                    ),
+                    0,
+                )
+                updated = json.loads(queue_path.read_text(encoding="utf-8"))["approval_queue"]
+                self.assertEqual(updated[0]["manual_review_status"], "pending")
+                self.assertEqual(updated[1]["manual_review_status"], "rejected")
+                self.assertEqual(updated[1]["manual_reviewer"], "test-reviewer")
+                self.assertFalse(updated[1]["promotion_allowed"])
+            finally:
+                for name, value in originals.items():
+                    setattr(apply_mod, name, value)
+
+
 if __name__ == "__main__":
     unittest.main()
