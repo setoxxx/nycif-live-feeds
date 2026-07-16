@@ -37,12 +37,13 @@ https://github.com/setoxxx/nycif-live-feeds/pull/179
 - [x] God View digest + [civic-godview-panel-v01.js](https://github.com/setoxxx/nycif-live-feeds/blob/cursor/citywide-parade-census-bfb8/docs/field-desk-admin-deploy/admin/civic-godview-panel-v01.js) updated
 - [x] **14 pytest cases** passing
 
-### Completed in field-desk (local — not yet pushed)
+### Completed in field-desk (v02 ready — human push + merge to main)
 
-- [x] `field-desk-news-desk-v01.js` (operator/assignment mode only)
-- [x] `index.html` + `service-worker.js` wired (cache `v024-news-desk-v01`)
-- Branch ready: `cursor/news-desk-staging-overlay-bfb8`
-- **Note:** `cursor[bot]` cannot push `nycif-field-desk` — human must push + merge to `main`
+- [x] [`field-desk-news-desk-v01.js`](https://github.com/setoxxx/nycif-field-desk/blob/cursor/news-desk-staging-overlay-bfb8/field-desk-news-desk-v01.js) v02 — assignment merge, sort, URL handshake, priority filter
+- [x] [`admin/news-desk-godview-panel-v01.js`](https://github.com/setoxxx/nycif-field-desk/blob/cursor/news-desk-staging-overlay-bfb8/admin/news-desk-godview-panel-v01.js)
+- [x] 14 frontend tests passing
+- Branch: `cursor/news-desk-staging-overlay-bfb8` — **cursor[bot] cannot push field-desk**
+- Deploy package: [docs/field-desk-map-deploy/civic-people-facing-v01/field-desk-news-desk-v01.js](https://github.com/setoxxx/nycif-live-feeds/blob/cursor/citywide-parade-census-bfb8/docs/field-desk-map-deploy/civic-people-facing-v01/field-desk-news-desk-v01.js)
 
 ### Safety (enforced)
 
@@ -145,9 +146,9 @@ gh workflow run live-sync-qa.yml -f allow_live_fetch=yes -f allow_email=no
 | Area | Status |
 |------|--------|
 | Backend checklist/census QA | ✅ Done — verify after merge |
-| Field Desk staging overlay | ⬜ After field-desk push |
-| Assignment mode sort/merge | ⬜ Polish |
-| Admin God View KPIs | ⬜ Verify live |
+| Field Desk staging overlay | ✅ Built — push branch + merge to main |
+| Assignment mode sort/merge | ✅ Built in v02 overlay |
+| Admin God View KPIs | ✅ Built — verify after Pages deploy |
 | Anchor watchlist completeness | ⬜ Ongoing |
 
 ---
