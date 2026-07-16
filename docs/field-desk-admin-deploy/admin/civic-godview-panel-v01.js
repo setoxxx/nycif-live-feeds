@@ -88,7 +88,7 @@
       <ul class="mini-list">
         <li><strong>Approved</strong> — ${esc((digest.lanes || {}).Approved || "permits")}</li>
         <li><strong>Review</strong> — ${esc((digest.lanes || {}).Review || "calendar/Parks ∪ civic")}</li>
-        <li><strong>Help Places</strong> — ${esc((digest.lanes || {}).["Help Places"] || "markets + directories")}</li>
+        <li><strong>Help Places</strong> — ${esc((digest.lanes || {})["Help Places"] || "markets + directories")}</li>
       </ul>
 
       <h3>Field Desk next (human push)</h3>

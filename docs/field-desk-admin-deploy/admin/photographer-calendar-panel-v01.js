@@ -122,7 +122,7 @@
         <h3>${esc(heading)} — ${esc(pack.pack_date)}</h3>
         <div class="muted">${fmtNum(pack.total_events)} money-day · ${fmtNum(pack.map_ready_count)} map_ready</div>
         <div class="md-chips">${boroughChipsHtml(pack)}</div>
-        <ol class="md-go">${tops || "<li class=\\"muted\\">No go-shoot rows</li>"}</ol>
+        <ol class="md-go">${tops || '<li class="muted">No go-shoot rows</li>'}</ol>
         <p><a href="${esc(pack.field_desk_link || fieldDeskUrl(pack.pack_date))}" target="_blank" rel="noopener noreferrer">Open Field Desk Assignment Mode</a></p>
       </div>`;
   }
