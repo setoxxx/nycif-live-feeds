@@ -61,5 +61,5 @@ Merge backend PR, then deploy field-desk to GitHub Pages.
 
 ## Verify
 
-- https://setoxxx.github.io/nycif-field-desk/ — should show ~32k staged events (filtered by date/category)
-- https://nycinfocus.com/map/ — update iframe cache param after deploy
+- https://setoxxx.github.io/nycif-field-desk/ — `?v=public-map-v07` runtime (Complete-the-Map handshake)
+- https://nycinfocus.com/map/ — fullscreen shell per [`docs/wordpress-plugin-deploy/nycinfocus-map-page-v1-freeze.md`](../wordpress-plugin-deploy/nycinfocus-map-page-v1-freeze.md); bump iframe `v=` only after Pages deploy + QA
