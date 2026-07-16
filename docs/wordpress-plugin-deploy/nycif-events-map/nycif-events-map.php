@@ -2,8 +2,8 @@
 /**
  * Plugin Name: NYCIF Events Map
  * Plugin URI: https://github.com/setoxxx/nycif-live-feeds
- * Description: Embeds the NYC In Focus live event map from GitHub Pages using the restored staged-first Field Desk runtime.
- * Version: 1.3.1
+ * Description: Embeds the NYC In Focus live event map from GitHub Pages (approved schema-v1-discovery public feed).
+ * Version: 1.3.2
  * Author: NYC In Focus
  * License: GPL-2.0-or-later
  * Text Domain: nycif-events-map
@@ -13,8 +13,10 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('NYCIF_EVENTS_MAP_VERSION', '1.3.1');
+define('NYCIF_EVENTS_MAP_VERSION', '1.3.2');
 define('NYCIF_MAP_EMBED_URL', 'https://setoxxx.github.io/nycif-field-desk/');
+define('NYCIF_APPROVED_FEED_REF', 'main');
+define('NYCIF_RUNTIME_CACHE_BUST', 'public-map-v07');
 define('NYCIF_STAGED_FEED_URL', 'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nycif_staged_live_events.json');
 define('NYCIF_ALL_FEED_URL', 'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/nycif_all_radar_map_events.json');
 define('NYCIF_DASHBOARD_URL', 'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/status/nycif-live-pipeline-dashboard.json');
@@ -23,7 +25,8 @@ function nycif_events_map_shortcode($atts) {
     $atts = shortcode_atts(
         array(
             'height'        => '85vh',
-            'cache'         => 'map-restore-v02',
+            'cache'         => NYCIF_RUNTIME_CACHE_BUST,
+            'feeds'         => NYCIF_APPROVED_FEED_REF,
             'reset_filters' => '1',
         ),
         $atts,
@@ -35,7 +38,10 @@ function nycif_events_map_shortcode($atts) {
         $height = '85vh';
     }
 
-    $query_args = array('v' => sanitize_text_field($atts['cache']));
+    $query_args = array(
+        'v'     => sanitize_text_field($atts['cache']),
+        'feeds' => sanitize_text_field($atts['feeds']),
+    );
     if ('1' === (string) $atts['reset_filters']) {
         $query_args['resetFilters'] = '1';
     }
@@ -49,7 +55,7 @@ function nycif_events_map_shortcode($atts) {
         . 'loading="eager" referrerpolicy="no-referrer-when-downgrade" '
         . 'allow="geolocation; fullscreen" allowfullscreen></iframe>'
         . '<p class="nycif-events-map-caption" style="font-size:12px;color:#666;margin-top:8px;">'
-        . 'Live NYC public-event records via the NYCIF staged-first map. Event details may change; confirm before traveling.'
+        . 'Live NYC public events from the approved discovery feed. Event details may change; confirm before traveling.'
         . '</p></div>',
         esc_url($src),
         esc_attr($height)
@@ -72,7 +78,7 @@ function nycif_events_map_settings_render() {
         <p>Plugin version <?php echo esc_html(NYCIF_EVENTS_MAP_VERSION); ?></p>
         <table class="form-table">
             <tr><th>Embed URL</th><td><code><?php echo esc_html(NYCIF_MAP_EMBED_URL); ?></code></td></tr>
-            <tr><th>Default runtime URL</th><td><code><?php echo esc_html(add_query_arg(array('v' => 'map-restore-v02', 'resetFilters' => '1'), NYCIF_MAP_EMBED_URL)); ?></code></td></tr>
+            <tr><th>Default runtime URL</th><td><code><?php echo esc_html(add_query_arg(array('v' => NYCIF_RUNTIME_CACHE_BUST, 'feeds' => NYCIF_APPROVED_FEED_REF, 'resetFilters' => '1'), NYCIF_MAP_EMBED_URL)); ?></code></td></tr>
             <tr><th>Staged feed</th><td><code><?php echo esc_html(NYCIF_STAGED_FEED_URL); ?></code></td></tr>
             <tr><th>Full feed</th><td><code><?php echo esc_html(NYCIF_ALL_FEED_URL); ?></code></td></tr>
             <tr><th>Pipeline dashboard</th><td><a href="<?php echo esc_url(NYCIF_DASHBOARD_URL); ?>" target="_blank" rel="noopener">Open JSON</a></td></tr>
