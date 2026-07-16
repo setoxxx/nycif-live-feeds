@@ -2,6 +2,12 @@ name: Deploy Complete-the-Map to Field Desk
 
 on:
   workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "docs/field-desk-map-deploy/schema-v1-major-all-v01/**"
+      - "docs/field-desk-map-deploy/discovery-taxonomy-v02/discovery-patch-v02.js"
+      - ".github/workflows/field-desk-complete-map-deploy.yml"
 
 permissions:
   contents: read
