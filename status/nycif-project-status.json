@@ -4,18 +4,51 @@
   "project": "nycif-live-feeds",
   "repository": "setoxxx/nycif-live-feeds",
   "visibility": "public",
-  "current_phase": "Viral Recurrence Memory",
+  "current_phase": "News Desk + Parade Census (staging)",
   "completion_percent": 98,
   "health": "green",
-  "status_summary": "Viral Recurrence Memory matches Money-Day calendar to prior-year bkfu-528j permits (334 matches, 279 returning_likely). FOIL operator index stub ready. No applicant in Open Data. Public map still unauthorized.",
+  "status_summary": "News Desk assignment checklist + citywide parade census are staged on PR #179 with God View admin wiring. Checklist qa_pass true; map_eligible false on all rows. Awaiting merge + Field Desk human push. Public map still unauthorized.",
   "active_prs": [
     {
-      "branch": "cursor/viral-recurrence-memory-da92",
-      "title": "Viral Recurrence Memory",
-      "state": "open_draft"
+      "number": 179,
+      "branch": "cursor/citywide-parade-census-bfb8",
+      "title": "Citywide parade census + News Desk checklist (staging)",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/179",
+      "state": "open"
     }
   ],
   "recent_prs": [
+    {
+      "number": 177,
+      "title": "Discovery Feed Refresh workflow",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/177",
+      "state": "merged"
+    },
+    {
+      "number": 176,
+      "title": "Pin integrity + Shoot Day Certified gate",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/176",
+      "state": "merged",
+      "merge_commit": "65f410ed76c795b2b1301b67badb6ac5869141dc"
+    },
+    {
+      "number": 175,
+      "title": "Viral Recurrence Memory",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/175",
+      "state": "merged"
+    },
+    {
+      "number": 174,
+      "title": "Photographer Money-Day Desk v2",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/174",
+      "state": "merged"
+    },
+    {
+      "number": 173,
+      "title": "Photographer assignment calendar + daily desk sync",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/173",
+      "state": "merged"
+    },
     {
       "number": 172,
       "title": "Civic map coverage report, proposals, and God View bookmark",
@@ -38,24 +71,40 @@
     "No official live citywide soup-kitchen/pantry pin SODA feed.",
     "Phase 2E location_cache promotion remains unauthorized."
   ],
-  "next_action": "Merge viral recurrence PR when green; Howard push admin panel; file FOIL for SAPO PDFs.",
+  "next_action": "Howard: merge PR #179 when CI green; push Field Desk civic-people-facing-v01 + admin News Desk God View panel; verify ?assignment=1 and admin KPIs.",
   "admin_dashboard_urls": {
     "interim_live": "https://setoxxx.github.io/nycif-live-feeds/admin/index.html",
-    "field_desk": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main"
+    "field_desk": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main",
+    "assignment_mode": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&assignment=1"
   },
   "data_freshness": {
-    "source": "Photographer calendar build + offline daily desk sync",
-    "last_verified_at": "2026-07-15T00:45:00.000Z",
-    "notes": "842 assignment events Jul\u2013Aug 2026; daily workflow cron 15 11 * * * UTC."
+    "source": "News Desk checklist + parade census rebuild on PR #179",
+    "last_verified_at": "2026-07-16T16:01:48.000Z",
+    "notes": "Checklist 549 rows (15 today, 404 priority_unchecked, 350 map_ready); parade census 233 merged / 88 priority; map_eligible false everywhere."
+  },
+  "news_desk": {
+    "pr": 179,
+    "branch": "cursor/citywide-parade-census-bfb8",
+    "checklist_qa_pass": true,
+    "total_rows": 549,
+    "today_count": 15,
+    "priority_unchecked_count": 404,
+    "map_ready_count": 350,
+    "map_eligible_count": 0,
+    "promotion_allowed": false,
+    "parade_census_qa_pass": true,
+    "parade_merged_total": 233,
+    "parade_priority_event_count": 88,
+    "godview_panel": "docs/field-desk-admin-deploy/admin/news-desk-godview-panel-v01.js",
+    "field_desk_package": "docs/field-desk-map-deploy/civic-people-facing-v01/",
+    "completion_prompt": "docs/NYCIF-GODVIEW-NEWS-DESK-COMPLETION-PROMPT.txt"
   },
   "photographer_assignment_calendar": {
     "pr173_merged": true,
-    "money_day_v2_branch": "cursor/photographer-money-day-desk-v2-da92",
-    "baseline_v1_events": 842,
+    "money_day_v2_merged": true,
+    "viral_recurrence_merged": true,
     "v2_events": 327,
     "v2_days_with_coverage": 37,
-    "today_pack_events": 14,
-    "tomorrow_pack_events": 15,
     "workflow": "daily-people-facing-desk-sync.yml"
   },
   "civic_people_facing": {
@@ -76,13 +125,7 @@
     "promotion_allowed_default": false,
     "phase_2e_authorized": false,
     "m7c_authorized": false,
-    "wordpress_public_map_publish_authorized": false
-  },
-  "viral_recurrence_memory": {
-    "branch": "cursor/viral-recurrence-memory-da92",
-    "historical_rows": 2450,
-    "match_count": 334,
-    "returning_likely": 279,
-    "next_14d_magnets": 40
+    "wordpress_public_map_publish_authorized": false,
+    "news_desk_map_eligible_default": false
   }
 }

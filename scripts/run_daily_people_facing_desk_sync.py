@@ -44,6 +44,7 @@ ALLOWED_SCRIPTS = frozenset(
         "scripts/build_photographer_viral_recurrence.py",
         "scripts/build_citywide_parade_census.py",
         "scripts/build_news_desk_assignment_checklist.py",
+        "scripts/build_major_radar_map_events.py",
         "scripts/build_pin_integrity_gate.py",
         "scripts/build_photographer_shoot_day_certified.py",
         "scripts/build_events_discovery_godview_digest_v02.py",

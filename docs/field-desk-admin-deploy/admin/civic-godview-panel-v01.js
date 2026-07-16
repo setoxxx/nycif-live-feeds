@@ -5,7 +5,7 @@
 (() => {
   const VERSION = "civic-godview-panel-v01";
   const LIVE_FEEDS_BASE = "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds";
-  const BRANCH_CANDIDATES = ["main", "cursor/pin-integrity-shoot-day-gate-da92"];
+  const BRANCH_CANDIDATES = ["main", "cursor/citywide-parade-census-bfb8"];
   const DIGEST_PATH = "data/civic_people_facing_godview_digest.json";
 
   function esc(value) {
