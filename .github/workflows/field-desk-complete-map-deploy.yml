@@ -1,0 +1,73 @@
+name: Deploy Complete-the-Map to Field Desk
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout live-feeds canonical deploy sources
+        uses: actions/checkout@v4
+
+      - name: Sync Complete-the-Map runtime to field-desk
+        env:
+          FIELD_DESK_TOKEN: ${{ secrets.FIELD_DESK_DEPLOY_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${FIELD_DESK_TOKEN:-}" ]; then
+            echo "::error::FIELD_DESK_DEPLOY_TOKEN secret is not configured on nycif-live-feeds."
+            exit 1
+          fi
+
+          SRC="$GITHUB_WORKSPACE/docs/field-desk-map-deploy"
+          git clone "https://x-access-token:${FIELD_DESK_TOKEN}@github.com/setoxxx/nycif-field-desk.git" /tmp/field-desk
+          cd /tmp/field-desk
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout main
+          git pull origin main
+          git checkout -B cursor/complete-map-pages-handshake-d65d
+
+          cp "$SRC/schema-v1-major-all-v01/app-schema-v1-major-all-v01.js" ./app-schema-v1-major-all-v01.js
+          cp "$SRC/discovery-taxonomy-v02/discovery-patch-v02.js" ./discovery-patch-v02.js
+          cp "$SRC/schema-v1-major-all-v01/index.html" ./index.html
+
+          grep -q "[/basketball/i, '🏀']" app-schema-v1-major-all-v01.js
+          grep -q reviewManifest app-schema-v1-major-all-v01.js
+          grep -q "schema-v1-discovery" discovery-patch-v02.js
+          grep -q 'media: { emoji' discovery-patch-v02.js
+          grep -q public-map-v07 index.html
+          grep -q 'data-cat="media"' index.html
+          grep -q admin-whats-new-v01.js index.html
+          node --check app-schema-v1-major-all-v01.js
+          node --check discovery-patch-v02.js
+
+          git add app-schema-v1-major-all-v01.js discovery-patch-v02.js index.html
+          if git diff --cached --quiet; then
+            echo "No field-desk changes to commit."
+          else
+            git commit -m "Ship Complete-the-Map handshake: public-map-v07 from live-feeds canonical deploy"
+          fi
+          git push -u origin cursor/complete-map-pages-handshake-d65d
+
+      - name: Merge PR to main
+        env:
+          FIELD_DESK_TOKEN: ${{ secrets.FIELD_DESK_DEPLOY_TOKEN }}
+          GH_TOKEN: ${{ secrets.FIELD_DESK_DEPLOY_TOKEN }}
+        run: |
+          set -euo pipefail
+          PR_URL="$(gh pr list -R setoxxx/nycif-field-desk --head cursor/complete-map-pages-handshake-d65d --json url --jq '.[0].url' || true)"
+          if [ -z "$PR_URL" ] || [ "$PR_URL" = "null" ]; then
+            gh pr create -R setoxxx/nycif-field-desk \
+              --base main \
+              --head cursor/complete-map-pages-handshake-d65d \
+              --title "Ship Complete-the-Map handshake: public-map-v07 from live-feeds canonical deploy" \
+              --body "Automated deploy from nycif-live-feeds workflow. Sport-true emojis, discovery taxonomy lanes, public-map-v07 cache bust. Closes #127 and #128."
+          else
+            echo "PR already exists: $PR_URL"
+          fi
+          gh pr merge -R setoxxx/nycif-field-desk cursor/complete-map-pages-handshake-d65d --squash --delete-branch
