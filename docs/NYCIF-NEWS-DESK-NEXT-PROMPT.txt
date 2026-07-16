@@ -1,0 +1,339 @@
+================================================================================
+NYCIF NEWS DESK + PARADE CENSUS — NEXT PROMPT TO COMPLETE
+================================================================================
+Bookmark date: 2026-07-16
+Backend repo: setoxxx/nycif-live-feeds
+Frontend map repo: setoxxx/nycif-field-desk
+Read AGENTS.md in BOTH repos before any changes.
+
+Prime directive: Do not publish bad data.
+Staging/checklist/census artifacts are editorial tools until explicit promotion.
+
+
+================================================================================
+WHERE WE ARE NOW (DO NOT REBUILD)
+================================================================================
+
+Backend PR #179 (branch: cursor/citywide-parade-census-bfb8):
+  https://github.com/setoxxx/nycif-live-feeds/pull/179
+
+COMPLETED ON BACKEND:
+  [x] data/nycif_citywide_parade_anchor_registry.json (47 editorial anchors)
+  [x] scripts/citywide_parade_census_common.py (Phase 2 multi-source helpers)
+  [x] scripts/build_citywide_parade_census.py (schema v2)
+  [x] data/citywide_parade_census_snapshot.json — 233 rows, qa_pass: true
+  [x] data/citywide_parade_census_report.json
+  [x] Parade census Phase 2 sources: permits + citywide calendar (+86) + Parks BigApps (+33)
+  [x] Historical permits → TBA inference on unmatched anchors only
+  [x] SAPO FOIL operator join hook (when sapo_foil_operator_index.json filled)
+  [x] anchor_watchlist in census snapshot
+  [x] scripts/news_desk_checklist_common.py
+  [x] scripts/build_news_desk_assignment_checklist.py
+  [x] data/news_desk_assignment_checklist.json — 661 rows, qa_pass: true
+  [x] data/news_desk_assignment_checklist_report.json
+  [x] data/news_desk_assignment_checklist.csv
+  [x] ODB street co-naming: permit 945819, Jul 25 Brooklyn, highest, street_co_naming
+  [x] priority_unchecked: 514 rows
+  [x] scripts/build_major_radar_map_events.py
+  [x] nycif_major_radar_map_events.json rebuilt (369 rows, 11 NYPD hard-writes preserved)
+  [x] Wired into run_daily_people_facing_desk_sync.py (census → checklist → major radar)
+  [x] Wired into .github/workflows/live-sync-qa.yml (after Parks sync)
+  [x] God View digest + admin civic-godview-panel updated
+  [x] tests/test_citywide_parade_census.py (8 tests)
+  [x] tests/test_news_desk_assignment_checklist.py (5 tests)
+  [x] tests/test_major_radar_rebuild.py (1 test)
+
+COMPLETED IN FIELD-DESK (LOCAL — NOT YET PUSHED TO GITHUB):
+  [x] field-desk-news-desk-v01.js (operator/assignment mode only)
+  [x] index.html + service-worker.js wired (cache v024-news-desk-v01)
+  [x] tools/public-map/operator-desk.test.mjs updated
+  Branch ready: cursor/news-desk-staging-overlay-bfb8
+  NOTE: cursor[bot] cannot push nycif-field-desk — human must push + merge to main
+
+SAFETY (ENFORCED):
+  - map_eligible: false on ALL census + checklist rows
+  - promotion_allowed: false everywhere
+  - location_cache.json, nycif_staged_live_events.json, staged manifests UNTOUCHED
+  - No public map publish
+
+
+================================================================================
+MAP LINKS
+================================================================================
+
+Field Desk map:
+  https://setoxxx.github.io/nycif-field-desk/
+
+Assignment / News Desk mode (after field-desk push):
+  https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&assignment=1
+
+ODB deep link (Jul 25 Brooklyn):
+  https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-25&assignment=1&borough=Brooklyn
+
+Admin God View:
+  https://setoxxx.github.io/nycif-field-desk/admin/index.html
+
+WordPress public map (unchanged):
+  https://nycinfocus.com/map/
+
+
+================================================================================
+ARTIFACT URLS (RAW GITHUB — AFTER PR #179 MERGES TO MAIN)
+================================================================================
+
+News desk checklist:
+  https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/news_desk_assignment_checklist.json
+
+Parade census snapshot:
+  https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/citywide_parade_census_snapshot.json
+
+Major radar (rebuilt):
+  https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/nycif_major_radar_map_events.json
+
+Photographer money-day calendar:
+  https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/photographer_assignment_calendar_2mo.json
+
+Public staged feed (DEFAULT — do not replace):
+  https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nycif_staged_live_events.json
+
+QA-ONLY — never public map default:
+  - citywide_parade_census_snapshot.json
+  - news_desk_assignment_checklist.json
+  - All gps_review_* / gps_manual_approval_* artifacts
+
+
+================================================================================
+REMAINING WORK — COMPLETE THESE NEXT
+================================================================================
+
+TASK A — MERGE + DEPLOY (HUMAN GATES)
+--------------------------------------
+1. Review and merge PR #179 on nycif-live-feeds
+2. Push field-desk branch to GitHub Pages:
+     cd nycif-field-desk
+     git checkout cursor/news-desk-staging-overlay-bfb8
+     git push -u origin cursor/news-desk-staging-overlay-bfb8
+     # open PR, merge to main → Pages refresh
+3. Copy deploy packages if needed:
+     docs/field-desk-map-deploy/civic-people-facing-v01/ → nycif-field-desk/
+     docs/field-desk-admin-deploy/admin/ → nycif-field-desk/admin/
+4. Verify assignment mode loads checklist + census overlay in Filters panel
+5. Confirm public map (no ?assignment=1) shows NO News Desk UI
+
+
+TASK B — FIELD DESK POLISH (nycif-field-desk)
+---------------------------------------------
+Read AGENTS.md first. Operator/assignment mode ONLY — never change public default feed.
+
+1. Assignment mode merge improvements:
+   - Merge photographer_assignment_calendar priority rows WITH news_desk priority_unchecked
+   - Show why_story tags + assignment_score on list cards
+   - Sort: editorial_priority (highest→high→normal) then assignment_score desc
+   - Honor ?date=YYYY-MM-DD&borough=Brooklyn&assignment=1 deep links
+
+2. News Desk panel enhancements:
+   - editorial_priority filter chip (highest / high / all)
+   - Hide list_only rows on map; keep in sidebar (already partial — verify end-to-end)
+   - Optional: sync news_desk_status to admin backend later (localStorage OK for now)
+
+3. Parade & civic census overlay:
+   - Popup cards: headline, date, start/end time, borough, route, confidence,
+     permit_event_id, editorial_priority, story_lane/event_kind
+   - Color pins by story_lane; largest pin for highest priority
+   - Banner: "Staging / editorial — not public promoted data"
+
+4. Admin God View:
+   - Ensure live-pipeline-panel or civic panel shows checklist + census QA from digest
+   - Link to assignment mode + raw artifact URLs
+
+5. Tests:
+   node --test tools/public-map/operator-desk.test.mjs
+   Add tests for field-desk-news-desk-v01.js gate + tab filtering if extending
+
+
+TASK C — BACKEND DATA QUALITY (nycif-live-feeds)
+------------------------------------------------
+After PR #179 merge, on main:
+
+1. Fill data/sapo_foil_operator_index.json when FOIL PDFs arrive (human)
+2. Expand anchor registry as organizers confirm 2026 dates (Jul–Dec majors)
+3. Verify permit refresh captures new neighborhood parades automatically:
+     python3 scripts/sync_nyc_open_data.py
+     python3 scripts/build_citywide_parade_census.py
+     python3 scripts/build_news_desk_assignment_checklist.py
+4. Confirm anchor_watchlist tracks unmatched annual events (Colombian Day, Giglio,
+   J'Ouvert, West Indian Day, San Gennaro window, Halloween parades, Marathon, etc.)
+5. Street co-namings must never silently drop (ODB class + NYPD intel + permit extract)
+
+
+TASK D — DISPLAY / GEOCODE COMPLETENESS (OPTIONAL HARDENING)
+------------------------------------------------------------
+For rows exposed to Field Desk list + map:
+
+REQUIRED FOR LIST VIEW (verify every checklist row):
+  story_headline, date, borough, route_or_location, story_lane, editorial_priority,
+  confidence, field_desk_link
+
+REQUIRED FOR MAP PIN (when map_ready):
+  latitude, longitude (valid NYC bounds), coordinate_status: map_ready
+  Join from nycif_all_radar_map_events.json / staged feed by permit_event_id
+  Do NOT write to location_cache.json
+
+DISPLAY HEADLINE CLEANUP:
+  C0-Naming → Co-Naming in display layer; preserve raw in permit_match_name/raw_title
+
+
+TASK E — DAILY OPERATOR WORKFLOW (AUTOMATED)
+--------------------------------------------
+daily-people-facing-desk-sync.yml order (already wired):
+  1. sync_nyc_open_data.py
+  2. sync_nyc_citywide_events_calendar.py
+  3. sync_nyc_parks_bigapps_events.py
+  4. build_civic_people_facing_staging.py
+  5. build_photographer_assignment_calendar.py
+  6. sync_nyc_permits_historical.py
+  7. build_photographer_viral_recurrence.py
+  8. build_citywide_parade_census.py
+  9. build_news_desk_assignment_checklist.py
+  10. build_major_radar_map_events.py
+  11. build_pin_integrity_gate.py
+  12. build_photographer_shoot_day_certified.py
+  13. build godview digests
+
+Human morning checklist:
+  1. Open admin: https://setoxxx.github.io/nycif-field-desk/admin/index.html
+  2. Verify daily_people_facing_sync_report.json qa_pass
+  3. Open assignment mode for today
+  4. Review priority_unchecked in news_desk_assignment_checklist.json
+  5. Assign stories → news_desk_status assigned (localStorage or future admin sync)
+  6. After coverage → mark covered
+
+Full permit refresh (manual):
+  gh workflow run live-sync-qa.yml -f allow_live_fetch=yes -f allow_email=no
+
+
+================================================================================
+CONFIRMED ANNUAL ANCHORS (JUL 16 – DEC 31, 2026)
+================================================================================
+Must appear in anchor_watchlist until permit-organizer confirms:
+
+JULY: Colombian parade (Queens), Williamsburg Giglio (Jul 19), CURLFEST (Jul 25),
+  Thunderbird Powwow (Jul 24-26), St. Irene procession (Jul 28)
+
+AUGUST: East Harlem Sant'Antonio (Aug 8), East Harlem Giglio (Aug 9),
+  Dominican Day Parade (Aug 9), India Day Parade (Aug 16), Santa Rosalia (Aug 23),
+  late-August school/community parades
+
+SEPTEMBER: J'Ouvert + West Indian Day (Sep 7), Ferragosto (Sep 13),
+  Steuben Parade (Sep 19), Queens Cancer Walk (Sep 19), African American Day (Sep 20),
+  Mexican Day candidate (Sep 20), San Gennaro window (Sep 19-27),
+  Grand Procession (Sep 26), Chinatown Mid-Autumn TBA
+
+OCTOBER: Pulaski (Oct 4), St. Francis blessing (Oct 4), Panamanian (Oct 10-11),
+  Hispanic Day (Oct 11), Columbus Day (Oct 12), Korean Parade TBA,
+  Nigerian Independence TBA, Diwali Times Square (Oct 24), Village Halloween (Oct 31),
+  Park Slope + Jackson Heights Halloween, precinct Halloween parades
+
+NOVEMBER: NYC Marathon (Nov 1), Election Day gatherings (Nov 3),
+  Veterans Day Parade (Nov 11), Macy's balloon inflation (Nov 25),
+  Macy's Thanksgiving Parade (Nov 26), holiday tree-lighting parades
+
+DECEMBER: holiday parades, Santa/toy-drive parades, Hanukkah processions,
+  Christmas pageants, Times Square NYE (Dec 31), borough NYE events
+
+PRIORITY CIVIC (not always parades):
+  ODB Street Co-Naming (Jul 25, Brooklyn) — highest ✓
+  Street co-namings from permits + NYPD intel
+  Pop-ups and merchandise fairs from money-day desk
+
+
+================================================================================
+SUCCESS CRITERIA (DEFINITION OF DONE)
+================================================================================
+
+Backend (mostly done — verify after merge):
+  [x] news_desk_assignment_checklist.json qa_pass: true
+  [x] ODB highest street_co_naming in priority_unchecked
+  [x] Every checklist row has field_desk_link, story_lane, editorial_priority
+  [x] Rows with geocoded permits have lat/lng + coordinate_status
+  [x] Daily sync runs checklist after census
+  [x] pytest passes
+  [x] map_eligible: false on all checklist/census rows
+  [x] Protected files untouched
+
+Display (complete after field-desk push):
+  [ ] Field Desk loads checklist in staging lane (?assignment=1)
+  [ ] Assignment mode shows priority stories sorted correctly
+  [ ] Parade/civic pins render with proper popup cards
+  [ ] List-only rows in checklist sidebar but not as bad map pins
+  [ ] Borough + date + lane filters work
+  [ ] Admin God View shows checklist + census QA summary
+
+Data completeness (ongoing):
+  [ ] Permit refresh captures new neighborhood parades automatically
+  [ ] Anchor watchlist tracks unmatched major annual events
+  [ ] Street co-namings never silently dropped
+  [ ] Pop-ups and feasts merge without duplicates
+
+
+================================================================================
+PROTECTED FILES — DO NOT EDIT WITHOUT EXPLICIT AUTHORIZATION
+================================================================================
+
+  data/location_cache.json
+  data/nycif_staged_live_events.json
+  data/staged_live_manifest.json
+  data/previous_staged_live_events_snapshot.json
+  Public map feed outputs (unless running authorized publish pipeline)
+  WordPress/public embed production settings
+  GitHub Actions secrets
+
+Publishing requires explicit language:
+  "promote these approved rows"
+  "update location_cache.json with these approved rows"
+  "publish this to the public map"
+
+Review, stage, prepare, generate proposals are NOT permission to publish.
+
+
+================================================================================
+RUN LOCALLY
+================================================================================
+
+Backend (from nycif-live-feeds root):
+  python3 scripts/build_citywide_parade_census.py
+  python3 scripts/build_news_desk_assignment_checklist.py
+  python3 scripts/build_major_radar_map_events.py
+  python3 -m pytest tests/test_citywide_parade_census.py \
+    tests/test_news_desk_assignment_checklist.py \
+    tests/test_major_radar_rebuild.py -q
+
+Frontend (from nycif-field-desk root):
+  node --test tools/public-map/operator-desk.test.mjs
+
+
+================================================================================
+COPY-PASTE AGENT KICKOFF (SHORT VERSION)
+================================================================================
+
+Complete NYCIF News Desk display rollout:
+
+1. Merge PR #179 on setoxxx/nycif-live-feeds (census + checklist + major radar).
+2. Push nycif-field-desk branch cursor/news-desk-staging-overlay-bfb8:
+   field-desk-news-desk-v01.js is ready — operator/assignment mode only.
+3. Polish assignment mode: merge money-day calendar + priority_unchecked,
+   show why_story + assignment_score, sort by editorial_priority then score.
+4. Verify parade census staging pins + popup cards; list_only stays off map.
+5. Copy docs/field-desk-map-deploy + admin panels if needed; merge to main → Pages.
+6. QA in assignment mode:
+   https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&assignment=1
+7. Do NOT publish census/checklist to public map without explicit promotion.
+   map_eligible false everywhere. Protected files untouched.
+
+Read AGENTS.md in both repos. Full spec: docs/NYCIF-NEWS-DESK-FULL-PROMPT.txt
+Status snapshot: docs/NYCIF-NEWS-DESK-NEXT-PROMPT.txt
+
+
+================================================================================
+END OF NEXT PROMPT
+================================================================================
