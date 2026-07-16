@@ -16,6 +16,10 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 ANCHOR_REGISTRY_PATH = DATA_DIR / "nycif_citywide_parade_anchor_registry.json"
 PERMIT_SNAPSHOT_PATH = DATA_DIR / "raw_nyc_open_data_snapshot.json"
+MAJOR_RADAR_PATH = ROOT / "nycif_major_radar_map_events.json"
+PHOTOGRAPHER_CALENDAR_PATH = DATA_DIR / "photographer_assignment_calendar_2mo.json"
+
+EDITORIAL_PRIORITY_RANK = {"highest": 0, "high": 1, "normal": 2, "low": 3}
 
 WINDOW_START = date(2026, 7, 16)
 WINDOW_END = date(2026, 12, 31)
@@ -80,7 +84,29 @@ EVENT_KIND_RULES: list[tuple[str, re.Pattern[str]]] = [
     ("street_festival_procession", re.compile(r"ferragosto|san gennaro|powwow", re.I)),
     ("fan_festival", re.compile(r"curlfest|fan festival|fan zone", re.I)),
     ("balloon_inflation", re.compile(r"balloon inflation", re.I)),
+    (
+        "street_co_naming",
+        re.compile(
+            r"co-?naming|c0-naming|street naming|honorary street|naming ceremony|"
+            r"street co-?naming|\bway naming\b",
+            re.I,
+        ),
+    ),
+    ("civic_dedication", re.compile(r"\bunveiling\b|dedication ceremony|ribbon cutting", re.I)),
 ]
+
+# Auto-highest civic signals (local major-radar / desk behavior).
+PRIORITY_HIGHEST_TITLE_RE = re.compile(
+    r"co-?naming|c0-naming|street naming|honorary street|naming ceremony|"
+    r"ol.?dirty bastard|\bodb\b|ticker.?tape|ball drop|thanksgiving day parade|"
+    r"west indian|j.?ouvert|village halloween",
+    re.I,
+)
+PRIORITY_HIGH_TITLE_RE = re.compile(
+    r"street fair|merchandise fair|fan festival|curlfest|ferragosto|san gennaro|"
+    r"veterans day parade|pride march|giglio",
+    re.I,
+)
 
 CENSUS_INCLUDE_RE = re.compile(
     "|".join(f"(?:{p.pattern})" for _, p in EVENT_KIND_RULES),
@@ -195,11 +221,172 @@ def is_census_candidate(row: dict[str, Any]) -> tuple[bool, str]:
     return False, "no_match"
 
 
-def census_entry_from_permit(row: dict[str, Any], *, match_reason: str) -> dict[str, Any]:
+def _title_day_key(name: str, day: str | None) -> tuple[str, str]:
+    return norm_text(name), str(day or "")
+
+
+def load_priority_reference(
+    *,
+    major_radar_path: Path | None = None,
+    photographer_calendar_path: Path | None = None,
+) -> dict[str, Any]:
+    """Index local desk priority signals (major radar + photographer calendar)."""
+    by_permit_id: dict[str, dict[str, Any]] = {}
+    by_title_day: dict[tuple[str, str], dict[str, Any]] = {}
+
+    def _upsert(
+        *,
+        permit_id: str | None,
+        title: str,
+        day: str | None,
+        priority: str,
+        reason: str,
+        source: str,
+        extra: dict[str, Any] | None = None,
+    ) -> None:
+        payload = {
+            "editorial_priority": priority,
+            "priority_reason": reason,
+            "priority_source": source,
+            **(extra or {}),
+        }
+        if permit_id:
+            existing = by_permit_id.get(permit_id)
+            if existing is None or EDITORIAL_PRIORITY_RANK[priority] < EDITORIAL_PRIORITY_RANK.get(
+                existing["editorial_priority"], 9
+            ):
+                by_permit_id[permit_id] = payload
+        key = _title_day_key(title, day)
+        existing = by_title_day.get(key)
+        if existing is None or EDITORIAL_PRIORITY_RANK[priority] < EDITORIAL_PRIORITY_RANK.get(
+            existing["editorial_priority"], 9
+        ):
+            by_title_day[key] = payload
+
+    radar_path = major_radar_path or MAJOR_RADAR_PATH
+    if radar_path.exists():
+        radar_rows = json.loads(radar_path.read_text(encoding="utf-8"))
+        if isinstance(radar_rows, list):
+            for row in radar_rows:
+                if not isinstance(row, dict):
+                    continue
+                day = str(row.get("date") or row.get("start_date_time") or "")[:10]
+                if not in_census_window(parse_iso_day(day)):
+                    continue
+                title = str(row.get("title") or "")
+                permit_id = str(row.get("id") or row.get("source_event_id") or "").strip() or None
+                event_type = str(row.get("event_type") or "")
+                priority = "normal"
+                reason = None
+                if event_type == "Street Co-Naming / Ceremony" or row.get("_manual_priority") == "NYPD":
+                    priority = "highest"
+                    reason = "major_radar_street_co_naming"
+                elif row.get("field_default") or row.get("assignment_feed") == "major":
+                    priority = "high"
+                    reason = "major_radar_field_default"
+                elif row.get("photo_pick"):
+                    priority = "high"
+                    reason = "major_radar_photo_pick"
+                if priority != "normal":
+                    _upsert(
+                        permit_id=permit_id,
+                        title=title,
+                        day=day,
+                        priority=priority,
+                        reason=reason or "major_radar",
+                        source="nycif_major_radar_map_events.json",
+                    )
+
+    cal_path = photographer_calendar_path or PHOTOGRAPHER_CALENDAR_PATH
+    if cal_path.exists():
+        cal_payload = json.loads(cal_path.read_text(encoding="utf-8"))
+        cal_rows = cal_payload.get("events") if isinstance(cal_payload, dict) else cal_payload
+        if isinstance(cal_rows, list):
+            for row in cal_rows:
+                if not isinstance(row, dict):
+                    continue
+                day = str(row.get("date") or row.get("start_date_time") or "")[:10]
+                if not in_census_window(parse_iso_day(day)):
+                    continue
+                title = str(row.get("title") or "")
+                source = row.get("source") if isinstance(row.get("source"), dict) else {}
+                permit_id = str(source.get("source_event_id") or "").strip() or None
+                score = int(row.get("assignment_score") or 0)
+                priority = "normal"
+                reason = None
+                if row.get("money_day") and score >= 380:
+                    priority = "highest"
+                    reason = "photographer_money_day"
+                elif row.get("money_day") or score >= 300:
+                    priority = "high"
+                    reason = "photographer_assignment_calendar"
+                if priority != "normal":
+                    _upsert(
+                        permit_id=permit_id,
+                        title=title,
+                        day=day,
+                        priority=priority,
+                        reason=reason or "photographer_assignment_calendar",
+                        source="photographer_assignment_calendar_2mo.json",
+                        extra={"assignment_score": score} if score else None,
+                    )
+
+    return {"by_permit_id": by_permit_id, "by_title_day": by_title_day}
+
+
+def infer_editorial_priority(entry: dict[str, Any]) -> tuple[str, str | None]:
+    name = str(entry.get("name") or "")
+    blob = norm_text(f"{name} {entry.get('event_kind') or ''}")
+    if entry.get("event_kind") == "street_co_naming" or PRIORITY_HIGHEST_TITLE_RE.search(name):
+        return "highest", "title_street_co_naming_or_signature_civic"
+    if PRIORITY_HIGH_TITLE_RE.search(name):
+        return "high", "title_high_value_civic"
+    if entry.get("editorial_priority") in {"highest", "high"}:
+        return str(entry["editorial_priority"]), "anchor_editorial_priority"
+    return str(entry.get("editorial_priority") or "normal"), None
+
+
+def apply_editorial_priority(
+    entry: dict[str, Any], priority_ref: dict[str, Any] | None
+) -> dict[str, Any]:
+    updated = dict(entry)
+    base_priority, base_reason = infer_editorial_priority(updated)
+    updated["editorial_priority"] = base_priority
+    if base_reason:
+        updated["priority_reason"] = base_reason
+
+    ref = priority_ref or {}
+    permit_id = str(updated.get("permit_event_id") or "").strip()
+    day = str(updated.get("date") or "")
+    title = str(updated.get("name") or "")
+    overlay = None
+    if permit_id:
+        overlay = (ref.get("by_permit_id") or {}).get(permit_id)
+    if overlay is None:
+        overlay = (ref.get("by_title_day") or {}).get(_title_day_key(title, day))
+
+    if overlay:
+        new_priority = overlay["editorial_priority"]
+        current = str(updated.get("editorial_priority") or "normal")
+        if EDITORIAL_PRIORITY_RANK[new_priority] <= EDITORIAL_PRIORITY_RANK.get(current, 9):
+            updated["editorial_priority"] = new_priority
+            updated["priority_reason"] = overlay.get("priority_reason")
+            updated["priority_source"] = overlay.get("priority_source")
+            if overlay.get("assignment_score") is not None:
+                updated["assignment_score"] = overlay["assignment_score"]
+    return updated
+
+
+def census_entry_from_permit(
+    row: dict[str, Any],
+    *,
+    match_reason: str,
+    priority_ref: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     day = parse_iso_day(row.get("start_date_time"))
     blob = permit_blob(row)
     borough = queue_borough(row.get("event_borough"))
-    return {
+    entry = {
         "name": str(row.get("event_name") or "").strip(),
         "date": day.isoformat() if day else None,
         "start_time": hhmm_from_datetime(row.get("start_date_time")),
@@ -221,6 +408,7 @@ def census_entry_from_permit(row: dict[str, Any], *, match_reason: str) -> dict[
         "event_type": row.get("event_type"),
         "street_closure_type": row.get("street_closure_type"),
     }
+    return apply_editorial_priority(entry, priority_ref)
 
 
 def census_entry_from_anchor(anchor: dict[str, Any]) -> dict[str, Any]:
@@ -317,7 +505,12 @@ def match_anchor_to_permit(
     return None
 
 
-def merge_anchor_with_permit(entry: dict[str, Any], permit_row: dict[str, Any]) -> dict[str, Any]:
+def merge_anchor_with_permit(
+    entry: dict[str, Any],
+    permit_row: dict[str, Any],
+    *,
+    priority_ref: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     merged = dict(entry)
     merged["permit_event_id"] = str(permit_row.get("source_event_id") or "").strip() or None
     merged["permit_status"] = "permit_matched"
@@ -337,7 +530,18 @@ def merge_anchor_with_permit(entry: dict[str, Any], permit_row: dict[str, Any]) 
     if route:
         merged["route"] = route
     merged["permit_match_name"] = str(permit_row.get("event_name") or "").strip()
-    return merged
+    return apply_editorial_priority(merged, priority_ref)
+
+
+def _sort_entries(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return sorted(
+        entries,
+        key=lambda e: (
+            EDITORIAL_PRIORITY_RANK.get(str(e.get("editorial_priority") or "normal"), 9),
+            e.get("date") or "9999-99-99",
+            e.get("name") or "",
+        ),
+    )
 
 
 def group_by_borough(entries: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
@@ -348,5 +552,15 @@ def group_by_borough(entries: list[dict[str, Any]]) -> dict[str, list[dict[str, 
             borough = "Multi-borough"
         grouped[borough].append(entry)
     for bucket in grouped.values():
-        bucket.sort(key=lambda e: (e.get("date") or "9999-99-99", e.get("name") or ""))
+        bucket[:] = _sort_entries(bucket)
     return grouped
+
+
+def priority_queue(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Cross-borough priority lane for desk/calendar consumers."""
+    flagged = [
+        e
+        for e in entries
+        if str(e.get("editorial_priority") or "normal") in {"highest", "high"}
+    ]
+    return _sort_entries(flagged)

@@ -31,6 +31,7 @@ def build_census(
     registry = census.load_anchor_registry(anchor_registry_path)
     anchors = registry.get("anchors") or []
     permit_rows = census.load_permit_rows(permit_snapshot_path)
+    priority_ref = census.load_priority_reference()
 
     matched_permit_ids: set[str] = set()
     anchor_entries: list[dict[str, Any]] = []
@@ -38,9 +39,10 @@ def build_census(
 
     for anchor in anchors:
         entry = census.census_entry_from_anchor(anchor)
+        entry = census.apply_editorial_priority(entry, priority_ref)
         permit_match = census.match_anchor_to_permit(anchor, permit_rows)
         if permit_match:
-            entry = census.merge_anchor_with_permit(entry, permit_match)
+            entry = census.merge_anchor_with_permit(entry, permit_match, priority_ref=priority_ref)
             pid = str(permit_match.get("source_event_id") or "")
             if pid:
                 matched_permit_ids.add(pid)
@@ -57,12 +59,16 @@ def build_census(
         pid = str(row.get("source_event_id") or "")
         if pid and pid in matched_permit_ids:
             continue
-        permit_entries.append(census.census_entry_from_permit(row, match_reason=reason))
+        permit_entries.append(
+            census.census_entry_from_permit(row, match_reason=reason, priority_ref=priority_ref)
+        )
 
     all_entries = anchor_entries + permit_entries
     borough_queues = census.group_by_borough(all_entries)
+    priority_events = census.priority_queue(all_entries)
 
     confidence_counts = Counter(e.get("confidence") for e in all_entries)
+    editorial_priority_counts = Counter(e.get("editorial_priority") for e in all_entries)
     event_kind_counts = Counter(e.get("event_kind") for e in all_entries)
     permit_status_counts = Counter(e.get("permit_status") for e in all_entries)
     borough_counts = {b: len(rows) for b, rows in borough_queues.items() if rows}
@@ -87,13 +93,16 @@ def build_census(
         "anchor_registry": str(anchor_registry_path or census.ANCHOR_REGISTRY_PATH.relative_to(ROOT)),
         "permit_snapshot": str(permit_snapshot_path or census.PERMIT_SNAPSHOT_PATH.relative_to(ROOT)),
         "borough_queues": borough_queues,
+        "priority_events": priority_events,
         "entries": all_entries,
         "counts": {
             "anchor_count": len(anchor_entries),
             "permit_extracted_count": len(permit_entries),
             "merged_total": len(all_entries),
             "anchor_permit_matches": anchor_match_count,
+            "priority_event_count": len(priority_events),
             "borough_counts": borough_counts,
+            "editorial_priority_counts": dict(editorial_priority_counts),
             "confidence_counts": dict(confidence_counts),
             "event_kind_counts": dict(event_kind_counts),
             "permit_status_counts": dict(permit_status_counts),
@@ -116,7 +125,9 @@ def build_census(
         "permit_extracted_count": len(permit_entries),
         "merged_total": len(all_entries),
         "anchor_permit_matches": anchor_match_count,
+        "priority_event_count": len(priority_events),
         "borough_counts": borough_counts,
+        "editorial_priority_counts": dict(editorial_priority_counts),
         "confidence_counts": dict(confidence_counts),
         "event_kind_counts": dict(event_kind_counts),
         "permit_status_counts": dict(permit_status_counts),

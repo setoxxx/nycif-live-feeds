@@ -17,6 +17,18 @@ import citywide_parade_census_common as census  # noqa: E402
 
 FIXTURE_PERMIT_ROWS = [
     {
+        "source_event_id": "945819",
+        "source_dataset": "tvpp-9vvx",
+        "event_name": "Ol Dirty Bastard Street C0-Naming ceremony",
+        "event_type": "Street Event",
+        "event_borough": "Brooklyn",
+        "event_location": "CLAVER PLACE between JEFFERSON AVENUE and PUTNAM AVENUE",
+        "start_date_time": "2026-07-25T12:00:00.000",
+        "end_date_time": "2026-07-25T14:00:00.000",
+        "event_agency": "Street Activity Permit Office",
+        "street_closure_type": "Full Street Closure",
+    },
+    {
         "source_event_id": "903587",
         "source_dataset": "tvpp-9vvx",
         "event_name": "Gratitude 5k",
@@ -67,19 +79,28 @@ FIXTURE_PERMIT_ROWS = [
 ]
 
 
+def test_odb_street_co_naming_is_priority_census_event():
+    ok, reason = census.is_census_candidate(FIXTURE_PERMIT_ROWS[0])
+    assert ok
+    entry = census.census_entry_from_permit(FIXTURE_PERMIT_ROWS[0], match_reason=reason)
+    assert entry["event_kind"] == "street_co_naming"
+    assert entry["editorial_priority"] == "highest"
+    assert entry["permit_event_id"] == "945819"
+
+
 def test_parade_ground_and_rehearsal_excluded():
-    ok, reason = census.is_census_candidate(FIXTURE_PERMIT_ROWS[2])
+    ok, reason = census.is_census_candidate(FIXTURE_PERMIT_ROWS[3])
     assert not ok
     assert reason == "parade_ground_excluded"
 
 
 def test_routine_fitness_not_in_census():
-    ok, _ = census.is_census_candidate(FIXTURE_PERMIT_ROWS[3])
+    ok, _ = census.is_census_candidate(FIXTURE_PERMIT_ROWS[4])
     assert not ok
 
 
 def test_gratitude_5k_included_on_thanksgiving_morning():
-    ok, reason = census.is_census_candidate(FIXTURE_PERMIT_ROWS[0])
+    ok, reason = census.is_census_candidate(FIXTURE_PERMIT_ROWS[1])
     assert ok
     assert reason in {"census_keyword_match", "typed_street_event_with_census_keyword"}
 
@@ -140,3 +161,13 @@ def test_production_build_passes_qa():
     assert report["qa_pass"] is True
     assert report["map_eligible_count"] == 0
     assert snapshot["promotion_allowed"] is False
+    odb = next(
+        (e for e in snapshot["entries"] if e.get("anchor_key") == "odb-street-co-naming"),
+        None,
+    )
+    assert odb is not None
+    assert odb["editorial_priority"] == "highest"
+    assert odb["event_kind"] == "street_co_naming"
+    assert any(
+        e.get("name") == odb.get("name") for e in snapshot.get("priority_events", [])
+    )
