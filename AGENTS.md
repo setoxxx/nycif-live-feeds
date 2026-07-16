@@ -185,6 +185,7 @@ When backend changes affect frontend/map behavior:
 3. Never ask the frontend to load GPS review/proposal/approval artifacts as live public event data.
 4. Keep public map behavior separate from admin/test/review behavior.
 5. If a backend public feed path changes, update the frontend repo only after QA confirms the new feed is public-ready.
+6. Before editing WordPress `nycinfocus.com/map/`, read `docs/wordpress-plugin-deploy/nycinfocus-map-page-v1-freeze.md` — production uses a fullscreen `#nycifMapAppShell` Custom HTML block, not the `[nycif_events_map]` shortcode.
 
 When frontend changes depend on backend data:
 
