@@ -2,11 +2,13 @@
  * Thin SW for civic-people-facing-v01 package preview.
  * Shell assets mostly live in sibling discovery-taxonomy-v02 / schema-v1-major-all-v01 folders.
  */
-var CIVIC_CACHE = "nycif-civic-people-facing-v01-shell";
+var CIVIC_CACHE = "nycif-civic-people-facing-v02-news-desk";
 var CIVIC_SHELL = [
   "./index.html",
   "./civic-patch-v01.js",
   "./public-map-defaults-v01.js",
+  "./field-desk-operator-layer-v01.js",
+  "./field-desk-news-desk-v01.js",
   "./service-worker.js"
 ];
 
