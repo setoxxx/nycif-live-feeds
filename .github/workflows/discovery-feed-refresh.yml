@@ -96,6 +96,7 @@ jobs:
               data/nycif_new_events.json \
               data/comprehensive_feed_report.json \
               data/_event_seen_index.json \
+              data/nycif_street_festivals_feed.json \
               data/events_discovery_contract_v02.json \
               data/events_discovery_v02_approved.json \
               data/events_discovery_v02_review.json \
@@ -106,7 +107,8 @@ jobs:
               data/events_discovery_schema_validation_v02.json \
               data/events_schema_v1_major.json \
               data/events_schema_v1_major_report.json \
-              docs/events-discovery-taxonomy-v02.md
+              docs/events-discovery-taxonomy-v02.md \
+              docs/field-desk-map-deploy
             if git diff --cached --quiet; then
               echo "No discovery feed changes to commit."
               exit 0
