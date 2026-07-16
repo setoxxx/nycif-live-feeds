@@ -1,0 +1,80 @@
+{
+  "anchor_count": 46,
+  "anchor_permit_matches": 10,
+  "anchor_registry_path": "data/nycif_citywide_parade_anchor_registry.json",
+  "borough_counts": {
+    "Bronx": 5,
+    "Brooklyn": 16,
+    "Manhattan": 43,
+    "Multi-borough": 11,
+    "Queens": 36,
+    "Staten Island": 2
+  },
+  "calendar_eligible_count": 113,
+  "checks": {
+    "all_map_eligible_false": true,
+    "anchors_present": true,
+    "confidence_values_valid": true,
+    "permit_extraction_ran": true
+  },
+  "confidence_counts": {
+    "confirmed": 2,
+    "historical_pattern_only": 6,
+    "permit_confirmed": 76,
+    "provisional": 12,
+    "strongly_supported": 17
+  },
+  "event_kind_counts": {
+    "balloon_inflation": 1,
+    "carnival": 2,
+    "ceremonial_race": 38,
+    "cultural_march": 1,
+    "fan_festival": 1,
+    "halloween_parade": 4,
+    "holiday_parade": 3,
+    "lantern_procession": 2,
+    "march": 2,
+    "marching_band_event": 1,
+    "new_years_gathering": 2,
+    "parade": 35,
+    "pet_parade": 1,
+    "political_march": 1,
+    "pride_march": 2,
+    "procession": 1,
+    "religious_procession": 10,
+    "school_parade": 2,
+    "street_festival_procession": 3,
+    "veterans_procession": 1
+  },
+  "generated_at_utc": "2026-07-16T04:58:17Z",
+  "location_cache_modified": false,
+  "map_eligible_count": 0,
+  "merged_total": 113,
+  "next_steps": [
+    "Refresh permit snapshot daily via sync_nyc_open_data.py",
+    "Re-run build_citywide_parade_census.py after each permit refresh",
+    "Expand anchor registry as organizers confirm 2026 dates",
+    "Do not set map_eligible=true without explicit promotion authorization"
+  ],
+  "permit_extracted_count": 67,
+  "permit_reject_reasons": {
+    "no_match": 30049,
+    "outside_window": 4616,
+    "parade_ground_excluded": 644,
+    "rehearsal_or_closed_excluded": 59
+  },
+  "permit_snapshot_path": "data/raw_nyc_open_data_snapshot.json",
+  "permit_status_counts": {
+    "not_yet_matched": 36,
+    "permit_matched": 10,
+    "permit_only": 67
+  },
+  "promotion_allowed": false,
+  "public_map_modified": false,
+  "qa_pass": true,
+  "schema_version": "citywide-parade-census-report-v1",
+  "snapshot_path": "data/citywide_parade_census_snapshot.json",
+  "staged_feed_modified": false,
+  "window_end": "2026-12-31",
+  "window_start": "2026-07-16"
+}
