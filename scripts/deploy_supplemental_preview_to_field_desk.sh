@@ -23,11 +23,6 @@ cp "$PREVIEW_SRC/approved-export-preview.html" ./approved-export-preview.html
 mkdir -p ./tools/public-map
 cp "$PREVIEW_SRC/supplemental-export-preview.test.mjs" ./tools/public-map/supplemental-export-preview.test.mjs
 
-node --check supplemental-approved-export-preview-v01.js
-node --test tools/public-map/supplemental-export-preview.test.mjs
-grep -q "3,566" approved-export-preview.html
-grep -q "supplemental_approved_export_feed" supplemental-approved-export-preview-v01.js
-
 if ! grep -q 'supplemental-approved-export-preview-v01.js' desk.html; then
   sed -i 's|feed-status-panel-v01.js?v=01"></script>|feed-status-panel-v01.js?v=01"></script>\n  <script src="./supplemental-approved-export-preview-v01.js?v=01"></script>|' desk.html
 fi
@@ -44,6 +39,11 @@ if ! grep -q "Supplemental approved export preview" README.md; then
     echo "- Preview only — not production map; \`promotion_allowed=false\`."
   } >> README.md
 fi
+
+node --check supplemental-approved-export-preview-v01.js
+node --test tools/public-map/supplemental-export-preview.test.mjs
+grep -q "3,566" approved-export-preview.html
+grep -q "supplemental_approved_export_feed" supplemental-approved-export-preview-v01.js
 
 git add \
   supplemental-approved-export-preview-v01.js \
