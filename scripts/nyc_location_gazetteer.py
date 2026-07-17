@@ -14,6 +14,7 @@ except ModuleNotFoundError:  # pragma: no cover
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 GAZETTEER_PATH = DATA_DIR / "nyc_location_gazetteer.json"
+SUPPLEMENTAL_OVERLAY_PATH = DATA_DIR / "supplemental_location_gazetteer_overlay.json"
 GEOSEARCH_CACHE_PATH = DATA_DIR / "nyc_geosearch_gazetteer_cache.json"
 
 LOCATION_CACHE_PATH = DATA_DIR / "location_cache.json"
@@ -85,6 +86,25 @@ def add_index_key(index: dict[str, dict[str, Any]], key: str, entry: dict[str, A
     rank = {"high": 3, "medium": 2, "low": 1}
     if rank.get(str(entry.get("confidence")), 0) > rank.get(str(existing.get("confidence")), 0):
         index[key] = entry
+
+
+def merge_gazetteer_indexes(
+    base_index: dict[str, dict[str, Any]],
+    overlay_index: dict[str, dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    merged = dict(base_index)
+    for key, entry in overlay_index.items():
+        if isinstance(entry, dict):
+            add_index_key(merged, key, entry)
+    return merged
+
+
+def load_supplemental_gazetteer_overlay(path: Path = SUPPLEMENTAL_OVERLAY_PATH) -> dict[str, dict[str, Any]]:
+    payload = load_json(path, {})
+    index = payload.get("index", {}) if isinstance(payload, dict) else {}
+    if not isinstance(index, dict):
+        return {}
+    return {str(key): value for key, value in index.items() if isinstance(value, dict)}
 
 
 def build_gazetteer_index() -> dict[str, Any]:
@@ -217,11 +237,21 @@ class NYCLocationGazetteer:
         self.index = index
 
     @classmethod
-    def from_file(cls, path: Path = GAZETTEER_PATH) -> NYCLocationGazetteer:
+    def from_file(
+        cls,
+        path: Path = GAZETTEER_PATH,
+        *,
+        overlay_path: Path | None = SUPPLEMENTAL_OVERLAY_PATH,
+        include_overlay: bool = True,
+    ) -> NYCLocationGazetteer:
         payload = load_json(path, {})
         index = payload.get("index", {}) if isinstance(payload, dict) else {}
         if not isinstance(index, dict):
             index = {}
+        if include_overlay and overlay_path is not None:
+            overlay_index = load_supplemental_gazetteer_overlay(overlay_path)
+            if overlay_index:
+                index = merge_gazetteer_indexes(index, overlay_index)
         return cls(index)
 
     def lookup(self, key: str) -> dict[str, Any] | None:
