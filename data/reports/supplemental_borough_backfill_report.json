@@ -1,11 +1,11 @@
 {
   "artifact_type": "supplemental_borough_backfill_report",
-  "backfilled_count": 1382,
-  "candidate_count": 1386,
-  "generated_at_utc": "2026-07-17T22:28:22.117461+00:00",
+  "backfilled_count": 4,
+  "candidate_count": 4,
+  "generated_at_utc": "2026-07-17T22:37:50.292827+00:00",
   "next_required_step": "Re-run dry_run_supplemental_phase2e_promotion.py and rebuild export feed. Unresolved rows need manual borough review; do not invent boroughs.",
   "phase": "m11_supplemental_borough_backfill",
-  "qa_pass": false,
+  "qa_pass": true,
   "safety": {
     "location_cache_modified": false,
     "production_feed": false,
@@ -14,14 +14,11 @@
     "staged_feed_modified": false
   },
   "source_counts": {
-    "nyc_parks_properties_reference": 1332,
-    "supplemental_location_memory": 50
+    "nyc_geosearch_planninglabs_reverse": 2,
+    "nyc_parks_bigapps_events_snapshot:venue_name_prefix": 1,
+    "nyc_parks_properties_reference:point_in_polygon:Snug Harbor Cultural Center": 1
   },
   "source_queue_path": "data/supplemental_manual_approval_queue.json",
-  "unresolved_count": 4,
-  "unresolved_display_counts": {
-    "Fit4Dance NYC": 2,
-    "Queens Public Library - Corona": 1,
-    "The Noble Maritime Collection": 1
-  }
+  "unresolved_count": 0,
+  "unresolved_display_counts": {}
 }

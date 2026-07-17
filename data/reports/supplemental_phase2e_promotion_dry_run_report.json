@@ -1,54 +1,12 @@
 {
-  "all_rows_ready_for_promotion": false,
+  "all_rows_ready_for_promotion": true,
   "approved_queue_count": 3566,
   "artifact_type": "supplemental_phase2e_promotion_dry_run_report",
-  "blocked_samples": [
-    {
-      "borough": "",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "issues": [
-        "missing_required_field:borough",
-        "promotion_allowed_not_true"
-      ],
-      "overlap_key": "shea butter grooves|2026-07-18",
-      "title": "Shea Butter Grooves"
-    },
-    {
-      "borough": "",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "issues": [
-        "missing_required_field:borough",
-        "promotion_allowed_not_true"
-      ],
-      "overlap_key": "shea butter grooves|2026-07-25",
-      "title": "Shea Butter Grooves"
-    },
-    {
-      "borough": "",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "issues": [
-        "missing_required_field:borough",
-        "promotion_allowed_not_true"
-      ],
-      "overlap_key": "zumba|2026-07-16",
-      "title": "Zumba"
-    },
-    {
-      "borough": "",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "issues": [
-        "missing_required_field:borough",
-        "promotion_allowed_not_true"
-      ],
-      "overlap_key": "tending aids to navigation with the lilac preservation project at the noble maritime collection|2026-07-18",
-      "title": "Tending Aids to Navigation with the LILAC Preservation Project at the Noble Maritime Collection"
-    }
-  ],
+  "blocked_samples": [],
   "dry_run_only": true,
   "export_event_count": 3566,
-  "generated_at_utc": "2026-07-17T22:28:28.549864+00:00",
+  "generated_at_utc": "2026-07-17T22:37:54.093922+00:00",
   "issue_counts": {
-    "missing_required_field:borough": 4,
     "promotion_allowed_not_true": 3566
   },
   "next_required_step": "Explicit Phase 2E authorization required before setting promotion_allowed=true or promoting supplemental rows to location_cache.json / public map.",
@@ -65,11 +23,11 @@
   "source_export_path": "data/supplemental_approved_export_feed.json",
   "source_queue_path": "data/supplemental_manual_approval_queue.json",
   "summary": {
-    "blocked_from_promotion": 4,
-    "blocked_pct": 0.11,
+    "blocked_from_promotion": 0,
+    "blocked_pct": 0.0,
     "ready_all_gates_including_promotion_allowed": 0,
-    "ready_if_authorized_pct": 99.89,
-    "would_pass_if_promotion_authorized": 3562
+    "ready_if_authorized_pct": 100.0,
+    "would_pass_if_promotion_authorized": 3566
   },
   "validation_qa_pass": true,
   "validation_report_path": "data/supplemental_manual_approval_validation_report.json",
