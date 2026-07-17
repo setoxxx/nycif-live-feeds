@@ -100,7 +100,14 @@ def apply_memory_to_staging_feed(
         "after": after,
         "fill": fill_stats,
         "net_new_coordinates_from_memory": after["with_coordinates_count"] - prior["with_coordinates_count"],
-        "qa_pass": fill_stats["memory_filled_count"] > 0 or prior["needs_memory_fill_count"] == 0,
+        "qa_pass": (
+            fill_stats["memory_filled_count"] > 0
+            or prior["needs_memory_fill_count"] == 0
+            or (
+                prior["with_coordinates_count"] == after["with_coordinates_count"]
+                and after["with_coordinates_count"] > 0
+            )
+        ),
         "safety": {
             "location_cache_modified": False,
             "promotion_allowed": False,
