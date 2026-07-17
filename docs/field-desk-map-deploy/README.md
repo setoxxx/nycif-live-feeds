@@ -59,6 +59,16 @@ python3 scripts/build_public_map_feeds.py
 
 Merge backend PR, then deploy field-desk to GitHub Pages.
 
+## Supplemental approved export preview (M11)
+
+See [`supplemental-export-preview/README.md`](./supplemental-export-preview/README.md).
+
+```bash
+./scripts/sync_supplemental_export_preview_to_field_desk.sh /path/to/nycif-field-desk
+```
+
+Expected QA: **3,566** preview markers on `approved-export-preview.html`.
+
 ## Verify
 
 - https://setoxxx.github.io/nycif-field-desk/ — `?v=public-map-v07` runtime (Complete-the-Map handshake)

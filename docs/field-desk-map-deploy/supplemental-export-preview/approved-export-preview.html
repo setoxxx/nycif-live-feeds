@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en" data-nycif-supplemental-export-preview="1">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>NYCIF Supplemental Approved Export Preview (QA Only)</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1020;
+      --panel: #121a2b;
+      --panel-2: #182235;
+      --line: rgba(255,255,255,.08);
+      --text: #eef2ff;
+      --muted: #9aa7c0;
+      --warn: #fbbf24;
+      --ok: #34d399;
+      --bad: #f87171;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font: 14px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #0a0f1a, #111827 240px, var(--bg));
+      color: var(--text);
+    }
+    .wrap { max-width: 1280px; margin: 0 auto; padding: 20px 16px 48px; }
+    h1 { margin: 0 0 6px; font-size: 24px; }
+    .sub { color: var(--muted); margin: 0 0 18px; }
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .panel h2 { margin: 0 0 12px; font-size: 16px; }
+    .status-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+    .stat {
+      background: var(--panel-2);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .stat .label { color: var(--muted); font-size: 12px; margin-bottom: 4px; }
+    .stat .value { font-size: 22px; font-weight: 700; }
+    .warn {
+      border-left: 4px solid var(--warn);
+      background: rgba(251,191,36,.08);
+      padding: 12px 14px;
+      border-radius: 12px;
+      color: #fde68a;
+    }
+    .block {
+      border-left: 4px solid var(--bad);
+      background: rgba(248,113,113,.08);
+      padding: 12px 14px;
+      border-radius: 12px;
+      color: #fecaca;
+    }
+    .meta { color: var(--muted); font-size: 12px; margin-top: 8px; }
+    #map {
+      height: 420px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+    }
+    code {
+      background: rgba(255,255,255,.06);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+    .error { color: var(--bad); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Supplemental Approved Export Preview</h1>
+    <p class="sub">
+      Standalone QA map for backend
+      <code>supplemental_approved_export_feed.json</code>.
+      Preview/admin layer only — not the production public map.
+    </p>
+
+    <section class="panel" aria-label="Project status">
+      <h2>Preview status</h2>
+      <div class="status-grid" id="statusGrid">
+        <div class="stat"><div class="label">Mode</div><div class="value" style="font-size:16px;color:var(--warn)">PREVIEW</div></div>
+        <div class="stat"><div class="label">Production feed modified</div><div class="value" style="color:var(--ok)">false</div></div>
+        <div class="stat"><div class="label">Public map modified</div><div class="value" style="color:var(--ok)">false</div></div>
+        <div class="stat"><div class="label">promotion_allowed</div><div class="value" style="color:var(--ok)">false</div></div>
+      </div>
+      <p class="meta" id="feedMeta">Loading export feed…</p>
+    </section>
+
+    <section class="panel warn" aria-label="QA warning">
+      <strong>QA warning:</strong>
+      These 3,566 approved supplemental events are exported for field-desk preview only.
+      They are not merged into <code>nycif_staged_live_events.json</code>,
+      <code>location_cache.json</code>, or the production public map.
+    </section>
+
+    <section class="panel block" aria-label="Blocked artifacts">
+      <strong>Not loaded on this page:</strong>
+      GPS review proposals, filled proposals, manual approval queues, pending queue rows,
+      or any artifact with <code>production_feed=true</code>.
+    </section>
+
+    <section class="panel" aria-label="Map">
+      <h2>Supplemental approved export map</h2>
+      <div id="map" aria-label="Supplemental approved export preview map"></div>
+      <p class="meta" id="mapMeta"></p>
+    </section>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="./supplemental-approved-export-preview-v01.js?v=01"></script>
+  <script>
+    function esc(value) {
+      return String(value ?? '').replace(/[&<>"']/g, ch => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+      }[ch]));
+    }
+
+    const api = window.NYCIF_SUPPLEMENTAL_EXPORT_PREVIEW;
+    if (!api) {
+      document.getElementById('feedMeta').innerHTML =
+        '<span class="error">Preview module failed to load.</span>';
+    } else {
+      api.bootStandaloneMap('map')
+        .then(state => {
+          const meta = state.feedMeta || {};
+          const expected = 3566;
+          const count = state.pins.length;
+          document.getElementById('feedMeta').textContent =
+            `${count.toLocaleString()} approved export marker(s) · ` +
+            `artifact ${esc(meta.artifactType || 'supplemental_approved_export_feed')} · ` +
+            `source ${esc(meta.sourceUrl || api.feedUrl())}` +
+            (meta.generatedAtUtc ? ` · generated ${esc(meta.generatedAtUtc)}` : '');
+          document.getElementById('mapMeta').textContent =
+            `${count.toLocaleString()} marker(s) on map · PREVIEW / NOT PRODUCTION` +
+            (count === expected ? '' : ` · WARN expected ${expected}`);
+        })
+        .catch(error => {
+          document.getElementById('feedMeta').innerHTML =
+            `<span class="error">Failed to load export feed: ${esc(error.message)}</span>`;
+        });
+    }
+  </script>
+</body>
+</html>
