@@ -1,5 +1,5 @@
 {
-  "generated_at_utc": "2026-07-17T20:01:03.360967+00:00",
+  "generated_at_utc": "2026-07-17T20:46:58.031289+00:00",
   "queue_path": "data/supplemental_manual_approval_queue.json",
   "total_rows": 3457,
   "approved_count": 3406,
@@ -11,29 +11,36 @@
     "rejected": 51
   },
   "approved_geocoder_sources": {
-    "nyc_parks_bigapps_events_snapshot": 3086,
+    "nyc_parks_bigapps_events_snapshot": 3077,
     "nyc_parks_facility_reference": 218,
-    "nyc_geosearch_planninglabs": 66,
+    "nyc_geosearch_planninglabs": 75,
     "nyc_geosearch_planninglabs_midpoint": 30,
     "nyc_parks_properties_reference": 3,
     "nyc_geoclient_intersection": 2,
     "location_cache": 1
   },
   "top_reject_reasons": {
-    "Rejected-pass: virtual/online/citywide or otherwise ungeocodable location": 31,
+    "Rejected-pass: virtual/online/citywide or otherwise ungeocodable location": 16,
+    "Rejected — location deferred to flyer; no address in calendar intake.": 6,
     "Canceled per Parks feed title (CANCELED: Zumba).": 4,
-    "Rejected-pass: Summer Streets route event (multi-street corridor, not a single m": 3,
+    "Rejected — virtual/online event; no physical map pin.": 4,
+    "Rejected — Summer Streets route event; not a single venue pin.": 3,
     "Canceled per Parks feed title (CANCELED: Low Impact Bodyweight Circuit Training)": 2,
     "Canceled per Parks feed title (CANCELED: Total Body Fitness).": 2,
     "Canceled per Parks feed title (CANCELED: Full Body Circuit Training).": 1,
     "Canceled per Parks feed title (CANCELED: Functional Yoga).": 1,
     "Canceled per Parks feed title (CANCELLED: Dance in the Park: Salsa).": 1,
     "Canceled per Parks feed title (CANCELED: Functional Yoga, recurring instance).": 1,
+    "Rejected — citywide multi-borough watch parties; not a single mappable venue for": 1,
+    "Rejected — citywide restaurant program; participating venues are not a single pi": 1,
     "Canceled per Parks feed title (CANCELED: Built To Move Circuit Training).": 1,
     "Canceled per Parks feed title (CANCELED: Cardio Circuit Blast).": 1,
-    "Canceled per Parks feed title (CANCELED: Soca Dance Fitness).": 1,
+    "Rejected — canceled event (CANCELED: Soca Dance Fitness).": 1,
     "Canceled per Parks feed title (CANCELLED: Urban Farm Volunteers).": 1,
-    "Canceled per Parks feed title (CANCELED: Bodyweight Interval Training).": 1
+    "Canceled per Parks feed title (CANCELED: Bodyweight Interval Training).": 1,
+    "Rejected — election admin citywide event; not a single mappable venue.": 1,
+    "Rejected — voter-registration deadline is a citywide election-administration ite": 1,
+    "Rejected — poll sites citywide; not a single mappable venue.": 1
   },
   "engine_tiers": [
     "parks_overlap",
