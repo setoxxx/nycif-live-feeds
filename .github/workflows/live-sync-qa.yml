@@ -101,6 +101,9 @@ jobs:
       - name: Build supplemental coverage review queues
         run: python scripts/build_supplemental_coverage_review_queues.py
 
+      - name: Build supplemental location memory from approved queue (M11)
+        run: python scripts/build_supplemental_location_memory.py
+
       - name: Build supplemental events staging feed
         run: python scripts/build_supplemental_events_staging_feed.py
 
@@ -115,6 +118,22 @@ jobs:
 
       - name: Validate supplemental manual approvals after incremental intake
         run: python scripts/validate_supplemental_manual_approvals.py
+
+      - name: Net-new supplemental review when pending rows exist (M11)
+        env:
+          NYCIF_ALLOW_LIVE_GEOSEARCH: "yes"
+        run: |
+          pending=$(python3 -c "import json; from pathlib import Path; q=json.loads(Path('data/supplemental_manual_approval_queue.json').read_text()); print(sum(1 for r in q.get('approval_queue', []) if str(r.get('manual_review_status', '')).lower() == 'pending'))")
+          if [ "$pending" -gt 0 ]; then
+            python3 scripts/apply_supplemental_net_new_live_sync_review.py
+            python3 scripts/validate_supplemental_manual_approvals.py
+            python3 scripts/build_supplemental_location_memory.py
+          else
+            echo "No pending supplemental rows; skipping net-new review."
+          fi
+
+      - name: Publish supplemental approved export for field-desk preview
+        run: python scripts/publish_supplemental_approved_export_feed.py
 
       - name: Build supplemental manual review sheet (M11)
         run: python scripts/build_supplemental_manual_review_sheet.py

@@ -1,33 +1,36 @@
 {
   "after": {
-    "event_count": 3457,
-    "needs_memory_fill_count": 19,
-    "with_coordinates_count": 3438,
-    "without_coordinates_count": 19
+    "event_count": 3725,
+    "needs_memory_fill_count": 28,
+    "with_coordinates_count": 3697,
+    "without_coordinates_count": 28
   },
   "artifact_type": "supplemental_memory_auto_resolution_report",
   "before": {
-    "event_count": 3457,
-    "needs_memory_fill_count": 19,
-    "with_coordinates_count": 3438,
-    "without_coordinates_count": 19
+    "event_count": 3725,
+    "needs_memory_fill_count": 676,
+    "with_coordinates_count": 3049,
+    "without_coordinates_count": 676
   },
   "dry_run": false,
   "fill": {
-    "already_had_coordinates_count": 3438,
-    "attempted_fill_count": 19,
-    "attempted_fill_resolution_pct": 0.0,
-    "event_count": 3457,
-    "fill_method_counts": {},
-    "memory_filled_count": 0,
-    "memory_filled_pct": 0.0,
-    "still_without_coordinates_count": 19,
-    "with_coordinates_after_count": 3438,
-    "with_coordinates_after_pct": 99.45
+    "already_had_coordinates_count": 3049,
+    "attempted_fill_count": 676,
+    "attempted_fill_resolution_pct": 95.86,
+    "event_count": 3725,
+    "fill_method_counts": {
+      "supplemental_location_gazetteer_overlay": 5,
+      "supplemental_location_memory": 643
+    },
+    "memory_filled_count": 648,
+    "memory_filled_pct": 17.4,
+    "still_without_coordinates_count": 28,
+    "with_coordinates_after_count": 3697,
+    "with_coordinates_after_pct": 99.25
   },
-  "generated_at_utc": "2026-07-17T20:31:31.831321+00:00",
+  "generated_at_utc": "2026-07-17T21:51:13.507381+00:00",
   "memory_path": "data/supplemental_location_memory.json",
-  "net_new_coordinates_from_memory": 0,
+  "net_new_coordinates_from_memory": 648,
   "next_required_step": "Rows remain pending manual review. build_supplemental_manual_approval_queue.py will include memory-filled coordinates but does not auto-approve.",
   "phase": "m11_supplemental_memory_auto_resolution",
   "qa_pass": true,
