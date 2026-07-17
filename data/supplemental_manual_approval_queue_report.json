@@ -1,27 +1,29 @@
 {
   "approval_queue_count": 3457,
-  "approved_count": 0,
+  "approved_count": 3406,
   "calendar_only_count": 2210,
-  "generated_at_utc": "2026-07-16T21:24:49.842771+00:00",
+  "generated_at_utc": "2026-07-17T20:56:07.578608+00:00",
+  "incremental_net_new_count": 0,
   "intake_counts": {
     "calendar_only": 2210,
     "parks_only": 1247
   },
   "location_cache_modified": false,
-  "next_required_step": "Human review of supplemental_manual_approval_queue.json. Do not merge into feeds=main or permit staged feed without explicit authorization.",
+  "next_required_step": "Run validate_supplemental_manual_approvals.py. Review net-new pending rows only.",
   "parks_only_count": 1247,
-  "pending_count": 3457,
-  "phase": "m11_supplemental_manual_approval_queue",
+  "pending_count": 0,
+  "phase": "m11_incremental_supplemental_manual_approval_queue",
   "promotion_allowed": false,
   "promotion_allowed_count": 0,
   "public_map_modified": false,
   "qa_pass": true,
-  "rejected_count": 0,
+  "rejected_count": 51,
   "source_feed": "data/supplemental_events_staging_feed.json",
   "staged_feed_modified": false,
   "status_counts": {
-    "pending": 3457
+    "approved": 3406,
+    "rejected": 51
   },
-  "with_coordinates_count": 2402,
-  "without_coordinates_count": 1055
+  "with_coordinates_count": 3434,
+  "without_coordinates_count": 23
 }

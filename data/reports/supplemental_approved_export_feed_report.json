@@ -1,0 +1,22 @@
+{
+  "approved_queue_count": 3406,
+  "artifact_type": "supplemental_approved_export_feed_report",
+  "export_event_count": 3406,
+  "export_path": "data/supplemental_approved_export_feed.json",
+  "generated_at_utc": "2026-07-17T20:56:07.584893+00:00",
+  "intake_counts": {
+    "calendar_only": 2175,
+    "parks_only": 1231
+  },
+  "next_required_step": "Field-desk preview only. Public map merge and location_cache promotion require explicit Phase 2E authorization.",
+  "phase": "m11_supplemental_approved_export",
+  "qa_pass": true,
+  "safety": {
+    "location_cache_modified": false,
+    "production_feed": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "staged_feed_modified": false
+  },
+  "skipped_approved_without_coordinates": 0
+}
