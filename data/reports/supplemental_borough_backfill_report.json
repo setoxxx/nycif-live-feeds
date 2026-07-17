@@ -1,0 +1,27 @@
+{
+  "artifact_type": "supplemental_borough_backfill_report",
+  "backfilled_count": 1382,
+  "candidate_count": 1386,
+  "generated_at_utc": "2026-07-17T22:28:22.117461+00:00",
+  "next_required_step": "Re-run dry_run_supplemental_phase2e_promotion.py and rebuild export feed. Unresolved rows need manual borough review; do not invent boroughs.",
+  "phase": "m11_supplemental_borough_backfill",
+  "qa_pass": false,
+  "safety": {
+    "location_cache_modified": false,
+    "production_feed": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "staged_feed_modified": false
+  },
+  "source_counts": {
+    "nyc_parks_properties_reference": 1332,
+    "supplemental_location_memory": 50
+  },
+  "source_queue_path": "data/supplemental_manual_approval_queue.json",
+  "unresolved_count": 4,
+  "unresolved_display_counts": {
+    "Fit4Dance NYC": 2,
+    "Queens Public Library - Corona": 1,
+    "The Noble Maritime Collection": 1
+  }
+}
