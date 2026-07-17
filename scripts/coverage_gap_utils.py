@@ -157,17 +157,18 @@ def parse_facility_in_parent(display: Any) -> tuple[str, str] | None:
     text = str(display or "").strip()
     if not text:
         return None
-    paren_match = re.match(r"^(.+?)\s*\(\s*in\s+(.+?)\)\s*$", text, flags=re.IGNORECASE)
+    segment = _display_primary_segment(text)
+    paren_match = re.match(r"^(.+?)\s*\(\s*in\s+(.+?)\)\s*$", segment, flags=re.IGNORECASE)
     if paren_match:
         child = paren_match.group(1).strip()
         parent = paren_match.group(2).strip()
         if child and parent:
             return child, parent
-    match = re.search(r"\s+in\s+", text, flags=re.IGNORECASE)
+    match = re.search(r"\s+in\s+", segment, flags=re.IGNORECASE)
     if not match:
         return None
-    child = text[: match.start()].strip()
-    parent = text[match.end() :].strip()
+    child = segment[: match.start()].strip()
+    parent = segment[match.end() :].strip()
     if not child or not parent:
         return None
     return child, parent

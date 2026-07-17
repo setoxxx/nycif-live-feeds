@@ -51,6 +51,14 @@ class IntersectionParseTests(unittest.TestCase):
             ("125th Street", "Marginal Street", "West Harlem Piers"),
         )
 
+    def test_paren_parent_ignores_trailing_comma_segment(self) -> None:
+        self.assertEqual(
+            parse_facility_in_parent(
+                "Meadow Lake North (in Flushing Meadows Corona Park),Sand Lane and Father Capadanno Boulevard"
+            ),
+            ("Meadow Lake North", "Flushing Meadows Corona Park"),
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

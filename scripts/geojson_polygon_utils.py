@@ -122,6 +122,31 @@ def build_parks_properties_name_index(
     return index
 
 
+GENERIC_PARK_NAME_TOKENS = frozenset(
+    {
+        "park",
+        "recreation",
+        "center",
+        "centre",
+        "playground",
+        "playground",
+        "field",
+        "fields",
+        "beach",
+        "boardwalk",
+        "and",
+        "the",
+        "at",
+        "in",
+        "of",
+    }
+)
+
+
+def _significant_park_tokens(norm: str) -> set[str]:
+    return {token for token in norm.split() if token and token not in GENERIC_PARK_NAME_TOKENS and len(token) >= 3}
+
+
 def find_park_property_row(
     park_name: str,
     borough: Any,
@@ -131,10 +156,26 @@ def find_park_property_row(
     if not target:
         return None
     boro_key = normalize_text_legacy(str(borough or ""))
-    candidates = name_index.get(target, [])
+    candidates = list(name_index.get(target, []))
     if not candidates:
+        target_tokens = _significant_park_tokens(target)
         for norm, rows in name_index.items():
-            if target in norm or norm in target:
+            if target == norm:
+                candidates.extend(rows)
+                continue
+            if len(target) >= 8 and (target in norm or norm in target):
+                candidates.extend(rows)
+                continue
+            norm_tokens = _significant_park_tokens(norm)
+            if target_tokens and norm_tokens and len(target_tokens & norm_tokens) >= 2:
+                candidates.extend(rows)
+            elif (
+                target_tokens
+                and norm_tokens
+                and len(target_tokens) == 1
+                and len(norm_tokens) == 1
+                and target_tokens == norm_tokens
+            ):
                 candidates.extend(rows)
     if not candidates:
         return None
