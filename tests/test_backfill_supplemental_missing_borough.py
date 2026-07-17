@@ -66,12 +66,19 @@ class SupplementalBoroughBackfillTests(unittest.TestCase):
         borough, source = resolve_borough(
             row,
             parks_index={},
+            parks_properties=[],
             memory_display_index={},
             gazetteer=NYCLocationGazetteer({}),
             sibling_index={},
+            geosearch_cache={},
         )
         self.assertIsNone(borough)
         self.assertIsNone(source)
+
+    def test_borough_from_display_venue_prefix(self) -> None:
+        from scripts.backfill_supplemental_missing_borough import borough_from_display_venue_prefix
+
+        self.assertEqual(borough_from_display_venue_prefix("Queens Public Library - Corona"), "Qn")
 
 
 if __name__ == "__main__":
