@@ -1,0 +1,29 @@
+{
+  "artifact_type": "supplemental_no_coord_human_review_sheet_report",
+  "csv_path": "data/supplemental_no_coord_human_review_sheet.csv",
+  "generated_at_utc": "2026-07-17T20:34:16.687993+00:00",
+  "json_path": "data/supplemental_no_coord_human_review_sheet.json",
+  "next_required_step": "Review supplemental_no_coord_human_review_sheet.csv. Record decisions in supplemental_manual_approval_decisions.json and run apply_supplemental_manual_approval_decisions.py — or reject permanent non-mappable rows.",
+  "phase": "m11_supplemental_no_coord_human_review",
+  "qa_pass": true,
+  "review_category_counts": {
+    "canceled_event": 1,
+    "citywide_program": 2,
+    "election_admin": 3,
+    "flyer_reference": 6,
+    "summer_streets_route": 3,
+    "virtual_online": 4
+  },
+  "row_count": 19,
+  "safety": {
+    "location_cache_modified": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "staged_feed_modified": false
+  },
+  "staging_feed_event_count": 3457,
+  "staging_feed_with_coordinates_pct": 99.45,
+  "suggested_disposition_counts": {
+    "reject": 19
+  }
+}
