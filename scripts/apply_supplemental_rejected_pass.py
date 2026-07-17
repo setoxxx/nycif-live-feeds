@@ -13,6 +13,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import sys
 from collections import Counter
 from pathlib import Path
@@ -157,6 +158,25 @@ def approval_reason(row: dict[str, Any], fill: dict[str, Any]) -> str:
     return "Rejected-pass approved; NYC coordinates filled from official reference; pin verified"
 
 
+def is_canceled_title(title: Any) -> bool:
+    return bool(re.search(r"\bCANCEL", str(title or ""), flags=re.IGNORECASE))
+
+
+def existing_coords_approval_reason(row: dict[str, Any]) -> str:
+    intake = row.get("intake_type") or ""
+    source = str(row.get("geocoder_source") or "")
+    if intake == "parks_only" or "parks" in source:
+        return "Supplemental approved; NYC coordinates from Parks feed; pin verified"
+    if "calendar" in source:
+        return "Supplemental approved; NYC coordinates from calendar intake; pin verified"
+    return "Supplemental approved; NYC coordinates from intake source; pin verified"
+
+
+def canceled_reject_reason(title: str) -> str:
+    clean = re.sub(r"<[^>]+>", "", str(title or "")).strip()
+    return f"Canceled per Parks feed title ({clean[:120]})."
+
+
 def run(
     *,
     start_rank: int,
@@ -202,23 +222,68 @@ def run(
 
     for rank in range(start_rank, end_rank + 1):
         row = queue_by_rank.get(rank)
-        decision = decision_by_rank.get(rank)
-        if row is None or decision is None:
-            outcomes.append({"review_rank": rank, "outcome": "missing_row_or_decision"})
+        if row is None:
+            outcomes.append({"review_rank": rank, "outcome": "missing_row"})
             skipped += 1
             continue
-        if row.get("manual_review_status") != "rejected":
-            outcomes.append({"review_rank": rank, "outcome": "skipped_not_rejected"})
+
+        status = str(row.get("manual_review_status") or "")
+        if status not in {"rejected", "pending"}:
+            outcomes.append({"review_rank": rank, "outcome": "skipped_not_actionable", "status": status})
             skipped += 1
             continue
-        reason = str(decision.get("approval_decision_reason") or "")
-        if is_permanent_reject(reason):
+
+        decision = decision_by_rank.get(rank) or {"review_rank": rank}
+        reason = str(decision.get("approval_decision_reason") or row.get("approval_decision_reason") or "")
+
+        if status == "rejected" and is_permanent_reject(reason):
             outcomes.append({"review_rank": rank, "outcome": "skipped_permanent_reject", "reason": reason})
             skipped += 1
             continue
+
+        if is_canceled_title(row.get("title")):
+            decision_by_rank[rank] = {
+                "review_rank": rank,
+                "manual_review_status": "rejected",
+                "approval_decision_reason": canceled_reject_reason(str(row.get("title") or "")),
+                "manual_review_notes": batch_notes,
+            }
+            outcomes.append({"review_rank": rank, "outcome": "rejected_canceled_title"})
+            rejected += 1
+            continue
+
         if is_ungeocodable_location(row.get("display_location"), row.get("borough")):
-            outcomes.append({"review_rank": rank, "outcome": "skipped_permanent_ungeocodable"})
-            skipped += 1
+            decision_by_rank[rank] = {
+                "review_rank": rank,
+                "manual_review_status": "rejected",
+                "approval_decision_reason": (
+                    "Rejected-pass: virtual/online/citywide or otherwise ungeocodable location"
+                ),
+                "manual_review_notes": batch_notes,
+            }
+            outcomes.append({"review_rank": rank, "outcome": "rejected_ungeocodable"})
+            rejected += 1
+            continue
+
+        if status == "pending" and valid_nyc_lat_lng(row.get("proposed_lat"), row.get("proposed_lng")):
+            decision_by_rank[rank] = {
+                "review_rank": rank,
+                "manual_review_status": "approved",
+                "approval_decision_reason": existing_coords_approval_reason(row),
+                "manual_review_notes": batch_notes,
+            }
+            fill_method_counts["existing_intake_coordinates"] += 1
+            outcomes.append(
+                {
+                    "review_rank": rank,
+                    "outcome": "approved",
+                    "fill_method": "existing_intake_coordinates",
+                    "geocoder_source": row.get("geocoder_source"),
+                    "proposed_lat": row.get("proposed_lat"),
+                    "proposed_lng": row.get("proposed_lng"),
+                }
+            )
+            approved += 1
             continue
 
         fill = resolve_coordinates(

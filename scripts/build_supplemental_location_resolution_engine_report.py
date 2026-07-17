@@ -15,7 +15,7 @@ REPORT_PATH = ROOT / "data" / "supplemental_location_resolution_engine_report.js
 
 def main() -> None:
     queue = json.loads(QUEUE_PATH.read_text(encoding="utf-8"))
-    rows = queue.get("rows") or []
+    rows = queue.get("approval_queue") or queue.get("rows") or []
     status_counts = Counter((r.get("manual_review_status") or "unknown") for r in rows)
     source_counts = Counter(
         (r.get("geocoder_source") or "none")

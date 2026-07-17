@@ -6,9 +6,30 @@ from __future__ import annotations
 import json
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
-from coverage_gap_utils import parse_facility_in_parent, parse_intersection_in_parent
-from geojson_polygon_utils import load_parks_properties_index, point_in_named_park
+try:
+    from scripts.coverage_gap_utils import load_json_file, load_parks_properties_name_index, parse_facility_in_parent, parse_intersection_in_parent
+    from scripts.geojson_polygon_utils import find_park_property_row, point_in_polygon_geometry
+except ModuleNotFoundError:  # pragma: no cover
+    from coverage_gap_utils import load_json_file, load_parks_properties_name_index, parse_facility_in_parent, parse_intersection_in_parent
+    from geojson_polygon_utils import find_park_property_row, point_in_polygon_geometry
+
+
+def point_in_named_park(
+    lat: float,
+    lng: float,
+    park_name: str,
+    borough: Any,
+    parks_index: dict[str, list[dict[str, Any]]],
+) -> bool:
+    row = find_park_property_row(park_name, borough, parks_index)
+    if not row:
+        return True
+    geometry = row.get("geometry") or row.get("multipolygon")
+    if not isinstance(geometry, dict):
+        return True
+    return point_in_polygon_geometry(lng, lat, geometry)
 
 ROOT = Path(__file__).resolve().parents[1]
 QUEUE_PATH = ROOT / "data" / "supplemental_manual_approval_queue.json"
@@ -18,9 +39,10 @@ REPORT_PATH = ROOT / "data" / "supplemental_pin_quality_audit_report.json"
 
 def main() -> None:
     queue = json.loads(QUEUE_PATH.read_text(encoding="utf-8"))
-    parks_index = load_parks_properties_index(PARKS_REF_PATH) if PARKS_REF_PATH.exists() else {}
+    parks_index = load_parks_properties_name_index(PARKS_REF_PATH) if PARKS_REF_PATH.exists() else {}
     outside = []
-    for row in queue.get("rows") or []:
+    rows = queue.get("approval_queue") or queue.get("rows") or []
+    for row in rows:
         if (row.get("manual_review_status") or "") != "approved":
             continue
         lat, lng = row.get("proposed_lat"), row.get("proposed_lng")
@@ -35,10 +57,10 @@ def main() -> None:
             parent = parsed[2]
         if not parent or not parks_index:
             continue
-        if not point_in_named_park(float(lat), float(lng), parent, parks_index):
+        if not point_in_named_park(float(lat), float(lng), parent, row.get("borough"), parks_index):
             outside.append(
                 {
-                    "rank": row.get("rank"),
+                    "rank": row.get("review_rank") or row.get("rank"),
                     "display_location": display,
                     "parent_park": parent,
                     "proposed_lat": lat,

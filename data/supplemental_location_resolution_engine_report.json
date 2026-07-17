@@ -1,0 +1,46 @@
+{
+  "generated_at_utc": "2026-07-17T19:52:09.039348+00:00",
+  "queue_path": "data/supplemental_manual_approval_queue.json",
+  "total_rows": 3457,
+  "approved_count": 3398,
+  "rejected_count": 59,
+  "pending_count": 0,
+  "disposition_complete": true,
+  "status_counts": {
+    "approved": 3398,
+    "rejected": 59
+  },
+  "approved_geocoder_sources": {
+    "nyc_parks_bigapps_events_snapshot": 3086,
+    "nyc_parks_facility_reference": 218,
+    "nyc_geosearch_planninglabs": 63,
+    "nyc_geosearch_planninglabs_midpoint": 30,
+    "location_cache": 1
+  },
+  "top_reject_reasons": {
+    "Rejected-pass: virtual/online/citywide or otherwise ungeocodable location": 30,
+    "Rejected-pass: no resolvable GPS after gazetteer, Geoclient, Parks reference, an": 12,
+    "Canceled per Parks feed title (CANCELED: Zumba).": 4,
+    "Canceled per Parks feed title (CANCELED: Low Impact Bodyweight Circuit Training)": 2,
+    "Canceled per Parks feed title (CANCELED: Total Body Fitness).": 2,
+    "Canceled per Parks feed title (CANCELED: Full Body Circuit Training).": 1,
+    "Canceled per Parks feed title (CANCELED: Functional Yoga).": 1,
+    "Canceled per Parks feed title (CANCELLED: Dance in the Park: Salsa).": 1,
+    "Canceled per Parks feed title (CANCELED: Functional Yoga, recurring instance).": 1,
+    "Canceled per Parks feed title (CANCELED: Built To Move Circuit Training).": 1,
+    "Canceled per Parks feed title (CANCELED: Cardio Circuit Blast).": 1,
+    "Canceled per Parks feed title (CANCELED: Soca Dance Fitness).": 1,
+    "Canceled per Parks feed title (CANCELLED: Urban Farm Volunteers).": 1,
+    "Canceled per Parks feed title (CANCELED: Bodyweight Interval Training).": 1
+  },
+  "engine_tiers": [
+    "parks_overlap",
+    "child_in_parent_gazetteer",
+    "full_display_gazetteer",
+    "geoclient_intersection",
+    "geoclient_intersection_in_parent",
+    "calendar_parks_overlap",
+    "nyc_location_resolver",
+    "park_polygon_correction"
+  ]
+}
