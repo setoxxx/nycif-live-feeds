@@ -1,0 +1,141 @@
+{
+  "allow_live_geoclient": true,
+  "allow_live_geosearch": true,
+  "approved_count": 8,
+  "batch_notes": "geoclient intersection retry",
+  "end_rank": 3457,
+  "fill_method_counts": {
+    "nyc_geosearch_cache": 3,
+    "park_polygon_correction": 2,
+    "parks_properties_parent_centroid": 3
+  },
+  "generated_at_utc": "2026-07-17T20:00:56.178979+00:00",
+  "geoclient_cache_entries_after": 1,
+  "geoclient_cache_entries_before": 1,
+  "geoclient_live_calls": 0,
+  "geosearch_cache_entries_after": 649,
+  "geosearch_cache_entries_before": 649,
+  "geosearch_live_calls": 4,
+  "location_cache_modified": false,
+  "next_required_step": "Run apply_supplemental_manual_approval_decisions.py, validate_supplemental_manual_approvals.py, and supplemental tests.",
+  "outcomes": [
+    {
+      "fill_method": "park_polygon_correction",
+      "geocoder_source": "nyc_geoclient_intersection",
+      "outcome": "approved",
+      "proposed_lat": 40.5789033,
+      "proposed_lng": -74.0740785,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 2439
+    },
+    {
+      "outcome": "rejected_ungeocodable",
+      "review_rank": 2460
+    },
+    {
+      "fill_method": "parks_properties_parent_centroid",
+      "geocoder_source": "nyc_parks_properties_reference",
+      "outcome": "approved",
+      "proposed_lat": 40.6924404,
+      "proposed_lng": -73.9091801,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 2925
+    },
+    {
+      "fill_method": "nyc_geosearch_cache",
+      "geocoder_source": "nyc_geosearch_planninglabs",
+      "outcome": "approved",
+      "proposed_lat": 40.736187,
+      "proposed_lng": -73.975658,
+      "query_used": "Asser Levy Recreation Center",
+      "resolver_tier": "tier_2_geosearch_cache",
+      "review_rank": 2926
+    },
+    {
+      "outcome": "rejected_summer_streets_route",
+      "review_rank": 3059
+    },
+    {
+      "fill_method": "nyc_geosearch_cache",
+      "geocoder_source": "nyc_geosearch_planninglabs",
+      "outcome": "approved",
+      "proposed_lat": 40.726812,
+      "proposed_lng": -73.978463,
+      "query_used": "11 BC Serenity Garden",
+      "resolver_tier": "tier_2_geosearch_cache",
+      "review_rank": 3067
+    },
+    {
+      "fill_method": "parks_properties_parent_centroid",
+      "geocoder_source": "nyc_parks_properties_reference",
+      "outcome": "approved",
+      "proposed_lat": 40.7163289,
+      "proposed_lng": -74.0018198,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3069
+    },
+    {
+      "fill_method": "park_polygon_correction",
+      "geocoder_source": "nyc_geoclient_intersection",
+      "outcome": "approved",
+      "proposed_lat": 40.5789033,
+      "proposed_lng": -74.0740785,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3087
+    },
+    {
+      "fill_method": "parks_properties_parent_centroid",
+      "geocoder_source": "nyc_parks_properties_reference",
+      "outcome": "approved",
+      "proposed_lat": 40.771533,
+      "proposed_lng": -73.7675541,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3277
+    },
+    {
+      "outcome": "rejected_summer_streets_route",
+      "review_rank": 3392
+    },
+    {
+      "outcome": "rejected_summer_streets_route",
+      "review_rank": 3395
+    },
+    {
+      "fill_method": "nyc_geosearch_cache",
+      "geocoder_source": "nyc_geosearch_planninglabs",
+      "outcome": "approved",
+      "proposed_lat": 40.813841,
+      "proposed_lng": -73.918972,
+      "query_used": "460 Willi Ave",
+      "resolver_tier": "tier_2_geosearch_cache",
+      "review_rank": 3410
+    }
+  ],
+  "parks_properties_index_size": 1909,
+  "phase": "m11_supplemental_location_resolution_engine",
+  "promotion_allowed": false,
+  "public_map_modified": false,
+  "rejected_count": 4,
+  "review_ranks": [
+    2439,
+    2460,
+    2925,
+    2926,
+    3059,
+    3067,
+    3069,
+    3087,
+    3277,
+    3392,
+    3395,
+    3410
+  ],
+  "skipped_count": 0,
+  "staged_feed_modified": false,
+  "start_rank": 1
+}

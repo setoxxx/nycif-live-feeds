@@ -1,0 +1,26 @@
+{
+  "artifact_type": "supplemental_no_coord_manual_decisions_report",
+  "generated_at_utc": "2026-07-17T20:37:59.865171+00:00",
+  "phase": "m11_supplemental_no_coord_manual_decisions",
+  "decisions_path": "data/supplemental_no_coord_manual_decisions.json",
+  "decisions_applied": 19,
+  "rejected_count": 18,
+  "held_pending_count": 1,
+  "held_overlap_key": "general election last day to register to vote|2026-10-24",
+  "held_review_rank": 3438,
+  "held_title": "General Election - Last Day to Register to Vote",
+  "held_display_location": "32 Broadway 7th Floor",
+  "queue_status_after_apply": {
+    "approved": 3406,
+    "rejected": 50,
+    "pending": 1
+  },
+  "validation_qa_pass": true,
+  "safety": {
+    "location_cache_modified": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "staged_feed_modified": false
+  },
+  "next_required_step": "Manually verify 32 Broadway 7th Floor (review_rank 3438) for BOE pin approve/reject."
+}

@@ -1,0 +1,101 @@
+{
+  "artifact_type": "supplemental_pin_quality_human_signoff_report",
+  "generated_at_utc": "2026-07-17T20:25:00.974073+00:00",
+  "next_required_step": "Run build_supplemental_location_memory.py output through resolver QA. Explicit Phase 2E authorization required before location_cache.json promotion.",
+  "phase": "m11_supplemental_pin_quality_human_signoff",
+  "review_sheet_path": "data/supplemental_pin_quality_human_review_sheet.csv",
+  "reviewed_rows": [
+    {
+      "borough": "Bk",
+      "display_location": "Dance Room in Shirley Chisholm Recreation Center",
+      "geocoder_source": "nyc_geosearch_planninglabs",
+      "parent_park": "Shirley Chisholm Recreation Center",
+      "pin_quality_category": "no_polygon_match",
+      "proposed_lat": "40.63811",
+      "proposed_lng": "-73.94706",
+      "review_rank": "84",
+      "signoff_reason": "Recreation-center building pin matches supplemental RC alias address (no parent park polygon in Open Data). Approved for supplemental location memory and gazetteer overlay only; not promoted to location_cache.json.",
+      "signoff_status": "approved_for_staging_memory"
+    },
+    {
+      "borough": "Bk",
+      "display_location": "Multipurpose Room in Shirley Chisholm Recreation Center",
+      "geocoder_source": "nyc_geosearch_planninglabs",
+      "parent_park": "Shirley Chisholm Recreation Center",
+      "pin_quality_category": "no_polygon_match",
+      "proposed_lat": "40.63811",
+      "proposed_lng": "-73.94706",
+      "review_rank": "796",
+      "signoff_reason": "Recreation-center building pin matches supplemental RC alias address (no parent park polygon in Open Data). Approved for supplemental location memory and gazetteer overlay only; not promoted to location_cache.json.",
+      "signoff_status": "approved_for_staging_memory"
+    },
+    {
+      "borough": "Bk",
+      "display_location": "Dance Room in Shirley Chisholm Recreation Center",
+      "geocoder_source": "nyc_geosearch_planninglabs",
+      "parent_park": "Shirley Chisholm Recreation Center",
+      "pin_quality_category": "no_polygon_match",
+      "proposed_lat": "40.63811",
+      "proposed_lng": "-73.94706",
+      "review_rank": "816",
+      "signoff_reason": "Recreation-center building pin matches supplemental RC alias address (no parent park polygon in Open Data). Approved for supplemental location memory and gazetteer overlay only; not promoted to location_cache.json.",
+      "signoff_status": "approved_for_staging_memory"
+    },
+    {
+      "borough": "Qn",
+      "display_location": "Gymnasium (Court) in Al Oerter Recreation Center",
+      "geocoder_source": "nyc_geosearch_planninglabs",
+      "parent_park": "Al Oerter Recreation Center",
+      "pin_quality_category": "no_polygon_match",
+      "proposed_lat": "40.751392",
+      "proposed_lng": "-73.834009",
+      "review_rank": "1156",
+      "signoff_reason": "Recreation-center building pin matches supplemental RC alias address (no parent park polygon in Open Data). Approved for supplemental location memory and gazetteer overlay only; not promoted to location_cache.json.",
+      "signoff_status": "approved_for_staging_memory"
+    },
+    {
+      "borough": "Bk",
+      "display_location": "Multipurpose Room in Shirley Chisholm Recreation Center",
+      "geocoder_source": "nyc_geosearch_planninglabs",
+      "parent_park": "Shirley Chisholm Recreation Center",
+      "pin_quality_category": "no_polygon_match",
+      "proposed_lat": "40.63811",
+      "proposed_lng": "-73.94706",
+      "review_rank": "2722",
+      "signoff_reason": "Recreation-center building pin matches supplemental RC alias address (no parent park polygon in Open Data). Approved for supplemental location memory and gazetteer overlay only; not promoted to location_cache.json.",
+      "signoff_status": "approved_for_staging_memory"
+    },
+    {
+      "borough": "Bk",
+      "display_location": "Dance Room in Shirley Chisholm Recreation Center",
+      "geocoder_source": "nyc_geosearch_planninglabs",
+      "parent_park": "Shirley Chisholm Recreation Center",
+      "pin_quality_category": "no_polygon_match",
+      "proposed_lat": "40.63811",
+      "proposed_lng": "-73.94706",
+      "review_rank": "2742",
+      "signoff_reason": "Recreation-center building pin matches supplemental RC alias address (no parent park polygon in Open Data). Approved for supplemental location memory and gazetteer overlay only; not promoted to location_cache.json.",
+      "signoff_status": "approved_for_staging_memory"
+    },
+    {
+      "borough": "Bk",
+      "display_location": "Multipurpose Room in Shirley Chisholm Recreation Center",
+      "geocoder_source": "nyc_geosearch_planninglabs",
+      "parent_park": "Shirley Chisholm Recreation Center",
+      "pin_quality_category": "no_polygon_match",
+      "proposed_lat": "40.63811",
+      "proposed_lng": "-73.94706",
+      "review_rank": "3386",
+      "signoff_reason": "Recreation-center building pin matches supplemental RC alias address (no parent park polygon in Open Data). Approved for supplemental location memory and gazetteer overlay only; not promoted to location_cache.json.",
+      "signoff_status": "approved_for_staging_memory"
+    }
+  ],
+  "row_count": 7,
+  "safety": {
+    "location_cache_modified": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "staged_feed_modified": false
+  },
+  "signoff_summary": "All 7 flagged recreation-center building pins use consistent GeoSearch address coordinates from supplemental_recreation_center_park_aliases.json. Pins are approved for staging location memory and recurring-event auto-resolution. Phase 2E promotion not authorized."
+}

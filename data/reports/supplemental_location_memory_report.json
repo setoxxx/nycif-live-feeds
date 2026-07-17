@@ -1,0 +1,183 @@
+{
+  "approved_row_count": 3406,
+  "artifact_type": "supplemental_location_memory_report",
+  "generated_at_utc": "2026-07-17T20:25:00.974170+00:00",
+  "human_pin_quality_signoff_report": "data/reports/supplemental_pin_quality_human_signoff_report.json",
+  "memory_entry_count": 716,
+  "next_required_step": "Resolver and rejected-pass now consult supplemental_location_gazetteer_overlay.json. Re-run validate_supplemental_manual_approvals.py. Phase 2E promotion still requires explicit authorization.",
+  "overlay": {
+    "index_key_count": 1588,
+    "merged_preview_key_count": 1588,
+    "path": "data/supplemental_location_gazetteer_overlay.json"
+  },
+  "phase": "m11_supplemental_location_memory",
+  "qa_pass": true,
+  "recurrence": {
+    "approved_row_count": 3406,
+    "approved_rows_auto_resolvable_from_overlay": 3406,
+    "approved_rows_auto_resolvable_from_overlay_pct": 100.0,
+    "approved_rows_sharing_recurring_location_key": 3094,
+    "approved_rows_sharing_recurring_location_key_pct": 90.84,
+    "location_keys_with_event_count_gt_1": 404,
+    "unique_location_key_count": 716
+  },
+  "safety": {
+    "location_cache_modified": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "staged_feed_modified": false
+  },
+  "skipped_approved_rows_without_coords": 51,
+  "top_recurring_location_keys": [
+    {
+      "borough": "Bk",
+      "display_location": "Kosciuszko Pool",
+      "event_count": 60,
+      "location_key": "bk|kosciuszko pool"
+    },
+    {
+      "borough": "Qn",
+      "display_location": "Main Pool in Detective Keith L Williams Park",
+      "event_count": 54,
+      "location_key": "qn|main pool in detective keith l williams park|parent:detective keith l williams park"
+    },
+    {
+      "borough": "Mn",
+      "display_location": "Main Pool in Hamilton Fish Park",
+      "event_count": 53,
+      "location_key": "mn|main pool in hamilton fish park|parent:hamilton fish park"
+    },
+    {
+      "borough": "SI",
+      "display_location": "Lyons Pool",
+      "event_count": 48,
+      "location_key": "si|lyons pool"
+    },
+    {
+      "borough": "Bk",
+      "display_location": "McCarren Park Pool in McCarren Park",
+      "event_count": 48,
+      "location_key": "bk|mccarren park pool in mccarren park|parent:mccarren park"
+    },
+    {
+      "borough": "SI",
+      "display_location": "Faber Pool in Faber Pool and Park",
+      "event_count": 33,
+      "location_key": "si|faber pool in faber pool and park|parent:faber pool and park"
+    },
+    {
+      "borough": "",
+      "display_location": "Kosciuszko Pool",
+      "event_count": 32,
+      "location_key": "|kosciuszko pool"
+    },
+    {
+      "borough": "Mn",
+      "display_location": "Multi-Use Room in Alfred E. Smith Recreation Center",
+      "event_count": 30,
+      "location_key": "mn|multi use room in alfred e smith recreation center|parent:alfred e smith recreation center"
+    },
+    {
+      "borough": "SI",
+      "display_location": "Greenbelt Recreation Center in Greenbelt Recreation Center",
+      "event_count": 30,
+      "location_key": "si|greenbelt recreation center in greenbelt recreation center|parent:greenbelt recreation center"
+    },
+    {
+      "borough": "Qn",
+      "display_location": "Astoria Pool in Astoria Park",
+      "event_count": 29,
+      "location_key": "qn|astoria pool in astoria park|parent:astoria park"
+    },
+    {
+      "borough": "Bx",
+      "display_location": "Main Pool in Crotona Park",
+      "event_count": 29,
+      "location_key": "bx|main pool in crotona park|parent:crotona park"
+    },
+    {
+      "borough": "",
+      "display_location": "Main Pool (in Hamilton Fish Park)",
+      "event_count": 29,
+      "location_key": "|main pool in hamilton fish park|parent:hamilton fish park"
+    },
+    {
+      "borough": "",
+      "display_location": "Main Pool (in Detective Keith L Williams Park)",
+      "event_count": 29,
+      "location_key": "|main pool in detective keith l williams park|parent:detective keith l williams park"
+    },
+    {
+      "borough": "Bx",
+      "display_location": "Van Cortlandt Park Pool in Van Cortlandt Park",
+      "event_count": 27,
+      "location_key": "bx|van cortlandt park pool in van cortlandt park|parent:van cortlandt park"
+    },
+    {
+      "borough": "",
+      "display_location": "Lyons Pool",
+      "event_count": 26,
+      "location_key": "|lyons pool"
+    },
+    {
+      "borough": "Bx",
+      "display_location": "Play Area in Spuyten Duyvil Playground",
+      "event_count": 25,
+      "location_key": "bx|play area in spuyten duyvil playground|parent:spuyten duyvil playground"
+    },
+    {
+      "borough": "",
+      "display_location": "McCarren Park Pool (in McCarren Park)",
+      "event_count": 25,
+      "location_key": "|mccarren park pool in mccarren park|parent:mccarren park"
+    },
+    {
+      "borough": "Mn",
+      "display_location": "Greeley Square Park",
+      "event_count": 24,
+      "location_key": "mn|greeley square park"
+    },
+    {
+      "borough": "SI",
+      "display_location": "H.H. Biddle House in Conference House Park",
+      "event_count": 24,
+      "location_key": "si|h h biddle house in conference house park|parent:conference house park"
+    },
+    {
+      "borough": "Mn",
+      "display_location": "Upper Terrace in Bryant Park",
+      "event_count": 24,
+      "location_key": "mn|upper terrace in bryant park|parent:bryant park"
+    },
+    {
+      "borough": "Qn",
+      "display_location": "Main Pool in Fisher Pool",
+      "event_count": 23,
+      "location_key": "qn|main pool in fisher pool|parent:fisher pool"
+    },
+    {
+      "borough": "",
+      "display_location": "Faber Pool (in Faber Pool and Park)",
+      "event_count": 23,
+      "location_key": "|faber pool in faber pool and park|parent:faber pool and park"
+    },
+    {
+      "borough": "",
+      "display_location": "Astoria Pool (in Astoria Park)",
+      "event_count": 22,
+      "location_key": "|astoria pool in astoria park|parent:astoria park"
+    },
+    {
+      "borough": "Mn",
+      "display_location": "Gottesman Pool at the Davis Center in Central Park",
+      "event_count": 21,
+      "location_key": "mn|gottesman pool at the davis center in central park|parent:central park"
+    },
+    {
+      "borough": "Bx",
+      "display_location": "Ben Abrams Playground in Bronx Park",
+      "event_count": 19,
+      "location_key": "bx|ben abrams playground in bronx park|parent:bronx park"
+    }
+  ]
+}

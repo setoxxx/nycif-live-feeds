@@ -102,7 +102,7 @@ def haversine_m(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
 
 
 class NYCLocationResolver:
-    """Three-tier public resolver: gazetteer → geosearch cache → live geosearch."""
+    """Tiered public resolver: gazetteer (+ supplemental overlay) → geosearch cache → live geosearch."""
 
     def __init__(
         self,
