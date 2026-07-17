@@ -1,16 +1,17 @@
 {
   "allow_live_geosearch": true,
-  "approved_count": 48,
-  "batch_notes": "M11 rejected pass batch 11: child/parent gazetteer decomposition + live GeoSearch, ranks 2903-2952",
-  "end_rank": 2952,
+  "approved_count": 43,
+  "batch_notes": "M11 rejected pass batch 14: child/parent gazetteer decomposition + live GeoSearch, ranks 3053-3102",
+  "end_rank": 3102,
   "fill_method_counts": {
-    "location_gazetteer": 47,
-    "parent_park_fallback": 1
+    "location_gazetteer": 39,
+    "nyc_geosearch_live": 1,
+    "parent_park_fallback": 3
   },
-  "generated_at_utc": "2026-07-17T18:57:48.719588+00:00",
-  "geosearch_cache_entries_after": 550,
-  "geosearch_cache_entries_before": 550,
-  "geosearch_live_calls": 8,
+  "generated_at_utc": "2026-07-17T19:00:39.083247+00:00",
+  "geosearch_cache_entries_after": 553,
+  "geosearch_cache_entries_before": 552,
+  "geosearch_live_calls": 17,
   "location_cache_modified": false,
   "next_required_step": "Run apply_supplemental_manual_approval_decisions.py, validate_supplemental_manual_approvals.py, and supplemental tests.",
   "outcomes": [
@@ -18,439 +19,21 @@
       "fill_method": "location_gazetteer",
       "geocoder_source": "nyc_parks_bigapps_events_snapshot",
       "outcome": "approved",
-      "proposed_lat": 40.597699406311,
-      "proposed_lng": -74.071126343877,
+      "proposed_lat": 40.86869812011719,
+      "proposed_lng": -73.93260192871094,
       "query_used": null,
       "resolver_tier": null,
-      "review_rank": 2903
+      "review_rank": 3053
     },
     {
       "fill_method": "location_gazetteer",
       "geocoder_source": "nyc_parks_bigapps_events_snapshot",
       "outcome": "approved",
-      "proposed_lat": 40.814040812484,
-      "proposed_lng": -73.886041879654,
+      "proposed_lat": 40.6830369,
+      "proposed_lng": -73.9348376,
       "query_used": null,
       "resolver_tier": null,
-      "review_rank": 2904
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_facility_reference",
-      "outcome": "approved",
-      "proposed_lat": 40.8488,
-      "proposed_lng": -73.8522,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2905
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_facility_reference",
-      "outcome": "approved",
-      "proposed_lat": 40.8346,
-      "proposed_lng": -73.8736,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2906
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_facility_reference",
-      "outcome": "approved",
-      "proposed_lat": 40.7855,
-      "proposed_lng": -73.9507,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2907
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.714499,
-      "proposed_lng": -73.989886,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2908
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_facility_reference",
-      "outcome": "approved",
-      "proposed_lat": 40.7141,
-      "proposed_lng": -73.9841,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2909
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.597699406311,
-      "proposed_lng": -74.071126343877,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2910
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_facility_reference",
-      "outcome": "approved",
-      "proposed_lat": 40.866,
-      "proposed_lng": -73.8982,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2911
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.812814939192,
-      "proposed_lng": -73.913262844086,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2912
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.597699406311,
-      "proposed_lng": -74.071126343877,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2913
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.877219084337,
-      "proposed_lng": -73.878661870956,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2914
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.597699406311,
-      "proposed_lng": -74.071126343877,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2915
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_facility_reference",
-      "outcome": "approved",
-      "proposed_lat": 40.749,
-      "proposed_lng": -73.8063,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2916
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.691200256348,
-      "proposed_lng": -73.949501037598,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2917
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.753299713135,
-      "proposed_lng": -73.984001159668,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2918
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.83721,
-      "proposed_lng": -73.907983,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2919
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.662030117821,
-      "proposed_lng": -73.914012242472,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2920
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.71032072,
-      "proposed_lng": -73.99763525,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2921
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.637199401855,
-      "proposed_lng": -74.07430267334,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2922
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.7201557,
-      "proposed_lng": -73.9517404,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2923
-    },
-    {
-      "fill_method": "parent_park_fallback",
-      "geocoder_source": "nyc_parks_facility_reference",
-      "outcome": "approved",
-      "proposed_lat": 40.577,
-      "proposed_lng": -74.0995,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2924
-    },
-    {
-      "outcome": "rejected_no_fill",
-      "review_rank": 2925
-    },
-    {
-      "outcome": "rejected_no_fill",
-      "review_rank": 2926
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.754116748576,
-      "proposed_lng": -73.983368813992,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2927
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.505546147538,
-      "proposed_lng": -74.254193782807,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2928
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.732021858331,
-      "proposed_lng": -73.998527526855,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2929
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.75339889526367,
-      "proposed_lng": -73.98269653320312,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2930
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.597699406311,
-      "proposed_lng": -74.071126343877,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2931
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.797615,
-      "proposed_lng": -73.9419066,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2932
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.8958854675293,
-      "proposed_lng": -73.8964614868164,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2933
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.83721,
-      "proposed_lng": -73.907983,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2934
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.83721,
-      "proposed_lng": -73.907983,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2935
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.83721,
-      "proposed_lng": -73.907983,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2936
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.83721,
-      "proposed_lng": -73.907983,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2937
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.83721,
-      "proposed_lng": -73.907983,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2938
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.691200256348,
-      "proposed_lng": -73.949501037598,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2939
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.691200256348,
-      "proposed_lng": -73.949501037598,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2940
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.691200256348,
-      "proposed_lng": -73.949501037598,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2941
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.83721,
-      "proposed_lng": -73.907983,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2942
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.637199401855,
-      "proposed_lng": -74.07430267334,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2943
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.7201557,
-      "proposed_lng": -73.9517404,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2944
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.83721,
-      "proposed_lng": -73.907983,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2945
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.83721,
-      "proposed_lng": -73.907983,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2946
-    },
-    {
-      "fill_method": "location_gazetteer",
-      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-      "outcome": "approved",
-      "proposed_lat": 40.629665602787,
-      "proposed_lng": -74.11564596041,
-      "query_used": null,
-      "resolver_tier": null,
-      "review_rank": 2947
+      "review_rank": 3054
     },
     {
       "fill_method": "location_gazetteer",
@@ -460,54 +43,445 @@
       "proposed_lng": -74.139472484589,
       "query_used": null,
       "resolver_tier": null,
-      "review_rank": 2948
+      "review_rank": 3055
     },
     {
       "fill_method": "location_gazetteer",
       "geocoder_source": "nyc_parks_bigapps_events_snapshot",
       "outcome": "approved",
-      "proposed_lat": 40.597699406311,
-      "proposed_lng": -74.071126343877,
+      "proposed_lat": 40.591982601343,
+      "proposed_lng": -74.139472484589,
       "query_used": null,
       "resolver_tier": null,
-      "review_rank": 2949
+      "review_rank": 3056
     },
     {
       "fill_method": "location_gazetteer",
       "geocoder_source": "nyc_parks_bigapps_events_snapshot",
       "outcome": "approved",
-      "proposed_lat": 40.8188362121582,
-      "proposed_lng": -73.9609146118164,
+      "proposed_lat": 40.641015406203,
+      "proposed_lng": -74.135333200543,
       "query_used": null,
       "resolver_tier": null,
-      "review_rank": 2950
+      "review_rank": 3057
     },
     {
       "fill_method": "location_gazetteer",
       "geocoder_source": "nyc_parks_bigapps_events_snapshot",
       "outcome": "approved",
-      "proposed_lat": 40.7297706604,
-      "proposed_lng": -73.960708618164,
+      "proposed_lat": 40.629665602787,
+      "proposed_lng": -74.11564596041,
       "query_used": null,
       "resolver_tier": null,
-      "review_rank": 2951
+      "review_rank": 3058
+    },
+    {
+      "outcome": "rejected_no_fill",
+      "review_rank": 3059
     },
     {
       "fill_method": "location_gazetteer",
       "geocoder_source": "nyc_parks_bigapps_events_snapshot",
       "outcome": "approved",
-      "proposed_lat": 40.663341435816,
-      "proposed_lng": -73.905597686768,
+      "proposed_lat": 40.818801879883,
+      "proposed_lng": -73.961097717285,
       "query_used": null,
       "resolver_tier": null,
-      "review_rank": 2952
+      "review_rank": 3060
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.800691692826,
+      "proposed_lng": -73.973306179047,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3061
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_facility_reference",
+      "outcome": "approved",
+      "proposed_lat": 40.6894,
+      "proposed_lng": -73.9459,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3062
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_facility_reference",
+      "outcome": "approved",
+      "proposed_lat": 40.8844,
+      "proposed_lng": -73.8672,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3063
+    },
+    {
+      "outcome": "skipped_permanent_reject",
+      "reason": "Online-only event; no in-person NYC venue",
+      "review_rank": 3064
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_facility_reference",
+      "outcome": "approved",
+      "proposed_lat": 40.6079,
+      "proposed_lng": -73.935,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3065
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.57849884033203,
+      "proposed_lng": -74.07759857177734,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3066
+    },
+    {
+      "outcome": "rejected_no_fill",
+      "review_rank": 3067
+    },
+    {
+      "fill_method": "nyc_geosearch_live",
+      "geocoder_source": "nyc_geosearch_planninglabs",
+      "outcome": "approved",
+      "proposed_lat": 40.59819,
+      "proposed_lng": -73.82327,
+      "query_used": "Sunset Cove Park Entrance",
+      "resolver_tier": "tier_3_nyc_geosearch_live",
+      "review_rank": 3068
+    },
+    {
+      "outcome": "rejected_no_fill",
+      "review_rank": 3069
+    },
+    {
+      "outcome": "skipped_permanent_reject",
+      "reason": "Canceled event in title",
+      "review_rank": 3070
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.870399475098,
+      "proposed_lng": -73.786697387695,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3071
+    },
+    {
+      "fill_method": "parent_park_fallback",
+      "geocoder_source": "nyc_parks_facility_reference",
+      "outcome": "approved",
+      "proposed_lat": 40.616,
+      "proposed_lng": -74.1054,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3072
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.791999816895,
+      "proposed_lng": -73.978996276855,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3073
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.86869812011719,
+      "proposed_lng": -73.93260192871094,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3074
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.88990020751953,
+      "proposed_lng": -73.90360260009766,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3075
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.8303481,
+      "proposed_lng": -73.9499595,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3076
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.57292175293,
+      "proposed_lng": -73.984397888184,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3077
+    },
+    {
+      "fill_method": "parent_park_fallback",
+      "geocoder_source": "nyc_parks_facility_reference",
+      "outcome": "approved",
+      "proposed_lat": 40.6386,
+      "proposed_lng": -73.938,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3078
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.502601623535,
+      "proposed_lng": -74.251800537109,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3079
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.730899810791016,
+      "proposed_lng": -73.77400207519531,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3080
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.607943945573,
+      "proposed_lng": -73.937465012074,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3081
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.505546147538,
+      "proposed_lng": -74.254193782807,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3082
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.591982601343,
+      "proposed_lng": -74.139472484589,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3083
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.591982601343,
+      "proposed_lng": -74.139472484589,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3084
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.780084854514,
+      "proposed_lng": -73.98849773407,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3085
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_facility_reference",
+      "outcome": "approved",
+      "proposed_lat": 40.6992,
+      "proposed_lng": -73.9983,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3086
+    },
+    {
+      "outcome": "rejected_no_fill",
+      "review_rank": 3087
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.71032072,
+      "proposed_lng": -73.99763525,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3088
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.767200469971,
+      "proposed_lng": -73.971298217773,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3089
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.71032072,
+      "proposed_lng": -73.99763525,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3090
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.71032072,
+      "proposed_lng": -73.99763525,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3091
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.778793896396,
+      "proposed_lng": -73.922681749985,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3092
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.748642685667,
+      "proposed_lng": -73.988085303512,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3093
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.661722130567,
+      "proposed_lng": -73.96136879921,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3094
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.74829865,
+      "proposed_lng": -74.00219727,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3095
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.753819792011,
+      "proposed_lng": -73.983734458685,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3096
+    },
+    {
+      "outcome": "skipped_permanent_reject",
+      "reason": "Canceled event in title",
+      "review_rank": 3097
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.8256848,
+      "proposed_lng": -73.9480598,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3098
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.747336617996,
+      "proposed_lng": -73.921119214382,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3099
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.869995298193,
+      "proposed_lng": -73.844834804535,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3100
+    },
+    {
+      "fill_method": "location_gazetteer",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.83721,
+      "proposed_lng": -73.907983,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3101
+    },
+    {
+      "fill_method": "parent_park_fallback",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "outcome": "approved",
+      "proposed_lat": 40.502601623535,
+      "proposed_lng": -74.251800537109,
+      "query_used": null,
+      "resolver_tier": null,
+      "review_rank": 3102
     }
   ],
   "phase": "m11_supplemental_rejected_pass",
   "promotion_allowed": false,
   "public_map_modified": false,
-  "rejected_count": 2,
-  "skipped_count": 0,
+  "rejected_count": 4,
+  "skipped_count": 3,
   "staged_feed_modified": false,
-  "start_rank": 2903
+  "start_rank": 3053
 }
