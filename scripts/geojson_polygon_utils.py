@@ -2,14 +2,19 @@
 
 from __future__ import annotations
 
+import html
+import re
+from pathlib import Path
 from typing import Any, Iterable
 
 try:
-    from scripts.coverage_gap_utils import valid_nyc_lat_lng
+    from scripts.coverage_gap_utils import DATA_DIR, load_json_file, valid_nyc_lat_lng
     from scripts.gps_identity import normalize_text_legacy
 except ModuleNotFoundError:  # pragma: no cover
-    from coverage_gap_utils import valid_nyc_lat_lng
+    from coverage_gap_utils import DATA_DIR, load_json_file, valid_nyc_lat_lng
     from gps_identity import normalize_text_legacy
+
+RECREATION_CENTER_ALIASES_PATH = DATA_DIR / "supplemental_recreation_center_park_aliases.json"
 
 
 def _ring_lng_lat_pairs(ring: Any) -> list[tuple[float, float]]:
@@ -167,6 +172,55 @@ def _park_name_aliases(park_name: str) -> list[str]:
     return deduped
 
 
+def clean_park_display_name(value: Any) -> str:
+    text = html.unescape(str(value or ""))
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def recreation_center_alias_key(park_name: str, borough: Any) -> str:
+    return f"{normalize_text_legacy(str(borough or ''))}|{normalize_park_name(clean_park_display_name(park_name))}"
+
+
+def load_recreation_center_aliases(
+    path: Path = RECREATION_CENTER_ALIASES_PATH,
+) -> dict[str, dict[str, Any]]:
+    payload = load_json_file(path, {})
+    entries = payload.get("entries", {}) if isinstance(payload, dict) else {}
+    return entries if isinstance(entries, dict) else {}
+
+
+def lookup_recreation_center_alias(
+    park_name: str,
+    borough: Any,
+    aliases: dict[str, dict[str, Any]] | None = None,
+) -> dict[str, Any] | None:
+    aliases = aliases if aliases is not None else load_recreation_center_aliases()
+    if not aliases:
+        return None
+    keys = [
+        recreation_center_alias_key(park_name, borough),
+        recreation_center_alias_key(clean_park_display_name(park_name), borough),
+    ]
+    for alias in _park_name_aliases(clean_park_display_name(park_name)):
+        keys.append(f"{normalize_text_legacy(str(borough or ''))}|{alias}")
+    for key in keys:
+        hit = aliases.get(key)
+        if isinstance(hit, dict):
+            return hit
+    for entry in aliases.values():
+        if not isinstance(entry, dict):
+            continue
+        if normalize_park_name(clean_park_display_name(entry.get("alias"))) != normalize_park_name(
+            clean_park_display_name(park_name)
+        ):
+            continue
+        entry_boro = normalize_text_legacy(str(entry.get("borough") or ""))
+        query_boro = normalize_text_legacy(str(borough or ""))
+        if not entry_boro or not query_boro or entry_boro == query_boro:
+            return entry
+    return None
+
+
 def _borough_match_keys(borough: Any) -> set[str]:
     keys = {normalize_text_legacy(str(borough or ""))}
     try:
@@ -199,7 +253,26 @@ def find_park_property_row(
     park_name: str,
     borough: Any,
     name_index: dict[str, list[dict[str, Any]]],
+    *,
+    recreation_center_aliases: dict[str, dict[str, Any]] | None = None,
+    allow_rc_redirect: bool = True,
 ) -> dict[str, Any] | None:
+    rc_alias = (
+        lookup_recreation_center_alias(park_name, borough, recreation_center_aliases)
+        if allow_rc_redirect
+        else None
+    )
+    if rc_alias and rc_alias.get("parks_properties_signname"):
+        redirected = find_park_property_row(
+            str(rc_alias["parks_properties_signname"]),
+            borough,
+            name_index,
+            recreation_center_aliases=recreation_center_aliases,
+            allow_rc_redirect=False,
+        )
+        if redirected:
+            return redirected
+
     boro_keys = _borough_match_keys(borough)
     scored: list[tuple[int, dict[str, Any]]] = []
     seen_ids: set[str] = set()

@@ -26,6 +26,8 @@ try:
     )
     from scripts.geojson_polygon_utils import (
         find_park_property_row,
+        load_recreation_center_aliases,
+        lookup_recreation_center_alias,
         point_in_polygon_geometry,
         snap_to_park_interior,
     )
@@ -41,6 +43,8 @@ except ModuleNotFoundError:  # pragma: no cover
     )
     from geojson_polygon_utils import (
         find_park_property_row,
+        load_recreation_center_aliases,
+        lookup_recreation_center_alias,
         point_in_polygon_geometry,
         snap_to_park_interior,
     )
@@ -58,10 +62,124 @@ def parent_park_from_display(display: str) -> str | None:
     return parsed[2]
 
 
+def apply_row_pin_correction(
+    row: dict[str, Any],
+    *,
+    parks_index: dict[str, list[dict[str, Any]]],
+    recreation_center_aliases: dict[str, dict[str, Any]],
+) -> tuple[dict[str, Any] | None, dict[str, Any] | None]:
+    lat, lng = row.get("proposed_lat"), row.get("proposed_lng")
+    if lat is None or lng is None:
+        return row, None
+    display = str(row.get("display_location") or "")
+    parent = parent_park_from_display(display)
+    if not parent:
+        return row, {"outcome": "skipped_no_parent_context"}
+
+    lat_f, lng_f = float(lat), float(lng)
+    borough = row.get("borough")
+    rc_alias = lookup_recreation_center_alias(parent, borough, recreation_center_aliases)
+    prop = find_park_property_row(
+        parent,
+        borough,
+        parks_index,
+        recreation_center_aliases=recreation_center_aliases,
+    )
+    geometry = (prop.get("geometry") or prop.get("multipolygon")) if prop else None
+
+    if isinstance(geometry, dict) and point_in_polygon_geometry(lng_f, lat_f, geometry):
+        return row, {"outcome": "skipped_inside_polygon"}
+
+    new_lat: float | None = None
+    new_lng: float | None = None
+    label = parent
+    correction_method = "park_polygon_correction"
+
+    snapped = snap_to_park_interior(lat_f, lng_f, parent, borough, parks_index)
+    if snapped:
+        new_lat, new_lng, label = snapped
+        if isinstance(geometry, dict) and not point_in_polygon_geometry(float(new_lng), float(new_lat), geometry):
+            new_lat = new_lng = None
+
+    if new_lat is None and rc_alias:
+        rc_lat = rc_alias.get("facility_lat")
+        rc_lng = rc_alias.get("facility_lng")
+        if rc_lat is not None and rc_lng is not None:
+            rc_lat_f, rc_lng_f = float(rc_lat), float(rc_lng)
+            if isinstance(geometry, dict):
+                if point_in_polygon_geometry(rc_lng_f, rc_lat_f, geometry):
+                    new_lat, new_lng = rc_lat_f, rc_lng_f
+                    label = str(rc_alias.get("alias") or parent)
+                    correction_method = "recreation_center_facility_alias"
+                elif rc_alias.get("parks_properties_signname"):
+                    new_lat, new_lng = rc_lat_f, rc_lng_f
+                    label = str(rc_alias.get("alias") or parent)
+                    correction_method = "recreation_center_facility_alias"
+            else:
+                new_lat, new_lng = rc_lat_f, rc_lng_f
+                label = str(rc_alias.get("alias") or parent)
+                correction_method = "recreation_center_facility_alias"
+
+    if new_lat is None:
+        if not prop:
+            return row, {
+                "review_rank": row.get("review_rank"),
+                "outcome": "skipped_no_polygon_match",
+                "parent_park": parent,
+                "display_location": display,
+            }
+        if snapped is None:
+            return row, {
+                "review_rank": row.get("review_rank"),
+                "outcome": "skipped_snap_failed",
+                "parent_park": parent,
+            }
+        return row, {
+            "review_rank": row.get("review_rank"),
+            "outcome": "skipped_centroid_still_outside",
+            "parent_park": parent,
+            "display_location": display,
+        }
+
+    out = dict(row)
+    out["proposed_lat"] = new_lat
+    out["proposed_lng"] = new_lng
+    if out.get("geocoder_confidence") == "high":
+        out["geocoder_confidence"] = "medium"
+    if correction_method == "recreation_center_facility_alias":
+        out["geocoder_source"] = str(rc_alias.get("geocoder_source") or "supplemental_recreation_center_alias")
+        out["confidence_reason"] = (
+            f"Pin-quality correction: recreation center facility alias for '{label}' "
+            f"({rc_alias.get('address_query') or 'official address'}). For manual review only."
+        )
+    else:
+        out["confidence_reason"] = (
+            f"Pin-quality correction: relocated pin into '{label}' park interior "
+            f"(parent context '{parent}') for manual review only."
+        )
+    out["public_map_modified"] = False
+    out["location_cache_modified"] = False
+    out["staged_feed_modified"] = False
+    out["promotion_allowed"] = False
+    return out, {
+        "review_rank": row.get("review_rank"),
+        "outcome": "corrected",
+        "correction_method": correction_method,
+        "parent_park": parent,
+        "display_location": display,
+        "old_lat": lat_f,
+        "old_lng": lng_f,
+        "new_lat": new_lat,
+        "new_lng": new_lng,
+        "geocoder_source": out.get("geocoder_source"),
+    }
+
+
 def run(*, dry_run: bool = False) -> int:
     payload = load_json_file(QUEUE_PATH, {})
     queue = payload.get("approval_queue") or []
     parks_index = load_parks_properties_name_index()
+    recreation_center_aliases = load_recreation_center_aliases()
     outcomes: list[dict[str, Any]] = []
     corrected = 0
     skipped_inside = 0
@@ -69,107 +187,50 @@ def run(*, dry_run: bool = False) -> int:
     skipped_no_polygon = 0
     skipped_snap_failed = 0
     skipped_still_outside = 0
+    recreation_center_corrected = 0
 
     updated_queue: list[dict[str, Any]] = []
     for row in queue:
         if (row.get("manual_review_status") or "") != "approved":
             updated_queue.append(row)
             continue
-        lat, lng = row.get("proposed_lat"), row.get("proposed_lng")
-        if lat is None or lng is None:
-            updated_queue.append(row)
+        updated_row, outcome = apply_row_pin_correction(
+            row,
+            parks_index=parks_index,
+            recreation_center_aliases=recreation_center_aliases,
+        )
+        if outcome is None:
+            updated_queue.append(updated_row or row)
             continue
-        display = str(row.get("display_location") or "")
-        parent = parent_park_from_display(display)
-        if not parent:
-            skipped_no_parent += 1
-            updated_queue.append(row)
+        outcome_name = outcome.get("outcome")
+        if outcome_name == "corrected":
+            corrected += 1
+            if outcome.get("correction_method") == "recreation_center_facility_alias":
+                recreation_center_corrected += 1
+            outcomes.append(outcome)
+            updated_queue.append(updated_row or row)
             continue
-        prop = find_park_property_row(parent, row.get("borough"), parks_index)
-        if not prop:
-            skipped_no_polygon += 1
-            outcomes.append(
-                {
-                    "review_rank": row.get("review_rank"),
-                    "outcome": "skipped_no_polygon_match",
-                    "parent_park": parent,
-                    "display_location": display,
-                }
-            )
-            updated_queue.append(row)
-            continue
-        geometry = prop.get("geometry") or prop.get("multipolygon")
-        if not isinstance(geometry, dict):
-            skipped_no_polygon += 1
-            updated_queue.append(row)
-            continue
-        lat_f, lng_f = float(lat), float(lng)
-        if point_in_polygon_geometry(lng_f, lat_f, geometry):
+        if outcome_name == "skipped_inside_polygon":
             skipped_inside += 1
-            updated_queue.append(row)
-            continue
-        snapped = snap_to_park_interior(lat_f, lng_f, parent, row.get("borough"), parks_index)
-        if not snapped:
+        elif outcome_name == "skipped_no_parent_context":
+            skipped_no_parent += 1
+        elif outcome_name == "skipped_no_polygon_match":
+            skipped_no_polygon += 1
+            outcomes.append(outcome)
+        elif outcome_name == "skipped_snap_failed":
             skipped_snap_failed += 1
-            outcomes.append(
-                {
-                    "review_rank": row.get("review_rank"),
-                    "outcome": "skipped_snap_failed",
-                    "parent_park": parent,
-                }
-            )
-            updated_queue.append(row)
-            continue
-        new_lat, new_lng, label = snapped
-        if not point_in_polygon_geometry(float(new_lng), float(new_lat), geometry):
+            outcomes.append(outcome)
+        elif outcome_name == "skipped_centroid_still_outside":
             skipped_still_outside += 1
-            outcomes.append(
-                {
-                    "review_rank": row.get("review_rank"),
-                    "outcome": "skipped_centroid_still_outside",
-                    "parent_park": parent,
-                    "display_location": display,
-                    "proposed_lat": new_lat,
-                    "proposed_lng": new_lng,
-                }
-            )
-            updated_queue.append(row)
-            continue
-
-        out = dict(row)
-        out["proposed_lat"] = new_lat
-        out["proposed_lng"] = new_lng
-        if out.get("geocoder_confidence") == "high":
-            out["geocoder_confidence"] = "medium"
-        out["confidence_reason"] = (
-            f"Pin-quality correction: relocated pin into '{label}' park interior "
-            f"(parent context '{parent}') for manual review only."
-        )
-        out["public_map_modified"] = False
-        out["location_cache_modified"] = False
-        out["staged_feed_modified"] = False
-        out["promotion_allowed"] = False
-        corrected += 1
-        outcomes.append(
-            {
-                "review_rank": row.get("review_rank"),
-                "outcome": "corrected",
-                "parent_park": parent,
-                "display_location": display,
-                "old_lat": lat_f,
-                "old_lng": lng_f,
-                "new_lat": new_lat,
-                "new_lng": new_lng,
-                "geocoder_source": row.get("geocoder_source"),
-            }
-        )
-        updated_queue.append(out)
+            outcomes.append(outcome)
+        updated_queue.append(updated_row or row)
 
     report = {
         "generated_at_utc": utc_now_iso(),
         "phase": "m11_supplemental_pin_polygon_correction",
         "dry_run": dry_run,
         "corrected_count": corrected,
+        "recreation_center_alias_corrected_count": recreation_center_corrected,
         "skipped_inside_polygon_count": skipped_inside,
         "skipped_no_parent_context_count": skipped_no_parent,
         "skipped_no_polygon_match_count": skipped_no_polygon,
