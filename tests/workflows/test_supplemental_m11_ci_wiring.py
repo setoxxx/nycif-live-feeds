@@ -73,3 +73,10 @@ def test_phase2e_dry_run_and_readiness_gate_in_workflow():
         "Enforce supplemental Phase 2E readiness gate",
     )
     assert publish_idx < dry_run_idx < gate_idx
+
+
+def test_supplemental_preview_deploy_workflow_exists():
+    text = (REPO_ROOT / ".github/workflows/field-desk-supplemental-preview-deploy.yml").read_text(encoding="utf-8")
+    assert "FIELD_DESK_DEPLOY_TOKEN" in text
+    assert "supplemental-export-preview" in text
+    assert "approved-export-preview.html" in text
