@@ -24,8 +24,9 @@ mkdir -p ./tools/public-map
 cp "$PREVIEW_SRC/supplemental-export-preview.test.mjs" ./tools/public-map/supplemental-export-preview.test.mjs
 
 if ! grep -q 'supplemental-approved-export-preview-v01.js' desk.html; then
-  sed -i 's|feed-status-panel-v01.js?v=01"></script>|feed-status-panel-v01.js?v=01"></script>\n  <script src="./supplemental-approved-export-preview-v01.js?v=01"></script>|' desk.html
+  sed -i 's|feed-status-panel-v01.js?v=01"></script>|feed-status-panel-v01.js?v=01"></script>\n  <script src="./supplemental-approved-export-preview-v01.js?v=02"></script>|' desk.html
 fi
+sed -i 's|supplemental-approved-export-preview-v01.js?v=01|supplemental-approved-export-preview-v01.js?v=02|g' desk.html
 grep -q 'supplemental-approved-export-preview-v01.js' desk.html
 
 if ! grep -q "Supplemental approved export preview" README.md; then

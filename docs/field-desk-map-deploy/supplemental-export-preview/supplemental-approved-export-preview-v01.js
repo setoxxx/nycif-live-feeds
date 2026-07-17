@@ -24,7 +24,8 @@
     'supplemental_events_staging_feed',
   ]);
   const DEFAULT_BACKEND_URL =
-    'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/supplemental_approved_export_feed.json';
+    'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/supplemental_approved_export_feed.json';
+  const MARKER_BATCH = 500;
   const LOCAL_EXPORT_URL = './data/supplemental_approved_export_feed.json';
   const DIST_EXPORT_URL = './data/supplemental_approved_export_feed.dist.json';
   const NYC = { minLat: 40.4774, maxLat: 40.9176, minLng: -74.2591, maxLng: -73.7004 };
@@ -150,9 +151,32 @@
     };
   }
 
+  let canvasRenderer = null;
+
   function setStatus(text) {
     const status = document.getElementById('status');
     if (status) status.textContent = text;
+  }
+
+  function setPageMeta(feedText, mapText) {
+    const feedMeta = document.getElementById('feedMeta');
+    const mapMeta = document.getElementById('mapMeta');
+    if (feedMeta && feedText) feedMeta.textContent = feedText;
+    if (mapMeta && mapText) mapMeta.textContent = mapText;
+  }
+
+  function getCanvasRenderer() {
+    if (!canvasRenderer && window.L?.canvas) {
+      canvasRenderer = window.L.canvas({ padding: 0.5 });
+    }
+    return canvasRenderer;
+  }
+
+  function suppressServiceWorkerForPreview() {
+    if (!deskOverlayMode() || !('serviceWorker' in navigator)) return;
+    navigator.serviceWorker.getRegistrations()
+      .then(regs => Promise.all(regs.map(reg => reg.unregister())))
+      .catch(() => {});
   }
 
   function installStyles() {
@@ -288,19 +312,42 @@
     </article>`;
   }
 
-  function markerFor(pin) {
-    const icon = window.L.divIcon({
-      className: 'nycif-supplemental-preview-marker-shell',
-      html: '<div class="nycif-supplemental-preview-marker">🟣</div>',
-      iconSize: [34, 34],
-      iconAnchor: [17, 17],
-      popupAnchor: [0, -18],
+  function markerFor(pin, renderer) {
+    const marker = window.L.circleMarker([pin.lat, pin.lng], {
+      renderer,
+      radius: 6,
+      color: '#ede9fe',
+      weight: 1,
+      fillColor: '#7c3aed',
+      fillOpacity: 0.9,
+      interactive: true,
     });
-    return window.L.marker([pin.lat, pin.lng], {
-      icon,
-      title: pin.title,
-      zIndexOffset: 880,
-    }).bindPopup(popupHtml(pin), { maxWidth: 350, minWidth: 250 });
+    marker.on('click', function onPreviewPinClick() {
+      if (!this.getPopup()) {
+        this.bindPopup(popupHtml(pin), { maxWidth: 350, minWidth: 250 });
+      }
+      this.openPopup();
+    });
+    return marker;
+  }
+
+  async function buildMarkerLayer(map, pins, options = {}) {
+    const { fitBounds = false, onProgress } = options;
+    const renderer = getCanvasRenderer();
+    const group = window.L.layerGroup();
+    const total = pins.length;
+    for (let i = 0; i < total; i += MARKER_BATCH) {
+      const batch = pins.slice(i, i + MARKER_BATCH);
+      batch.forEach(pin => group.addLayer(markerFor(pin, renderer)));
+      if (onProgress) onProgress(Math.min(i + MARKER_BATCH, total), total);
+      await new Promise(resolve => requestAnimationFrame(resolve));
+    }
+    group.addTo(map);
+    if (fitBounds && total) {
+      const bounds = window.L.latLngBounds(pins.map(pin => [pin.lat, pin.lng]));
+      map.fitBounds(bounds.pad(0.12));
+    }
+    return group;
   }
 
   async function loadExportFeed() {
@@ -355,10 +402,14 @@
 
     try {
       await loadExportFeed();
-      if (!state.layer) {
-        state.layer = window.L.layerGroup(state.pins.map(markerFor));
-      }
-      state.layer.addTo(map);
+      if (state.layer) map.removeLayer(state.layer);
+      setStatus(`Drawing ${state.pins.length.toLocaleString()} preview markers…`);
+      state.layer = await buildMarkerLayer(map, state.pins, {
+        fitBounds: false,
+        onProgress(done, total) {
+          setStatus(`Drawing preview markers… ${done.toLocaleString()} / ${total.toLocaleString()}`);
+        },
+      });
       setStatus(
         `Supplemental approved export preview · ${state.pins.length.toLocaleString()} marker${
           state.pins.length === 1 ? '' : 's'
@@ -372,10 +423,30 @@
     }
   }
 
+  function scheduleDeskAutoEnable() {
+    let attempts = 0;
+    const tick = () => {
+      attempts += 1;
+      const map = window.NYCIF_MAIN_MAP;
+      const checkbox = document.getElementById('supplementalExportPreviewToggle');
+      if (map && window.L && checkbox) {
+        if (!checkbox.checked) {
+          checkbox.checked = true;
+          toggleOverlay(true);
+        }
+        return;
+      }
+      if (attempts < 160) setTimeout(tick, 250);
+    };
+    tick();
+  }
+
   function bootDeskOverlay() {
+    suppressServiceWorkerForPreview();
     installStyles();
     ensureBanner();
     ensureControls();
+    scheduleDeskAutoEnable();
   }
 
   function bootStandaloneMap(mapElId) {
@@ -384,21 +455,35 @@
     const mapNode = document.getElementById(mapElId || 'map');
     if (!mapNode || !window.L) return Promise.reject(new Error('Map container not ready'));
 
-    const map = window.L.map(mapNode).setView([40.7128, -74.006], 11);
+    setPageMeta('Fetching supplemental approved export feed…', 'Initializing map…');
+
+    const map = window.L.map(mapNode, { preferCanvas: true }).setView([40.7128, -74.006], 11);
     window.NYCIF_MAIN_MAP = map;
     window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
       attribution: '&copy; OpenStreetMap',
     }).addTo(map);
 
-    return loadExportFeed().then(() => {
-      state.layer = window.L.layerGroup(state.pins.map(markerFor)).addTo(map);
-      if (state.pins.length) {
-        const bounds = window.L.latLngBounds(state.pins.map(pin => [pin.lat, pin.lng]));
-        map.fitBounds(bounds.pad(0.12));
-      }
-      return state;
-    });
+    return loadExportFeed()
+      .then(() => {
+        setPageMeta(
+          `Feed loaded · ${state.pins.length.toLocaleString()} approved export row(s)`,
+          'Drawing purple preview markers…'
+        );
+        return buildMarkerLayer(map, state.pins, {
+          fitBounds: true,
+          onProgress(done, total) {
+            setPageMeta(
+              `Feed loaded · ${total.toLocaleString()} approved export row(s)`,
+              `Drawing markers… ${done.toLocaleString()} / ${total.toLocaleString()}`
+            );
+          },
+        });
+      })
+      .then(layer => {
+        state.layer = layer;
+        return state;
+      });
   }
 
   const api = {
@@ -411,8 +496,10 @@
     normalizePin,
     certifyCoord,
     loadExportFeed,
+    buildMarkerLayer,
     toggleOverlay,
     bootStandaloneMap,
+    setPageMeta,
     getState: () => ({ ...state, pins: [...state.pins] }),
   };
 

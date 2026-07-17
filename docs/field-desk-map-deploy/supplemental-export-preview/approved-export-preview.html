@@ -66,9 +66,14 @@
     }
     .meta { color: var(--muted); font-size: 12px; margin-top: 8px; }
     #map {
-      height: 420px;
+      height: min(68vh, 640px);
+      min-height: 420px;
       border-radius: 14px;
       border: 1px solid var(--line);
+    }
+    .loading {
+      color: var(--warn);
+      font-weight: 600;
     }
     code {
       background: rgba(255,255,255,.06);
@@ -96,7 +101,7 @@
         <div class="stat"><div class="label">Public map modified</div><div class="value" style="color:var(--ok)">false</div></div>
         <div class="stat"><div class="label">promotion_allowed</div><div class="value" style="color:var(--ok)">false</div></div>
       </div>
-      <p class="meta" id="feedMeta">Loading export feed…</p>
+      <p class="meta loading" id="feedMeta">Fetching supplemental approved export feed…</p>
     </section>
 
     <section class="panel warn" aria-label="QA warning">
@@ -115,12 +120,12 @@
     <section class="panel" aria-label="Map">
       <h2>Supplemental approved export map</h2>
       <div id="map" aria-label="Supplemental approved export preview map"></div>
-      <p class="meta" id="mapMeta"></p>
+      <p class="meta" id="mapMeta">Initializing map…</p>
     </section>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="./supplemental-approved-export-preview-v01.js?v=01"></script>
+  <script src="./supplemental-approved-export-preview-v01.js?v=02"></script>
   <script>
     function esc(value) {
       return String(value ?? '').replace(/[&<>"']/g, ch => ({
@@ -138,6 +143,7 @@
           const meta = state.feedMeta || {};
           const expected = 3566;
           const count = state.pins.length;
+          document.getElementById('feedMeta').classList.remove('loading');
           document.getElementById('feedMeta').textContent =
             `${count.toLocaleString()} approved export marker(s) · ` +
             `artifact ${esc(meta.artifactType || 'supplemental_approved_export_feed')} · ` +
@@ -148,6 +154,7 @@
             (count === expected ? '' : ` · WARN expected ${expected}`);
         })
         .catch(error => {
+          document.getElementById('feedMeta').classList.remove('loading');
           document.getElementById('feedMeta').innerHTML =
             `<span class="error">Failed to load export feed: ${esc(error.message)}</span>`;
         });
