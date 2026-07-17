@@ -1,0 +1,323 @@
+{
+  "all_rows_ready_for_promotion": false,
+  "approved_queue_count": 3566,
+  "artifact_type": "supplemental_phase2e_promotion_dry_run_report",
+  "blocked_samples": [
+    {
+      "borough": "",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "missing_required_field:borough",
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "adult hike reed 8217 s basket willow park|2026-07-16",
+      "title": "Adult Hike - Reed&#8217;s Basket Willow Park"
+    },
+    {
+      "borough": "",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "missing_required_field:borough",
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "dance fusion|2026-07-16",
+      "title": "Dance Fusion"
+    },
+    {
+      "borough": "",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "missing_required_field:borough",
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "trail work thursdays|2026-07-16",
+      "title": "Trail Work Thursdays"
+    },
+    {
+      "borough": "",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "missing_required_field:borough",
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "arts culture and fun be bolder senior ballet programming|2026-07-17",
+      "title": "Arts, Culture and Fun: BE BOLDER: Senior Ballet Programming"
+    },
+    {
+      "borough": "",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "missing_required_field:borough",
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "groove glow|2026-07-17",
+      "title": "Groove & Glow"
+    },
+    {
+      "borough": "",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "missing_required_field:borough",
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "movies under the stars pitch perfect 2012|2026-07-17",
+      "title": "Movies Under the Stars: Pitch Perfect (2012)"
+    },
+    {
+      "borough": "",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "missing_required_field:borough",
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "summer on the hudson harlem moves with lim 243 n dance company|2026-07-17",
+      "title": "Summer on the Hudson: Harlem Moves with Lim&#243;n Dance Company"
+    },
+    {
+      "borough": "",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "missing_required_field:borough",
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "zumba gold 174|2026-07-17",
+      "title": "Zumba Gold&#174;"
+    },
+    {
+      "borough": "",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "missing_required_field:borough",
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "flower bundle dyeing|2026-07-18",
+      "title": "Flower Bundle Dyeing"
+    },
+    {
+      "borough": "",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "missing_required_field:borough",
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "gather for field day|2026-07-18",
+      "title": "Gather for Field Day"
+    },
+    {
+      "borough": "",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "missing_required_field:borough",
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "it s my park at leif ericson park|2026-07-18",
+      "title": "It's My Park at Leif Ericson Park"
+    },
+    {
+      "borough": "",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "missing_required_field:borough",
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "just for kids uncle tony 8217 s reptile show|2026-07-18",
+      "title": "Just for Kids: Uncle Tony&#8217;s Reptile Show"
+    },
+    {
+      "borough": "",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "missing_required_field:borough",
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "lablast 174 fitness|2026-07-18",
+      "title": "LaBlast&#174; Fitness"
+    },
+    {
+      "borough": "",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "missing_required_field:borough",
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "moves with lim 243 n dance at bryant park|2026-07-18",
+      "title": "Moves with Lim&#243;n Dance at Bryant Park"
+    },
+    {
+      "borough": "",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "missing_required_field:borough",
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "movies under the stars hoppers 2026|2026-07-18",
+      "title": "Movies Under the Stars: Hoppers (2026)"
+    }
+  ],
+  "dry_run_only": true,
+  "export_event_count": 3566,
+  "generated_at_utc": "2026-07-17T22:10:00.719864+00:00",
+  "issue_counts": {
+    "missing_required_field:borough": 1386,
+    "promotion_allowed_not_true": 3566
+  },
+  "next_required_step": "Explicit Phase 2E authorization required before setting promotion_allowed=true or promoting supplemental rows to location_cache.json / public map.",
+  "phase": "m11_supplemental_phase2e_promotion_dry_run",
+  "promotion_performed": false,
+  "qa_pass": true,
+  "safety": {
+    "location_cache_modified": false,
+    "production_feed": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "staged_feed_modified": false
+  },
+  "source_export_path": "data/supplemental_approved_export_feed.json",
+  "source_queue_path": "data/supplemental_manual_approval_queue.json",
+  "summary": {
+    "blocked_from_promotion": 1386,
+    "blocked_pct": 38.87,
+    "ready_all_gates_including_promotion_allowed": 0,
+    "ready_if_authorized_pct": 61.13,
+    "would_pass_if_promotion_authorized": 2180
+  },
+  "validation_qa_pass": true,
+  "validation_report_path": "data/supplemental_manual_approval_validation_report.json",
+  "would_pass_if_promotion_authorized_samples": [
+    {
+      "borough": "Mn",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "40 in focus summerstage through the lens of photographer jack vartoogian|2026-07-16",
+      "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+    },
+    {
+      "borough": "Mn",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "alfred e smith recreation center summer camp extended day|2026-07-16",
+      "title": "Alfred E. Smith Recreation Center Summer Camp Extended Day"
+    },
+    {
+      "borough": "Mn",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "alfred e smith recreation center summer camp regular day|2026-07-16",
+      "title": "Alfred E. Smith Recreation Center Summer Camp Regular Day"
+    },
+    {
+      "borough": "Mn",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "art meets books|2026-07-16",
+      "title": "Art Meets Books"
+    },
+    {
+      "borough": "Qn",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "astoria pool lap swim|2026-07-16",
+      "title": "Astoria Pool: Lap Swim"
+    },
+    {
+      "borough": "Other",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "body boost circuit training|2026-07-16",
+      "title": "Body-boost Circuit Training"
+    },
+    {
+      "borough": "SI",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "bootcamp|2026-07-16",
+      "title": "Bootcamp"
+    },
+    {
+      "borough": "Bk",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "brooklyn bridge park movies with a view presented by persol|2026-07-16",
+      "title": "Brooklyn Bridge Park Movies With A View presented by Persol"
+    },
+    {
+      "borough": "Mn",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "cardio circuit blast|2026-07-16",
+      "title": "Cardio Circuit Blast"
+    },
+    {
+      "borough": "Qn",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "cardio sculpt|2026-07-16",
+      "title": "Cardio Sculpt"
+    },
+    {
+      "borough": "Bx",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "claremont pool lap swim|2026-07-16",
+      "title": "Claremont Pool: Lap Swim"
+    },
+    {
+      "borough": "Bx",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "crotona pool swim team training|2026-07-16",
+      "title": "Crotona Pool: Swim Team Training"
+    },
+    {
+      "borough": "Bk",
+      "geocoder_source": "nyc_geosearch_planninglabs",
+      "issues": [
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "dance fitness|2026-07-16",
+      "title": "Dance Fitness"
+    },
+    {
+      "borough": "Mn",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "double dutch|2026-07-16",
+      "title": "Double Dutch"
+    },
+    {
+      "borough": "SI",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "issues": [
+        "promotion_allowed_not_true"
+      ],
+      "overlap_key": "faber pool lap swim|2026-07-16",
+      "title": "Faber Pool: Lap Swim"
+    }
+  ]
+}
