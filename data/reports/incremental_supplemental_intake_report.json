@@ -1,24 +1,24 @@
 {
   "after_status_counts": {
-    "approved": 3406,
-    "rejected": 51
+    "approved": 3566,
+    "rejected": 68
   },
   "artifact_type": "incremental_supplemental_intake_report",
   "before_status_counts": {
-    "approved": 3406,
-    "rejected": 51
+    "approved": 3566,
+    "rejected": 68
   },
   "dry_run": false,
   "export": {
-    "export_event_count": 3406,
+    "export_event_count": 3566,
     "path": "data/supplemental_approved_export_feed.json",
     "skipped_approved_without_coordinates": 0
   },
-  "generated_at_utc": "2026-07-17T20:56:07.578608+00:00",
+  "generated_at_utc": "2026-07-17T21:29:46.300558+00:00",
   "merge": {
     "disposition_preserved": true,
-    "existing_queue_count": 3457,
-    "existing_unique_overlap_key_count": 2280,
+    "existing_queue_count": 3634,
+    "existing_unique_overlap_key_count": 2457,
     "net_new_auto_resolved_count": 0,
     "net_new_auto_resolved_pct": 0.0,
     "net_new_needing_human_review_count": 0,
@@ -26,10 +26,21 @@
     "net_new_row_count": 0,
     "net_new_with_coordinates_count": 0,
     "net_new_with_coordinates_pct": 0.0,
-    "preserved_row_count": 3457,
-    "staging_event_count": 3457,
-    "stale_overlap_keys_sample": [],
-    "stale_queue_key_count": 0
+    "preserved_row_count": 3634,
+    "staging_event_count": 3725,
+    "stale_overlap_keys_sample": [
+      "40 in focus summerstage through the lens of photographer jack vartoogian|2026-07-16",
+      "access benefits at local neighborhoodstat 2026 season johnson houses|2026-07-16",
+      "access benefits at oti internet access survey promotion brooklyn|2026-07-16",
+      "adult hike reed 8217 s basket willow park|2026-07-16",
+      "adult hike reed s basket willow park|2026-07-16",
+      "alfred e smith recreation center summer camp extended day|2026-07-16",
+      "alfred e smith recreation center summer camp regular day|2026-07-16",
+      "art meets books|2026-07-16",
+      "astoria pool lap swim|2026-07-16",
+      "body boost circuit training|2026-07-16"
+    ],
+    "stale_queue_key_count": 158
   },
   "next_required_step": "Run validate_supplemental_manual_approvals.py. Review net-new pending rows only.",
   "phase": "m11_incremental_supplemental_intake",

@@ -137,6 +137,24 @@ def apply_decision(
     out["staged_feed_modified"] = False
     out["promotion_allowed"] = bool(decision.get("promotion_allowed")) and status == "approved"
 
+    coord_fields = (
+        "proposed_lat",
+        "proposed_lng",
+        "geocoder_source",
+        "geocoder_confidence",
+        "confidence_reason",
+        "fill_method",
+    )
+    for field in coord_fields:
+        if field in decision and decision[field] is not None:
+            out[field] = decision[field]
+    try:
+        from scripts.coverage_gap_utils import valid_nyc_lat_lng
+    except ModuleNotFoundError:  # pragma: no cover
+        from coverage_gap_utils import valid_nyc_lat_lng
+    if valid_nyc_lat_lng(out.get("proposed_lat"), out.get("proposed_lng")):
+        out["has_coordinates"] = True
+
     if status in {"approved", "rejected"}:
         out["manual_reviewer"] = reviewer
         out["manual_reviewed_at_utc"] = reviewed_at_utc
