@@ -2,9 +2,14 @@
 """Apply M11 supplemental rejected-row re-review pass (coordinate fill + re-decide).
 
 Reads rejected rows in a review_rank range, attempts conservative coordinate fill
-via NYC location gazetteer, Parks references, and NYC Planning GeoSearch (cache +
-optional live), updates queue coordinates, and replaces matching entries in
-supplemental_manual_approval_decisions.json.
+via NYC location gazetteer (including "Child in Parent" decomposition), Parks
+references, calendar<->Parks title/date overlap proposals, and NYC Planning
+GeoSearch (cache + optional live), updates queue coordinates, and replaces
+matching entries in supplemental_manual_approval_decisions.json.
+
+The tiered resolution itself lives in scripts.coverage_gap_utils
+(resolve_supplemental_coordinates) so other GPS-fill scripts in this pipeline
+can reuse the same logic instead of reimplementing it per script.
 
 Does NOT set promotion_allowed=true or modify location_cache.json.
 
@@ -28,10 +33,14 @@ from typing import Any
 try:
     from scripts.coverage_gap_utils import (
         DATA_DIR,
+        build_calendar_parks_overlap_index,
+        is_ungeocodable_location,
         load_json_file,
         overlap_key,
+        resolve_supplemental_coordinates,
         row_coords,
         save_json_file,
+        supplemental_borough_for_geosearch,
         utc_now_iso,
         valid_nyc_lat_lng,
     )
@@ -41,15 +50,18 @@ try:
         NYCLocationGazetteer,
         build_gazetteer_index,
     )
-    from scripts.nyc_location_resolver import NYCLocationResolver, ResolveResult
-    from scripts.schema_v1_common import borough_label
+    from scripts.nyc_location_resolver import NYCLocationResolver
 except ModuleNotFoundError:  # pragma: no cover
     from coverage_gap_utils import (
         DATA_DIR,
+        build_calendar_parks_overlap_index,
+        is_ungeocodable_location,
         load_json_file,
         overlap_key,
+        resolve_supplemental_coordinates,
         row_coords,
         save_json_file,
+        supplemental_borough_for_geosearch,
         utc_now_iso,
         valid_nyc_lat_lng,
     )
@@ -59,8 +71,7 @@ except ModuleNotFoundError:  # pragma: no cover
         NYCLocationGazetteer,
         build_gazetteer_index,
     )
-    from nyc_location_resolver import NYCLocationResolver, ResolveResult
-    from schema_v1_common import borough_label
+    from nyc_location_resolver import NYCLocationResolver
 
 APPROVAL_QUEUE_PATH = DATA_DIR / "supplemental_manual_approval_queue.json"
 DECISIONS_PATH = DATA_DIR / "supplemental_manual_approval_decisions.json"
@@ -73,21 +84,10 @@ PERMANENT_REJECT_PREFIXES = (
     "Canceled per ",
 )
 
-UNGEOCODABLE_LOCATION_MARKERS = (
-    "citywide",
-    "poll sites citywide",
-    "see the flyer",
-    "see flyer",
-    "across all five boroughs",
-    "check website",
-    "participating restaurants",
-)
-
-GEOSEARCH_FILL_METHODS = {
-    "tier_2_geosearch_cache": "nyc_geosearch_cache",
-    "tier_3_nyc_geosearch_live": "nyc_geosearch_live",
-    "tier_2_geosearch_midpoint": "nyc_geosearch_midpoint",
-}
+# Re-exported for backward compatibility (tests and other callers import
+# these directly from this module). Canonical implementations live in
+# scripts.coverage_gap_utils so the whole supplemental pipeline shares them.
+resolve_coordinates = resolve_supplemental_coordinates
 
 
 def rows_from_payload(payload: Any, key: str) -> list[dict[str, Any]]:
@@ -117,49 +117,6 @@ def load_resolver(*, allow_live_geosearch: bool) -> NYCLocationResolver:
     return NYCLocationResolver(gazetteer, entries, allow_live_geosearch=allow_live_geosearch)
 
 
-def supplemental_borough_for_geosearch(borough: Any) -> str | None:
-    raw = str(borough or "").strip()
-    if not raw or "," in raw:
-        return None
-    return borough_label(raw)
-
-
-def is_ungeocodable_location(display: str, borough: Any) -> bool:
-    text = str(display or "").lower()
-    if any(marker in text for marker in UNGEOCODABLE_LOCATION_MARKERS):
-        return True
-    brow = str(borough or "")
-    if "," in brow and len([part for part in brow.split(",") if part.strip()]) >= 2:
-        return True
-    return False
-
-
-def fill_from_resolve_result(result: ResolveResult) -> dict[str, Any] | None:
-    if not result.resolved or result.lat is None or result.lng is None:
-        return None
-    if not valid_nyc_lat_lng(result.lat, result.lng):
-        return None
-    fill_method = GEOSEARCH_FILL_METHODS.get(result.tier, "location_gazetteer")
-    confidence = str(result.confidence or "medium")
-    if confidence not in {"high", "medium"}:
-        confidence = "medium"
-    source = str(result.source or "nyc_geosearch_planninglabs")
-    return {
-        "proposed_lat": float(result.lat),
-        "proposed_lng": float(result.lng),
-        "geocoder_source": source,
-        "geocoder_confidence": confidence,
-        "confidence_reason": (
-            f"Rejected-pass fill: {result.confidence_reason or 'NYC GeoSearch match'} "
-            "for manual review only."
-        ),
-        "fill_method": fill_method,
-        "resolver_tier": result.tier,
-        "geocoder_label": result.label,
-        "query_used": result.query_used,
-    }
-
-
 def build_parks_overlap_index() -> dict[str, dict[str, Any]]:
     payload = load_json_file(PARKS_SNAPSHOT_PATH, {})
     events = payload.get("events", payload) if isinstance(payload, dict) else payload
@@ -178,58 +135,6 @@ def build_parks_overlap_index() -> dict[str, dict[str, Any]]:
         if valid_nyc_lat_lng(lat, lng):
             index[key] = row
     return index
-
-
-def resolve_coordinates(
-    row: dict[str, Any],
-    gazetteer: NYCLocationGazetteer,
-    parks_overlap: dict[str, dict[str, Any]],
-    resolver: NYCLocationResolver | None = None,
-) -> dict[str, Any] | None:
-    overlap = str(row.get("overlap_key") or "")
-    if overlap and overlap in parks_overlap:
-        hit = parks_overlap[overlap]
-        lat, lng = row_coords(hit)
-        if valid_nyc_lat_lng(lat, lng):
-            return {
-                "proposed_lat": float(lat),
-                "proposed_lng": float(lng),
-                "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-                "geocoder_confidence": "high",
-                "confidence_reason": (
-                    "Rejected-pass fill: Parks BigApps title+date match coordinates for manual review only."
-                ),
-                "fill_method": "parks_overlap_key",
-            }
-
-    display = str(row.get("display_location") or "")
-    borough = row.get("borough")
-    hit = gazetteer.lookup_display(display, borough)
-    if hit and valid_nyc_lat_lng(hit.get("lat"), hit.get("lng")):
-        confidence = str(hit.get("confidence") or "medium")
-        if confidence not in {"high", "medium"}:
-            confidence = "medium"
-        return {
-            "proposed_lat": float(hit["lat"]),
-            "proposed_lng": float(hit["lng"]),
-            "geocoder_source": str(hit.get("source") or "nyc_location_gazetteer"),
-            "geocoder_confidence": confidence,
-            "confidence_reason": (
-                f"Rejected-pass fill: {hit.get('confidence_reason') or 'Gazetteer location match'} "
-                "for manual review only."
-            ),
-            "fill_method": "location_gazetteer",
-        }
-
-    if resolver is None or is_ungeocodable_location(display, borough):
-        return None
-
-    boro = supplemental_borough_for_geosearch(borough)
-    result = resolver.resolve(display_location=display, borough=boro)
-    fill = fill_from_resolve_result(result)
-    if fill and result.tier.startswith("tier_1_"):
-        fill["fill_method"] = "location_gazetteer"
-    return fill
 
 
 def patch_queue_row(row: dict[str, Any], fill: dict[str, Any]) -> dict[str, Any]:
@@ -256,6 +161,8 @@ def approval_reason(row: dict[str, Any], fill: dict[str, Any]) -> str:
         return "Rejected-pass approved; Calendar+Parks title/date match; NYC pin verified"
     if fill_method.startswith("nyc_geosearch"):
         return "Rejected-pass approved; NYC coordinates filled via GeoSearch; pin verified"
+    if fill_method == "parent_park_fallback":
+        return "Rejected-pass approved; parent park coordinates; pin verified"
     return "Rejected-pass approved; NYC coordinates filled from official reference; pin verified"
 
 
@@ -287,6 +194,7 @@ def run(
 
     gazetteer = ensure_gazetteer()
     parks_overlap = build_parks_overlap_index()
+    calendar_parks_overlap = build_calendar_parks_overlap_index()
     resolver = load_resolver(allow_live_geosearch=allow_live_geosearch)
     cache_size_before = len(resolver.geosearch_cache)
 
@@ -314,7 +222,13 @@ def run(
             skipped += 1
             continue
 
-        fill = resolve_coordinates(row, gazetteer, parks_overlap, resolver)
+        fill = resolve_coordinates(
+            row,
+            gazetteer,
+            parks_overlap,
+            resolver,
+            calendar_parks_overlap=calendar_parks_overlap,
+        )
         if fill:
             queue_by_rank[rank] = patch_queue_row(row, fill)
             decision_by_rank[rank] = {
