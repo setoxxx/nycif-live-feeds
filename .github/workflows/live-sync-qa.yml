@@ -133,7 +133,15 @@ jobs:
           fi
 
       - name: Publish supplemental approved export for field-desk preview
-        run: python scripts/publish_supplemental_approved_export_feed.py
+        run: |
+          python3 scripts/build_supplemental_approved_export_feed.py
+          python3 scripts/publish_supplemental_approved_export_feed.py
+
+      - name: Supplemental Phase 2E promotion dry-run (M11)
+        run: python3 scripts/dry_run_supplemental_phase2e_promotion.py
+
+      - name: Enforce supplemental Phase 2E readiness gate
+        run: python3 scripts/verify_supplemental_phase2e_readiness.py
 
       - name: Build supplemental manual review sheet (M11)
         run: python scripts/build_supplemental_manual_review_sheet.py

@@ -59,3 +59,17 @@ def test_net_new_review_gated_on_pending_count():
 
 def test_incremental_intake_still_present():
     assert "incremental_supplemental_intake.py" in _text()
+
+
+def test_phase2e_dry_run_and_readiness_gate_in_workflow():
+    text = _text()
+    assert "Supplemental Phase 2E promotion dry-run (M11)" in text
+    assert "dry_run_supplemental_phase2e_promotion.py" in text
+    assert "verify_supplemental_phase2e_readiness.py" in text
+    publish_idx, dry_run_idx, gate_idx = _step_order(
+        text,
+        "Publish supplemental approved export for field-desk preview",
+        "Supplemental Phase 2E promotion dry-run (M11)",
+        "Enforce supplemental Phase 2E readiness gate",
+    )
+    assert publish_idx < dry_run_idx < gate_idx
