@@ -34,11 +34,16 @@ except ModuleNotFoundError:  # pragma: no cover
 EXPORT_PATH = DATA_DIR / "supplemental_approved_export_feed.json"
 DIST_DIR = ROOT / "dist"
 DIST_EXPORT_PATH = DIST_DIR / "supplemental_approved_export_feed.json"
+DIST_MAP_PINS_PATH = DIST_DIR / "supplemental_approved_export_map_pins.json"
 REPORT_PATH = DATA_DIR / "reports" / "supplemental_approved_export_publish_report.json"
 
 FIELD_DESK_RAW_URL = (
     "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/"
     "dist/supplemental_approved_export_feed.json"
+)
+FIELD_DESK_MAP_PINS_URL = (
+    "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/"
+    "dist/supplemental_approved_export_map_pins.json"
 )
 FIELD_DESK_BACKEND_DATA_URL = (
     "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/"
@@ -64,6 +69,36 @@ def validate_export_payload(payload: Any) -> dict[str, Any]:
     return payload
 
 
+def lite_pin_from_event(row: dict[str, Any], index: int) -> dict[str, Any]:
+    lat = row.get("lat", row.get("proposed_lat"))
+    lng = row.get("lng", row.get("proposed_lng"))
+    return {
+        "id": row.get("overlap_key") or row.get("source_event_id") or f"supplemental-export-{index}",
+        "lat": lat,
+        "lng": lng,
+        "title": row.get("title") or "Supplemental approved event",
+        "displayLocation": row.get("display_location") or "",
+        "borough": row.get("borough") or "",
+        "date": row.get("date") or "",
+        "geocoderSource": row.get("geocoder_source") or "",
+        "geocoderConfidence": row.get("geocoder_confidence") or "",
+    }
+
+
+def build_map_pins_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    events = payload.get("events") or []
+    pins = [lite_pin_from_event(row, index) for index, row in enumerate(events)]
+    return {
+        "artifact_type": "supplemental_approved_export_map_pins",
+        "generated_at_utc": payload.get("generated_at_utc"),
+        "export_event_count": len(pins),
+        "approved_queue_count": payload.get("approved_queue_count"),
+        "production_feed": False,
+        "promotion_allowed": False,
+        "pins": pins,
+    }
+
+
 def publish_export_feed() -> dict[str, Any]:
     payload = validate_export_payload(load_json_file(EXPORT_PATH, {}))
     if not EXPORT_PATH.exists():
@@ -71,6 +106,8 @@ def publish_export_feed() -> dict[str, Any]:
 
     DIST_DIR.mkdir(parents=True, exist_ok=True)
     shutil.copy2(EXPORT_PATH, DIST_EXPORT_PATH)
+    map_pins = build_map_pins_payload(payload)
+    save_json_file(DIST_MAP_PINS_PATH, map_pins)
 
     generated_at = utc_now_iso()
     report = {
@@ -80,10 +117,13 @@ def publish_export_feed() -> dict[str, Any]:
         "qa_pass": True,
         "source_path": repo_relative(EXPORT_PATH),
         "published_path": repo_relative(DIST_EXPORT_PATH),
+        "map_pins_path": repo_relative(DIST_MAP_PINS_PATH),
+        "map_pin_count": map_pins.get("export_event_count"),
         "export_event_count": payload.get("export_event_count"),
         "approved_queue_count": payload.get("approved_queue_count"),
         "field_desk_urls": {
             "dist_raw": FIELD_DESK_RAW_URL,
+            "map_pins_raw": FIELD_DESK_MAP_PINS_URL,
             "backend_data_raw": FIELD_DESK_BACKEND_DATA_URL,
         },
         "safety": {

@@ -13,7 +13,7 @@
 (function () {
   'use strict';
 
-  const VERSION = 'supplemental-approved-export-preview-v01';
+  const VERSION = 'supplemental-approved-export-preview-v02';
   const BLOCKED_ARTIFACT_TYPES = new Set([
     'gps_manual_approval_queue',
     'gps_review_geocoding_proposals',
@@ -25,7 +25,8 @@
   ]);
   const DEFAULT_BACKEND_URL =
     'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/supplemental_approved_export_feed.json';
-  const MARKER_BATCH = 500;
+  const DEFAULT_LITE_PINS_URL =
+    'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/supplemental_approved_export_map_pins.json';
   const LOCAL_EXPORT_URL = './data/supplemental_approved_export_feed.json';
   const DIST_EXPORT_URL = './data/supplemental_approved_export_feed.dist.json';
   const NYC = { minLat: 40.4774, maxLat: 40.9176, minLng: -74.2591, maxLng: -73.7004 };
@@ -79,6 +80,38 @@
     return DEFAULT_BACKEND_URL;
   }
 
+  function mapPinsUrl() {
+    try {
+      const params = new URL(location.href).searchParams;
+      const custom = params.get('exportPins');
+      if (custom && /^https?:\/\//.test(custom)) return custom;
+    } catch {
+      /* fall through */
+    }
+    const full = feedUrl();
+    if (full.includes('supplemental_approved_export_feed.json')) {
+      return full.replace(
+        'supplemental_approved_export_feed.json',
+        'supplemental_approved_export_map_pins.json'
+      );
+    }
+    return DEFAULT_LITE_PINS_URL;
+  }
+
+  function boundsFromPins(pins) {
+    let minLat = Infinity;
+    let maxLat = -Infinity;
+    let minLng = Infinity;
+    let maxLng = -Infinity;
+    for (const pin of pins) {
+      if (pin.lat < minLat) minLat = pin.lat;
+      if (pin.lat > maxLat) maxLat = pin.lat;
+      if (pin.lng < minLng) minLng = pin.lng;
+      if (pin.lng > maxLng) maxLng = pin.lng;
+    }
+    return window.L.latLngBounds([minLat, minLng], [maxLat, maxLng]);
+  }
+
   function inNycBox(lat, lng) {
     return lat >= NYC.minLat && lat <= NYC.maxLat && lng >= NYC.minLng && lng <= NYC.maxLng;
   }
@@ -121,6 +154,36 @@
     return payload;
   }
 
+  function validateMapPinsPayload(payload) {
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+      throw new Error('Map pins feed must be a JSON object');
+    }
+    const artifactType = String(payload.artifact_type || '');
+    if (artifactType !== 'supplemental_approved_export_map_pins') {
+      throw new Error(`Refusing non-map-pins artifact: ${artifactType || 'unknown'}`);
+    }
+    if (payload.production_feed === true) {
+      throw new Error('Refusing production_feed=true artifact in preview mode');
+    }
+    if (payload.promotion_allowed === true) {
+      throw new Error('Refusing promotion_allowed=true artifact in preview mode');
+    }
+    if (!Array.isArray(payload.pins)) {
+      throw new Error('Map pins feed missing pins array');
+    }
+    return payload;
+  }
+
+  function certifyLitePin(pin) {
+    const coord = certifyCoord(pin?.lat, pin?.lng);
+    if (!coord.ok) return null;
+    return {
+      ...pin,
+      lat: coord.lat,
+      lng: coord.lng,
+    };
+  }
+
   function normalizePin(row, index) {
     if (String(row.manual_review_status || '').toLowerCase() !== 'approved') {
       return null;
@@ -151,8 +214,6 @@
     };
   }
 
-  let canvasRenderer = null;
-
   function setStatus(text) {
     const status = document.getElementById('status');
     if (status) status.textContent = text;
@@ -165,15 +226,8 @@
     if (mapMeta && mapText) mapMeta.textContent = mapText;
   }
 
-  function getCanvasRenderer() {
-    if (!canvasRenderer && window.L?.canvas) {
-      canvasRenderer = window.L.canvas({ padding: 0.5 });
-    }
-    return canvasRenderer;
-  }
-
   function suppressServiceWorkerForPreview() {
-    if (!deskOverlayMode() || !('serviceWorker' in navigator)) return;
+    if (!previewExportMode() || !('serviceWorker' in navigator)) return;
     navigator.serviceWorker.getRegistrations()
       .then(regs => Promise.all(regs.map(reg => reg.unregister())))
       .catch(() => {});
@@ -312,42 +366,149 @@
     </article>`;
   }
 
-  function markerFor(pin, renderer) {
-    const marker = window.L.circleMarker([pin.lat, pin.lng], {
-      renderer,
-      radius: 6,
-      color: '#ede9fe',
-      weight: 1,
-      fillColor: '#7c3aed',
-      fillOpacity: 0.9,
-      interactive: true,
-    });
-    marker.on('click', function onPreviewPinClick() {
-      if (!this.getPopup()) {
-        this.bindPopup(popupHtml(pin), { maxWidth: 350, minWidth: 250 });
+  let SupplementalDotsLayerClass = null;
+
+  function getSupplementalDotsLayerClass() {
+    if (SupplementalDotsLayerClass) return SupplementalDotsLayerClass;
+    if (!window.L?.Layer) {
+      throw new Error('Leaflet is not loaded');
+    }
+    SupplementalDotsLayerClass = window.L.Layer.extend({
+    initialize(pins) {
+      this._pins = pins;
+    },
+    onAdd(map) {
+      this._map = map;
+      this._canvas = window.L.DomUtil.create('canvas', 'nycif-supplemental-dots-canvas');
+      map.getPanes().overlayPane.appendChild(this._canvas);
+      map.on('move zoom moveend zoomend resize viewreset', this._reset, this);
+      map.on('click', this._onMapClick, this);
+      this._reset();
+      return this;
+    },
+    onRemove(map) {
+      map.off('move zoom moveend zoomend resize viewreset', this._reset, this);
+      map.off('click', this._onMapClick, this);
+      window.L.DomUtil.remove(this._canvas);
+    },
+    _reset() {
+      const map = this._map;
+      const size = map.getSize();
+      const topLeft = map.containerPointToLayerPoint([0, 0]);
+      window.L.DomUtil.setPosition(this._canvas, topLeft);
+      this._canvas.width = size.x;
+      this._canvas.height = size.y;
+      this._topLeft = topLeft;
+      this._redraw();
+    },
+    _redraw() {
+      const map = this._map;
+      const ctx = this._canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+      const bounds = map.getBounds();
+      const topLeft = this._topLeft;
+      ctx.fillStyle = '#7c3aed';
+      ctx.strokeStyle = '#ede9fe';
+      ctx.lineWidth = 1;
+      for (const pin of this._pins) {
+        if (!bounds.contains([pin.lat, pin.lng])) continue;
+        const pt = map.latLngToContainerPoint([pin.lat, pin.lng]);
+        const x = pt.x - topLeft.x;
+        const y = pt.y - topLeft.y;
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
       }
-      this.openPopup();
+    },
+    _onMapClick(event) {
+      const map = this._map;
+      const clickPt = map.latLngToContainerPoint(event.latlng);
+      let best = null;
+      let bestDist = 14;
+      const bounds = map.getBounds();
+      for (const pin of this._pins) {
+        if (!bounds.contains([pin.lat, pin.lng])) continue;
+        const pt = map.latLngToContainerPoint([pin.lat, pin.lng]);
+        const dx = pt.x - clickPt.x;
+        const dy = pt.y - clickPt.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < bestDist) {
+          bestDist = dist;
+          best = pin;
+        }
+      }
+      if (best) {
+        window.L.popup({ maxWidth: 350, minWidth: 250 })
+          .setLatLng([best.lat, best.lng])
+          .setContent(popupHtml(best))
+          .openOn(map);
+      }
+    }
     });
-    return marker;
+    return SupplementalDotsLayerClass;
   }
 
-  async function buildMarkerLayer(map, pins, options = {}) {
+  function buildMarkerLayer(map, pins, options = {}) {
     const { fitBounds = false, onProgress } = options;
-    const renderer = getCanvasRenderer();
-    const group = window.L.layerGroup();
-    const total = pins.length;
-    for (let i = 0; i < total; i += MARKER_BATCH) {
-      const batch = pins.slice(i, i + MARKER_BATCH);
-      batch.forEach(pin => group.addLayer(markerFor(pin, renderer)));
-      if (onProgress) onProgress(Math.min(i + MARKER_BATCH, total), total);
-      await new Promise(resolve => requestAnimationFrame(resolve));
+    if (onProgress) onProgress(pins.length, pins.length);
+    const LayerClass = getSupplementalDotsLayerClass();
+    const layer = new LayerClass(pins).addTo(map);
+    if (fitBounds && pins.length) {
+      map.fitBounds(boundsFromPins(pins).pad(0.12));
     }
-    group.addTo(map);
-    if (fitBounds && total) {
-      const bounds = window.L.latLngBounds(pins.map(pin => [pin.lat, pin.lng]));
-      map.fitBounds(bounds.pad(0.12));
+    return layer;
+  }
+
+  async function loadPinsFromLiteFeed(url) {
+    const response = await fetch(`${url}?cache=${Date.now()}`, {
+      cache: 'no-store',
+      headers: { Accept: 'application/json' },
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const payload = validateMapPinsPayload(await response.json());
+    const pins = payload.pins.map(certifyLitePin).filter(Boolean);
+    state.feedMeta = {
+      artifactType: payload.artifact_type,
+      exportEventCount: payload.export_event_count ?? pins.length,
+      approvedQueueCount: payload.approved_queue_count ?? null,
+      generatedAtUtc: payload.generated_at_utc || null,
+      sourceUrl: url,
+      feedKind: 'map_pins',
+    };
+    state.pins = pins;
+    state.loaded = true;
+    return state;
+  }
+
+  async function loadPinsFromFullFeed(url) {
+    const response = await fetch(`${url}?cache=${Date.now()}`, {
+      cache: 'no-store',
+      headers: { Accept: 'application/json' },
+    });
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const payload = validateExportPayload(await response.json());
+    const pins = [];
+    const events = payload.events;
+    for (let index = 0; index < events.length; index += 1) {
+      const pin = normalizePin(events[index], index);
+      if (pin) pins.push(pin);
+      if (index > 0 && index % 400 === 0) {
+        await new Promise(resolve => setTimeout(resolve, 0));
+      }
     }
-    return group;
+    state.feedMeta = {
+      artifactType: payload.artifact_type,
+      exportEventCount: payload.export_event_count ?? pins.length,
+      approvedQueueCount: payload.approved_queue_count ?? null,
+      generatedAtUtc: payload.generated_at_utc || null,
+      sourceUrl: url,
+      feedKind: 'full_export',
+    };
+    state.pins = pins;
+    state.loaded = true;
+    return state;
   }
 
   async function loadExportFeed() {
@@ -360,28 +521,17 @@
     }
 
     state.loading = true;
-    const url = feedUrl();
-    setStatus(`Loading supplemental approved export preview from ${url}…`);
+    const liteUrl = mapPinsUrl();
+    setStatus(`Loading supplemental map pins from ${liteUrl}…`);
     try {
-      const response = await fetch(`${url}?cache=${Date.now()}`, {
-        cache: 'no-store',
-        headers: { Accept: 'application/json' },
-      });
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      const payload = validateExportPayload(await response.json());
-      const pins = payload.events
-        .map((row, index) => normalizePin(row, index))
-        .filter(Boolean);
-      state.feedMeta = {
-        artifactType: payload.artifact_type,
-        exportEventCount: payload.export_event_count ?? pins.length,
-        approvedQueueCount: payload.approved_queue_count ?? null,
-        generatedAtUtc: payload.generated_at_utc || null,
-        sourceUrl: url,
-      };
-      state.pins = pins;
-      state.loaded = true;
-      return state;
+      try {
+        return await loadPinsFromLiteFeed(liteUrl);
+      } catch (liteError) {
+        console.warn('Lite map pins unavailable; falling back to full export feed.', liteError);
+        const fullUrl = feedUrl();
+        setStatus(`Loading full supplemental export feed from ${fullUrl}…`);
+        return await loadPinsFromFullFeed(fullUrl);
+      }
     } finally {
       state.loading = false;
     }
@@ -404,11 +554,8 @@
       await loadExportFeed();
       if (state.layer) map.removeLayer(state.layer);
       setStatus(`Drawing ${state.pins.length.toLocaleString()} preview markers…`);
-      state.layer = await buildMarkerLayer(map, state.pins, {
+      state.layer = buildMarkerLayer(map, state.pins, {
         fitBounds: false,
-        onProgress(done, total) {
-          setStatus(`Drawing preview markers… ${done.toLocaleString()} / ${total.toLocaleString()}`);
-        },
       });
       setStatus(
         `Supplemental approved export preview · ${state.pins.length.toLocaleString()} marker${
@@ -450,14 +597,15 @@
   }
 
   function bootStandaloneMap(mapElId) {
+    suppressServiceWorkerForPreview();
     installStyles();
     ensureBanner();
     const mapNode = document.getElementById(mapElId || 'map');
     if (!mapNode || !window.L) return Promise.reject(new Error('Map container not ready'));
 
-    setPageMeta('Fetching supplemental approved export feed…', 'Initializing map…');
+    setPageMeta('Fetching supplemental map pins…', 'Initializing map…');
 
-    const map = window.L.map(mapNode, { preferCanvas: true }).setView([40.7128, -74.006], 11);
+    const map = window.L.map(mapNode).setView([40.7128, -74.006], 11);
     window.NYCIF_MAIN_MAP = map;
     window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
@@ -468,20 +616,13 @@
       .then(() => {
         setPageMeta(
           `Feed loaded · ${state.pins.length.toLocaleString()} approved export row(s)`,
-          'Drawing purple preview markers…'
+          'Drawing purple preview dots…'
         );
-        return buildMarkerLayer(map, state.pins, {
-          fitBounds: true,
-          onProgress(done, total) {
-            setPageMeta(
-              `Feed loaded · ${total.toLocaleString()} approved export row(s)`,
-              `Drawing markers… ${done.toLocaleString()} / ${total.toLocaleString()}`
-            );
-          },
-        });
-      })
-      .then(layer => {
-        state.layer = layer;
+        state.layer = buildMarkerLayer(map, state.pins, { fitBounds: true });
+        setPageMeta(
+          `${state.pins.length.toLocaleString()} approved export marker(s) · ${state.feedMeta?.feedKind || 'map'}`,
+          `${state.pins.length.toLocaleString()} marker(s) on map · PREVIEW / NOT PRODUCTION`
+        );
         return state;
       });
   }
@@ -492,7 +633,10 @@
     deskOverlayMode,
     previewExportMode,
     feedUrl,
+    mapPinsUrl,
     validateExportPayload,
+    validateMapPinsPayload,
+    certifyLitePin,
     normalizePin,
     certifyCoord,
     loadExportFeed,
