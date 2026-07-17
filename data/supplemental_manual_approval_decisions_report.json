@@ -3,156 +3,29 @@
     {
       "match": [
         "overlap_key",
-        "free world cup watch parties|2026-07-19"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "nyc restaurant week|2026-07-20"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "hpd in your district council district 6|2026-07-21"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "hpd in your district council district 11|2026-07-24"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "hpd in your district council district 15|2026-07-24"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "friends of bronx river forest meeting|2026-07-30"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "virtual zumba|2026-07-30"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "canceled soca dance fitness|2026-08-01"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "summer streets manhattan|2026-08-01"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "virtual rise and shine yoga|2026-08-01"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "virtual yoga|2026-08-03"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "summer streets manhattan|2026-08-08"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "summer streets manhattan|2026-08-15"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "hpd in your district council district 45|2026-08-20"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "hpd in your district council district 31|2026-08-22"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "join hpd and council member selvena brooks powers in your district and learn about housing related issues|2026-08-22"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "general election change of address|2026-10-19"
-      ],
-      "status": "rejected"
-    },
-    {
-      "match": [
-        "overlap_key",
         "general election last day to register to vote|2026-10-24"
-      ],
-      "status": "pending"
-    },
-    {
-      "match": [
-        "overlap_key",
-        "general election|2026-11-03"
       ],
       "status": "rejected"
     }
   ],
   "approval_queue_count": 3457,
   "approved_count": 3406,
-  "decisions_applied": 19,
-  "decisions_requested": 19,
-  "decisions_source": "data/supplemental_no_coord_manual_decisions.json",
+  "decisions_applied": 1,
+  "decisions_requested": 1,
+  "decisions_source": "data/supplemental_boe_row_rejection_decision.json",
   "decisions_unmatched": 0,
-  "generated_at_utc": "2026-07-17T20:37:59.865171+00:00",
+  "generated_at_utc": "2026-07-17T20:42:00.920375+00:00",
   "location_cache_modified": false,
   "next_required_step": "Run validate_supplemental_manual_approvals.py. Public map merge still requires explicit authorization.",
-  "pending_count": 1,
+  "pending_count": 0,
   "phase": "m11_supplemental_manual_approval_decisions_applied",
   "promotion_allowed_count": 0,
   "public_map_modified": false,
-  "rejected_count": 50,
+  "rejected_count": 51,
   "staged_feed_modified": false,
   "status_counts": {
     "approved": 3406,
-    "pending": 1,
-    "rejected": 50
+    "rejected": 51
   },
   "unmatched": []
 }
