@@ -147,44 +147,100 @@ def _significant_park_tokens(norm: str) -> set[str]:
     return {token for token in norm.split() if token and token not in GENERIC_PARK_NAME_TOKENS and len(token) >= 3}
 
 
+def _is_weak_park_norm(norm: str) -> bool:
+    tokens = [token for token in norm.split() if token]
+    return not tokens or tokens == ["park"] or all(token in GENERIC_PARK_NAME_TOKENS for token in tokens)
+
+
+def _park_name_aliases(park_name: str) -> list[str]:
+    target = normalize_park_name(park_name)
+    aliases = [target]
+    for suffix in (" recreation center", " play center", " recreation building"):
+        if target.endswith(suffix):
+            aliases.append(target[: -len(suffix)].strip())
+    if " - " in target:
+        aliases.append(target.split(" - ", 1)[0].strip())
+    deduped: list[str] = []
+    for alias in aliases:
+        if alias and alias not in deduped:
+            deduped.append(alias)
+    return deduped
+
+
+def _borough_match_keys(borough: Any) -> set[str]:
+    keys = {normalize_text_legacy(str(borough or ""))}
+    try:
+        from scripts.schema_v1_common import borough_label
+    except ModuleNotFoundError:  # pragma: no cover
+        from schema_v1_common import borough_label
+    label = borough_label(borough)
+    if label:
+        keys.add(normalize_text_legacy(label))
+    return {key for key in keys if key}
+
+
+def _park_match_score(alias: str, norm: str) -> int:
+    if alias == norm:
+        return 100
+    if len(alias) >= 8 and len(norm) >= 6 and (alias in norm or norm in alias):
+        return 70
+    overlap = _significant_park_tokens(alias) & _significant_park_tokens(norm)
+    if not overlap:
+        return 0
+    if len(overlap) >= 2:
+        return 50 + len(overlap) * 5
+    token = next(iter(overlap))
+    if len(token) >= 5 and len(_significant_park_tokens(alias)) <= 2:
+        return 35
+    return 0
+
+
 def find_park_property_row(
     park_name: str,
     borough: Any,
     name_index: dict[str, list[dict[str, Any]]],
 ) -> dict[str, Any] | None:
-    target = normalize_park_name(park_name)
-    if not target:
-        return None
-    boro_key = normalize_text_legacy(str(borough or ""))
-    candidates = list(name_index.get(target, []))
-    if not candidates:
-        target_tokens = _significant_park_tokens(target)
+    boro_keys = _borough_match_keys(borough)
+    scored: list[tuple[int, dict[str, Any]]] = []
+    seen_ids: set[str] = set()
+
+    def add_scored(score: int, rows: Iterable[dict[str, Any]]) -> None:
+        for row in rows:
+            row_id = str(row.get("gispropnum") or row.get("signname") or row.get("name311") or id(row))
+            if row_id in seen_ids:
+                continue
+            seen_ids.add(row_id)
+            scored.append((score, row))
+
+    for alias in _park_name_aliases(park_name):
+        if alias in name_index:
+            add_scored(100, name_index[alias])
+        target_tokens = _significant_park_tokens(alias)
         for norm, rows in name_index.items():
-            if target == norm:
-                candidates.extend(rows)
+            if _is_weak_park_norm(norm):
                 continue
-            if len(target) >= 8 and (target in norm or norm in target):
-                candidates.extend(rows)
-                continue
-            norm_tokens = _significant_park_tokens(norm)
-            if target_tokens and norm_tokens and len(target_tokens & norm_tokens) >= 2:
-                candidates.extend(rows)
-            elif (
-                target_tokens
-                and norm_tokens
-                and len(target_tokens) == 1
-                and len(norm_tokens) == 1
-                and target_tokens == norm_tokens
-            ):
-                candidates.extend(rows)
-    if not candidates:
+            score = _park_match_score(alias, norm)
+            if score:
+                add_scored(score, rows)
+
+    if not scored:
         return None
-    if boro_key:
-        for row in candidates:
-            row_boro = normalize_text_legacy(str(row.get("borough_label") or row.get("borough") or ""))
-            if row_boro and (boro_key in row_boro or row_boro in boro_key):
-                return row
-    return candidates[0]
+    if boro_keys:
+        boro_scored = [
+            (score, row)
+            for score, row in scored
+            if normalize_text_legacy(str(row.get("borough_label") or row.get("borough") or ""))
+            in boro_keys
+            or any(
+                key in normalize_text_legacy(str(row.get("borough_label") or row.get("borough") or ""))
+                or normalize_text_legacy(str(row.get("borough_label") or row.get("borough") or "")) in key
+                for key in boro_keys
+            )
+        ]
+        if boro_scored:
+            scored = boro_scored
+    scored.sort(key=lambda item: item[0], reverse=True)
+    return scored[0][1]
 
 
 def snap_to_park_interior(
