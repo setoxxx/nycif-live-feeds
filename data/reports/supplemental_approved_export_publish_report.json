@@ -1,0 +1,22 @@
+{
+  "approved_queue_count": 3406,
+  "artifact_type": "supplemental_approved_export_publish_report",
+  "export_event_count": 3406,
+  "field_desk_urls": {
+    "backend_data_raw": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/supplemental_approved_export_feed.json",
+    "dist_raw": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/supplemental_approved_export_feed.json"
+  },
+  "generated_at_utc": "2026-07-17T21:11:23.007143+00:00",
+  "next_required_step": "Field-desk preview only. Use approved-export-preview.html or desk.html?previewExport=1. Public map merge requires explicit Phase 2E authorization.",
+  "phase": "m11_supplemental_approved_export_publish",
+  "published_path": "dist/supplemental_approved_export_feed.json",
+  "qa_pass": true,
+  "safety": {
+    "location_cache_modified": false,
+    "production_feed": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "staged_feed_modified": false
+  },
+  "source_path": "data/supplemental_approved_export_feed.json"
+}
