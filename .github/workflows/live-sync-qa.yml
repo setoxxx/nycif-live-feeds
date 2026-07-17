@@ -104,6 +104,9 @@ jobs:
       - name: Build supplemental events staging feed
         run: python scripts/build_supplemental_events_staging_feed.py
 
+      - name: Apply supplemental location memory to staging intake
+        run: python scripts/apply_supplemental_location_memory.py
+
       - name: Build supplemental manual approval queue (M11)
         run: python scripts/build_supplemental_manual_approval_queue.py
 

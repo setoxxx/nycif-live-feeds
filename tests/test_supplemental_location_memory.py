@@ -12,10 +12,13 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from scripts.build_supplemental_location_memory import (  # noqa: E402
-    build_overlay_index,
+from scripts.build_supplemental_location_memory import memory_entry_to_gazetteer_keys
+from scripts.supplemental_location_memory_utils import (
+    apply_memory_fill_to_event,
+    apply_memory_to_events,
     location_key_for_row,
-    memory_entry_to_gazetteer_keys,
+    lookup_memory_fill,
+    needs_memory_fill,
 )
 from scripts.nyc_location_gazetteer import (  # noqa: E402
     NYCLocationGazetteer,
@@ -111,6 +114,52 @@ class SupplementalLocationMemoryTests(unittest.TestCase):
         }
         merged = merge_gazetteer_indexes(base, overlay)
         self.assertEqual(merged["bk|test park"]["source"], "location_cache")
+
+    def test_needs_memory_fill_when_coords_missing(self) -> None:
+        row = {"display_location": "Bryant Park", "borough": "Mn"}
+        self.assertTrue(needs_memory_fill(row))
+
+    def test_apply_memory_to_events_fills_missing_coords(self) -> None:
+        memory = {
+            "mn|bryant park": {
+                "display_location": "Bryant Park",
+                "borough": "Mn",
+                "proposed_lat": 40.7536,
+                "proposed_lng": -73.9832,
+                "geocoder_source": "supplemental_location_memory",
+                "geocoder_confidence": "high",
+                "event_count": 3,
+            }
+        }
+        events = [
+            {"display_location": "Bryant Park", "borough": "Mn", "manual_review_status": "pending"},
+            {"display_location": "Central Park", "borough": "Mn", "proposed_lat": 40.78, "proposed_lng": -73.97},
+        ]
+        updated, stats = apply_memory_to_events(events, memory_entries=memory, gazetteer=NYCLocationGazetteer({}))
+        self.assertEqual(stats["memory_filled_count"], 1)
+        self.assertTrue(updated[0].get("auto_resolved"))
+        self.assertEqual(updated[0]["fill_method"], "supplemental_location_memory")
+        self.assertFalse(updated[0]["promotion_allowed"])
+
+    def test_lookup_memory_fill_preserves_pending_review(self) -> None:
+        fill = lookup_memory_fill(
+            {"display_location": "Bryant Park", "borough": "Mn"},
+            {
+                "mn|bryant park": {
+                    "display_location": "Bryant Park",
+                    "borough": "Mn",
+                    "proposed_lat": 40.7536,
+                    "proposed_lng": -73.9832,
+                    "geocoder_source": "supplemental_location_memory",
+                    "geocoder_confidence": "high",
+                    "event_count": 1,
+                }
+            },
+            NYCLocationGazetteer({}),
+        )
+        self.assertIsNotNone(fill)
+        event = apply_memory_fill_to_event({"manual_review_status": "pending"}, fill or {})
+        self.assertEqual(event["manual_review_status"], "pending")
 
 
 if __name__ == "__main__":

@@ -42,6 +42,7 @@ try:
         gazetteer_entry,
         merge_gazetteer_indexes,
     )
+    from scripts.supplemental_location_memory_utils import location_key_for_row
 except ModuleNotFoundError:  # pragma: no cover
     from build_supplemental_pin_quality_review_report import parent_park_from_display
     from coverage_gap_utils import (
@@ -61,6 +62,7 @@ except ModuleNotFoundError:  # pragma: no cover
         gazetteer_entry,
         merge_gazetteer_indexes,
     )
+    from supplemental_location_memory_utils import location_key_for_row
 
 QUEUE_PATH = DATA_DIR / "supplemental_manual_approval_queue.json"
 MEMORY_PATH = DATA_DIR / "supplemental_location_memory.json"
@@ -81,17 +83,6 @@ def rows_from_queue(payload: Any) -> list[dict[str, Any]]:
             if isinstance(rows, list):
                 return [row for row in rows if isinstance(row, dict)]
     return []
-
-
-def location_key_for_row(row: dict[str, Any]) -> str:
-    display = str(row.get("display_location") or "").strip()
-    borough = borough_norm(row.get("borough"))
-    norm_display = normalize_text_legacy(display)
-    parent = parent_park_from_display(display)
-    if parent:
-        norm_parent = normalize_text_legacy(parent)
-        return f"{borough}|{norm_display}|parent:{norm_parent}"
-    return f"{borough}|{norm_display}"
 
 
 def coord_signature(lat: Any, lng: Any) -> str:

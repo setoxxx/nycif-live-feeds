@@ -195,6 +195,16 @@ def main() -> int:
     save_json_file(FEED_PATH, feed)
     save_json_file(MANIFEST_PATH, manifest)
     save_json_file(REPORT_PATH, report)
+
+    try:
+        from scripts.apply_supplemental_location_memory import apply_memory_to_staging_feed
+    except ModuleNotFoundError:  # pragma: no cover
+        from apply_supplemental_location_memory import apply_memory_to_staging_feed
+
+    memory_report = apply_memory_to_staging_feed(feed_path=FEED_PATH, dry_run=False, write_report=True)
+    report["memory_auto_filled_count"] = memory_report.get("fill", {}).get("memory_filled_count", 0)
+    report["memory_auto_resolution_report"] = "data/reports/supplemental_memory_auto_resolution_report.json"
+    save_json_file(REPORT_PATH, report)
     print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0
 
