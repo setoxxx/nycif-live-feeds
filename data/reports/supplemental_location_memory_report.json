@@ -1,25 +1,25 @@
 {
-  "approved_row_count": 3406,
+  "approved_row_count": 3566,
   "artifact_type": "supplemental_location_memory_report",
-  "generated_at_utc": "2026-07-17T20:25:00.974170+00:00",
+  "generated_at_utc": "2026-07-17T21:48:36.155206+00:00",
   "human_pin_quality_signoff_report": "data/reports/supplemental_pin_quality_human_signoff_report.json",
-  "memory_entry_count": 716,
+  "memory_entry_count": 746,
   "next_required_step": "Resolver and rejected-pass now consult supplemental_location_gazetteer_overlay.json. Re-run validate_supplemental_manual_approvals.py. Phase 2E promotion still requires explicit authorization.",
   "overlay": {
-    "index_key_count": 1588,
-    "merged_preview_key_count": 1588,
+    "index_key_count": 1646,
+    "merged_preview_key_count": 1646,
     "path": "data/supplemental_location_gazetteer_overlay.json"
   },
   "phase": "m11_supplemental_location_memory",
   "qa_pass": true,
   "recurrence": {
-    "approved_row_count": 3406,
-    "approved_rows_auto_resolvable_from_overlay": 3406,
+    "approved_row_count": 3566,
+    "approved_rows_auto_resolvable_from_overlay": 3566,
     "approved_rows_auto_resolvable_from_overlay_pct": 100.0,
-    "approved_rows_sharing_recurring_location_key": 3094,
-    "approved_rows_sharing_recurring_location_key_pct": 90.84,
-    "location_keys_with_event_count_gt_1": 404,
-    "unique_location_key_count": 716
+    "approved_rows_sharing_recurring_location_key": 3239,
+    "approved_rows_sharing_recurring_location_key_pct": 90.83,
+    "location_keys_with_event_count_gt_1": 419,
+    "unique_location_key_count": 746
   },
   "safety": {
     "location_cache_modified": false,
@@ -27,7 +27,7 @@
     "public_map_modified": false,
     "staged_feed_modified": false
   },
-  "skipped_approved_rows_without_coords": 51,
+  "skipped_approved_rows_without_coords": 68,
   "top_recurring_location_keys": [
     {
       "borough": "Bk",
