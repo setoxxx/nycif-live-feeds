@@ -1,24 +1,25 @@
 {
   "approval_queue_count": 3457,
-  "approved_count": 0,
+  "approved_count": 393,
   "fail_count": 0,
-  "generated_at_utc": "2026-07-16T21:41:34.384064+00:00",
+  "generated_at_utc": "2026-07-17T14:03:37.741855+00:00",
   "intake_counts": {
     "calendar_only": 2210,
     "parks_only": 1247
   },
   "issues": [],
   "location_cache_modified": false,
-  "pending_count": 3453,
+  "pending_count": 3057,
   "phase": "m11_supplemental_manual_approval_validation",
   "promotion_allowed_count": 0,
   "public_map_modified": false,
   "qa_pass": true,
-  "rejected_count": 4,
+  "rejected_count": 7,
   "staged_feed_modified": false,
   "status_counts": {
-    "pending": 3453,
-    "rejected": 4
+    "approved": 393,
+    "pending": 3057,
+    "rejected": 7
   },
   "validation_rule": "Pending rows are allowed. Approved/promotable rows must have valid NYC coordinates, documented source/confidence, reviewer, review timestamp, and decision reason."
 }
