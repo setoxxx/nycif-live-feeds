@@ -23,6 +23,7 @@ try:
     from scripts.coverage_gap_utils import (
         DATA_DIR,
         build_calendar_parks_overlap_index,
+        is_summer_streets_event,
         is_ungeocodable_location,
         load_json_file,
         load_parks_properties_name_index,
@@ -45,6 +46,7 @@ except ModuleNotFoundError:  # pragma: no cover
     from coverage_gap_utils import (
         DATA_DIR,
         build_calendar_parks_overlap_index,
+        is_summer_streets_event,
         is_ungeocodable_location,
         load_json_file,
         load_parks_properties_name_index,
@@ -177,6 +179,23 @@ def canceled_reject_reason(title: str) -> str:
     return f"Canceled per Parks feed title ({clean[:120]})."
 
 
+def parse_review_ranks(value: str | None) -> list[int] | None:
+    if not value:
+        return None
+    ranks: list[int] = []
+    for part in value.split(","):
+        part = part.strip()
+        if not part:
+            continue
+        if "-" in part:
+            start_s, end_s = part.split("-", 1)
+            start_i, end_i = int(start_s), int(end_s)
+            ranks.extend(range(start_i, end_i + 1))
+        else:
+            ranks.append(int(part))
+    return sorted(set(ranks))
+
+
 def run(
     *,
     start_rank: int,
@@ -185,6 +204,7 @@ def run(
     dry_run: bool = False,
     allow_live_geosearch: bool = False,
     allow_live_geoclient: bool = False,
+    review_ranks: list[int] | None = None,
 ) -> int:
     queue_payload = load_json_file(APPROVAL_QUEUE_PATH, {})
     queue = rows_from_payload(queue_payload, "approval_queue")
@@ -220,7 +240,10 @@ def run(
     skipped = 0
     fill_method_counts: Counter[str] = Counter()
 
-    for rank in range(start_rank, end_rank + 1):
+    rank_list = review_ranks if review_ranks is not None else list(range(start_rank, end_rank + 1))
+    rank_set = set(rank_list)
+
+    for rank in rank_list:
         row = queue_by_rank.get(rank)
         if row is None:
             outcomes.append({"review_rank": rank, "outcome": "missing_row"})
@@ -249,6 +272,19 @@ def run(
                 "manual_review_notes": batch_notes,
             }
             outcomes.append({"review_rank": rank, "outcome": "rejected_canceled_title"})
+            rejected += 1
+            continue
+
+        if is_summer_streets_event(row):
+            decision_by_rank[rank] = {
+                "review_rank": rank,
+                "manual_review_status": "rejected",
+                "approval_decision_reason": (
+                    "Rejected-pass: Summer Streets route event (multi-street corridor, not a single mappable point)"
+                ),
+                "manual_review_notes": batch_notes,
+            }
+            outcomes.append({"review_rank": rank, "outcome": "rejected_summer_streets_route"})
             rejected += 1
             continue
 
@@ -347,7 +383,7 @@ def run(
         else:
             updated_decisions.append(item)
     for rank, item in decision_by_rank.items():
-        if start_rank <= rank <= end_rank and rank not in seen:
+        if rank in rank_set and rank not in seen:
             updated_decisions.append(item)
 
     report = {
@@ -355,6 +391,7 @@ def run(
         "phase": "m11_supplemental_location_resolution_engine",
         "start_rank": start_rank,
         "end_rank": end_rank,
+        "review_ranks": rank_list if review_ranks is not None else None,
         "batch_notes": batch_notes,
         "approved_count": approved,
         "rejected_count": rejected,
@@ -412,6 +449,11 @@ def main() -> int:
         help="Allow live NYC Geoclient intersection calls (also enabled by NYCIF_ALLOW_LIVE_GEOCLIENT=1).",
     )
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument(
+        "--review-ranks",
+        default=None,
+        help="Comma-separated review ranks and/or ranges (e.g. 2439,2925-2926,3059). Overrides start/end range.",
+    )
     args = parser.parse_args()
     if args.end_rank < args.start_rank:
         print(json.dumps({"error": "end-rank must be >= start-rank"}, indent=2))
@@ -433,6 +475,7 @@ def main() -> int:
         dry_run=args.dry_run,
         allow_live_geosearch=allow_live_geosearch,
         allow_live_geoclient=allow_live_geoclient,
+        review_ranks=parse_review_ranks(args.review_ranks),
     )
 
 

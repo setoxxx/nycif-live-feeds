@@ -507,6 +507,15 @@
       "query": "402 E Fordham Rd, Bronx, NY",
       "source": "nyc_geosearch_planninglabs"
     },
+    "bronx|460 willi ave": {
+      "confidence": "high",
+      "confidence_reason": "NYC GeoSearch match for 460 Willis Avenue (staging seed for supplemental retry).",
+      "label": "460 WILLIS AVENUE, Bronx, NY, USA",
+      "lat": 40.813841,
+      "lng": -73.918972,
+      "query": "460 Willis Avenue, Bronx, NY",
+      "source": "nyc_geosearch_planninglabs"
+    },
     "bronx|840 grand concourse": {
       "borough": "Bronx",
       "cached_at_utc": "2026-07-17T19:50:50.851365+00:00",
@@ -4533,6 +4542,15 @@
       "query": "100 WEST   77 STREET, New York, NY, New York, NY",
       "source": "nyc_geosearch_planninglabs"
     },
+    "manhattan|11 bc serenity garden": {
+      "confidence": "high",
+      "confidence_reason": "OpenStreetMap/Nominatim match for 11 BC Serenity Garden (staging seed for supplemental retry).",
+      "label": "11 BC Serenity Garden, Manhattan, NY, USA",
+      "lat": 40.726812,
+      "lng": -73.978463,
+      "query": "11 BC Serenity Garden, Manhattan, NY",
+      "source": "nyc_geosearch_planninglabs"
+    },
     "manhattan|1250 e 229th st": {
       "borough": "Manhattan",
       "cached_at_utc": "2026-07-17T19:49:49.602487+00:00",
@@ -4641,6 +4659,15 @@
       "lat": 40.705523,
       "lng": -74.001567,
       "query": "89 SOUTH STREET Manhattan, New York, NY",
+      "source": "nyc_geosearch_planninglabs"
+    },
+    "manhattan|asser levy recreation center": {
+      "confidence": "high",
+      "confidence_reason": "NYC GeoSearch match for Asser Levy Recreation Center (staging seed for supplemental retry).",
+      "label": "ASSER LEVY RECREATION CENTER, New York, NY, USA",
+      "lat": 40.736187,
+      "lng": -73.975658,
+      "query": "Asser Levy Recreation Center, Manhattan, NY",
       "source": "nyc_geosearch_planninglabs"
     },
     "manhattan|broadway malls 59th 110th broadway malls 59th 110th": {
@@ -7108,8 +7135,8 @@
       "source": "nyc_geosearch_planninglabs"
     }
   },
-  "entry_count": 646,
-  "generated_at_utc": "2026-07-17T19:51:55.155065+00:00",
+  "entry_count": 649,
+  "generated_at_utc": "2026-07-17T20:00:25.173286+00:00",
   "safety": {
     "location_cache_modified": false,
     "promotion_allowed": false,

@@ -1,26 +1,28 @@
 {
-  "generated_at_utc": "2026-07-17T19:52:09.039348+00:00",
+  "generated_at_utc": "2026-07-17T20:01:03.360967+00:00",
   "queue_path": "data/supplemental_manual_approval_queue.json",
   "total_rows": 3457,
-  "approved_count": 3398,
-  "rejected_count": 59,
+  "approved_count": 3406,
+  "rejected_count": 51,
   "pending_count": 0,
   "disposition_complete": true,
   "status_counts": {
-    "approved": 3398,
-    "rejected": 59
+    "approved": 3406,
+    "rejected": 51
   },
   "approved_geocoder_sources": {
     "nyc_parks_bigapps_events_snapshot": 3086,
     "nyc_parks_facility_reference": 218,
-    "nyc_geosearch_planninglabs": 63,
+    "nyc_geosearch_planninglabs": 66,
     "nyc_geosearch_planninglabs_midpoint": 30,
+    "nyc_parks_properties_reference": 3,
+    "nyc_geoclient_intersection": 2,
     "location_cache": 1
   },
   "top_reject_reasons": {
-    "Rejected-pass: virtual/online/citywide or otherwise ungeocodable location": 30,
-    "Rejected-pass: no resolvable GPS after gazetteer, Geoclient, Parks reference, an": 12,
+    "Rejected-pass: virtual/online/citywide or otherwise ungeocodable location": 31,
     "Canceled per Parks feed title (CANCELED: Zumba).": 4,
+    "Rejected-pass: Summer Streets route event (multi-street corridor, not a single m": 3,
     "Canceled per Parks feed title (CANCELED: Low Impact Bodyweight Circuit Training)": 2,
     "Canceled per Parks feed title (CANCELED: Total Body Fitness).": 2,
     "Canceled per Parks feed title (CANCELED: Full Body Circuit Training).": 1,

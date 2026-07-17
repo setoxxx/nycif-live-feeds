@@ -134,12 +134,16 @@ UNGEOCODABLE_LOCATION_MARKERS = (
     "poll sites citywide",
     "see the flyer",
     "see flyer",
+    "seee flyer",
+    "please seee flyer",
     "across all five boroughs",
     "check website",
     "participating restaurants",
     "virtual/online",
     "virtual\\/online",
     "online events",
+    "summer streets",
+    "brooklyn bridge to broadway",
 )
 
 GEOSEARCH_FILL_METHODS = {
@@ -254,6 +258,48 @@ def load_parks_properties_name_index(
     if not isinstance(properties, list):
         return {}
     return build_parks_properties_name_index(properties)
+
+
+def is_summer_streets_event(row: dict[str, Any]) -> bool:
+    title = str(row.get("title") or "").lower()
+    display = str(row.get("display_location") or "").lower()
+    return "summer streets" in title or "brooklyn bridge to broadway" in display
+
+
+def _fill_from_parks_properties_parent(
+    parent: str,
+    *,
+    child: str | None = None,
+    borough: Any,
+    parks_properties_index: dict[str, list[dict[str, Any]]] | None,
+) -> dict[str, Any] | None:
+    if not parks_properties_index:
+        return None
+    try:
+        from scripts.geojson_polygon_utils import find_park_property_row
+    except ModuleNotFoundError:  # pragma: no cover
+        from geojson_polygon_utils import find_park_property_row
+
+    row_prop = find_park_property_row(parent, borough, parks_properties_index)
+    if not row_prop:
+        return None
+    lat = row_prop.get("centroid_lat")
+    lng = row_prop.get("centroid_lng")
+    if not valid_nyc_lat_lng(lat, lng):
+        return None
+    label = str(row_prop.get("signname") or row_prop.get("name311") or parent)
+    child_note = f" for '{child}'" if child else ""
+    return {
+        "proposed_lat": float(lat),
+        "proposed_lng": float(lng),
+        "geocoder_source": "nyc_parks_properties_reference",
+        "geocoder_confidence": "medium",
+        "confidence_reason": (
+            f"Rejected-pass fill: NYC Parks Properties parent polygon centroid for '{label}'"
+            f"{child_note}; pin may be park interior centroid. For manual review only."
+        ),
+        "fill_method": "parks_properties_parent_centroid",
+    }
 
 
 def _gazetteer_hit_fill(hit: dict[str, Any], *, fill_method: str, force_confidence: str | None = None) -> dict[str, Any]:
@@ -429,6 +475,17 @@ def resolve_supplemental_coordinates(
             return _apply_park_polygon_correction(
                 fill, display=display, borough=borough, parks_properties_index=parks_properties_index
             )
+        if not parse_intersection(child):
+            fill = _fill_from_parks_properties_parent(
+                parent,
+                child=child,
+                borough=borough,
+                parks_properties_index=parks_properties_index,
+            )
+            if fill:
+                return _apply_park_polygon_correction(
+                    fill, display=display, borough=borough, parks_properties_index=parks_properties_index
+                )
     else:
         hit = gazetteer.lookup_display(display, borough)
         if hit and valid_nyc_lat_lng(hit.get("lat"), hit.get("lng")):
@@ -443,6 +500,16 @@ def resolve_supplemental_coordinates(
         hit = geoclient.resolve_intersection(street1, street2, borough)
         if hit and valid_nyc_lat_lng(hit.get("lat"), hit.get("lng")):
             fill = _geoclient_hit_fill(hit, parent_park=parent)
+            return _apply_park_polygon_correction(
+                fill, display=display, borough=borough, parks_properties_index=parks_properties_index
+            )
+        fill = _fill_from_parks_properties_parent(
+            parent,
+            child=f"{street1} and {street2}",
+            borough=borough,
+            parks_properties_index=parks_properties_index,
+        )
+        if fill:
             return _apply_park_polygon_correction(
                 fill, display=display, borough=borough, parks_properties_index=parks_properties_index
             )
@@ -481,8 +548,14 @@ def resolve_supplemental_coordinates(
 
     boro = supplemental_borough_for_geosearch(borough)
     query = decomposed[0] if decomposed else display
+    outside_match = re.search(r"\boutside\s+(.+)$", display, flags=re.IGNORECASE)
+    if outside_match:
+        query = outside_match.group(1).strip(" ,.")
     result = resolver.resolve(display_location=query, borough=boro)
     fill = fill_from_resolve_result(result)
+    if not fill and decomposed:
+        result = resolver.resolve(display_location=decomposed[1], borough=boro)
+        fill = fill_from_resolve_result(result)
     if not fill:
         return None
     return _apply_park_polygon_correction(
