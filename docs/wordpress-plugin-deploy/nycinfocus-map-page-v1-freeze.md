@@ -12,9 +12,9 @@
 3. Update → run the live QA checklist at the bottom of this doc
 4. Human viewport check: fullscreen map, mobile week strip clear of GPS stack, tip jar share opens `https://www.nycinfocus.com/map/`
 
-**Field Desk Pages** deploys from GitHub Actions on `main`. After it succeeds, use [`CHATGPT-WORDPRESS-DEPLOY-PROMPT.md`](./CHATGPT-WORDPRESS-DEPLOY-PROMPT.md) — copy/paste the full prompt into ChatGPT with WordPress admin access.
+**Field Desk Pages** deploys from GitHub Actions on `main`. After it succeeds, use [`CHATGPT-WORDPRESS-DEPLOY-PROMPT.md`](./CHATGPT-WORDPRESS-DEPLOY-PROMPT.md) (in-depth runbook + copy/paste ChatGPT prompt).
 
-**Display modes:** the map iframe app auto-detects mobile (≤720px) vs desktop (≥721px) via `public-display-mode-v01.js`. WordPress shell stays fullscreen on both; layout differences are inside the iframe.
+**Display modes:** [`PUBLIC-MAP-DISPLAY-MODES.md`](./PUBLIC-MAP-DISPLAY-MODES.md) — mobile (≤720px) vs desktop (≥721px) inside the iframe via `public-display-mode-v01.js`. WordPress shell stays fullscreen on both; never create a separate mobile WordPress page.
 
 Any agent or human improving NYC In Focus must read this before touching the Map page, theme template, or embed params. The saved page content and the live rendered viewport must match this contract.
 
@@ -124,7 +124,13 @@ for name, ok in checks:
 
 **Human check (required):** open https://nycinfocus.com/map/ in a browser — fullscreen map only, no header/footer/caption visible. Text crawlers may still see hidden DOM nodes; trust the viewport.
 
-**Pass criteria:** all automated checks PASS + human viewport confirms fullscreen map.
+**Device layout check (required):** see [`PUBLIC-MAP-DISPLAY-MODES.md`](./PUBLIC-MAP-DISPLAY-MODES.md) and the Human viewport QA section in [`CHATGPT-WORDPRESS-DEPLOY-PROMPT.md`](./CHATGPT-WORDPRESS-DEPLOY-PROMPT.md):
+
+- **Desktop (≥721px):** brand top-left, Filters/GPS/Bug top-right, week strip top, intro visible, Near Me visible.
+- **Mobile (≤720px):** week strip clears GPS stack, Near Me hidden, intro hidden, map still fullscreen.
+- **Resize:** crossing 720px updates layout without reload; Filters/Event List close when narrowing to mobile.
+
+**Pass criteria:** all automated checks PASS + human viewport confirms fullscreen map on desktop and mobile.
 
 ---
 
@@ -135,7 +141,9 @@ for name, ok in checks:
 | GitHub Pages map | https://setoxxx.github.io/nycif-field-desk/ — map runtime (`public-map-v10`) |
 | WordPress `/map/` | Fullscreen iframe shell → Pages URL above |
 | `docs/field-desk-map-deploy/` | Field Desk file deploy handshake |
-| `docs/wordpress-plugin-deploy/nycif-events-map/` | Plugin for non-/map/ embeds only |
+| `CHATGPT-WORDPRESS-DEPLOY-PROMPT.md` | In-depth ChatGPT / WP admin deploy runbook |
+| `PUBLIC-MAP-DISPLAY-MODES.md` | Mobile vs desktop layout inside iframe |
+| `nycif-events-map/` plugin | In-article embeds only — **not** `/map/` |
 
 When Field Desk Pages updates (`v=` bump), update the iframe `src` on `/map/` in the same release window, then re-run this checklist.
 
