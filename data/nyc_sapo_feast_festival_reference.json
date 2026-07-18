@@ -1,0 +1,505 @@
+{
+  "artifact_type": "nyc_sapo_feast_festival_reference",
+  "generated_at_utc": "2026-07-18T20:55:01Z",
+  "source_seed": "data/staging/nyc_feast_festival_reference_seed.json",
+  "warning": "Projected feast/fair rows are mapping hints only. Permit IDs from external lists are often wrong; only raw-match rows are SAPO-confirmed in this snapshot.",
+  "emoji_guide": {
+    "religious_feast_multi_day": "🎡",
+    "street_fair_single_day": "🎉",
+    "food_festival": "🍽️",
+    "cultural_parade": "🎊",
+    "holiday_market": "🎄",
+    "halloween": "🎃",
+    "multi_day_marker_note": "Multi-day events use the same emoji but a larger map pin."
+  },
+  "entries": [
+    {
+      "key": "our-lady-of-mount-carmel-brooklyn",
+      "canonical_name": "Our Lady of Mt. Carmel Church Feast",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": "906428",
+      "projected_start": "2026-07-08",
+      "projected_end": "2026-07-19",
+      "location_hint": "HAVEMEYER STREET",
+      "borough": "Brooklyn",
+      "source": "google_studio_projected",
+      "match_status": "confirmed_permit_id",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "906428",
+        "event_name": "Our Lady of Mt. Carmel Church Feast",
+        "event_type": "Street Festival",
+        "start_date_time": "2026-07-08T19:00:00.000",
+        "end_date_time": "2026-07-19T20:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "HAVEMEYER STREET between METROPOLITAN AVENUE and NORTH    9 STREET,  WITHERS STREET between NORTH    9 STREET and UNION AVENUE,  NORTH    8 STREET between ROEBLING STREET and MEEKER AVENUE",
+        "span_days": 12
+      },
+      "notes": []
+    },
+    {
+      "key": "giglio-east-harlem",
+      "canonical_name": "Giglio Society of East Harlem Feast",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": "907551",
+      "projected_start": "2026-08-06",
+      "projected_end": "2026-08-09",
+      "location_hint": "PLEASANT AVENUE",
+      "borough": "Manhattan",
+      "source": "google_studio_projected",
+      "match_status": "permit_id_mismatch",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "907551",
+        "event_name": "Soccer - Non Regulation",
+        "event_type": "Sport - Adult",
+        "start_date_time": "2026-07-13T09:00:00.000",
+        "end_date_time": "2026-07-13T20:00:00.000",
+        "event_borough": "Manhattan",
+        "event_location": "St. Vartan Park: Soccer-01",
+        "span_days": 1
+      },
+      "notes": [
+        "Claimed permit ID exists in raw snapshot but title does not match this feast/fair."
+      ]
+    },
+    {
+      "key": "feast-santa-rosalia-18th-avenue",
+      "canonical_name": "18th Avenue Feast of Santa Rosalia",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": "910012",
+      "projected_start": "2026-08-20",
+      "projected_end": "2026-08-30",
+      "location_hint": "18 AVENUE",
+      "borough": "Brooklyn",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "feast-of-san-gennaro",
+      "canonical_name": "Feast of San Gennaro",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": "912345",
+      "projected_start": "2026-09-10",
+      "projected_end": "2026-09-20",
+      "location_hint": "MULBERRY STREET",
+      "borough": "Manhattan",
+      "source": "google_studio_projected",
+      "match_status": "permit_id_mismatch",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "912345",
+        "event_name": "Softball (Little league)",
+        "event_type": "Sport - Youth",
+        "start_date_time": "2026-07-14T17:00:00.000",
+        "end_date_time": "2026-07-14T17:30:00.000",
+        "event_borough": "Manhattan",
+        "event_location": "James J Walker Park: Softball-01",
+        "span_days": 1
+      },
+      "notes": [
+        "Claimed permit ID exists in raw snapshot but title does not match this feast/fair."
+      ]
+    },
+    {
+      "key": "st-frances-cabrini-feast",
+      "canonical_name": "St. Frances Cabrini Feast",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-15",
+      "projected_end": "2026-07-19",
+      "location_hint": "FORT WASHINGTON AVENUE",
+      "borough": "Manhattan",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "feast-st-rocco",
+      "canonical_name": "St. Rocco Feast",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-15",
+      "projected_end": "2026-08-16",
+      "location_hint": "ST. THERESA",
+      "borough": "Bronx",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "feast-assumption-arthur-avenue",
+      "canonical_name": "Feast of the Assumption (Arthur Avenue)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-15",
+      "projected_end": "2026-08-15",
+      "location_hint": "ARTHUR AVENUE",
+      "borough": "Bronx",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "feast-ss-crocifisso",
+      "canonical_name": "Feast of SS. Crocifisso",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-04",
+      "projected_end": "2026-09-07",
+      "location_hint": "18 AVENUE",
+      "borough": "Brooklyn",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "festival-st-markella",
+      "canonical_name": "Festival of St. Markella",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-17",
+      "projected_end": "2026-09-20",
+      "location_hint": "26 STREET",
+      "borough": "Queens",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "feast-st-padre-pio",
+      "canonical_name": "Feast of St. Padre Pio",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-26",
+      "projected_end": "2026-09-26",
+      "location_hint": "LORIMER STREET",
+      "borough": "Brooklyn",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "feast-st-anthony-soho",
+      "canonical_name": "Feast of St. Anthony (SoHo)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-04",
+      "projected_end": "2026-06-14",
+      "location_hint": "SULLIVAN STREET",
+      "borough": "Manhattan",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "giglio-sant-antonio",
+      "canonical_name": "Giglio di Sant' Antonio Feast",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-10",
+      "projected_end": "2026-06-14",
+      "location_hint": "20 AVENUE",
+      "borough": "Queens",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "mount-carmel-rosebank",
+      "canonical_name": "Feast of Our Lady of Mount Carmel (Rosebank)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-15",
+      "projected_end": "2026-07-19",
+      "location_hint": "AMITY STREET",
+      "borough": "Staten Island",
+      "source": "google_studio_projected",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "948699",
+        "event_name": "Feast of Our Lady of Mount Carmel",
+        "event_type": "Religious Event",
+        "start_date_time": "2026-07-12T13:00:00.000",
+        "end_date_time": "2026-07-12T15:30:00.000",
+        "event_borough": "Staten Island",
+        "event_location": "BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE,  WESTWOOD AVENUE between GRAVES STREET and BRADLEY AVENUE,  BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE,  GRAVES STREET between WESTWOOD AVENUE and HOLDEN BOULEVARD,  HOLDEN BOULEVARD between GRAVES STREET and BRADLEY AVENUE",
+        "span_days": 1
+      },
+      "notes": []
+    },
+    {
+      "key": "atlantic-antic",
+      "canonical_name": "Atlantic Antic Street Festival",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "913221",
+      "projected_start": "2026-09-27",
+      "projected_end": "2026-09-27",
+      "location_hint": "ATLANTIC AVENUE",
+      "borough": "Brooklyn",
+      "source": "google_studio_projected",
+      "match_status": "permit_id_mismatch",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "913221",
+        "event_name": "MUTS- Alexander Hamilton Playground",
+        "event_type": "Special Event",
+        "start_date_time": "2026-08-01T18:30:00.000",
+        "end_date_time": "2026-08-01T22:30:00.000",
+        "event_borough": "Manhattan",
+        "event_location": "Alexander Hamilton Playground: Basketball-01",
+        "span_days": 1
+      },
+      "notes": [
+        "Claimed permit ID exists in raw snapshot but title does not match this feast/fair."
+      ]
+    },
+    {
+      "key": "ninth-avenue-food-festival",
+      "canonical_name": "Ninth Avenue International Food Festival",
+      "event_kind": "food_festival",
+      "map_emoji": "🍽️",
+      "typical_multi_day": true,
+      "claimed_permit_id": null,
+      "projected_start": "2026-05-16",
+      "projected_end": "2026-05-17",
+      "location_hint": "9 AVENUE",
+      "borough": "Manhattan",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "washington-square-fair",
+      "canonical_name": "Washington Square Fair",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "911675",
+      "projected_start": "2026-09-06",
+      "projected_end": "2026-09-06",
+      "location_hint": "WAVERLY PLACE",
+      "borough": "Manhattan",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "columbus-avenue-festival",
+      "canonical_name": "Columbus Avenue Festival",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "914582",
+      "projected_start": "2026-10-11",
+      "projected_end": "2026-10-11",
+      "location_hint": "COLUMBUS AVENUE",
+      "borough": "Manhattan",
+      "source": "google_studio_projected",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "922552",
+        "event_name": "Fall Festival",
+        "event_type": "Special Event",
+        "start_date_time": "2026-10-03T13:00:00.000",
+        "end_date_time": "2026-10-03T16:00:00.000",
+        "event_borough": "Queens",
+        "event_location": "Fort Totten Park: Parade Ground",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
+      "key": "lexington-avenue-summerfest",
+      "canonical_name": "Lexington Avenue Summerfest",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "915882",
+      "projected_start": "2026-08-16",
+      "projected_end": "2026-08-16",
+      "location_hint": "LEXINGTON AVENUE",
+      "borough": "Manhattan",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "brazilian-day-festival",
+      "canonical_name": "Brazilian Day Festival",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-06",
+      "projected_end": "2026-09-06",
+      "location_hint": "6 AVENUE",
+      "borough": "Manhattan",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "bastille-day-60th-street",
+      "canonical_name": "Bastille Day on 60th Street",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-12",
+      "projected_end": "2026-07-12",
+      "location_hint": "EAST 60 STREET",
+      "borough": "Manhattan",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "winter-village-bryant-park",
+      "canonical_name": "Winter Village at Bryant Park",
+      "event_kind": "holiday_market",
+      "map_emoji": "🎄",
+      "typical_multi_day": true,
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-30",
+      "projected_end": "2027-01-03",
+      "location_hint": "BRYANT PARK",
+      "borough": "Manhattan",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "union-square-holiday-market",
+      "canonical_name": "Union Square Holiday Market",
+      "event_kind": "holiday_market",
+      "map_emoji": "🎄",
+      "typical_multi_day": true,
+      "claimed_permit_id": null,
+      "projected_start": "2026-11-19",
+      "projected_end": "2026-12-24",
+      "location_hint": "UNION SQUARE",
+      "borough": "Manhattan",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "village-halloween-festival",
+      "canonical_name": "Village Halloween Festival & Street Closure",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎃",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-31",
+      "projected_end": "2026-10-31",
+      "location_hint": "6 AVENUE",
+      "borough": "Manhattan",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "dyker-heights-christmas-lights",
+      "canonical_name": "Dyker Heights Christmas Lights",
+      "event_kind": "holiday_market",
+      "map_emoji": "🎄",
+      "typical_multi_day": true,
+      "claimed_permit_id": null,
+      "projected_start": "2026-11-27",
+      "projected_end": "2026-12-31",
+      "location_hint": "DYKER HEIGHTS",
+      "borough": "Brooklyn",
+      "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    }
+  ]
+}
