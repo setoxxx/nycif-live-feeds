@@ -227,7 +227,9 @@
   }
 
   function suppressServiceWorkerForPreview() {
-    if (!previewExportMode() || !('serviceWorker' in navigator)) return;
+    if (!previewExportMode() || typeof navigator === 'undefined' || !('serviceWorker' in navigator)) {
+      return;
+    }
     try {
       navigator.serviceWorker.register = async function blockedServiceWorkerRegister() {
         return {
