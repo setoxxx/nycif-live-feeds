@@ -1,10 +1,84 @@
 /* NYCIF public map polish v01 */
+body.public-map-page .brand-header-row {
+  position: absolute;
+  z-index: 790;
+  top: calc(env(safe-area-inset-top, 0px) + 8px);
+  left: calc(env(safe-area-inset-left, 0px) + 8px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: min(420px, calc(100vw - 120px));
+}
+
+body.public-map-page .brand-header-row .brand-card {
+  position: static;
+  top: auto;
+  left: auto;
+  transform: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: none;
+}
+
 body.public-map-page .brand-card {
   max-width: min(360px, calc(100vw - 98px));
 }
 
 body.public-map-page .brand-card strong::after {
   content: " Event Map";
+}
+
+/* Upper-right control stack: Filters, GPS, Bug, then Near Me. */
+body.public-map-page .map-controls {
+  position: absolute;
+  z-index: 800;
+  top: calc(env(safe-area-inset-top, 0px) + 8px);
+  right: calc(env(safe-area-inset-right, 0px) + 8px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+body.public-map-page .map-controls .pill,
+body.public-map-page .map-controls .near-me-btn,
+body.public-map-page .map-controls .locate-btn,
+body.public-map-page .map-controls .bug-btn {
+  position: static;
+}
+
+body.public-map-page .near-me-btn {
+  min-height: 31px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0 11px;
+  background: rgba(255, 255, 255, .94);
+  color: #44546b;
+  font-size: 11px;
+  font-weight: 900;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .22);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+}
+
+body.public-map-page .bug-btn {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .94);
+  color: #44546b;
+  font-size: 16px;
+  line-height: 1;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .22);
+  cursor: pointer;
+}
+
+body.public-map-page .layers-panel {
+  top: auto;
+  left: auto;
+  right: calc(env(safe-area-inset-right, 0px) + 8px);
+  inset-block-start: calc(env(safe-area-inset-top, 0px) + 176px);
 }
 
 body.public-map-page .panel-label {
