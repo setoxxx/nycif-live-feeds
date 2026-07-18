@@ -1,0 +1,335 @@
+{
+  "artifact_type": "supplemental_discovery_merge_readiness_report",
+  "baseline": {
+    "approved_discovery_categories": {
+      "arts": 261,
+      "civic": 218,
+      "education": 252,
+      "environment": 3,
+      "family": 1854,
+      "fitness": 217,
+      "government": 1,
+      "housing": 20,
+      "jobs": 1,
+      "market": 547,
+      "media": 15,
+      "parks": 3815,
+      "services": 31,
+      "sports": 23308,
+      "tours": 15,
+      "volunteer": 161
+    },
+    "approved_discovery_total": 30719,
+    "approved_manifest_path": "data/schema-v1-discovery/approved/manifest.json"
+  },
+  "errors": [],
+  "generated_at_utc": "2026-07-18T18:58:20.312578+00:00",
+  "long_island_note": "Long Island expansion is out of scope for M11; NYC five-borough supplemental only.",
+  "merge_authorized": false,
+  "next_required_step": "Human authorization to merge approved supplemental into schema-v1-discovery approved pages (feeds=main). Until then, preview at supplemental-export-preview only.",
+  "phase": "m11_supplemental_discovery_merge_prep",
+  "projected_after_merge": {
+    "approved_discovery_total": 32536,
+    "duplicates_skipped": 1675,
+    "net_new_events": 1817
+  },
+  "qa_pass": true,
+  "safety": {
+    "location_cache_modified": false,
+    "production_feed": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "schema_v1_discovery_modified": false,
+    "staged_feed_modified": false
+  },
+  "supplemental_export": {
+    "already_in_approved_discovery": 1675,
+    "borough_counts": {
+      "Bk": 532,
+      "Bx": 600,
+      "Mn": 1004,
+      "Other": 40,
+      "Qn": 816,
+      "SI": 500
+    },
+    "export_event_count": 3492,
+    "intake_counts": {
+      "calendar_only": 2124,
+      "parks_only": 1368
+    },
+    "missing_coords": 0,
+    "net_new_to_merge": 1817,
+    "path": "data/supplemental_approved_export_feed.json",
+    "sample_already_present": [
+      {
+        "date": "2026-07-16",
+        "overlap_key": "it s my park at leif ericson park|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1047976",
+        "title": "It's My Park at Leif Ericson Park"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "it s my park at sunset park|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1048296",
+        "title": "It's My Park at Sunset Park"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "40 in focus summerstage through the lens of photographer jack vartoogian|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1051996",
+        "title": "40 in Focus: SummerStage through the Lens of Photographer Jack Vartoogian"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "it s my park at peter detmold park|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1048036",
+        "title": "It's My Park at Peter Detmold Park"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "session 1 van cortlandt pool parent and tots learn to swim class a|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1101036",
+        "title": "Session 1: Van Cortlandt Pool - Parent and Tots Learn to Swim (Class A)"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "it s my park at hunter s point south park|2026-07-16",
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2183891",
+        "title": "It's My Park at Hunter's Point South Park"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "kids in motion addabbo playground|2026-07-16",
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2206940",
+        "title": "Kids In Motion: Addabbo Playground"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "kids in motion alley springfield playground|2026-07-16",
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2207217",
+        "title": "Kids In Motion: Alley Springfield Playground"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "kids in motion arrochar|2026-07-16",
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2172730",
+        "title": "Kids In Motion: Arrochar"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "kids in motion austin j mcdonald s playground|2026-07-16",
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2175827",
+        "title": "Kids In Motion: Austin J. McDonald's Playground"
+      }
+    ],
+    "sample_net_new": [
+      {
+        "date": "2026-07-16",
+        "overlap_key": "astoria pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1053836",
+        "title": "Astoria Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "claremont pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1058816",
+        "title": "Claremont Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "faber pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1060816",
+        "title": "Faber Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "gottesman pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1063116",
+        "title": "Gottesman Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "hamilton fish pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1063676",
+        "title": "Hamilton Fish Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "kosciuszko pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1084596",
+        "title": "Kosciuszko Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "liberty pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1085656",
+        "title": "Liberty Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "lyons pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1086836",
+        "title": "Lyons Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "mccarren pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1087636",
+        "title": "McCarren Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "van cortlandt pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1111856",
+        "title": "Van Cortlandt Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "alfred e smith recreation center summer camp extended day|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1052496",
+        "title": "Alfred E. Smith Recreation Center Summer Camp Extended Day"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "total body fitness|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1110696",
+        "title": "Total Body Fitness"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "alfred e smith recreation center summer camp regular day|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1052476",
+        "title": "Alfred E. Smith Recreation Center Summer Camp Regular Day"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "kim nostrand playground|2026-07-16",
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2184192",
+        "title": "KIM : Nostrand Playground"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "kim rev dr maggie howard|2026-07-16",
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2172727",
+        "title": "KIM: Rev. Dr. Maggie Howard"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "kim st john s park|2026-07-16",
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2184333",
+        "title": "KIM: St. John's park"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "liberty pool swim team training|2026-07-16",
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2188382",
+        "title": "Liberty Pool: Swim Team Training"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "queens recreation summer sports experience|2026-07-16",
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2208615",
+        "title": "Queens Recreation Summer Sports Experience"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "kim nostrand playground|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1083056",
+        "title": "KIM : Nostrand Playground"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "kim rev dr maggie howard|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1083636",
+        "title": "KIM: Rev. Dr. Maggie Howard"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "kim st john s park|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1084036",
+        "title": "KIM: St. John's park"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "liberty pool swim team training|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1085776",
+        "title": "Liberty Pool: Swim Team Training"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "morning gardening thursday at shoelace park|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1088156",
+        "title": "Morning Gardening Thursday at Shoelace Park"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "queens recreation summer sports experience|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1094076",
+        "title": "Queens Recreation Summer Sports Experience"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "summer sport experience basketball skills and drills|2026-07-16",
+        "source_dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2177838",
+        "title": "Summer Sport Experience: Basketball: Skills and Drills"
+      }
+    ]
+  },
+  "upstream_gates": {
+    "approval_queue_pending": 0,
+    "approved_export_report": {
+      "artifact_type": "supplemental_approved_export_feed_report",
+      "path": "data/reports/supplemental_approved_export_feed_report.json",
+      "present": true,
+      "qa_pass": true
+    },
+    "manual_approval_validation": {
+      "artifact_type": null,
+      "path": "data/supplemental_manual_approval_validation_report.json",
+      "present": true,
+      "qa_pass": true
+    },
+    "overlap_coord_conflict_audit": {
+      "artifact_type": "supplemental_overlap_key_coord_conflict_audit_report",
+      "path": "data/reports/supplemental_overlap_key_coord_conflict_audit_report.json",
+      "present": true,
+      "qa_pass": true
+    },
+    "phase2e_dry_run_blocked": 0
+  }
+}

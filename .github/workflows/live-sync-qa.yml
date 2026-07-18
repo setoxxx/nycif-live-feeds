@@ -140,6 +140,12 @@ jobs:
           python3 scripts/build_supplemental_press_geofence_staging.py
           python3 scripts/publish_supplemental_approved_export_feed.py
 
+      - name: Audit supplemental overlap-key coord conflicts (M11)
+        run: python3 scripts/audit_supplemental_overlap_key_coord_conflicts.py
+
+      - name: Prepare supplemental discovery merge readiness (M11)
+        run: python3 scripts/prepare_supplemental_discovery_merge.py
+
       - name: Supplemental Phase 2E promotion dry-run (M11)
         run: python3 scripts/dry_run_supplemental_phase2e_promotion.py
 
