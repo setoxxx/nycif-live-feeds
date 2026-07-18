@@ -68,7 +68,7 @@ class BulkImportFeastFestivalSeedTests(unittest.TestCase):
         self.assertTrue(report_path.exists(), "Run bulk_import_feast_festival_seed.py first")
         report = json.loads(report_path.read_text(encoding="utf-8"))
         self.assertTrue(report["qa_pass"])
-        self.assertGreaterEqual(report["seed_after"], 160)
+        self.assertGreaterEqual(report["seed_after"], 175)
 
     def test_dry_run_merge_via_temp_files(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
