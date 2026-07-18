@@ -24,11 +24,13 @@
     <section class="map-shell" aria-label="NYC In Focus public event map">
       <div id="map" class="map" role="application" aria-label="NYC event map"></div>
 
-      <div class="brand-card" aria-label="NYC In Focus Event Map status">
-        <div class="brand-mark">NYCIF</div>
-        <div>
-          <strong>NYC</strong>
-          <span id="brandCount">Loading NYC events…</span>
+      <div class="brand-header-row" aria-label="NYC In Focus header">
+        <div class="brand-card" aria-label="NYC In Focus Event Map status">
+          <div class="brand-mark">NYCIF</div>
+          <div>
+            <strong>NYC</strong>
+            <span id="brandCount">Loading NYC events…</span>
+          </div>
         </div>
       </div>
 
@@ -41,9 +43,9 @@
         <button id="layersBtn" class="pill layers-pill" type="button" aria-expanded="false" aria-controls="layersPanel">
           <span>☰</span><b>Filters</b>
         </button>
-        <button id="nearMeBtn" class="near-me-btn" type="button" aria-label="Sort events near me" title="Near me">Near Me</button>
         <button id="locateBtn" class="locate-btn" type="button" aria-label="Show my location" title="Show my location">⌖</button>
         <button id="bugBtn" class="bug-btn" type="button" aria-label="Report a problem" title="Report a problem">🐞</button>
+        <button id="nearMeBtn" class="near-me-btn" type="button" aria-label="Sort events near me" title="Near me">Near Me</button>
       </div>
 
       <aside id="layersPanel" class="layers-panel" aria-label="Choose what to show" hidden>
@@ -145,7 +147,7 @@
   <script src="./public-approved-overlays-v01.js?v=public-map-v07"></script>
   <script src="./field-desk-operator-layer-v01.js?v=public-map-v07"></script>
   <script src="./admin-whats-new-v01.js?v=public-map-v07"></script>
-  <script src="./nycif-tip-jar-v01.js?v=03"></script>
+  <script src="./nycif-tip-jar-v01.js?v=04"></script>
   <script>
     (function () {
       var btn = document.getElementById("explore-more-toggle");

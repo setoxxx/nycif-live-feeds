@@ -1,10 +1,84 @@
 /* NYCIF public map polish v01 */
+body.public-map-page .brand-header-row {
+  position: absolute;
+  z-index: 790;
+  top: calc(env(safe-area-inset-top, 0px) + 8px);
+  left: calc(env(safe-area-inset-left, 0px) + 8px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: min(420px, calc(100vw - 120px));
+}
+
+body.public-map-page .brand-header-row .brand-card {
+  position: static;
+  top: auto;
+  left: auto;
+  transform: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: none;
+}
+
 body.public-map-page .brand-card {
   max-width: min(360px, calc(100vw - 98px));
 }
 
 body.public-map-page .brand-card strong::after {
   content: " Event Map";
+}
+
+/* Upper-right control stack: Filters, GPS, Bug, then Near Me. */
+body.public-map-page .map-controls {
+  position: absolute;
+  z-index: 800;
+  top: calc(env(safe-area-inset-top, 0px) + 8px);
+  right: calc(env(safe-area-inset-right, 0px) + 8px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+body.public-map-page .map-controls .pill,
+body.public-map-page .map-controls .near-me-btn,
+body.public-map-page .map-controls .locate-btn,
+body.public-map-page .map-controls .bug-btn {
+  position: static;
+}
+
+body.public-map-page .near-me-btn {
+  min-height: 31px;
+  border: 0;
+  border-radius: 999px;
+  padding: 0 11px;
+  background: rgba(255, 255, 255, .94);
+  color: #44546b;
+  font-size: 11px;
+  font-weight: 900;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .22);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+}
+
+body.public-map-page .bug-btn {
+  width: 34px;
+  height: 34px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .94);
+  color: #44546b;
+  font-size: 16px;
+  line-height: 1;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .22);
+  cursor: pointer;
+}
+
+body.public-map-page .layers-panel {
+  top: auto;
+  left: auto;
+  right: calc(env(safe-area-inset-right, 0px) + 8px);
+  inset-block-start: calc(env(safe-area-inset-top, 0px) + 176px);
 }
 
 body.public-map-page .panel-label {
@@ -408,6 +482,106 @@ body.public-map-page .nycif-event-popup .leaflet-popup-close-button {
   font-size: 21px;
   font-weight: 400;
   line-height: 27px;
+}
+
+body.public-map-page .nycif-event-popup .nycif-popup-back {
+  position: absolute;
+  top: 9px;
+  right: 44px;
+  width: 30px;
+  height: 30px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(118, 118, 128, .12);
+  color: #636366;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  cursor: pointer;
+}
+
+body.public-map-page .nycif-event-popup .nycif-popup-back svg {
+  width: 18px;
+  height: 18px;
+}
+
+body.public-map-page .marker--stacked {
+  margin-bottom: 4px;
+}
+
+body.public-map-page .marker .stack-dots {
+  position: absolute;
+  left: 50%;
+  bottom: -9px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+}
+
+body.public-map-page .marker .stack-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: #111827;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .85);
+}
+
+body.public-map-page .marker .stack-more {
+  font: 800 8px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #111827;
+}
+
+body.public-map-page .popup-card--picker .popup-picker-label {
+  margin: 0 0 4px;
+  color: #636366;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+
+body.public-map-page .popup-card--picker h2 {
+  margin-top: 0;
+}
+
+body.public-map-page .popup-stack-grid {
+  display: grid;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+body.public-map-page .popup-stack-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid rgba(17, 24, 39, .08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, .72);
+  color: #1d1d1f;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+}
+
+body.public-map-page .popup-stack-item:hover {
+  background: rgba(0, 110, 230, .08);
+  border-color: rgba(0, 110, 230, .22);
+}
+
+body.public-map-page .popup-stack-emoji {
+  flex: 0 0 28px;
+  font-size: 22px;
+  line-height: 1;
+}
+
+body.public-map-page .popup-stack-title {
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1.2;
 }
 
 @media (max-width: 500px) {

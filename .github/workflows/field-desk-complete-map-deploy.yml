@@ -43,7 +43,10 @@ jobs:
           cp "$MAP_SRC/schema-v1-major-all-v01/app-schema-v1-major-all-v01.js" ./app-schema-v1-major-all-v01.js
           cp "$MAP_SRC/discovery-taxonomy-v02/discovery-patch-v02.js" ./discovery-patch-v02.js
           cp "$MAP_SRC/schema-v1-major-all-v01/index.html" ./index.html
+          cp "$MAP_SRC/schema-v1-major-all-v01/public-map-v01.css" ./public-map-v01.css
           cp "$MAP_SRC/shared/nycif-tip-jar-v01.js" ./nycif-tip-jar-v01.js
+          mkdir -p ./tools/public-map
+          cp "$MAP_SRC/schema-v1-major-all-v01/public-map-ui.test.mjs" ./tools/public-map/public-map-ui.test.mjs
 
           cp "$ADMIN_SRC/index.html" ./admin/index.html
           cp "$ADMIN_SRC/live-pipeline-panel-v02.js" ./admin/live-pipeline-panel-v02.js
@@ -59,9 +62,13 @@ jobs:
           grep -q 'data-cat="media"' index.html
           grep -q admin-whats-new-v01.js index.html
           grep -q nycif-tip-jar-v01.js index.html
+          grep -q 'nycif-tip-jar-v01.js?v=04' index.html
+          grep -q brand-header-row index.html
+          grep -q brand-header-row public-map-v01.css
           node --check app-schema-v1-major-all-v01.js
           node --check discovery-patch-v02.js
           node --check nycif-tip-jar-v01.js
+          node --test tools/public-map/public-map-ui.test.mjs
 
           grep -q discovery-godview-panel-v02 admin/index.html
           grep -q live-pipeline-panel-v02 admin/index.html
@@ -76,7 +83,9 @@ jobs:
             app-schema-v1-major-all-v01.js \
             discovery-patch-v02.js \
             index.html \
+            public-map-v01.css \
             nycif-tip-jar-v01.js \
+            tools/public-map/public-map-ui.test.mjs \
             admin/index.html \
             admin/live-pipeline-panel-v02.js \
             admin/discovery-godview-panel-v02.js \
@@ -87,5 +96,5 @@ jobs:
             echo "Field-desk already has canonical map + admin runtime."
             exit 0
           fi
-          git commit -m "Ship Admin God View handshake: v02 panels + God View project control"
+          git commit -m "Deploy tip jar header layout, stacked event picker, and map chrome fixes"
           git push origin main
