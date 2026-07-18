@@ -15,6 +15,7 @@ Production /map/ page (IMPORTANT)
 Package contents (verify before upload)
 - nycif-events-map.php
 - block.json
+- editor.js + editor.asset.php
 - readme.txt
 - README.md
 - RECOVERY-MANIFEST.json
@@ -39,7 +40,7 @@ What changed from 1.4.0-rc1
 - RETIRED: discovery-taxonomy-v03 runtime token
 - RETIRED: commit SHA feed pins
 - NEW: feeds=main and public-map-v10 allowlists
-- NEW: block.json for dynamic block registration
+- NEW: block.json plus WordPress 5.8-compatible editor registration for the dynamic block
 
 Shortcode
   [nycif_events_map]
