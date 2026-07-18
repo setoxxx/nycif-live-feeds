@@ -1,12 +1,12 @@
 # Discovery taxonomy v02
 
-Generated: `2026-07-17T11:57:37Z`
+Generated: `2026-07-18T11:36:43Z`
 
 - Accepted canonical records: **37280**
 - Invalid/rejected documented: **0**
-- Standalone public events: **35559**
+- Standalone public events: **36594**
 - Grouped supporting records: **5**
-- List-only: **1660**
+- List-only: **625**
 - Categories: `{'parks': 5966, 'civic': 232, 'market': 656, 'sports': 27036, 'fitness': 590, 'education': 276, 'family': 1900, 'arts': 287, 'volunteer': 165, 'media': 28, 'services': 31, 'environment': 4, 'housing': 27, 'general': 64, 'tours': 15, 'government': 1, 'jobs': 2}`
 - Interests: `{'parks': 8713, 'market': 834, 'civic': 232, 'sports': 27036, 'fitness': 590, 'education': 1171, 'family': 2025, 'arts': 287, 'volunteer': 165, 'media': 28, 'services': 31, 'environment': 32, 'housing': 27, 'general': 64, 'tours': 15, 'government': 1, 'jobs': 2}`
 
