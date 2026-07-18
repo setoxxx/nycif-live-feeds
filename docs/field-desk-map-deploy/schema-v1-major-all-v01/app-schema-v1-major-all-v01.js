@@ -1864,6 +1864,12 @@
     els.closeDeskBtn?.addEventListener('click', () => setDesk(false));
     els.locateBtn?.addEventListener('click', () => locateUser());
     els.nearMeBtn?.addEventListener('click', () => locateUser({ sortNear: true }));
+    window.addEventListener('nycif:display-mode', (event) => {
+      if (event.detail?.mobile) {
+        setDesk(false);
+        setLayers(false);
+      }
+    });
     els.bugBtn?.addEventListener('click', () => {
       window.location.href = bugReportMailto();
     });

@@ -1,4 +1,14 @@
-/* NYCIF public map polish v01 */
+/* NYCIF public map polish v01 — mobile/desktop layout via public-display-mode-v01.js */
+html[data-nycif-display="mobile"] body.public-map-page,
+body.public-map-page.nycif-display-mobile {
+  /* Mobile-first compact shell; detailed rules in @media block below. */
+}
+
+html[data-nycif-display="desktop"] body.public-map-page,
+body.public-map-page.nycif-display-desktop {
+  /* Fullscreen desktop map shell; week strip centered, intro visible. */
+}
+
 body.public-map-page .brand-header-row {
   position: absolute;
   z-index: 790;

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nycif-rc-public-map-v09';
+const CACHE_NAME = 'nycif-rc-public-map-v10';
 const APP_SHELL = [
   './',
   './index.html',
@@ -6,6 +6,7 @@ const APP_SHELL = [
   './fielddesk-v02.css',
   './weekstrip-v06-safe.css',
   './public-map-v01.css',
+  './public-display-mode-v01.js',
   './public-approved-overlays-capture-v01.js',
   './public-map-defaults-v01.js',
   './discovery-patch-v02.js',
@@ -19,7 +20,7 @@ const APP_SHELL = [
   './service-worker.js',
 ];
 
-const NETWORK_FIRST_RE = /\/(?:index\.html|discovery-patch-v02\.js|public-map-defaults-v01\.js|service-worker\.js|public-approved-overlays-v01\.js|public-approved-overlays-capture-v01\.js|app-schema-v1-major-all-v01\.js|event-feed-schema-v1\.js|field-desk-operator-layer-v01\.js|news-desk-editors-picks-v01\.js|nycif-tip-jar-v01\.js)$/;
+const NETWORK_FIRST_RE = /\/(?:index\.html|discovery-patch-v02\.js|public-map-defaults-v01\.js|public-display-mode-v01\.js|service-worker\.js|public-approved-overlays-v01\.js|public-approved-overlays-capture-v01\.js|app-schema-v1-major-all-v01\.js|event-feed-schema-v1\.js|field-desk-operator-layer-v01\.js|news-desk-editors-picks-v01\.js|nycif-tip-jar-v01\.js)$/;
 
 function isNetworkFirst(url) {
   return (url.origin === location.origin && NETWORK_FIRST_RE.test(url.pathname))

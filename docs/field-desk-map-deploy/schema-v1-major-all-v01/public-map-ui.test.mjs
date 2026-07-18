@@ -22,7 +22,7 @@ const publicMapCss = readFileSync(join(repoRoot, 'public-map-v01.css'), 'utf8');
 
 test('production index mounts tip jar beside the NYCIF brand header', () => {
   assert.match(indexHtml, /brand-header-row/);
-  assert.match(indexHtml, /public-map-v09/);
+  assert.match(indexHtml, /public-map-v10/);
   assert.match(indexHtml, /nycif-tip-jar-v01\.js\?v=06/);
 });
 
@@ -56,6 +56,16 @@ test('public map css anchors brand header left and stacks right controls', () =>
   assert.match(publicMapCss, /Filters, GPS, Bug, then Near Me/);
   assert.match(publicMapCss, /max-width: 720px/);
   assert.match(publicMapCss, /#nearMeBtn/);
+});
+
+test('display mode script sets mobile/desktop classes at 720px breakpoint', () => {
+  assert.match(indexHtml, /public-display-mode-v01\.js/);
+  const displayModeJs = readFileSync(join(repoRoot, 'public-display-mode-v01.js'), 'utf8');
+  assert.match(displayModeJs, /max-width: 720px/);
+  assert.match(displayModeJs, /dataset\.nycifDisplay/);
+  assert.match(displayModeJs, /nycif:display-mode/);
+  assert.match(displayModeJs, /NYCIF_DISPLAY_MODE/);
+  assert.match(appJs, /nycif:display-mode/);
 });
 
 test('filters panel exposes news assignments and readable overlay disclaimer', () => {
