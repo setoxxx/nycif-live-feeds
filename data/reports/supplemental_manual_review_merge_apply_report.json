@@ -1,0 +1,45 @@
+{
+  "artifact_type": "supplemental_manual_review_merge_apply_report",
+  "generated_at_utc": "2026-07-18T00:39:55.740539+00:00",
+  "phase": "m11_supplemental_manual_review_merge_apply",
+  "qa_pass": true,
+  "promotion_performed": false,
+  "decisions_source": "data/supplemental_manual_review_merge_decisions.json",
+  "merges_applied": 3,
+  "rows_rejected": 3,
+  "rows_kept": 3,
+  "decisions": [
+    {
+      "title": "Invasive Species Removal",
+      "date": "2026-07-18",
+      "action": "merge",
+      "kept_source_event_id": "1050736",
+      "rejected_source_event_id": "2184048"
+    },
+    {
+      "title": "Inwood Canoe Club Sunday Open House",
+      "date": "2026-07-19",
+      "action": "merge",
+      "kept_source_event_id": "2190856",
+      "rejected_source_event_id": "1050856"
+    },
+    {
+      "title": "Waterfront Workouts: Amp'd Bootcamp",
+      "date": "2026-07-22",
+      "action": "merge",
+      "kept_source_event_id": "2170520",
+      "rejected_source_event_id": "1112476"
+    }
+  ],
+  "export_event_count": 3493,
+  "unique_overlap_key_count": 2406,
+  "remaining_coord_conflict_pair_count": 0,
+  "safety": {
+    "production_feed": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "location_cache_modified": false,
+    "staged_feed_modified": false
+  },
+  "next_required_step": "Merge PR and redeploy field-desk preview. Phase 2E promotion still requires explicit authorization."
+}

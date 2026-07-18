@@ -1,0 +1,555 @@
+{
+  "action_counts": {
+    "hold_manual_review": 6,
+    "reject_duplicate": 70,
+    "rekey": 10
+  },
+  "actions_applied": 86,
+  "applied": [
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "7 17 restoration fridays at highland park|2026-07-17",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1052076"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "7 25 vernal pond restoration at highland park|2026-07-25",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1052136"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "basketball clinic at highbridge recreation center ages 5 to 7|2026-07-18",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1054016"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "basketball clinic at highbridge recreation center ages 5 to 7|2026-07-25",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1054056"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "basketball clinic at highbridge recreation center ages 8 to 12|2026-07-18",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "2200212"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "basketball clinic at highbridge recreation center ages 8 to 12|2026-07-25",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "2200258"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "bootcamp|2026-07-16",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1055516"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "bootcamp|2026-07-23",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1055536"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "cardio circuit blast|2026-07-17",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "2151675"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "cardio circuit blast|2026-07-24",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "2151666"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "cardio dance|2026-07-21",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1056816"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "celebrate shorebirds|2026-07-25",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "2195680"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "chair yoga|2026-07-18",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1057796"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "chair yoga|2026-07-25",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1057856"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "dance fitness|2026-07-16",
+      "recommendation": "dedupe_keep_higher_confidence",
+      "source_event_id": "1059356"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "dance fitness|2026-07-23",
+      "recommendation": "dedupe_keep_higher_confidence",
+      "source_event_id": "1059396"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "historic new york the highbridge water tower|2026-07-26",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "2179071"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "hula hoop aerobics|2026-07-18",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1050436"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "hula hoop aerobics|2026-07-25",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1050456"
+    },
+    {
+      "action": "hold_manual_review",
+      "overlap_key": "invasive species removal|2026-07-18",
+      "source_event_id": "1050736"
+    },
+    {
+      "action": "hold_manual_review",
+      "overlap_key": "invasive species removal|2026-07-18",
+      "source_event_id": "2184048"
+    },
+    {
+      "action": "hold_manual_review",
+      "overlap_key": "inwood canoe club sunday open house|2026-07-19",
+      "source_event_id": "1050856"
+    },
+    {
+      "action": "hold_manual_review",
+      "overlap_key": "inwood canoe club sunday open house|2026-07-19",
+      "source_event_id": "2190856"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "july book swap and upcycle paper craft|2026-07-24",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "2190733"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion lower highland playground|2026-07-16",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1074036"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion lower highland playground|2026-07-17",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1074056"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion lower highland playground|2026-07-18",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1074076"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion lower highland playground|2026-07-21",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1073696"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion lower highland playground|2026-07-22",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1073716"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion lower highland playground|2026-07-23",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1073736"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion lower highland playground|2026-07-24",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1073756"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion lower highland playground|2026-07-25",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1073776"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion st mary s park west|2026-07-16",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1080056"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion st mary s park west|2026-07-17",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1080076"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion st mary s park west|2026-07-18",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1080096"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion st mary s park west|2026-07-21",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1079716"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion st mary s park west|2026-07-22",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1079736"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion st mary s park west|2026-07-23",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1079756"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion st mary s park west|2026-07-24",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1079776"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion st mary s park west|2026-07-25",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1079796"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "kids in motion st mary s playground west color me tote bag|2026-07-22",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "2180758"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "movies under the stars a minecraft movie|2026-07-25",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "2200368"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "nature trivia disc golfering your park|2026-07-19",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "2176410"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "nyrr open run highland park|2026-07-18",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "2097674"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "nyrr open run highland park|2026-07-25",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "2097675"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "rise restore circuit training|2026-07-18",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1094516"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "rise restore circuit training|2026-07-25",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1094536"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "soundview park microplastics workshop with new york sea grant|2026-07-18",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "1104816"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sport experience pickleball|2026-07-18",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1108276"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sport experience pickleball|2026-07-19",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1108296"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sport experience pickleball|2026-07-25",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1108316"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sport experience pickleball|2026-07-26",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1108336"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sports experience basketball|2026-07-18",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1108656"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sports experience basketball|2026-07-19",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1108696"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sports experience basketball|2026-07-25",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1108736"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sports experience basketball|2026-07-26",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1108456"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sports experience pickleball|2026-07-16",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1109296"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sports experience pickleball|2026-07-17",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1109316"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sports experience pickleball|2026-07-20",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1109336"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sports experience pickleball|2026-07-21",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1108956"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sports experience pickleball|2026-07-22",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1108976"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sports experience pickleball|2026-07-23",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1108996"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sports experience pickleball|2026-07-24",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1109016"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sports experience pickleball|2026-07-27",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1109036"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sports experience st mary s park game of zones girls basketball clinic|2026-07-18",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1109516"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "summer sports experience st mary s park game of zones girls basketball clinic|2026-07-25",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1109536"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "total body fitness|2026-07-22",
+      "recommendation": "dedupe_keep_higher_confidence",
+      "source_event_id": "1110356"
+    },
+    {
+      "action": "rekey",
+      "new_overlap_key": "trees count at st mary s park|2026-07-17|Bx|149th street and st ann s avenue",
+      "old_overlap_key": "trees count at st mary s park|2026-07-17",
+      "overlap_key": "trees count at st mary s park|2026-07-17",
+      "source_event_id": "1047556"
+    },
+    {
+      "action": "rekey",
+      "new_overlap_key": "trees count at st mary s park|2026-07-17|Bk|st mary s park",
+      "old_overlap_key": "trees count at st mary s park|2026-07-17",
+      "overlap_key": "trees count at st mary s park|2026-07-17",
+      "source_event_id": "2201629"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "ugh it s a bug|2026-07-24",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "2190736"
+    },
+    {
+      "action": "hold_manual_review",
+      "overlap_key": "waterfront workouts amp d bootcamp|2026-07-22",
+      "source_event_id": "1112476"
+    },
+    {
+      "action": "hold_manual_review",
+      "overlap_key": "waterfront workouts amp d bootcamp|2026-07-22",
+      "source_event_id": "2170520"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "west harlem summer jazz festival|2026-07-24",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "2174476"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-17",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "2195702"
+    },
+    {
+      "action": "rekey",
+      "new_overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-18|Bk|marine park",
+      "old_overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-18",
+      "overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-18",
+      "source_event_id": "1112976"
+    },
+    {
+      "action": "rekey",
+      "new_overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-18|Qn|meadow lake north",
+      "old_overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-18",
+      "overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-18",
+      "source_event_id": "2195703"
+    },
+    {
+      "action": "rekey",
+      "new_overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-19|SI|sand lane and father capadanno boulevard in franklin d roosevelt boardwalk and beach",
+      "old_overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-19",
+      "overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-19",
+      "source_event_id": "1113056"
+    },
+    {
+      "action": "rekey",
+      "new_overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-19|Qn|meadow lake north",
+      "old_overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-19",
+      "overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-19",
+      "source_event_id": "2195704"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-24",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "2195705"
+    },
+    {
+      "action": "rekey",
+      "new_overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-25|Bk|marine park",
+      "old_overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-25",
+      "overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-25",
+      "source_event_id": "1113296"
+    },
+    {
+      "action": "rekey",
+      "new_overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-25|Qn|meadow lake north",
+      "old_overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-25",
+      "overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-25",
+      "source_event_id": "2195706"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "wheel fun rentals celebrates america s 250th with patriotic led bike ride|2026-07-26",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "2195707"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "zumba|2026-07-21",
+      "recommendation": "dedupe_drop_bad_geocode",
+      "source_event_id": "1115096"
+    },
+    {
+      "action": "reject_duplicate",
+      "overlap_key": "zumba|2026-07-22",
+      "recommendation": "merge_dedupe_keep_better_geocode",
+      "source_event_id": "2151837"
+    },
+    {
+      "action": "rekey",
+      "new_overlap_key": "zumba|2026-07-25|Qn|gymnasium",
+      "old_overlap_key": "zumba|2026-07-25",
+      "overlap_key": "zumba|2026-07-25",
+      "source_event_id": "1115256"
+    },
+    {
+      "action": "rekey",
+      "new_overlap_key": "zumba|2026-07-25|SI|midland beach splash plaza",
+      "old_overlap_key": "zumba|2026-07-25",
+      "overlap_key": "zumba|2026-07-25",
+      "source_event_id": "2169466"
+    }
+  ],
+  "approval_queue_count": 3634,
+  "approval_queue_path": "data/supplemental_manual_approval_queue.json",
+  "approved_count": 3496,
+  "artifact_type": "supplemental_overlap_key_coord_conflict_apply_report",
+  "audit_report_path": "data/reports/supplemental_overlap_key_coord_conflict_audit_report.json",
+  "dry_run": false,
+  "findings_total": 78,
+  "generated_at_utc": "2026-07-18T00:30:28.689391+00:00",
+  "phase": "m11_supplemental_overlap_key_coord_conflict_apply",
+  "promotion_performed": false,
+  "qa_pass": true,
+  "rejected_count": 138,
+  "safety": {
+    "location_cache_modified": false,
+    "production_feed": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "staged_feed_modified": false
+  },
+  "status_counts": {
+    "approved": 3496,
+    "rejected": 138
+  },
+  "unmatched": [],
+  "unmatched_count": 0
+}

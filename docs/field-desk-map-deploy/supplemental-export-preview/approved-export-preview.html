@@ -113,7 +113,7 @@
 
     <section class="panel warn" aria-label="QA warning">
       <strong>QA warning:</strong>
-      These 3,566 approved supplemental events are exported for field-desk preview only.
+      These 3,493 approved supplemental events are exported for field-desk preview only.
       They are not merged into <code>nycif_staged_live_events.json</code>,
       <code>location_cache.json</code>, or the production public map.
     </section>
@@ -148,7 +148,7 @@
       api.bootStandaloneMap('map')
         .then(state => {
           const meta = state.feedMeta || {};
-          const expected = 3566;
+          const expected = 3493;
           const count = state.pins.length;
           document.getElementById('feedMeta').classList.remove('loading');
           document.getElementById('feedMeta').textContent =

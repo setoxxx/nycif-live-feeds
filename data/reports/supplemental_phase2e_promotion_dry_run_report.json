@@ -1,13 +1,13 @@
 {
   "all_rows_ready_for_promotion": true,
-  "approved_queue_count": 3566,
+  "approved_queue_count": 3496,
   "artifact_type": "supplemental_phase2e_promotion_dry_run_report",
   "blocked_samples": [],
   "dry_run_only": true,
-  "export_event_count": 3566,
-  "generated_at_utc": "2026-07-17T22:37:54.093922+00:00",
+  "export_event_count": 3496,
+  "generated_at_utc": "2026-07-18T00:30:52.547762+00:00",
   "issue_counts": {
-    "promotion_allowed_not_true": 3566
+    "promotion_allowed_not_true": 3496
   },
   "next_required_step": "Explicit Phase 2E authorization required before setting promotion_allowed=true or promoting supplemental rows to location_cache.json / public map.",
   "phase": "m11_supplemental_phase2e_promotion_dry_run",
@@ -27,7 +27,7 @@
     "blocked_pct": 0.0,
     "ready_all_gates_including_promotion_allowed": 0,
     "ready_if_authorized_pct": 100.0,
-    "would_pass_if_promotion_authorized": 3566
+    "would_pass_if_promotion_authorized": 3496
   },
   "validation_qa_pass": true,
   "validation_report_path": "data/supplemental_manual_approval_validation_report.json",
