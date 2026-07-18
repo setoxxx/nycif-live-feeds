@@ -46,9 +46,13 @@ jobs:
           cp "$MAP_SRC/discovery-taxonomy-v02/public-approved-overlays-v01.js" ./public-approved-overlays-v01.js
           cp "$MAP_SRC/schema-v1-major-all-v01/index.html" ./index.html
           cp "$MAP_SRC/schema-v1-major-all-v01/public-map-v01.css" ./public-map-v01.css
+          cp "$MAP_SRC/schema-v1-major-all-v01/service-worker.js" ./service-worker.js
           cp "$MAP_SRC/shared/nycif-tip-jar-v01.js" ./nycif-tip-jar-v01.js
           mkdir -p ./tools/public-map
           cp "$MAP_SRC/schema-v1-major-all-v01/public-map-ui.test.mjs" ./tools/public-map/public-map-ui.test.mjs
+
+          # Retire orphaned public-map runtimes from Pages root (desk.html still uses app-v06-safe.js).
+          rm -f ./staged-map-mode-v01.css
 
           cp "$ADMIN_SRC/index.html" ./admin/index.html
           cp "$ADMIN_SRC/live-pipeline-panel-v02.js" ./admin/live-pipeline-panel-v02.js
@@ -60,11 +64,11 @@ jobs:
           grep -q reviewManifest app-schema-v1-major-all-v01.js
           grep -q "schema-v1-discovery" discovery-patch-v02.js
           grep -q 'media: { emoji' discovery-patch-v02.js
-          grep -q public-map-v07 index.html
+          grep -q public-map-v08 index.html
           grep -q 'data-cat="media"' index.html
           grep -q admin-whats-new-v01.js index.html
           grep -q nycif-tip-jar-v01.js index.html
-          grep -q 'nycif-tip-jar-v01.js?v=04' index.html
+          grep -q 'nycif-tip-jar-v01.js?v=05' index.html
           grep -q brand-header-row index.html
           grep -q brand-header-row public-map-v01.css
           grep -q panel-sub-label index.html
@@ -72,6 +76,7 @@ jobs:
           node --check app-schema-v1-major-all-v01.js
           node --check discovery-patch-v02.js
           node --check nycif-tip-jar-v01.js
+          node --check service-worker.js
           node --check public-approved-overlays-v01.js
           node --test tools/public-map/public-map-ui.test.mjs
 
@@ -90,6 +95,7 @@ jobs:
             public-approved-overlays-v01.js \
             index.html \
             public-map-v01.css \
+            service-worker.js \
             nycif-tip-jar-v01.js \
             tools/public-map/public-map-ui.test.mjs \
             admin/index.html \
@@ -102,5 +108,5 @@ jobs:
             echo "Field-desk already has canonical map + admin runtime."
             exit 0
           fi
-          git commit -m "Deploy tip jar header layout, stacked event picker, and map chrome fixes"
+          git commit -m "Deploy RC public map v08: tip jar strobe, centered panel, legacy cleanup"
           git push origin main

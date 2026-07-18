@@ -22,6 +22,7 @@ const publicMapCss = readFileSync(join(repoRoot, 'public-map-v01.css'), 'utf8');
 
 test('production index mounts tip jar beside the NYCIF brand header', () => {
   assert.match(indexHtml, /brand-header-row/);
+  assert.match(indexHtml, /public-map-v08/);
   assert.match(indexHtml, /nycif-tip-jar-v01\.js\?v=05/);
 });
 
