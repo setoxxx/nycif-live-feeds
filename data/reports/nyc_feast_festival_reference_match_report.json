@@ -1,18 +1,18 @@
 {
   "artifact_type": "nyc_feast_festival_reference_match_report",
-  "generated_at_utc": "2026-07-18T23:08:17Z",
+  "generated_at_utc": "2026-07-18T23:45:59Z",
   "qa_pass": true,
   "seed_count": 223,
   "status_counts": {
-    "not_in_raw_snapshot": 180,
-    "title_match": 37,
-    "confirmed_permit_id": 3,
+    "not_in_raw_snapshot": 184,
+    "title_match": 34,
+    "confirmed_permit_id": 2,
     "permit_id_mismatch": 3
   },
-  "confirmed_in_raw_snapshot": 40,
+  "confirmed_in_raw_snapshot": 36,
   "multi_day_confirmed_in_raw_snapshot": 1,
   "permit_id_mismatch_count": 3,
-  "not_in_raw_snapshot_count": 180,
+  "not_in_raw_snapshot_count": 184,
   "confirmed_samples": [
     {
       "key": "dumbo-drop-block-party",
@@ -121,86 +121,6 @@
       "notes": [
         "Title matched a different permit ID than the projected one."
       ]
-    },
-    {
-      "key": "church-at-the-park-marine-park",
-      "canonical_name": "Church at the Park (Marine Park)",
-      "event_kind": "religious_feast",
-      "map_emoji": "🎡",
-      "typical_multi_day": false,
-      "claimed_permit_id": "952432",
-      "projected_start": "2026-07-12",
-      "projected_end": "2026-07-12",
-      "location_hint": "Marine Park",
-      "borough": "Brooklyn",
-      "source": "google_studio_bulk_patch",
-      "match_status": "confirmed_permit_id",
-      "raw_match": {
-        "source_dataset": "tvpp-9vvx",
-        "source_event_id": "952432",
-        "event_name": "Church at the Park",
-        "event_type": "Special Event",
-        "start_date_time": "2026-07-12T10:00:00.000",
-        "end_date_time": "2026-07-12T11:00:00.000",
-        "event_borough": "Brooklyn",
-        "event_location": "Marine Park: Stuart St Lawn",
-        "span_days": 1
-      },
-      "notes": []
-    },
-    {
-      "key": "mount-carmel-bradley-avenue-staten-island",
-      "canonical_name": "Feast of Our Lady of Mount Carmel (Bradley Avenue, Staten Island)",
-      "event_kind": "religious_feast",
-      "map_emoji": "🎡",
-      "typical_multi_day": false,
-      "claimed_permit_id": "872477",
-      "projected_start": "2026-07-12",
-      "projected_end": "2026-07-12",
-      "location_hint": "BRADLEY AVENUE",
-      "borough": "Staten Island",
-      "source": "google_studio_bulk_patch",
-      "match_status": "title_match",
-      "raw_match": {
-        "source_dataset": "tvpp-9vvx",
-        "source_event_id": "948699",
-        "event_name": "Feast of Our Lady of Mount Carmel",
-        "event_type": "Religious Event",
-        "start_date_time": "2026-07-12T13:00:00.000",
-        "end_date_time": "2026-07-12T15:30:00.000",
-        "event_borough": "Staten Island",
-        "event_location": "BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE,  WESTWOOD AVENUE between GRAVES STREET and BRADLEY AVENUE,  BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE,  GRAVES STREET between WESTWOOD AVENUE and HOLDEN BOULEVARD,  HOLDEN BOULEVARD between GRAVES STREET and BRADLEY AVENUE",
-        "span_days": 1
-      },
-      "notes": [
-        "Title matched a different permit ID than the projected one."
-      ]
-    },
-    {
-      "key": "mount-carmel-rosebank",
-      "canonical_name": "Feast of Our Lady of Mount Carmel (Rosebank)",
-      "event_kind": "religious_feast",
-      "map_emoji": "🎡",
-      "typical_multi_day": true,
-      "claimed_permit_id": null,
-      "projected_start": "2026-07-15",
-      "projected_end": "2026-07-19",
-      "location_hint": "AMITY STREET",
-      "borough": "Staten Island",
-      "source": "google_studio_projected",
-      "match_status": "title_match",
-      "raw_match": {
-        "source_dataset": "tvpp-9vvx",
-        "source_event_id": "948699",
-        "event_name": "Feast of Our Lady of Mount Carmel",
-        "event_type": "Religious Event",
-        "start_date_time": "2026-07-12T13:00:00.000",
-        "end_date_time": "2026-07-12T15:30:00.000",
-        "event_borough": "Staten Island",
-        "event_location": "BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE,  WESTWOOD AVENUE between GRAVES STREET and BRADLEY AVENUE,  BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE,  GRAVES STREET between WESTWOOD AVENUE and HOLDEN BOULEVARD,  HOLDEN BOULEVARD between GRAVES STREET and BRADLEY AVENUE",
-        "span_days": 1
-      },
-      "notes": []
     },
     {
       "key": "eltingville-block-party-south-shore",
@@ -339,34 +259,6 @@
       ]
     },
     {
-      "key": "international-peruvian-festival-jackson-heights",
-      "canonical_name": "International Peruvian Festival (Jackson Heights)",
-      "event_kind": "cultural_festival",
-      "map_emoji": "🎊",
-      "typical_multi_day": false,
-      "claimed_permit_id": "843678",
-      "projected_start": "2026-07-19",
-      "projected_end": "2026-07-19",
-      "location_hint": "37 AVENUE",
-      "borough": "Queens",
-      "source": "google_studio_bulk_patch",
-      "match_status": "title_match",
-      "raw_match": {
-        "source_dataset": "tvpp-9vvx",
-        "source_event_id": "932566",
-        "event_name": "International Peruvian Festival",
-        "event_type": "Parade",
-        "start_date_time": "2026-07-12T12:00:00.000",
-        "end_date_time": "2026-07-12T14:00:00.000",
-        "event_borough": "Queens",
-        "event_location": "35 Avenue 69 STREET between 37 AVENUE and 34 AVENUE,  37 AVENUE between 71 STREET and 87 STREET, 85-08 37 AVENUE, 87 STREET between 37 AVENUE and 35 AVENUE",
-        "span_days": 1
-      },
-      "notes": [
-        "Title matched a different permit ID than the projected one."
-      ]
-    },
-    {
       "key": "our-lady-snows-saint-alphonsa-procession",
       "canonical_name": "Our Lady of the Snows Procession (Saint Alphonsa)",
       "event_kind": "religious_feast",
@@ -391,34 +283,6 @@
         "span_days": 1
       },
       "notes": []
-    },
-    {
-      "key": "st-bernard-madonna-del-carmine-bergen-beach",
-      "canonical_name": "Feast of Madonna del Carmine (St. Bernard, Bergen Beach)",
-      "event_kind": "religious_feast",
-      "map_emoji": "🎡",
-      "typical_multi_day": true,
-      "claimed_permit_id": "820048",
-      "projected_start": "2026-07-23",
-      "projected_end": "2026-07-26",
-      "location_hint": "EAST 69 STREET & AVENUE U",
-      "borough": "Brooklyn",
-      "source": "google_studio_bulk_patch",
-      "match_status": "title_match",
-      "raw_match": {
-        "source_dataset": "tvpp-9vvx",
-        "source_event_id": "948699",
-        "event_name": "Feast of Our Lady of Mount Carmel",
-        "event_type": "Religious Event",
-        "start_date_time": "2026-07-12T13:00:00.000",
-        "end_date_time": "2026-07-12T15:30:00.000",
-        "event_borough": "Staten Island",
-        "event_location": "BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE,  WESTWOOD AVENUE between GRAVES STREET and BRADLEY AVENUE,  BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE,  GRAVES STREET between WESTWOOD AVENUE and HOLDEN BOULEVARD,  HOLDEN BOULEVARD between GRAVES STREET and BRADLEY AVENUE",
-        "span_days": 1
-      },
-      "notes": [
-        "Title matched a different permit ID than the projected one."
-      ]
     },
     {
       "key": "st-irene-festival-astoria",
@@ -643,6 +507,32 @@
       ]
     },
     {
+      "key": "feast-st-rocco",
+      "canonical_name": "St. Rocco Feast",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-15",
+      "projected_end": "2026-08-16",
+      "location_hint": "ST. THERESA",
+      "borough": "Bronx",
+      "source": "google_studio_projected",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "947828",
+        "event_name": "137th Annual Feast of St Rocco Procession",
+        "event_type": "Religious Event",
+        "start_date_time": "2026-08-16T11:30:00.000",
+        "end_date_time": "2026-08-16T19:00:00.000",
+        "event_borough": "Manhattan",
+        "event_location": "113 BAXTER STREET, BAXTER STREET between HESTER STREET and CANAL STREET,  BAXTER STREET between CANAL STREET and BAYARD STREET,  BAYARD STREET between BAXTER STREET and MOTT STREET,  MOTT STREET between BAYARD STREET and PARK ROW,  ST JAMES PLACE between WORTH STREET and MADISON STREET,  MADISON STREET between ST JAMES PLACE and CATHERINE STREET,  WORTH STREET between PARK ROW and MULBERRY STREET,  MULBERRY STREET between WORTH STREET and BROOME STREET,  CANAL STREET between MULBERRY STREET and BAXTER STREET,  JAMES STREET between ST JAMES PLACE and MADISON STREET, 113 BAXTER STREET",
+        "span_days": 1
+      },
+      "notes": []
+    },
+    {
       "key": "st-rocco-baxter-street-little-italy",
       "canonical_name": "St. Rocco Feast (Baxter Street, Little Italy)",
       "event_kind": "religious_feast",
@@ -695,6 +585,116 @@
         "span_days": 1
       },
       "notes": []
+    },
+    {
+      "key": "ozone-park-108th-street-block-party",
+      "canonical_name": "108th Street Block Party (Ozone Park)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "872178",
+      "projected_start": "2026-08-22",
+      "projected_end": "2026-08-22",
+      "location_hint": "108 STREET",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
+      "key": "howard-beach-west-16th-road-block-party",
+      "canonical_name": "West 16th Road Block Party (Howard Beach)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "878194",
+      "projected_start": "2026-08-29",
+      "projected_end": "2026-08-29",
+      "location_hint": "WEST 16 ROAD",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
+      "key": "fourth-avenue-brooklyn-fall-festival",
+      "canonical_name": "Fourth Avenue Brooklyn Fall Festival",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-30",
+      "projected_end": "2026-08-30",
+      "location_hint": "4 AVENUE",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "922552",
+        "event_name": "Fall Festival",
+        "event_type": "Special Event",
+        "start_date_time": "2026-10-03T13:00:00.000",
+        "end_date_time": "2026-10-03T16:00:00.000",
+        "event_borough": "Queens",
+        "event_location": "Fort Totten Park: Parade Ground",
+        "span_days": 1
+      },
+      "notes": []
+    },
+    {
+      "key": "ozone-park-131st-street-block-party",
+      "canonical_name": "131st Street Block Party (Ozone Park / Richmond Hill)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "871871",
+      "projected_start": "2026-09-05",
+      "projected_end": "2026-09-05",
+      "location_hint": "131 STREET",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
     }
   ],
   "permit_id_mismatches": [
@@ -716,8 +716,8 @@
         "source_event_id": "907551",
         "event_name": "Soccer - Non Regulation",
         "event_type": "Sport - Adult",
-        "start_date_time": "2026-07-13T09:00:00.000",
-        "end_date_time": "2026-07-13T20:00:00.000",
+        "start_date_time": "2026-07-18T09:00:00.000",
+        "end_date_time": "2026-07-18T20:00:00.000",
         "event_borough": "Manhattan",
         "event_location": "St. Vartan Park: Soccer-01",
         "span_days": 1
@@ -744,8 +744,8 @@
         "source_event_id": "912345",
         "event_name": "Softball (Little league)",
         "event_type": "Sport - Youth",
-        "start_date_time": "2026-07-14T17:00:00.000",
-        "end_date_time": "2026-07-14T17:30:00.000",
+        "start_date_time": "2026-07-21T17:00:00.000",
+        "end_date_time": "2026-07-21T17:30:00.000",
         "event_borough": "Manhattan",
         "event_location": "James J Walker Park: Softball-01",
         "span_days": 1

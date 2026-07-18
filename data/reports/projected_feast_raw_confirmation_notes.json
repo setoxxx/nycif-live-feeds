@@ -1,14 +1,14 @@
 {
   "artifact_type": "projected_feast_raw_confirmation_notes",
-  "generated_at_utc": "2026-07-18T23:14:19Z",
+  "generated_at_utc": "2026-07-18T23:52:01Z",
   "match_report_status_counts": {
-    "not_in_raw_snapshot": 180,
-    "title_match": 37,
-    "confirmed_permit_id": 3,
+    "not_in_raw_snapshot": 184,
+    "title_match": 34,
+    "confirmed_permit_id": 2,
     "permit_id_mismatch": 3
   },
-  "confirmed_permit_id_count": 3,
-  "title_match_count": 37,
+  "confirmed_permit_id_count": 2,
+  "title_match_count": 34,
   "permit_id_mismatch_count": 3,
   "confirmed_permit_id": [
     {
@@ -17,13 +17,6 @@
       "match_status": "confirmed_permit_id",
       "claimed_permit_id": "906428",
       "raw_event_id": "906428"
-    },
-    {
-      "key": "church-at-the-park-marine-park",
-      "canonical_name": "Church at the Park (Marine Park)",
-      "match_status": "confirmed_permit_id",
-      "claimed_permit_id": "952432",
-      "raw_event_id": "952432"
     },
     {
       "key": "our-lady-snows-saint-alphonsa-procession",
@@ -54,20 +47,6 @@
       "match_status": "title_match",
       "claimed_permit_id": "859845",
       "raw_event_id": "919112"
-    },
-    {
-      "key": "mount-carmel-bradley-avenue-staten-island",
-      "canonical_name": "Feast of Our Lady of Mount Carmel (Bradley Avenue, Staten Island)",
-      "match_status": "title_match",
-      "claimed_permit_id": "872477",
-      "raw_event_id": "948699"
-    },
-    {
-      "key": "mount-carmel-rosebank",
-      "canonical_name": "Feast of Our Lady of Mount Carmel (Rosebank)",
-      "match_status": "title_match",
-      "claimed_permit_id": null,
-      "raw_event_id": "948699"
     },
     {
       "key": "eltingville-block-party-south-shore",
@@ -103,20 +82,6 @@
       "match_status": "title_match",
       "claimed_permit_id": "859273",
       "raw_event_id": "919112"
-    },
-    {
-      "key": "international-peruvian-festival-jackson-heights",
-      "canonical_name": "International Peruvian Festival (Jackson Heights)",
-      "match_status": "title_match",
-      "claimed_permit_id": "843678",
-      "raw_event_id": "932566"
-    },
-    {
-      "key": "st-bernard-madonna-del-carmine-bergen-beach",
-      "canonical_name": "Feast of Madonna del Carmine (St. Bernard, Bergen Beach)",
-      "match_status": "title_match",
-      "claimed_permit_id": "820048",
-      "raw_event_id": "948699"
     },
     {
       "key": "st-irene-festival-astoria",
@@ -173,6 +138,13 @@
       "match_status": "title_match",
       "claimed_permit_id": "836150",
       "raw_event_id": "919112"
+    },
+    {
+      "key": "feast-st-rocco",
+      "canonical_name": "St. Rocco Feast",
+      "match_status": "title_match",
+      "claimed_permit_id": null,
+      "raw_event_id": "947828"
     },
     {
       "key": "st-rocco-baxter-street-little-italy",
