@@ -40,9 +40,10 @@ No. Use the fullscreen shell documented in `nycinfocus-map-page-v1-freeze.md` in
 == Changelog ==
 
 = 1.5.0-rc2 =
-* Review fixes: lazy shortcode loading, strict-origin referrer, block attributes registered
-* Admin-visible warning when commit SHA feed pins normalize to main
-* Settings clarify v= cache-bust vs Field Desk deploy rollback
+* Feed and cache allowlists (main + public-map-v10 only)
+* block.json for dynamic block registration
+* ZIP build uses nycif-events-map/ directory prefix
+* Review fixes: lazy loading, strict-origin referrer, settings HTML, preflight script
 
 = 1.5.0-rc1 =
 * Align with public-map-v10 and feeds=main approved discovery contract
@@ -55,5 +56,5 @@ No. Use the fullscreen shell documented in `nycinfocus-map-page-v1-freeze.md` in
 
 == Upgrade Notice ==
 
-= 1.5.0-rc1 =
-Required for RC public map release. Replaces 1.4.0-rc1 commit-pinned feed with feeds=main.
+= 1.5.0-rc2 =
+Required for RC public map release. Replaces 1.4.0-rc1; enforces feeds=main and public-map-v10 allowlists.

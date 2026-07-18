@@ -59,7 +59,14 @@ LIVE_FEEDS_SHA="$(curl -sS "https://api.github.com/repos/${LIVE_FEEDS_REPO}/comm
 
 if [[ -n "$FIELD_DESK_SHA" ]]; then
   echo "INFO field-desk main @ ${FIELD_DESK_SHA}"
-  check "field-desk index contains runtime token" curl -sSL "${BASE}/index.html" | grep -q "$RUNTIME_V"
+  FD_INDEX="$(curl -sSL "${BASE}/index.html")"
+  if grep -q "$RUNTIME_V" <<<"$FD_INDEX"; then
+    echo "PASS field-desk index contains runtime token"
+    pass=$((pass + 1))
+  else
+    echo "FAIL field-desk index contains runtime token"
+    fail=$((fail + 1))
+  fi
 else
   echo "WARN could not resolve field-desk main commit (API rate limit?)"
 fi

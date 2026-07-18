@@ -110,7 +110,8 @@ The live site may still have **1.4.0-rc1** (bad: `discovery-taxonomy-v03` + comm
 
 | File | Purpose |
 |------|---------|
-| `nycif-events-map.php` | Main plugin — version `1.5.0-rc2`, `public-map-v10`, `feeds=main` |
+| `nycif-events-map.php` | Main plugin — version `1.5.0-rc2`, allowlists `main` + `public-map-v10` |
+| `block.json` | Dynamic block metadata for editor inserter (server-rendered) |
 | `readme.txt` | WordPress plugin readme |
 | `README.md` | Human install notes |
 | `RECOVERY-MANIFEST.json` | Release metadata + feed snapshot fields |
@@ -123,6 +124,8 @@ https://github.com/setoxxx/nycif-live-feeds/tree/main/docs/wordpress-plugin-depl
 ```bash
 ./scripts/build_nycif_events_map_plugin_zip.sh
 # Produces dist/nycif-events-map-1.5.0-rc2.zip
+unzip -l dist/nycif-events-map-1.5.0-rc2.zip
+# Every path MUST start with nycif-events-map/
 ```
 
 ### Install
