@@ -86,3 +86,12 @@ test('stacked location popups expose scrollable picker, time rows, and side plac
   assert.match(appJs, /formatTimeRange/);
   assert.match(appJs, /syncStackPopupPlacement/);
 });
+
+test('category filter badges are date-scoped and explain other-day totals', () => {
+  assert.match(appJs, /function categoryKeysForEvent/);
+  assert.match(appJs, /function categoryOtherDayHint/);
+  assert.match(appJs, /selectedDateKey\(\)/);
+  assert.match(appJs, /dateMatches\(e\)/);
+  assert.match(appJs, /other days/);
+  assert.match(appJs, /on map/);
+});
