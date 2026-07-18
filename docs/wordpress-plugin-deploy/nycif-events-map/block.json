@@ -6,7 +6,12 @@
   "category": "embed",
   "icon": "location-alt",
   "description": "Embed the NYC In Focus public event map (in-article only; not for /map/).",
-  "keywords": ["nyc", "map", "events", "nycif"],
+  "keywords": [
+    "nyc",
+    "map",
+    "events",
+    "nycif"
+  ],
   "textdomain": "nycif-events-map",
   "supports": {
     "html": false
@@ -36,5 +41,6 @@
       "type": "string",
       "default": "lazy"
     }
-  }
+  },
+  "editorScript": "file:./editor.js"
 }
