@@ -1,0 +1,77 @@
+{
+  "artifact_type": "projected_feast_pr_merge_readiness_report",
+  "generated_at_utc": "2026-07-18T23:14:19Z",
+  "pr_number": 312,
+  "branch": "cursor/multiday-feast-discovery-c1f9",
+  "qa_pass": true,
+  "seed_count": 223,
+  "intake_count": 220,
+  "map_ready_count": 220,
+  "list_only_count": 0,
+  "projected_discovery_count": 218,
+  "religious_feast_discovery_count": 50,
+  "waves_merged": [
+    "google_studio_bulk",
+    "gap_wave1",
+    "gap_wave2",
+    "gap_wave3",
+    "gap_wave4"
+  ],
+  "wave4_added_keys": [
+    "church-at-the-park-marine-park",
+    "feaster-hollis-queens",
+    "feast-day-procession-flushing-kissena",
+    "prayer-march-parkchester-bronx",
+    "brown-street-gerritsen-beach-block-party",
+    "gotham-avenue-gerritsen-block-party",
+    "bay-ridge-94th-street-block-party",
+    "flushing-community-block-party-downing",
+    "flushing-bid-summer-block-party",
+    "castle-hill-virgil-place-block-party",
+    "pelham-bay-open-hands-summer-street-fair",
+    "howard-beach-chicot-road-block-party",
+    "howard-beach-west-16th-road-block-party",
+    "ozone-park-108th-street-block-party",
+    "ozone-park-131st-street-block-party",
+    "ridgewood-madison-street-block-party",
+    "ridgewood-essex-street-block-party",
+    "great-kills-road-block-party",
+    "lamoka-avenue-great-kills-block-party",
+    "goodall-street-south-beach-block-party",
+    "naughton-avenue-new-dorp-block-party",
+    "st-rocco-baxter-street-little-italy",
+    "our-lady-of-the-angel-woodhaven-feast",
+    "resurrection-parish-gerritsen-beach-feast"
+  ],
+  "raw_sapo_confirmed_count": 3,
+  "title_match_count": 37,
+  "permit_id_mismatch_count": 3,
+  "match_report_status_counts": {
+    "not_in_raw_snapshot": 180,
+    "title_match": 37,
+    "confirmed_permit_id": 3,
+    "permit_id_mismatch": 3
+  },
+  "protected_files_unchanged": true,
+  "protected_files_checklist": [
+    "data/location_cache.json",
+    "data/nycif_staged_live_events.json",
+    "data/staged_live_manifest.json",
+    "data/previous_staged_live_events_snapshot.json"
+  ],
+  "promotion_allowed_all_false": true,
+  "public_map_modified": false,
+  "recommended_next_steps": [
+    "Merge PR #312 to main",
+    "Verify pins in setoxxx/nycif-field-desk using projected_feast_field_desk_verification_checklist.json",
+    "Optional: run sync_nyc_open_data.py when human authorizes network sync",
+    "Phase 2E promotion ONLY with explicit human approval to update location_cache.json"
+  ],
+  "wave5_gaps": [
+    "Woodhaven / Ozone Park dedicated parish carnivals (thin SAPO religious coverage)",
+    "Gravesend / Bensonhurst parish feasts beyond existing rows",
+    "Dyker Heights summer church events (beyond Christmas lights)",
+    "Parkchester dedicated parish feast rows",
+    "Pleasant Plains parish carnivals beyond Travis July 4 parade"
+  ]
+}

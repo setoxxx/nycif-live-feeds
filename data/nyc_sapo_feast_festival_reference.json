@@ -1,6 +1,6 @@
 {
   "artifact_type": "nyc_sapo_feast_festival_reference",
-  "generated_at_utc": "2026-07-18T22:42:14Z",
+  "generated_at_utc": "2026-07-18T23:08:17Z",
   "source_seed": "data/staging/nyc_feast_festival_reference_seed.json",
   "warning": "Projected feast/fair rows are mapping hints only. Permit IDs from external lists are often wrong; only raw-match rows are SAPO-confirmed in this snapshot.",
   "emoji_guide": {
@@ -1138,6 +1138,34 @@
       ]
     },
     {
+      "key": "ridgewood-essex-street-block-party",
+      "canonical_name": "Essex Street Block Party (Ridgewood)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "859845",
+      "projected_start": "2026-07-11",
+      "projected_end": "2026-07-11",
+      "location_hint": "ESSEX STREET",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
       "key": "bastille-day-60th-street",
       "canonical_name": "Bastille Day on 60th Street",
       "event_kind": "cultural_festival",
@@ -1172,6 +1200,32 @@
       "notes": [
         "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
       ]
+    },
+    {
+      "key": "church-at-the-park-marine-park",
+      "canonical_name": "Church at the Park (Marine Park)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "952432",
+      "projected_start": "2026-07-12",
+      "projected_end": "2026-07-12",
+      "location_hint": "Marine Park",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "confirmed_permit_id",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "952432",
+        "event_name": "Church at the Park",
+        "event_type": "Special Event",
+        "start_date_time": "2026-07-12T10:00:00.000",
+        "end_date_time": "2026-07-12T11:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "Marine Park: Stuart St Lawn",
+        "span_days": 1
+      },
+      "notes": []
     },
     {
       "key": "fatima-devotion-procession-maspeth",
@@ -1217,6 +1271,24 @@
       },
       "notes": [
         "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
+      "key": "feaster-hollis-queens",
+      "canonical_name": "Feaster (Hollis)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "846214",
+      "projected_start": "2026-07-12",
+      "projected_end": "2026-07-12",
+      "location_hint": "198 STREET",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
       ]
     },
     {
@@ -1318,6 +1390,24 @@
       ]
     },
     {
+      "key": "resurrection-parish-gerritsen-beach-feast",
+      "canonical_name": "Resurrection Parish Feast (Gerritsen Beach)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-17",
+      "projected_end": "2026-07-19",
+      "location_hint": "GERRITSEN AVENUE",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "eltingville-block-party-south-shore",
       "canonical_name": "Eltingville Block Party (South Shore)",
       "event_kind": "street_fair",
@@ -1328,6 +1418,60 @@
       "projected_end": "2026-07-18",
       "location_hint": "ELTINGVILLE BOULEVARD",
       "borough": "Staten Island",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": []
+    },
+    {
+      "key": "goodall-street-south-beach-block-party",
+      "canonical_name": "Goodall Street Block Party (South Beach)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "850037",
+      "projected_start": "2026-07-18",
+      "projected_end": "2026-07-18",
+      "location_hint": "GOODALL STREET",
+      "borough": "Staten Island",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
+      "key": "ridgewood-madison-street-block-party",
+      "canonical_name": "Madison Street Block Party (Ridgewood)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-18",
+      "projected_end": "2026-07-18",
+      "location_hint": "MADISON STREET",
+      "borough": "Brooklyn",
       "source": "google_studio_bulk_patch",
       "match_status": "title_match",
       "raw_match": {
@@ -1377,6 +1521,34 @@
       "raw_match": null,
       "notes": [
         "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "naughton-avenue-new-dorp-block-party",
+      "canonical_name": "Naughton Avenue Block Party (New Dorp)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "844572",
+      "projected_start": "2026-07-18",
+      "projected_end": "2026-07-18",
+      "location_hint": "NAUGHTON AVENUE",
+      "borough": "Staten Island",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
       ]
     },
     {
@@ -1431,6 +1603,34 @@
       "raw_match": null,
       "notes": [
         "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "flushing-community-block-party-downing",
+      "canonical_name": "Flushing Community Block Party (Downing Street)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "859273",
+      "projected_start": "2026-07-19",
+      "projected_end": "2026-07-19",
+      "location_hint": "DOWNING STREET",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
       ]
     },
     {
@@ -1608,6 +1808,32 @@
       ]
     },
     {
+      "key": "great-kills-road-block-party",
+      "canonical_name": "Great Kills Road Block Party",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-26",
+      "projected_end": "2026-07-26",
+      "location_hint": "GREAT KILLS ROAD",
+      "borough": "Staten Island",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": []
+    },
+    {
       "key": "manhattan-avenue-festival",
       "canonical_name": "Manhattan Avenue Festival",
       "event_kind": "street_fair",
@@ -1662,6 +1888,34 @@
       ]
     },
     {
+      "key": "howard-beach-chicot-road-block-party",
+      "canonical_name": "Chicot Road Block Party (Howard Beach)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "858127",
+      "projected_start": "2026-08-01",
+      "projected_end": "2026-08-01",
+      "location_hint": "CHICOT ROAD",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
       "key": "east-55th-street-festival-borough-park",
       "canonical_name": "East 55th Street Festival (Borough Park)",
       "event_kind": "street_fair",
@@ -1705,6 +1959,34 @@
       "raw_match": null,
       "notes": [
         "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "lamoka-avenue-great-kills-block-party",
+      "canonical_name": "Lamoka Avenue Block Party (Great Kills)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "855718",
+      "projected_start": "2026-08-01",
+      "projected_end": "2026-08-01",
+      "location_hint": "LAMOKA AVENUE",
+      "borough": "Staten Island",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
       ]
     },
     {
@@ -1823,6 +2105,34 @@
       "raw_match": null,
       "notes": [
         "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "gotham-avenue-gerritsen-block-party",
+      "canonical_name": "Gotham Avenue Block Party (Gerritsen Beach)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "867505",
+      "projected_start": "2026-08-08",
+      "projected_end": "2026-08-08",
+      "location_hint": "GOTHAM AVENUE",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
       ]
     },
     {
@@ -2052,6 +2362,34 @@
       ]
     },
     {
+      "key": "st-rocco-baxter-street-little-italy",
+      "canonical_name": "St. Rocco Feast (Baxter Street, Little Italy)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": "856930",
+      "projected_start": "2026-08-15",
+      "projected_end": "2026-08-16",
+      "location_hint": "BAXTER STREET",
+      "borough": "Manhattan",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
       "key": "stapleton-back-to-school-block-party",
       "canonical_name": "Stapleton Back to School Block Party (Staten Island)",
       "event_kind": "street_fair",
@@ -2168,6 +2506,34 @@
       ]
     },
     {
+      "key": "ozone-park-108th-street-block-party",
+      "canonical_name": "108th Street Block Party (Ozone Park)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "872178",
+      "projected_start": "2026-08-22",
+      "projected_end": "2026-08-22",
+      "location_hint": "108 STREET",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
       "key": "queens-carnival-rockaway-beach",
       "canonical_name": "Queens Carnival in the Rockaways",
       "event_kind": "cultural_festival",
@@ -2258,6 +2624,24 @@
       ]
     },
     {
+      "key": "our-lady-of-the-angel-woodhaven-feast",
+      "canonical_name": "Our Lady of the Angel Feast (Woodhaven)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-28",
+      "projected_end": "2026-09-01",
+      "location_hint": "WOODHAVEN",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "church-festival-hooper-street-williamsburg",
       "canonical_name": "Church Festival (Hooper Street, Williamsburg)",
       "event_kind": "religious_feast",
@@ -2273,6 +2657,34 @@
       "raw_match": null,
       "notes": [
         "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "howard-beach-west-16th-road-block-party",
+      "canonical_name": "West 16th Road Block Party (Howard Beach)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "878194",
+      "projected_start": "2026-08-29",
+      "projected_end": "2026-08-29",
+      "location_hint": "WEST 16 ROAD",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
       ]
     },
     {
@@ -2338,6 +2750,24 @@
       "notes": []
     },
     {
+      "key": "prayer-march-parkchester-bronx",
+      "canonical_name": "Christian Church Prayer March (Parkchester)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "878605",
+      "projected_start": "2026-08-31",
+      "projected_end": "2026-08-31",
+      "location_hint": "REV RICARDO TANON AVENUE",
+      "borough": "Bronx",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "feast-ss-crocifisso",
       "canonical_name": "Feast of SS. Crocifisso",
       "event_kind": "religious_feast",
@@ -2349,6 +2779,52 @@
       "location_hint": "18 AVENUE",
       "borough": "Brooklyn",
       "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "ozone-park-131st-street-block-party",
+      "canonical_name": "131st Street Block Party (Ozone Park / Richmond Hill)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "871871",
+      "projected_start": "2026-09-05",
+      "projected_end": "2026-09-05",
+      "location_hint": "131 STREET",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
+      "key": "pelham-bay-open-hands-summer-street-fair",
+      "canonical_name": "Open Hands Association Summer Street Fair (Pelham Bay)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "876989",
+      "projected_start": "2026-09-05",
+      "projected_end": "2026-09-05",
+      "location_hint": "BARNES AVENUE",
+      "borough": "Bronx",
+      "source": "google_studio_bulk_patch",
       "match_status": "not_in_raw_snapshot",
       "raw_match": null,
       "notes": [
@@ -2421,6 +2897,24 @@
       "location_hint": "6 AVENUE",
       "borough": "Manhattan",
       "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "feast-day-procession-flushing-kissena",
+      "canonical_name": "Feast Day Procession (Flushing, Kissena Corridor)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "884441",
+      "projected_start": "2026-09-06",
+      "projected_end": "2026-09-06",
+      "location_hint": "262 STREET",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
       "match_status": "not_in_raw_snapshot",
       "raw_match": null,
       "notes": [
@@ -2528,6 +3022,34 @@
       ]
     },
     {
+      "key": "bay-ridge-94th-street-block-party",
+      "canonical_name": "Bay Ridge 94th Street Block Party",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "874784",
+      "projected_start": "2026-09-12",
+      "projected_end": "2026-09-12",
+      "location_hint": "94 STREET",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
       "key": "car-show-parade-watchogue-staten-island",
       "canonical_name": "Car Show Parade (Watchogue, Staten Island)",
       "event_kind": "parade",
@@ -2543,6 +3065,34 @@
       "raw_match": null,
       "notes": [
         "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "castle-hill-virgil-place-block-party",
+      "canonical_name": "Castle Hill Virgil Place Block Party",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "859871",
+      "projected_start": "2026-09-12",
+      "projected_end": "2026-09-12",
+      "location_hint": "VIRGIL PLACE",
+      "borough": "Bronx",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
       ]
     },
     {
@@ -2780,6 +3330,34 @@
       ]
     },
     {
+      "key": "brown-street-gerritsen-beach-block-party",
+      "canonical_name": "Brown Street Block Party (Gerritsen Beach)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "871145",
+      "projected_start": "2026-09-19",
+      "projected_end": "2026-09-19",
+      "location_hint": "BROWN STREET",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
       "key": "festival-del-grito-de-lares",
       "canonical_name": "Festival del Grito de Lares (Bronx)",
       "event_kind": "cultural_festival",
@@ -2795,6 +3373,34 @@
       "raw_match": null,
       "notes": [
         "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "flushing-bid-summer-block-party",
+      "canonical_name": "Flushing BID Summer Block Party",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "852607",
+      "projected_start": "2026-09-19",
+      "projected_end": "2026-09-19",
+      "location_hint": "40 ROAD",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
       ]
     },
     {

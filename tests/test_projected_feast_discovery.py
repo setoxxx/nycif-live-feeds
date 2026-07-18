@@ -16,7 +16,7 @@ class ProjectedFeastDiscoveryTests(unittest.TestCase):
         self.assertTrue(path.exists())
         payload = json.loads(path.read_text(encoding="utf-8"))
         events = payload.get("events") if isinstance(payload, dict) else []
-        self.assertGreaterEqual(len(events), 190)
+        self.assertGreaterEqual(len(events), 200)
 
     def test_projected_feast_intake_has_zero_list_only(self) -> None:
         report = json.loads(
@@ -24,7 +24,7 @@ class ProjectedFeastDiscoveryTests(unittest.TestCase):
         )
         self.assertTrue(report["qa_pass"])
         self.assertEqual(report["list_only_count"], 0)
-        self.assertGreaterEqual(report["map_ready_count"], 190)
+        self.assertGreaterEqual(report["map_ready_count"], 200)
 
     def test_projected_feast_bulk_coverage_in_approved(self) -> None:
         approved = json.loads((ROOT / "data/events_discovery_v02_approved.json").read_text(encoding="utf-8"))
@@ -33,7 +33,7 @@ class ProjectedFeastDiscoveryTests(unittest.TestCase):
             for e in approved.get("events", [])
             if e.get("nycif", {}).get("projected_feast_reference")
         ]
-        self.assertGreaterEqual(len(projected), 185)
+        self.assertGreaterEqual(len(projected), 200)
 
     def test_san_gennaro_in_approved_discovery(self) -> None:
         approved = json.loads((ROOT / "data/events_discovery_v02_approved.json").read_text(encoding="utf-8"))
@@ -69,7 +69,26 @@ class ProjectedFeastDiscoveryTests(unittest.TestCase):
         report = json.loads(path.read_text(encoding="utf-8"))
         self.assertTrue(report.get("qa_pass"))
         self.assertEqual(report.get("list_only_count"), 0)
-        self.assertGreaterEqual(report.get("projected_discovery_count", 0), 185)
+        self.assertGreaterEqual(report.get("projected_discovery_count", 0), 200)
+        self.assertGreaterEqual(report.get("religious_feast_discovery_count", 0), 50)
+
+    def test_pr_merge_readiness_report_exists_and_passes(self) -> None:
+        path = ROOT / "data/reports/projected_feast_pr_merge_readiness_report.json"
+        self.assertTrue(path.exists())
+        report = json.loads(path.read_text(encoding="utf-8"))
+        self.assertTrue(report.get("qa_pass"))
+        self.assertEqual(report.get("list_only_count"), 0)
+        self.assertTrue(report.get("protected_files_unchanged"))
+        self.assertTrue(report.get("promotion_allowed_all_false"))
+        self.assertEqual(report.get("pr_number"), 312)
+        self.assertIn("gap_wave4", report.get("waves_merged", []))
+
+    def test_field_desk_verification_checklist_exists(self) -> None:
+        path = ROOT / "data/reports/projected_feast_field_desk_verification_checklist.json"
+        self.assertTrue(path.exists())
+        checklist = json.loads(path.read_text(encoding="utf-8"))
+        self.assertEqual(checklist.get("target_repo"), "setoxxx/nycif-field-desk")
+        self.assertGreaterEqual(len(checklist.get("verification_items", [])), 5)
 
 
 if __name__ == "__main__":

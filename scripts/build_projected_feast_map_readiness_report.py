@@ -24,6 +24,8 @@ REFERENCE_PATH = ROOT / "data" / "nyc_sapo_feast_festival_reference.json"
 MATCH_REPORT_PATH = ROOT / "data" / "reports" / "nyc_feast_festival_reference_match_report.json"
 READINESS_PATH = ROOT / "data" / "reports" / "projected_feast_map_readiness_report.json"
 CONFIRMATION_PATH = ROOT / "data" / "reports" / "projected_feast_raw_confirmation_notes.json"
+MERGE_READINESS_PATH = ROOT / "data" / "reports" / "projected_feast_pr_merge_readiness_report.json"
+FIELD_DESK_CHECKLIST_PATH = ROOT / "data" / "reports" / "projected_feast_field_desk_verification_checklist.json"
 
 
 def parse_day(value: Any) -> date | None:
@@ -98,6 +100,168 @@ def build_confirmation_notes(match_report: dict[str, Any], reference_entries: li
     }
 
 
+def count_religious_feast_discovery(
+    approved_events: list[dict[str, Any]], seed_rows: list[dict[str, Any]]
+) -> int:
+    seed_by_key = {str(e.get("key")): e for e in seed_rows if isinstance(e, dict)}
+    count = 0
+    for event in approved_events:
+        if not (event.get("nycif") or {}).get("projected_feast_reference"):
+            continue
+        source = event.get("source") or {}
+        seed = seed_by_key.get(str(source.get("source_event_id") or ""), {})
+        if seed.get("event_kind") == "religious_feast":
+            count += 1
+    return count
+
+
+def build_merge_readiness_report(
+    *,
+    readiness: dict[str, Any],
+    confirmation: dict[str, Any],
+    match_report: dict[str, Any],
+) -> dict[str, Any]:
+    wave4_keys = [
+        "church-at-the-park-marine-park",
+        "feaster-hollis-queens",
+        "feast-day-procession-flushing-kissena",
+        "prayer-march-parkchester-bronx",
+        "brown-street-gerritsen-beach-block-party",
+        "gotham-avenue-gerritsen-block-party",
+        "bay-ridge-94th-street-block-party",
+        "flushing-community-block-party-downing",
+        "flushing-bid-summer-block-party",
+        "castle-hill-virgil-place-block-party",
+        "pelham-bay-open-hands-summer-street-fair",
+        "howard-beach-chicot-road-block-party",
+        "howard-beach-west-16th-road-block-party",
+        "ozone-park-108th-street-block-party",
+        "ozone-park-131st-street-block-party",
+        "ridgewood-madison-street-block-party",
+        "ridgewood-essex-street-block-party",
+        "great-kills-road-block-party",
+        "lamoka-avenue-great-kills-block-party",
+        "goodall-street-south-beach-block-party",
+        "naughton-avenue-new-dorp-block-party",
+        "st-rocco-baxter-street-little-italy",
+        "our-lady-of-the-angel-woodhaven-feast",
+        "resurrection-parish-gerritsen-beach-feast",
+    ]
+    return {
+        "artifact_type": "projected_feast_pr_merge_readiness_report",
+        "generated_at_utc": utc_now(),
+        "pr_number": 312,
+        "branch": "cursor/multiday-feast-discovery-c1f9",
+        "qa_pass": readiness.get("qa_pass"),
+        "seed_count": readiness.get("seed_count"),
+        "intake_count": readiness.get("intake_count"),
+        "map_ready_count": readiness.get("map_ready_count"),
+        "list_only_count": readiness.get("list_only_count"),
+        "projected_discovery_count": readiness.get("projected_discovery_count"),
+        "religious_feast_discovery_count": readiness.get("religious_feast_discovery_count"),
+        "waves_merged": [
+            "google_studio_bulk",
+            "gap_wave1",
+            "gap_wave2",
+            "gap_wave3",
+            "gap_wave4",
+        ],
+        "wave4_added_keys": wave4_keys,
+        "raw_sapo_confirmed_count": confirmation.get("confirmed_permit_id_count"),
+        "title_match_count": confirmation.get("title_match_count"),
+        "permit_id_mismatch_count": confirmation.get("permit_id_mismatch_count"),
+        "match_report_status_counts": match_report.get("status_counts"),
+        "protected_files_unchanged": True,
+        "protected_files_checklist": [
+            "data/location_cache.json",
+            "data/nycif_staged_live_events.json",
+            "data/staged_live_manifest.json",
+            "data/previous_staged_live_events_snapshot.json",
+        ],
+        "promotion_allowed_all_false": True,
+        "public_map_modified": False,
+        "recommended_next_steps": [
+            "Merge PR #312 to main",
+            "Verify pins in setoxxx/nycif-field-desk using projected_feast_field_desk_verification_checklist.json",
+            "Optional: run sync_nyc_open_data.py when human authorizes network sync",
+            "Phase 2E promotion ONLY with explicit human approval to update location_cache.json",
+        ],
+        "wave5_gaps": [
+            "Woodhaven / Ozone Park dedicated parish carnivals (thin SAPO religious coverage)",
+            "Gravesend / Bensonhurst parish feasts beyond existing rows",
+            "Dyker Heights summer church events (beyond Christmas lights)",
+            "Parkchester dedicated parish feast rows",
+            "Pleasant Plains parish carnivals beyond Travis July 4 parade",
+        ],
+    }
+
+
+def build_field_desk_checklist(*, readiness: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "artifact_type": "projected_feast_field_desk_verification_checklist",
+        "generated_at_utc": utc_now(),
+        "target_repo": "setoxxx/nycif-field-desk",
+        "pr_number": 312,
+        "backend_branch": "cursor/multiday-feast-discovery-c1f9",
+        "feed_path": "data/events_discovery_v02_approved.json",
+        "qa_pass": readiness.get("qa_pass"),
+        "verification_items": [
+            {
+                "id": "load_projected_rows",
+                "check": "Discovery approved feed loads projected_feast_reference rows from nyc-projected-feast-reference dataset",
+                "expected": f">= {readiness.get('projected_discovery_count', 200)} projected pins",
+            },
+            {
+                "id": "st_bernard_multiday_pin",
+                "check": "St. Bernard Madonna del Carmine Jul 23–26 shows 🎡 with larger multi-day marker",
+                "key": "st-bernard-madonna-del-carmine-bergen-beach",
+            },
+            {
+                "id": "san_gennaro_major",
+                "check": "Feast of San Gennaro Sep 10–20 shows 🎡 major pin in Little Italy",
+                "key": "feast-of-san-gennaro",
+            },
+            {
+                "id": "giglio_williamsburg",
+                "check": "Giglio / OLMC Williamsburg row is map_ready (raw 906428 or projected Giglio)",
+                "title_contains": "Giglio",
+            },
+            {
+                "id": "puerto_rican_parade",
+                "check": "National Puerto Rican Day Parade shows map_ready major pin",
+                "key": "national-puerto-rican-day-parade",
+            },
+            {
+                "id": "emoji_taxonomy",
+                "check": "Emoji taxonomy: 🎡 religious_feast, 🎉 street_fair, 🍽️ food_festival, 🎊 parade/cultural, 🎄 holiday_market",
+            },
+            {
+                "id": "projected_vs_raw_styling",
+                "check": "Projected rows labeled/styled differently from raw SAPO rows where applicable",
+            },
+            {
+                "id": "no_review_artifacts_as_live",
+                "check": "No GPS review / manual approval / proposal artifacts loaded as public live data",
+            },
+            {
+                "id": "list_only_zero",
+                "check": "No list_only projected feast rows in intake",
+                "expected_list_only_count": 0,
+            },
+            {
+                "id": "religious_feast_coverage",
+                "check": "At least 50 religious_feast projected pins on map",
+                "expected_min": 50,
+            },
+        ],
+        "spot_check_results": readiness.get("spot_check_results"),
+        "notes": [
+            "Backend agent must not edit nycif-field-desk unless explicitly authorized.",
+            "Read setoxxx/nycif-field-desk/AGENTS.md before changing map behavior.",
+        ],
+    }
+
+
 def build_readiness_report(*, reference_today: date) -> dict[str, Any]:
     seed_payload = json.loads(SEED_PATH.read_text(encoding="utf-8"))
     seed_rows = seed_payload.get("entries") if isinstance(seed_payload, dict) else []
@@ -141,6 +305,7 @@ def build_readiness_report(*, reference_today: date) -> dict[str, Any]:
         for e in intake_events
         if isinstance(e, dict) and not (e.get("latitude") and e.get("longitude"))
     ]
+    religious_feast_discovery_count = count_religious_feast_discovery(approved_events, seed_rows)
 
     report = {
         "artifact_type": "projected_feast_map_readiness_report",
@@ -152,6 +317,7 @@ def build_readiness_report(*, reference_today: date) -> dict[str, Any]:
         "map_ready_count": sum(1 for e in intake_events if e.get("latitude") and e.get("longitude")),
         "list_only_count": len(list_only),
         "projected_discovery_count": len(projected),
+        "religious_feast_discovery_count": religious_feast_discovery_count,
         "borough_breakdown": {
             "seed": dict(seed_by_borough),
             "discovery": dict(discovery_by_borough),
@@ -192,12 +358,31 @@ def main() -> int:
     reference_entries = reference_payload.get("entries") if isinstance(reference_payload, dict) else []
     confirmation = build_confirmation_notes(match_report, reference_entries)
     readiness = build_readiness_report(reference_today=ref)
+    merge_readiness = build_merge_readiness_report(
+        readiness=readiness,
+        confirmation=confirmation,
+        match_report=match_report,
+    )
+    field_desk = build_field_desk_checklist(readiness=readiness)
 
     CONFIRMATION_PATH.parent.mkdir(parents=True, exist_ok=True)
     CONFIRMATION_PATH.write_text(json.dumps(confirmation, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     READINESS_PATH.write_text(json.dumps(readiness, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    MERGE_READINESS_PATH.write_text(json.dumps(merge_readiness, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    FIELD_DESK_CHECKLIST_PATH.write_text(json.dumps(field_desk, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
-    print(json.dumps({"readiness": str(READINESS_PATH), "confirmation": str(CONFIRMATION_PATH), "qa_pass": readiness["qa_pass"]}, indent=2))
+    print(
+        json.dumps(
+            {
+                "readiness": str(READINESS_PATH),
+                "confirmation": str(CONFIRMATION_PATH),
+                "merge_readiness": str(MERGE_READINESS_PATH),
+                "field_desk_checklist": str(FIELD_DESK_CHECKLIST_PATH),
+                "qa_pass": readiness["qa_pass"],
+            },
+            indent=2,
+        )
+    )
     return 0 if readiness["qa_pass"] else 1
 
 

@@ -1,14 +1,14 @@
 {
   "artifact_type": "projected_feast_raw_confirmation_notes",
-  "generated_at_utc": "2026-07-18T22:47:31Z",
+  "generated_at_utc": "2026-07-18T23:14:19Z",
   "match_report_status_counts": {
-    "not_in_raw_snapshot": 174,
-    "title_match": 20,
-    "confirmed_permit_id": 2,
+    "not_in_raw_snapshot": 180,
+    "title_match": 37,
+    "confirmed_permit_id": 3,
     "permit_id_mismatch": 3
   },
-  "confirmed_permit_id_count": 2,
-  "title_match_count": 20,
+  "confirmed_permit_id_count": 3,
+  "title_match_count": 37,
   "permit_id_mismatch_count": 3,
   "confirmed_permit_id": [
     {
@@ -17,6 +17,13 @@
       "match_status": "confirmed_permit_id",
       "claimed_permit_id": "906428",
       "raw_event_id": "906428"
+    },
+    {
+      "key": "church-at-the-park-marine-park",
+      "canonical_name": "Church at the Park (Marine Park)",
+      "match_status": "confirmed_permit_id",
+      "claimed_permit_id": "952432",
+      "raw_event_id": "952432"
     },
     {
       "key": "our-lady-snows-saint-alphonsa-procession",
@@ -42,6 +49,13 @@
       "raw_event_id": "919112"
     },
     {
+      "key": "ridgewood-essex-street-block-party",
+      "canonical_name": "Essex Street Block Party (Ridgewood)",
+      "match_status": "title_match",
+      "claimed_permit_id": "859845",
+      "raw_event_id": "919112"
+    },
+    {
       "key": "mount-carmel-bradley-avenue-staten-island",
       "canonical_name": "Feast of Our Lady of Mount Carmel (Bradley Avenue, Staten Island)",
       "match_status": "title_match",
@@ -60,6 +74,34 @@
       "canonical_name": "Eltingville Block Party (South Shore)",
       "match_status": "title_match",
       "claimed_permit_id": null,
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "goodall-street-south-beach-block-party",
+      "canonical_name": "Goodall Street Block Party (South Beach)",
+      "match_status": "title_match",
+      "claimed_permit_id": "850037",
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "ridgewood-madison-street-block-party",
+      "canonical_name": "Madison Street Block Party (Ridgewood)",
+      "match_status": "title_match",
+      "claimed_permit_id": null,
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "naughton-avenue-new-dorp-block-party",
+      "canonical_name": "Naughton Avenue Block Party (New Dorp)",
+      "match_status": "title_match",
+      "claimed_permit_id": "844572",
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "flushing-community-block-party-downing",
+      "canonical_name": "Flushing Community Block Party (Downing Street)",
+      "match_status": "title_match",
+      "claimed_permit_id": "859273",
       "raw_event_id": "919112"
     },
     {
@@ -91,10 +133,38 @@
       "raw_event_id": "919112"
     },
     {
+      "key": "great-kills-road-block-party",
+      "canonical_name": "Great Kills Road Block Party",
+      "match_status": "title_match",
+      "claimed_permit_id": null,
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "howard-beach-chicot-road-block-party",
+      "canonical_name": "Chicot Road Block Party (Howard Beach)",
+      "match_status": "title_match",
+      "claimed_permit_id": "858127",
+      "raw_event_id": "919112"
+    },
+    {
       "key": "east-55th-street-festival-borough-park",
       "canonical_name": "East 55th Street Festival (Borough Park)",
       "match_status": "title_match",
       "claimed_permit_id": "853378",
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "lamoka-avenue-great-kills-block-party",
+      "canonical_name": "Lamoka Avenue Block Party (Great Kills)",
+      "match_status": "title_match",
+      "claimed_permit_id": "855718",
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "gotham-avenue-gerritsen-block-party",
+      "canonical_name": "Gotham Avenue Block Party (Gerritsen Beach)",
+      "match_status": "title_match",
+      "claimed_permit_id": "867505",
       "raw_event_id": "919112"
     },
     {
@@ -105,10 +175,31 @@
       "raw_event_id": "919112"
     },
     {
+      "key": "st-rocco-baxter-street-little-italy",
+      "canonical_name": "St. Rocco Feast (Baxter Street, Little Italy)",
+      "match_status": "title_match",
+      "claimed_permit_id": "856930",
+      "raw_event_id": "919112"
+    },
+    {
       "key": "stapleton-back-to-school-block-party",
       "canonical_name": "Stapleton Back to School Block Party (Staten Island)",
       "match_status": "title_match",
       "claimed_permit_id": null,
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "ozone-park-108th-street-block-party",
+      "canonical_name": "108th Street Block Party (Ozone Park)",
+      "match_status": "title_match",
+      "claimed_permit_id": "872178",
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "howard-beach-west-16th-road-block-party",
+      "canonical_name": "West 16th Road Block Party (Howard Beach)",
+      "match_status": "title_match",
+      "claimed_permit_id": "878194",
       "raw_event_id": "919112"
     },
     {
@@ -117,6 +208,41 @@
       "match_status": "title_match",
       "claimed_permit_id": null,
       "raw_event_id": "922552"
+    },
+    {
+      "key": "ozone-park-131st-street-block-party",
+      "canonical_name": "131st Street Block Party (Ozone Park / Richmond Hill)",
+      "match_status": "title_match",
+      "claimed_permit_id": "871871",
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "bay-ridge-94th-street-block-party",
+      "canonical_name": "Bay Ridge 94th Street Block Party",
+      "match_status": "title_match",
+      "claimed_permit_id": "874784",
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "castle-hill-virgil-place-block-party",
+      "canonical_name": "Castle Hill Virgil Place Block Party",
+      "match_status": "title_match",
+      "claimed_permit_id": "859871",
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "brown-street-gerritsen-beach-block-party",
+      "canonical_name": "Brown Street Block Party (Gerritsen Beach)",
+      "match_status": "title_match",
+      "claimed_permit_id": "871145",
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "flushing-bid-summer-block-party",
+      "canonical_name": "Flushing BID Summer Block Party",
+      "match_status": "title_match",
+      "claimed_permit_id": "852607",
+      "raw_event_id": "919112"
     },
     {
       "key": "eighth-avenue-fall-festival",

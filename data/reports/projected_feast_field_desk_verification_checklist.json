@@ -1,0 +1,96 @@
+{
+  "artifact_type": "projected_feast_field_desk_verification_checklist",
+  "generated_at_utc": "2026-07-18T23:14:19Z",
+  "target_repo": "setoxxx/nycif-field-desk",
+  "pr_number": 312,
+  "backend_branch": "cursor/multiday-feast-discovery-c1f9",
+  "feed_path": "data/events_discovery_v02_approved.json",
+  "qa_pass": true,
+  "verification_items": [
+    {
+      "id": "load_projected_rows",
+      "check": "Discovery approved feed loads projected_feast_reference rows from nyc-projected-feast-reference dataset",
+      "expected": ">= 218 projected pins"
+    },
+    {
+      "id": "st_bernard_multiday_pin",
+      "check": "St. Bernard Madonna del Carmine Jul 23–26 shows 🎡 with larger multi-day marker",
+      "key": "st-bernard-madonna-del-carmine-bergen-beach"
+    },
+    {
+      "id": "san_gennaro_major",
+      "check": "Feast of San Gennaro Sep 10–20 shows 🎡 major pin in Little Italy",
+      "key": "feast-of-san-gennaro"
+    },
+    {
+      "id": "giglio_williamsburg",
+      "check": "Giglio / OLMC Williamsburg row is map_ready (raw 906428 or projected Giglio)",
+      "title_contains": "Giglio"
+    },
+    {
+      "id": "puerto_rican_parade",
+      "check": "National Puerto Rican Day Parade shows map_ready major pin",
+      "key": "national-puerto-rican-day-parade"
+    },
+    {
+      "id": "emoji_taxonomy",
+      "check": "Emoji taxonomy: 🎡 religious_feast, 🎉 street_fair, 🍽️ food_festival, 🎊 parade/cultural, 🎄 holiday_market"
+    },
+    {
+      "id": "projected_vs_raw_styling",
+      "check": "Projected rows labeled/styled differently from raw SAPO rows where applicable"
+    },
+    {
+      "id": "no_review_artifacts_as_live",
+      "check": "No GPS review / manual approval / proposal artifacts loaded as public live data"
+    },
+    {
+      "id": "list_only_zero",
+      "check": "No list_only projected feast rows in intake",
+      "expected_list_only_count": 0
+    },
+    {
+      "id": "religious_feast_coverage",
+      "check": "At least 50 religious_feast projected pins on map",
+      "expected_min": 50
+    }
+  ],
+  "spot_check_results": {
+    "st_bernard_bergen_beach": {
+      "found": true,
+      "title": "Feast of Madonna del Carmine (St. Bernard, Bergen Beach)",
+      "coordinate_status": "map_ready",
+      "is_major": true,
+      "end_date": "2026-07-26",
+      "source_dataset": "nyc-projected-feast-reference"
+    },
+    "san_gennaro": {
+      "found": true,
+      "title": "Feast of San Gennaro",
+      "coordinate_status": "map_ready",
+      "is_major": true,
+      "end_date": "2026-09-20",
+      "source_dataset": "nyc-projected-feast-reference"
+    },
+    "giglio": {
+      "found": true,
+      "title": "Giglio di Sant' Antonio Feast",
+      "coordinate_status": "map_ready",
+      "is_major": true,
+      "end_date": "2026-06-14",
+      "source_dataset": "nyc-projected-feast-reference"
+    },
+    "puerto_rican_day_parade": {
+      "found": true,
+      "title": "National Puerto Rican Day Parade",
+      "coordinate_status": "map_ready",
+      "is_major": true,
+      "end_date": "2026-06-14",
+      "source_dataset": "nyc-projected-feast-reference"
+    }
+  },
+  "notes": [
+    "Backend agent must not edit nycif-field-desk unless explicitly authorized.",
+    "Read setoxxx/nycif-field-desk/AGENTS.md before changing map behavior."
+  ]
+}

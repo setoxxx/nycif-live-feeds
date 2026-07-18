@@ -1,41 +1,42 @@
 {
   "artifact_type": "projected_feast_map_readiness_report",
-  "generated_at_utc": "2026-07-18T22:47:31Z",
+  "generated_at_utc": "2026-07-18T23:14:19Z",
   "reference_today": "2026-07-18",
   "qa_pass": true,
-  "seed_count": 199,
-  "intake_count": 198,
-  "map_ready_count": 198,
+  "seed_count": 223,
+  "intake_count": 220,
+  "map_ready_count": 220,
   "list_only_count": 0,
-  "projected_discovery_count": 196,
+  "projected_discovery_count": 218,
+  "religious_feast_discovery_count": 50,
   "borough_breakdown": {
     "seed": {
-      "Queens": 38,
-      "Manhattan": 81,
-      "Brooklyn": 57,
-      "Bronx": 14,
-      "Staten Island": 9
+      "Queens": 47,
+      "Manhattan": 82,
+      "Brooklyn": 64,
+      "Bronx": 17,
+      "Staten Island": 13
     },
     "discovery": {
-      "Queens": 38,
-      "Manhattan": 79,
-      "Brooklyn": 56,
-      "Bronx": 14,
-      "Staten Island": 9
+      "Queens": 46,
+      "Manhattan": 80,
+      "Brooklyn": 62,
+      "Bronx": 17,
+      "Staten Island": 13
     }
   },
   "event_kind_breakdown": {
     "seed": {
       "parade": 16,
-      "street_fair": 72,
+      "street_fair": 89,
       "cultural_festival": 50,
       "food_festival": 10,
-      "religious_feast": 46,
+      "religious_feast": 53,
       "holiday_market": 5
     },
     "discovery": {
-      "civic": 47,
-      "arts": 149
+      "civic": 51,
+      "arts": 167
     }
   },
   "top_20_upcoming_multi_day_feasts": [
@@ -72,11 +73,27 @@
       "coordinate_status": "map_ready"
     },
     {
+      "title": "St. Rocco Feast (Baxter Street, Little Italy)",
+      "start": "2026-08-15",
+      "end": "2026-08-16",
+      "borough": "Manhattan",
+      "days": 2,
+      "coordinate_status": "map_ready"
+    },
+    {
       "title": "18th Avenue Feast of Santa Rosalia",
       "start": "2026-08-20",
       "end": "2026-08-30",
       "borough": "Brooklyn",
       "days": 11,
+      "coordinate_status": "map_ready"
+    },
+    {
+      "title": "Our Lady of the Angel Feast (Woodhaven)",
+      "start": "2026-08-28",
+      "end": "2026-09-01",
+      "borough": "Queens",
+      "days": 5,
       "coordinate_status": "map_ready"
     },
     {
