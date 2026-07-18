@@ -92,6 +92,11 @@ test('produce market markers get tighter emoji sizing', () => {
   assert.match(appJs, /marker--produce/);
 });
 
+test('religious feasts and carnivals use ferris wheel emoji', () => {
+  assert.match(appJs, /\\bfeast\\b\|giglio\|san gennaro\|carmel\|carnival\|mardi gras\/i, '🎡'/);
+  assert.doesNotMatch(appJs, /\\bfeast\\b\|giglio\|san gennaro\/i, '🍝'/);
+});
+
 test('farmers markets and HHFM rows use grocery bags with vegetables emoji', () => {
   assert.match(appJs, /farmers\? market\|greenmarket\|green market\|produce\|harvest\|hhfm\/i, '🛍️🥬'/);
 });

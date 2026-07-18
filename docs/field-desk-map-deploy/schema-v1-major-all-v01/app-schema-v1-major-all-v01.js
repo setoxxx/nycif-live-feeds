@@ -94,15 +94,14 @@
   // ("food looks like food") from the title/tags, falling back to the category
   // emoji. First match wins, so put specific patterns before generic ones.
   const EVENT_EMOJI_RULES = [
-    [/\bfeast\b|giglio|san gennaro/i, '🍝'],
     [/food|culinary|taste of|restaurant|eats|foodie|chili|pizza|bbq|barbecue|cook ?out|grill/i, '🍽️'],
     [/farmers? market|greenmarket|green market|produce|harvest|hhfm/i, '🛍️🥬'],
     [/night market|bazaar|flea|vendor|sidewalk sale|craft fair|makers/i, '🛍️'],
     [/wine|beer|brew|cocktail|spirits/i, '🍷'],
     [/ice cream|dessert|sweet|bake/i, '🍦'],
     [/coffee/i, '☕'],
+    [/\bfeast\b|giglio|san gennaro|carmel|carnival|mardi gras/i, '🎡'],
     [/parade/i, '🎊'],
-    [/carnival|mardi gras/i, '🎡'],
     [/fireworks/i, '🎆'],
     [/marathon|\b\d+ ?k\b|road race|run\b|running|jog|triathlon|duathlon|cycl|bike ride|criterium/i, '🏃'],
     [/yoga|zumba|pilates|fitness|workout|aerobic|bootcamp|tai chi|wellness/i, '🧘'],

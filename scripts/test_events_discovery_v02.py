@@ -88,7 +88,15 @@ def main() -> int:
         ),
         ({"title": "Storytime at the park", "category": "parks"}, "family"),
         ({"title": "Bike Safety Class - Crotona - July 2026", "category": "parks"}, "education"),
-        ({"title": "Giglio Feast on Havemeyer", "category": "general"}, "arts"),
+        ({"title": "Giglio Feast on Havemeyer", "category": "general"}, "civic"),
+        (
+            {
+                "title": "Our Lady of Mt. Carmel Church Feast",
+                "event_type": "Street Festival",
+                "event_borough": "Brooklyn",
+            },
+            "civic",
+        ),
         (
             {
                 "title": "HPD Outreach Housing Resources in Your Neighborhood",
