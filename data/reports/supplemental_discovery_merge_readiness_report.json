@@ -1,0 +1,160 @@
+{
+  "artifact_type": "supplemental_discovery_merge_readiness_report",
+  "baseline": {
+    "approved_discovery_categories": {
+      "arts": 302,
+      "civic": 219,
+      "education": 254,
+      "environment": 12,
+      "family": 1957,
+      "fitness": 714,
+      "general": 123,
+      "government": 1,
+      "housing": 20,
+      "jobs": 1,
+      "market": 547,
+      "media": 15,
+      "parks": 4724,
+      "services": 31,
+      "sports": 23423,
+      "tours": 15,
+      "volunteer": 171
+    },
+    "approved_discovery_total": 32529,
+    "approved_manifest_path": "data/schema-v1-discovery/approved/manifest.json"
+  },
+  "errors": [],
+  "generated_at_utc": "2026-07-18T19:02:36.733905+00:00",
+  "long_island_note": "Long Island expansion is out of scope for M11; NYC five-borough supplemental only.",
+  "merge_authorized": true,
+  "next_required_step": "Supplemental approved export merged into schema-v1-discovery approved pages. Deploy field-desk so feeds=main loads updated manifest on GitHub Pages.",
+  "phase": "m11_supplemental_discovery_merge_prep",
+  "projected_after_merge": {
+    "approved_discovery_total": 32529,
+    "duplicates_skipped": 3492,
+    "net_new_events": 0
+  },
+  "qa_pass": true,
+  "safety": {
+    "location_cache_modified": false,
+    "production_feed": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "schema_v1_discovery_modified": false,
+    "staged_feed_modified": false
+  },
+  "supplemental_export": {
+    "already_in_approved_discovery": 3492,
+    "borough_counts": {
+      "Bk": 532,
+      "Bx": 600,
+      "Mn": 1004,
+      "Other": 40,
+      "Qn": 816,
+      "SI": 500
+    },
+    "export_event_count": 3492,
+    "intake_counts": {
+      "calendar_only": 2124,
+      "parks_only": 1368
+    },
+    "missing_coords": 0,
+    "net_new_to_merge": 0,
+    "path": "data/supplemental_approved_export_feed.json",
+    "sample_already_present": [
+      {
+        "date": "2026-07-16",
+        "overlap_key": "astoria pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1053836",
+        "title": "Astoria Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "claremont pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1058816",
+        "title": "Claremont Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "faber pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1060816",
+        "title": "Faber Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "gottesman pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1063116",
+        "title": "Gottesman Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "hamilton fish pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1063676",
+        "title": "Hamilton Fish Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "it s my park at leif ericson park|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1047976",
+        "title": "It's My Park at Leif Ericson Park"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "it s my park at sunset park|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1048296",
+        "title": "It's My Park at Sunset Park"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "kosciuszko pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1084596",
+        "title": "Kosciuszko Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "liberty pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1085656",
+        "title": "Liberty Pool: Lap Swim"
+      },
+      {
+        "date": "2026-07-16",
+        "overlap_key": "lyons pool lap swim|2026-07-16",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1086836",
+        "title": "Lyons Pool: Lap Swim"
+      }
+    ],
+    "sample_net_new": []
+  },
+  "upstream_gates": {
+    "approval_queue_pending": 0,
+    "approved_export_report": {
+      "artifact_type": "supplemental_approved_export_feed_report",
+      "path": "data/reports/supplemental_approved_export_feed_report.json",
+      "present": true,
+      "qa_pass": true
+    },
+    "manual_approval_validation": {
+      "artifact_type": null,
+      "path": "data/supplemental_manual_approval_validation_report.json",
+      "present": true,
+      "qa_pass": true
+    },
+    "overlap_coord_conflict_audit": {
+      "artifact_type": "supplemental_overlap_key_coord_conflict_audit_report",
+      "path": "data/reports/supplemental_overlap_key_coord_conflict_audit_report.json",
+      "present": true,
+      "qa_pass": true
+    },
+    "phase2e_dry_run_blocked": 0
+  }
+}

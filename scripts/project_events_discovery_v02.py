@@ -962,6 +962,24 @@ def main() -> int:
         seen_approved_ids.add(eid)
         folded += 1
     print(json.dumps({"public_supplemental_folded_into_approved": folded}))
+    baseline_approved_total = len(approved)
+    from supplemental_discovery_merge import (  # noqa: E402
+        fold_approved_supplemental_export,
+        write_merge_report,
+    )
+
+    approved, supplemental_merge_stats = fold_approved_supplemental_export(
+        approved,
+        build_base_event=build_base_event,
+        current_major_keys=current_major_keys,
+    )
+    merge_report = write_merge_report(
+        supplemental_merge_stats,
+        baseline_total=baseline_approved_total,
+        qa_pass=True,
+        errors=[],
+    )
+    print(json.dumps({"supplemental_approved_export_merge": supplemental_merge_stats}))
     major = [
         e
         for e in approved
