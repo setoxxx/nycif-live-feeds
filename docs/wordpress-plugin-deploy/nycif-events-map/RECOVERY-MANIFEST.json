@@ -1,34 +1,52 @@
 {
   "plugin": "nycif-events-map",
-  "release": "1.5.0-rc1",
+  "release": "1.5.0-rc2",
   "created_for": "NYC In Focus",
   "public_map_url": "https://nycinfocus.com/map/",
   "map_embed_url": "https://setoxxx.github.io/nycif-field-desk/",
   "canonical_runtime_url": "https://setoxxx.github.io/nycif-field-desk/?v=public-map-v10&resetFilters=1&feeds=main",
   "runtime_cache_bust": "public-map-v10",
+  "runtime_cache_bust_note": "Query-label cache buster only. Immutable app build = nycif-field-desk main commit deployed by field-desk-complete-map-deploy.yml",
   "approved_feed_ref": "main",
-  "field_desk_repository": "https://github.com/setoxxx/nycif-field-desk",
-  "live_data_repository": "https://github.com/setoxxx/nycif-live-feeds",
-  "freeze_doc": "docs/wordpress-plugin-deploy/nycinfocus-map-page-v1-freeze.md",
-  "wordpress_deploy_runbook": "docs/wordpress-plugin-deploy/CHATGPT-WORDPRESS-DEPLOY-PROMPT.md",
-  "display_modes_doc": "docs/wordpress-plugin-deploy/PUBLIC-MAP-DISPLAY-MODES.md",
-  "display_mode_breakpoint_px": 720,
+  "feed_channel": {
+    "mutable": true,
+    "contract": "feeds=main resolves to nycif-live-feeds main data/schema-v1-discovery at runtime",
+    "manifest_probe_url": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/schema-v1-discovery/approved/manifest.json",
+    "record_at_deploy": [
+      "live_feeds_main_sha",
+      "field_desk_main_sha",
+      "manifest.generated_at_utc",
+      "manifest.total"
+    ]
+  },
+  "deploy_pipeline": {
+    "source_repo": "setoxxx/nycif-live-feeds",
+    "pages_repo": "setoxxx/nycif-field-desk",
+    "workflow_file": ".github/workflows/field-desk-complete-map-deploy.yml",
+    "workflow_name": "Deploy to Field Desk Pages",
+    "must_pass_before_wordpress": true
+  },
+  "execution_prompt": "docs/wordpress-plugin-deploy/CHATGPT-EXECUTION-PROMPT.md",
+  "preflight_script": "scripts/preflight_field_desk_map_release.sh",
+  "plugin_zip_build_script": "scripts/build_nycif_events_map_plugin_zip.sh",
   "retired": {
+    "plugin_versions": ["1.4.0-rc1"],
     "runtime_tokens": ["discovery-taxonomy-v02", "discovery-taxonomy-v03", "public-map-v07"],
-    "feed_pin_patterns": ["40-char git commit SHA in feeds="],
-    "shortcode_on_map_page": "Do not use [nycif_events_map] on /map/ — use #nycifMapAppShell shell"
+    "feed_pin_patterns": ["40-char git commit SHA in feeds="]
   },
   "rollback": {
-    "package": "nycif-events-map-1.4.0-rc1.zip",
-    "note": "SHA-256 from 1.3.1 safe rollback lineage; verify before use",
-    "sha256": "ea5b0ac0632fe09f99758b34cab67fa45bf753be4ca724b9bdeb5fa0d79101e9"
+    "application": "Redeploy known-good commit to nycif-field-desk via live-feeds workflow — not v= query change alone",
+    "wordpress_shell": "Restore page 2647 revision or prior canonical HTML after Field Desk rollback verified",
+    "plugin_package": "nycif-events-map-1.4.0-rc1.zip",
+    "plugin_sha256_legacy": "ea5b0ac0632fe09f99758b34cab67fa45bf753be4ca724b9bdeb5fa0d79101e9"
   },
   "status": "release-candidate",
   "promotion_gate": [
-    "Field Desk Pages deploy public-map-v10 succeeded on main",
-    "WordPress /map/ page 2647 iframe v= updated (ChatGPT runbook QA PASS)",
-    "Desktop and mobile viewport QA on nycinfocus.com/map/",
-    "feeds=main discovery feed only — no supplemental on public map until M11 approved",
-    "GPS / location_cache promotion remains unauthorized"
+    "Deploy to Field Desk Pages workflow PASS on main",
+    "preflight_field_desk_map_release.sh public-map-v10 PASS",
+    "GitHub Pages human smoke test PASS",
+    "WordPress plugin 1.5.0-rc2 reviewed and uploaded",
+    "WordPress /map/ page 2647 canonical shell deployed",
+    "curl + human QA on nycinfocus.com/map/ PASS"
   ]
 }

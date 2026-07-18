@@ -1,6 +1,8 @@
 # NYCIF Events Map — WordPress plugin deploy
 
-> **Production `/map/` page (FROZEN):** read [`nycinfocus-map-page-v1-freeze.md`](./nycinfocus-map-page-v1-freeze.md) before any WordPress or embed change. For WordPress deploys, copy the prompt from [`CHATGPT-WORDPRESS-DEPLOY-PROMPT.md`](./CHATGPT-WORDPRESS-DEPLOY-PROMPT.md) into ChatGPT (or any agent with WP admin access).
+**Primary ChatGPT prompt (use this):** [`CHATGPT-EXECUTION-PROMPT.md`](./CHATGPT-EXECUTION-PROMPT.md) — gated deploy with preflight, plugin review, and rollback truth.
+
+Background runbook: [`CHATGPT-WORDPRESS-DEPLOY-PROMPT.md`](./CHATGPT-WORDPRESS-DEPLOY-PROMPT.md)
 
 Copy `nycif-events-map/` into your WordPress plugins directory:
 
@@ -15,7 +17,8 @@ Or zip and upload: `nycif-events-map-1.5.0-rc1.zip` (package the `nycif-events-m
 
 | Package | Runtime `v=` | Feed | Status |
 |---------|--------------|------|--------|
-| **1.5.0-rc1** (repo) | `public-map-v10` | `feeds=main` | **Use this** |
+| **1.5.0-rc2** (repo) | `public-map-v10` | `feeds=main` | **Use this** — addresses deploy review |
+| 1.5.0-rc1 | `public-map-v10` | `feeds=main` | Superseded by rc2 |
 | 1.4.0-rc1 (live site) | `discovery-taxonomy-v03` | commit `bf7dedd…` | **Retired** — upgrade |
 | 1.3.2 (older repo) | `public-map-v10` | `feeds=main` | Superseded by 1.5.0-rc1 |
 

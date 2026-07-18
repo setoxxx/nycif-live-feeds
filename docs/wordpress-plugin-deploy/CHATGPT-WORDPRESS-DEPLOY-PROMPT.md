@@ -70,30 +70,27 @@ If step 2 has not finished, **do not** update WordPress — visitors would get a
 
 ## Pre-flight: confirm GitHub Pages before touching WordPress
 
+**Use the full gate script — not grep alone:**
+
+```bash
+./scripts/preflight_field_desk_map_release.sh public-map-v10
+```
+
+This checks HTTP 200 on index + JS bundles, discovery manifest `total > 0`, and field-desk `index.html` on Pages. See [`CHATGPT-EXECUTION-PROMPT.md`](./CHATGPT-EXECUTION-PROMPT.md) for the complete gated deploy prompt to paste into ChatGPT.
+
 **Current canonical `v=` token:** `public-map-v10`  
 (If unsure, read `status/nycif-map-v1-freeze.json` → `surfaces.canonical_iframe_src`.)
 
-### 1. Pages URL responds
+### Deploy dependency (required)
 
-```bash
-curl -sI 'https://setoxxx.github.io/nycif-field-desk/?v=public-map-v10&resetFilters=1&feeds=main' | head -5
-```
+| Step | Repo | Action |
+|------|------|--------|
+| 1 | `nycif-live-feeds` | PR merges to `main` |
+| 2 | `nycif-live-feeds` | Workflow **Deploy to Field Desk Pages** succeeds |
+| 3 | `nycif-field-desk` | `main` receives copied map files (immutable build for Pages) |
+| 4 | WordPress | Only after step 2–3 PASS: update page 2647 + plugin |
 
-Expect `HTTP/2 200` (or `HTTP/1.1 200`).
-
-### 2. Pages HTML contains the new cache bust
-
-```bash
-curl -sL 'https://setoxxx.github.io/nycif-field-desk/?v=public-map-v10&resetFilters=1&feeds=main' | grep -o 'public-map-v10' | head -3
-```
-
-Expect at least one `public-map-v10` line.
-
-### 3. Display-mode script is deployed (v10+)
-
-```bash
-curl -sL 'https://setoxxx.github.io/nycif-field-desk/?v=public-map-v10&resetFilters=1&feeds=main' | grep -q 'public-display-mode-v01.js' && echo PASS display-mode-script || echo FAIL display-mode-script
-```
+Workflow URL: https://github.com/setoxxx/nycif-live-feeds/actions/workflows/field-desk-complete-map-deploy.yml
 
 ---
 
@@ -319,15 +316,25 @@ WordPress /map/ deploy report
 
 ## Rollback procedure
 
-If production `/map/` breaks after a deploy:
+**`v=` is not a rollback mechanism.** It only busts browser/CDN caches on asset URLs. The application code is whatever commit is deployed on `setoxxx/nycif-field-desk` `main`.
 
-1. WP Admin → page 2647 → Code Editor.
-2. Change iframe `src` `v=` back to last known good token (e.g. `public-map-v07`) **only** if that runtime still exists on Pages.
-3. Update page.
-4. Re-run curl QA.
-5. Report incident to Cursor agent with exact iframe src and curl output.
+### Application rollback (map broken)
 
-Rollback changes display shell only — it does not revert feed data.
+1. Find last known-good commit on https://github.com/setoxxx/nycif-field-desk/commits/main/
+2. Revert the deploy commit on `nycif-live-feeds` `main` or restore canonical deploy sources, then re-run **Deploy to Field Desk Pages**:
+   https://github.com/setoxxx/nycif-live-feeds/actions/workflows/field-desk-complete-map-deploy.yml
+3. Run `./scripts/preflight_field_desk_map_release.sh public-map-v10` (or the new token) until PASS.
+4. Only then adjust WordPress iframe `v=` if the cache-bust label changed.
+
+### WordPress shell rollback (chrome/layout broken)
+
+Restore page **2647** from WordPress revision history, or paste the last known-good canonical HTML from `nycinfocus-map-page-v1-freeze.md`.
+
+### Plugin rollback
+
+Reinstall documented ZIP from `RECOVERY-MANIFEST.json` → `rollback.plugin_package`. Note: 1.4.0-rc1 is retired (commit-pinned feed).
+
+**Do not** tell operators that changing `v=public-map-v07` alone restores an earlier deployment unless that Field Desk commit is still live on Pages.
 
 ---
 

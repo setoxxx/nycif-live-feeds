@@ -4,7 +4,7 @@ Tags: map, events, nyc, iframe
 Requires at least: 5.8
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.5.0-rc1
+Stable tag: 1.5.0-rc2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,6 +38,11 @@ No. Use the fullscreen shell documented in `nycinfocus-map-page-v1-freeze.md` in
 - Aligns with RC release (#298–#302) and device display modes
 
 == Changelog ==
+
+= 1.5.0-rc2 =
+* Review fixes: lazy shortcode loading, strict-origin referrer, block attributes registered
+* Admin-visible warning when commit SHA feed pins normalize to main
+* Settings clarify v= cache-bust vs Field Desk deploy rollback
 
 = 1.5.0-rc1 =
 * Align with public-map-v10 and feeds=main approved discovery contract
