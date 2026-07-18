@@ -2,44 +2,66 @@
   "applied": [
     {
       "match": [
-        "overlap_key",
-        "invasive species removal|2026-07-18"
+        "review_rank",
+        3639
       ],
-      "status": "rejected"
+      "status": "approved"
     },
     {
       "match": [
-        "overlap_key",
-        "inwood canoe club sunday open house|2026-07-19"
+        "review_rank",
+        3640
       ],
-      "status": "rejected"
+      "status": "approved"
     },
     {
       "match": [
-        "overlap_key",
-        "waterfront workouts amp d bootcamp|2026-07-22"
+        "review_rank",
+        3641
       ],
-      "status": "rejected"
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        3642
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        3643
+      ],
+      "status": "approved"
+    },
+    {
+      "match": [
+        "review_rank",
+        3644
+      ],
+      "status": "approved"
     }
   ],
-  "approval_queue_count": 3634,
-  "approved_count": 3493,
-  "decisions_applied": 3,
-  "decisions_requested": 3,
-  "decisions_source": "data/supplemental_manual_review_merge_decisions.json",
+  "approval_queue_count": 3644,
+  "approved_count": 3498,
+  "decisions_applied": 6,
+  "decisions_requested": 6,
+  "decisions_source": "data/staging/access_benefits_manual_approval_decisions.json",
   "decisions_unmatched": 0,
-  "generated_at_utc": "2026-07-18T00:39:52.737378+00:00",
+  "generated_at_utc": "2026-07-18T19:30:20.004474+00:00",
   "location_cache_modified": false,
   "next_required_step": "Run validate_supplemental_manual_approvals.py. Public map merge still requires explicit authorization.",
-  "pending_count": 0,
+  "pending_count": 4,
   "phase": "m11_supplemental_manual_approval_decisions_applied",
   "promotion_allowed_count": 0,
   "public_map_modified": false,
-  "rejected_count": 141,
+  "rejected_count": 142,
   "staged_feed_modified": false,
   "status_counts": {
-    "approved": 3493,
-    "rejected": 141
+    "approved": 3498,
+    "pending": 4,
+    "rejected": 142
   },
   "unmatched": []
 }
