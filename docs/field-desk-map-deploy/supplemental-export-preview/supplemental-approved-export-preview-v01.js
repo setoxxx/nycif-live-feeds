@@ -228,6 +228,17 @@
 
   function suppressServiceWorkerForPreview() {
     if (!previewExportMode() || !('serviceWorker' in navigator)) return;
+    try {
+      navigator.serviceWorker.register = async function blockedServiceWorkerRegister() {
+        return {
+          scope: `${location.origin}/`,
+          unregister: async () => true,
+          update: async () => {},
+        };
+      };
+    } catch {
+      /* ignore */
+    }
     navigator.serviceWorker.getRegistrations()
       .then(regs => Promise.all(regs.map(reg => reg.unregister())))
       .catch(() => {});
@@ -376,74 +387,97 @@
     SupplementalDotsLayerClass = window.L.Layer.extend({
       initialize(pins) {
         this._pins = pins;
+        this._topLeft = null;
+        this._raf = null;
       },
       onAdd(map) {
         this._map = map;
-        this._canvas = window.L.DomUtil.create('canvas', 'nycif-supplemental-dots-canvas leaflet-layer');
-        window.L.DomUtil.addClass(this._canvas, 'leaflet-zoom-animated');
+        this._canvas = window.L.DomUtil.create('canvas', 'nycif-supplemental-dots-canvas');
         map.getPanes().overlayPane.appendChild(this._canvas);
-        map.on('resize viewreset zoomend', this._resize, this);
-        map.on('move moveend zoom zoomanim', this._redraw, this);
+        this._reset = this._reset.bind(this);
+        this._scheduleRedraw = this._scheduleRedraw.bind(this);
+        this._onMapClick = this._onMapClick.bind(this);
+        map.on('viewreset resize zoomend', this._reset, this);
+        map.on('moveend', this._redraw, this);
+        map.on('move zoom', this._scheduleRedraw, this);
         map.on('click', this._onMapClick, this);
-        this._resize();
+        this._reset();
         return this;
       },
       onRemove(map) {
-        map.off('resize viewreset zoomend', this._resize, this);
-        map.off('move moveend zoom zoomanim', this._redraw, this);
+        if (this._raf) {
+          cancelAnimationFrame(this._raf);
+          this._raf = null;
+        }
+        map.off('viewreset resize zoomend', this._reset, this);
+        map.off('moveend', this._redraw, this);
+        map.off('move zoom', this._scheduleRedraw, this);
         map.off('click', this._onMapClick, this);
         window.L.DomUtil.remove(this._canvas);
       },
-      _resize() {
+      _scheduleRedraw() {
+        if (this._raf) return;
+        this._raf = requestAnimationFrame(() => {
+          this._raf = null;
+          this._updatePositionAndRedraw();
+        });
+      },
+      _updatePositionAndRedraw() {
         const map = this._map;
-        const size = map.getSize();
-        this._canvas.width = size.x;
-        this._canvas.height = size.y;
+        const topLeft = map.containerPointToLayerPoint([0, 0]);
+        window.L.DomUtil.setPosition(this._canvas, topLeft);
+        this._topLeft = topLeft;
         this._redraw();
       },
-      _layerOrigin() {
-        return this._map.containerPointToLayerPoint([0, 0]);
-      },
-      _pinPoint(pin) {
-        const origin = this._layerOrigin();
-        const layerPoint = this._map.latLngToLayerPoint([pin.lat, pin.lng]);
-        return {
-          x: layerPoint.x - origin.x,
-          y: layerPoint.y - origin.y,
-        };
+      _reset() {
+        const map = this._map;
+        const size = map.getSize();
+        const topLeft = map.containerPointToLayerPoint([0, 0]);
+        window.L.DomUtil.setPosition(this._canvas, topLeft);
+        this._canvas.width = size.x;
+        this._canvas.height = size.y;
+        this._topLeft = topLeft;
+        this._redraw();
       },
       _redraw() {
         const map = this._map;
-        const ctx = this._canvas.getContext('2d');
-        if (!ctx) return;
-        window.L.DomUtil.setPosition(this._canvas, this._layerOrigin());
+        const ctx = this._canvas?.getContext('2d');
+        const topLeft = this._topLeft;
+        if (!ctx || !topLeft) return;
+
         ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+        const bounds = map.getBounds();
         ctx.fillStyle = '#7c3aed';
         ctx.strokeStyle = '#ede9fe';
         ctx.lineWidth = 1;
-        const pad = 12;
-        const w = this._canvas.width + pad;
-        const h = this._canvas.height + pad;
         for (const pin of this._pins) {
-          const point = this._pinPoint(pin);
-          if (point.x < -pad || point.y < -pad || point.x > w || point.y > h) continue;
+          if (!bounds.contains([pin.lat, pin.lng])) continue;
+          const pt = map.latLngToContainerPoint([pin.lat, pin.lng]);
+          const x = pt.x - topLeft.x;
+          const y = pt.y - topLeft.y;
+          if (x < -12 || y < -12 || x > this._canvas.width + 12 || y > this._canvas.height + 12) {
+            continue;
+          }
           ctx.beginPath();
-          ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+          ctx.arc(x, y, 5, 0, Math.PI * 2);
           ctx.fill();
           ctx.stroke();
         }
       },
       _onMapClick(event) {
         const map = this._map;
-        const clickPt = map.latLngToLayerPoint(event.latlng);
-        const origin = this._layerOrigin();
-        const clickX = clickPt.x - origin.x;
-        const clickY = clickPt.y - origin.y;
+        const clickPt = map.latLngToContainerPoint(event.latlng);
+        const topLeft = this._topLeft;
+        if (!topLeft) return;
+        const clickX = clickPt.x - topLeft.x;
+        const clickY = clickPt.y - topLeft.y;
         let best = null;
         let bestDist = 14;
+        const bounds = map.getBounds();
         for (const pin of this._pins) {
-          const point = this._pinPoint(pin);
-          const dist = Math.hypot(point.x - clickX, point.y - clickY);
+          if (!bounds.contains([pin.lat, pin.lng])) continue;
+          const pt = map.latLngToContainerPoint([pin.lat, pin.lng]);
+          const dist = Math.hypot((pt.x - topLeft.x) - clickX, (pt.y - topLeft.y) - clickY);
           if (dist < bestDist) {
             bestDist = dist;
             best = pin;
@@ -466,7 +500,7 @@
     const LayerClass = getSupplementalDotsLayerClass();
     const layer = new LayerClass(pins).addTo(map);
     if (fitBounds && pins.length) {
-      map.fitBounds(boundsFromPins(pins).pad(0.12));
+      map.fitBounds(boundsFromPins(pins).pad(0.12), { animate: false });
     }
     return layer;
   }
@@ -582,7 +616,9 @@
 
   function scheduleDeskAutoEnable() {
     let attempts = 0;
+    let enabled = false;
     const tick = () => {
+      if (enabled) return;
       attempts += 1;
       const map = window.NYCIF_MAIN_MAP;
       const checkbox = document.getElementById('supplementalExportPreviewToggle');
@@ -591,6 +627,7 @@
           checkbox.checked = true;
           toggleOverlay(true);
         }
+        enabled = true;
         return;
       }
       if (attempts < 160) setTimeout(tick, 250);
@@ -658,6 +695,10 @@
   };
 
   window.NYCIF_SUPPLEMENTAL_EXPORT_PREVIEW = api;
+
+  if (previewExportMode()) {
+    suppressServiceWorkerForPreview();
+  }
 
   if (!deskOverlayMode()) {
     return;
