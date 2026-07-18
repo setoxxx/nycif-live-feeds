@@ -1,6 +1,6 @@
 {
   "artifact_type": "nyc_feast_festival_reference_seed",
-  "version": 4,
+  "version": 5,
   "notes": [
     "Curated from operator/Google Studio projected feast lists for mapping and registry aliases.",
     "claimed_permit_id values are hints only and frequently mismatch the committed raw snapshot.",
@@ -786,6 +786,28 @@
       "bulk_import_batch": "operator_gap_fill_wave2_2026_07"
     },
     {
+      "key": "coney-island-mermaid-parade-festival",
+      "canonical_name": "Coney Island Mermaid Parade Festival",
+      "aliases": [
+        "Coney Island Mermaid Parade Festival",
+        "Mermaid Parade Coney Island",
+        "Mermaid Parade Festival"
+      ],
+      "claimed_permit_id": "834804",
+      "projected_start": "2026-06-20",
+      "projected_end": "2026-06-20",
+      "event_kind": "parade",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "STILLWELL AVENUE",
+      "display_location": "STILLWELL AVENUE between SURF AVENUE and BOARDWALK, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
+    },
+    {
       "key": "flatiron-district-summer-kickoff",
       "canonical_name": "Flatiron District Summer Kickoff",
       "aliases": [
@@ -804,6 +826,28 @@
       "reference_lng": null,
       "source": "google_studio_bulk_patch",
       "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "fordham-plaza-community-festival",
+      "canonical_name": "Fordham Plaza Community Festival (Bronx)",
+      "aliases": [
+        "Fordham Plaza Community Festival (Bronx)",
+        "Fordham Plaza Festival",
+        "Fordham Road Festival"
+      ],
+      "claimed_permit_id": "816452",
+      "projected_start": "2026-06-20",
+      "projected_end": "2026-06-20",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "borough": "Bronx",
+      "location_hint": "Fordham Plaza",
+      "display_location": "Fordham Plaza, East Fordham Road, Bronx, NY",
+      "reference_lat": 40.8623,
+      "reference_lng": -73.9012,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
     },
     {
       "key": "longwood-avenue-festival-bronx",
@@ -826,6 +870,28 @@
       "reference_lng": null,
       "source": "google_studio_bulk_patch",
       "bulk_import_batch": "operator_gap_fill_wave2_2026_07"
+    },
+    {
+      "key": "st-matthews-st-gregory-block-party-crown-heights",
+      "canonical_name": "St. Matthews–St. Gregory Block Party (Crown Heights)",
+      "aliases": [
+        "St. Matthews–St. Gregory Block Party (Crown Heights)",
+        "St Matthews St Gregory Block Party",
+        "St. Gregory Church Block Party"
+      ],
+      "claimed_permit_id": "833564",
+      "projected_start": "2026-06-20",
+      "projected_end": "2026-06-20",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "ST JOHNS PLACE",
+      "display_location": "ST JOHNS PLACE between BROOKLYN AVENUE and NEW YORK AVENUE, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
     },
     {
       "key": "annual-feast-procession-bellerose",
@@ -1062,6 +1128,28 @@
       "bulk_import_batch": "google_studio_parts_1_9_2026"
     },
     {
+      "key": "international-african-arts-festival-brooklyn",
+      "canonical_name": "International African Arts Festival (Brooklyn)",
+      "aliases": [
+        "International African Arts Festival (Brooklyn)",
+        "African Arts Festival Commodore Barry Park",
+        "IAAF Brooklyn"
+      ],
+      "claimed_permit_id": "821634",
+      "projected_start": "2026-07-01",
+      "projected_end": "2026-07-07",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": true,
+      "borough": "Brooklyn",
+      "location_hint": "Commodore Barry Park",
+      "display_location": "Commodore Barry Park, Brooklyn, NY",
+      "reference_lat": 40.6977,
+      "reference_lng": -73.9798,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
+    },
+    {
       "key": "travis-4th-of-july-parade",
       "canonical_name": "Travis 4th of July Parade",
       "aliases": [
@@ -1123,6 +1211,28 @@
       "bulk_import_batch": "google_studio_parts_1_9_2026"
     },
     {
+      "key": "barbados-festival-day-canarsie",
+      "canonical_name": "Barbados Festival Day (Canarsie)",
+      "aliases": [
+        "Barbados Festival Day (Canarsie)",
+        "Barbados Festival Canarsie Park",
+        "Barbados Day Brooklyn"
+      ],
+      "claimed_permit_id": "819286",
+      "projected_start": "2026-07-11",
+      "projected_end": "2026-07-11",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "Canarsie Park",
+      "display_location": "Canarsie Park, Brooklyn, NY",
+      "reference_lat": 40.6405,
+      "reference_lng": -73.8845,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
+    },
+    {
       "key": "calle-colombia-festival-corona",
       "canonical_name": "Calle Colombia Festival (Corona)",
       "aliases": [
@@ -1180,6 +1290,28 @@
       "reference_lng": null,
       "source": "google_studio_bulk_patch",
       "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "fatima-devotion-procession-maspeth",
+      "canonical_name": "Fatima Devotion Procession (Maspeth)",
+      "aliases": [
+        "Fatima Devotion Procession (Maspeth)",
+        "Fatima Procession Maspeth",
+        "Our Lady of Fatima Procession"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-12",
+      "projected_end": "2026-07-12",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "56 ROAD",
+      "display_location": "56 ROAD between 61 STREET and 64 STREET, Queens, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
     },
     {
       "key": "mount-carmel-bradley-avenue-staten-island",
@@ -1325,6 +1457,28 @@
       "bulk_import_batch": "operator_gap_fill_wave2_2026_07"
     },
     {
+      "key": "mariamman-festival-richmond-hill",
+      "canonical_name": "Mariamman Festival (Richmond Hill)",
+      "aliases": [
+        "Mariamman Festival (Richmond Hill)",
+        "3rd Annual Mariamman Festival",
+        "Mariamman Festival Queens"
+      ],
+      "claimed_permit_id": "860242",
+      "projected_start": "2026-07-18",
+      "projected_end": "2026-07-18",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "101 AVENUE",
+      "display_location": "101 AVENUE between 121 STREET and 123 STREET, Queens, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
+    },
+    {
       "key": "murray-hill-neighborhood-festival",
       "canonical_name": "Murray Hill Neighborhood Festival",
       "aliases": [
@@ -1405,6 +1559,28 @@
       "reference_lng": null,
       "source": "google_studio_bulk_patch",
       "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "international-peruvian-festival-jackson-heights",
+      "canonical_name": "International Peruvian Festival (Jackson Heights)",
+      "aliases": [
+        "International Peruvian Festival (Jackson Heights)",
+        "Peruvian Festival Queens",
+        "International Peruvian Festival NY"
+      ],
+      "claimed_permit_id": "843678",
+      "projected_start": "2026-07-19",
+      "projected_end": "2026-07-19",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "37 AVENUE",
+      "display_location": "37 AVENUE between 71 STREET and 87 STREET, Queens, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
     },
     {
       "key": "our-lady-snows-saint-alphonsa-procession",
@@ -1500,6 +1676,28 @@
       "bulk_import_batch": "operator_gap_fill_wave2_2026_07"
     },
     {
+      "key": "downtown-jamaica-rhythm-jazz-festival",
+      "canonical_name": "Downtown Jamaica Rhythm and Jazz Festival",
+      "aliases": [
+        "Downtown Jamaica Rhythm and Jazz Festival",
+        "Jamaica Jazz Festival",
+        "Rufus King Park Jazz Festival"
+      ],
+      "claimed_permit_id": "869323",
+      "projected_start": "2026-07-25",
+      "projected_end": "2026-07-25",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "Rufus King Park",
+      "display_location": "Rufus King Park, Jamaica, Queens, NY",
+      "reference_lat": 40.7055,
+      "reference_lng": -73.8035,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
+    },
+    {
       "key": "tudor-city-neighborhood-festival",
       "canonical_name": "Tudor City Neighborhood Festival",
       "aliases": [
@@ -1560,6 +1758,50 @@
       "bulk_import_batch": "google_studio_parts_1_9_2026"
     },
     {
+      "key": "chelum-procession-flushing",
+      "canonical_name": "Chelum Procession (Flushing)",
+      "aliases": [
+        "Chelum Procession (Flushing)",
+        "Chelum Procession Queens",
+        "Flushing Chelum Procession"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-01",
+      "projected_end": "2026-08-01",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "MAIN STREET",
+      "display_location": "MAIN STREET between FRANKLIN AVENUE and SAULL STREET, Queens, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
+    },
+    {
+      "key": "east-55th-street-festival-borough-park",
+      "canonical_name": "East 55th Street Festival (Borough Park)",
+      "aliases": [
+        "East 55th Street Festival (Borough Park)",
+        "East 55th St Block Party",
+        "55th Street Festival Brooklyn"
+      ],
+      "claimed_permit_id": "853378",
+      "projected_start": "2026-08-01",
+      "projected_end": "2026-08-01",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "EAST 55 STREET",
+      "display_location": "EAST 55 STREET between AVENUE N and AVENUE M, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
+    },
+    {
       "key": "hester-street-fair-summer",
       "canonical_name": "Hester Street Fair (Summer Edition)",
       "aliases": [
@@ -1617,6 +1859,28 @@
       "location_hint": "PLEASANT AVENUE",
       "source": "google_studio_projected",
       "display_location": "PLEASANT AVENUE between EAST 114 STREET and EAST 116 STREET, Manhattan, NY"
+    },
+    {
+      "key": "african-heritage-festival-brownsville",
+      "canonical_name": "African Heritage Festival (Brownsville)",
+      "aliases": [
+        "African Heritage Festival (Brownsville)",
+        "Brownsville African Heritage Festival",
+        "Betsy Head Park African Festival"
+      ],
+      "claimed_permit_id": "863129",
+      "projected_start": "2026-08-08",
+      "projected_end": "2026-08-08",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "Betsy Head Park",
+      "display_location": "Betsy Head Park, Brooklyn, NY",
+      "reference_lat": 40.6652,
+      "reference_lng": -73.9115,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
     },
     {
       "key": "church-annual-festival-mermaid-avenue",
@@ -1702,6 +1966,28 @@
       "reference_lng": null,
       "source": "google_studio_bulk_patch",
       "bulk_import_batch": "operator_gap_fill_wave2_2026_07"
+    },
+    {
+      "key": "our-lady-of-victory-block-party-bed-stuy",
+      "canonical_name": "Our Lady of Victory Block Party (Bedford-Stuyvesant)",
+      "aliases": [
+        "Our Lady of Victory Block Party (Bedford-Stuyvesant)",
+        "Our Lady Of Victory Block Party",
+        "OLV Block Party Brooklyn"
+      ],
+      "claimed_permit_id": "836150",
+      "projected_start": "2026-08-08",
+      "projected_end": "2026-08-08",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "MACDONOUGH STREET",
+      "display_location": "MACDONOUGH STREET between MARCUS GARVEY BOULEVARD and THROOP AVENUE, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
     },
     {
       "key": "rockaway-beach-surf-fest",
@@ -1902,6 +2188,28 @@
       "display_location": "ST. THERESA PARISH at 2855 ST. THERESA AVENUE, Bronx, NY"
     },
     {
+      "key": "stapleton-back-to-school-block-party",
+      "canonical_name": "Stapleton Back to School Block Party (Staten Island)",
+      "aliases": [
+        "Stapleton Back to School Block Party (Staten Island)",
+        "Stapleton Block Party",
+        "Brownell Street Block Party"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-15",
+      "projected_end": "2026-08-15",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "borough": "Staten Island",
+      "location_hint": "BROWNELL STREET",
+      "display_location": "BROWNELL STREET between BROAD STREET and HARRISON STREET, Staten Island, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
+    },
+    {
       "key": "india-day-festival",
       "canonical_name": "India Day Festival",
       "aliases": [
@@ -1920,6 +2228,28 @@
       "reference_lng": null,
       "source": "google_studio_bulk_patch",
       "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "junction-boulevard-festival-corona",
+      "canonical_name": "Junction Boulevard Festival (Corona)",
+      "aliases": [
+        "Junction Boulevard Festival (Corona)",
+        "Junction Blvd Festival",
+        "Corona Junction Festival"
+      ],
+      "claimed_permit_id": "818744",
+      "projected_start": "2026-08-16",
+      "projected_end": "2026-08-16",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "JUNCTION BOULEVARD",
+      "display_location": "JUNCTION BOULEVARD between ROOSEVELT AVENUE and 35 AVENUE, Queens, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
     },
     {
       "key": "lexington-avenue-summerfest",
@@ -1976,6 +2306,28 @@
       "location_hint": "18 AVENUE",
       "source": "google_studio_projected",
       "display_location": "18 AVENUE between 68 STREET and BAY RIDGE PARKWAY, Brooklyn, NY"
+    },
+    {
+      "key": "queens-carnival-rockaway-beach",
+      "canonical_name": "Queens Carnival in the Rockaways",
+      "aliases": [
+        "Queens Carnival in the Rockaways",
+        "Rockaway Carnival",
+        "Queens Carnival Rockaway Beach"
+      ],
+      "claimed_permit_id": "817494",
+      "projected_start": "2026-08-22",
+      "projected_end": "2026-08-22",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "Beach 17th Street",
+      "display_location": "Beach 17th Street, Rockaway Beach, Queens, NY",
+      "reference_lat": 40.5889,
+      "reference_lng": -73.8135,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
     },
     {
       "key": "amsterdam-avenue-festival",
@@ -2056,6 +2408,28 @@
       "reference_lng": null,
       "source": "google_studio_bulk_patch",
       "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "church-festival-hooper-street-williamsburg",
+      "canonical_name": "Church Festival (Hooper Street, Williamsburg)",
+      "aliases": [
+        "Church Festival (Hooper Street, Williamsburg)",
+        "Hooper Street Church Festival",
+        "Williamsburg Church Festival"
+      ],
+      "claimed_permit_id": "871513",
+      "projected_start": "2026-08-29",
+      "projected_end": "2026-08-29",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "HOOPER STREET",
+      "display_location": "HOOPER STREET between BORINQUEN PLACE and SOUTH 1 STREET, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
     },
     {
       "key": "broadway-summer-fair",
@@ -2292,6 +2666,50 @@
       "display_location": "MULBERRY STREET between CANAL STREET and EAST HOUSTON STREET, Manhattan, NY"
     },
     {
+      "key": "allerton-international-food-festival",
+      "canonical_name": "Allerton International Food Festival (Bronx)",
+      "aliases": [
+        "Allerton International Food Festival (Bronx)",
+        "Allerton Food Festival",
+        "Allerton Ave Festival"
+      ],
+      "claimed_permit_id": "818466",
+      "projected_start": "2026-09-12",
+      "projected_end": "2026-09-12",
+      "event_kind": "food_festival",
+      "map_emoji": "🍽️",
+      "typical_multi_day": false,
+      "borough": "Bronx",
+      "location_hint": "ALLERTON AVENUE",
+      "display_location": "ALLERTON AVENUE between BARNES AVENUE and WALLACE AVENUE, Bronx, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
+    },
+    {
+      "key": "car-show-parade-watchogue-staten-island",
+      "canonical_name": "Car Show Parade (Watchogue, Staten Island)",
+      "aliases": [
+        "Car Show Parade (Watchogue, Staten Island)",
+        "Watchogue Car Show Parade",
+        "Staten Island Car Show Parade"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-12",
+      "projected_end": "2026-09-12",
+      "event_kind": "parade",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "borough": "Staten Island",
+      "location_hint": "WATCHOGUE ROAD",
+      "display_location": "WATCHOGUE ROAD between DELMORE STREET and WADE STREET, Staten Island, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
+    },
+    {
       "key": "feast-of-the-cross-bay-ridge",
       "canonical_name": "Feast of the Cross (Bay Ridge)",
       "aliases": [
@@ -2374,6 +2792,28 @@
       "reference_lng": null,
       "source": "google_studio_bulk_patch",
       "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "central-american-festival-crotona-park",
+      "canonical_name": "Central American Festival (Crotona Park)",
+      "aliases": [
+        "Central American Festival (Crotona Park)",
+        "CENTRAL AMERICAN FESTIVAL Bronx",
+        "Crotona Park Central American Festival"
+      ],
+      "claimed_permit_id": "810552",
+      "projected_start": "2026-09-13",
+      "projected_end": "2026-09-13",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "borough": "Bronx",
+      "location_hint": "Crotona Park",
+      "display_location": "Crotona Park, Bronx, NY",
+      "reference_lat": 40.8408,
+      "reference_lng": -73.8944,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
     },
     {
       "key": "feast-figli-maria-ss-addolorata-bensonhurst",
@@ -2543,6 +2983,28 @@
       "display_location": "26 STREET between 23 AVENUE and DITMARS BOULEVARD, Queens, NY"
     },
     {
+      "key": "festival-del-grito-de-lares",
+      "canonical_name": "Festival del Grito de Lares (Bronx)",
+      "aliases": [
+        "Festival del Grito de Lares (Bronx)",
+        "Grito de Lares Festival",
+        "Puerto Rican Grito de Lares Bronx"
+      ],
+      "claimed_permit_id": "877831",
+      "projected_start": "2026-09-19",
+      "projected_end": "2026-09-19",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "borough": "Bronx",
+      "location_hint": "VYSE AVENUE",
+      "display_location": "VYSE AVENUE between EAST 167 STREET and HOME STREET, Bronx, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
+    },
+    {
       "key": "greenpoint-avenue-festival",
       "canonical_name": "Greenpoint Avenue Festival",
       "aliases": [
@@ -2603,6 +3065,28 @@
       "reference_lng": null,
       "source": "google_studio_bulk_patch",
       "bulk_import_batch": "operator_gap_fill_wave2_2026_07"
+    },
+    {
+      "key": "sutphin-boulevard-festival-jamaica",
+      "canonical_name": "Sutphin Boulevard Festival (Jamaica)",
+      "aliases": [
+        "Sutphin Boulevard Festival (Jamaica)",
+        "Sutphin Blvd Festival",
+        "Jamaica Sutphin Festival"
+      ],
+      "claimed_permit_id": "829802",
+      "projected_start": "2026-09-19",
+      "projected_end": "2026-09-19",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "SUTPHIN BOULEVARD",
+      "display_location": "SUTPHIN BOULEVARD between JAMAICA AVENUE and 89 AVENUE, Queens, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_wave3_2026_07"
     },
     {
       "key": "viva-la-comida-festival",
@@ -3575,5 +4059,5 @@
       "bulk_import_batch": "operator_gap_fill_2026_07"
     }
   ],
-  "last_bulk_merge_at_utc": "2026-07-18T22:18:25Z"
+  "last_bulk_merge_at_utc": "2026-07-18T22:42:11Z"
 }

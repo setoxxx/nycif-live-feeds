@@ -1,6 +1,6 @@
 {
   "artifact_type": "nyc_sapo_feast_festival_reference",
-  "generated_at_utc": "2026-07-18T22:18:25Z",
+  "generated_at_utc": "2026-07-18T22:42:14Z",
   "source_seed": "data/staging/nyc_feast_festival_reference_seed.json",
   "warning": "Projected feast/fair rows are mapping hints only. Permit IDs from external lists are often wrong; only raw-match rows are SAPO-confirmed in this snapshot.",
   "emoji_guide": {
@@ -706,6 +706,42 @@
       ]
     },
     {
+      "key": "gregorian-festival-bellerose",
+      "canonical_name": "43rd Gregorian Festival (Bellerose)",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": "862125",
+      "projected_start": "2026-06-19",
+      "projected_end": "2026-06-19",
+      "location_hint": "87 AVENUE",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "coney-island-mermaid-parade-festival",
+      "canonical_name": "Coney Island Mermaid Parade Festival",
+      "event_kind": "parade",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": "834804",
+      "projected_start": "2026-06-20",
+      "projected_end": "2026-06-20",
+      "location_hint": "STILLWELL AVENUE",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "flatiron-district-summer-kickoff",
       "canonical_name": "Flatiron District Summer Kickoff",
       "event_kind": "street_fair",
@@ -724,6 +760,70 @@
       ]
     },
     {
+      "key": "fordham-plaza-community-festival",
+      "canonical_name": "Fordham Plaza Community Festival (Bronx)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "816452",
+      "projected_start": "2026-06-20",
+      "projected_end": "2026-06-20",
+      "location_hint": "Fordham Plaza",
+      "borough": "Bronx",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "longwood-avenue-festival-bronx",
+      "canonical_name": "Longwood Avenue Festival (Bronx)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "857795",
+      "projected_start": "2026-06-20",
+      "projected_end": "2026-06-20",
+      "location_hint": "LONGWOOD AVENUE",
+      "borough": "Bronx",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "st-matthews-st-gregory-block-party-crown-heights",
+      "canonical_name": "St. Matthews–St. Gregory Block Party (Crown Heights)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "833564",
+      "projected_start": "2026-06-20",
+      "projected_end": "2026-06-20",
+      "location_hint": "ST JOHNS PLACE",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
       "key": "annual-feast-procession-bellerose",
       "canonical_name": "Annual Feast Procession (Bellerose)",
       "event_kind": "religious_feast",
@@ -734,6 +834,24 @@
       "projected_end": "2026-06-21",
       "location_hint": "248 STREET",
       "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "desfile-festival-latinos-graham-avenue",
+      "canonical_name": "Desfile y Festival Latinos de NY (Graham Avenue)",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-21",
+      "projected_end": "2026-06-21",
+      "location_hint": "GRAHAM AVENUE",
+      "borough": "Brooklyn",
       "source": "google_studio_bulk_patch",
       "match_status": "not_in_raw_snapshot",
       "raw_match": null,
@@ -805,6 +923,24 @@
       "projected_start": "2026-06-24",
       "projected_end": "2026-06-28",
       "location_hint": "ASTORIA PARK",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "st-antonio-abate-festival-astoria",
+      "canonical_name": "St. Antonio Abate Annual Street Festival (Astoria)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": "824063",
+      "projected_start": "2026-06-25",
+      "projected_end": "2026-06-28",
+      "location_hint": "DITMARS BOULEVARD",
       "borough": "Queens",
       "source": "google_studio_bulk_patch",
       "match_status": "not_in_raw_snapshot",
@@ -886,6 +1022,42 @@
       ]
     },
     {
+      "key": "international-african-arts-festival-brooklyn",
+      "canonical_name": "International African Arts Festival (Brooklyn)",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": true,
+      "claimed_permit_id": "821634",
+      "projected_start": "2026-07-01",
+      "projected_end": "2026-07-07",
+      "location_hint": "Commodore Barry Park",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "travis-4th-of-july-parade",
+      "canonical_name": "Travis 4th of July Parade",
+      "event_kind": "parade",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-04",
+      "projected_end": "2026-07-04",
+      "location_hint": "CANNON AVENUE",
+      "borough": "Staten Island",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "our-lady-of-mount-carmel-brooklyn",
       "canonical_name": "Our Lady of Mt. Carmel Church Feast",
       "event_kind": "religious_feast",
@@ -930,6 +1102,42 @@
       ]
     },
     {
+      "key": "barbados-festival-day-canarsie",
+      "canonical_name": "Barbados Festival Day (Canarsie)",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": "819286",
+      "projected_start": "2026-07-11",
+      "projected_end": "2026-07-11",
+      "location_hint": "Canarsie Park",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "calle-colombia-festival-corona",
+      "canonical_name": "Calle Colombia Festival (Corona)",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": "855740",
+      "projected_start": "2026-07-11",
+      "projected_end": "2026-07-11",
+      "location_hint": "37 AVENUE",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "bastille-day-60th-street",
       "canonical_name": "Bastille Day on 60th Street",
       "event_kind": "cultural_festival",
@@ -958,6 +1166,24 @@
       "projected_end": "2026-07-12",
       "location_hint": "SMITH STREET",
       "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "fatima-devotion-procession-maspeth",
+      "canonical_name": "Fatima Devotion Procession (Maspeth)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-12",
+      "projected_end": "2026-07-12",
+      "location_hint": "56 ROAD",
+      "borough": "Queens",
       "source": "google_studio_bulk_patch",
       "match_status": "not_in_raw_snapshot",
       "raw_match": null,
@@ -1092,6 +1318,50 @@
       ]
     },
     {
+      "key": "eltingville-block-party-south-shore",
+      "canonical_name": "Eltingville Block Party (South Shore)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-18",
+      "projected_end": "2026-07-18",
+      "location_hint": "ELTINGVILLE BOULEVARD",
+      "borough": "Staten Island",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": []
+    },
+    {
+      "key": "mariamman-festival-richmond-hill",
+      "canonical_name": "Mariamman Festival (Richmond Hill)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "860242",
+      "projected_start": "2026-07-18",
+      "projected_end": "2026-07-18",
+      "location_hint": "101 AVENUE",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "murray-hill-neighborhood-festival",
       "canonical_name": "Murray Hill Neighborhood Festival",
       "event_kind": "street_fair",
@@ -1164,6 +1434,60 @@
       ]
     },
     {
+      "key": "international-peruvian-festival-jackson-heights",
+      "canonical_name": "International Peruvian Festival (Jackson Heights)",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": "843678",
+      "projected_start": "2026-07-19",
+      "projected_end": "2026-07-19",
+      "location_hint": "37 AVENUE",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "932566",
+        "event_name": "International Peruvian Festival",
+        "event_type": "Parade",
+        "start_date_time": "2026-07-12T12:00:00.000",
+        "end_date_time": "2026-07-12T14:00:00.000",
+        "event_borough": "Queens",
+        "event_location": "35 Avenue 69 STREET between 37 AVENUE and 34 AVENUE,  37 AVENUE between 71 STREET and 87 STREET, 85-08 37 AVENUE, 87 STREET between 37 AVENUE and 35 AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
+      "key": "our-lady-snows-saint-alphonsa-procession",
+      "canonical_name": "Our Lady of the Snows Procession (Saint Alphonsa)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "952465",
+      "projected_start": "2026-07-19",
+      "projected_end": "2026-07-19",
+      "location_hint": "259 STREET",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "confirmed_permit_id",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "952465",
+        "event_name": "Our Lady of the Snows Church Procession in Honor of Saint Alphonsa",
+        "event_type": "Parade",
+        "start_date_time": "2026-07-19T17:00:00.000",
+        "end_date_time": "2026-07-19T18:00:00.000",
+        "event_borough": "Queens",
+        "event_location": "259 STREET between UNION TURNPIKE and 80 AVENUE,  259 STREET between 80 AVENUE and 81 AVENUE,  81 AVENUE between 259 STREET and 258 STREET,  258 STREET between 81 AVENUE and 80 AVENUE,  258 STREET between 80 AVENUE and UNION TURNPIKE,  259 STREET between UNION TURNPIKE and 80 AVENUE",
+        "span_days": 1
+      },
+      "notes": []
+    },
+    {
       "key": "st-bernard-madonna-del-carmine-bergen-beach",
       "canonical_name": "Feast of Madonna del Carmine (St. Bernard, Bergen Beach)",
       "event_kind": "religious_feast",
@@ -1220,6 +1544,52 @@
       ]
     },
     {
+      "key": "beulah-church-block-party-east-flatbush",
+      "canonical_name": "Beulah Church Annual Block Party (East Flatbush)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "845108",
+      "projected_start": "2026-07-25",
+      "projected_end": "2026-07-25",
+      "location_hint": "ST JOHNS PLACE",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
+      "key": "downtown-jamaica-rhythm-jazz-festival",
+      "canonical_name": "Downtown Jamaica Rhythm and Jazz Festival",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": "869323",
+      "projected_start": "2026-07-25",
+      "projected_end": "2026-07-25",
+      "location_hint": "Rufus King Park",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "tudor-city-neighborhood-festival",
       "canonical_name": "Tudor City Neighborhood Festival",
       "event_kind": "street_fair",
@@ -1271,6 +1641,52 @@
       "raw_match": null,
       "notes": [
         "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "chelum-procession-flushing",
+      "canonical_name": "Chelum Procession (Flushing)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-01",
+      "projected_end": "2026-08-01",
+      "location_hint": "MAIN STREET",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "east-55th-street-festival-borough-park",
+      "canonical_name": "East 55th Street Festival (Borough Park)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "853378",
+      "projected_start": "2026-08-01",
+      "projected_end": "2026-08-01",
+      "location_hint": "EAST 55 STREET",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
       ]
     },
     {
@@ -1338,6 +1754,24 @@
       ]
     },
     {
+      "key": "african-heritage-festival-brownsville",
+      "canonical_name": "African Heritage Festival (Brownsville)",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": "863129",
+      "projected_start": "2026-08-08",
+      "projected_end": "2026-08-08",
+      "location_hint": "Betsy Head Park",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "church-annual-festival-mermaid-avenue",
       "canonical_name": "Church Annual Festival (Mermaid Avenue, Coney Island)",
       "event_kind": "religious_feast",
@@ -1371,6 +1805,70 @@
       "raw_match": null,
       "notes": [
         "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "festival-mt-carmel-family-fellowship-bronx",
+      "canonical_name": "Festival Mt Carmel Family Fellowship (Bronx)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "866208",
+      "projected_start": "2026-08-08",
+      "projected_end": "2026-08-08",
+      "location_hint": "RITTER PLACE",
+      "borough": "Bronx",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "morrison-avenue-festival-morris-park",
+      "canonical_name": "Morrison Avenue Festival (Morris Park)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "823761",
+      "projected_start": "2026-08-08",
+      "projected_end": "2026-08-08",
+      "location_hint": "MORRISON AVENUE",
+      "borough": "Bronx",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "our-lady-of-victory-block-party-bed-stuy",
+      "canonical_name": "Our Lady of Victory Block Party (Bedford-Stuyvesant)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "836150",
+      "projected_start": "2026-08-08",
+      "projected_end": "2026-08-08",
+      "location_hint": "MACDONOUGH STREET",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
       ]
     },
     {
@@ -1554,6 +2052,32 @@
       ]
     },
     {
+      "key": "stapleton-back-to-school-block-party",
+      "canonical_name": "Stapleton Back to School Block Party (Staten Island)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-15",
+      "projected_end": "2026-08-15",
+      "location_hint": "BROWNELL STREET",
+      "borough": "Staten Island",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": []
+    },
+    {
       "key": "india-day-festival",
       "canonical_name": "India Day Festival",
       "event_kind": "cultural_festival",
@@ -1564,6 +2088,24 @@
       "projected_end": "2026-08-16",
       "location_hint": "MADISON AVENUE",
       "borough": "Manhattan",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "junction-boulevard-festival-corona",
+      "canonical_name": "Junction Boulevard Festival (Corona)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "818744",
+      "projected_start": "2026-08-16",
+      "projected_end": "2026-08-16",
+      "location_hint": "JUNCTION BOULEVARD",
+      "borough": "Queens",
       "source": "google_studio_bulk_patch",
       "match_status": "not_in_raw_snapshot",
       "raw_match": null,
@@ -1619,6 +2161,24 @@
       "location_hint": "18 AVENUE",
       "borough": "Brooklyn",
       "source": "google_studio_projected",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "queens-carnival-rockaway-beach",
+      "canonical_name": "Queens Carnival in the Rockaways",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": "817494",
+      "projected_start": "2026-08-22",
+      "projected_end": "2026-08-22",
+      "location_hint": "Beach 17th Street",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
       "match_status": "not_in_raw_snapshot",
       "raw_match": null,
       "notes": [
@@ -1690,6 +2250,24 @@
       "projected_end": "2026-08-23",
       "location_hint": "LIBERTY AVENUE",
       "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "church-festival-hooper-street-williamsburg",
+      "canonical_name": "Church Festival (Hooper Street, Williamsburg)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "871513",
+      "projected_start": "2026-08-29",
+      "projected_end": "2026-08-29",
+      "location_hint": "HOOPER STREET",
+      "borough": "Brooklyn",
       "source": "google_studio_bulk_patch",
       "match_status": "not_in_raw_snapshot",
       "raw_match": null,
@@ -1932,6 +2510,42 @@
       ]
     },
     {
+      "key": "allerton-international-food-festival",
+      "canonical_name": "Allerton International Food Festival (Bronx)",
+      "event_kind": "food_festival",
+      "map_emoji": "🍽️",
+      "typical_multi_day": false,
+      "claimed_permit_id": "818466",
+      "projected_start": "2026-09-12",
+      "projected_end": "2026-09-12",
+      "location_hint": "ALLERTON AVENUE",
+      "borough": "Bronx",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "car-show-parade-watchogue-staten-island",
+      "canonical_name": "Car Show Parade (Watchogue, Staten Island)",
+      "event_kind": "parade",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-12",
+      "projected_end": "2026-09-12",
+      "location_hint": "WATCHOGUE ROAD",
+      "borough": "Staten Island",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "feast-of-the-cross-bay-ridge",
       "canonical_name": "Feast of the Cross (Bay Ridge)",
       "event_kind": "religious_feast",
@@ -2004,6 +2618,24 @@
       ]
     },
     {
+      "key": "central-american-festival-crotona-park",
+      "canonical_name": "Central American Festival (Crotona Park)",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": "810552",
+      "projected_start": "2026-09-13",
+      "projected_end": "2026-09-13",
+      "location_hint": "Crotona Park",
+      "borough": "Bronx",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "feast-figli-maria-ss-addolorata-bensonhurst",
       "canonical_name": "Feast of Figli Maria SS. Addolorata (Bensonhurst)",
       "event_kind": "religious_feast",
@@ -2032,6 +2664,24 @@
       "projected_end": "2026-09-13",
       "location_hint": "SUMMIT STREET",
       "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "mexican-independence-day-parade-port-richmond",
+      "canonical_name": "Mexican Independence Day Parade (Port Richmond)",
+      "event_kind": "parade",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-13",
+      "projected_end": "2026-09-13",
+      "location_hint": "PORT RICHMOND AVENUE",
+      "borough": "Staten Island",
       "source": "google_studio_bulk_patch",
       "match_status": "not_in_raw_snapshot",
       "raw_match": null,
@@ -2130,6 +2780,24 @@
       ]
     },
     {
+      "key": "festival-del-grito-de-lares",
+      "canonical_name": "Festival del Grito de Lares (Bronx)",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": "877831",
+      "projected_start": "2026-09-19",
+      "projected_end": "2026-09-19",
+      "location_hint": "VYSE AVENUE",
+      "borough": "Bronx",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "greenpoint-avenue-festival",
       "canonical_name": "Greenpoint Avenue Festival",
       "event_kind": "street_fair",
@@ -2166,6 +2834,42 @@
       ]
     },
     {
+      "key": "parish-family-feast-hoe-avenue",
+      "canonical_name": "Parish Family Feast (Soundview, Bronx)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "881716",
+      "projected_start": "2026-09-19",
+      "projected_end": "2026-09-19",
+      "location_hint": "HOE AVENUE",
+      "borough": "Bronx",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "sutphin-boulevard-festival-jamaica",
+      "canonical_name": "Sutphin Boulevard Festival (Jamaica)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "829802",
+      "projected_start": "2026-09-19",
+      "projected_end": "2026-09-19",
+      "location_hint": "SUTPHIN BOULEVARD",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "viva-la-comida-festival",
       "canonical_name": "Viva La Comida Festival",
       "event_kind": "food_festival",
@@ -2176,6 +2880,24 @@
       "projected_end": "2026-09-19",
       "location_hint": "82 STREET",
       "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "westerleigh-folk-festival",
+      "canonical_name": "Westerleigh Folk Festival",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": "808464",
+      "projected_start": "2026-09-19",
+      "projected_end": "2026-09-19",
+      "location_hint": "Westerleigh Park",
+      "borough": "Staten Island",
       "source": "google_studio_bulk_patch",
       "match_status": "not_in_raw_snapshot",
       "raw_match": null,

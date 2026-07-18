@@ -1,18 +1,18 @@
 {
   "artifact_type": "nyc_feast_festival_reference_match_report",
-  "generated_at_utc": "2026-07-18T22:18:25Z",
+  "generated_at_utc": "2026-07-18T22:42:14Z",
   "qa_pass": true,
-  "seed_count": 163,
+  "seed_count": 199,
   "status_counts": {
-    "not_in_raw_snapshot": 146,
-    "title_match": 13,
-    "confirmed_permit_id": 1,
+    "not_in_raw_snapshot": 174,
+    "title_match": 20,
+    "confirmed_permit_id": 2,
     "permit_id_mismatch": 3
   },
-  "confirmed_in_raw_snapshot": 14,
+  "confirmed_in_raw_snapshot": 22,
   "multi_day_confirmed_in_raw_snapshot": 1,
   "permit_id_mismatch_count": 3,
-  "not_in_raw_snapshot_count": 146,
+  "not_in_raw_snapshot_count": 174,
   "confirmed_samples": [
     {
       "key": "dumbo-drop-block-party",
@@ -39,6 +39,34 @@
         "span_days": 1
       },
       "notes": []
+    },
+    {
+      "key": "st-matthews-st-gregory-block-party-crown-heights",
+      "canonical_name": "St. Matthews–St. Gregory Block Party (Crown Heights)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "833564",
+      "projected_start": "2026-06-20",
+      "projected_end": "2026-06-20",
+      "location_hint": "ST JOHNS PLACE",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
     },
     {
       "key": "our-lady-of-mount-carmel-brooklyn",
@@ -121,6 +149,86 @@
       "notes": []
     },
     {
+      "key": "eltingville-block-party-south-shore",
+      "canonical_name": "Eltingville Block Party (South Shore)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-18",
+      "projected_end": "2026-07-18",
+      "location_hint": "ELTINGVILLE BOULEVARD",
+      "borough": "Staten Island",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": []
+    },
+    {
+      "key": "international-peruvian-festival-jackson-heights",
+      "canonical_name": "International Peruvian Festival (Jackson Heights)",
+      "event_kind": "cultural_festival",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": "843678",
+      "projected_start": "2026-07-19",
+      "projected_end": "2026-07-19",
+      "location_hint": "37 AVENUE",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "932566",
+        "event_name": "International Peruvian Festival",
+        "event_type": "Parade",
+        "start_date_time": "2026-07-12T12:00:00.000",
+        "end_date_time": "2026-07-12T14:00:00.000",
+        "event_borough": "Queens",
+        "event_location": "35 Avenue 69 STREET between 37 AVENUE and 34 AVENUE,  37 AVENUE between 71 STREET and 87 STREET, 85-08 37 AVENUE, 87 STREET between 37 AVENUE and 35 AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
+      "key": "our-lady-snows-saint-alphonsa-procession",
+      "canonical_name": "Our Lady of the Snows Procession (Saint Alphonsa)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "952465",
+      "projected_start": "2026-07-19",
+      "projected_end": "2026-07-19",
+      "location_hint": "259 STREET",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "confirmed_permit_id",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "952465",
+        "event_name": "Our Lady of the Snows Church Procession in Honor of Saint Alphonsa",
+        "event_type": "Parade",
+        "start_date_time": "2026-07-19T17:00:00.000",
+        "end_date_time": "2026-07-19T18:00:00.000",
+        "event_borough": "Queens",
+        "event_location": "259 STREET between UNION TURNPIKE and 80 AVENUE,  259 STREET between 80 AVENUE and 81 AVENUE,  81 AVENUE between 259 STREET and 258 STREET,  258 STREET between 81 AVENUE and 80 AVENUE,  258 STREET between 80 AVENUE and UNION TURNPIKE,  259 STREET between UNION TURNPIKE and 80 AVENUE",
+        "span_days": 1
+      },
+      "notes": []
+    },
+    {
       "key": "st-bernard-madonna-del-carmine-bergen-beach",
       "canonical_name": "Feast of Madonna del Carmine (St. Bernard, Bergen Beach)",
       "event_kind": "religious_feast",
@@ -175,6 +283,116 @@
       "notes": [
         "Title matched a different permit ID than the projected one."
       ]
+    },
+    {
+      "key": "beulah-church-block-party-east-flatbush",
+      "canonical_name": "Beulah Church Annual Block Party (East Flatbush)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "845108",
+      "projected_start": "2026-07-25",
+      "projected_end": "2026-07-25",
+      "location_hint": "ST JOHNS PLACE",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
+      "key": "east-55th-street-festival-borough-park",
+      "canonical_name": "East 55th Street Festival (Borough Park)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "853378",
+      "projected_start": "2026-08-01",
+      "projected_end": "2026-08-01",
+      "location_hint": "EAST 55 STREET",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
+      "key": "our-lady-of-victory-block-party-bed-stuy",
+      "canonical_name": "Our Lady of Victory Block Party (Bedford-Stuyvesant)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "836150",
+      "projected_start": "2026-08-08",
+      "projected_end": "2026-08-08",
+      "location_hint": "MACDONOUGH STREET",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
+      "key": "stapleton-back-to-school-block-party",
+      "canonical_name": "Stapleton Back to School Block Party (Staten Island)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-15",
+      "projected_end": "2026-08-15",
+      "location_hint": "BROWNELL STREET",
+      "borough": "Staten Island",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": []
     },
     {
       "key": "fourth-avenue-brooklyn-fall-festival",

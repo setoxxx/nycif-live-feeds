@@ -16,7 +16,7 @@ class ProjectedFeastDiscoveryTests(unittest.TestCase):
         self.assertTrue(path.exists())
         payload = json.loads(path.read_text(encoding="utf-8"))
         events = payload.get("events") if isinstance(payload, dict) else []
-        self.assertGreaterEqual(len(events), 170)
+        self.assertGreaterEqual(len(events), 190)
 
     def test_projected_feast_intake_has_zero_list_only(self) -> None:
         report = json.loads(
@@ -24,7 +24,7 @@ class ProjectedFeastDiscoveryTests(unittest.TestCase):
         )
         self.assertTrue(report["qa_pass"])
         self.assertEqual(report["list_only_count"], 0)
-        self.assertGreaterEqual(report["map_ready_count"], 170)
+        self.assertGreaterEqual(report["map_ready_count"], 190)
 
     def test_projected_feast_bulk_coverage_in_approved(self) -> None:
         approved = json.loads((ROOT / "data/events_discovery_v02_approved.json").read_text(encoding="utf-8"))
@@ -33,7 +33,7 @@ class ProjectedFeastDiscoveryTests(unittest.TestCase):
             for e in approved.get("events", [])
             if e.get("nycif", {}).get("projected_feast_reference")
         ]
-        self.assertGreaterEqual(len(projected), 165)
+        self.assertGreaterEqual(len(projected), 185)
 
     def test_san_gennaro_in_approved_discovery(self) -> None:
         approved = json.loads((ROOT / "data/events_discovery_v02_approved.json").read_text(encoding="utf-8"))
@@ -61,6 +61,15 @@ class ProjectedFeastDiscoveryTests(unittest.TestCase):
         self.assertIn("St. Bernard", event["title"])
         self.assertEqual(event["nycif"]["coordinate_status"], "map_ready")
         self.assertTrue(event["nycif"]["projected_feast_reference"])
+
+
+    def test_map_readiness_report_exists_and_passes(self) -> None:
+        path = ROOT / "data/reports/projected_feast_map_readiness_report.json"
+        self.assertTrue(path.exists())
+        report = json.loads(path.read_text(encoding="utf-8"))
+        self.assertTrue(report.get("qa_pass"))
+        self.assertEqual(report.get("list_only_count"), 0)
+        self.assertGreaterEqual(report.get("projected_discovery_count", 0), 185)
 
 
 if __name__ == "__main__":
