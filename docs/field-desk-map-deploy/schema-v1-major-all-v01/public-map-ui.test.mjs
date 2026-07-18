@@ -52,6 +52,14 @@ test('public map css anchors brand header left and stacks right controls', () =>
   assert.match(publicMapCss, /Filters, GPS, Bug, then Near Me/);
 });
 
+test('filters panel exposes news assignments and readable overlay disclaimer', () => {
+  assert.match(indexHtml, /panel-sub-label/);
+  assert.match(indexHtml, /News assignments/);
+  assert.match(publicMapCss, /\.panel-sub-label/);
+  assert.match(publicMapCss, /\.nycif-approved-overlays-note/);
+  assert.match(publicMapCss, /#374151/);
+});
+
 test('stacked location popups expose scrollable picker, time rows, and side placement', () => {
   assert.match(publicMapCss, /\.popup-stack-scroll/);
   assert.match(publicMapCss, /\.popup-stack-time/);
