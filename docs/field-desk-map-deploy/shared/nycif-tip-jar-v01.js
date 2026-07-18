@@ -85,22 +85,86 @@
       .nycif-tip-jar-panel a {
         display: flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px;
         padding: 8px 10px;
         margin-top: 6px;
         border-radius: 10px;
+        border: 1px solid rgba(255,255,255,.06);
         background: rgba(255,255,255,.05);
         color: #fff7ed;
         text-decoration: none;
         font: 600 13px/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
       }
       .nycif-tip-jar-panel a:hover {
-        background: rgba(251,191,36,.14);
+        background: rgba(251,191,36,.12);
+      }
+      .nycif-tip-jar-panel a.nycif-tip-pay--cashapp:hover {
+        border-color: rgba(0,214,50,.45);
+        background: rgba(0,214,50,.12);
+        box-shadow: inset 3px 0 0 rgba(0,214,50,.75);
+      }
+      .nycif-tip-jar-panel a.nycif-tip-pay--venmo:hover {
+        border-color: rgba(61,149,206,.5);
+        background: rgba(61,149,206,.14);
+        box-shadow: inset 3px 0 0 rgba(61,149,206,.85);
+      }
+      .nycif-tip-jar-panel a.nycif-tip-pay--paypal:hover {
+        border-color: rgba(0,156,222,.5);
+        background: rgba(0,48,135,.22);
+        box-shadow: inset 3px 0 0 rgba(0,156,222,.85);
+      }
+      .nycif-tip-jar-panel .pay-emoji-wrap {
+        position: relative;
+        flex: 0 0 24px;
+        width: 24px;
+        height: 24px;
+        display: grid;
+        place-items: center;
       }
       .nycif-tip-jar-panel .pay-emoji {
         font-size: 18px;
-        width: 22px;
-        text-align: center;
+        line-height: 1;
+        display: block;
+      }
+      .nycif-tip-jar-panel .pay-heart {
+        position: absolute;
+        top: -3px;
+        right: -5px;
+        font-size: 9px;
+        line-height: 1;
+        color: #fb7185;
+        text-shadow: 0 0 6px rgba(251,113,133,.55);
+        pointer-events: none;
+        opacity: 0;
+        transform: scale(0.85);
+      }
+      .nycif-tip-jar-panel:not([hidden]) .pay-heart {
+        opacity: 0.92;
+        animation: nycif-tip-jar-heart-pulse 1.6s ease-in-out infinite;
+      }
+      .nycif-tip-jar-panel:not([hidden]) a:nth-child(2) .pay-heart {
+        animation-delay: 0.2s;
+      }
+      .nycif-tip-jar-panel:not([hidden]) a:nth-child(3) .pay-heart {
+        animation-delay: 0.45s;
+      }
+      .nycif-tip-jar-panel:not([hidden]) a:nth-child(4) .pay-heart {
+        animation-delay: 0.7s;
+      }
+      @keyframes nycif-tip-jar-heart-pulse {
+        0%, 100% { transform: scale(0.9); opacity: 0.75; }
+        50% { transform: scale(1.08); opacity: 1; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .nycif-tip-jar-panel .pay-heart {
+          animation: none !important;
+          opacity: 0.85;
+          transform: none;
+        }
+        .nycif-tip-jar.shake .nycif-tip-jar-emoji {
+          animation: none;
+        }
       }
     `;
     document.head.appendChild(style);
@@ -121,9 +185,13 @@
       <div class="nycif-tip-jar-panel" id="nycifTipJarPanel" hidden>
         <h3>Tip jar — support NYC In Focus</h3>
         ${TIP_JAR_LINKS.map(link => `
-          <a href="${esc(link.url)}" target="_blank" rel="noopener noreferrer">
-            <span class="pay-emoji" aria-hidden="true">${link.emoji}</span>
-            <span>${esc(link.label)}</span>
+          <a class="nycif-tip-pay nycif-tip-pay--${esc(link.id)}" href="${esc(link.url)}"
+            target="_blank" rel="noopener noreferrer">
+            <span class="pay-emoji-wrap">
+              <span class="pay-emoji" aria-hidden="true">${link.emoji}</span>
+              <span class="pay-heart" aria-hidden="true">♥</span>
+            </span>
+            <span class="pay-label">${esc(link.label)}</span>
           </a>
         `).join('')}
       </div>
@@ -172,7 +240,7 @@
   }
 
   window.NYCIF_TIP_JAR = {
-    VERSION: 'nycif-tip-jar-v01',
+    VERSION: 'nycif-tip-jar-v02',
     TIP_JAR_LINKS,
     install: installTipJar,
   };

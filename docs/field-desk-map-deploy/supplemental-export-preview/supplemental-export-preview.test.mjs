@@ -195,7 +195,8 @@ test('tip jar links include Cash App, Venmo, and PayPal', () => {
   assert.equal(api.TIP_JAR_LINKS.length, 3);
   assert.match(previewHtml, /nycif-tip-jar-v01\.js/);
   assert.match(source, /NYCIF_TIP_JAR/);
-  assert.match(tipJarSource, /nycif-tip-jar/);
+  assert.match(tipJarSource, /pay-heart/);
+  assert.match(tipJarSource, /nycif-tip-pay--cashapp/);
   assert.match(tipJarSource, /cash\.app\/\$NYCINFOCUS/);
   assert.match(tipJarSource, /venmo\.com\/u\/Howie-Doin/);
   assert.match(tipJarSource, /py\.pl\/oxvv2Mgg0bztfniKXwpQWA/);
