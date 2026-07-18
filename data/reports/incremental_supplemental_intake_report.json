@@ -1,46 +1,37 @@
 {
   "after_status_counts": {
-    "approved": 3531,
-    "pending": 15,
+    "approved": 3542,
+    "pending": 5,
     "rejected": 143
   },
   "artifact_type": "incremental_supplemental_intake_report",
   "before_status_counts": {
-    "approved": 3531,
+    "approved": 3542,
     "pending": 4,
     "rejected": 143
   },
   "dry_run": false,
   "export": {
-    "export_event_count": 3531,
+    "export_event_count": 3542,
     "path": "data/supplemental_approved_export_feed.json",
     "skipped_approved_without_coordinates": 0
   },
-  "generated_at_utc": "2026-07-18T19:54:02.128551+00:00",
+  "generated_at_utc": "2026-07-18T20:00:16.373850+00:00",
   "merge": {
     "disposition_preserved": true,
-    "existing_queue_count": 3678,
-    "existing_unique_overlap_key_count": 2505,
+    "existing_queue_count": 3689,
+    "existing_unique_overlap_key_count": 2516,
     "net_new_auto_resolved_count": 0,
     "net_new_auto_resolved_pct": 0.0,
     "net_new_needing_human_review_count": 0,
     "net_new_overlap_keys_sample": [
-      "baraat procession|2026-07-25",
-      "brownsville old timer s parade|2026-07-18",
-      "cheikh ahmadou bamba day|2026-07-28",
-      "chelum procession|2026-08-02",
-      "colombian day parade|2026-07-26",
-      "ecuadorian parade|2026-08-02",
-      "grace american peace parade|2026-08-09",
-      "july falun dafa parade|2026-07-19",
-      "our lady of the snows church procession in honor of saint alphonsa|2026-07-19",
-      "religious procession|2026-08-16"
+      "hpd outreach housing resources in your neighborhood|2026-07-15"
     ],
-    "net_new_row_count": 11,
-    "net_new_with_coordinates_count": 11,
+    "net_new_row_count": 1,
+    "net_new_with_coordinates_count": 1,
     "net_new_with_coordinates_pct": 100.0,
-    "preserved_row_count": 3678,
-    "staging_event_count": 2963,
+    "preserved_row_count": 3689,
+    "staging_event_count": 2966,
     "stale_overlap_keys_sample": [
       "40 in focus summerstage through the lens of photographer jack vartoogian|2026-07-16",
       "40 in focus summerstage through the lens of photographer jack vartoogian|2026-07-17",
@@ -53,7 +44,7 @@
       "alfred e smith recreation center summer camp regular day|2026-07-17",
       "art meets books|2026-07-16"
     ],
-    "stale_queue_key_count": 482
+    "stale_queue_key_count": 481
   },
   "next_required_step": "Run validate_supplemental_manual_approvals.py. Review net-new pending rows only.",
   "phase": "m11_incremental_supplemental_intake",
@@ -66,7 +57,7 @@
   },
   "scale_benefit": {
     "memory_auto_fill_on_net_new_pct": 0.0,
-    "net_new_rows_on_this_sync": 11,
+    "net_new_rows_on_this_sync": 1,
     "net_new_still_needing_human_review": 0
   },
   "skip_rebuild": true

@@ -1,0 +1,29 @@
+{
+  "artifact_type": "m12_batch3_merge_report",
+  "generated_at_utc": "2026-07-18T19:57:55Z",
+  "phase": "m12_batch3_civic_merge",
+  "batch": 3,
+  "category": "civic",
+  "rows_approved": 11,
+  "approved_ranks": "3679-3689",
+  "feeds_main_approved_total": {
+    "before": 30983,
+    "after": 30994,
+    "net_change": 11
+  },
+  "supplemental_export_count": 3542,
+  "qa_pass": true,
+  "safety": {
+    "location_cache_modified": false,
+    "promotion_allowed": false,
+    "public_map_modified": true,
+    "staged_feed_modified": false
+  },
+  "sample_merged_titles": [
+    "Brownsville Old Timer's Parade",
+    "Colombian Day Parade",
+    "Ecuadorian Parade",
+    "SOUTH ASIAN UNITY PARADE"
+  ],
+  "next_required_step": "Review batch 4 in data/staging/m12_batch4_pending_review.json"
+}

@@ -1,0 +1,27 @@
+{
+  "artifact_type": "m12_batch4_merge_report",
+  "generated_at_utc": "2026-07-18T20:15:16Z",
+  "phase": "m12_batch4_housing_merge",
+  "batch": 4,
+  "category": "housing",
+  "rows_approved": 1,
+  "approved_ranks": [3690],
+  "approved_source_event_id": "919556",
+  "approved_title": "HPD Outreach Housing Resources in Your Neighborhood",
+  "approved_location": "4932 BROADWAY",
+  "feeds_main_approved_total": {
+    "before": 30994,
+    "after": 30995,
+    "net_change": 1
+  },
+  "supplemental_export_count": 3543,
+  "qa_pass": true,
+  "safety": {
+    "location_cache_modified": false,
+    "promotion_allowed": false,
+    "public_map_modified": true,
+    "staged_feed_modified": false
+  },
+  "note": "Queens HPD Van (1047536) was already merged in an earlier batch. Butler 1116856 remains duplicate of approved 1116636.",
+  "next_required_step": "Continue M12 pin gaps: market (8 unfilled), volunteer (2), civic (3), jobs (1)."
+}

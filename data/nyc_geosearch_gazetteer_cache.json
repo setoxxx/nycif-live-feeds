@@ -571,6 +571,17 @@
       "query": "990 Pelham Parkway South, Bronx, NY",
       "source": "nyc_geosearch_planninglabs"
     },
+    "bronx|between park webster ave e 170th st n": {
+      "borough": "Bronx",
+      "cached_at_utc": "2026-07-18T19:59:39.821911+00:00",
+      "confidence": "high",
+      "confidence_reason": "NYC GeoSearch match for query '(between Park & Webster Ave.), E 170th St\\n, Bronx, NY'.",
+      "label": "300 EAST 170 STREET, Bronx, NY, USA",
+      "lat": 40.837218,
+      "lng": -73.91055,
+      "query": "(between Park & Webster Ave.), E 170th St\\n, Bronx, NY",
+      "source": "nyc_geosearch_planninglabs"
+    },
     "bronx|butler houses": {
       "borough": "Bronx",
       "cached_at_utc": "2026-07-18T19:25:43.757898+00:00",
@@ -4672,6 +4683,17 @@
       "query": "4790 Broadway,, New York, NY",
       "source": "nyc_geosearch_planninglabs"
     },
+    "manhattan|4932 broadway": {
+      "borough": "Manhattan",
+      "cached_at_utc": "2026-07-18T20:00:13.460494+00:00",
+      "confidence": "high",
+      "confidence_reason": "NYC GeoSearch match for query '4932 BROADWAY, New York, NY'.",
+      "label": "4932 B'WAY, New York, NY, USA",
+      "lat": 40.867363,
+      "lng": -73.921317,
+      "query": "4932 BROADWAY, New York, NY",
+      "source": "nyc_geosearch_planninglabs"
+    },
     "manhattan|501 west 145 street": {
       "borough": "Manhattan",
       "cached_at_utc": "2026-07-17T19:50:59.279231+00:00",
@@ -7212,8 +7234,8 @@
       "source": "nyc_geosearch_planninglabs"
     }
   },
-  "entry_count": 656,
-  "generated_at_utc": "2026-07-18T19:25:44.201096+00:00",
+  "entry_count": 658,
+  "generated_at_utc": "2026-07-18T20:00:13.461029+00:00",
   "safety": {
     "location_cache_modified": false,
     "promotion_allowed": false,

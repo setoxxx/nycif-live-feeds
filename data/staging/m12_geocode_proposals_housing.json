@@ -1,0 +1,42 @@
+{
+  "artifact_type": "m12_geocode_proposals",
+  "category": "housing",
+  "generated_at_utc": "2026-07-18T20:00:13.512485+00:00",
+  "proposals": [
+    {
+      "address": "4932 BROADWAY",
+      "category": "housing",
+      "date": "2026-07-15",
+      "fill": {
+        "confidence_reason": "Rejected-pass fill: NYC GeoSearch match for query '4932 BROADWAY, New York, NY'. for manual review only.",
+        "fill_method": "nyc_geosearch_live",
+        "geocoder_confidence": "high",
+        "geocoder_label": "4932 B'WAY, New York, NY, USA",
+        "geocoder_source": "nyc_geosearch_planninglabs",
+        "proposed_lat": 40.867363,
+        "proposed_lng": -73.921317,
+        "query_used": "4932 BROADWAY",
+        "resolver_tier": "tier_3_nyc_geosearch_live"
+      },
+      "source_event_id": "919556",
+      "status": "filled",
+      "title": "HPD Outreach Housing Resources in Your Neighborhood"
+    },
+    {
+      "address": "98-09 Northern Blvd",
+      "category": "housing",
+      "date": "2026-07-16",
+      "fill": {
+        "confidence_reason": "Rejected-pass fill: Supplemental approved location memory (1 event(s)) for recurring auto-resolution. Rejected-pass fill: NYC GeoSearch match for query '98-09 Northern Blvd, Queens, NY'. for manual review only. for manual review only.",
+        "fill_method": "location_gazetteer",
+        "geocoder_confidence": "high",
+        "geocoder_source": "supplemental_location_memory",
+        "proposed_lat": 40.757393,
+        "proposed_lng": -73.870024
+      },
+      "source_event_id": "1047536",
+      "status": "filled",
+      "title": "Queens Satellite Office - HPD Outreach Van"
+    }
+  ]
+}

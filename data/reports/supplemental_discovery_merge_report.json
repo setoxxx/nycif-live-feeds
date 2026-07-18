@@ -1,18 +1,18 @@
 {
   "artifact_type": "supplemental_discovery_merge_report",
   "baseline": {
-    "approved_discovery_total_after": 32074,
+    "approved_discovery_total_after": 32086,
     "approved_discovery_total_before": 28550,
-    "net_new_merged": 3524
+    "net_new_merged": 3536
   },
   "errors": [],
-  "generated_at_utc": "2026-07-18T19:53:52.917465+00:00",
+  "generated_at_utc": "2026-07-18T20:15:22.068208+00:00",
   "merge_authorized": true,
   "merge_stats": {
-    "approved_total_after_merge": 32074,
+    "approved_total_after_merge": 32086,
     "authorized": true,
-    "export_event_count": 3531,
-    "merged": 3524,
+    "export_event_count": 3543,
+    "merged": 3536,
     "sample_merged": [
       {
         "date": "2026-07-13",
@@ -142,6 +142,13 @@
       },
       {
         "date": "2026-07-15",
+        "id": "nyc-citywide-events-calendar-api:919556@2026-07-15",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "919556",
+        "title": "HPD Outreach Housing Resources in Your Neighborhood"
+      },
+      {
+        "date": "2026-07-15",
         "id": "nyc-citywide-events-calendar-api:1051116@2026-07-15",
         "source_dataset": "nyc-citywide-events-calendar-api",
         "source_event_id": "1051116",
@@ -181,13 +188,6 @@
         "source_dataset": "nyc-citywide-events-calendar-api",
         "source_event_id": "1063676",
         "title": "Hamilton Fish Pool: Lap Swim"
-      },
-      {
-        "date": "2026-07-16",
-        "id": "nyc-citywide-events-calendar-api:1047976@2026-07-16",
-        "source_dataset": "nyc-citywide-events-calendar-api",
-        "source_event_id": "1047976",
-        "title": "It's My Park at Leif Ericson Park"
       }
     ],
     "skipped_duplicate": 7,
