@@ -16,7 +16,16 @@ class ProjectedFeastDiscoveryTests(unittest.TestCase):
         self.assertTrue(path.exists())
         payload = json.loads(path.read_text(encoding="utf-8"))
         events = payload.get("events") if isinstance(payload, dict) else []
-        self.assertGreaterEqual(len(events), 20)
+        self.assertGreaterEqual(len(events), 100)
+
+    def test_projected_feast_bulk_coverage_in_approved(self) -> None:
+        approved = json.loads((ROOT / "data/events_discovery_v02_approved.json").read_text(encoding="utf-8"))
+        projected = [
+            e
+            for e in approved.get("events", [])
+            if e.get("nycif", {}).get("projected_feast_reference")
+        ]
+        self.assertGreaterEqual(len(projected), 100)
 
     def test_san_gennaro_in_approved_discovery(self) -> None:
         approved = json.loads((ROOT / "data/events_discovery_v02_approved.json").read_text(encoding="utf-8"))

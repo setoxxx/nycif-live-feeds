@@ -1,0 +1,1914 @@
+{
+  "artifact_type": "nyc_feast_festival_reference_seed_bulk_patch",
+  "batch": "google_studio_parts_1_9_2026",
+  "notes": [
+    "Append-only bulk patch for operator/Google Studio feast lists.",
+    "Merge with scripts/bulk_import_feast_festival_seed.py — never overwrites existing seed keys."
+  ],
+  "entries": [
+    {
+      "key": "astoria-alive-street-festival",
+      "canonical_name": "Astoria Alive Street Festival",
+      "aliases": [
+        "Astoria Alive Street Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-09",
+      "projected_end": "2026-08-09",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "31 STREET",
+      "display_location": "31 STREET between DITMARS BOULEVARD and 21 AVENUE, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "second-avenue-summer-stroll",
+      "canonical_name": "Second Avenue Summer Stroll",
+      "aliases": [
+        "Second Avenue Summer Stroll"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-15",
+      "projected_end": "2026-08-15",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "2 AVENUE",
+      "display_location": "2 AVENUE between EAST 14 STREET and EAST 23 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "brighton-jubilee-festival",
+      "canonical_name": "Brighton Jubilee Festival",
+      "aliases": [
+        "Brighton Jubilee Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-23",
+      "projected_end": "2026-08-23",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "BRIGHTON BEACH AVENUE",
+      "display_location": "BRIGHTON BEACH AVENUE between CORBIN PLACE and CONEY ISLAND AVENUE, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "st-bartholomews-street-fair",
+      "canonical_name": "St. Bartholomew's Street Fair",
+      "aliases": [
+        "St. Bartholomew's Street Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-05",
+      "projected_end": "2026-09-05",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "PARK AVENUE",
+      "display_location": "PARK AVENUE between EAST 47 STREET and EAST 57 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "third-avenue-community-benefit-festival",
+      "canonical_name": "Third Avenue Community Benefit Festival",
+      "aliases": [
+        "Third Avenue Community Benefit Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-13",
+      "projected_end": "2026-09-13",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "3 AVENUE",
+      "display_location": "3 AVENUE between EAST 66 STREET and EAST 86 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "court-street-fair",
+      "canonical_name": "Court Street Fair",
+      "aliases": [
+        "Court Street Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-20",
+      "projected_end": "2026-09-20",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "COURT STREET",
+      "display_location": "COURT STREET between ATLANTIC AVENUE and JORALEMON STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "eighth-avenue-fall-festival",
+      "canonical_name": "Eighth Avenue Fall Festival",
+      "aliases": [
+        "Eighth Avenue Fall Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-03",
+      "projected_end": "2026-10-03",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "8 AVENUE",
+      "display_location": "8 AVENUE between WEST 42 STREET and WEST 57 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "broadway-fall-festival",
+      "canonical_name": "Broadway Fall Festival",
+      "aliases": [
+        "Broadway Fall Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-04",
+      "projected_end": "2026-10-04",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "BROADWAY",
+      "display_location": "BROADWAY between WEST 86 STREET and WEST 96 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "vanderbilt-avenue-summer-fair",
+      "canonical_name": "Vanderbilt Avenue Open Streets & Summer Fair",
+      "aliases": [
+        "Vanderbilt Avenue Open Streets & Summer Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-18",
+      "projected_end": "2026-07-18",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "VANDERBILT AVENUE",
+      "display_location": "VANDERBILT AVENUE between ATLANTIC AVENUE and PARK PLACE, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "festival-of-the-americas",
+      "canonical_name": "Festival of the Americas",
+      "aliases": [
+        "Festival of the Americas"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-19",
+      "projected_end": "2026-07-19",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "6 AVENUE",
+      "display_location": "6 AVENUE between WEST 42 STREET and WEST 56 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "manhattan-avenue-festival",
+      "canonical_name": "Manhattan Avenue Festival",
+      "aliases": [
+        "Manhattan Avenue Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-26",
+      "projected_end": "2026-07-26",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "MANHATTAN AVENUE",
+      "display_location": "MANHATTAN AVENUE between DRIGGS AVENUE and GREENPOINT AVENUE, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "park-slope-fifth-avenue-summer-stroll",
+      "canonical_name": "Park Slope Fifth Avenue Summer Stroll",
+      "aliases": [
+        "Park Slope Fifth Avenue Summer Stroll"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-26",
+      "projected_end": "2026-07-26",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "5 AVENUE",
+      "display_location": "5 AVENUE between STERLING PLACE and 12 STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "flatbush-avenue-street-fair",
+      "canonical_name": "Flatbush Avenue Street Fair",
+      "aliases": [
+        "Flatbush Avenue Street Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-02",
+      "projected_end": "2026-08-02",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "FLATBUSH AVENUE",
+      "display_location": "FLATBUSH AVENUE between PARKSIDE AVENUE and CORTELYOU ROAD, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "eighth-avenue-summer-stroll",
+      "canonical_name": "Eighth Avenue Summer Stroll",
+      "aliases": [
+        "Eighth Avenue Summer Stroll"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-08",
+      "projected_end": "2026-08-08",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "8 AVENUE",
+      "display_location": "8 AVENUE between WEST 42 STREET and WEST 57 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "grand-avenue-festival",
+      "canonical_name": "Grand Avenue Festival",
+      "aliases": [
+        "Grand Avenue Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-09",
+      "projected_end": "2026-08-09",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "GRAND AVENUE",
+      "display_location": "GRAND AVENUE between 65 STREET and 72 STREET, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "dominican-day-festival",
+      "canonical_name": "Dominican Day Festival",
+      "aliases": [
+        "Dominican Day Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-09",
+      "projected_end": "2026-08-09",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "6 AVENUE",
+      "display_location": "6 AVENUE between WEST 37 STREET and WEST 52 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "ecuadorian-festival",
+      "canonical_name": "Ecuadorian Festival",
+      "aliases": [
+        "Ecuadorian Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-09",
+      "projected_end": "2026-08-09",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "NORTHERN BOULEVARD",
+      "display_location": "NORTHERN BOULEVARD between 69 STREET and 89 STREET, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "india-day-festival",
+      "canonical_name": "India Day Festival",
+      "aliases": [
+        "India Day Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-16",
+      "projected_end": "2026-08-16",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "MADISON AVENUE",
+      "display_location": "MADISON AVENUE between EAST 26 STREET and EAST 38 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "steinway-street-festival",
+      "canonical_name": "Steinway Street Festival",
+      "aliases": [
+        "Steinway Street Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-16",
+      "projected_end": "2026-08-16",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "STEINWAY STREET",
+      "display_location": "STEINWAY STREET between 28 AVENUE and 34 AVENUE, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "pakistan-independence-day-festival",
+      "canonical_name": "Pakistan Independence Day Festival",
+      "aliases": [
+        "Pakistan Independence Day Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-23",
+      "projected_end": "2026-08-23",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "CONEY ISLAND AVENUE",
+      "display_location": "CONEY ISLAND AVENUE between FOSTER AVENUE and AVENUE H, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "amsterdam-avenue-festival",
+      "canonical_name": "Amsterdam Avenue Festival",
+      "aliases": [
+        "Amsterdam Avenue Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-23",
+      "projected_end": "2026-08-23",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "AMSTERDAM AVENUE",
+      "display_location": "AMSTERDAM AVENUE between WEST 79 STREET and WEST 86 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "richmond-hill-caribbean-festival",
+      "canonical_name": "Richmond Hill Caribbean Festival",
+      "aliases": [
+        "Richmond Hill Caribbean Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-23",
+      "projected_end": "2026-08-23",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "LIBERTY AVENUE",
+      "display_location": "LIBERTY AVENUE between 104 STREET and 130 STREET, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "broadway-summer-fair",
+      "canonical_name": "Broadway Summer Fair",
+      "aliases": [
+        "Broadway Summer Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-30",
+      "projected_end": "2026-08-30",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "BROADWAY",
+      "display_location": "BROADWAY between WEST 86 STREET and WEST 96 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "cortelyou-road-flatbush-frolic",
+      "canonical_name": "Cortelyou Road Flatbush Frolic",
+      "aliases": [
+        "Cortelyou Road Flatbush Frolic"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-30",
+      "projected_end": "2026-08-30",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "CORTELYOU ROAD",
+      "display_location": "CORTELYOU ROAD between CONEY ISLAND AVENUE and OCEAN AVENUE, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "fourth-avenue-brooklyn-fall-festival",
+      "canonical_name": "Fourth Avenue Brooklyn Fall Festival",
+      "aliases": [
+        "Fourth Avenue Brooklyn Fall Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-30",
+      "projected_end": "2026-08-30",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "4 AVENUE",
+      "display_location": "4 AVENUE between 9 STREET and 14 STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "labor-day-washington-square-fair",
+      "canonical_name": "Labor Day Washington Square Fair",
+      "aliases": [
+        "Labor Day Washington Square Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-07",
+      "projected_end": "2026-09-07",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "UNIVERSITY PLACE",
+      "display_location": "UNIVERSITY PLACE between WAVERLY PLACE and EAST 14 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "park-avenue-autumn-fair",
+      "canonical_name": "Park Avenue Autumn Fair",
+      "aliases": [
+        "Park Avenue Autumn Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-12",
+      "projected_end": "2026-09-12",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "PARK AVENUE SOUTH",
+      "display_location": "PARK AVENUE SOUTH between EAST 14 STREET and EAST 23 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "knickerbocker-avenue-festival",
+      "canonical_name": "Knickerbocker Avenue Festival",
+      "aliases": [
+        "Knickerbocker Avenue Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-19",
+      "projected_end": "2026-09-19",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "KNICKERBOCKER AVENUE",
+      "display_location": "KNICKERBOCKER AVENUE between SUYDAM STREET and BLEECKER STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "african-american-day-festival",
+      "canonical_name": "African American Day Festival",
+      "aliases": [
+        "African American Day Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-20",
+      "projected_end": "2026-09-20",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "ADAM CLAYTON POWELL JR BOULEVARD",
+      "display_location": "ADAM CLAYTON POWELL JR BOULEVARD between WEST 110 STREET and WEST 137 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "broadway-autumntime-fair",
+      "canonical_name": "Broadway Autumntime Fair",
+      "aliases": [
+        "Broadway Autumntime Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-26",
+      "projected_end": "2026-09-26",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "BROADWAY",
+      "display_location": "BROADWAY between WAVERLY PLACE and EAST 14 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "astoria-street-festival",
+      "canonical_name": "Astoria Street Festival",
+      "aliases": [
+        "Astoria Street Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-27",
+      "projected_end": "2026-09-27",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "30 AVENUE",
+      "display_location": "30 AVENUE between 29 STREET and 41 STREET, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "muslim-day-festival",
+      "canonical_name": "Muslim Day Festival",
+      "aliases": [
+        "Muslim Day Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-27",
+      "projected_end": "2026-09-27",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "MADISON AVENUE",
+      "display_location": "MADISON AVENUE between EAST 23 STREET and EAST 27 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "korean-festival",
+      "canonical_name": "Korean Festival",
+      "aliases": [
+        "Korean Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-03",
+      "projected_end": "2026-10-03",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "6 AVENUE",
+      "display_location": "6 AVENUE between WEST 32 STREET and WEST 42 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "third-avenue-bay-ridge-festival",
+      "canonical_name": "Third Avenue Bay Ridge Festival",
+      "aliases": [
+        "Third Avenue Bay Ridge Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-04",
+      "projected_end": "2026-10-04",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "3 AVENUE",
+      "display_location": "3 AVENUE between BAY RIDGE AVENUE and 94 STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "pulaski-day-festival",
+      "canonical_name": "Pulaski Day Festival",
+      "aliases": [
+        "Pulaski Day Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-04",
+      "projected_end": "2026-10-04",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "5 AVENUE",
+      "display_location": "5 AVENUE between EAST 39 STREET and EAST 56 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "deepavali-festival",
+      "canonical_name": "Deepavali Festival (Diwali)",
+      "aliases": [
+        "Deepavali Festival (Diwali)"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-04",
+      "projected_end": "2026-10-04",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "WATER STREET",
+      "display_location": "WATER STREET between FULTON STREET and FLETCHER STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "panamanian-day-festival",
+      "canonical_name": "Panamanian Day Festival",
+      "aliases": [
+        "Panamanian Day Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-10",
+      "projected_end": "2026-10-10",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "FRANKLIN AVENUE",
+      "display_location": "FRANKLIN AVENUE between ST JOHNS PLACE and PRESIDENT STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "hispanic-day-festival",
+      "canonical_name": "Hispanic Day Festival",
+      "aliases": [
+        "Hispanic Day Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-11",
+      "projected_end": "2026-10-11",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "5 AVENUE",
+      "display_location": "5 AVENUE between EAST 44 STREET and EAST 66 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "bleecker-street-fall-festival",
+      "canonical_name": "Bleecker Street Fall Festival",
+      "aliases": [
+        "Bleecker Street Fall Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-17",
+      "projected_end": "2026-10-17",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "BLEECKER STREET",
+      "display_location": "BLEECKER STREET between 6 AVENUE and 7 AVENUE SOUTH, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "washington-square-autumn-fair",
+      "canonical_name": "Washington Square Autumn Fair",
+      "aliases": [
+        "Washington Square Autumn Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-18",
+      "projected_end": "2026-10-18",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "WAVERLY PLACE",
+      "display_location": "WAVERLY PLACE between MACDOUGAL STREET and 5 AVENUE, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "tompkins-square-halloween-dog-festival",
+      "canonical_name": "Tompkins Square Park Halloween Dog Festival",
+      "aliases": [
+        "Tompkins Square Park Halloween Dog Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-24",
+      "projected_end": "2026-10-24",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "AVENUE A",
+      "display_location": "AVENUE A between EAST 7 STREET and EAST 10 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "veterans-day-festival",
+      "canonical_name": "Veterans Day Festival",
+      "aliases": [
+        "Veterans Day Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-11-11",
+      "projected_end": "2026-11-11",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "BROADWAY",
+      "display_location": "BROADWAY between WATER STREET and LIBERTY STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "university-place-fall-festival",
+      "canonical_name": "University Place Fall Festival",
+      "aliases": [
+        "University Place Fall Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-11-14",
+      "projected_end": "2026-11-14",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "UNIVERSITY PLACE",
+      "display_location": "UNIVERSITY PLACE between WAVERLY PLACE and EAST 14 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "macys-thanksgiving-balloon-inflation",
+      "canonical_name": "Macy's Thanksgiving Parade Balloon Inflation",
+      "aliases": [
+        "Macy's Thanksgiving Parade Balloon Inflation"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-11-25",
+      "projected_end": "2026-11-25",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "WEST 77 STREET and WEST 81 STREET",
+      "display_location": "WEST 77 STREET and WEST 81 STREET between CENTRAL PARK WEST and COLUMBUS AVENUE, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "macys-thanksgiving-day-parade",
+      "canonical_name": "Macy's Thanksgiving Day Parade",
+      "aliases": [
+        "Macy's Thanksgiving Day Parade"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-11-26",
+      "projected_end": "2026-11-26",
+      "event_kind": "parade",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "CENTRAL PARK WEST and 6 AVENUE from WEST",
+      "display_location": "CENTRAL PARK WEST and 6 AVENUE from WEST 77 STREET to WEST 34 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "columbus-circle-holiday-market",
+      "canonical_name": "Columbus Circle Holiday Market",
+      "aliases": [
+        "Columbus Circle Holiday Market"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-12-01",
+      "projected_end": "2026-12-24",
+      "event_kind": "holiday_market",
+      "typical_multi_day": true,
+      "borough": "Manhattan",
+      "location_hint": "COLUMBUS CIRCLE",
+      "display_location": "COLUMBUS CIRCLE at 59 STREET and CENTRAL PARK WEST, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "rockefeller-center-tree-lighting",
+      "canonical_name": "Rockefeller Center Tree Lighting & Street Closure",
+      "aliases": [
+        "Rockefeller Center Tree Lighting & Street Closure"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-12-02",
+      "projected_end": "2026-12-02",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "WEST 48 STREET to WEST 51 STREET",
+      "display_location": "WEST 48 STREET to WEST 51 STREET between 5 AVENUE and 6 AVENUE, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "grand-army-plaza-menorah-lighting",
+      "canonical_name": "Grand Army Plaza Menorah Lighting (Brooklyn)",
+      "aliases": [
+        "Grand Army Plaza Menorah Lighting (Brooklyn)"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-12-04",
+      "projected_end": "2026-12-12",
+      "event_kind": "religious_feast",
+      "typical_multi_day": true,
+      "borough": "Brooklyn",
+      "location_hint": "GRAND ARMY PLAZA",
+      "display_location": "GRAND ARMY PLAZA at FLATBUSH AVENUE and EASTERN PARKWAY, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "fifth-avenue-holiday-open-streets",
+      "canonical_name": "Fifth Avenue Holiday Open Streets",
+      "aliases": [
+        "Fifth Avenue Holiday Open Streets"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-12-06",
+      "projected_end": "2026-12-20",
+      "event_kind": "holiday_market",
+      "typical_multi_day": true,
+      "borough": "Manhattan",
+      "location_hint": "5 AVENUE",
+      "display_location": "5 AVENUE between WEST 48 STREET and WEST 59 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "times-square-new-years-eve",
+      "canonical_name": "Times Square New Year's Eve",
+      "aliases": [
+        "Times Square New Year's Eve"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-12-31",
+      "projected_end": "2027-01-01",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": true,
+      "borough": "Manhattan",
+      "location_hint": "7 AVENUE and BROADWAY",
+      "display_location": "7 AVENUE and BROADWAY between WEST 42 STREET and WEST 59 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "coney-island-polar-bear-plunge",
+      "canonical_name": "Coney Island Polar Bear Plunge",
+      "aliases": [
+        "Coney Island Polar Bear Plunge"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2027-01-01",
+      "projected_end": "2027-01-01",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "STILLWELL AVENUE and BOARDWALK",
+      "display_location": "STILLWELL AVENUE and BOARDWALK at CONEY ISLAND BEACH, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "tartan-day-parade-festival",
+      "canonical_name": "Tartan Day Parade & Festival",
+      "aliases": [
+        "Tartan Day Parade & Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-04-11",
+      "projected_end": "2026-04-11",
+      "event_kind": "parade",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "6 AVENUE",
+      "display_location": "6 AVENUE between WEST 42 STREET and WEST 55 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "earth-day-initiative-street-fair",
+      "canonical_name": "Earth Day Initiative Street Fair",
+      "aliases": [
+        "Earth Day Initiative Street Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-04-19",
+      "projected_end": "2026-04-19",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "BROADWAY",
+      "display_location": "BROADWAY between EAST 17 STREET and EAST 22 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "broadway-spring-festival",
+      "canonical_name": "Broadway Spring Festival",
+      "aliases": [
+        "Broadway Spring Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-04-26",
+      "projected_end": "2026-04-26",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "BROADWAY",
+      "display_location": "BROADWAY between WAVERLY PLACE and EAST 14 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "japan-fes-new-york-spring",
+      "canonical_name": "Japan Fes New York (Spring Edition)",
+      "aliases": [
+        "Japan Fes New York (Spring Edition)"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-05-02",
+      "projected_end": "2026-05-02",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "BROADWAY",
+      "display_location": "BROADWAY between WEST 86 STREET and WEST 87 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "fabulous-fifth-avenue-fair",
+      "canonical_name": "Fabulous Fifth Avenue Fair",
+      "aliases": [
+        "Fabulous Fifth Avenue Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-05-17",
+      "projected_end": "2026-05-17",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "5 AVENUE",
+      "display_location": "5 AVENUE between STERLING PLACE and 12 STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "bronx-week-grand-finale-festival",
+      "canonical_name": "Bronx Week Grand Finale Festival",
+      "aliases": [
+        "Bronx Week Grand Finale Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-05-17",
+      "projected_end": "2026-05-17",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Bronx",
+      "location_hint": "MOSHOLU PARKWAY",
+      "display_location": "MOSHOLU PARKWAY between VAN CORTLANDT AVENUE and BAINBRIDGE AVENUE, Bronx, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "danceafrica-bazaar",
+      "canonical_name": "DanceAfrica Bazaar",
+      "aliases": [
+        "DanceAfrica Bazaar"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-05-23",
+      "projected_end": "2026-05-25",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": true,
+      "borough": "Brooklyn",
+      "location_hint": "ASHLAND PLACE",
+      "display_location": "ASHLAND PLACE between LAFAYETTE AVENUE and FULTON STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "loisaida-festival",
+      "canonical_name": "Loisaida Festival",
+      "aliases": [
+        "Loisaida Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-05-24",
+      "projected_end": "2026-05-24",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "AVENUE C",
+      "display_location": "AVENUE C between EAST 6 STREET and EAST 12 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "washington-square-outdoor-art-exhibit",
+      "canonical_name": "Washington Square Outdoor Art Exhibit",
+      "aliases": [
+        "Washington Square Outdoor Art Exhibit"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-05-23",
+      "projected_end": "2026-05-25",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": true,
+      "borough": "Manhattan",
+      "location_hint": "UNIVERSITY PLACE",
+      "display_location": "UNIVERSITY PLACE between EAST 13 STREET and WAVERLY PLACE, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "queens-pride-festival",
+      "canonical_name": "Queens Pride Festival",
+      "aliases": [
+        "Queens Pride Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-07",
+      "projected_end": "2026-06-07",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "37 ROAD",
+      "display_location": "37 ROAD between 73 STREET and 77 STREET, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "museum-mile-festival",
+      "canonical_name": "Museum Mile Festival",
+      "aliases": [
+        "Museum Mile Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-09",
+      "projected_end": "2026-06-09",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "5 AVENUE",
+      "display_location": "5 AVENUE between EAST 82 STREET and EAST 105 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "116th-street-festival",
+      "canonical_name": "116th Street Festival",
+      "aliases": [
+        "116th Street Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-13",
+      "projected_end": "2026-06-13",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "EAST 116 STREET",
+      "display_location": "EAST 116 STREET between LEXINGTON AVENUE and 2 AVENUE, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "brooklyn-pride-festival",
+      "canonical_name": "Brooklyn Pride Festival",
+      "aliases": [
+        "Brooklyn Pride Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-13",
+      "projected_end": "2026-06-13",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "5 AVENUE",
+      "display_location": "5 AVENUE between UNION STREET and 9 STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "seventh-heaven-street-fair",
+      "canonical_name": "Seventh Heaven Street Fair",
+      "aliases": [
+        "Seventh Heaven Street Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-21",
+      "projected_end": "2026-06-21",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "7 AVENUE",
+      "display_location": "7 AVENUE between FLATBUSH AVENUE and 16 STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "nyc-pridefest",
+      "canonical_name": "NYC PrideFest",
+      "aliases": [
+        "NYC PrideFest"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-28",
+      "projected_end": "2026-06-28",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "4 AVENUE",
+      "display_location": "4 AVENUE between EAST 8 STREET and EAST 13 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "astoria-park-carnival",
+      "canonical_name": "Astoria Park Carnival",
+      "aliases": [
+        "Astoria Park Carnival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-24",
+      "projected_end": "2026-06-28",
+      "event_kind": "religious_feast",
+      "typical_multi_day": true,
+      "borough": "Queens",
+      "location_hint": "ASTORIA PARK PARKING LOT",
+      "display_location": "ASTORIA PARK PARKING LOT at HOYT AVENUE NORTH, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "arab-american-street-festival",
+      "canonical_name": "Arab American Street Festival",
+      "aliases": [
+        "Arab American Street Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-11",
+      "projected_end": "2026-07-11",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "GREAT JONES STREET",
+      "display_location": "GREAT JONES STREET between LAFAYETTE STREET and BOWERY, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "murray-hill-neighborhood-festival",
+      "canonical_name": "Murray Hill Neighborhood Festival",
+      "aliases": [
+        "Murray Hill Neighborhood Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-18",
+      "projected_end": "2026-07-18",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "PARK AVENUE",
+      "display_location": "PARK AVENUE between EAST 34 STREET and EAST 40 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "hester-street-fair-summer",
+      "canonical_name": "Hester Street Fair (Summer Edition)",
+      "aliases": [
+        "Hester Street Fair (Summer Edition)"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-01",
+      "projected_end": "2026-08-01",
+      "event_kind": "food_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "PIER 17",
+      "display_location": "PIER 17 at 89 SOUTH STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "sunset-park-fifth-avenue-festival",
+      "canonical_name": "Sunset Park Fifth Avenue Festival",
+      "aliases": [
+        "Sunset Park Fifth Avenue Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-13",
+      "projected_end": "2026-09-13",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "5 AVENUE",
+      "display_location": "5 AVENUE between 44 STREET and 59 STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "viva-la-comida-festival",
+      "canonical_name": "Viva La Comida Festival",
+      "aliases": [
+        "Viva La Comida Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-19",
+      "projected_end": "2026-09-19",
+      "event_kind": "food_festival",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "82 STREET",
+      "display_location": "82 STREET between ROOSEVELT AVENUE and BAXTER AVENUE, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "broadway-cares-flea-market",
+      "canonical_name": "Broadway Cares Flea Market & Grand Auction",
+      "aliases": [
+        "Broadway Cares Flea Market & Grand Auction"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-20",
+      "projected_end": "2026-09-20",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "WEST 44 STREET and WEST 45 STREET",
+      "display_location": "WEST 44 STREET and WEST 45 STREET between BROADWAY and 8 AVENUE, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "lower-east-side-pickle-day",
+      "canonical_name": "Lower East Side Pickle Day",
+      "aliases": [
+        "Lower East Side Pickle Day"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-18",
+      "projected_end": "2026-10-18",
+      "event_kind": "food_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "ORCHARD STREET",
+      "display_location": "ORCHARD STREET between DELANCEY STREET and EAST HOUSTON STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "queens-botanical-garden-harvest-fest",
+      "canonical_name": "Queens Botanical Garden Harvest Fest",
+      "aliases": [
+        "Queens Botanical Garden Harvest Fest"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-18",
+      "projected_end": "2026-10-18",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "MAIN STREET",
+      "display_location": "MAIN STREET between DAHLIA AVENUE and PECK AVENUE, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "meatpacking-treat-street",
+      "canonical_name": "Meatpacking District Treat Street",
+      "aliases": [
+        "Meatpacking District Treat Street"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-31",
+      "projected_end": "2026-10-31",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "GANSEVOORT STREET",
+      "display_location": "GANSEVOORT STREET between WASHINGTON STREET and 9 AVENUE, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "forest-hills-festival-of-the-arts",
+      "canonical_name": "Forest Hills Festival of the Arts",
+      "aliases": [
+        "Forest Hills Festival of the Arts"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-14",
+      "projected_end": "2026-06-14",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "AUSTIN STREET",
+      "display_location": "AUSTIN STREET between 69 ROAD and 72 ROAD, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "smith-street-sunday-fair",
+      "canonical_name": "Smith Street Sunday Fair",
+      "aliases": [
+        "Smith Street Sunday Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-28",
+      "projected_end": "2026-06-28",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "SMITH STREET",
+      "display_location": "SMITH STREET between BERGEN STREET and UNION STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "financial-district-summer-festival",
+      "canonical_name": "Financial District Summer Festival",
+      "aliases": [
+        "Financial District Summer Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-12",
+      "projected_end": "2026-07-12",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "WATER STREET",
+      "display_location": "WATER STREET between FULTON STREET and BROAD STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "montague-street-summer-stroll",
+      "canonical_name": "Montague Street Summer Stroll",
+      "aliases": [
+        "Montague Street Summer Stroll"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-12",
+      "projected_end": "2026-07-12",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "MONTAGUE STREET",
+      "display_location": "MONTAGUE STREET between CLINTON STREET and HICKS STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "tudor-city-neighborhood-festival",
+      "canonical_name": "Tudor City Neighborhood Festival",
+      "aliases": [
+        "Tudor City Neighborhood Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-25",
+      "projected_end": "2026-07-25",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "2 AVENUE",
+      "display_location": "2 AVENUE between EAST 43 STREET and EAST 53 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "rockaway-beach-surf-fest",
+      "canonical_name": "Rockaway Beach Surf Fest & Fair",
+      "aliases": [
+        "Rockaway Beach Surf Fest & Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-08",
+      "projected_end": "2026-08-08",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "BEACH 116 STREET",
+      "display_location": "BEACH 116 STREET between ROCKAWAY BEACH BOULEVARD and THE BOARDWALK, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "fulton-street-follies",
+      "canonical_name": "Fulton Street Follies",
+      "aliases": [
+        "Fulton Street Follies"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-15",
+      "projected_end": "2026-08-15",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "FULTON STREET",
+      "display_location": "FULTON STREET between WATER STREET and GOLD STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "staten-island-italian-festival",
+      "canonical_name": "Staten Island Italian Festival at Casa Belvedere",
+      "aliases": [
+        "Staten Island Italian Festival at Casa Belvedere"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-05",
+      "projected_end": "2026-09-07",
+      "event_kind": "religious_feast",
+      "typical_multi_day": true,
+      "borough": "Staten Island",
+      "location_hint": "CASA BELVEDERE",
+      "display_location": "CASA BELVEDERE at 79 HOWARD AVENUE, Staten Island, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "jackson-heights-37th-avenue-festival",
+      "canonical_name": "Jackson Heights 37th Avenue Festival",
+      "aliases": [
+        "Jackson Heights 37th Avenue Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-06",
+      "projected_end": "2026-09-06",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "37 AVENUE",
+      "display_location": "37 AVENUE between 83 STREET and 89 STREET, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "upper-east-side-first-avenue-festival",
+      "canonical_name": "Upper East Side First Avenue Festival",
+      "aliases": [
+        "Upper East Side First Avenue Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-12",
+      "projected_end": "2026-09-12",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "1 AVENUE",
+      "display_location": "1 AVENUE between EAST 68 STREET and EAST 79 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "west-side-county-fair",
+      "canonical_name": "West Side County Fair",
+      "aliases": [
+        "West Side County Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-13",
+      "projected_end": "2026-09-13",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "RIVERSIDE PARK",
+      "display_location": "RIVERSIDE PARK at PIER I (WEST 70 STREET), Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "greenpoint-avenue-festival",
+      "canonical_name": "Greenpoint Avenue Festival",
+      "aliases": [
+        "Greenpoint Avenue Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-19",
+      "projected_end": "2026-09-19",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "GREENPOINT AVENUE",
+      "display_location": "GREENPOINT AVENUE between QUEENS BOULEVARD and 44 STREET, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "stone-street-oyster-festival",
+      "canonical_name": "Stone Street Oyster Festival",
+      "aliases": [
+        "Stone Street Oyster Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-26",
+      "projected_end": "2026-09-26",
+      "event_kind": "food_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "STONE STREET",
+      "display_location": "STONE STREET between HANOVER SQUARE and BROAD STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "bayside-village-fair",
+      "canonical_name": "Bayside Village Fair",
+      "aliases": [
+        "Bayside Village Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-27",
+      "projected_end": "2026-09-27",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "BELL BOULEVARD",
+      "display_location": "BELL BOULEVARD between NORTHERN BOULEVARD and 35 AVENUE, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "ridgewood-fall-festival",
+      "canonical_name": "Ridgewood Fall Festival",
+      "aliases": [
+        "Ridgewood Fall Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-04",
+      "projected_end": "2026-10-04",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "MYRTLE AVENUE",
+      "display_location": "MYRTLE AVENUE between WYCKOFF AVENUE and FRESH POND ROAD, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "kings-highway-street-fair",
+      "canonical_name": "Kings Highway Street Fair",
+      "aliases": [
+        "Kings Highway Street Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-11",
+      "projected_end": "2026-10-11",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "KINGS HIGHWAY",
+      "display_location": "KINGS HIGHWAY between OCEAN AVENUE and EAST 12 STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "hells-kitchen-fall-festival",
+      "canonical_name": "Hell's Kitchen Fall Festival",
+      "aliases": [
+        "Hell's Kitchen Fall Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-17",
+      "projected_end": "2026-10-17",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "9 AVENUE",
+      "display_location": "9 AVENUE between WEST 42 STREET and WEST 52 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "union-square-autumn-fair",
+      "canonical_name": "Union Square Autumn Fair",
+      "aliases": [
+        "Union Square Autumn Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-25",
+      "projected_end": "2026-10-25",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "BROADWAY",
+      "display_location": "BROADWAY between EAST 17 STREET and EAST 23 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "lenox-hill-spring-fair",
+      "canonical_name": "Lenox Hill Neighborhood House Spring Gala & Fair",
+      "aliases": [
+        "Lenox Hill Neighborhood House Spring Gala & Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-05-31",
+      "projected_end": "2026-05-31",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "1 AVENUE",
+      "display_location": "1 AVENUE between EAST 70 STREET and EAST 80 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "graham-avenue-fiesta",
+      "canonical_name": "Graham Avenue Fiesta",
+      "aliases": [
+        "Graham Avenue Fiesta"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-05-30",
+      "projected_end": "2026-05-30",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "GRAHAM AVENUE",
+      "display_location": "GRAHAM AVENUE between BOERUM STREET and BROADWAY, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "lower-third-avenue-spring-festival",
+      "canonical_name": "Lower Third Avenue Spring Festival",
+      "aliases": [
+        "Lower Third Avenue Spring Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-06",
+      "projected_end": "2026-06-06",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "3 AVENUE",
+      "display_location": "3 AVENUE between EAST 14 STREET and EAST 23 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "grand-central-spring-food-festival",
+      "canonical_name": "Grand Central Spring Food Festival",
+      "aliases": [
+        "Grand Central Spring Food Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-07",
+      "projected_end": "2026-06-07",
+      "event_kind": "food_festival",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "LEXINGTON AVENUE",
+      "display_location": "LEXINGTON AVENUE between EAST 42 STREET and EAST 52 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "bed-stuy-alive-street-festival",
+      "canonical_name": "Bed-Stuy Alive! Street Festival",
+      "aliases": [
+        "Bed-Stuy Alive! Street Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-13",
+      "projected_end": "2026-06-13",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "MACON STREET",
+      "display_location": "MACON STREET between MARCUS GARVEY BOULEVARD and TOMPKINS AVENUE, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "flatiron-district-summer-kickoff",
+      "canonical_name": "Flatiron District Summer Kickoff",
+      "aliases": [
+        "Flatiron District Summer Kickoff"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-20",
+      "projected_end": "2026-06-20",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "5 AVENUE",
+      "display_location": "5 AVENUE between EAST 23 STREET and EAST 33 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "lunar-new-year-parade-chinatown",
+      "canonical_name": "Lunar New Year Parade & Festival (Chinatown)",
+      "aliases": [
+        "Lunar New Year Parade & Festival (Chinatown)"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-02-22",
+      "projected_end": "2026-02-22",
+      "event_kind": "parade",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "MOTT STREET",
+      "display_location": "MOTT STREET between CANAL STREET and WORTH STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "flushing-lunar-new-year-parade",
+      "canonical_name": "Flushing Lunar New Year Parade",
+      "aliases": [
+        "Flushing Lunar New Year Parade"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-02-21",
+      "projected_end": "2026-02-21",
+      "event_kind": "parade",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "MAIN STREET",
+      "display_location": "MAIN STREET between 37 AVENUE and 39 AVENUE, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "st-patricks-day-parade",
+      "canonical_name": "St. Patrick's Day Parade",
+      "aliases": [
+        "St. Patrick's Day Parade"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-03-17",
+      "projected_end": "2026-03-17",
+      "event_kind": "parade",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "5 AVENUE",
+      "display_location": "5 AVENUE between EAST 44 STREET and EAST 79 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "greek-independence-day-parade",
+      "canonical_name": "Greek Independence Day Parade & Festival",
+      "aliases": [
+        "Greek Independence Day Parade & Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-04-19",
+      "projected_end": "2026-04-19",
+      "event_kind": "parade",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "5 AVENUE",
+      "display_location": "5 AVENUE between EAST 64 STREET and EAST 79 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "persian-day-parade",
+      "canonical_name": "Persian Day Parade & Festival",
+      "aliases": [
+        "Persian Day Parade & Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-04-26",
+      "projected_end": "2026-04-26",
+      "event_kind": "parade",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "MADISON AVENUE",
+      "display_location": "MADISON AVENUE between EAST 38 STREET and EAST 26 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "third-avenue-spring-fair",
+      "canonical_name": "Third Avenue Spring Fair",
+      "aliases": [
+        "Third Avenue Spring Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-04-26",
+      "projected_end": "2026-04-26",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "3 AVENUE",
+      "display_location": "3 AVENUE between EAST 23 STREET and EAST 34 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "smorgasburg-prospect-park-spring",
+      "canonical_name": "Smorgasburg Prospect Park (Spring Opening)",
+      "aliases": [
+        "Smorgasburg Prospect Park (Spring Opening)"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-05-03",
+      "projected_end": "2026-05-03",
+      "event_kind": "food_festival",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "BREEZE HILL",
+      "display_location": "BREEZE HILL at PROSPECT PARK, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "haitian-day-parade",
+      "canonical_name": "Haitian Day Parade & Festival",
+      "aliases": [
+        "Haitian Day Parade & Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-05-10",
+      "projected_end": "2026-05-10",
+      "event_kind": "parade",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "NOSTRAND AVENUE",
+      "display_location": "NOSTRAND AVENUE between CLARENDON ROAD and FOSTER AVENUE, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "st-george-ukrainian-festival",
+      "canonical_name": "St. George Ukrainian Festival",
+      "aliases": [
+        "St. George Ukrainian Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-05-15",
+      "projected_end": "2026-05-17",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": true,
+      "borough": "Manhattan",
+      "location_hint": "EAST 7 STREET",
+      "display_location": "EAST 7 STREET between 2 AVENUE and 3 AVENUE, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "sunnyside-queens-boulevard-festival",
+      "canonical_name": "Sunnyside Queens Boulevard Festival",
+      "aliases": [
+        "Sunnyside Queens Boulevard Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-05-16",
+      "projected_end": "2026-05-16",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "QUEENS BOULEVARD",
+      "display_location": "QUEENS BOULEVARD between 39 STREET and 46 STREET, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "garment-district-urbanspace-market",
+      "canonical_name": "Garment District UrbanSpace Market",
+      "aliases": [
+        "Garment District UrbanSpace Market"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-05-18",
+      "projected_end": "2026-06-19",
+      "event_kind": "food_festival",
+      "typical_multi_day": true,
+      "borough": "Manhattan",
+      "location_hint": "BROADWAY",
+      "display_location": "BROADWAY between WEST 39 STREET and WEST 40 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "dumbo-drop-block-party",
+      "canonical_name": "DUMBO Drop Block Party",
+      "aliases": [
+        "DUMBO Drop Block Party"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-05-30",
+      "projected_end": "2026-05-30",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "WASHINGTON STREET",
+      "display_location": "WASHINGTON STREET between WATER STREET and FRONT STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "bay-ridge-fifth-avenue-spring-festival",
+      "canonical_name": "Bay Ridge Fifth Avenue Spring Festival",
+      "aliases": [
+        "Bay Ridge Fifth Avenue Spring Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-07",
+      "projected_end": "2026-06-07",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "5 AVENUE",
+      "display_location": "5 AVENUE between 69 STREET and 85 STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "philippine-independence-day-parade",
+      "canonical_name": "Philippine Independence Day Parade & Street Fair",
+      "aliases": [
+        "Philippine Independence Day Parade & Street Fair"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-07",
+      "projected_end": "2026-06-07",
+      "event_kind": "parade",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "MADISON AVENUE",
+      "display_location": "MADISON AVENUE between EAST 23 STREET and EAST 26 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "national-puerto-rican-day-parade",
+      "canonical_name": "National Puerto Rican Day Parade",
+      "aliases": [
+        "National Puerto Rican Day Parade"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-14",
+      "projected_end": "2026-06-14",
+      "event_kind": "parade",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "5 AVENUE",
+      "display_location": "5 AVENUE between EAST 44 STREET and EAST 79 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "bastille-day-smith-street-brooklyn",
+      "canonical_name": "Bastille Day on Smith Street (Brooklyn)",
+      "aliases": [
+        "Bastille Day on Smith Street (Brooklyn)"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-12",
+      "projected_end": "2026-07-12",
+      "event_kind": "cultural_festival",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "SMITH STREET",
+      "display_location": "SMITH STREET between BERGEN STREET and PACIFIC STREET, Brooklyn, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "jackson-heights-momo-crawl",
+      "canonical_name": "Jackson Heights Momo Crawl",
+      "aliases": [
+        "Jackson Heights Momo Crawl"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-20",
+      "projected_end": "2026-09-20",
+      "event_kind": "food_festival",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "DIVERSITY PLAZA",
+      "display_location": "DIVERSITY PLAZA at 37 ROAD and 73 STREET, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "nigerian-independence-day-parade",
+      "canonical_name": "Nigerian Independence Day Parade & Festival",
+      "aliases": [
+        "Nigerian Independence Day Parade & Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-03",
+      "projected_end": "2026-10-03",
+      "event_kind": "parade",
+      "typical_multi_day": false,
+      "borough": "Manhattan",
+      "location_hint": "2 AVENUE",
+      "display_location": "2 AVENUE between EAST 54 STREET and EAST 44 STREET, Manhattan, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "woodside-avenue-autumn-festival",
+      "canonical_name": "Woodside Avenue Autumn Festival",
+      "aliases": [
+        "Woodside Avenue Autumn Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-10-10",
+      "projected_end": "2026-10-10",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "WOODSIDE AVENUE",
+      "display_location": "WOODSIDE AVENUE between 65 PLACE and 58 STREET, Queens, NY",
+      "bulk_import_batch": "google_studio_parts_1_9_2026"
+    }
+  ]
+}
