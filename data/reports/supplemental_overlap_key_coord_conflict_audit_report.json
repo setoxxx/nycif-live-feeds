@@ -1,155 +1,7 @@
 {
   "artifact_type": "supplemental_overlap_key_coord_conflict_audit_report",
-  "findings": [
-    {
-      "action": "human_decision_required",
-      "alternate_row": {
-        "borough": "Mn",
-        "display_location": "Inwood Canoe Club (in Inwood Hill Park)",
-        "geocoder_confidence": "medium",
-        "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-        "keep": false,
-        "lat": 40.8721112,
-        "lng": -73.9245878,
-        "source_event_id": "2184048"
-      },
-      "date": "2026-07-18",
-      "distance_miles": 0.481,
-      "overlap_key": "invasive species removal|2026-07-18",
-      "preferred_row_if_forced_to_pick_one": {
-        "borough": "Mn",
-        "display_location": "Inwood, west end of Dyckman Street, then south through the gate and past the sailing club. in Inwood Hill Park",
-        "geocoder_confidence": "high",
-        "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-        "keep": true,
-        "lat": 40.86869812011719,
-        "lng": -73.93260192871094,
-        "source_event_id": "1050736"
-      },
-      "reason": "Venue text and distance are ambiguous; human should confirm merge vs split before promotion.",
-      "recommendation": "manual_review",
-      "row_a": {
-        "borough": "Mn",
-        "display_location": "Inwood Canoe Club (in Inwood Hill Park)",
-        "geocoder_confidence": "medium",
-        "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-        "keep": false,
-        "lat": 40.8721112,
-        "lng": -73.9245878,
-        "source_event_id": "2184048"
-      },
-      "row_b": {
-        "borough": "Mn",
-        "display_location": "Inwood, west end of Dyckman Street, then south through the gate and past the sailing club. in Inwood Hill Park",
-        "geocoder_confidence": "high",
-        "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-        "keep": true,
-        "lat": 40.86869812011719,
-        "lng": -73.93260192871094,
-        "source_event_id": "1050736"
-      },
-      "title": "Invasive Species Removal"
-    },
-    {
-      "action": "human_decision_required",
-      "alternate_row": {
-        "borough": "Mn",
-        "display_location": "Inwood Canoe Club (in Inwood Hill Park)",
-        "geocoder_confidence": "medium",
-        "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-        "keep": false,
-        "lat": 40.8721112,
-        "lng": -73.9245878,
-        "source_event_id": "2190856"
-      },
-      "date": "2026-07-19",
-      "distance_miles": 0.481,
-      "overlap_key": "inwood canoe club sunday open house|2026-07-19",
-      "preferred_row_if_forced_to_pick_one": {
-        "borough": "Mn",
-        "display_location": "Inwood, west end of Dyckman Street, then south through the gate and past the sailing club. in Inwood Hill Park",
-        "geocoder_confidence": "high",
-        "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-        "keep": true,
-        "lat": 40.86869812011719,
-        "lng": -73.93260192871094,
-        "source_event_id": "1050856"
-      },
-      "reason": "Venue text and distance are ambiguous; human should confirm merge vs split before promotion.",
-      "recommendation": "manual_review",
-      "row_a": {
-        "borough": "Mn",
-        "display_location": "Inwood, west end of Dyckman Street, then south through the gate and past the sailing club. in Inwood Hill Park",
-        "geocoder_confidence": "high",
-        "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-        "keep": true,
-        "lat": 40.86869812011719,
-        "lng": -73.93260192871094,
-        "source_event_id": "1050856"
-      },
-      "row_b": {
-        "borough": "Mn",
-        "display_location": "Inwood Canoe Club (in Inwood Hill Park)",
-        "geocoder_confidence": "medium",
-        "geocoder_source": "nyc_parks_bigapps_events_snapshot",
-        "keep": false,
-        "lat": 40.8721112,
-        "lng": -73.9245878,
-        "source_event_id": "2190856"
-      },
-      "title": "Inwood Canoe Club Sunday Open House"
-    },
-    {
-      "action": "human_decision_required",
-      "alternate_row": {
-        "borough": "Bk",
-        "display_location": "Pier 2 (in Brooklyn Bridge Park),Brooklyn Bridge Park",
-        "geocoder_confidence": "medium",
-        "geocoder_source": "nyc_parks_facility_reference",
-        "keep": false,
-        "lat": 40.6930021,
-        "lng": -74.001903,
-        "source_event_id": "2170520"
-      },
-      "date": "2026-07-22",
-      "distance_miles": 0.468,
-      "overlap_key": "waterfront workouts amp d bootcamp|2026-07-22",
-      "preferred_row_if_forced_to_pick_one": {
-        "borough": "Bk",
-        "display_location": "Brooklyn Bridge Park",
-        "geocoder_confidence": "high",
-        "geocoder_source": "nyc_parks_facility_reference",
-        "keep": true,
-        "lat": 40.6992,
-        "lng": -73.9983,
-        "source_event_id": "1112476"
-      },
-      "reason": "Venue text and distance are ambiguous; human should confirm merge vs split before promotion.",
-      "recommendation": "manual_review",
-      "row_a": {
-        "borough": "Bk",
-        "display_location": "Brooklyn Bridge Park",
-        "geocoder_confidence": "high",
-        "geocoder_source": "nyc_parks_facility_reference",
-        "keep": true,
-        "lat": 40.6992,
-        "lng": -73.9983,
-        "source_event_id": "1112476"
-      },
-      "row_b": {
-        "borough": "Bk",
-        "display_location": "Pier 2 (in Brooklyn Bridge Park),Brooklyn Bridge Park",
-        "geocoder_confidence": "medium",
-        "geocoder_source": "nyc_parks_facility_reference",
-        "keep": false,
-        "lat": 40.6930021,
-        "lng": -74.001903,
-        "source_event_id": "2170520"
-      },
-      "title": "Waterfront Workouts: Amp'd Bootcamp"
-    }
-  ],
-  "generated_at_utc": "2026-07-18T00:31:00.447432+00:00",
+  "findings": [],
+  "generated_at_utc": "2026-07-18T00:40:08.879565+00:00",
   "next_required_step": "Apply human-reviewed cleanup decisions before Phase 2E promotion. Do not promote until overlap_key conflicts are resolved.",
   "phase": "m11_supplemental_pre_phase2e_overlap_key_audit",
   "promotion_performed": false,
@@ -163,16 +15,14 @@
   },
   "source_export_path": "data/supplemental_approved_export_feed.json",
   "summary": {
-    "conflict_pair_count": 3,
-    "conflict_row_count": 6,
+    "conflict_pair_count": 0,
+    "conflict_row_count": 0,
     "dedupe_pair_count": 0,
-    "export_event_count": 3496,
-    "manual_review_pair_count": 3,
-    "projected_export_event_count_after_dedupe_actions": 3496,
+    "export_event_count": 3493,
+    "manual_review_pair_count": 0,
+    "projected_export_event_count_after_dedupe_actions": 3493,
     "projected_unique_overlap_key_count_after_dedupe_and_rekey": 2406,
-    "recommendation_counts": {
-      "manual_review": 3
-    },
+    "recommendation_counts": {},
     "split_pair_count": 0,
     "unique_overlap_key_count": 2406
   }

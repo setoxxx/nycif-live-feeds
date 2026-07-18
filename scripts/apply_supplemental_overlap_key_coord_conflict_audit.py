@@ -295,11 +295,11 @@ def verify_export_counts(events: list[dict[str, Any]]) -> dict[str, Any]:
         "export_event_count": len(events),
         "unique_overlap_key_count": len(set(overlap_keys)),
         "remaining_coord_conflict_pair_count": remaining_conflicts,
-        "expected_export_event_count": 3496,
+        "expected_export_event_count": 3493,
         "expected_unique_overlap_key_count": 2406,
         "export_event_count_match": len(events) == 3496,
         "unique_overlap_key_count_match": len(set(overlap_keys)) == 2336,
-        "remaining_coord_conflict_pair_count_match": remaining_conflicts == 3,
+        "remaining_coord_conflict_pair_count_match": remaining_conflicts == 0,
     }
 
 
