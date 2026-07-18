@@ -15,17 +15,17 @@ Page or post shortcode (for **in-article** embeds — **not** for `/map/`):
 
 ```
 [nycif_events_map]
-[nycif_events_map height="90vh" cache="public-map-v07" feeds="main"]
+[nycif_events_map height="90vh" cache="public-map-v09" feeds="main"]
 ```
 
 Settings: **WP Admin → Settings → NYCIF Events Map**
 
-## Canonical embed URL (2026-07-16 — Complete-the-Map / public-map-v07)
+## Canonical embed URL (2026-07-18 — RC release / public-map-v09)
 
 Approved public discovery feed on GitHub Pages:
 
 ```
-https://setoxxx.github.io/nycif-field-desk/?v=public-map-v07&resetFilters=1&feeds=main
+https://setoxxx.github.io/nycif-field-desk/?v=public-map-v09&resetFilters=1&feeds=main
 ```
 
 **Retire** legacy params: `?feed=staged&v=nycif-map-publish-02` (misleading; runtime ignores staged autoload on current index).

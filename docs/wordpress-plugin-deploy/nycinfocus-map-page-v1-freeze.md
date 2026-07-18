@@ -1,9 +1,18 @@
-# nycinfocus.com/map/ — Map v1 display freeze (2026-07-16)
+# nycinfocus.com/map/ — Map v1 display freeze (2026-07-18 RC release)
 
-**Status:** FROZEN — signed off after live QA PASS  
+**Status:** FROZEN — RC release authorized (`public-map-v09`)  
 **URL:** https://nycinfocus.com/map/  
 **WordPress page ID:** 2647  
 **Editor:** Code Editor only for this page (avoid smart-quote corruption)
+
+### Deploy RC to WordPress (one-time after Pages deploy)
+
+1. WP Admin → Pages → edit page **2647** (`/map/`) in **Code Editor**
+2. Replace the iframe `src` line so `v=public-map-v09` (see canonical HTML below)
+3. Update → run the live QA checklist at the bottom of this doc
+4. Human viewport check: fullscreen map, mobile week strip clear of GPS stack, tip jar share opens `https://www.nycinfocus.com/map/`
+
+**Field Desk Pages** is already on `public-map-v09`. WordPress `/map/` must match.
 
 Any agent or human improving NYC In Focus must read this before touching the Map page, theme template, or embed params. The saved page content and the live rendered viewport must match this contract.
 
@@ -50,7 +59,7 @@ Live NYC public events map from NYC In Focus.
 <div id="nycifMapAppShell">
   <iframe
     title="NYC In Focus Event Map"
-    src="https://setoxxx.github.io/nycif-field-desk/?v=public-map-v07&resetFilters=1&feeds=main"
+    src="https://setoxxx.github.io/nycif-field-desk/?v=public-map-v09&resetFilters=1&feeds=main"
     loading="eager"
     referrerpolicy="no-referrer-when-downgrade"
     allow="geolocation; fullscreen"
@@ -61,12 +70,12 @@ Live NYC public events map from NYC In Focus.
 ### Canonical iframe `src` (must match exactly)
 
 ```
-https://setoxxx.github.io/nycif-field-desk/?v=public-map-v07&resetFilters=1&feeds=main
+https://setoxxx.github.io/nycif-field-desk/?v=public-map-v09&resetFilters=1&feeds=main
 ```
 
 | Param | Required value | Notes |
 |-------|----------------|-------|
-| `v` | `public-map-v07` | Field Desk runtime cache bust; bump only after Pages deploy + QA |
+| `v` | `public-map-v09` | Field Desk runtime cache bust; bump only after Pages deploy + QA |
 | `feeds` | `main` | Approved public discovery feed — **not** a commit hash, **not** `staged` |
 | `resetFilters` | `1` | Clean boot filters on load |
 
@@ -99,7 +108,7 @@ h = sys.stdin.read()
 checks = [
     ('nycifMapAppShell div', bool(re.search(r'<div id=\"nycifMapAppShell\"', h))),
     ('hide rules', 'body:has(#nycifMapAppShell)' in h),
-    ('public-map-v07', 'public-map-v07' in h),
+    ('public-map-v09', 'public-map-v09' in h),
     ('feeds=main', 'feeds=main' in h or 'feeds&#038;main' in h),
     ('no plugin wrap', not re.search(r'<div class=\"nycif-events-map-wrap\"', h)),
     ('no caption', not re.search(r'<p class=\"nycif-events-map-caption\"', h)),
@@ -121,7 +130,7 @@ for name, ok in checks:
 
 | Surface | Role |
 |---------|------|
-| GitHub Pages map | https://setoxxx.github.io/nycif-field-desk/ — map runtime (`public-map-v07`) |
+| GitHub Pages map | https://setoxxx.github.io/nycif-field-desk/ — map runtime (`public-map-v09`) |
 | WordPress `/map/` | Fullscreen iframe shell → Pages URL above |
 | `docs/field-desk-map-deploy/` | Field Desk file deploy handshake |
 | `docs/wordpress-plugin-deploy/nycif-events-map/` | Plugin for non-/map/ embeds only |
@@ -134,6 +143,7 @@ When Field Desk Pages updates (`v=` bump), update the iframe `src` on `/map/` in
 
 | Field | Value |
 |-------|-------|
-| Signed off | 2026-07-16 |
-| Live QA | PASS — fullscreen shell, `public-map-v07`, `feeds=main` |
-| Repo | `nycif-live-feeds` docs only; WordPress content is human/ChatGPT deploy |
+| Signed off | 2026-07-18 (RC release) |
+| Live QA | Field Desk Pages PASS · WordPress `/map/` deploy pending until iframe `v=` updated |
+| Runtime | `public-map-v09` — mobile week strip, tip jar v06, Near Me hidden for RC |
+| Repo | `nycif-live-feeds` docs only; WordPress content is human deploy (page 2647) |
