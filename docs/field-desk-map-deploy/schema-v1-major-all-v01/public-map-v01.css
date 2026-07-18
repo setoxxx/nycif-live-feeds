@@ -90,6 +90,65 @@ body.public-map-page .panel-label::after {
   font-size: 9.5px;
 }
 
+body.public-map-page .layers-panel .panel-sub-label {
+  margin: 0 0 6px;
+  color: #4b5563;
+  font-size: 9.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+body.public-map-page .editors-block {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(17, 24, 39, .12);
+}
+
+body.public-map-page .editors-pick {
+  display: grid;
+  gap: 4px;
+  padding: 3px 4px;
+  font-size: 10px;
+  font-weight: 750;
+  color: #111827;
+}
+
+body.public-map-page .editors-pick select {
+  width: 100%;
+  min-height: 28px;
+  border: 1px solid rgba(17, 24, 39, .12);
+  border-radius: 9px;
+  padding: 4px 8px;
+  background: #fff;
+  color: #111827;
+  font: inherit;
+}
+
+body.public-map-page .newsdesk-check small {
+  color: #6b7280;
+  font-size: 9px;
+  font-weight: 650;
+}
+
+body.public-map-page .layers-panel .nycif-approved-overlays-note {
+  color: #374151;
+}
+
+body.public-map-page .layers-panel .nycif-approved-overlays-block .panel-label {
+  font-size: 9.5px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #4b5563;
+}
+
+body.public-map-page .layers-panel .nycif-approved-overlays-block .panel-label::after {
+  content: none;
+}
+
 body.public-map-page .pill.layers-pill {
   min-height: 31px;
   padding: 0 10px;

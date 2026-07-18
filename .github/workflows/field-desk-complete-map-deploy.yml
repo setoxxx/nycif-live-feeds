@@ -8,6 +8,7 @@ on:
       - "docs/field-desk-map-deploy/schema-v1-major-all-v01/**"
       - "docs/field-desk-map-deploy/shared/**"
       - "docs/field-desk-map-deploy/discovery-taxonomy-v02/discovery-patch-v02.js"
+      - "docs/field-desk-map-deploy/discovery-taxonomy-v02/public-approved-overlays-v01.js"
       - "docs/field-desk-admin-deploy/admin/**"
       - ".github/workflows/field-desk-complete-map-deploy.yml"
 
@@ -42,6 +43,7 @@ jobs:
 
           cp "$MAP_SRC/schema-v1-major-all-v01/app-schema-v1-major-all-v01.js" ./app-schema-v1-major-all-v01.js
           cp "$MAP_SRC/discovery-taxonomy-v02/discovery-patch-v02.js" ./discovery-patch-v02.js
+          cp "$MAP_SRC/discovery-taxonomy-v02/public-approved-overlays-v01.js" ./public-approved-overlays-v01.js
           cp "$MAP_SRC/schema-v1-major-all-v01/index.html" ./index.html
           cp "$MAP_SRC/schema-v1-major-all-v01/public-map-v01.css" ./public-map-v01.css
           cp "$MAP_SRC/shared/nycif-tip-jar-v01.js" ./nycif-tip-jar-v01.js
@@ -65,9 +67,12 @@ jobs:
           grep -q 'nycif-tip-jar-v01.js?v=04' index.html
           grep -q brand-header-row index.html
           grep -q brand-header-row public-map-v01.css
+          grep -q panel-sub-label index.html
+          grep -q '#374151' public-approved-overlays-v01.js
           node --check app-schema-v1-major-all-v01.js
           node --check discovery-patch-v02.js
           node --check nycif-tip-jar-v01.js
+          node --check public-approved-overlays-v01.js
           node --test tools/public-map/public-map-ui.test.mjs
 
           grep -q discovery-godview-panel-v02 admin/index.html
@@ -82,6 +87,7 @@ jobs:
           git add \
             app-schema-v1-major-all-v01.js \
             discovery-patch-v02.js \
+            public-approved-overlays-v01.js \
             index.html \
             public-map-v01.css \
             nycif-tip-jar-v01.js \

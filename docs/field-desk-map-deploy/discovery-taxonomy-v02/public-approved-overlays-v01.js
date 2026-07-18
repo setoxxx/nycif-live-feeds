@@ -76,7 +76,7 @@
     style.id = 'nycif-approved-overlays-style';
     style.textContent = `
       .nycif-approved-overlays-block { display: grid; gap: 8px; }
-      .nycif-approved-overlays-note { margin: 8px 0 0; font-size: 11px; line-height: 1.35; color: rgba(255,255,255,.72); }
+      .nycif-approved-overlays-note { margin: 8px 0 0; font-size: 11px; line-height: 1.35; color: #374151; }
       .nycif-approved-marker { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 999px; border: 2px solid rgba(255,255,255,.94); box-shadow: 0 9px 22px rgba(0,0,0,.34); color: #fff; font-size: 16px; }
       .nycif-approved-marker-active { background: #b91c1c; }
       .nycif-approved-marker-cannabis { background: #166534; }
