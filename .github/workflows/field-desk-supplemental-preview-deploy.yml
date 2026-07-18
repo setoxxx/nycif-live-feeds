@@ -6,6 +6,7 @@ on:
     branches: ["main"]
     paths:
       - "docs/field-desk-map-deploy/supplemental-export-preview/**"
+      - "docs/field-desk-map-deploy/shared/**"
       - "dist/supplemental_approved_export_feed.json"
       - "dist/supplemental_approved_export_map_pins.json"
       - "dist/supplemental_cultural_anniversary_staging.json"
