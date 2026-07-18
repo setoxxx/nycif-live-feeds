@@ -1,0 +1,132 @@
+{
+  "allow_live_geosearch": false,
+  "artifact_type": "access_benefits_geocode_report",
+  "filled_count": 8,
+  "generated_at_utc": "2026-07-18T19:25:56.587979+00:00",
+  "missing_from_snapshot_count": 0,
+  "phase": "m11_access_benefits_geocode",
+  "proposals": [
+    {
+      "address": "44 Washington Square S",
+      "date": "2026-07-14",
+      "fill": {
+        "confidence_reason": "test fill",
+        "geocoder_confidence": "high",
+        "geocoder_source": "test",
+        "proposed_lat": 40.75,
+        "proposed_lng": -73.98
+      },
+      "source_event_id": "1116816",
+      "status": "filled",
+      "title": "Access Benefits at Fair Fares Promotion - Manhattan"
+    },
+    {
+      "address": "96-01 Roosevelt Ave",
+      "date": "2026-07-14",
+      "fill": {
+        "confidence_reason": "test fill",
+        "geocoder_confidence": "high",
+        "geocoder_source": "test",
+        "proposed_lat": 40.75,
+        "proposed_lng": -73.98
+      },
+      "source_event_id": "1116836",
+      "status": "filled",
+      "title": "Access Benefits at Fair Fares Promotion - Queens"
+    },
+    {
+      "address": "620 Atlantic Ave\\n",
+      "date": "2026-07-14",
+      "fill": {
+        "confidence_reason": "test fill",
+        "geocoder_confidence": "high",
+        "geocoder_source": "test",
+        "proposed_lat": 40.75,
+        "proposed_lng": -73.98
+      },
+      "source_event_id": "1117076",
+      "status": "filled",
+      "title": "Access Benefits Fair Fares Promotion - Brooklyn"
+    },
+    {
+      "address": "91 Claremont Ave",
+      "date": "2026-07-14",
+      "fill": {
+        "confidence_reason": "test fill",
+        "geocoder_confidence": "high",
+        "geocoder_source": "test",
+        "proposed_lat": 40.75,
+        "proposed_lng": -73.98
+      },
+      "source_event_id": "1116776",
+      "status": "filled",
+      "title": "Access Benefits at The Riverside Church Food Pantry (Manhattan)"
+    },
+    {
+      "address": "Butler Houses (between Park & Webster Ave.) E",
+      "date": "2026-07-14",
+      "fill": {
+        "confidence_reason": "test fill",
+        "geocoder_confidence": "high",
+        "geocoder_source": "test",
+        "proposed_lat": 40.75,
+        "proposed_lng": -73.98
+      },
+      "source_event_id": "1116636",
+      "status": "filled",
+      "title": "Access Benefits at Local NeighborhoodStat 2026 Season - Butler Houses"
+    },
+    {
+      "address": "230 E 179th St",
+      "date": "2026-07-15",
+      "fill": {
+        "confidence_reason": "test fill",
+        "geocoder_confidence": "high",
+        "geocoder_source": "test",
+        "proposed_lat": 40.75,
+        "proposed_lng": -73.98
+      },
+      "source_event_id": "1116736",
+      "status": "filled",
+      "title": "Access Benefits at Resource Event for Seniors at Jonas Bronck Apartments - Bronx"
+    },
+    {
+      "address": "Between Lexington & 3rd Ave, E 112th St",
+      "date": "2026-07-16",
+      "fill": {
+        "confidence_reason": "test fill",
+        "geocoder_confidence": "high",
+        "geocoder_source": "test",
+        "proposed_lat": 40.75,
+        "proposed_lng": -73.98
+      },
+      "source_event_id": "1116876",
+      "status": "filled",
+      "title": "Access Benefits at Local NeighborhoodStat 2026 Season - Johnson Houses"
+    },
+    {
+      "address": "Stavros Niarchos Foundation Library 455 Fifth Ave,",
+      "date": "2026-07-17",
+      "fill": {
+        "confidence_reason": "test fill",
+        "geocoder_confidence": "high",
+        "geocoder_source": "test",
+        "proposed_lat": 40.75,
+        "proposed_lng": -73.98
+      },
+      "source_event_id": "1116896",
+      "status": "filled",
+      "title": "Access Benefits at NYPL Office Hours - Stavros Niarchos Foundation Library"
+    }
+  ],
+  "proposals_path": "data/staging/access_benefits_geocode_proposals.json",
+  "qa_pass": true,
+  "queue_path": "data/supplemental_calendar_only_review_queue.json",
+  "safety": {
+    "location_cache_modified": false,
+    "manual_review_status": "pending",
+    "promotion_allowed": false,
+    "public_map_modified": false
+  },
+  "target_count": 8
+}
