@@ -45,6 +45,18 @@ def test_incremental_intake_precedes_publish_export():
     assert intake_idx < publish_idx
 
 
+def test_preview_enrichment_build_steps_in_publish_block():
+    text = _text()
+    assert "build_nypd_precinct_boundaries_reference.py" in text
+    assert "build_supplemental_cultural_anniversary_staging.py" in text
+    assert "build_supplemental_press_geofence_staging.py" in text
+    publish_marker = "- name: Publish supplemental approved export for field-desk preview"
+    publish_idx = text.index(publish_marker)
+    block = text[publish_idx:publish_idx + 500]
+    assert "build_supplemental_cultural_anniversary_staging.py" in block
+    assert "publish_supplemental_approved_export_feed.py" in block
+
+
 def test_destructive_queue_builder_not_in_workflow():
     text = _text()
     assert "build_supplemental_manual_approval_queue.py" not in text
@@ -79,4 +91,5 @@ def test_supplemental_preview_deploy_workflow_exists():
     text = (REPO_ROOT / ".github/workflows/field-desk-supplemental-preview-deploy.yml").read_text(encoding="utf-8")
     assert "FIELD_DESK_DEPLOY_TOKEN" in text
     assert "supplemental-export-preview" in text
-    assert "approved-export-preview.html" in text
+    assert "deploy_supplemental_preview_to_field_desk.sh" in text
+    assert "supplemental_cultural_anniversary_staging.json" in text

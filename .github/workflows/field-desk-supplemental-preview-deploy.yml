@@ -8,6 +8,9 @@ on:
       - "docs/field-desk-map-deploy/supplemental-export-preview/**"
       - "dist/supplemental_approved_export_feed.json"
       - "dist/supplemental_approved_export_map_pins.json"
+      - "dist/supplemental_cultural_anniversary_staging.json"
+      - "dist/supplemental_press_geofence_staging.json"
+      - "dist/nypd_precincts/**"
       - "scripts/deploy_supplemental_preview_to_field_desk.sh"
       - ".github/workflows/field-desk-supplemental-preview-deploy.yml"
 

@@ -3,15 +3,43 @@
   "artifact_type": "supplemental_approved_export_publish_report",
   "export_event_count": 3493,
   "field_desk_urls": {
+    "anniversary_staging_raw": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/supplemental_cultural_anniversary_staging.json",
     "backend_data_raw": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/supplemental_approved_export_feed.json",
     "dist_raw": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/supplemental_approved_export_feed.json",
-    "map_pins_raw": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/supplemental_approved_export_map_pins.json"
+    "map_pins_raw": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/supplemental_approved_export_map_pins.json",
+    "precinct_boundaries_raw": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/nypd_precinct_boundaries_reference.json",
+    "press_geofence_staging_raw": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/supplemental_press_geofence_staging.json"
   },
-  "generated_at_utc": "2026-07-18T00:39:55.686263+00:00",
+  "generated_at_utc": "2026-07-18T04:23:08.454414+00:00",
   "map_pin_count": 3493,
   "map_pins_path": "dist/supplemental_approved_export_map_pins.json",
   "next_required_step": "Field-desk preview only. Use approved-export-preview.html or desk.html?previewExport=1. Public map merge requires explicit Phase 2E authorization.",
   "phase": "m11_supplemental_approved_export_publish",
+  "preview_enrichment": {
+    "anniversary_staging": {
+      "artifact_type": "supplemental_cultural_anniversary_staging",
+      "published_path": "dist/supplemental_cultural_anniversary_staging.json",
+      "row_count": 7,
+      "source_path": "data/supplemental_cultural_anniversary_staging.json"
+    },
+    "precinct_boundaries": {
+      "artifact_type": "nypd_precinct_boundaries_reference",
+      "published_path": "dist/nypd_precinct_boundaries_reference.json",
+      "row_count": 78,
+      "source_path": "data/nypd_precinct_boundaries_reference.json"
+    },
+    "precinct_shards": {
+      "shard_base_url": "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/nypd_precincts/",
+      "shard_count": 78,
+      "shard_dir": "dist/nypd_precincts"
+    },
+    "press_geofence_staging": {
+      "artifact_type": "supplemental_press_geofence_staging",
+      "published_path": "dist/supplemental_press_geofence_staging.json",
+      "row_count": 2363,
+      "source_path": "data/supplemental_press_geofence_staging.json"
+    }
+  },
   "published_path": "dist/supplemental_approved_export_feed.json",
   "qa_pass": true,
   "safety": {
