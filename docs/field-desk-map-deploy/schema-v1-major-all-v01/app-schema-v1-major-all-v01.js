@@ -96,7 +96,7 @@
   const EVENT_EMOJI_RULES = [
     [/\bfeast\b|giglio|san gennaro/i, '🍝'],
     [/food|culinary|taste of|restaurant|eats|foodie|chili|pizza|bbq|barbecue|cook ?out|grill/i, '🍽️'],
-    [/farmers? market|greenmarket|green market|produce|harvest/i, '🥕'],
+    [/farmers? market|greenmarket|green market|produce|harvest|hhfm/i, '🛍️🥬'],
     [/night market|bazaar|flea|vendor|sidewalk sale|craft fair|makers/i, '🛍️'],
     [/wine|beer|brew|cocktail|spirits/i, '🍷'],
     [/ice cream|dessert|sweet|bake/i, '🍦'],
@@ -888,6 +888,9 @@
     }
     if (stackCount > 1) {
       cls.push('marker--stacked');
+    }
+    if (e.displayEmoji === '🛍️🥬') {
+      cls.push('marker--produce');
     }
     return cls;
   }
