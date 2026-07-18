@@ -1,6 +1,6 @@
 # Supplemental approved export preview (field-desk deploy)
 
-Admin/QA-only map for **3,566** approved supplemental events from
+Admin/QA-only map for **3,493** approved supplemental events from
 `supplemental_approved_export_feed.json`. Not production map data.
 
 ## Sync to field-desk (requires write access)
@@ -21,7 +21,7 @@ gh pr merge --squash
 | Desk overlay | `https://setoxxx.github.io/nycif-field-desk/desk.html?previewExport=1` |
 | Dist feed override | add `?distExport=1` |
 
-Expected: **3,566** purple preview markers; banner shows PREVIEW / NOT PRODUCTION.
+Expected: **3,493** purple preview markers; banner shows PREVIEW / NOT PRODUCTION.
 
 ## Backend feed URLs
 

@@ -34,7 +34,7 @@ if ! grep -q "Supplemental approved export preview" README.md; then
     echo ""
     echo "### Supplemental approved export preview (admin / QA only)"
     echo ""
-    echo "- Standalone: \`approved-export-preview.html\` (**3,566** approved supplemental events)"
+    echo "- Standalone: \`approved-export-preview.html\` (**3,493** approved supplemental events)"
     echo "- Desk overlay: \`desk.html?previewExport=1\`"
     echo "- Feed: \`https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/supplemental_approved_export_feed.json\`"
     echo "- Preview only — not production map; \`promotion_allowed=false\`."
@@ -43,7 +43,7 @@ fi
 
 node --check supplemental-approved-export-preview-v01.js
 node --test tools/public-map/supplemental-export-preview.test.mjs
-grep -q "3,566" approved-export-preview.html
+grep -q "3,493" approved-export-preview.html
 grep -q "supplemental_approved_export_feed" supplemental-approved-export-preview-v01.js
 
 git add \
@@ -58,5 +58,5 @@ if git diff --cached --quiet; then
   exit 0
 fi
 
-git commit -m "Deploy supplemental approved export preview (3566 events)"
+git commit -m "Deploy supplemental approved export preview (3493 events)"
 git push origin main
