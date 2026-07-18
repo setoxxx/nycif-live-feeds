@@ -1,0 +1,257 @@
+{
+  "allow_live_geosearch": false,
+  "appended_to_calendar_queue_count": 11,
+  "artifact_type": "m12_geocode_list_only_civic_report",
+  "category": "civic",
+  "filled_count": 11,
+  "generated_at_utc": "2026-07-18T19:53:58.268371+00:00",
+  "missing_from_snapshot_count": 0,
+  "next_required_step": "Run build_supplemental_events_staging_feed.py then incremental_supplemental_intake.py --skip-rebuild. Do not approve until human review.",
+  "phase": "m12_geocode_list_only_civic_events",
+  "proposals": [
+    {
+      "address": "PITKIN AVENUE between SARATOGA AVENUE and GRAFTON STREET  Brooklyn",
+      "category": "civic",
+      "date": "2026-07-18",
+      "fill": {
+        "confidence_reason": "Rejected-pass fill: Midpoint from GeoSearch endpoints '194 1/2 SARATOGA AVENUE, Brooklyn, NY, USA' and '2599 PITKIN AVENUE, Brooklyn, NY, USA' for open street segment. for manual review only.",
+        "fill_method": "nyc_geosearch_midpoint",
+        "geocoder_confidence": "medium",
+        "geocoder_label": "PITKIN AVENUE between SARATOGA AVENUE and GRAFTON STREET  Brooklyn",
+        "geocoder_source": "nyc_geosearch_planninglabs_midpoint",
+        "proposed_lat": 40.677225,
+        "proposed_lng": -73.8965905,
+        "query_used": "SARATOGA AVENUE / GRAFTON STREET  Brooklyn on PITKIN AVENUE",
+        "resolver_tier": "tier_2_geosearch_midpoint"
+      },
+      "source_event_id": "1044856",
+      "status": "filled",
+      "title": "Brownsville Old Timer's Parade"
+    },
+    {
+      "address": "MOTT STREET between GRAND STREET and HESTER STREET  Manhattan",
+      "category": "civic",
+      "date": "2026-07-19",
+      "fill": {
+        "confidence_reason": "Rejected-pass fill: Midpoint from GeoSearch endpoints '1 GRAND CENTRAL PLACE, New York, NY, USA' and '100 MOTT STREET, New York, NY, USA' for open street segment. for manual review only.",
+        "fill_method": "nyc_geosearch_midpoint",
+        "geocoder_confidence": "medium",
+        "geocoder_label": "MOTT STREET between GRAND STREET and HESTER STREET  Manhattan",
+        "geocoder_source": "nyc_geosearch_planninglabs_midpoint",
+        "proposed_lat": 40.7346925,
+        "proposed_lng": -73.98799,
+        "query_used": "GRAND STREET / HESTER STREET  Manhattan on MOTT STREET",
+        "resolver_tier": "tier_2_geosearch_midpoint"
+      },
+      "source_event_id": "1045916",
+      "status": "filled",
+      "title": "July Falun Dafa Parade"
+    },
+    {
+      "address": "259 STREET between UNION TURNPIKE and 80 AVENUE  Queens",
+      "category": "civic",
+      "date": "2026-07-19",
+      "fill": {
+        "confidence_reason": "Rejected-pass fill: Midpoint from GeoSearch endpoints '115-01 UNION TURNPIKE, Forest Hills, NY, USA' and '7915 259 STREET, Floral Park, NY, USA' for open street segment. for manual review only.",
+        "fill_method": "nyc_geosearch_midpoint",
+        "geocoder_confidence": "medium",
+        "geocoder_label": "259 STREET between UNION TURNPIKE and 80 AVENUE  Queens",
+        "geocoder_source": "nyc_geosearch_planninglabs_midpoint",
+        "proposed_lat": 40.7284485,
+        "proposed_lng": -73.775964,
+        "query_used": "UNION TURNPIKE / 80 AVENUE  Queens on 259 STREET",
+        "resolver_tier": "tier_2_geosearch_midpoint"
+      },
+      "source_event_id": "1046216",
+      "status": "filled",
+      "title": "Our Lady of the Snows Church Procession in Honor of Saint Alphonsa"
+    },
+    {
+      "address": "SPRINGFIELD BOULEVARD between FRANCIS LEWIS BOULEVARD and HOLLIS AVENUE  Queens",
+      "category": "civic",
+      "date": "2026-07-25",
+      "fill": null,
+      "source_event_id": "1046856",
+      "status": "unfilled",
+      "title": "Unity Walk"
+    },
+    {
+      "address": "WATER STREET between OLD SLIP and WALL STREET  Manhattan",
+      "category": "civic",
+      "date": "2026-07-25",
+      "fill": {
+        "confidence_reason": "Rejected-pass fill: Midpoint from GeoSearch endpoints '27 OLD SLIP, New York, NY, USA' and '100 WATER STREET, New York, NY, USA' for open street segment. for manual review only.",
+        "fill_method": "nyc_geosearch_midpoint",
+        "geocoder_confidence": "medium",
+        "geocoder_label": "WATER STREET between OLD SLIP and WALL STREET  Manhattan",
+        "geocoder_source": "nyc_geosearch_planninglabs_midpoint",
+        "proposed_lat": 40.704138,
+        "proposed_lng": -74.008595,
+        "query_used": "OLD SLIP / WALL STREET  Manhattan on WATER STREET",
+        "resolver_tier": "tier_2_geosearch_midpoint"
+      },
+      "source_event_id": "1044696",
+      "status": "filled",
+      "title": "BARAAT PROCESSION"
+    },
+    {
+      "address": "69 STREET between NORTHERN BOULEVARD and 35 AVENUE  Queens",
+      "category": "civic",
+      "date": "2026-07-26",
+      "fill": {
+        "confidence_reason": "Rejected-pass fill: Midpoint from GeoSearch endpoints '1 NORTHERN BOULEVARD, Staten Island, NY, USA' and '100 69 STREET, Brooklyn, NY, USA' for open street segment. for manual review only.",
+        "fill_method": "nyc_geosearch_midpoint",
+        "geocoder_confidence": "medium",
+        "geocoder_label": "69 STREET between NORTHERN BOULEVARD and 35 AVENUE  Queens",
+        "geocoder_source": "nyc_geosearch_planninglabs_midpoint",
+        "proposed_lat": 40.625981,
+        "proposed_lng": -74.0690895,
+        "query_used": "NORTHERN BOULEVARD / 35 AVENUE  Queens on 69 STREET",
+        "resolver_tier": "tier_2_geosearch_midpoint"
+      },
+      "source_event_id": "1045016",
+      "status": "filled",
+      "title": "Colombian Day Parade"
+    },
+    {
+      "address": "ADAM CLAYTON POWELL JR BOULEVARD between WEST 116 STREET and WEST 125 STREET  Manhattan",
+      "category": "civic",
+      "date": "2026-07-28",
+      "fill": {
+        "confidence_reason": "Rejected-pass fill: Midpoint from GeoSearch endpoints '1 WEST 116 STREET, New York, NY, USA' and '2121 ADAM CLAYTON POWELL JR BOULEVARD, New York, NY, USA' for open street segment. for manual review only.",
+        "fill_method": "nyc_geosearch_midpoint",
+        "geocoder_confidence": "medium",
+        "geocoder_label": "ADAM CLAYTON POWELL JR BOULEVARD between WEST 116 STREET and WEST 125 STREET  Manhattan",
+        "geocoder_source": "nyc_geosearch_planninglabs_midpoint",
+        "proposed_lat": 40.805568,
+        "proposed_lng": -73.947017,
+        "query_used": "WEST 116 STREET / WEST 125 STREET  Manhattan on ADAM CLAYTON POWELL JR BOULEVARD",
+        "resolver_tier": "tier_2_geosearch_midpoint"
+      },
+      "source_event_id": "1044956",
+      "status": "filled",
+      "title": "Cheikh Ahmadou Bamba Day"
+    },
+    {
+      "address": "EAST  149 STREET between BROOK AVENUE and BERGEN AVENUE  Bronx",
+      "category": "civic",
+      "date": "2026-07-28",
+      "fill": null,
+      "source_event_id": "1044796",
+      "status": "unfilled",
+      "title": "Bronx Anti-Stigma March"
+    },
+    {
+      "address": "FRANKLIN AVENUE between MAIN STREET and SAULL STREET  Queens",
+      "category": "civic",
+      "date": "2026-08-02",
+      "fill": {
+        "confidence_reason": "Rejected-pass fill: Midpoint from GeoSearch endpoints '1 MAIN STREET, New York, NY, USA' and '100 FRANKLIN AVENUE, Brooklyn, NY, USA' for open street segment. for manual review only.",
+        "fill_method": "nyc_geosearch_midpoint",
+        "geocoder_confidence": "medium",
+        "geocoder_label": "FRANKLIN AVENUE between MAIN STREET and SAULL STREET  Queens",
+        "geocoder_source": "nyc_geosearch_planninglabs_midpoint",
+        "proposed_lat": 40.7249695,
+        "proposed_lng": -73.9578315,
+        "query_used": "MAIN STREET / SAULL STREET  Queens on FRANKLIN AVENUE",
+        "resolver_tier": "tier_2_geosearch_midpoint"
+      },
+      "source_event_id": "1044976",
+      "status": "filled",
+      "title": "Chelum Procession"
+    },
+    {
+      "address": "69 STREET between NORTHERN BLVD and 35 AVENUE  Queens",
+      "category": "civic",
+      "date": "2026-08-02",
+      "fill": {
+        "confidence_reason": "Rejected-pass fill: Midpoint from GeoSearch endpoints '1 NORTHERN BOULEVARD, Staten Island, NY, USA' and '100 69 STREET, Brooklyn, NY, USA' for open street segment. for manual review only.",
+        "fill_method": "nyc_geosearch_midpoint",
+        "geocoder_confidence": "medium",
+        "geocoder_label": "69 STREET between NORTHERN BLVD and 35 AVENUE  Queens",
+        "geocoder_source": "nyc_geosearch_planninglabs_midpoint",
+        "proposed_lat": 40.625981,
+        "proposed_lng": -74.0690895,
+        "query_used": "NORTHERN BLVD / 35 AVENUE  Queens on 69 STREET",
+        "resolver_tier": "tier_2_geosearch_midpoint"
+      },
+      "source_event_id": "1045276",
+      "status": "filled",
+      "title": "Ecuadorian Parade"
+    },
+    {
+      "address": "134 STREET between ADAM CLAYTON POWELL JR BOULEVARD and FREDERICK DOUGLASS BLVD  Manhattan",
+      "category": "civic",
+      "date": "2026-08-05",
+      "fill": null,
+      "source_event_id": "1046356",
+      "status": "unfilled",
+      "title": "Rasuli Lewis Annual Childrens March for Peace"
+    },
+    {
+      "address": "69TH ST between 37 AVE and 35 AVE  Queens",
+      "category": "civic",
+      "date": "2026-08-09",
+      "fill": {
+        "confidence_reason": "Rejected-pass fill: Midpoint from GeoSearch endpoints '221-35 EDMORE AVENUE, Queens Village, NY, USA' and '100 69 STREET, Brooklyn, NY, USA' for open street segment. for manual review only.",
+        "fill_method": "nyc_geosearch_midpoint",
+        "geocoder_confidence": "medium",
+        "geocoder_label": "69TH ST between 37 AVE and 35 AVE  Queens",
+        "geocoder_source": "nyc_geosearch_planninglabs_midpoint",
+        "proposed_lat": 40.681012,
+        "proposed_lng": -73.8836395,
+        "query_used": "37 AVE / 35 AVE  Queens on 69TH ST",
+        "resolver_tier": "tier_2_geosearch_midpoint"
+      },
+      "source_event_id": "1046556",
+      "status": "filled",
+      "title": "SOUTH ASIAN UNITY PARADE"
+    },
+    {
+      "address": "FREDERICK DOUGLASS BOULEVARD between WEST  123 STREET and WEST  126 STREET  Manhattan",
+      "category": "civic",
+      "date": "2026-08-09",
+      "fill": {
+        "confidence_reason": "Rejected-pass fill: Midpoint from GeoSearch endpoints '1 WEST 123 STREET, New York, NY, USA' and '2053 FREDERICK DOUGLASS BOULEVARD, New York, NY, USA' for open street segment. for manual review only.",
+        "fill_method": "nyc_geosearch_midpoint",
+        "geocoder_confidence": "medium",
+        "geocoder_label": "FREDERICK DOUGLASS BOULEVARD between WEST  123 STREET and WEST  126 STREET  Manhattan",
+        "geocoder_source": "nyc_geosearch_planninglabs_midpoint",
+        "proposed_lat": 40.803806,
+        "proposed_lng": -73.9514265,
+        "query_used": "WEST  123 STREET / WEST  126 STREET  Manhattan on FREDERICK DOUGLASS BOULEVARD",
+        "resolver_tier": "tier_2_geosearch_midpoint"
+      },
+      "source_event_id": "1045536",
+      "status": "filled",
+      "title": "Grace American Peace Parade"
+    },
+    {
+      "address": "Rufus King Park: Rufus King Park  Queens",
+      "category": "civic",
+      "date": "2026-08-16",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'Religious Procession'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.70369,
+        "proposed_lng": -73.804
+      },
+      "source_event_id": "1046376",
+      "status": "filled",
+      "title": "Religious Procession"
+    }
+  ],
+  "proposals_path": "data/staging/m12_geocode_proposals_civic.json",
+  "qa_pass": false,
+  "queue_path": "data/supplemental_calendar_only_review_queue.json",
+  "safety": {
+    "location_cache_modified": false,
+    "manual_review_status": "pending",
+    "promotion_allowed": false,
+    "public_map_modified": false
+  },
+  "target_count": 14,
+  "unfilled_count": 3
+}

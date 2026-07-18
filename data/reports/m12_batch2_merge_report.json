@@ -1,0 +1,28 @@
+{
+  "artifact_type": "m12_batch2_merge_report",
+  "generated_at_utc": "2026-07-18T19:53:55Z",
+  "phase": "m12_batch2_volunteer_merge",
+  "batch": 2,
+  "category": "volunteer",
+  "rows_approved": 11,
+  "rows_rejected": 1,
+  "rejected_ranks": [3667],
+  "rejected_title": "CANCELLED: Monday Morning Pitch In to Pick Up",
+  "approved_ranks": "3668-3678",
+  "feeds_main_approved_total": {
+    "before": 30973,
+    "after": 30983,
+    "net_change": 10
+  },
+  "note": "11 approved but +10 net after discovery dedupe (1 overlap_key already present)",
+  "supplemental_export_count": 3531,
+  "qa_pass": true,
+  "conflict_pair_count": 0,
+  "safety": {
+    "location_cache_modified": false,
+    "promotion_allowed": false,
+    "public_map_modified": true,
+    "staged_feed_modified": false
+  },
+  "next_required_step": "Review batch 3 civic rows in data/staging/m12_batch3_pending_review.json"
+}
