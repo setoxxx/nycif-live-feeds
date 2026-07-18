@@ -44,7 +44,12 @@
     return;
   }
 
-  const VERSION = 'supplemental-approved-export-preview-v02';
+  const VERSION = 'supplemental-approved-export-preview-v04';
+  const VIEWPORT_BUFFER = 0.15;
+  const MARKER_SOFT_CAP = 600;
+  const DAY_WINDOW = 7;
+  const CHIP_DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const DAYS_IN_MONTH = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   const BLOCKED_ARTIFACT_TYPES = new Set([
     'gps_manual_approval_queue',
     'gps_review_geocoding_proposals',
@@ -69,7 +74,116 @@
     pins: [],
     layer: null,
     banner: null,
+    dateMode: 'today',
   };
+
+  const dateKey = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const todayKey = () => dateKey(new Date());
+  const addDays = (d, n) => {
+    const x = new Date(d);
+    x.setDate(x.getDate() + n);
+    return x;
+  };
+
+  function validCalendarDate(value) {
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value ?? ''));
+    if (!match) return null;
+    const year = Number(match[1]);
+    const month = Number(match[2]);
+    const day = Number(match[3]);
+    if (year < 2000 || year > 2100 || month < 1 || month > 12 || day < 1) return null;
+    const leap = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
+    const max = month === 2 && leap ? 29 : DAYS_IN_MONTH[month - 1];
+    return day <= max ? match[0] : null;
+  }
+
+  function selectedDateKey() {
+    if (state.dateMode === 'today') {
+      return todayKey();
+    }
+    const valid = validCalendarDate(state.dateMode);
+    if (valid && valid >= todayKey()) {
+      return valid;
+    }
+    return todayKey();
+  }
+
+  function pinDateKey(pin) {
+    const direct = validCalendarDate(String(pin?.dateKey || pin?.date || '').slice(0, 10));
+    if (direct) return direct;
+    const start = String(pin?.startDateTime || '');
+    const match = /^(\d{4}-\d{2}-\d{2})/.exec(start);
+    return (match && validCalendarDate(match[1])) || '';
+  }
+
+  function pinEndDay(pin, startDay) {
+    if (!startDay) return startDay || '';
+    const raw = /^(\d{4}-\d{2}-\d{2})/.exec(String(pin?.endDateTime || ''));
+    const endDay = raw ? validCalendarDate(raw[1]) : '';
+    return endDay && endDay >= startDay ? endDay : startDay;
+  }
+
+  function dateMatchesPin(pin, sel) {
+    const start = pinDateKey(pin);
+    if (!start) return false;
+    const end = pin.endDay || pinEndDay(pin, start);
+    return start <= sel && sel <= end;
+  }
+
+  function filterPinsForSelectedDate(pins, sel) {
+    const selected = sel || selectedDateKey();
+    return pins.filter(pin => dateMatchesPin(pin, selected));
+  }
+
+  function sortPinsByDate(pins) {
+    return [...pins].sort((a, b) => {
+      const da = pinDateKey(a) || '9999-99-99';
+      const db = pinDateKey(b) || '9999-99-99';
+      return da.localeCompare(db) || String(a.title || '').localeCompare(String(b.title || ''));
+    });
+  }
+
+  function dateChipModel(baseDate) {
+    const start = baseDate && typeof baseDate.getTime === 'function'
+      ? new Date(baseDate.getTime())
+      : new Date();
+    const chips = [];
+    for (let i = 0; i <= DAY_WINDOW; i += 1) {
+      const d = addDays(start, i);
+      let label;
+      if (i === 0) label = 'Today';
+      else if (i === 1) label = 'Tomorrow';
+      else label = `${CHIP_DAY_NAMES[d.getDay()]} ${d.getMonth() + 1}/${d.getDate()}`;
+      chips.push({ key: dateKey(d), label, offset: i });
+    }
+    return chips;
+  }
+
+  function friendlyDateLabel(key) {
+    if (key === todayKey()) return 'today';
+    const tomorrow = dateKey(addDays(new Date(), 1));
+    if (key === tomorrow) return 'tomorrow';
+    return key;
+  }
+
+  function readInitialDateMode() {
+    try {
+      const param = new URL(location.href).searchParams.get('previewDate');
+      const valid = validCalendarDate(param);
+      if (valid && valid >= todayKey()) {
+        return valid;
+      }
+    } catch {
+      /* fall through */
+    }
+    return 'today';
+  }
+
+  function visiblePinsForMap() {
+    return sortPinsByDate(filterPinsForSelectedDate(state.pins));
+  }
+
+  state.dateMode = readInitialDateMode();
 
   function esc(value) {
     return String(value ?? '').replace(/[&<>"']/g, ch => ({
@@ -208,10 +322,14 @@
   function certifyLitePin(pin) {
     const coord = certifyCoord(pin?.lat, pin?.lng);
     if (!coord.ok) return null;
+    const startDay = pinDateKey(pin);
+    if (!startDay) return null;
     return {
       ...pin,
       lat: coord.lat,
       lng: coord.lng,
+      dateKey: startDay,
+      endDay: pinEndDay(pin, startDay),
     };
   }
 
@@ -224,13 +342,23 @@
     }
     const coord = certifyCoord(row.lat ?? row.proposed_lat, row.lng ?? row.proposed_lng);
     if (!coord.ok) return null;
+    const startDay = pinDateKey({
+      date: row.date,
+      startDateTime: row.start_date_time,
+      dateKey: row.date,
+    });
+    if (!startDay) return null;
+    const endDay = pinEndDay({ endDateTime: row.end_date_time }, startDay);
     return {
       id: row.overlap_key || row.source_event_id || `supplemental-export-${index}`,
       title: row.title || 'Supplemental approved event',
       displayLocation: row.display_location || '',
       borough: row.borough || '',
-      date: row.date || '',
+      date: startDay,
+      dateKey: startDay,
+      endDay,
       startDateTime: row.start_date_time || '',
+      endDateTime: row.end_date_time || '',
       geocoderSource: row.geocoder_source || '',
       geocoderConfidence: row.geocoder_confidence || '',
       confidenceReason: row.confidence_reason || '',
@@ -354,6 +482,29 @@
       .nycif-supplemental-preview-popup p { margin: 4px 0; color: #111827; }
       .nycif-supplemental-preview-popup strong { color: #0f172a; }
       .nycif-supplemental-preview-popup .note { color: #4b5563; font-size: 11px; }
+      .nycif-supplemental-preview-date-chips {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 2px 0 12px;
+        margin-bottom: 4px;
+        scrollbar-width: thin;
+      }
+      .nycif-supplemental-preview-date-chips button {
+        flex: 0 0 auto;
+        border: 1px solid rgba(255,255,255,.12);
+        background: rgba(255,255,255,.04);
+        color: var(--text, #eef2ff);
+        border-radius: 999px;
+        padding: 8px 12px;
+        font: 600 12px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        cursor: pointer;
+      }
+      .nycif-supplemental-preview-date-chips button.active {
+        background: rgba(124,58,237,.28);
+        border-color: rgba(167,139,250,.55);
+        color: #ede9fe;
+      }
     `;
     document.head.appendChild(style);
   }
@@ -410,132 +561,189 @@
     </article>`;
   }
 
-  let SupplementalDotsLayerClass = null;
-
-  function getSupplementalDotsLayerClass() {
-    if (SupplementalDotsLayerClass) return SupplementalDotsLayerClass;
-    if (!window.L?.Layer) {
-      throw new Error('Leaflet is not loaded');
-    }
-    SupplementalDotsLayerClass = window.L.Layer.extend({
-      initialize(pins) {
-        this._pins = pins;
-        this._topLeft = null;
-        this._raf = null;
-      },
-      onAdd(map) {
-        this._map = map;
-        this._canvas = window.L.DomUtil.create('canvas', 'nycif-supplemental-dots-canvas');
-        map.getPanes().overlayPane.appendChild(this._canvas);
-        this._reset = this._reset.bind(this);
-        this._scheduleRedraw = this._scheduleRedraw.bind(this);
-        this._onMapClick = this._onMapClick.bind(this);
-        map.on('viewreset resize zoomend', this._reset, this);
-        map.on('moveend', this._redraw, this);
-        map.on('move zoom', this._scheduleRedraw, this);
-        map.on('click', this._onMapClick, this);
-        this._reset();
-        return this;
-      },
-      onRemove(map) {
-        if (this._raf) {
-          cancelAnimationFrame(this._raf);
-          this._raf = null;
-        }
-        map.off('viewreset resize zoomend', this._reset, this);
-        map.off('moveend', this._redraw, this);
-        map.off('move zoom', this._scheduleRedraw, this);
-        map.off('click', this._onMapClick, this);
-        window.L.DomUtil.remove(this._canvas);
-      },
-      _scheduleRedraw() {
-        if (this._raf) return;
-        this._raf = requestAnimationFrame(() => {
-          this._raf = null;
-          this._updatePositionAndRedraw();
-        });
-      },
-      _updatePositionAndRedraw() {
-        const map = this._map;
-        const topLeft = map.containerPointToLayerPoint([0, 0]);
-        window.L.DomUtil.setPosition(this._canvas, topLeft);
-        this._topLeft = topLeft;
-        this._redraw();
-      },
-      _reset() {
-        const map = this._map;
-        const size = map.getSize();
-        const topLeft = map.containerPointToLayerPoint([0, 0]);
-        window.L.DomUtil.setPosition(this._canvas, topLeft);
-        this._canvas.width = size.x;
-        this._canvas.height = size.y;
-        this._topLeft = topLeft;
-        this._redraw();
-      },
-      _redraw() {
-        const map = this._map;
-        const ctx = this._canvas?.getContext('2d');
-        const topLeft = this._topLeft;
-        if (!ctx || !topLeft) return;
-
-        ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
-        const bounds = map.getBounds();
-        ctx.fillStyle = '#7c3aed';
-        ctx.strokeStyle = '#ede9fe';
-        ctx.lineWidth = 1;
-        for (const pin of this._pins) {
-          if (!bounds.contains([pin.lat, pin.lng])) continue;
-          const pt = map.latLngToContainerPoint([pin.lat, pin.lng]);
-          const x = pt.x - topLeft.x;
-          const y = pt.y - topLeft.y;
-          if (x < -12 || y < -12 || x > this._canvas.width + 12 || y > this._canvas.height + 12) {
-            continue;
-          }
-          ctx.beginPath();
-          ctx.arc(x, y, 5, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.stroke();
-        }
-      },
-      _onMapClick(event) {
-        const map = this._map;
-        const clickPt = map.latLngToContainerPoint(event.latlng);
-        const topLeft = this._topLeft;
-        if (!topLeft) return;
-        const clickX = clickPt.x - topLeft.x;
-        const clickY = clickPt.y - topLeft.y;
-        let best = null;
-        let bestDist = 14;
-        const bounds = map.getBounds();
-        for (const pin of this._pins) {
-          if (!bounds.contains([pin.lat, pin.lng])) continue;
-          const pt = map.latLngToContainerPoint([pin.lat, pin.lng]);
-          const dist = Math.hypot((pt.x - topLeft.x) - clickX, (pt.y - topLeft.y) - clickY);
-          if (dist < bestDist) {
-            bestDist = dist;
-            best = pin;
-          }
-        }
-        if (best) {
-          window.L.popup({ maxWidth: 350, minWidth: 250 })
-            .setLatLng([best.lat, best.lng])
-            .setContent(popupHtml(best))
-            .openOn(map);
-        }
-      },
-    });
-    return SupplementalDotsLayerClass;
+  function expandedBounds(map) {
+    const bounds = map.getBounds();
+    if (!bounds) return null;
+    const padLat = (bounds.getNorth() - bounds.getSouth()) * VIEWPORT_BUFFER;
+    const padLng = (bounds.getEast() - bounds.getWest()) * VIEWPORT_BUFFER;
+    return window.L.latLngBounds(
+      [bounds.getSouth() - padLat, bounds.getWest() - padLng],
+      [bounds.getNorth() + padLat, bounds.getEast() + padLng]
+    );
   }
 
-  function buildMarkerLayer(map, pins, options = {}) {
-    const { fitBounds = false, onProgress } = options;
-    if (onProgress) onProgress(pins.length, pins.length);
-    const LayerClass = getSupplementalDotsLayerClass();
-    const layer = new LayerClass(pins).addTo(map);
-    if (fitBounds && pins.length) {
-      map.fitBounds(boundsFromPins(pins).pad(0.12), { animate: false });
+  function makePreviewMarker(pin) {
+    return window.L.marker([pin.lat, pin.lng], {
+      icon: window.L.divIcon({
+        className: 'nycif-supplemental-preview-marker-shell',
+        html: '<span class="nycif-supplemental-preview-marker">🟣</span>',
+        iconSize: [34, 34],
+        iconAnchor: [17, 17],
+        popupAnchor: [0, -18],
+      }),
+      title: pin.title,
+      riseOnHover: true,
+    }).bindPopup(popupHtml(pin), {
+      maxWidth: 350,
+      minWidth: 250,
+      autoPan: false,
+      closeButton: true,
+      autoClose: true,
+      closeOnClick: true,
+    });
+  }
+
+  function ensureMarker(pin) {
+    if (!pin.marker) {
+      pin.marker = makePreviewMarker(pin);
     }
-    return layer;
+    return pin.marker;
+  }
+
+  function formatMapRenderMeta(stats) {
+    const totalLoaded = stats.loadedTotal || stats.total || 0;
+    const dayTotal = stats.total || 0;
+    const dateLabel = stats.selectedDate ? friendlyDateLabel(stats.selectedDate) : 'today';
+    let text = `${dayTotal.toLocaleString()} event${dayTotal === 1 ? '' : 's'} on ${dateLabel}`;
+    if (totalLoaded && dayTotal !== totalLoaded) {
+      text += ` · ${totalLoaded.toLocaleString()} loaded total`;
+    }
+    text += ' · PREVIEW / NOT PRODUCTION';
+    if (stats.drawn < stats.inView) {
+      text += ` · ${stats.drawn.toLocaleString()} shown of ${stats.inView.toLocaleString()} in view — pan/zoom for more`;
+    } else if (stats.drawn < dayTotal) {
+      text += ` · ${stats.drawn.toLocaleString()} shown in current view`;
+    }
+    return text;
+  }
+
+  function formatFeedMetaLine() {
+    const selected = selectedDateKey();
+    const dayCount = filterPinsForSelectedDate(state.pins, selected).length;
+    const loaded = state.pins.length;
+    const kind = state.feedMeta?.feedKind || 'map';
+    return `${dayCount.toLocaleString()} on ${friendlyDateLabel(selected)} · ${loaded.toLocaleString()} approved export row(s) total · ${kind}`;
+  }
+
+  function buildDateChips(containerId) {
+    const host = document.getElementById(containerId || 'previewDateChips');
+    if (!host) return;
+    host.className = 'nycif-supplemental-preview-date-chips';
+    host.innerHTML = '';
+    const activeKey = selectedDateKey();
+    dateChipModel(new Date()).forEach((chip) => {
+      const mode = chip.offset === 0 ? 'today' : chip.key;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.dateMode = mode;
+      button.dataset.dateKey = chip.key;
+      button.textContent = chip.label;
+      if (chip.key === activeKey) {
+        button.classList.add('active');
+      }
+      button.addEventListener('click', () => {
+        state.dateMode = mode;
+        buildDateChips(containerId);
+        if (state.layer?.renderMarkers) {
+          state.layer.renderMarkers();
+        }
+        setPageMeta(formatFeedMetaLine(), formatMapRenderMeta(state.layer?.getRenderStats?.() || {
+          total: filterPinsForSelectedDate(state.pins).length,
+          loadedTotal: state.pins.length,
+          selectedDate: selectedDateKey(),
+          drawn: 0,
+          inView: 0,
+        }));
+      });
+      host.appendChild(button);
+    });
+  }
+
+  function buildMarkerLayer(map, getPins, options = {}) {
+    const { fitBounds = false, onProgress, onRender } = options;
+    if (!window.L?.layerGroup) {
+      throw new Error('Leaflet is not loaded');
+    }
+
+    let pinsGetter = typeof getPins === 'function' ? getPins : () => getPins;
+    let renderTimer = null;
+    let moveTimer = null;
+    const markers = window.L.layerGroup().addTo(map);
+    const renderStats = {
+      drawn: 0,
+      inView: 0,
+      total: 0,
+      loadedTotal: state.pins.length,
+      selectedDate: selectedDateKey(),
+    };
+
+    function renderMarkers() {
+      const pins = pinsGetter();
+      markers.clearLayers();
+      const bounds = expandedBounds(map);
+      const inView = bounds
+        ? pins.filter(pin => bounds.contains([pin.lat, pin.lng]))
+        : pins;
+      const candidates = (inView.length ? inView : pins).slice(0, MARKER_SOFT_CAP);
+      const batch = [];
+      for (const pin of candidates) {
+        const marker = ensureMarker(pin);
+        if (marker) batch.push(marker);
+      }
+      batch.forEach(marker => markers.addLayer(marker));
+      renderStats.drawn = batch.length;
+      renderStats.inView = inView.length;
+      renderStats.total = pins.length;
+      renderStats.loadedTotal = state.pins.length;
+      renderStats.selectedDate = selectedDateKey();
+      if (onProgress) onProgress(batch.length, pins.length);
+      if (onRender) onRender({ ...renderStats });
+      return batch;
+    }
+
+    function scheduleRender() {
+      clearTimeout(renderTimer);
+      renderTimer = setTimeout(() => renderMarkers(), 40);
+    }
+
+    function onMapMoveEnd() {
+      clearTimeout(moveTimer);
+      moveTimer = setTimeout(() => scheduleRender(), 120);
+    }
+
+    map.on('moveend', onMapMoveEnd);
+    map.on('zoomend', scheduleRender);
+
+    markers.cleanup = () => {
+      clearTimeout(renderTimer);
+      clearTimeout(moveTimer);
+      map.off('moveend', onMapMoveEnd);
+      map.off('zoomend', scheduleRender);
+    };
+    markers.renderMarkers = renderMarkers;
+    markers.getRenderStats = () => ({ ...renderStats });
+    markers.setPinsGetter = (fn) => {
+      pinsGetter = fn;
+    };
+
+    renderMarkers();
+
+    if (fitBounds) {
+      const pins = pinsGetter();
+      if (pins.length) {
+        map.fitBounds(boundsFromPins(pins).pad(0.12), { animate: false });
+      }
+    }
+
+    return markers;
+  }
+
+  function removeMarkerLayer(map, layer) {
+    if (!layer) return;
+    if (typeof layer.cleanup === 'function') {
+      layer.cleanup();
+    }
+    map.removeLayer(layer);
   }
 
   async function loadPinsFromLiteFeed(url) {
@@ -622,23 +830,22 @@
     }
 
     if (!enabled) {
-      if (state.layer) map.removeLayer(state.layer);
+      removeMarkerLayer(map, state.layer);
+      state.layer = null;
       setStatus('Supplemental approved export preview hidden.');
       return;
     }
 
     try {
       await loadExportFeed();
-      if (state.layer) map.removeLayer(state.layer);
-      setStatus(`Drawing ${state.pins.length.toLocaleString()} preview markers…`);
-      state.layer = buildMarkerLayer(map, state.pins, {
+      removeMarkerLayer(map, state.layer);
+      setStatus(`Drawing preview markers for ${friendlyDateLabel(selectedDateKey())}…`);
+      state.layer = buildMarkerLayer(map, visiblePinsForMap, {
         fitBounds: false,
+        onRender(stats) {
+          setStatus(formatMapRenderMeta(stats));
+        },
       });
-      setStatus(
-        `Supplemental approved export preview · ${state.pins.length.toLocaleString()} marker${
-          state.pins.length === 1 ? '' : 's'
-        } · PREVIEW / NOT PRODUCTION`
-      );
     } catch (error) {
       console.error(error);
       const checkbox = document.getElementById('supplementalExportPreviewToggle');
@@ -694,21 +901,26 @@
 
     return loadExportFeed()
       .then(() => {
+        buildDateChips('previewDateChips');
         setPageMeta(
-          `Feed loaded · ${state.pins.length.toLocaleString()} approved export row(s)`,
-          'Drawing purple preview dots…'
+          formatFeedMetaLine(),
+          `Drawing preview markers for ${friendlyDateLabel(selectedDateKey())}…`
         );
-        state.layer = buildMarkerLayer(map, state.pins, { fitBounds: true });
-        setPageMeta(
-          `${state.pins.length.toLocaleString()} approved export marker(s) · ${state.feedMeta?.feedKind || 'map'}`,
-          `${state.pins.length.toLocaleString()} marker(s) on map · PREVIEW / NOT PRODUCTION`
-        );
+        state.layer = buildMarkerLayer(map, visiblePinsForMap, {
+          fitBounds: true,
+          onRender(stats) {
+            setPageMeta(formatFeedMetaLine(), formatMapRenderMeta(stats));
+          },
+        });
         return state;
       });
   }
 
   const api = {
     VERSION,
+    VIEWPORT_BUFFER,
+    MARKER_SOFT_CAP,
+    DAY_WINDOW,
     standaloneMode,
     deskOverlayMode,
     previewExportMode,
@@ -719,8 +931,23 @@
     certifyLitePin,
     normalizePin,
     certifyCoord,
+    validCalendarDate,
+    pinDateKey,
+    dateMatchesPin,
+    filterPinsForSelectedDate,
+    sortPinsByDate,
+    selectedDateKey,
+    dateChipModel,
+    friendlyDateLabel,
+    visiblePinsForMap,
+    expandedBounds,
+    ensureMarker,
+    formatMapRenderMeta,
+    formatFeedMetaLine,
+    buildDateChips,
     loadExportFeed,
     buildMarkerLayer,
+    removeMarkerLayer,
     toggleOverlay,
     bootStandaloneMap,
     setPageMeta,

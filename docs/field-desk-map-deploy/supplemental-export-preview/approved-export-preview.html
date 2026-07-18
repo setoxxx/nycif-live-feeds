@@ -129,13 +129,15 @@
 
     <section class="panel" aria-label="Map">
       <h2>Supplemental approved export map</h2>
+      <p class="meta">Showing one calendar day at a time, like the production public map. Use the date chips to browse days.</p>
+      <div id="previewDateChips" aria-label="Select date"></div>
       <div id="map" aria-label="Supplemental approved export preview map"></div>
       <p class="meta" id="mapMeta">Initializing map…</p>
     </section>
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="./supplemental-approved-export-preview-v01.js?v=06"></script>
+  <script src="./supplemental-approved-export-preview-v01.js?v=08"></script>
   <script>
     function esc(value) {
       return String(value ?? '').replace(/[&<>"']/g, ch => ({
@@ -153,15 +155,23 @@
           const meta = state.feedMeta || {};
           const expected = 3493;
           const count = state.pins.length;
+          const dayCount = api.filterPinsForSelectedDate(state.pins).length;
           document.getElementById('feedMeta').classList.remove('loading');
           document.getElementById('feedMeta').textContent =
-            `${count.toLocaleString()} approved export marker(s) · ` +
+            `${dayCount.toLocaleString()} on ${api.friendlyDateLabel(api.selectedDateKey())} · ` +
+            `${count.toLocaleString()} approved export row(s) total · ` +
             `artifact ${esc(meta.artifactType || 'supplemental_approved_export_feed')} · ` +
             `source ${esc(meta.sourceUrl || api.feedUrl())}` +
             (meta.generatedAtUtc ? ` · generated ${esc(meta.generatedAtUtc)}` : '');
           document.getElementById('mapMeta').textContent =
-            `${count.toLocaleString()} marker(s) on map · PREVIEW / NOT PRODUCTION` +
-            (count === expected ? '' : ` · WARN expected ${expected}`);
+            api.formatMapRenderMeta(state.layer?.getRenderStats?.() || {
+              total: dayCount,
+              loadedTotal: count,
+              selectedDate: api.selectedDateKey(),
+              drawn: dayCount,
+              inView: dayCount,
+            }) +
+            (count === expected ? '' : ` · WARN expected ${expected} total`);
         })
         .catch(error => {
           document.getElementById('feedMeta').classList.remove('loading');
