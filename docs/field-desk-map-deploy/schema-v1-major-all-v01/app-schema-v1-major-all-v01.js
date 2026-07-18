@@ -233,6 +233,12 @@
       return;
     }
 
+    const stack = source.__nycifStack;
+    if (stack?.events?.length > 1) {
+      window.requestAnimationFrame(() => syncStackPopupPlacement(source));
+      return;
+    }
+
     const selectedLocation = source.getLatLng();
     const currentCenter = map.getCenter();
 
@@ -751,6 +757,76 @@
   const shortDate = key => (SCHEMA.validCalendarDate(key)
     ? `${key.slice(5, 7)}/${key.slice(8, 10)}/${key.slice(2, 4)}`
     : '');
+
+  function meaningfulTime(value) {
+    const text = String(value || '');
+    const match24 = text.match(/T(\d{2}):(\d{2})/);
+    if (match24 && !(match24[1] === '00' && match24[2] === '00')) {
+      return true;
+    }
+    return /T(\d{1,2}):(\d{2})\s*(am|pm)/i.test(text);
+  }
+
+  function formatClock(value) {
+    const text = String(value || '');
+    let date = null;
+    const match12 = text.match(/T(\d{1,2}):(\d{2})\s*(am|pm)/i);
+    if (match12) {
+      let hour = Number(match12[1]);
+      const minute = match12[2];
+      const ampm = String(match12[3]).toLowerCase();
+      if (ampm === 'pm' && hour < 12) {
+        hour += 12;
+      }
+      if (ampm === 'am' && hour === 12) {
+        hour = 0;
+      }
+      const day = text.slice(0, 10);
+      date = new Date(`${day}T${String(hour).padStart(2, '0')}:${minute}:00-04:00`);
+    } else if (meaningfulTime(text)) {
+      date = new Date(text);
+    }
+    if (!date || Number.isNaN(date.getTime())) {
+      return '';
+    }
+    return new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZone: 'America/New_York'
+    }).format(date);
+  }
+
+  function formatTimeRange(e) {
+    const start = formatClock(e && e.start_date_time);
+    const end = formatClock(e && e.end_date_time);
+    if (start && end && start !== end) {
+      return `${start}–${end}`;
+    }
+    return start || end || 'Time not listed';
+  }
+
+  function eventSortTime(e) {
+    const raw = String(e?.start_date_time || '');
+    const match12 = raw.match(/T(\d{1,2}):(\d{2})\s*(am|pm)/i);
+    if (match12) {
+      let hour = Number(match12[1]);
+      const minute = Number(match12[2]);
+      const ampm = String(match12[3]).toLowerCase();
+      if (ampm === 'pm' && hour < 12) {
+        hour += 12;
+      }
+      if (ampm === 'am' && hour === 12) {
+        hour = 0;
+      }
+      return hour * 60 + minute;
+    }
+    const match24 = raw.match(/T(\d{2}):(\d{2})/);
+    if (match24) {
+      return Number(match24[1]) * 60 + Number(match24[2]);
+    }
+    return Number.MAX_SAFE_INTEGER;
+  }
+
   // "07/16/26" for a single day, "07/16 – 07/19" for a multi-day run.
   function formatDateSpan(e) {
     const start = e.startDay || e.dateKey;
@@ -825,25 +901,35 @@
   function popupPicker(events, marker) {
     const root = document.createElement('article');
     root.className = 'popup-card popup-card--picker';
-    appendText(root, 'p', `${events.length} events at this spot`, 'popup-picker-label');
-    appendText(root, 'h2', 'Choose an event');
-    const grid = document.createElement('div');
-    grid.className = 'popup-stack-grid';
-    events.forEach(ev => {
+    const locationLabel = events[0]?.location || 'this location';
+    appendText(root, 'p', `${events.length} events`, 'popup-picker-label');
+    appendText(root, 'h2', locationLabel);
+    const scroll = document.createElement('div');
+    scroll.className = 'popup-stack-scroll';
+    scroll.setAttribute('role', 'listbox');
+    scroll.setAttribute('aria-label', `Events at ${locationLabel}`);
+    const sorted = [...events].sort((a, b) => eventSortTime(a) - eventSortTime(b)
+      || String(a.title).localeCompare(String(b.title)));
+    sorted.forEach(ev => {
       const btn = document.createElement('button');
       btn.type = 'button';
       btn.className = 'popup-stack-item';
-      btn.setAttribute('aria-label', ev.title);
+      btn.setAttribute('role', 'option');
+      btn.setAttribute('aria-label', `${ev.title}, ${formatTimeRange(ev)}`);
       appendText(btn, 'span', ev.displayEmoji, 'popup-stack-emoji');
-      appendText(btn, 'span', ev.title, 'popup-stack-title');
+      const copy = document.createElement('span');
+      copy.className = 'popup-stack-copy';
+      appendText(copy, 'span', ev.title, 'popup-stack-title');
+      appendText(copy, 'span', formatTimeRange(ev), 'popup-stack-time');
+      btn.appendChild(copy);
       btn.addEventListener('click', evt => {
         evt.preventDefault();
         evt.stopPropagation();
         openStackDetail(marker, events, ev);
       });
-      grid.appendChild(btn);
+      scroll.appendChild(btn);
     });
-    root.appendChild(grid);
+    root.appendChild(scroll);
     return root;
   }
 
@@ -855,6 +941,7 @@
     marker.setPopupContent(events.length === 1 ? popupRoot(events[0]) : popupPicker(events, marker));
     if (marker.isPopupOpen()) {
       marker.getPopup().update();
+      syncStackPopupPlacement(marker);
       syncPopupBackButton(marker);
     } else {
       marker.openPopup();
@@ -869,10 +956,47 @@
     marker.setPopupContent(popupRoot(selected));
     if (marker.isPopupOpen()) {
       marker.getPopup().update();
+      syncStackPopupPlacement(marker);
       syncPopupBackButton(marker);
     } else {
       marker.openPopup();
     }
+  }
+
+  function syncStackPopupPlacement(marker) {
+    const stack = marker?.__nycifStack;
+    const popup = marker?.getPopup();
+    const el = popup?.getElement();
+    if (!stack || stack.events.length <= 1 || !el || !map) {
+      return;
+    }
+    const markerPoint = map.latLngToContainerPoint(marker.getLatLng());
+    const mapWidth = map.getSize().x;
+    const popupWidth = el.offsetWidth || 320;
+    const preferRight = (mapWidth - markerPoint.x) >= (popupWidth * 0.55);
+    const sideClass = preferRight ? 'nycif-event-popup--side-right' : 'nycif-event-popup--side-left';
+    el.classList.remove('nycif-event-popup--side-right', 'nycif-event-popup--side-left');
+    el.classList.add(sideClass);
+    const offsetX = preferRight ? 22 : -(popupWidth * 0.42);
+    popup.options.offset = L.point(offsetX, -8);
+    popup.update();
+    const mapHeight = map.getSize().y;
+    const verticalDrift = Math.abs(markerPoint.y - mapHeight * 0.5);
+    if (verticalDrift > mapHeight * 0.18) {
+      popupCentering = true;
+      map.panTo(marker.getLatLng(), { animate: true, duration: 0.28 });
+      map.once('moveend', () => {
+        popupCentering = false;
+      });
+    }
+    window.requestAnimationFrame(() => {
+      const point = map.latLngToContainerPoint(marker.getLatLng());
+      const targetX = mapWidth * (preferRight ? 0.38 : 0.62);
+      const panX = targetX - point.x;
+      if (Math.abs(panX) > 12 && !popupCentering) {
+        map.panBy([panX, 0], { animate: true });
+      }
+    });
   }
 
   function syncPopupBackButton(marker) {
@@ -918,6 +1042,7 @@
       dl.appendChild(wrap);
     };
     addRow('Date', formatDateSpan(e));
+    addRow('Time', formatTimeRange(e));
     addRow('Borough', e.borough);
     addRow('Location', e.location);
     root.appendChild(dl);
@@ -975,9 +1100,13 @@
       closeButton: true,
       autoClose: true,
       closeOnClick: true,
-      className: 'nycif-event-popup'
+      offset: count > 1 ? L.point(22, -8) : L.point(0, 0),
+      className: count > 1 ? 'nycif-event-popup nycif-event-popup--stack' : 'nycif-event-popup'
     });
-    marker.on('popupopen', () => syncPopupBackButton(marker));
+    marker.on('popupopen', () => {
+      syncStackPopupPlacement(marker);
+      syncPopupBackButton(marker);
+    });
     return marker;
   }
 

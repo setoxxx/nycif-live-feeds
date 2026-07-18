@@ -544,20 +544,35 @@ body.public-map-page .popup-card--picker .popup-picker-label {
 
 body.public-map-page .popup-card--picker h2 {
   margin-top: 0;
+  margin-bottom: 10px;
 }
 
-body.public-map-page .popup-stack-grid {
+body.public-map-page .popup-card--picker {
+  display: flex;
+  flex-direction: column;
+  min-height: 248px;
+  max-height: 248px;
+}
+
+body.public-map-page .popup-stack-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  max-height: 196px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   display: grid;
-  gap: 8px;
-  margin-top: 10px;
+  gap: 6px;
+  padding-right: 2px;
+  margin-right: -2px;
 }
 
 body.public-map-page .popup-stack-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   width: 100%;
-  padding: 10px 12px;
+  padding: 8px 10px;
   border: 1px solid rgba(17, 24, 39, .08);
   border-radius: 12px;
   background: rgba(255, 255, 255, .72);
@@ -573,15 +588,63 @@ body.public-map-page .popup-stack-item:hover {
 }
 
 body.public-map-page .popup-stack-emoji {
-  flex: 0 0 28px;
-  font-size: 22px;
-  line-height: 1;
+  flex: 0 0 24px;
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+body.public-map-page .popup-stack-copy {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
 }
 
 body.public-map-page .popup-stack-title {
   font-size: 13px;
   font-weight: 650;
   line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+body.public-map-page .popup-stack-time {
+  color: #636366;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+body.public-map-page .nycif-event-popup--stack.leaflet-popup,
+body.public-map-page .nycif-event-popup--side-right.leaflet-popup,
+body.public-map-page .nycif-event-popup--side-left.leaflet-popup {
+  margin-bottom: 0;
+}
+
+body.public-map-page .nycif-event-popup--side-right .leaflet-popup-tip-container {
+  left: 10px;
+  top: 50%;
+  margin-top: -11px;
+  margin-left: 0;
+  transform: rotate(90deg);
+}
+
+body.public-map-page .nycif-event-popup--side-left .leaflet-popup-tip-container {
+  right: 10px;
+  left: auto;
+  top: 50%;
+  margin-top: -11px;
+  margin-right: 0;
+  transform: rotate(-90deg);
+}
+
+@media (max-width: 500px) {
+  body.public-map-page .popup-card--picker {
+    min-height: 236px;
+    max-height: 236px;
+  }
+
+  body.public-map-page .popup-stack-scroll {
+    max-height: 184px;
+  }
 }
 
 @media (max-width: 500px) {
