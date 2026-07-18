@@ -719,3 +719,39 @@ body.public-map-page .nycif-event-popup--side-left .leaflet-popup-tip-container 
     font-size: 17px;
   }
 }
+
+/* Mobile: keep the week strip clear of the upper-right GPS/control stack. */
+@media (max-width: 720px) {
+  body.public-map-page .date-chips {
+    top: calc(env(safe-area-inset-top, 0px) + 52px);
+    left: calc(env(safe-area-inset-left, 0px) + 8px);
+    right: auto;
+    transform: none;
+    width: min(100%, calc(100vw - 56px));
+    max-width: calc(100vw - 56px);
+    padding: 2px 3px;
+  }
+
+  body.public-map-page .date-chip-track {
+    gap: 4px;
+  }
+
+  body.public-map-page .date-chip-track button {
+    min-width: 50px;
+    padding: 5px 6px;
+    font-size: 9px;
+  }
+
+  body.public-map-page .date-chip-track button[data-date-mode="all"] {
+    min-width: 42px;
+  }
+
+  /* Near Me becomes a future push-alert feature in the native app shell. */
+  body.public-map-page #nearMeBtn {
+    display: none;
+  }
+
+  body.public-map-page .layers-panel {
+    inset-block-start: calc(env(safe-area-inset-top, 0px) + 132px);
+  }
+}

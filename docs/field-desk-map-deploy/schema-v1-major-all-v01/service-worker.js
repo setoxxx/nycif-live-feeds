@@ -1,4 +1,4 @@
-const CACHE_NAME = 'nycif-rc-public-map-v08';
+const CACHE_NAME = 'nycif-rc-public-map-v09';
 const APP_SHELL = [
   './',
   './index.html',
