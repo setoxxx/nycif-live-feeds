@@ -153,7 +153,7 @@ When Field Desk Pages updates (`v=` bump), update the iframe `src` on `/map/` in
 
 | Field | Value |
 |-------|-------|
-| Signed off | 2026-07-18 (RC release) |
-| Live QA | Field Desk Pages PASS · WordPress `/map/` deploy pending until iframe `v=` updated |
-| Runtime | `public-map-v10` — device-aware mobile/desktop layout, tip jar v06, Near Me hidden on mobile |
-| Repo | `nycif-live-feeds` docs only; WordPress content is human deploy (page 2647) |
+| Signed off | 2026-07-18 (RC release — live) |
+| Live QA | WordPress `/map/` PASS · Field Desk Pages PASS · plugin 1.5.0-rc2 · human viewport QA pending |
+| Runtime | `public-map-v10` — device-aware mobile/desktop, tip jar v06 |
+| iframe src | `https://setoxxx.github.io/nycif-field-desk/?v=public-map-v10&resetFilters=1&feeds=main` |

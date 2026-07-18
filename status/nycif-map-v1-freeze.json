@@ -13,12 +13,24 @@
     "authorized_by": "human_release_request",
     "authorized_at_utc": "2026-07-18T17:50:00Z",
     "wordpress_page_id": 2647,
-    "wordpress_deploy_required": true
+    "wordpress_plugin_version": "1.5.0-rc2",
+    "wordpress_deploy_required": false,
+    "wordpress_deploy_completed_at_utc": "2026-07-18T18:44:00Z"
   },
   "live_qa": {
-    "wordpress_map": "PENDING_DEPLOY",
+    "wordpress_map": "PASS",
     "field_desk_pages": "PASS",
-    "verified_at_utc": "2026-07-18T17:55:00Z"
+    "wordpress_plugin": "PASS",
+    "verified_at_utc": "2026-07-18T18:44:00Z",
+    "wordpress_curl_qa": "PASS",
+    "human_viewport_qa": "PENDING"
+  },
+  "deploy_snapshot_at_release": {
+    "field_desk_main_sha": "47b92d05fa1f",
+    "live_feeds_main_sha": "9095c1210b95",
+    "discovery_manifest_generated_at_utc": "2026-07-18T16:29:24Z",
+    "discovery_approved_total": 30719,
+    "feed_channel_note": "feeds=main is mutable; snapshot records state at WordPress deploy"
   },
   "surfaces": {
     "wordpress_map_url": "https://nycinfocus.com/map/",
