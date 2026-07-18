@@ -59,6 +59,7 @@ def verify_dry_run(report: dict, *, expected_approved: int | None = None) -> lis
     blocked = int(summary.get("blocked_from_promotion") or 0)
     ready = int(summary.get("would_pass_if_promotion_authorized") or 0)
     approved = int(report.get("approved_queue_count") or 0)
+    export_count = int(report.get("export_event_count") or 0)
 
     if report.get("dry_run_only") is not True:
         errors.append("dry_run_only is not true")
@@ -68,6 +69,8 @@ def verify_dry_run(report: dict, *, expected_approved: int | None = None) -> lis
         errors.append(f"blocked_from_promotion={blocked}")
     if ready != approved:
         errors.append(f"would_pass_if_promotion_authorized={ready} != approved_queue_count={approved}")
+    if export_count != approved:
+        errors.append(f"export_event_count={export_count} != approved_queue_count={approved}")
     if expected_approved is not None and approved != expected_approved:
         errors.append(f"approved_queue_count={approved} != expected={expected_approved}")
     if report.get("all_rows_ready_for_promotion") is not True:

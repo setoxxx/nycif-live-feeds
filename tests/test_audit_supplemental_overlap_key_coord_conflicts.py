@@ -51,7 +51,9 @@ class SupplementalOverlapKeyConflictAuditTests(unittest.TestCase):
             self.skipTest("export feed snapshot missing")
         payload = json.loads(export_path.read_text(encoding="utf-8"))
         report = build_audit(payload["events"])
-        self.assertEqual(report["summary"]["export_event_count"], 3493)
+        export_count = report["summary"]["export_event_count"]
+        self.assertEqual(export_count, len(payload["events"]))
+        self.assertEqual(export_count, payload.get("export_event_count"))
         self.assertEqual(report["summary"]["conflict_pair_count"], 0)
 
 

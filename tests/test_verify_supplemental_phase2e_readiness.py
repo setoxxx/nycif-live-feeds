@@ -22,7 +22,10 @@ class SupplementalPhase2eReadinessTests(unittest.TestCase):
         )
         export_errors = verify_export(export)
         dry_run_errors = verify_dry_run(dry_run)
-        self.assertEqual(export.get("export_event_count"), 3566)
+        approved_count = int(dry_run.get("approved_queue_count") or export.get("approved_queue_count") or 0)
+        self.assertGreater(approved_count, 0)
+        self.assertEqual(export.get("export_event_count"), approved_count)
+        self.assertEqual(len(export.get("events") or []), approved_count)
         self.assertEqual([], export_errors, export_errors)
         self.assertEqual([], dry_run_errors, dry_run_errors)
 

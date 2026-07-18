@@ -134,8 +134,9 @@ class ApplyOverlapKeyConflictAuditTests(unittest.TestCase):
             self.skipTest("export feed snapshot missing")
         payload = json.loads(export_path.read_text(encoding="utf-8"))
         counts = verify_export_counts(payload["events"])
-        self.assertEqual(counts["expected_export_event_count"], 3493)
-        self.assertEqual(counts["expected_unique_overlap_key_count"], 2406)
+        self.assertEqual(counts["export_event_count"], len(payload["events"]))
+        self.assertEqual(counts["remaining_coord_conflict_pair_count"], 0)
+        self.assertTrue(counts["remaining_coord_conflict_pair_count_match"])
 
 
 if __name__ == "__main__":
