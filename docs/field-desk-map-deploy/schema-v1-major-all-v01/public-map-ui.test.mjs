@@ -1,16 +1,24 @@
 // Public map UI contract tests: static checks against canonical deploy sources.
-// Run with: node --test docs/field-desk-map-deploy/schema-v1-major-all-v01/public-map-ui.test.mjs
+// Run from live-feeds: node --test docs/field-desk-map-deploy/schema-v1-major-all-v01/public-map-ui.test.mjs
+// Run from field-desk: node --test tools/public-map/public-map-ui.test.mjs
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
-const deployRoot = dirname(fileURLToPath(import.meta.url));
-const indexHtml = readFileSync(join(deployRoot, 'index.html'), 'utf8');
-const appJs = readFileSync(join(deployRoot, 'app-schema-v1-major-all-v01.js'), 'utf8');
-const tipJarSource = readFileSync(join(deployRoot, '..', 'shared', 'nycif-tip-jar-v01.js'), 'utf8');
-const publicMapCss = readFileSync(join(deployRoot, 'public-map-v01.css'), 'utf8');
+const testDir = dirname(fileURLToPath(import.meta.url));
+const fieldDeskRoot = join(testDir, '..', '..');
+const usesCanonicalDeploySources = existsSync(join(testDir, 'index.html'));
+const repoRoot = usesCanonicalDeploySources ? testDir : fieldDeskRoot;
+const tipJarPath = usesCanonicalDeploySources
+  ? join(testDir, '..', 'shared', 'nycif-tip-jar-v01.js')
+  : join(fieldDeskRoot, 'nycif-tip-jar-v01.js');
+
+const indexHtml = readFileSync(join(repoRoot, 'index.html'), 'utf8');
+const appJs = readFileSync(join(repoRoot, 'app-schema-v1-major-all-v01.js'), 'utf8');
+const tipJarSource = readFileSync(tipJarPath, 'utf8');
+const publicMapCss = readFileSync(join(repoRoot, 'public-map-v01.css'), 'utf8');
 
 test('production index mounts tip jar beside the NYCIF brand header', () => {
   assert.match(indexHtml, /brand-header-row/);
