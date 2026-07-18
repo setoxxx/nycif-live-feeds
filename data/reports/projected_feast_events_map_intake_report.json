@@ -1,0 +1,119 @@
+{
+  "artifact_type": "projected_feast_events_map_intake_report",
+  "generated_at_utc": "2026-07-18T21:01:55Z",
+  "qa_pass": true,
+  "seed_count": 24,
+  "skipped_already_confirmed_in_raw": 1,
+  "intake_count": 23,
+  "map_ready_count": 23,
+  "list_only_count": 0,
+  "allow_live_geosearch": true,
+  "confirmed_raw_keys_ignored": [
+    [
+      "tvpp-9vvx",
+      "906428"
+    ]
+  ],
+  "samples": [
+    {
+      "key": "giglio-east-harlem",
+      "title": "Giglio Society of East Harlem Feast",
+      "start": "2026-08-06",
+      "end": "2026-08-09",
+      "latitude": 40.7973915,
+      "longitude": -73.940094
+    },
+    {
+      "key": "feast-santa-rosalia-18th-avenue",
+      "title": "18th Avenue Feast of Santa Rosalia",
+      "start": "2026-08-20",
+      "end": "2026-08-30",
+      "latitude": 40.701843,
+      "longitude": -74.002548
+    },
+    {
+      "key": "feast-of-san-gennaro",
+      "title": "Feast of San Gennaro",
+      "start": "2026-09-10",
+      "end": "2026-09-20",
+      "latitude": 40.7198845,
+      "longitude": -73.997879
+    },
+    {
+      "key": "st-frances-cabrini-feast",
+      "title": "St. Frances Cabrini Feast",
+      "start": "2026-07-15",
+      "end": "2026-07-19",
+      "latitude": 40.857939,
+      "longitude": -73.935635
+    },
+    {
+      "key": "feast-st-rocco",
+      "title": "St. Rocco Feast",
+      "start": "2026-08-15",
+      "end": "2026-08-16",
+      "latitude": 40.849447,
+      "longitude": -73.834312
+    },
+    {
+      "key": "feast-assumption-arthur-avenue",
+      "title": "Feast of the Assumption (Arthur Avenue)",
+      "start": "2026-08-15",
+      "end": "2026-08-15",
+      "latitude": 40.7242405,
+      "longitude": -73.9758685
+    },
+    {
+      "key": "feast-ss-crocifisso",
+      "title": "Feast of SS. Crocifisso",
+      "start": "2026-09-04",
+      "end": "2026-09-07",
+      "latitude": 40.7055245,
+      "longitude": -74.006062
+    },
+    {
+      "key": "festival-st-markella",
+      "title": "Festival of St. Markella",
+      "start": "2026-09-17",
+      "end": "2026-09-20",
+      "latitude": 40.759639,
+      "longitude": -73.9499125
+    },
+    {
+      "key": "feast-st-padre-pio",
+      "title": "Feast of St. Padre Pio",
+      "start": "2026-09-26",
+      "end": "2026-09-26",
+      "latitude": 40.708776,
+      "longitude": -73.9499115
+    },
+    {
+      "key": "feast-st-anthony-soho",
+      "title": "Feast of St. Anthony (SoHo)",
+      "start": "2026-06-04",
+      "end": "2026-06-14",
+      "latitude": 40.723441,
+      "longitude": -73.9986845
+    },
+    {
+      "key": "giglio-sant-antonio",
+      "title": "Giglio di Sant' Antonio Feast",
+      "start": "2026-06-10",
+      "end": "2026-06-14",
+      "latitude": 40.7065905,
+      "longitude": -73.991823
+    },
+    {
+      "key": "mount-carmel-rosebank",
+      "title": "Feast of Our Lady of Mount Carmel (Rosebank)",
+      "start": "2026-07-15",
+      "end": "2026-07-19",
+      "latitude": 40.6796585,
+      "longitude": -73.9972635
+    }
+  ],
+  "notes": [
+    "Projected feast rows are real recurring events staged for map visibility before SAPO raw intake.",
+    "Rows without coordinates remain in intake for list visibility and later geocoding."
+  ]
+}

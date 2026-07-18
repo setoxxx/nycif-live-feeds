@@ -36,6 +36,7 @@ from schema_v1_common import DEFAULT_TIMEZONE, envelope  # noqa: E402
 
 STAGED = ROOT / "data" / "nycif_staged_live_events.json"
 SUPP = ROOT / "data" / "supplemental_events_staging_feed.json"
+PROJECTED_FEAST = ROOT / "data" / "staging" / "projected_feast_events_map_intake.json"
 SUPP_APPROVAL_QUEUE = ROOT / "data" / "supplemental_manual_approval_queue.json"
 RAW = ROOT / "data" / "raw_nyc_open_data_snapshot.json"
 CAL = ROOT / "data" / "nyc_citywide_events_calendar_snapshot.json"
@@ -761,6 +762,37 @@ def main() -> int:
         accepted.append(event)
         unstaged_intake_count += 1
 
+    projected_feast_count = 0
+    if PROJECTED_FEAST.exists():
+        projected_rows = load_events(PROJECTED_FEAST)
+        accepted_keys = {source_parts_safe(row) for row in staged_rows}
+        for e in accepted:
+            src = e.get("source") if isinstance(e.get("source"), dict) else {}
+            accepted_keys.add(
+                (str(src.get("dataset") or ""), str(src.get("source_event_id") or ""))
+            )
+        for i, row in enumerate(projected_rows):
+            dataset, source_event_id = source_parts_safe(row)
+            if (dataset, source_event_id) in accepted_keys:
+                continue
+            event = build_base_event(
+                row,
+                data_layer="review_supplemental",
+                index=300000 + i,
+                production_feed=False,
+                current_major_keys=current_major_keys,
+            )
+            if event is None:
+                invalid.append(invalid_item(row, "projected_feast_missing_identity", "projected_feast_reference"))
+                continue
+            event["nycif"]["projected_feast_reference"] = True
+            event["nycif"]["classification_reason"] = (
+                str(event["nycif"].get("classification_reason") or "") + "+projected_feast_reference_intake"
+            )
+            accepted.append(event)
+            accepted_keys.add((dataset, source_event_id))
+            projected_feast_count += 1
+
     for row in rejected_disp:
         invalid.append(
             {
@@ -896,6 +928,7 @@ def main() -> int:
             "open_data_rows": len(raw_rows),
             "open_data_staged": staged_covers,
             "open_data_unstaged_intake": unstaged_intake_count,
+            "projected_feast_reference_intake": projected_feast_count,
             "open_data_disposition_rejected": len(rejected_disp),
             "calendar_parks_raw": cal_parks_raw,
             "calendar_parks_accepted_or_unlinked": cal_parks_accepted,
