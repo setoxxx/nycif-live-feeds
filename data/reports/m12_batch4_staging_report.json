@@ -1,0 +1,51 @@
+{
+  "artifact_type": "m12_batch4_staging_report",
+  "generated_at_utc": "2026-07-18T20:00:21Z",
+  "phase": "m12_batch4_housing_services_staging",
+  "batch": 4,
+  "categories": ["housing", "services"],
+  "original_audit_gaps": {
+    "housing": 2,
+    "services": 10
+  },
+  "post_batch3_gaps": {
+    "housing": 2,
+    "services": 1
+  },
+  "geocode_results": {
+    "housing_filled": 2,
+    "housing_unfilled": 0,
+    "services_filled": 1,
+    "services_unfilled": 0
+  },
+  "intake_results": {
+    "net_new_pending_rows": 1,
+    "blocked_duplicate_overlap_keys": 1
+  },
+  "pending_review_path": "data/staging/m12_batch4_pending_review.json",
+  "pending_count": 1,
+  "pending_ranks": [3690],
+  "already_merged": [
+    {
+      "source_event_id": "1047536",
+      "title": "Queens Satellite Office - HPD Outreach Van",
+      "note": "Approved rank 2409; already in feeds=main"
+    }
+  ],
+  "recommend_reject": [
+    {
+      "source_event_id": "1116856",
+      "duplicate_of": "1116636",
+      "reason": "Same overlap_key as approved Butler Houses row"
+    }
+  ],
+  "services_gap_resolution_note": "9 of 10 original services gaps resolved by prior Access Benefits merges (PR #307)",
+  "qa_pass": true,
+  "safety": {
+    "location_cache_modified": false,
+    "promotion_allowed": false,
+    "public_map_modified": false,
+    "staged_feed_modified": false
+  },
+  "next_required_step": "Human reply 'approved batch 4 housing' to merge rank 3690."
+}

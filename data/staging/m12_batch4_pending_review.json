@@ -1,0 +1,47 @@
+{
+  "artifact_type": "m12_batch4_pending_review",
+  "generated_at_utc": "2026-07-18T20:00:21.821650+00:00",
+  "categories": [
+    "housing",
+    "services"
+  ],
+  "batch": 4,
+  "pending_count": 1,
+  "manual_review_status": "pending",
+  "promotion_allowed": false,
+  "note": "After batch 3 merge, services gap reduced to 1 near-duplicate Butler Houses row (1116856); 9 of original 10 services gaps were resolved by prior Access Benefits merges (PR #307). Queens HPD Van (1047536) was already approved (rank 2409) and merged to feeds=main. Butler 1116856 shares overlap_key with approved 1116636 \u2014 recommend reject as duplicate.",
+  "rows": [
+    {
+      "review_rank": 3690,
+      "overlap_key": "hpd outreach housing resources in your neighborhood|2026-07-15",
+      "source_event_id": "919556",
+      "title": "HPD Outreach Housing Resources in Your Neighborhood",
+      "date": "2026-07-15",
+      "category": "housing",
+      "proposed_lat": 40.867363,
+      "proposed_lng": -73.921317,
+      "geocoder_source": "nyc_geosearch_planninglabs",
+      "confidence_reason": "Rejected-pass fill: NYC GeoSearch match for query '4932 BROADWAY, New York, NY'. for manual review only."
+    }
+  ],
+  "already_merged": [
+    {
+      "review_rank": 2409,
+      "source_event_id": "1047536",
+      "title": "Queens Satellite Office - HPD Outreach Van",
+      "status": "approved",
+      "note": "Already in feeds=main approved discovery"
+    }
+  ],
+  "recommend_reject": [
+    {
+      "source_event_id": "1116856",
+      "title": "Access Benefits at Local NeighborhoodStat 2026 Season - Butler Houses",
+      "overlap_key": "access benefits at local neighborhoodstat 2026 season butler houses|2026-07-14",
+      "duplicate_of_rank": 3642,
+      "duplicate_of_source_event_id": "1116636",
+      "note": "Same overlap_key and pin as approved Butler Houses row; geocoded but blocked from intake"
+    }
+  ],
+  "next_required_step": "Human reply 'approved batch 4 housing' to merge rank 3690 Broadway HPD row."
+}
