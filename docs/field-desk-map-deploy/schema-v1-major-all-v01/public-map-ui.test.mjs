@@ -52,9 +52,13 @@ test('public map css anchors brand header left and stacks right controls', () =>
   assert.match(publicMapCss, /Filters, GPS, Bug, then Near Me/);
 });
 
-test('stacked location popups expose picker grid and back control styles', () => {
-  assert.match(publicMapCss, /\.popup-stack-grid/);
+test('stacked location popups expose scrollable picker, time rows, and side placement', () => {
+  assert.match(publicMapCss, /\.popup-stack-scroll/);
+  assert.match(publicMapCss, /\.popup-stack-time/);
+  assert.match(publicMapCss, /\.nycif-event-popup--side-right/);
   assert.match(publicMapCss, /\.nycif-popup-back/);
   assert.match(appJs, /openStackDetail/);
   assert.match(appJs, /popupPicker/);
+  assert.match(appJs, /formatTimeRange/);
+  assert.match(appJs, /syncStackPopupPlacement/);
 });
