@@ -20,13 +20,18 @@ git pull origin main
 
 cp "$PREVIEW_SRC/supplemental-approved-export-preview-v01.js" ./supplemental-approved-export-preview-v01.js
 cp "$PREVIEW_SRC/approved-export-preview.html" ./approved-export-preview.html
+cp "$PREVIEW_SRC/supplemental-preview-desk-redirect.js" ./supplemental-preview-desk-redirect.js
 mkdir -p ./tools/public-map
 cp "$PREVIEW_SRC/supplemental-export-preview.test.mjs" ./tools/public-map/supplemental-export-preview.test.mjs
 
-if ! grep -q 'supplemental-approved-export-preview-v01.js' desk.html; then
-  sed -i 's|feed-status-panel-v01.js?v=01"></script>|feed-status-panel-v01.js?v=01"></script>\n  <script src="./supplemental-approved-export-preview-v01.js?v=05"></script>|' desk.html
+if ! grep -q 'supplemental-preview-desk-redirect.js' desk.html; then
+  sed -i 's|<meta charset="utf-8">|<meta charset="utf-8">\n  <script src="./supplemental-preview-desk-redirect.js?v=01"></script>|' desk.html
 fi
-  sed -i 's|supplemental-approved-export-preview-v01.js?v=0[0-9]|supplemental-approved-export-preview-v01.js?v=05|g' desk.html
+
+if ! grep -q 'supplemental-approved-export-preview-v01.js' desk.html; then
+  sed -i 's|feed-status-panel-v01.js?v=01"></script>|feed-status-panel-v01.js?v=01"></script>\n  <script src="./supplemental-approved-export-preview-v01.js?v=06"></script>|' desk.html
+fi
+sed -i 's|supplemental-approved-export-preview-v01.js?v=0[0-9]|supplemental-approved-export-preview-v01.js?v=06|g' desk.html
 grep -q 'supplemental-approved-export-preview-v01.js' desk.html
 
 if ! grep -q "Supplemental approved export preview" README.md; then
@@ -34,13 +39,15 @@ if ! grep -q "Supplemental approved export preview" README.md; then
     echo ""
     echo "### Supplemental approved export preview (admin / QA only)"
     echo ""
-    echo "- Standalone: \`approved-export-preview.html\` (**3,493** approved supplemental events)"
-    echo "- Desk overlay: \`desk.html?previewExport=1\`"
+    echo "- Standalone (preferred): \`approved-export-preview.html\` (**3,493** approved supplemental events)"
+    echo "- Desk shortcut: \`desk.html?previewExport=1\` redirects to standalone for Safari stability"
+    echo "- Heavy desk overlay (admin only): \`desk.html?previewExport=1&deskOverlay=1\`"
     echo "- Feed: \`https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/supplemental_approved_export_feed.json\`"
     echo "- Preview only — not production map; \`promotion_allowed=false\`."
   } >> README.md
 fi
 
+node --check supplemental-preview-desk-redirect.js
 node --check supplemental-approved-export-preview-v01.js
 node --test tools/public-map/supplemental-export-preview.test.mjs
 grep -q "3,493" approved-export-preview.html
@@ -48,6 +55,7 @@ grep -q "supplemental_approved_export_feed" supplemental-approved-export-preview
 
 git add \
   supplemental-approved-export-preview-v01.js \
+  supplemental-preview-desk-redirect.js \
   approved-export-preview.html \
   tools/public-map/supplemental-export-preview.test.mjs \
   desk.html \

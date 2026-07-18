@@ -17,8 +17,9 @@ gh pr merge --squash
 
 | Entry | URL |
 | --- | --- |
-| Standalone QA | `https://setoxxx.github.io/nycif-field-desk/approved-export-preview.html` |
-| Desk overlay | `https://setoxxx.github.io/nycif-field-desk/desk.html?previewExport=1` |
+| Standalone QA (preferred) | `https://setoxxx.github.io/nycif-field-desk/approved-export-preview.html` |
+| Desk shortcut | `https://setoxxx.github.io/nycif-field-desk/desk.html?previewExport=1` → redirects to standalone |
+| Heavy desk overlay (admin only) | `https://setoxxx.github.io/nycif-field-desk/desk.html?previewExport=1&deskOverlay=1` |
 | Dist feed override | add `?distExport=1` |
 
 Expected: **3,493** purple preview markers; banner shows PREVIEW / NOT PRODUCTION.

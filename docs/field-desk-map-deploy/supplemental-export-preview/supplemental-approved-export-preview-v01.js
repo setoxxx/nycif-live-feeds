@@ -5,13 +5,44 @@
  * Loads approved supplemental events with clear "preview / not production" labeling.
  *
  * Activation:
- * - desk.html?previewExport=1
- * - approved-export-preview.html (standalone QA page)
+ * - approved-export-preview.html (standalone QA page — preferred)
+ * - desk.html?previewExport=1 (redirects to standalone for Safari stability)
+ * - desk.html?previewExport=1&deskOverlay=1 (heavy desk overlay — admin only)
  *
  * Does NOT load GPS review artifacts, pending queue rows, or public production feeds.
  */
 (function () {
   'use strict';
+
+  function shouldRedirectDeskPreviewToStandalone() {
+    if (document.documentElement?.dataset?.nycifSupplementalExportPreview === '1') {
+      return false;
+    }
+    try {
+      const url = new URL(location.href);
+      return url.searchParams.get('previewExport') === '1'
+        && url.searchParams.get('deskOverlay') !== '1';
+    } catch {
+      return false;
+    }
+  }
+
+  function redirectDeskPreviewToStandalone() {
+    const target = new URL('approved-export-preview.html', location.href);
+    const current = new URL(location.href);
+    ['exportFeed', 'exportPins', 'localExport', 'distExport'].forEach((key) => {
+      const value = current.searchParams.get(key);
+      if (value) target.searchParams.set(key, value);
+    });
+    if (typeof location !== 'undefined' && typeof location.replace === 'function') {
+      location.replace(String(target));
+    }
+  }
+
+  if (shouldRedirectDeskPreviewToStandalone()) {
+    redirectDeskPreviewToStandalone();
+    return;
+  }
 
   const VERSION = 'supplemental-approved-export-preview-v02';
   const BLOCKED_ARTIFACT_TYPES = new Set([
