@@ -87,6 +87,10 @@ test('stacked location popups expose scrollable picker, time rows, and side plac
   assert.match(appJs, /syncStackPopupPlacement/);
 });
 
+test('farmers markets and HHFM rows use grocery cart emoji', () => {
+  assert.match(appJs, /farmers\? market\|greenmarket\|green market\|produce\|harvest\|hhfm\/i, '🛒'/);
+});
+
 test('category filter badges are date-scoped and explain other-day totals', () => {
   assert.match(appJs, /function categoryKeysForEvent/);
   assert.match(appJs, /function categoryOtherDayHint/);
