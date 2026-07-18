@@ -25,5 +25,5 @@ node --test tools/public-map/supplemental-export-preview.test.mjs
 BRANCH="cursor/supplemental-export-preview-c1f9"
 git checkout "$BRANCH" 2>/dev/null || git checkout -b "$BRANCH"
 git add supplemental-approved-export-preview-v01.js approved-export-preview.html tools/public-map/supplemental-export-preview.test.mjs
-git commit -m "Sync supplemental export preview from nycif-live-feeds (3566 events)" || true
+git commit -m "Sync supplemental export preview from nycif-live-feeds (3492 events)" || true
 echo "Ready to: git push -u origin $BRANCH && open PR && merge"
