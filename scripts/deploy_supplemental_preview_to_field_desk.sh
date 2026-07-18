@@ -21,6 +21,7 @@ git pull origin main
 cp "$PREVIEW_SRC/supplemental-approved-export-preview-v01.js" ./supplemental-approved-export-preview-v01.js
 cp "$PREVIEW_SRC/approved-export-preview.html" ./approved-export-preview.html
 cp "$PREVIEW_SRC/supplemental-preview-desk-redirect.js" ./supplemental-preview-desk-redirect.js
+cp "$ROOT/docs/field-desk-map-deploy/shared/nycif-tip-jar-v01.js" ./nycif-tip-jar-v01.js
 mkdir -p ./tools/public-map
 cp "$PREVIEW_SRC/supplemental-export-preview.test.mjs" ./tools/public-map/supplemental-export-preview.test.mjs
 
@@ -49,6 +50,7 @@ fi
 
 node --check supplemental-preview-desk-redirect.js
 node --check supplemental-approved-export-preview-v01.js
+node --check nycif-tip-jar-v01.js
 node --test tools/public-map/supplemental-export-preview.test.mjs
 grep -q "3,493" approved-export-preview.html
 grep -q "supplemental_approved_export_feed" supplemental-approved-export-preview-v01.js
@@ -57,6 +59,7 @@ git add \
   supplemental-approved-export-preview-v01.js \
   supplemental-preview-desk-redirect.js \
   approved-export-preview.html \
+  nycif-tip-jar-v01.js \
   tools/public-map/supplemental-export-preview.test.mjs \
   desk.html \
   README.md

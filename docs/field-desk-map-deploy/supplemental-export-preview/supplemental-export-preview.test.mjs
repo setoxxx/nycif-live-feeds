@@ -14,7 +14,10 @@ const previewDir = existsSync(join(testDir, 'supplemental-approved-export-previe
 const deployRoot = existsSync(join(previewDir, 'index.html'))
   ? previewDir
   : join(previewDir, '..');
+const canonicalProductionIndex = join(deployRoot, 'schema-v1-major-all-v01', 'index.html');
 const source = readFileSync(join(previewDir, 'supplemental-approved-export-preview-v01.js'), 'utf8');
+const tipJarPath = join(previewDir, '..', 'shared', 'nycif-tip-jar-v01.js');
+const tipJarSource = readFileSync(tipJarPath, 'utf8');
 const redirectSource = readFileSync(join(previewDir, 'supplemental-preview-desk-redirect.js'), 'utf8');
 const previewHtml = readFileSync(join(previewDir, 'approved-export-preview.html'), 'utf8');
 const deskHtmlPath = existsSync(join(previewDir, 'desk.html'))
@@ -22,11 +25,13 @@ const deskHtmlPath = existsSync(join(previewDir, 'desk.html'))
   : existsSync(join(deployRoot, 'desk.html'))
     ? join(deployRoot, 'desk.html')
     : null;
-const indexHtmlPath = existsSync(join(previewDir, 'index.html'))
-  ? join(previewDir, 'index.html')
-  : existsSync(join(deployRoot, 'index.html'))
-    ? join(deployRoot, 'index.html')
-    : join(deployRoot, 'schema-v1-major-all-v01', 'index.html');
+const indexHtmlPath = existsSync(canonicalProductionIndex)
+  ? canonicalProductionIndex
+  : existsSync(join(previewDir, 'index.html'))
+    ? join(previewDir, 'index.html')
+    : existsSync(join(deployRoot, 'index.html'))
+      ? join(deployRoot, 'index.html')
+      : canonicalProductionIndex;
 const deskHtml = deskHtmlPath ? readFileSync(deskHtmlPath, 'utf8') : '';
 const indexHtml = readFileSync(indexHtmlPath, 'utf8');
 
@@ -181,10 +186,17 @@ test('tip jar links include Cash App, Venmo, and PayPal', () => {
     nycifSupplementalExportPreview: '1',
   });
   assert.equal(api.TIP_JAR_LINKS.length, 3);
-  assert.match(source, /nycif-tip-jar/);
-  assert.match(source, /cash\.app\/\$NYCINFOCUS/);
-  assert.match(source, /venmo\.com\/u\/Howie-Doin/);
-  assert.match(source, /py\.pl\/oxvv2Mgg0bztfniKXwpQWA/);
+  assert.match(previewHtml, /nycif-tip-jar-v01\.js/);
+  assert.match(source, /NYCIF_TIP_JAR/);
+  assert.match(tipJarSource, /nycif-tip-jar/);
+  assert.match(tipJarSource, /cash\.app\/\$NYCINFOCUS/);
+  assert.match(tipJarSource, /venmo\.com\/u\/Howie-Doin/);
+  assert.match(tipJarSource, /py\.pl\/oxvv2Mgg0bztfniKXwpQWA/);
+});
+
+test('production index loads shared tip jar module', () => {
+  assert.match(indexHtml, /nycif-tip-jar-v01\.js/);
+  assert.ok(!/supplemental-approved-export-preview-v01\.js/.test(indexHtml));
 });
 
 test('formatMapRenderMeta reports cap when viewport exceeds soft cap', () => {
