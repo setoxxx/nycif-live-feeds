@@ -22,7 +22,7 @@ const publicMapCss = readFileSync(join(repoRoot, 'public-map-v01.css'), 'utf8');
 
 test('production index mounts tip jar beside the NYCIF brand header', () => {
   assert.match(indexHtml, /brand-header-row/);
-  assert.match(indexHtml, /public-map-v08/);
+  assert.match(indexHtml, /public-map-v09/);
   assert.match(indexHtml, /nycif-tip-jar-v01\.js\?v=05/);
 });
 
@@ -53,6 +53,8 @@ test('public map css anchors brand header left and stacks right controls', () =>
   assert.match(publicMapCss, /\.brand-header-row/);
   assert.match(publicMapCss, /\.map-controls/);
   assert.match(publicMapCss, /Filters, GPS, Bug, then Near Me/);
+  assert.match(publicMapCss, /max-width: 720px/);
+  assert.match(publicMapCss, /#nearMeBtn/);
 });
 
 test('filters panel exposes news assignments and readable overlay disclaimer', () => {
