@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import csv
+import html
 import json
 import re
 from datetime import datetime, timezone
@@ -59,7 +60,7 @@ def date_key(value: Any) -> str:
 
 
 def title_key(value: Any) -> str:
-    return normalize_text_legacy(str(value or ""))
+    return normalize_text_legacy(html.unescape(str(value or "")))
 
 
 def overlap_key(title: Any, start: Any) -> str:

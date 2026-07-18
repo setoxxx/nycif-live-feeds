@@ -252,16 +252,29 @@
 
   function meaningfulTime(value) {
     const text = String(value || '');
-    const match = text.match(/T(\d{2}):(\d{2})/);
-    return !!match && !(match[1] === '00' && match[2] === '00');
+    const match24 = text.match(/T(\d{2}):(\d{2})/);
+    if (match24 && !(match24[1] === '00' && match24[2] === '00')) {
+      return true;
+    }
+    return /T(\d{1,2}):(\d{2})\s*(am|pm)/i.test(text);
   }
 
   function formatClock(value) {
-    if (!meaningfulTime(value)) {
-      return '';
+    const text = String(value || '');
+    let date = null;
+    const match12 = text.match(/T(\d{1,2}):(\d{2})\s*(am|pm)/i);
+    if (match12) {
+      let hour = Number(match12[1]);
+      const minute = match12[2];
+      const ampm = String(match12[3]).toLowerCase();
+      if (ampm === 'pm' && hour < 12) hour += 12;
+      if (ampm === 'am' && hour === 12) hour = 0;
+      const day = text.slice(0, 10);
+      date = new Date(`${day}T${String(hour).padStart(2, '0')}:${minute}:00-04:00`);
+    } else if (meaningfulTime(text)) {
+      date = new Date(text);
     }
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) {
+    if (!date || Number.isNaN(date.getTime())) {
       return '';
     }
     return new Intl.DateTimeFormat('en-US', {

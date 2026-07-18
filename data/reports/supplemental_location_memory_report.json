@@ -1,25 +1,25 @@
 {
-  "approved_row_count": 3566,
+  "approved_row_count": 3492,
   "artifact_type": "supplemental_location_memory_report",
-  "generated_at_utc": "2026-07-17T22:37:54.266885+00:00",
+  "generated_at_utc": "2026-07-18T12:38:17.951410+00:00",
   "human_pin_quality_signoff_report": "data/reports/supplemental_pin_quality_human_signoff_report.json",
-  "memory_entry_count": 503,
+  "memory_entry_count": 496,
   "next_required_step": "Resolver and rejected-pass now consult supplemental_location_gazetteer_overlay.json. Re-run validate_supplemental_manual_approvals.py. Phase 2E promotion still requires explicit authorization.",
   "overlay": {
-    "index_key_count": 1793,
-    "merged_preview_key_count": 1793,
+    "index_key_count": 1775,
+    "merged_preview_key_count": 1775,
     "path": "data/supplemental_location_gazetteer_overlay.json"
   },
   "phase": "m11_supplemental_location_memory",
   "qa_pass": true,
   "recurrence": {
-    "approved_row_count": 3566,
-    "approved_rows_auto_resolvable_from_overlay": 3566,
+    "approved_row_count": 3492,
+    "approved_rows_auto_resolvable_from_overlay": 3492,
     "approved_rows_auto_resolvable_from_overlay_pct": 100.0,
-    "approved_rows_sharing_recurring_location_key": 3389,
-    "approved_rows_sharing_recurring_location_key_pct": 95.04,
-    "location_keys_with_event_count_gt_1": 326,
-    "unique_location_key_count": 503
+    "approved_rows_sharing_recurring_location_key": 3316,
+    "approved_rows_sharing_recurring_location_key_pct": 94.96,
+    "location_keys_with_event_count_gt_1": 320,
+    "unique_location_key_count": 496
   },
   "safety": {
     "location_cache_modified": false,
@@ -27,7 +27,7 @@
     "public_map_modified": false,
     "staged_feed_modified": false
   },
-  "skipped_approved_rows_without_coords": 68,
+  "skipped_approved_rows_without_coords": 142,
   "top_recurring_location_keys": [
     {
       "borough": "Bk",
@@ -144,12 +144,6 @@
       "location_key": "mn|multi use room in alfred e smith recreation center|parent:alfred e smith recreation center"
     },
     {
-      "borough": "SI",
-      "display_location": "Greenbelt Recreation Center in Greenbelt Recreation Center",
-      "event_count": 30,
-      "location_key": "si|greenbelt recreation center in greenbelt recreation center|parent:greenbelt recreation center"
-    },
-    {
       "borough": "Bx",
       "display_location": "Ben Abrams Playground in Bronx Park",
       "event_count": 29,
@@ -178,6 +172,12 @@
       "display_location": "Loreto Playground",
       "event_count": 27,
       "location_key": "bx|loreto playground"
+    },
+    {
+      "borough": "Bx",
+      "display_location": "Metcalf Playground in Soundview Park",
+      "event_count": 27,
+      "location_key": "bx|metcalf playground in soundview park|parent:soundview park"
     }
   ]
 }
