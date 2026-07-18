@@ -45,16 +45,17 @@ class SupplementalOverlapKeyConflictAuditTests(unittest.TestCase):
         recommendation, _ = classify_conflict(row_a, row_b)
         self.assertEqual(recommendation, "split_overlap_key_keep_both_pins")
 
-    def test_build_audit_finds_78_conflicts_on_live_export(self) -> None:
+    def test_build_audit_finds_remaining_manual_review_conflicts_on_live_export(self) -> None:
         export_path = ROOT / "data/supplemental_approved_export_feed.json"
         if not export_path.exists():
             self.skipTest("export feed snapshot missing")
         payload = json.loads(export_path.read_text(encoding="utf-8"))
         report = build_audit(payload["events"])
-        self.assertEqual(report["summary"]["conflict_pair_count"], 78)
+        self.assertEqual(report["summary"]["export_event_count"], 3496)
+        self.assertEqual(report["summary"]["conflict_pair_count"], 3)
         self.assertEqual(
-            report["summary"]["projected_export_event_count_after_dedupe_actions"],
-            3496,
+            report["summary"]["manual_review_pair_count"],
+            3,
         )
 
 
