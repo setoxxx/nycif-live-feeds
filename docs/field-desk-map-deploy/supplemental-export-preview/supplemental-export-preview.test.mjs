@@ -171,9 +171,20 @@ test('anniversaryBadgeLabel renders year count or annual fallback', () => {
   assert.equal(api.anniversaryBadgeLabel({ culturalAnniversary: true }), 'A');
 });
 
-test('standalone preview html uses cache bust v=09', () => {
-  assert.match(previewHtml, /supplemental-approved-export-preview-v01\.js\?v=09/);
+test('standalone preview html uses cache bust v=10', () => {
+  assert.match(previewHtml, /supplemental-approved-export-preview-v01\.js\?v=10/);
   assert.match(previewHtml, /cultural anniversary badges/i);
+});
+
+test('tip jar links include Cash App, Venmo, and PayPal', () => {
+  const api = loadWithUrl('https://x/approved-export-preview.html', {
+    nycifSupplementalExportPreview: '1',
+  });
+  assert.equal(api.TIP_JAR_LINKS.length, 3);
+  assert.match(source, /nycif-tip-jar/);
+  assert.match(source, /cash\.app\/\$NYCINFOCUS/);
+  assert.match(source, /venmo\.com\/u\/Howie-Doin/);
+  assert.match(source, /py\.pl\/oxvv2Mgg0bztfniKXwpQWA/);
 });
 
 test('formatMapRenderMeta reports cap when viewport exceeds soft cap', () => {
