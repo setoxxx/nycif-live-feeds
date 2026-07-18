@@ -1,0 +1,34 @@
+{
+  "plugin": "nycif-events-map",
+  "release": "1.5.0-rc1",
+  "created_for": "NYC In Focus",
+  "public_map_url": "https://nycinfocus.com/map/",
+  "map_embed_url": "https://setoxxx.github.io/nycif-field-desk/",
+  "canonical_runtime_url": "https://setoxxx.github.io/nycif-field-desk/?v=public-map-v10&resetFilters=1&feeds=main",
+  "runtime_cache_bust": "public-map-v10",
+  "approved_feed_ref": "main",
+  "field_desk_repository": "https://github.com/setoxxx/nycif-field-desk",
+  "live_data_repository": "https://github.com/setoxxx/nycif-live-feeds",
+  "freeze_doc": "docs/wordpress-plugin-deploy/nycinfocus-map-page-v1-freeze.md",
+  "wordpress_deploy_runbook": "docs/wordpress-plugin-deploy/CHATGPT-WORDPRESS-DEPLOY-PROMPT.md",
+  "display_modes_doc": "docs/wordpress-plugin-deploy/PUBLIC-MAP-DISPLAY-MODES.md",
+  "display_mode_breakpoint_px": 720,
+  "retired": {
+    "runtime_tokens": ["discovery-taxonomy-v02", "discovery-taxonomy-v03", "public-map-v07"],
+    "feed_pin_patterns": ["40-char git commit SHA in feeds="],
+    "shortcode_on_map_page": "Do not use [nycif_events_map] on /map/ — use #nycifMapAppShell shell"
+  },
+  "rollback": {
+    "package": "nycif-events-map-1.4.0-rc1.zip",
+    "note": "SHA-256 from 1.3.1 safe rollback lineage; verify before use",
+    "sha256": "ea5b0ac0632fe09f99758b34cab67fa45bf753be4ca724b9bdeb5fa0d79101e9"
+  },
+  "status": "release-candidate",
+  "promotion_gate": [
+    "Field Desk Pages deploy public-map-v10 succeeded on main",
+    "WordPress /map/ page 2647 iframe v= updated (ChatGPT runbook QA PASS)",
+    "Desktop and mobile viewport QA on nycinfocus.com/map/",
+    "feeds=main discovery feed only — no supplemental on public map until M11 approved",
+    "GPS / location_cache promotion remains unauthorized"
+  ]
+}

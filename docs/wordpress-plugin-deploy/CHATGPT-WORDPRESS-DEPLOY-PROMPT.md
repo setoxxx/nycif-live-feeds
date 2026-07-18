@@ -173,6 +173,7 @@ https://setoxxx.github.io/nycif-field-desk/?v=public-map-v10&resetFilters=1&feed
 NEVER use: feed=staged, feeds=<git-sha>, v=nycif-map-publish-02, or [nycif_events_map] shortcode on this page.
 
 ## TASK
+0. (Recommended) Plugins → NYCIF Events Map → verify version **1.5.0-rc1** or upload upgrade zip from live-feeds repo `docs/wordpress-plugin-deploy/nycif-events-map/`. This fixes shortcode embeds on other pages; /map/ still uses the shell below.
 1. WP Admin → Pages → page 2647 → Code Editor
 2. Replace entire page content with this HTML (straight ASCII quotes " only — no curly quotes):
 
@@ -362,4 +363,4 @@ Cursor should update this file's `v=` token and `status/nycif-map-v1-freeze.json
 | `nycinfocus-map-page-v1-freeze.md` | Signed-off HTML + curl QA |
 | `PUBLIC-MAP-DISPLAY-MODES.md` | Mobile/desktop behavior inside iframe |
 | `status/nycif-map-v1-freeze.json` | Canonical iframe src JSON |
-| `nycif-events-map/nycif-events-map.php` | Plugin for **other** pages — not `/map/` |
+| `nycif-events-map/nycif-events-map.php` | Plugin **1.5.0-rc1** for in-article embeds — upgrade from 1.4.0-rc1 |

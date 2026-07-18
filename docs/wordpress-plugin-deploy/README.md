@@ -9,6 +9,20 @@ cp -r docs/wordpress-plugin-deploy/nycif-events-map /path/to/wp-content/plugins/
 # Activate in WP Admin → Plugins → NYCIF Events Map
 ```
 
+Or zip and upload: `nycif-events-map-1.5.0-rc1.zip` (package the `nycif-events-map/` folder).
+
+## Plugin version alignment (2026-07-18)
+
+| Package | Runtime `v=` | Feed | Status |
+|---------|--------------|------|--------|
+| **1.5.0-rc1** (repo) | `public-map-v10` | `feeds=main` | **Use this** |
+| 1.4.0-rc1 (live site) | `discovery-taxonomy-v03` | commit `bf7dedd…` | **Retired** — upgrade |
+| 1.3.2 (older repo) | `public-map-v10` | `feeds=main` | Superseded by 1.5.0-rc1 |
+
+**1.4.0-rc1 problems:** pinned an unmerged commit SHA and old runtime token. The map on `/map/` uses the Custom HTML shell, but other pages with `[nycif_events_map]` still load whatever the **active plugin** builds — upgrade the plugin so shortcode embeds match RC.
+
+Settings after upgrade: **WP Admin → Settings → NYCIF Events Map** — confirm canonical URL shows `public-map-v10` and `feeds=main`.
+
 ## Usage
 
 Page or post shortcode (for **in-article** embeds — **not** for `/map/`):
