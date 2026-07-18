@@ -211,6 +211,29 @@
     }[ch]));
   }
 
+  function decodeHtml(value) {
+    const text = String(value ?? '');
+    if (!/&(?:#\d+|#x[0-9a-f]+|[a-z]+);/i.test(text)) return text;
+    const el = document.createElement('textarea');
+    el.innerHTML = text;
+    return el.value;
+  }
+
+  function formatEventTime(value) {
+    const text = String(value || '');
+    const match12 = text.match(/T(\d{1,2}):(\d{2})\s*(am|pm)/i);
+    if (match12) {
+      return `${match12[1]}:${match12[2]} ${match12[3].toUpperCase()}`;
+    }
+    const date = new Date(text);
+    if (Number.isNaN(date.getTime())) return '';
+    return date.toLocaleString([], {
+      hour: 'numeric',
+      minute: '2-digit',
+      timeZone: 'America/New_York',
+    });
+  }
+
   function standaloneMode() {
     return document.documentElement?.dataset?.nycifSupplementalExportPreview === '1';
   }
@@ -397,7 +420,7 @@
     const endDay = pinEndDay({ endDateTime: row.end_date_time }, startDay);
     return {
       id: row.overlap_key || row.source_event_id || `supplemental-export-${index}`,
-      title: row.title || 'Supplemental approved event',
+      title: decodeHtml(row.title || 'Supplemental approved event'),
       displayLocation: row.display_location || '',
       borough: row.borough || '',
       date: startDay,
@@ -679,6 +702,7 @@
       ${pin.displayLocation ? `<p>${esc(pin.displayLocation)}</p>` : ''}
       ${pin.borough ? `<p><strong>Borough:</strong> ${esc(pin.borough)}</p>` : ''}
       ${pin.date ? `<p><strong>Date:</strong> ${esc(pin.date)}</p>` : ''}
+      ${pin.startDateTime ? `<p><strong>Time:</strong> ${esc(formatEventTime(pin.startDateTime) || 'Time not listed')}</p>` : ''}
       ${pin.anniversaryStory ? `<p><strong>Cultural story:</strong> ${esc(pin.anniversaryStory)}</p>` : ''}
       ${pin.assignedPrecinct ? `<p><strong>NYPD precinct geofence:</strong> ${esc(pin.assignedPrecinct)} (tap pin to outline boundary)</p>` : ''}
       ${pin.pressReleaseCandidate ? `<p><strong>Press candidate:</strong> yes (preview heuristic only)</p>` : ''}

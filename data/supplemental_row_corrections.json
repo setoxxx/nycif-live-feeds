@@ -1,0 +1,33 @@
+{
+  "artifact_type": "supplemental_row_corrections",
+  "phase": "m11_supplemental_data_quality",
+  "generated_at_utc": "2026-07-18T12:40:00+00:00",
+  "production_feed": false,
+  "promotion_allowed": false,
+  "public_map_modified": false,
+  "location_cache_modified": false,
+  "staged_feed_modified": false,
+  "corrections": [
+    {
+      "review_rank": 2427,
+      "manual_review_status": "rejected",
+      "approval_decision_reason": "Duplicate of NYC Parks row for the same Uncle Tony reptile show on 2026-07-18; calendar intake superseded.",
+      "manual_review_notes": "Deduped duplicate pin — keep Parks source_event_id 2141011 only."
+    },
+    {
+      "review_rank": 15,
+      "title": "Just for Kids: Uncle Tony's Reptile Show",
+      "overlap_key": "just for kids uncle tony s reptile show|2026-07-18",
+      "display_location": "Playground 278 (in Marine Park)",
+      "borough": "Bk",
+      "proposed_lat": 40.6074677,
+      "proposed_lng": -73.9391634,
+      "start_date_time": "2026-07-18T11:00:00-04:00",
+      "geocoder_source": "nyc_parks_bigapps_events_snapshot",
+      "geocoder_confidence": "high",
+      "confidence_reason": "NYC Parks BigApps inline coordinates for Playground 278 in Marine Park; reverted incorrect park-interior snap.",
+      "approval_decision_reason": "GPS corrected to Playground 278; HTML title entity fixed; duplicate calendar row rejected.",
+      "manual_review_notes": "Field bugfix: two pins, wrong interior Marine Park GPS, and &#8217; title entity."
+    }
+  ]
+}

@@ -116,7 +116,7 @@
 
     <section class="panel warn" aria-label="QA warning">
       <strong>QA warning:</strong>
-      These 3,493 approved supplemental events are exported for field-desk preview only.
+      These 3,492 approved supplemental events are exported for field-desk preview only.
       They are not merged into <code>nycif_staged_live_events.json</code>,
       <code>location_cache.json</code>, or the production public map.
     </section>
@@ -138,7 +138,7 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="./nycif-tip-jar-v01.js?v=03"></script>
-  <script src="./supplemental-approved-export-preview-v01.js?v=10"></script>
+  <script src="./supplemental-approved-export-preview-v01.js?v=11"></script>
   <script>
     function esc(value) {
       return String(value ?? '').replace(/[&<>"']/g, ch => ({
@@ -154,7 +154,7 @@
       api.bootStandaloneMap('map')
         .then(state => {
           const meta = state.feedMeta || {};
-          const expected = 3493;
+          const expected = 3492;
           const count = state.pins.length;
           const dayCount = api.filterPinsForSelectedDate(state.pins).length;
           document.getElementById('feedMeta').classList.remove('loading');

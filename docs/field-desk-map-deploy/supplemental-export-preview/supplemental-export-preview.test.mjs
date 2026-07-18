@@ -183,8 +183,8 @@ test('anniversaryBadgeLabel renders year count or annual fallback', () => {
   assert.equal(api.anniversaryBadgeLabel({ culturalAnniversary: true }), 'A');
 });
 
-test('standalone preview html uses cache bust v=10', () => {
-  assert.match(previewHtml, /supplemental-approved-export-preview-v01\.js\?v=10/);
+test('standalone preview html uses cache bust v=11', () => {
+  assert.match(previewHtml, /supplemental-approved-export-preview-v01\.js\?v=11/);
   assert.match(previewHtml, /cultural anniversary badges/i);
 });
 
@@ -217,11 +217,11 @@ test('formatMapRenderMeta reports cap when viewport exceeds soft cap', () => {
     drawn: 600,
     inView: 1200,
     total: 249,
-    loadedTotal: 3493,
+    loadedTotal: 3492,
     selectedDate: '2026-07-18',
   });
   assert.match(capped, /249 events on today/);
-  assert.match(capped, /3,493 loaded total/);
+  assert.match(capped, /3,492 loaded total/);
   assert.match(capped, /600 shown of 1,200 in view/);
 });
 

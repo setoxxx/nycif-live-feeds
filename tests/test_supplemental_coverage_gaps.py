@@ -29,6 +29,10 @@ class CoverageGapUtilsTests(unittest.TestCase):
 
     def test_overlap_key(self) -> None:
         self.assertEqual(overlap_key("Summer Jam", "2026-07-13T09:00:00"), "summer jam|2026-07-13")
+        self.assertEqual(
+            overlap_key("Just for Kids: Uncle Tony&#8217;s Reptile Show", "2026-07-18T11:00 am"),
+            overlap_key("Just for Kids: Uncle Tony's Reptile Show", "2026-07-18T11:00 am"),
+        )
 
     def test_safety_fields_default_pending(self) -> None:
         fields = safety_fields()
