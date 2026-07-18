@@ -1,31 +1,31 @@
 {
   "after": {
-    "event_count": 3465,
-    "needs_memory_fill_count": 19,
-    "with_coordinates_count": 3446,
-    "without_coordinates_count": 19
+    "event_count": 2,
+    "needs_memory_fill_count": 1,
+    "with_coordinates_count": 1,
+    "without_coordinates_count": 1
   },
   "artifact_type": "supplemental_memory_auto_resolution_report",
   "before": {
-    "event_count": 3465,
-    "needs_memory_fill_count": 19,
-    "with_coordinates_count": 3446,
-    "without_coordinates_count": 19
+    "event_count": 2,
+    "needs_memory_fill_count": 1,
+    "with_coordinates_count": 1,
+    "without_coordinates_count": 1
   },
   "dry_run": false,
   "fill": {
-    "already_had_coordinates_count": 3446,
-    "attempted_fill_count": 19,
+    "already_had_coordinates_count": 1,
+    "attempted_fill_count": 1,
     "attempted_fill_resolution_pct": 0.0,
-    "event_count": 3465,
+    "event_count": 2,
     "fill_method_counts": {},
     "memory_filled_count": 0,
     "memory_filled_pct": 0.0,
-    "still_without_coordinates_count": 19,
-    "with_coordinates_after_count": 3446,
-    "with_coordinates_after_pct": 99.45
+    "still_without_coordinates_count": 1,
+    "with_coordinates_after_count": 1,
+    "with_coordinates_after_pct": 50.0
   },
-  "generated_at_utc": "2026-07-18T19:25:48.568970+00:00",
+  "generated_at_utc": "2026-07-18T19:30:56.771702+00:00",
   "memory_path": "data/supplemental_location_memory.json",
   "net_new_coordinates_from_memory": 0,
   "next_required_step": "Rows remain pending manual review. build_supplemental_manual_approval_queue.py will include memory-filled coordinates but does not auto-approve.",
@@ -38,5 +38,5 @@
     "public_map_modified": false,
     "staged_feed_modified": false
   },
-  "source_feed": "data/supplemental_events_staging_feed.json"
+  "source_feed": "/tmp/tmplk9fvr4j/data/supplemental_events_staging_feed.json"
 }

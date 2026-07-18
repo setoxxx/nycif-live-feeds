@@ -1,19 +1,61 @@
 {
   "artifact_type": "supplemental_discovery_merge_report",
   "baseline": {
-    "approved_discovery_total_after": 32035,
+    "approved_discovery_total_after": 32041,
     "approved_discovery_total_before": 28550,
-    "net_new_merged": 3485
+    "net_new_merged": 3491
   },
   "errors": [],
-  "generated_at_utc": "2026-07-18T19:21:46.874954+00:00",
+  "generated_at_utc": "2026-07-18T19:30:47.300429+00:00",
   "merge_authorized": true,
   "merge_stats": {
-    "approved_total_after_merge": 32035,
+    "approved_total_after_merge": 32041,
     "authorized": true,
-    "export_event_count": 3492,
-    "merged": 3485,
+    "export_event_count": 3498,
+    "merged": 3491,
     "sample_merged": [
+      {
+        "date": "2026-07-14",
+        "id": "nyc-citywide-events-calendar-api:1117076@2026-07-14",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1117076",
+        "title": "Access Benefits Fair Fares Promotion - Brooklyn"
+      },
+      {
+        "date": "2026-07-14",
+        "id": "nyc-citywide-events-calendar-api:1116776@2026-07-14",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1116776",
+        "title": "Access Benefits at The Riverside Church Food Pantry (Manhattan)"
+      },
+      {
+        "date": "2026-07-14",
+        "id": "nyc-citywide-events-calendar-api:1116816@2026-07-14",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1116816",
+        "title": "Access Benefits at Fair Fares Promotion - Manhattan"
+      },
+      {
+        "date": "2026-07-14",
+        "id": "nyc-citywide-events-calendar-api:1116836@2026-07-14",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1116836",
+        "title": "Access Benefits at Fair Fares Promotion - Queens"
+      },
+      {
+        "date": "2026-07-14",
+        "id": "nyc-citywide-events-calendar-api:1116636@2026-07-14",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1116636",
+        "title": "Access Benefits at Local NeighborhoodStat 2026 Season - Butler Houses"
+      },
+      {
+        "date": "2026-07-15",
+        "id": "nyc-citywide-events-calendar-api:1116736@2026-07-15",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1116736",
+        "title": "Access Benefits at Resource Event for Seniors at Jonas Bronck Apartments - Bronx"
+      },
       {
         "date": "2026-07-16",
         "id": "nyc-citywide-events-calendar-api:1053836@2026-07-16",
@@ -146,48 +188,6 @@
         "source_dataset": "nyc-parks-bigapps-events",
         "source_event_id": "2183891",
         "title": "It's My Park at Hunter's Point South Park"
-      },
-      {
-        "date": "2026-07-16",
-        "id": "nyc-parks-bigapps-events:2184192@2026-07-16",
-        "source_dataset": "nyc-parks-bigapps-events",
-        "source_event_id": "2184192",
-        "title": "KIM : Nostrand Playground"
-      },
-      {
-        "date": "2026-07-16",
-        "id": "nyc-parks-bigapps-events:2172727@2026-07-16",
-        "source_dataset": "nyc-parks-bigapps-events",
-        "source_event_id": "2172727",
-        "title": "KIM: Rev. Dr. Maggie Howard"
-      },
-      {
-        "date": "2026-07-16",
-        "id": "nyc-parks-bigapps-events:2184333@2026-07-16",
-        "source_dataset": "nyc-parks-bigapps-events",
-        "source_event_id": "2184333",
-        "title": "KIM: St. John's park"
-      },
-      {
-        "date": "2026-07-16",
-        "id": "nyc-parks-bigapps-events:2206940@2026-07-16",
-        "source_dataset": "nyc-parks-bigapps-events",
-        "source_event_id": "2206940",
-        "title": "Kids In Motion: Addabbo Playground"
-      },
-      {
-        "date": "2026-07-16",
-        "id": "nyc-parks-bigapps-events:2207217@2026-07-16",
-        "source_dataset": "nyc-parks-bigapps-events",
-        "source_event_id": "2207217",
-        "title": "Kids In Motion: Alley Springfield Playground"
-      },
-      {
-        "date": "2026-07-16",
-        "id": "nyc-parks-bigapps-events:2172730@2026-07-16",
-        "source_dataset": "nyc-parks-bigapps-events",
-        "source_event_id": "2172730",
-        "title": "Kids In Motion: Arrochar"
       }
     ],
     "skipped_duplicate": 7,
