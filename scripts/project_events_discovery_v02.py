@@ -36,6 +36,7 @@ from schema_v1_common import DEFAULT_TIMEZONE, envelope  # noqa: E402
 
 STAGED = ROOT / "data" / "nycif_staged_live_events.json"
 SUPP = ROOT / "data" / "supplemental_events_staging_feed.json"
+PROJECTED_FEAST = ROOT / "data" / "staging" / "projected_feast_events_map_intake.json"
 SUPP_APPROVAL_QUEUE = ROOT / "data" / "supplemental_manual_approval_queue.json"
 RAW = ROOT / "data" / "raw_nyc_open_data_snapshot.json"
 CAL = ROOT / "data" / "nyc_citywide_events_calendar_snapshot.json"
@@ -98,6 +99,43 @@ def start_of(row: dict) -> str | None:
 
 def end_of(row: dict) -> str | None:
     return row.get("end_date_time") or row.get("end") or None
+
+
+SEASON_START_DATE = "2026-07-14"
+SEASON_END_DATE = "2026-12-27"
+
+
+def _parse_iso_date(value: str | None) -> str | None:
+    if not value:
+        return None
+    match = re.match(r"(\d{4}-\d{2}-\d{2})", str(value).strip())
+    return match.group(1) if match else None
+
+
+def event_overlaps_season(row: dict, season_start: str, season_end: str) -> bool:
+    start = _parse_iso_date(preserve_date(row) or start_of(row))
+    if not start:
+        return False
+    end = _parse_iso_date(end_of(row)) or start
+    return start <= season_end and end >= season_start
+
+
+def staged_source_keys(rows: list[dict]) -> set[tuple[str, str]]:
+    return {source_parts_safe(row) for row in rows}
+
+
+def rejected_open_data_keys(dispositions: list[dict]) -> set[tuple[str, str]]:
+    rejected: set[tuple[str, str]] = set()
+    for row in dispositions:
+        if str(row.get("disposition") or "").lower() not in {"rejected", "drop", "invalid"} and "reject" not in str(
+            row.get("reason") or ""
+        ).lower():
+            continue
+        dataset = str(row.get("source_dataset") or "nyc-open-data").strip()
+        source_event_id = str(row.get("source_event_id") or "").strip()
+        if dataset and source_event_id:
+            rejected.add((dataset, source_event_id))
+    return rejected
 
 
 def source_url_of(row: dict) -> str | None:
@@ -688,13 +726,73 @@ def main() -> int:
             )
             accepted.append(event)
 
-    # Disposition reject reasons from open-data disposition file
+    # Raw open-data permits missing from the staged feed still need discovery intake
+    # so multi-day feasts and other map-ready events are not silently dropped.
     rejected_disp = [
         e
         for e in dispositions
         if str(e.get("disposition") or "").lower() in {"rejected", "drop", "invalid"}
         or "reject" in str(e.get("reason") or "").lower()
     ]
+    staged_keys = staged_source_keys(staged_rows)
+    rejected_keys = rejected_open_data_keys(rejected_disp)
+    unstaged_intake_count = 0
+    for i, row in enumerate(raw_rows):
+        dataset, source_event_id = source_parts_safe(row)
+        if (dataset, source_event_id) in staged_keys:
+            continue
+        if (dataset, source_event_id) in rejected_keys:
+            continue
+        if not event_overlaps_season(row, SEASON_START_DATE, SEASON_END_DATE):
+            continue
+        event = build_base_event(
+            row,
+            data_layer="review_supplemental",
+            index=200000 + i,
+            production_feed=False,
+            current_major_keys=current_major_keys,
+        )
+        if event is None:
+            invalid.append(invalid_item(row, "unstaged_open_data_missing_identity", "raw_unstaged_open_data"))
+            continue
+        event["nycif"]["raw_unstaged_open_data"] = True
+        event["nycif"]["classification_reason"] = (
+            str(event["nycif"].get("classification_reason") or "") + "+raw_unstaged_open_data_intake"
+        )
+        accepted.append(event)
+        unstaged_intake_count += 1
+
+    projected_feast_count = 0
+    if PROJECTED_FEAST.exists():
+        projected_rows = load_events(PROJECTED_FEAST)
+        accepted_keys = {source_parts_safe(row) for row in staged_rows}
+        for e in accepted:
+            src = e.get("source") if isinstance(e.get("source"), dict) else {}
+            accepted_keys.add(
+                (str(src.get("dataset") or ""), str(src.get("source_event_id") or ""))
+            )
+        for i, row in enumerate(projected_rows):
+            dataset, source_event_id = source_parts_safe(row)
+            if (dataset, source_event_id) in accepted_keys:
+                continue
+            event = build_base_event(
+                row,
+                data_layer="review_supplemental",
+                index=300000 + i,
+                production_feed=False,
+                current_major_keys=current_major_keys,
+            )
+            if event is None:
+                invalid.append(invalid_item(row, "projected_feast_missing_identity", "projected_feast_reference"))
+                continue
+            event["nycif"]["projected_feast_reference"] = True
+            event["nycif"]["classification_reason"] = (
+                str(event["nycif"].get("classification_reason") or "") + "+projected_feast_reference_intake"
+            )
+            accepted.append(event)
+            accepted_keys.add((dataset, source_event_id))
+            projected_feast_count += 1
+
     for row in rejected_disp:
         invalid.append(
             {
@@ -829,6 +927,8 @@ def main() -> int:
             "disposition_sum": standalone + grouped + list_only + maint + private,
             "open_data_rows": len(raw_rows),
             "open_data_staged": staged_covers,
+            "open_data_unstaged_intake": unstaged_intake_count,
+            "projected_feast_reference_intake": projected_feast_count,
             "open_data_disposition_rejected": len(rejected_disp),
             "calendar_parks_raw": cal_parks_raw,
             "calendar_parks_accepted_or_unlinked": cal_parks_accepted,
@@ -837,7 +937,7 @@ def main() -> int:
         "reconciles": reconciles_accept and cal_parks_gap == 0,
         "notes": [
             "Generated schema dumps and duplicative all-radar/enriched feeds excluded from raw intake.",
-            "Open-data accounting uses staged + disposition rejects; some dispositions may be non-reject classes.",
+            "Open-data accounting uses staged + unstaged season intake + disposition rejects.",
         ],
     }
     # Soften reconciles if disposition rejects double-count / overlap — document honesty

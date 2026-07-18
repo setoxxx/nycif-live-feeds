@@ -1,0 +1,56 @@
+{
+  "artifact_type": "nyc_feast_festival_reference_seed_bulk_patch",
+  "batch": "operator_gap_fill_wave4_2026_07",
+  "notes": [
+    "Wave 4 supplement: additional religious_feast rows for 50+ projected pin threshold.",
+    "Targets Woodhaven, Gerritsen/Resurrection, and Little Italy St. Rocco gaps."
+  ],
+  "entries": [
+    {
+      "key": "st-rocco-baxter-street-little-italy",
+      "canonical_name": "St. Rocco Feast (Baxter Street, Little Italy)",
+      "aliases": ["136th Annual St Rocco Feast Parade", "St Rocco Block Party Baxter Street"],
+      "claimed_permit_id": "856930",
+      "projected_start": "2026-08-15",
+      "projected_end": "2026-08-16",
+      "event_kind": "religious_feast",
+      "typical_multi_day": true,
+      "borough": "Manhattan",
+      "location_hint": "BAXTER STREET",
+      "display_location": "BAXTER STREET between CANAL STREET and HESTER STREET, Manhattan, NY",
+      "bulk_import_batch": "operator_gap_fill_wave4_2026_07"
+    },
+    {
+      "key": "our-lady-of-the-angel-woodhaven-feast",
+      "canonical_name": "Our Lady of the Angel Feast (Woodhaven)",
+      "aliases": ["OLOA Woodhaven Feast", "Our Lady of the Angels Parish Feast", "Woodhaven Italian Feast"],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-28",
+      "projected_end": "2026-09-01",
+      "event_kind": "religious_feast",
+      "typical_multi_day": true,
+      "borough": "Queens",
+      "location_hint": "WOODHAVEN",
+      "display_location": "84-02 78 STREET, Woodhaven, Queens, NY",
+      "reference_lat": 40.6891,
+      "reference_lng": -73.8525,
+      "bulk_import_batch": "operator_gap_fill_wave4_2026_07"
+    },
+    {
+      "key": "resurrection-parish-gerritsen-beach-feast",
+      "canonical_name": "Resurrection Parish Feast (Gerritsen Beach)",
+      "aliases": ["Resurrection Church Gerritsen Beach Feast", "Gerritsen Beach Parish Carnival"],
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-17",
+      "projected_end": "2026-07-19",
+      "event_kind": "religious_feast",
+      "typical_multi_day": true,
+      "borough": "Brooklyn",
+      "location_hint": "GERRITSEN AVENUE",
+      "display_location": "RESURRECTION CHURCH at 411 GERRITSEN AVENUE, Brooklyn, NY",
+      "reference_lat": 40.5862,
+      "reference_lng": -73.9243,
+      "bulk_import_batch": "operator_gap_fill_wave4_2026_07"
+    }
+  ]
+}

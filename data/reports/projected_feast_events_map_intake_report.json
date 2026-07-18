@@ -1,0 +1,127 @@
+{
+  "artifact_type": "projected_feast_events_map_intake_report",
+  "generated_at_utc": "2026-07-18T23:14:09Z",
+  "qa_pass": true,
+  "seed_count": 223,
+  "skipped_already_confirmed_in_raw": 3,
+  "intake_count": 220,
+  "map_ready_count": 220,
+  "list_only_count": 0,
+  "allow_live_geosearch": true,
+  "confirmed_raw_keys_ignored": [
+    [
+      "tvpp-9vvx",
+      "906428"
+    ],
+    [
+      "tvpp-9vvx",
+      "952432"
+    ],
+    [
+      "tvpp-9vvx",
+      "952465"
+    ]
+  ],
+  "samples": [
+    {
+      "key": "flushing-lunar-new-year-parade",
+      "title": "Flushing Lunar New Year Parade",
+      "start": "2026-02-21",
+      "end": "2026-02-21",
+      "latitude": 40.742602,
+      "longitude": -73.876637
+    },
+    {
+      "key": "lunar-new-year-parade-chinatown",
+      "title": "Lunar New Year Parade & Festival (Chinatown)",
+      "start": "2026-02-22",
+      "end": "2026-02-22",
+      "latitude": 40.717779,
+      "longitude": -74.002829
+    },
+    {
+      "key": "st-patricks-day-parade",
+      "title": "St. Patrick's Day Parade",
+      "start": "2026-03-17",
+      "end": "2026-03-17",
+      "latitude": 40.757055,
+      "longitude": -73.9782305
+    },
+    {
+      "key": "tartan-day-parade-festival",
+      "title": "Tartan Day Parade & Festival",
+      "start": "2026-04-11",
+      "end": "2026-04-11",
+      "latitude": 40.7426675,
+      "longitude": -73.989804
+    },
+    {
+      "key": "earth-day-initiative-street-fair",
+      "title": "Earth Day Initiative Street Fair",
+      "start": "2026-04-19",
+      "end": "2026-04-19",
+      "latitude": 40.7244785,
+      "longitude": -74.000395
+    },
+    {
+      "key": "greek-independence-day-parade",
+      "title": "Greek Independence Day Parade & Festival",
+      "start": "2026-04-19",
+      "end": "2026-04-19",
+      "latitude": 40.757055,
+      "longitude": -73.9782305
+    },
+    {
+      "key": "broadway-spring-festival",
+      "title": "Broadway Spring Festival",
+      "start": "2026-04-26",
+      "end": "2026-04-26",
+      "latitude": 40.722069,
+      "longitude": -74.002131
+    },
+    {
+      "key": "persian-day-parade",
+      "title": "Persian Day Parade & Festival",
+      "start": "2026-04-26",
+      "end": "2026-04-26",
+      "latitude": 40.747374,
+      "longitude": -73.984921
+    },
+    {
+      "key": "third-avenue-spring-fair",
+      "title": "Third Avenue Spring Fair",
+      "start": "2026-04-26",
+      "end": "2026-04-26",
+      "latitude": 40.7400815,
+      "longitude": -73.98581
+    },
+    {
+      "key": "japan-fes-new-york-spring",
+      "title": "Japan Fes New York (Spring Edition)",
+      "start": "2026-05-02",
+      "end": "2026-05-02",
+      "latitude": 40.7471125,
+      "longitude": -73.9900655
+    },
+    {
+      "key": "smorgasburg-prospect-park-spring",
+      "title": "Smorgasburg Prospect Park (Spring Opening)",
+      "start": "2026-05-03",
+      "end": "2026-05-03",
+      "latitude": 40.6609,
+      "longitude": -73.9683
+    },
+    {
+      "key": "haitian-day-parade",
+      "title": "Haitian Day Parade & Festival",
+      "start": "2026-05-10",
+      "end": "2026-05-10",
+      "latitude": 40.667646,
+      "longitude": -73.9528585
+    }
+  ],
+  "notes": [
+    "Projected feast rows are real recurring events staged for map visibility before SAPO raw intake.",
+    "Rows without coordinates remain in intake for list visibility and later geocoding."
+  ]
+}

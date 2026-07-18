@@ -1,0 +1,166 @@
+{
+  "artifact_type": "projected_feast_map_readiness_report",
+  "generated_at_utc": "2026-07-18T23:14:19Z",
+  "reference_today": "2026-07-18",
+  "qa_pass": true,
+  "seed_count": 223,
+  "intake_count": 220,
+  "map_ready_count": 220,
+  "list_only_count": 0,
+  "projected_discovery_count": 218,
+  "religious_feast_discovery_count": 50,
+  "borough_breakdown": {
+    "seed": {
+      "Queens": 47,
+      "Manhattan": 82,
+      "Brooklyn": 64,
+      "Bronx": 17,
+      "Staten Island": 13
+    },
+    "discovery": {
+      "Queens": 46,
+      "Manhattan": 80,
+      "Brooklyn": 62,
+      "Bronx": 17,
+      "Staten Island": 13
+    }
+  },
+  "event_kind_breakdown": {
+    "seed": {
+      "parade": 16,
+      "street_fair": 89,
+      "cultural_festival": 50,
+      "food_festival": 10,
+      "religious_feast": 53,
+      "holiday_market": 5
+    },
+    "discovery": {
+      "civic": 51,
+      "arts": 167
+    }
+  },
+  "top_20_upcoming_multi_day_feasts": [
+    {
+      "title": "Feast of Madonna del Carmine (St. Bernard, Bergen Beach)",
+      "start": "2026-07-23",
+      "end": "2026-07-26",
+      "borough": "Brooklyn",
+      "days": 4,
+      "coordinate_status": "map_ready"
+    },
+    {
+      "title": "St. Irene Festival (Astoria)",
+      "start": "2026-07-23",
+      "end": "2026-07-26",
+      "borough": "Queens",
+      "days": 4,
+      "coordinate_status": "map_ready"
+    },
+    {
+      "title": "Giglio Society of East Harlem Feast",
+      "start": "2026-08-06",
+      "end": "2026-08-09",
+      "borough": "Manhattan",
+      "days": 4,
+      "coordinate_status": "map_ready"
+    },
+    {
+      "title": "St. Rocco Feast",
+      "start": "2026-08-15",
+      "end": "2026-08-16",
+      "borough": "Bronx",
+      "days": 2,
+      "coordinate_status": "map_ready"
+    },
+    {
+      "title": "St. Rocco Feast (Baxter Street, Little Italy)",
+      "start": "2026-08-15",
+      "end": "2026-08-16",
+      "borough": "Manhattan",
+      "days": 2,
+      "coordinate_status": "map_ready"
+    },
+    {
+      "title": "18th Avenue Feast of Santa Rosalia",
+      "start": "2026-08-20",
+      "end": "2026-08-30",
+      "borough": "Brooklyn",
+      "days": 11,
+      "coordinate_status": "map_ready"
+    },
+    {
+      "title": "Our Lady of the Angel Feast (Woodhaven)",
+      "start": "2026-08-28",
+      "end": "2026-09-01",
+      "borough": "Queens",
+      "days": 5,
+      "coordinate_status": "map_ready"
+    },
+    {
+      "title": "Feast of SS. Crocifisso",
+      "start": "2026-09-04",
+      "end": "2026-09-07",
+      "borough": "Brooklyn",
+      "days": 4,
+      "coordinate_status": "map_ready"
+    },
+    {
+      "title": "Staten Island Italian Festival at Casa Belvedere",
+      "start": "2026-09-05",
+      "end": "2026-09-07",
+      "borough": "Staten Island",
+      "days": 3,
+      "coordinate_status": "map_ready"
+    },
+    {
+      "title": "Feast of San Gennaro",
+      "start": "2026-09-10",
+      "end": "2026-09-20",
+      "borough": "Manhattan",
+      "days": 11,
+      "coordinate_status": "map_ready"
+    }
+  ],
+  "spot_check_results": {
+    "st_bernard_bergen_beach": {
+      "found": true,
+      "title": "Feast of Madonna del Carmine (St. Bernard, Bergen Beach)",
+      "coordinate_status": "map_ready",
+      "is_major": true,
+      "end_date": "2026-07-26",
+      "source_dataset": "nyc-projected-feast-reference"
+    },
+    "san_gennaro": {
+      "found": true,
+      "title": "Feast of San Gennaro",
+      "coordinate_status": "map_ready",
+      "is_major": true,
+      "end_date": "2026-09-20",
+      "source_dataset": "nyc-projected-feast-reference"
+    },
+    "giglio": {
+      "found": true,
+      "title": "Giglio di Sant' Antonio Feast",
+      "coordinate_status": "map_ready",
+      "is_major": true,
+      "end_date": "2026-06-14",
+      "source_dataset": "nyc-projected-feast-reference"
+    },
+    "puerto_rican_day_parade": {
+      "found": true,
+      "title": "National Puerto Rican Day Parade",
+      "coordinate_status": "map_ready",
+      "is_major": true,
+      "end_date": "2026-06-14",
+      "source_dataset": "nyc-projected-feast-reference"
+    }
+  },
+  "remaining_gaps_wave4": [
+    "Woodhaven / Ozone Park parish feasts (limited SAPO historical coverage)",
+    "Gravesend / Marine Park church carnivals",
+    "Pelham Bay / Parkchester Bronx parish events",
+    "Great Kills / South Beach / New Dorp Staten Island feasts",
+    "Raw-confirmed rows awaiting human promotion (not auto-published)"
+  ],
+  "list_only_keys": []
+}

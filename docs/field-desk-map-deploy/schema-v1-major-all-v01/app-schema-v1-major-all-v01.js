@@ -94,15 +94,17 @@
   // ("food looks like food") from the title/tags, falling back to the category
   // emoji. First match wins, so put specific patterns before generic ones.
   const EVENT_EMOJI_RULES = [
-    [/\bfeast\b|giglio|san gennaro/i, '🍝'],
-    [/food|culinary|taste of|restaurant|eats|foodie|chili|pizza|bbq|barbecue|cook ?out|grill/i, '🍽️'],
+    [/holiday market|winter village|christmas lights|tree lighting|menorah lighting|union square holiday/i, '🎄'],
+    [/halloween|trick or treat/i, '🎃'],
+    [/\bfeast\b|giglio|san gennaro|carmel|carnival|mardi gras/i, '🎡'],
+    [/food festival|ninth avenue|smorgasburg|pickle day|oktoberfest|taste of|culinary fair|oyster festival|momo crawl/i, '🍽️'],
+    [/food|culinary|restaurant|eats|foodie|chili|pizza|bbq|barbecue|cook ?out|grill/i, '🍽️'],
     [/farmers? market|greenmarket|green market|produce|harvest|hhfm/i, '🛍️🥬'],
     [/night market|bazaar|flea|vendor|sidewalk sale|craft fair|makers/i, '🛍️'],
     [/wine|beer|brew|cocktail|spirits/i, '🍷'],
     [/ice cream|dessert|sweet|bake/i, '🍦'],
     [/coffee/i, '☕'],
-    [/parade/i, '🎊'],
-    [/carnival|mardi gras/i, '🎡'],
+    [/parade|march/i, '🎊'],
     [/fireworks/i, '🎆'],
     [/marathon|\b\d+ ?k\b|road race|run\b|running|jog|triathlon|duathlon|cycl|bike ride|criterium/i, '🏃'],
     [/yoga|zumba|pilates|fitness|workout|aerobic|bootcamp|tai chi|wellness/i, '🧘'],
@@ -374,13 +376,15 @@
       ? schemaEvent.tags.map(v => String(v || '')).filter(Boolean)
       : [];
     const startDay = eventDate(schemaEvent);
+    const endDay = eventEndDay(schemaEvent, startDay);
     const e = {
       ...schemaEvent,
       lat: schemaEvent.latitude,
       lng: schemaEvent.longitude,
       dateKey: startDay,
       startDay,
-      endDay: eventEndDay(schemaEvent, startDay),
+      endDay,
+      isMultiDay: Boolean(startDay && endDay && endDay > startDay),
       // Past = the event's end time has already elapsed (wall clock). Computed
       // live against the viewer's current moment so an event that ended earlier
       // today grays out too ("what's happening now" reads at a glance), not just
@@ -892,6 +896,9 @@
     if (e.displayEmoji === '🛍️🥬') {
       cls.push('marker--produce');
     }
+    if (e.isMultiDay) {
+      cls.push('marker--multiday');
+    }
     return cls;
   }
 
@@ -1043,13 +1050,17 @@
     const count = events.length;
     const medalEmoji = primary.medal && ED.MEDAL_META[primary.medal] ? ED.MEDAL_META[primary.medal].emoji : '';
     const cls = markerClassList(primary, count);
+    const multiDay = !!primary.isMultiDay;
+    const pinSize = multiDay ? 44 : 38;
+    const pinAnchor = multiDay ? 22 : 19;
+    const popupLift = count > 1 ? (multiDay ? 30 : 28) : (multiDay ? 26 : 24);
     const marker = L.marker([primary.lat, primary.lng], {
       icon: L.divIcon({
         className: 'marker-shell',
         html: `<span class="${cls.join(' ')}"><span class="emoji"></span>${medalEmoji ? '<span class="medal"></span>' : ''}${stackDotsHtml(count - 1)}</span>`,
-        iconSize: [38, count > 1 ? 46 : 38],
-        iconAnchor: [19, count > 1 ? 23 : 19],
-        popupAnchor: [0, count > 1 ? -28 : -24]
+        iconSize: [pinSize, count > 1 ? pinSize + 8 : pinSize],
+        iconAnchor: [pinAnchor, count > 1 ? pinAnchor + 4 : pinAnchor],
+        popupAnchor: [0, count > 1 ? -popupLift : -popupLift + 4]
       }),
       title: count > 1 ? `${count} events here` : primary.title,
       riseOnHover: true

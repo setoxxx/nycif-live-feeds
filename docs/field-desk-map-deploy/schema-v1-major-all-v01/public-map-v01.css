@@ -584,6 +584,24 @@ body.public-map-page .marker--produce .emoji {
   line-height: 1;
 }
 
+body.public-map-page .marker--multiday {
+  width: 42px;
+  height: 42px;
+  font-size: 22px;
+  border-width: 2.5px;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, .28);
+}
+
+body.public-map-page .marker--multiday.marker--major {
+  width: 44px;
+  height: 44px;
+  font-size: 24px;
+}
+
+body.public-map-page .marker--multiday .emoji {
+  line-height: 1;
+}
+
 body.public-map-page .marker .stack-dots {
   position: absolute;
   left: 50%;

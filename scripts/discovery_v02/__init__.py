@@ -152,6 +152,37 @@ def valid_nyc_coords(lat: Any, lng: Any) -> tuple[float | None, float | None, bo
     return lat_f, lng_f, True
 
 
+_PERMIT_COORD_RESOLVER: Any = None
+
+
+def _permit_coord_resolver() -> Any:
+    """Lazy read-only GeoSearch cache resolver for permit location text."""
+    global _PERMIT_COORD_RESOLVER
+    if _PERMIT_COORD_RESOLVER is not False and _PERMIT_COORD_RESOLVER is not None:
+        return _PERMIT_COORD_RESOLVER
+    try:
+        from coverage_gap_utils import resolve_supplemental_coordinates
+        from nyc_location_gazetteer import GAZETTEER_PATH, GEOSEARCH_CACHE_PATH, NYCLocationGazetteer
+        from nyc_location_resolver import NYCLocationResolver
+
+        if not GAZETTEER_PATH.exists():
+            _PERMIT_COORD_RESOLVER = False
+            return None
+        gazetteer = NYCLocationGazetteer.from_file(GAZETTEER_PATH)
+        cache_payload = json.loads(GEOSEARCH_CACHE_PATH.read_text(encoding="utf-8"))
+        entries = cache_payload.get("entries") if isinstance(cache_payload, dict) else {}
+        if not isinstance(entries, dict):
+            entries = {}
+        _PERMIT_COORD_RESOLVER = (
+            gazetteer,
+            NYCLocationResolver(gazetteer, entries, allow_live_geosearch=False),
+            resolve_supplemental_coordinates,
+        )
+    except Exception:
+        _PERMIT_COORD_RESOLVER = False
+    return _PERMIT_COORD_RESOLVER if _PERMIT_COORD_RESOLVER is not False else None
+
+
 def resolve_coords(row: dict[str, Any]) -> tuple[float | None, float | None, bool]:
     pairs = [
         (row.get("latitude"), row.get("longitude")),
@@ -162,6 +193,36 @@ def resolve_coords(row: dict[str, Any]) -> tuple[float | None, float | None, boo
         lat_f, lng_f, ok = valid_nyc_coords(lat, lng)
         if ok:
             return lat_f, lng_f, True
+    display = (
+        row.get("location")
+        or row.get("event_location")
+        or row.get("display_location")
+        or row.get("address")
+    )
+    if not display:
+        return None, None, False
+    resolver_bundle = _permit_coord_resolver()
+    if not resolver_bundle:
+        return None, None, False
+    gazetteer, resolver, resolve_supplemental_coordinates = resolver_bundle
+    fill = resolve_supplemental_coordinates(
+        {
+            "title": row.get("title") or row.get("event_name") or row.get("name"),
+            "display_location": display,
+            "address": display,
+            "borough": row.get("borough") or row.get("event_borough"),
+        },
+        gazetteer,
+        parks_overlap={},
+        resolver=resolver,
+        geoclient=None,
+        parks_properties_index={},
+    )
+    if not fill:
+        return None, None, False
+    lat_f, lng_f, ok = valid_nyc_coords(fill.get("proposed_lat"), fill.get("proposed_lng"))
+    if ok:
+        return lat_f, lng_f, True
     return None, None, False
 
 
@@ -476,11 +537,39 @@ def _classified(
     }
 
 
+RELIGIOUS_FEAST_PATTERN = (
+    r"\bfeast\b|giglio|san gennaro|mount carmel|mt\.?\s*carmel|church feast"
+)
+
+
 def classify_record(row: dict[str, Any]) -> dict[str, Any]:
     text = classification_blob(row)
     raw_cats = raw_categories(row)
     raw_category = raw_cats[0] if raw_cats else None
     event_role, role_reason = infer_event_role(row, text)
+
+    # Religious neighborhood feasts trump generic permit types like Street Festival.
+    if re.search(RELIGIOUS_FEAST_PATTERN, text):
+        tags = list(
+            dict.fromkeys(
+                ["religious", "feast", "festival", "annual"] + infer_tags("civic", text, event_role)
+            )
+        )[:12]
+        interests = infer_interests("civic", text, tags)
+        for interest in ("civic", "market"):
+            if interest not in interests:
+                interests.insert(0, interest)
+        return _classified(
+            category="civic",
+            interests=interests,
+            tags=tags,
+            event_role=event_role,
+            reason="high_confidence_religious_feast_before_event_type",
+            confidence="high",
+            raw_category=raw_category,
+            raw_cats=raw_cats,
+            role_reason=role_reason,
+        )
 
     # 0 Official NYC permit type wins first.
     # Staged rows often carry a coarse/wrong category (e.g. Production Event
@@ -587,8 +676,15 @@ def classify_record(row: dict[str, Any]) -> dict[str, Any]:
             "high_confidence_semantic_education",
         ),
         (
+            "civic",
+            r"\bfeast\b|giglio|san gennaro|mount carmel|mt\.?\s*carmel|church feast",
+            ["civic", "market"],
+            ["religious", "feast", "festival", "annual"],
+            "high_confidence_semantic_religious_feast",
+        ),
+        (
             "arts",
-            r"\bfeast\b|street festival|san gennaro|giglio|summerstage|outdoor movie|film festival",
+            r"street festival|summerstage|outdoor movie|film festival",
             ["arts"],
             [],
             "high_confidence_semantic_festival_arts",
@@ -662,14 +758,21 @@ def classify_record(row: dict[str, Any]) -> dict[str, Any]:
     )
 
 
+def _registry_title_norm(value: Any) -> str:
+    text = norm_text(value)
+    return re.sub(r"\bmt\b", "mount", text)
+
+
 def match_recurring_registry(row: dict[str, Any]) -> tuple[dict[str, Any] | None, int, list[str]]:
     text = classification_blob(row)
     borough = borough_label(row.get("borough") or row.get("event_borough"))
     event_type = norm_text(row.get("event_type") or row.get("type"))
     for entry in load_registry():
         signals = []
-        aliases = [norm_text(a) for a in entry.get("aliases") or []]
-        title = norm_text(row.get("title") or row.get("name") or row.get("event_name") or row.get("search_label"))
+        aliases = [_registry_title_norm(a) for a in entry.get("aliases") or []]
+        title = _registry_title_norm(
+            row.get("title") or row.get("name") or row.get("event_name") or row.get("search_label")
+        )
         if any(alias and (alias in title or title in alias) for alias in aliases):
             signals.append("recognized_alias")
         # Alias is mandatory — prevents generic parade/borough false matches.
