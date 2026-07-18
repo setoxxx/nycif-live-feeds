@@ -1,17 +1,17 @@
 {
-  "approval_queue_count": 3666,
-  "approved_count": 3498,
-  "calendar_only_count": 2251,
-  "generated_at_utc": "2026-07-18T19:42:47.924648+00:00",
-  "incremental_net_new_count": 21,
+  "approval_queue_count": 3678,
+  "approved_count": 3520,
+  "calendar_only_count": 2263,
+  "generated_at_utc": "2026-07-18T19:50:55.394275+00:00",
+  "incremental_net_new_count": 12,
   "intake_counts": {
-    "calendar_only": 2251,
+    "calendar_only": 2263,
     "parks_only": 1415
   },
   "location_cache_modified": false,
   "next_required_step": "Run validate_supplemental_manual_approvals.py. Review net-new pending rows only.",
   "parks_only_count": 1415,
-  "pending_count": 26,
+  "pending_count": 16,
   "phase": "m11_incremental_supplemental_manual_approval_queue",
   "promotion_allowed": false,
   "promotion_allowed_count": 0,
@@ -21,10 +21,10 @@
   "source_feed": "data/supplemental_events_staging_feed.json",
   "staged_feed_modified": false,
   "status_counts": {
-    "approved": 3498,
-    "pending": 26,
+    "approved": 3520,
+    "pending": 16,
     "rejected": 142
   },
-  "with_coordinates_count": 3635,
+  "with_coordinates_count": 3647,
   "without_coordinates_count": 31
 }
