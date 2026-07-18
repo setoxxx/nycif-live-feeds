@@ -257,8 +257,12 @@
     }, 700);
   });
 
-  map.on('popupclose', () => {
+  map.on('popupclose', event => {
     document.body.classList.remove('nycif-popup-open');
+    const source = event.popup && event.popup._source;
+    if (source && source.__nycifStack) {
+      source.__nycifStack.selected = null;
+    }
   });
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors',
@@ -517,9 +521,6 @@
         continue;
       }
       const existing = state.byId.get(e.id);
-      if (existing?.marker) {
-        e.marker = existing.marker;
-      }
       if (existing?.isMajor && !e.isMajor) {
         e.isMajor = true;
         e.significance = 'major';
@@ -763,6 +764,141 @@
     return shortDate(start);
   }
 
+  function coordKeyFor(lat, lng) {
+    return `${Number(lat).toFixed(5)},${Number(lng).toFixed(5)}`;
+  }
+
+  function groupEventsByCoord(eventList) {
+    const groups = new Map();
+    for (const e of eventList) {
+      const key = coordKeyFor(e.lat, e.lng);
+      if (!groups.has(key)) {
+        groups.set(key, []);
+      }
+      groups.get(key).push(e);
+    }
+    for (const group of groups.values()) {
+      group.sort((a, b) => b.priority - a.priority || String(a.title).localeCompare(String(b.title)));
+    }
+    return groups;
+  }
+
+  function stackDotsHtml(extraCount) {
+    if (extraCount <= 0) {
+      return '';
+    }
+    const shown = Math.min(extraCount, 3);
+    let html = '<span class="stack-dots" aria-hidden="true">';
+    for (let i = 0; i < shown; i += 1) {
+      html += '<span class="stack-dot"></span>';
+    }
+    if (extraCount > 3) {
+      html += `<span class="stack-more">+${extraCount - 3}</span>`;
+    }
+    html += '</span>';
+    return html;
+  }
+
+  function markerClassList(e, stackCount) {
+    const cls = ['marker', `marker--${e.categoryKey}`];
+    if (e.isPast) {
+      cls.push('marker--past');
+    }
+    if (e.isReview) {
+      cls.push('marker--review');
+    }
+    if (e.photoPick) {
+      cls.push('marker--photo');
+    }
+    if (e.isMajor) {
+      cls.push('marker--major');
+    }
+    if (e.medal) {
+      cls.push(`marker--medal-${e.medal}`);
+    }
+    if (stackCount > 1) {
+      cls.push('marker--stacked');
+    }
+    return cls;
+  }
+
+  function popupPicker(events, marker) {
+    const root = document.createElement('article');
+    root.className = 'popup-card popup-card--picker';
+    appendText(root, 'p', `${events.length} events at this spot`, 'popup-picker-label');
+    appendText(root, 'h2', 'Choose an event');
+    const grid = document.createElement('div');
+    grid.className = 'popup-stack-grid';
+    events.forEach(ev => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'popup-stack-item';
+      btn.setAttribute('aria-label', ev.title);
+      appendText(btn, 'span', ev.displayEmoji, 'popup-stack-emoji');
+      appendText(btn, 'span', ev.title, 'popup-stack-title');
+      btn.addEventListener('click', evt => {
+        evt.preventDefault();
+        evt.stopPropagation();
+        openStackDetail(marker, events, ev);
+      });
+      grid.appendChild(btn);
+    });
+    root.appendChild(grid);
+    return root;
+  }
+
+  function openStackPicker(marker, events) {
+    if (!marker || !events?.length) {
+      return;
+    }
+    marker.__nycifStack = { events, selected: null };
+    marker.setPopupContent(events.length === 1 ? popupRoot(events[0]) : popupPicker(events, marker));
+    if (marker.isPopupOpen()) {
+      marker.getPopup().update();
+      syncPopupBackButton(marker);
+    } else {
+      marker.openPopup();
+    }
+  }
+
+  function openStackDetail(marker, events, selected) {
+    if (!marker || !selected) {
+      return;
+    }
+    marker.__nycifStack = { events, selected };
+    marker.setPopupContent(popupRoot(selected));
+    if (marker.isPopupOpen()) {
+      marker.getPopup().update();
+      syncPopupBackButton(marker);
+    } else {
+      marker.openPopup();
+    }
+  }
+
+  function syncPopupBackButton(marker) {
+    const popup = marker.getPopup();
+    const wrapper = popup?.getElement()?.querySelector('.leaflet-popup-content-wrapper');
+    if (!wrapper) {
+      return;
+    }
+    wrapper.querySelector('.nycif-popup-back')?.remove();
+    const stack = marker.__nycifStack;
+    if (!stack?.selected || stack.events.length <= 1) {
+      return;
+    }
+    const back = document.createElement('button');
+    back.type = 'button';
+    back.className = 'nycif-popup-back';
+    back.setAttribute('aria-label', 'Back to events at this location');
+    back.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 4a8 8 0 1 0 0 16 8 8 0 0 0 0-16zm1 4v2.17l2.59 2.59L14 14.83 9.17 10 14 5.17 15.59 6.76 13 9.35V8h2z"/></svg>';
+    back.addEventListener('click', evt => {
+      evt.preventDefault();
+      evt.stopPropagation();
+      openStackPicker(marker, stack.events);
+    });
+    wrapper.appendChild(back);
+  }
+
   function popupRoot(e) {
     const root = document.createElement('article');
     root.className = 'popup-card';
@@ -797,48 +933,41 @@
     return root;
   }
 
-  function makeMarker(e) {
-    const cls = ['marker', `marker--${e.categoryKey}`];
-    if (e.isPast) {
-      cls.push('marker--past');
-    }
-    if (e.isReview) {
-      cls.push('marker--review');
-    }
-    if (e.photoPick) {
-      cls.push('marker--photo');
-    }
-    if (e.isMajor) {
-      cls.push('marker--major');
-    }
-    if (e.medal) {
-      cls.push(`marker--medal-${e.medal}`);
-    }
-    const medalEmoji = e.medal && ED.MEDAL_META[e.medal] ? ED.MEDAL_META[e.medal].emoji : '';
-    const marker = L.marker([e.lat, e.lng], {
+  function makeStackMarker(events) {
+    const primary = events[0];
+    const count = events.length;
+    const medalEmoji = primary.medal && ED.MEDAL_META[primary.medal] ? ED.MEDAL_META[primary.medal].emoji : '';
+    const cls = markerClassList(primary, count);
+    const marker = L.marker([primary.lat, primary.lng], {
       icon: L.divIcon({
         className: 'marker-shell',
-        html: `<span class="${cls.join(' ')}"><span class="emoji"></span>${medalEmoji ? '<span class="medal"></span>' : ''}</span>`,
-        iconSize: [38, 38],
-        iconAnchor: [19, 19],
-        popupAnchor: [0, -24]
+        html: `<span class="${cls.join(' ')}"><span class="emoji"></span>${medalEmoji ? '<span class="medal"></span>' : ''}${stackDotsHtml(count - 1)}</span>`,
+        iconSize: [38, count > 1 ? 46 : 38],
+        iconAnchor: [19, count > 1 ? 23 : 19],
+        popupAnchor: [0, count > 1 ? -28 : -24]
       }),
-      title: e.title,
+      title: count > 1 ? `${count} events here` : primary.title,
       riseOnHover: true
     });
-    // Set emoji via textContent after icon create for trusted static shell only.
+    marker.__nycifStack = { events, selected: null };
     marker.on('add', () => {
       const root = marker.getElement();
       const emoji = root?.querySelector('.emoji');
       if (emoji) {
-        emoji.textContent = e.displayEmoji;
+        emoji.textContent = primary.displayEmoji;
       }
       const medal = root?.querySelector('.medal');
       if (medal && medalEmoji) {
         medal.textContent = medalEmoji;
       }
     });
-    marker.bindPopup(popupRoot(e), {
+    marker.bindPopup(() => {
+      const stack = marker.__nycifStack || { events, selected: null };
+      if (stack.selected || stack.events.length === 1) {
+        return popupRoot(stack.selected || stack.events[0]);
+      }
+      return popupPicker(stack.events, marker);
+    }, {
       maxWidth: 360,
       minWidth: 300,
       autoPan: false,
@@ -848,6 +977,30 @@
       closeOnClick: true,
       className: 'nycif-event-popup'
     });
+    marker.on('popupopen', () => syncPopupBackButton(marker));
+    return marker;
+  }
+
+  const stackMarkerCache = new Map();
+
+  function ensureStackMarker(events) {
+    if (!events.length) {
+      return null;
+    }
+    const key = coordKeyFor(events[0].lat, events[0].lng);
+    if (stackMarkerCache.has(key)) {
+      const marker = stackMarkerCache.get(key);
+      events.forEach(e => {
+        e.marker = marker;
+      });
+      marker.__nycifStack = { events, selected: marker.__nycifStack?.selected || null };
+      return marker;
+    }
+    const marker = makeStackMarker(events);
+    events.forEach(e => {
+      e.marker = marker;
+    });
+    stackMarkerCache.set(key, marker);
     return marker;
   }
 
@@ -855,10 +1008,15 @@
     if (!markerEligible(e)) {
       return null;
     }
-    if (!e.marker) {
-      e.marker = makeMarker(e);
+    if (e.marker) {
+      return e.marker;
     }
-    return e.marker;
+    const key = coordKeyFor(e.lat, e.lng);
+    const stack = state.events.filter(ev => markerEligible(ev)
+      && eventMatches(ev)
+      && coordKeyFor(ev.lat, ev.lng) === key);
+    stack.sort((a, b) => b.priority - a.priority || String(a.title).localeCompare(String(b.title)));
+    return ensureStackMarker(stack.length ? stack : [e]);
   }
 
   function expandedBounds() {
@@ -876,6 +1034,7 @@
 
   function renderMarkers(visible) {
     const t0 = performance.now();
+    stackMarkerCache.clear();
     if (markers.clearLayers) {
       markers.clearLayers();
     }
@@ -883,9 +1042,13 @@
     const bounds = expandedBounds();
     const inView = bounds ? mapReady.filter(e => bounds.contains([e.lat, e.lng])) : mapReady;
     const candidates = (inView.length ? inView : mapReady).slice(0, MARKER_SOFT_CAP);
+    candidates.forEach(e => {
+      e.marker = null;
+    });
+    const groups = groupEventsByCoord(candidates);
     const batch = [];
-    for (const e of candidates) {
-      const marker = ensureMarker(e);
+    for (const group of groups.values()) {
+      const marker = ensureStackMarker(group);
       if (marker) {
         batch.push(marker);
       }
@@ -1092,7 +1255,17 @@
       markers.addLayer(marker);
     }
     map.flyTo([e.lat, e.lng], Math.max(map.getZoom(), 15), { duration: 0.55 });
-    setTimeout(() => marker?.openPopup(), 420);
+    setTimeout(() => {
+      if (!marker) {
+        return;
+      }
+      const stack = marker.__nycifStack?.events || [e];
+      if (stack.length > 1) {
+        openStackDetail(marker, stack, e);
+      } else {
+        marker.openPopup();
+      }
+    }, 420);
     setDesk(false);
   }
 

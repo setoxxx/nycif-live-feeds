@@ -96,5 +96,5 @@ jobs:
             echo "Field-desk already has canonical map + admin runtime."
             exit 0
           fi
-          git commit -m "Move tip jar to brand header; fix control stack; add share and social links"
+          git commit -m "Deploy tip jar header layout, stacked event picker, and map chrome fixes"
           git push origin main

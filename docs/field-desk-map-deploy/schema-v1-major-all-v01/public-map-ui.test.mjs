@@ -8,6 +8,7 @@ import { dirname, join } from 'node:path';
 
 const deployRoot = dirname(fileURLToPath(import.meta.url));
 const indexHtml = readFileSync(join(deployRoot, 'index.html'), 'utf8');
+const appJs = readFileSync(join(deployRoot, 'app-schema-v1-major-all-v01.js'), 'utf8');
 const tipJarSource = readFileSync(join(deployRoot, '..', 'shared', 'nycif-tip-jar-v01.js'), 'utf8');
 const publicMapCss = readFileSync(join(deployRoot, 'public-map-v01.css'), 'utf8');
 
@@ -41,4 +42,11 @@ test('public map css anchors brand header left and stacks right controls', () =>
   assert.match(publicMapCss, /\.brand-header-row/);
   assert.match(publicMapCss, /\.map-controls/);
   assert.match(publicMapCss, /Filters, GPS, Bug, then Near Me/);
+});
+
+test('stacked location popups expose picker grid and back control styles', () => {
+  assert.match(publicMapCss, /\.popup-stack-grid/);
+  assert.match(publicMapCss, /\.nycif-popup-back/);
+  assert.match(appJs, /openStackDetail/);
+  assert.match(appJs, /popupPicker/);
 });
