@@ -22,7 +22,8 @@ const publicMapCss = readFileSync(join(repoRoot, 'public-map-v01.css'), 'utf8');
 
 test('production index mounts tip jar beside the NYCIF brand header', () => {
   assert.match(indexHtml, /brand-header-row/);
-  assert.match(indexHtml, /nycif-tip-jar-v01\.js\?v=04/);
+  assert.match(indexHtml, /public-map-v08/);
+  assert.match(indexHtml, /nycif-tip-jar-v01\.js\?v=05/);
 });
 
 test('upper-right control stack has Filters, GPS, Bug, then Near Me', () => {
@@ -44,6 +45,8 @@ test('tip jar exposes share template and social profile links', () => {
   assert.match(tipJarSource, /tiktok\.com\/@howardweiss/);
   assert.match(tipJarSource, /youtube\.com\/@youfoundhowie/);
   assert.match(tipJarSource, /brand-header-row/);
+  assert.match(tipJarSource, /Follow Howard Weiss/);
+  assert.match(tipJarSource, /nycif-tip-jar-strobe/);
 });
 
 test('public map css anchors brand header left and stacks right controls', () => {

@@ -1,75 +1,58 @@
-# Field-desk public map deploy
+# Field-desk public map deploy (RC)
 
-## Complete-the-Map Pages handshake (READY — apply to field-desk)
+Single canonical public map runtime for NYC In Focus GitHub Pages.
 
-Backend feed side is already live on `nycif-live-feeds` main (#185).  
-GitHub Pages still needs these three files copied into `nycif-field-desk`:
+## Canonical runtime (only path for production)
+
+| Source (this repo) | Field Desk Pages root |
+|---|---|
+| `schema-v1-major-all-v01/index.html` | `index.html` |
+| `schema-v1-major-all-v01/app-schema-v1-major-all-v01.js` | `app-schema-v1-major-all-v01.js` |
+| `schema-v1-major-all-v01/public-map-v01.css` | `public-map-v01.css` |
+| `schema-v1-major-all-v01/service-worker.js` | `service-worker.js` |
+| `discovery-taxonomy-v02/discovery-patch-v02.js` | `discovery-patch-v02.js` |
+| `discovery-taxonomy-v02/public-approved-overlays-v01.js` | `public-approved-overlays-v01.js` |
+| `shared/nycif-tip-jar-v01.js` | `nycif-tip-jar-v01.js` |
+
+Cache bust token: **`public-map-v08`** (RC). Tip jar module: **`nycif-tip-jar-v01.js?v=05`**.
+
+## Deploy
+
+**Automatic (preferred):** merge to `main` — the `Deploy to Field Desk Pages` workflow copies canonical sources into `setoxxx/nycif-field-desk` and pushes.
+
+**Manual sync** (when you have a local field-desk checkout):
 
 ```bash
-# From a machine/agent WITH write access to nycif-field-desk:
 ./scripts/sync_complete_map_to_field_desk.sh /path/to/nycif-field-desk
-cd /path/to/nycif-field-desk
-git push -u origin HEAD
-gh pr create --title "Deploy Complete-the-Map runtime to Pages" --body "Sport emojis + lane handshake."
-gh pr merge --squash
 ```
 
-Or open a Cloud Agent **on the field-desk repo** (not live-feeds) and run the same copy from:
+## Retired legacy runtimes (removed from this repo)
 
-- `schema-v1-major-all-v01/app-schema-v1-major-all-v01.js`
-- `discovery-taxonomy-v02/discovery-patch-v02.js`
-- `schema-v1-major-all-v01/index.html` (`?v=public-map-v07`)
+These older public-map entrypoints are **not** part of RC and were removed from `docs/field-desk-map-deploy/`:
 
-Issues: https://github.com/setoxxx/nycif-field-desk/issues/127 https://github.com/setoxxx/nycif-field-desk/issues/128
+- `app-v06-safe.js` + root `index.html` (M10 staged-live map)
+- Root `public-map-defaults-v01.js` duplicate
+- `COMPLETE_MAP_PAGES_HANDSHAKE.patch`
 
----
+`desk.html` on Field Desk may still reference `app-v06-safe.js` for the operator desk overlay — that is separate from the public map and will be migrated in a later milestone.
 
-# Field-desk public map deploy (M10 staged live)
+## Staging / review lanes (not production)
 
-Civic people-facing Review/Help package (Jobs / Volunteer / markets / help places): see [`civic-people-facing-v01/README.md`](./civic-people-facing-v01/README.md). That lane stays staging/review-only and does not replace Approved permits.
+| Package | Purpose |
+|---|---|
+| [`supplemental-export-preview/`](./supplemental-export-preview/README.md) | M11 approved export preview (`approved-export-preview.html`) |
+| [`civic-people-facing-v01/`](./civic-people-facing-v01/README.md) | Jobs / volunteer / help-places review lane (`?v=civic-people-facing-v01`) |
 
-Copy these files into `nycif-field-desk/` root (and admin panel into `admin/`):
+Do not point WordPress or the public embed at staging lanes.
 
-```bash
-cp docs/field-desk-map-deploy/app-v06-safe.js ../nycif-field-desk/
-cp docs/field-desk-map-deploy/public-map-defaults-v01.js ../nycif-field-desk/
-cp docs/field-desk-map-deploy/index.html ../nycif-field-desk/
-cp docs/field-desk-admin-deploy/admin/live-pipeline-panel-v01.js ../nycif-field-desk/admin/
-git add app-v06-safe.js public-map-defaults-v01.js index.html admin/live-pipeline-panel-v01.js
-git commit -m "Public map: staged live default (M10 resolver-backed feed)"
-git push -u origin cursor/live-staged-map-m10-5215
-```
+## Verify after deploy
 
-## What changes
-
-- **Default boot feed:** staged (`data/nycif_staged_live_events.json`) instead of stale major feed
-- **Filters:** parks + general enabled; major-only off
-- **Marker cap:** 2,000 for staged mode
-- **Cache bust:** `?v=m10-staged-live` on WordPress iframe
-
-## Prerequisites
-
-Run on `nycif-live-feeds` main (or M10 PR) first:
-
-```bash
-NYCIF_ALLOW_LIVE_GEOSEARCH=yes python3 scripts/build_test_enriched_feed.py
-python3 scripts/build_staged_production_feed.py
-python3 scripts/build_public_map_feeds.py
-```
-
-Merge backend PR, then deploy field-desk to GitHub Pages.
+- https://setoxxx.github.io/nycif-field-desk/?v=public-map-v08&resetFilters=1&feeds=main
+- Tip jar: clear glass button, police strobe on random pulse, centered panel, “Follow Howard Weiss”
+- https://nycinfocus.com/map/ — bump iframe `v=` to `public-map-v08` after Pages deploy + QA
 
 ## Supplemental approved export preview (M11)
-
-See [`supplemental-export-preview/README.md`](./supplemental-export-preview/README.md).
 
 ```bash
 ./scripts/sync_supplemental_export_preview_to_field_desk.sh /path/to/nycif-field-desk
 ```
-
-Expected QA: **3,566** preview markers on `approved-export-preview.html`.
-
-## Verify
-
-- https://setoxxx.github.io/nycif-field-desk/ — `?v=public-map-v07` runtime (Complete-the-Map handshake)
-- https://nycinfocus.com/map/ — fullscreen shell per [`docs/wordpress-plugin-deploy/nycinfocus-map-page-v1-freeze.md`](../wordpress-plugin-deploy/nycinfocus-map-page-v1-freeze.md); bump iframe `v=` only after Pages deploy + QA

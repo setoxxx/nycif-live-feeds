@@ -94,25 +94,27 @@
         position: relative;
         z-index: 1300;
         display: grid;
-        justify-items: end;
+        justify-items: center;
         gap: 8px;
         flex: 0 0 auto;
       }
       .nycif-tip-jar-btn {
         width: 42px;
         height: 42px;
-        border: 2px solid rgba(251,191,36,.55);
+        border: 1px solid rgba(255,255,255,.55);
         border-radius: 999px;
-        background: linear-gradient(180deg, rgba(120,53,15,.95), rgba(69,26,3,.95));
-        box-shadow: 0 10px 24px rgba(0,0,0,.35);
+        background: rgba(255,255,255,.78);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 8px 24px rgba(0,0,0,.22);
         cursor: pointer;
         display: grid;
         place-items: center;
         padding: 0;
-        transition: transform .2s ease, border-color .2s ease;
+        transition: transform .2s ease, border-color .2s ease, background .12s ease, box-shadow .12s ease;
       }
       .nycif-tip-jar-btn:focus-visible {
-        outline: 2px solid #fbbf24;
+        outline: 2px solid #60a5fa;
         outline-offset: 2px;
       }
       .nycif-tip-jar-emoji {
@@ -121,8 +123,43 @@
         transform-origin: 50% 85%;
         display: block;
       }
+      .nycif-tip-jar.shake .nycif-tip-jar-btn {
+        animation: nycif-tip-jar-strobe 0.11s linear infinite;
+      }
       .nycif-tip-jar.shake .nycif-tip-jar-emoji {
         animation: nycif-tip-jar-shake 0.55s ease-in-out;
+      }
+      @keyframes nycif-tip-jar-strobe {
+        0% {
+          background: rgba(255,255,255,.95);
+          border-color: rgba(255,255,255,.9);
+          box-shadow: 0 0 18px rgba(255,255,255,.95), 0 0 32px rgba(255,255,255,.55);
+        }
+        20% {
+          background: rgba(220,38,38,.92);
+          border-color: rgba(252,165,165,.95);
+          box-shadow: 0 0 22px rgba(239,68,68,.95), 0 0 40px rgba(220,38,38,.65);
+        }
+        40% {
+          background: rgba(255,255,255,.95);
+          border-color: rgba(255,255,255,.9);
+          box-shadow: 0 0 18px rgba(255,255,255,.95), 0 0 32px rgba(255,255,255,.55);
+        }
+        60% {
+          background: rgba(37,99,235,.92);
+          border-color: rgba(147,197,253,.95);
+          box-shadow: 0 0 22px rgba(59,130,246,.95), 0 0 40px rgba(37,99,235,.65);
+        }
+        80% {
+          background: rgba(255,255,255,.95);
+          border-color: rgba(255,255,255,.9);
+          box-shadow: 0 0 18px rgba(255,255,255,.95), 0 0 32px rgba(255,255,255,.55);
+        }
+        100% {
+          background: rgba(220,38,38,.92);
+          border-color: rgba(252,165,165,.95);
+          box-shadow: 0 0 22px rgba(239,68,68,.95), 0 0 40px rgba(220,38,38,.65);
+        }
       }
       @keyframes nycif-tip-jar-shake {
         0%, 100% { transform: rotate(0deg) translateY(0); }
@@ -135,31 +172,38 @@
       .nycif-tip-jar-panel {
         position: absolute;
         top: calc(100% + 8px);
-        right: 0;
+        left: 50%;
+        right: auto;
         min-width: 220px;
+        max-width: min(280px, calc(100vw - 24px));
         padding: 12px;
         border-radius: 14px;
-        border: 1px solid rgba(251,191,36,.35);
-        background: rgba(17,24,39,.96);
+        border: 1px solid rgba(255,255,255,.22);
+        background: rgba(17,24,39,.94);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
         box-shadow: 0 16px 36px rgba(0,0,0,.35);
-        color: #fde68a;
-        transform-origin: top right;
+        color: #f3f4f6;
+        transform: translateX(-50%);
+        transform-origin: top center;
+        text-align: center;
       }
       .nycif-tip-jar.is-open .nycif-tip-jar-panel {
         min-width: 252px;
         padding: 14px 14px 16px;
-        border-color: rgba(251,191,36,.5);
-        box-shadow: 0 20px 44px rgba(0,0,0,.42), 0 0 0 1px rgba(251,191,36,.12);
+        border-color: rgba(255,255,255,.28);
+        box-shadow: 0 20px 44px rgba(0,0,0,.42), 0 0 0 1px rgba(255,255,255,.08);
       }
       .nycif-tip-jar.is-open .nycif-tip-jar-btn {
         transform: scale(1.04);
-        border-color: rgba(252,211,77,.75);
+        border-color: rgba(255,255,255,.75);
+        background: rgba(255,255,255,.9);
       }
       .nycif-tip-jar-panel[hidden] { display: none; }
       .nycif-tip-jar-panel h3 {
         margin: 0 0 8px;
         font: 700 12px/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        color: #fcd34d;
+        color: #f9fafb;
       }
       .nycif-tip-jar.is-open .nycif-tip-jar-panel h3 {
         margin-bottom: 10px;
@@ -168,6 +212,7 @@
       .nycif-tip-jar-share {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 10px;
         width: 100%;
         padding: 8px 10px;
@@ -175,10 +220,10 @@
         border-radius: 10px;
         border: 1px solid rgba(255,255,255,.1);
         background: rgba(255,255,255,.08);
-        color: #fff7ed;
+        color: #f9fafb;
         font: 600 13px/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         cursor: pointer;
-        text-align: left;
+        text-align: center;
         transition: background .18s ease, border-color .18s ease, transform .22s ease, padding .22s ease;
       }
       .nycif-tip-jar.is-open .nycif-tip-jar-share {
@@ -195,13 +240,14 @@
       .nycif-tip-jar-panel a.nycif-tip-pay {
         display: flex;
         align-items: center;
+        justify-content: center;
         gap: 10px;
         padding: 8px 10px;
         margin-top: 6px;
         border-radius: 10px;
         border: 1px solid rgba(255,255,255,.06);
         background: rgba(255,255,255,.05);
-        color: #fff7ed;
+        color: #f9fafb;
         text-decoration: none;
         font: 600 13px/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         transition: background .18s ease, border-color .18s ease, box-shadow .18s ease,
@@ -246,12 +292,13 @@
         font: 700 10px/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         letter-spacing: .04em;
         text-transform: uppercase;
-        color: rgba(253,230,138,.75);
+        color: rgba(243,244,246,.8);
       }
       .nycif-tip-jar-social {
         display: flex;
         gap: 8px;
         align-items: center;
+        justify-content: center;
       }
       .nycif-tip-jar-social a {
         display: grid;
@@ -364,6 +411,10 @@
         .nycif-tip-jar.is-open .nycif-tip-jar-share {
           animation: none;
         }
+        .nycif-tip-jar.shake .nycif-tip-jar-btn {
+          animation: none;
+          border-color: rgba(251,191,36,.75);
+        }
         .nycif-tip-jar.shake .nycif-tip-jar-emoji {
           animation: none;
         }
@@ -406,7 +457,7 @@
             <span class="pay-label">${esc(link.label)}</span>
           </a>
         `).join('')}
-        <p class="nycif-tip-jar-social-label">Follow Howie</p>
+        <p class="nycif-tip-jar-social-label">Follow Howard Weiss</p>
         <div class="nycif-tip-jar-social">
           ${SOCIAL_LINKS.map(link => `
             <a class="nycif-tip-social nycif-tip-social--${esc(link.id)}" href="${esc(link.url)}"
@@ -478,7 +529,7 @@
           return;
         }
         root.classList.add('shake');
-        window.setTimeout(() => root.classList.remove('shake'), 560);
+        window.setTimeout(() => root.classList.remove('shake'), 820);
         scheduleRandomShake();
       }, waitMs);
     };
@@ -486,7 +537,7 @@
   }
 
   window.NYCIF_TIP_JAR = {
-    VERSION: 'nycif-tip-jar-v04',
+    VERSION: 'nycif-tip-jar-v05',
     TIP_JAR_LINKS,
     SOCIAL_LINKS,
     shareMessage,
