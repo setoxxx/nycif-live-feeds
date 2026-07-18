@@ -9,6 +9,7 @@ import vm from 'node:vm';
 
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const source = readFileSync(join(repoRoot, 'supplemental-approved-export-preview-v01.js'), 'utf8');
+const redirectSource = readFileSync(join(repoRoot, 'supplemental-preview-desk-redirect.js'), 'utf8');
 const deskHtml = readFileSync(join(repoRoot, 'desk.html'), 'utf8');
 const previewHtml = readFileSync(join(repoRoot, 'approved-export-preview.html'), 'utf8');
 const indexHtml = readFileSync(join(repoRoot, 'index.html'), 'utf8');
@@ -41,8 +42,24 @@ test('does nothing for public visitors (no preview mode)', () => {
   assert.equal(api.deskOverlayMode(), false);
 });
 
-test('activates desk overlay for ?previewExport=1', () => {
-  const api = loadWithUrl('https://x/desk.html?previewExport=1');
+test('redirects desk previewExport to standalone unless deskOverlay=1', () => {
+  let replaced = null;
+  const sandbox = {
+    location: {
+      href: 'https://setoxxx.github.io/nycif-field-desk/desk.html?previewExport=1',
+      replace(url) {
+        replaced = url;
+      },
+    },
+    URL,
+  };
+  vm.createContext(sandbox);
+  vm.runInContext(redirectSource, sandbox);
+  assert.match(String(replaced), /approved-export-preview\.html$/);
+});
+
+test('keeps desk overlay when deskOverlay=1', () => {
+  const api = loadWithUrl('https://x/desk.html?previewExport=1&deskOverlay=1');
   assert.equal(api.previewExportMode(), true);
   assert.equal(api.deskOverlayMode(), true);
 });
@@ -55,7 +72,7 @@ test('standalone page mode uses data attribute only', () => {
   assert.equal(api.deskOverlayMode(), false);
 });
 
-const previewApi = loadWithUrl('https://x/desk.html?previewExport=1');
+const previewApi = loadWithUrl('https://x/desk.html?previewExport=1&deskOverlay=1');
 
 test('validateExportPayload accepts supplemental approved export feed', () => {
   const payload = previewApi.validateExportPayload({
