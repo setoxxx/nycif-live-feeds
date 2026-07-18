@@ -23,7 +23,7 @@ const publicMapCss = readFileSync(join(repoRoot, 'public-map-v01.css'), 'utf8');
 test('production index mounts tip jar beside the NYCIF brand header', () => {
   assert.match(indexHtml, /brand-header-row/);
   assert.match(indexHtml, /public-map-v09/);
-  assert.match(indexHtml, /nycif-tip-jar-v01\.js\?v=05/);
+  assert.match(indexHtml, /nycif-tip-jar-v01\.js\?v=06/);
 });
 
 test('upper-right control stack has Filters, GPS, Bug, then Near Me', () => {
@@ -44,7 +44,8 @@ test('tip jar exposes share template and social profile links', () => {
   assert.match(tipJarSource, /instagram\.com\/youfoundhowie/);
   assert.match(tipJarSource, /tiktok\.com\/@howardweiss/);
   assert.match(tipJarSource, /youtube\.com\/@youfoundhowie/);
-  assert.match(tipJarSource, /brand-header-row/);
+  assert.match(tipJarSource, /www\.nycinfocus\.com\/map/);
+  assert.match(tipJarSource, /PUBLIC_MAP_SHARE_URL/);
   assert.match(tipJarSource, /Follow Howard Weiss/);
   assert.match(tipJarSource, /nycif-tip-jar-strobe/);
 });

@@ -24,7 +24,7 @@ node --check discovery-patch-v02.js
 node --check nycif-tip-jar-v01.js
 node --check service-worker.js
 grep -q public-map-v09 index.html
-grep -q 'nycif-tip-jar-v01.js?v=05' index.html
+grep -q 'nycif-tip-jar-v01.js?v=06' index.html
 
 BRANCH="cursor/rc-public-map-v08-c1f9"
 git checkout "$BRANCH" 2>/dev/null || git checkout -b "$BRANCH"
