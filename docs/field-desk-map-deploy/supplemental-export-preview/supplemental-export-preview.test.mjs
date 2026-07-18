@@ -193,7 +193,7 @@ test('tip jar links include Cash App, Venmo, and PayPal', () => {
     nycifSupplementalExportPreview: '1',
   });
   assert.equal(api.TIP_JAR_LINKS.length, 3);
-  assert.match(previewHtml, /nycif-tip-jar-v01\.js\?v=05/);
+  assert.match(previewHtml, /nycif-tip-jar-v01\.js\?v=06/);
   assert.match(source, /NYCIF_TIP_JAR/);
   assert.match(tipJarSource, /pay-heart/);
   assert.match(tipJarSource, /nycif-tip-pay--cashapp/);
@@ -211,11 +211,11 @@ test('tip jar supports share template and social profile links', () => {
   assert.match(tipJarSource, /instagram\.com\/youfoundhowie/);
   assert.match(tipJarSource, /tiktok\.com\/@howardweiss/);
   assert.match(tipJarSource, /youtube\.com\/@youfoundhowie/);
-  assert.match(tipJarSource, /brand-header-row/);
+  assert.match(tipJarSource, /www\.nycinfocus\.com\/map/);
 });
 
 test('production index loads shared tip jar module beside brand header', () => {
-  assert.match(indexHtml, /nycif-tip-jar-v01\.js\?v=05/);
+  assert.match(indexHtml, /nycif-tip-jar-v01\.js\?v=06/);
   assert.match(indexHtml, /brand-header-row/);
   assert.ok(!/supplemental-approved-export-preview-v01\.js/.test(indexHtml));
 });

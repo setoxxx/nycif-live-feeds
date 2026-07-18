@@ -14,7 +14,7 @@ Single canonical public map runtime for NYC In Focus GitHub Pages.
 | `discovery-taxonomy-v02/public-approved-overlays-v01.js` | `public-approved-overlays-v01.js` |
 | `shared/nycif-tip-jar-v01.js` | `nycif-tip-jar-v01.js` |
 
-Cache bust token: **`public-map-v09`** (RC). Tip jar module: **`nycif-tip-jar-v01.js?v=05`**.
+Cache bust token: **`public-map-v09`** (RC). Tip jar module: **`nycif-tip-jar-v01.js?v=06`**.
 
 ## Deploy
 

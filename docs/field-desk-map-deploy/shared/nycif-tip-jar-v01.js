@@ -4,6 +4,8 @@
 (function () {
   'use strict';
 
+  const PUBLIC_MAP_SHARE_URL = 'https://www.nycinfocus.com/map/';
+
   const TIP_JAR_LINKS = [
     { id: 'cashapp', label: 'Cash App', emoji: '💵', url: 'https://cash.app/$NYCINFOCUS' },
     { id: 'venmo', label: 'Venmo', emoji: '💙', url: 'https://venmo.com/u/Howie-Doin' },
@@ -42,7 +44,7 @@
   }
 
   function shareMessage(url) {
-    const pageUrl = url || (typeof window !== 'undefined' ? window.location.href : '');
+    const pageUrl = url || PUBLIC_MAP_SHARE_URL;
     return `You gotta check this out — NYC In Focus maps what's happening in NYC today and this week: ${pageUrl}`;
   }
 
@@ -63,13 +65,14 @@
   }
 
   async function shareMap() {
-    const text = shareMessage();
+    const shareUrl = PUBLIC_MAP_SHARE_URL;
+    const text = shareMessage(shareUrl);
     if (navigator.share) {
       try {
         await navigator.share({
           title: 'NYC In Focus Event Map',
           text,
-          url: window.location.href,
+          url: shareUrl,
         });
         return;
       } catch (error) {
@@ -537,7 +540,8 @@
   }
 
   window.NYCIF_TIP_JAR = {
-    VERSION: 'nycif-tip-jar-v05',
+    VERSION: 'nycif-tip-jar-v06',
+    PUBLIC_MAP_SHARE_URL,
     TIP_JAR_LINKS,
     SOCIAL_LINKS,
     shareMessage,
