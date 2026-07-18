@@ -193,7 +193,7 @@ test('tip jar links include Cash App, Venmo, and PayPal', () => {
     nycifSupplementalExportPreview: '1',
   });
   assert.equal(api.TIP_JAR_LINKS.length, 3);
-  assert.match(previewHtml, /nycif-tip-jar-v01\.js\?v=04/);
+  assert.match(previewHtml, /nycif-tip-jar-v01\.js\?v=05/);
   assert.match(source, /NYCIF_TIP_JAR/);
   assert.match(tipJarSource, /pay-heart/);
   assert.match(tipJarSource, /nycif-tip-pay--cashapp/);
@@ -215,7 +215,7 @@ test('tip jar supports share template and social profile links', () => {
 });
 
 test('production index loads shared tip jar module beside brand header', () => {
-  assert.match(indexHtml, /nycif-tip-jar-v01\.js\?v=04/);
+  assert.match(indexHtml, /nycif-tip-jar-v01\.js\?v=05/);
   assert.match(indexHtml, /brand-header-row/);
   assert.ok(!/supplemental-approved-export-preview-v01\.js/.test(indexHtml));
 });
