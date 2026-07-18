@@ -1,7 +1,8 @@
 {
   "artifact_type": "nycif_map_v1_freeze",
   "schema_version": "1.0.0",
-  "signed_off_at_utc": "2026-07-18T17:55:00Z",
+  "signed_off_at_utc": "2026-07-18T18:52:00Z",
+  "rc_release_status": "SIGNED_OFF",
   "freeze_doc": "docs/wordpress-plugin-deploy/nycinfocus-map-page-v1-freeze.md",
   "release": {
     "runtime_cache_bust": "public-map-v10",
@@ -23,7 +24,9 @@
     "wordpress_plugin": "PASS",
     "verified_at_utc": "2026-07-18T18:44:00Z",
     "wordpress_curl_qa": "PASS",
-    "human_viewport_qa": "PENDING"
+    "human_viewport_qa": "PASS",
+    "signed_off_by": "human",
+    "signed_off_at_utc": "2026-07-18T18:52:00Z"
   },
   "deploy_snapshot_at_release": {
     "field_desk_main_sha": "47b92d05fa1f",
@@ -39,7 +42,7 @@
     "canonical_iframe_src": "https://setoxxx.github.io/nycif-field-desk/?v=public-map-v10&resetFilters=1&feeds=main"
   },
   "handshake_prs_merged": {
-    "live_feeds": [186, 187, 188, 189, 190, 192, 193, 194, 298, 299, 300, 301],
+    "live_feeds": [186, 187, 188, 189, 190, 192, 193, 194, 298, 299, 300, 301, 302],
     "field_desk_issues_closed": [127, 128]
   },
   "deploy_automation": {

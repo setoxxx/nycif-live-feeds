@@ -39,9 +39,12 @@
     "freeze_artifact": "status/nycif-map-v1-freeze.json",
     "freeze_doc": "docs/wordpress-plugin-deploy/nycinfocus-map-page-v1-freeze.md",
     "frozen": true,
-    "signed_off_at_utc": "2026-07-18T17:55:00Z"
+    "rc_release_signed_off": true,
+    "signed_off_at_utc": "2026-07-18T18:52:00Z",
+    "runtime": "public-map-v10",
+    "wordpress_plugin": "1.5.0-rc2"
   },
-  "next_action": "Map chat integration (M12) on field-desk",
+  "next_action": "Backend GPS pipeline + supplemental M11; paid events post-RC",
   "photographer_assignment_calendar": {
     "baseline_v1_events": 842,
     "money_day_v2_branch": "cursor/photographer-money-day-desk-v2-da92",
@@ -76,7 +79,7 @@
   ],
   "repository": "setoxxx/nycif-live-feeds",
   "resolved_blockers": [
-    "Map v1 frozen — Field Desk Pages + WordPress /map/ PASS",
+    "Map v1 RC signed off — public-map-v10 live on nycinfocus.com/map/",
     "Field-desk deploy automation (issues #127/#128 closed)",
     "M11 supplemental first-pass: 3492 rows approved in queue"
   ],
