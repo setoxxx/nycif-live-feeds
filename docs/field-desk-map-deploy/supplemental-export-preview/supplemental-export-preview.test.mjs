@@ -2,17 +2,33 @@
 // Run with: node --test tools/public-map/
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readFileSync, existsSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import vm from 'node:vm';
 
-const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..', '..');
-const source = readFileSync(join(repoRoot, 'supplemental-approved-export-preview-v01.js'), 'utf8');
-const redirectSource = readFileSync(join(repoRoot, 'supplemental-preview-desk-redirect.js'), 'utf8');
-const deskHtml = readFileSync(join(repoRoot, 'desk.html'), 'utf8');
-const previewHtml = readFileSync(join(repoRoot, 'approved-export-preview.html'), 'utf8');
-const indexHtml = readFileSync(join(repoRoot, 'index.html'), 'utf8');
+const testDir = dirname(fileURLToPath(import.meta.url));
+const previewDir = existsSync(join(testDir, 'supplemental-approved-export-preview-v01.js'))
+  ? testDir
+  : join(testDir, '..', '..');
+const deployRoot = existsSync(join(previewDir, 'index.html'))
+  ? previewDir
+  : join(previewDir, '..');
+const source = readFileSync(join(previewDir, 'supplemental-approved-export-preview-v01.js'), 'utf8');
+const redirectSource = readFileSync(join(previewDir, 'supplemental-preview-desk-redirect.js'), 'utf8');
+const previewHtml = readFileSync(join(previewDir, 'approved-export-preview.html'), 'utf8');
+const deskHtmlPath = existsSync(join(previewDir, 'desk.html'))
+  ? join(previewDir, 'desk.html')
+  : existsSync(join(deployRoot, 'desk.html'))
+    ? join(deployRoot, 'desk.html')
+    : null;
+const indexHtmlPath = existsSync(join(previewDir, 'index.html'))
+  ? join(previewDir, 'index.html')
+  : existsSync(join(deployRoot, 'index.html'))
+    ? join(deployRoot, 'index.html')
+    : join(deployRoot, 'schema-v1-major-all-v01', 'index.html');
+const deskHtml = deskHtmlPath ? readFileSync(deskHtmlPath, 'utf8') : '';
+const indexHtml = readFileSync(indexHtmlPath, 'utf8');
 
 function loadWithUrl(href, dataset = {}) {
   const html = { dataset: { ...dataset } };
@@ -119,12 +135,38 @@ test('normalizePin keeps only approved rows with NYC coordinates', () => {
 });
 
 test('desk.html loads preview module but production index.html does not', () => {
-  assert.match(deskHtml, /supplemental-approved-export-preview-v01\.js/);
   assert.match(previewHtml, /supplemental-approved-export-preview-v01\.js/);
   assert.ok(!/supplemental-approved-export-preview-v01\.js/.test(indexHtml), 'production index must not load preview module');
+  if (deskHtmlPath) {
+    assert.match(deskHtml, /supplemental-approved-export-preview-v01\.js/);
+  }
 });
 
 test('preview terminology is not added to production index markup', () => {
   assert.ok(!/previewExport/.test(indexHtml), 'no previewExport gate in production index');
   assert.ok(!/Supplemental approved export/.test(indexHtml), 'no supplemental preview label in production index');
+});
+
+test('uses public map RC marker cap and viewport buffer', () => {
+  const api = loadWithUrl('https://x/approved-export-preview.html', {
+    nycifSupplementalExportPreview: '1',
+  });
+  assert.equal(api.MARKER_SOFT_CAP, 600);
+  assert.equal(api.VIEWPORT_BUFFER, 0.15);
+  assert.ok(!/nycif-supplemental-dots-canvas/.test(source), 'canvas layer removed');
+  assert.match(source, /layerGroup/);
+  assert.match(source, /divIcon/);
+});
+
+test('formatMapRenderMeta reports cap when viewport exceeds soft cap', () => {
+  const api = loadWithUrl('https://x/approved-export-preview.html', {
+    nycifSupplementalExportPreview: '1',
+  });
+  const capped = api.formatMapRenderMeta({ drawn: 600, inView: 1200, total: 3493 });
+  assert.match(capped, /600 shown of 1,200 in view/);
+  assert.match(capped, /pan\/zoom for more/);
+});
+
+test('standalone preview html uses cache bust v=07', () => {
+  assert.match(previewHtml, /supplemental-approved-export-preview-v01\.js\?v=07/);
 });

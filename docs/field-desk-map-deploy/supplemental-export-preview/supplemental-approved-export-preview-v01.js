@@ -44,7 +44,9 @@
     return;
   }
 
-  const VERSION = 'supplemental-approved-export-preview-v02';
+  const VERSION = 'supplemental-approved-export-preview-v03';
+  const VIEWPORT_BUFFER = 0.15;
+  const MARKER_SOFT_CAP = 600;
   const BLOCKED_ARTIFACT_TYPES = new Set([
     'gps_manual_approval_queue',
     'gps_review_geocoding_proposals',
@@ -410,132 +412,125 @@
     </article>`;
   }
 
-  let SupplementalDotsLayerClass = null;
+  function expandedBounds(map) {
+    const bounds = map.getBounds();
+    if (!bounds) return null;
+    const padLat = (bounds.getNorth() - bounds.getSouth()) * VIEWPORT_BUFFER;
+    const padLng = (bounds.getEast() - bounds.getWest()) * VIEWPORT_BUFFER;
+    return window.L.latLngBounds(
+      [bounds.getSouth() - padLat, bounds.getWest() - padLng],
+      [bounds.getNorth() + padLat, bounds.getEast() + padLng]
+    );
+  }
 
-  function getSupplementalDotsLayerClass() {
-    if (SupplementalDotsLayerClass) return SupplementalDotsLayerClass;
-    if (!window.L?.Layer) {
-      throw new Error('Leaflet is not loaded');
-    }
-    SupplementalDotsLayerClass = window.L.Layer.extend({
-      initialize(pins) {
-        this._pins = pins;
-        this._topLeft = null;
-        this._raf = null;
-      },
-      onAdd(map) {
-        this._map = map;
-        this._canvas = window.L.DomUtil.create('canvas', 'nycif-supplemental-dots-canvas');
-        map.getPanes().overlayPane.appendChild(this._canvas);
-        this._reset = this._reset.bind(this);
-        this._scheduleRedraw = this._scheduleRedraw.bind(this);
-        this._onMapClick = this._onMapClick.bind(this);
-        map.on('viewreset resize zoomend', this._reset, this);
-        map.on('moveend', this._redraw, this);
-        map.on('move zoom', this._scheduleRedraw, this);
-        map.on('click', this._onMapClick, this);
-        this._reset();
-        return this;
-      },
-      onRemove(map) {
-        if (this._raf) {
-          cancelAnimationFrame(this._raf);
-          this._raf = null;
-        }
-        map.off('viewreset resize zoomend', this._reset, this);
-        map.off('moveend', this._redraw, this);
-        map.off('move zoom', this._scheduleRedraw, this);
-        map.off('click', this._onMapClick, this);
-        window.L.DomUtil.remove(this._canvas);
-      },
-      _scheduleRedraw() {
-        if (this._raf) return;
-        this._raf = requestAnimationFrame(() => {
-          this._raf = null;
-          this._updatePositionAndRedraw();
-        });
-      },
-      _updatePositionAndRedraw() {
-        const map = this._map;
-        const topLeft = map.containerPointToLayerPoint([0, 0]);
-        window.L.DomUtil.setPosition(this._canvas, topLeft);
-        this._topLeft = topLeft;
-        this._redraw();
-      },
-      _reset() {
-        const map = this._map;
-        const size = map.getSize();
-        const topLeft = map.containerPointToLayerPoint([0, 0]);
-        window.L.DomUtil.setPosition(this._canvas, topLeft);
-        this._canvas.width = size.x;
-        this._canvas.height = size.y;
-        this._topLeft = topLeft;
-        this._redraw();
-      },
-      _redraw() {
-        const map = this._map;
-        const ctx = this._canvas?.getContext('2d');
-        const topLeft = this._topLeft;
-        if (!ctx || !topLeft) return;
-
-        ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
-        const bounds = map.getBounds();
-        ctx.fillStyle = '#7c3aed';
-        ctx.strokeStyle = '#ede9fe';
-        ctx.lineWidth = 1;
-        for (const pin of this._pins) {
-          if (!bounds.contains([pin.lat, pin.lng])) continue;
-          const pt = map.latLngToContainerPoint([pin.lat, pin.lng]);
-          const x = pt.x - topLeft.x;
-          const y = pt.y - topLeft.y;
-          if (x < -12 || y < -12 || x > this._canvas.width + 12 || y > this._canvas.height + 12) {
-            continue;
-          }
-          ctx.beginPath();
-          ctx.arc(x, y, 5, 0, Math.PI * 2);
-          ctx.fill();
-          ctx.stroke();
-        }
-      },
-      _onMapClick(event) {
-        const map = this._map;
-        const clickPt = map.latLngToContainerPoint(event.latlng);
-        const topLeft = this._topLeft;
-        if (!topLeft) return;
-        const clickX = clickPt.x - topLeft.x;
-        const clickY = clickPt.y - topLeft.y;
-        let best = null;
-        let bestDist = 14;
-        const bounds = map.getBounds();
-        for (const pin of this._pins) {
-          if (!bounds.contains([pin.lat, pin.lng])) continue;
-          const pt = map.latLngToContainerPoint([pin.lat, pin.lng]);
-          const dist = Math.hypot((pt.x - topLeft.x) - clickX, (pt.y - topLeft.y) - clickY);
-          if (dist < bestDist) {
-            bestDist = dist;
-            best = pin;
-          }
-        }
-        if (best) {
-          window.L.popup({ maxWidth: 350, minWidth: 250 })
-            .setLatLng([best.lat, best.lng])
-            .setContent(popupHtml(best))
-            .openOn(map);
-        }
-      },
+  function makePreviewMarker(pin) {
+    return window.L.marker([pin.lat, pin.lng], {
+      icon: window.L.divIcon({
+        className: 'nycif-supplemental-preview-marker-shell',
+        html: '<span class="nycif-supplemental-preview-marker">🟣</span>',
+        iconSize: [34, 34],
+        iconAnchor: [17, 17],
+        popupAnchor: [0, -18],
+      }),
+      title: pin.title,
+      riseOnHover: true,
+    }).bindPopup(popupHtml(pin), {
+      maxWidth: 350,
+      minWidth: 250,
+      autoPan: false,
+      closeButton: true,
+      autoClose: true,
+      closeOnClick: true,
     });
-    return SupplementalDotsLayerClass;
+  }
+
+  function ensureMarker(pin) {
+    if (!pin.marker) {
+      pin.marker = makePreviewMarker(pin);
+    }
+    return pin.marker;
+  }
+
+  function formatMapRenderMeta(stats) {
+    const total = stats.total || 0;
+    let text = `${total.toLocaleString()} approved export marker(s) loaded · PREVIEW / NOT PRODUCTION`;
+    if (stats.drawn < stats.inView) {
+      text += ` · ${stats.drawn.toLocaleString()} shown of ${stats.inView.toLocaleString()} in view — pan/zoom for more`;
+    } else if (stats.drawn < total) {
+      text += ` · ${stats.drawn.toLocaleString()} shown in current view`;
+    }
+    return text;
   }
 
   function buildMarkerLayer(map, pins, options = {}) {
-    const { fitBounds = false, onProgress } = options;
-    if (onProgress) onProgress(pins.length, pins.length);
-    const LayerClass = getSupplementalDotsLayerClass();
-    const layer = new LayerClass(pins).addTo(map);
+    const { fitBounds = false, onProgress, onRender } = options;
+    if (!window.L?.layerGroup) {
+      throw new Error('Leaflet is not loaded');
+    }
+
+    let renderTimer = null;
+    let moveTimer = null;
+    const markers = window.L.layerGroup().addTo(map);
+    const renderStats = { drawn: 0, inView: 0, total: pins.length };
+
+    function renderMarkers() {
+      markers.clearLayers();
+      const bounds = expandedBounds(map);
+      const inView = bounds
+        ? pins.filter(pin => bounds.contains([pin.lat, pin.lng]))
+        : pins;
+      const candidates = (inView.length ? inView : pins).slice(0, MARKER_SOFT_CAP);
+      const batch = [];
+      for (const pin of candidates) {
+        const marker = ensureMarker(pin);
+        if (marker) batch.push(marker);
+      }
+      batch.forEach(marker => markers.addLayer(marker));
+      renderStats.drawn = batch.length;
+      renderStats.inView = inView.length;
+      renderStats.total = pins.length;
+      if (onProgress) onProgress(batch.length, pins.length);
+      if (onRender) onRender({ ...renderStats });
+      return batch;
+    }
+
+    function scheduleRender() {
+      clearTimeout(renderTimer);
+      renderTimer = setTimeout(() => renderMarkers(), 40);
+    }
+
+    function onMapMoveEnd() {
+      clearTimeout(moveTimer);
+      moveTimer = setTimeout(() => scheduleRender(), 120);
+    }
+
+    map.on('moveend', onMapMoveEnd);
+    map.on('zoomend', scheduleRender);
+
+    markers.cleanup = () => {
+      clearTimeout(renderTimer);
+      clearTimeout(moveTimer);
+      map.off('moveend', onMapMoveEnd);
+      map.off('zoomend', scheduleRender);
+    };
+    markers.renderMarkers = renderMarkers;
+    markers.getRenderStats = () => ({ ...renderStats });
+
+    renderMarkers();
+
     if (fitBounds && pins.length) {
       map.fitBounds(boundsFromPins(pins).pad(0.12), { animate: false });
     }
-    return layer;
+
+    return markers;
+  }
+
+  function removeMarkerLayer(map, layer) {
+    if (!layer) return;
+    if (typeof layer.cleanup === 'function') {
+      layer.cleanup();
+    }
+    map.removeLayer(layer);
   }
 
   async function loadPinsFromLiteFeed(url) {
@@ -622,23 +617,22 @@
     }
 
     if (!enabled) {
-      if (state.layer) map.removeLayer(state.layer);
+      removeMarkerLayer(map, state.layer);
+      state.layer = null;
       setStatus('Supplemental approved export preview hidden.');
       return;
     }
 
     try {
       await loadExportFeed();
-      if (state.layer) map.removeLayer(state.layer);
-      setStatus(`Drawing ${state.pins.length.toLocaleString()} preview markers…`);
+      removeMarkerLayer(map, state.layer);
+      setStatus(`Drawing preview markers (up to ${MARKER_SOFT_CAP.toLocaleString()} in view)…`);
       state.layer = buildMarkerLayer(map, state.pins, {
         fitBounds: false,
+        onRender(stats) {
+          setStatus(formatMapRenderMeta(stats));
+        },
       });
-      setStatus(
-        `Supplemental approved export preview · ${state.pins.length.toLocaleString()} marker${
-          state.pins.length === 1 ? '' : 's'
-        } · PREVIEW / NOT PRODUCTION`
-      );
     } catch (error) {
       console.error(error);
       const checkbox = document.getElementById('supplementalExportPreviewToggle');
@@ -696,19 +690,25 @@
       .then(() => {
         setPageMeta(
           `Feed loaded · ${state.pins.length.toLocaleString()} approved export row(s)`,
-          'Drawing purple preview dots…'
+          `Drawing preview markers (up to ${MARKER_SOFT_CAP.toLocaleString()} in view)…`
         );
-        state.layer = buildMarkerLayer(map, state.pins, { fitBounds: true });
-        setPageMeta(
-          `${state.pins.length.toLocaleString()} approved export marker(s) · ${state.feedMeta?.feedKind || 'map'}`,
-          `${state.pins.length.toLocaleString()} marker(s) on map · PREVIEW / NOT PRODUCTION`
-        );
+        state.layer = buildMarkerLayer(map, state.pins, {
+          fitBounds: true,
+          onRender(stats) {
+            setPageMeta(
+              `${state.pins.length.toLocaleString()} approved export marker(s) · ${state.feedMeta?.feedKind || 'map'}`,
+              formatMapRenderMeta(stats)
+            );
+          },
+        });
         return state;
       });
   }
 
   const api = {
     VERSION,
+    VIEWPORT_BUFFER,
+    MARKER_SOFT_CAP,
     standaloneMode,
     deskOverlayMode,
     previewExportMode,
@@ -719,8 +719,12 @@
     certifyLitePin,
     normalizePin,
     certifyCoord,
+    expandedBounds,
+    ensureMarker,
+    formatMapRenderMeta,
     loadExportFeed,
     buildMarkerLayer,
+    removeMarkerLayer,
     toggleOverlay,
     bootStandaloneMap,
     setPageMeta,
