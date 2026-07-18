@@ -6,6 +6,9 @@
   <meta name="robots" content="noindex,nofollow">
   <script>
     if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register = async function () {
+        return { unregister: async () => true, update: async () => {} };
+      };
       navigator.serviceWorker.getRegistrations().then(function (regs) {
         regs.forEach(function (reg) { reg.unregister(); });
       }).catch(function () {});
@@ -132,7 +135,7 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="./supplemental-approved-export-preview-v01.js?v=04"></script>
+  <script src="./supplemental-approved-export-preview-v01.js?v=05"></script>
   <script>
     function esc(value) {
       return String(value ?? '').replace(/[&<>"']/g, ch => ({
