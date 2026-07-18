@@ -1,5 +1,5 @@
 {
-  "approved_queue_count": 3542,
+  "approved_queue_count": 3543,
   "artifact_type": "supplemental_approved_export_feed",
   "events": [
     {
@@ -487,6 +487,33 @@
       "staged_feed_modified": false,
       "start_date_time": "2026-07-15T10:00:00.000-04:00",
       "title": "Access Benefits at Resource Event for Seniors at Jonas Bronck Apartments - Bronx"
+    },
+    {
+      "approval_decision_reason": "Human approved M12 batch 4 housing; GeoSearch pin at 4932 Broadway verified for HPD outreach van.",
+      "borough": "Mn",
+      "confidence_reason": "Rejected-pass fill: NYC GeoSearch match for query '4932 BROADWAY, New York, NY'. for manual review only.",
+      "date": "2026-07-15",
+      "display_location": "4932 BROADWAY",
+      "geocoder_confidence": "high",
+      "geocoder_source": "nyc_geosearch_planninglabs",
+      "intake_type": "calendar_only",
+      "lat": 40.867363,
+      "lng": -73.921317,
+      "location_cache_modified": false,
+      "manual_review_status": "approved",
+      "manual_reviewed_at_utc": "2026-07-18T20:15:16.253868+00:00",
+      "manual_reviewer": "Howard Weiss",
+      "overlap_key": "hpd outreach housing resources in your neighborhood|2026-07-15",
+      "production_feed": false,
+      "promotion_allowed": false,
+      "proposed_lat": 40.867363,
+      "proposed_lng": -73.921317,
+      "public_map_modified": false,
+      "source_dataset": "nyc-citywide-events-calendar-api",
+      "source_event_id": "919556",
+      "staged_feed_modified": false,
+      "start_date_time": "2026-07-15T10:00:00.000-04:00",
+      "title": "HPD Outreach Housing Resources in Your Neighborhood"
     },
     {
       "approval_decision_reason": "Human approved M12 batch 2 volunteer It's My Park event; NYC Parks snapshot coordinates verified.",
@@ -95637,8 +95664,8 @@
       "title": "Access Benefits at NYPL Corona Library"
     }
   ],
-  "export_event_count": 3542,
-  "generated_at_utc": "2026-07-18T20:00:16.381133+00:00",
+  "export_event_count": 3543,
+  "generated_at_utc": "2026-07-18T20:15:16.388329+00:00",
   "location_cache_modified": false,
   "phase": "m11_supplemental_approved_export",
   "production_feed": false,
