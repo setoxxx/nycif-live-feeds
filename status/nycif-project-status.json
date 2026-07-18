@@ -1,105 +1,104 @@
 {
-  "artifact_type": "nycif_project_status",
-  "schema_version": "1.0.0",
-  "project": "nycif-live-feeds",
-  "repository": "setoxxx/nycif-live-feeds",
-  "visibility": "public",
-  "current_phase": "M11 supplemental review queue ready — human review next",
-  "completion_percent": 99,
-  "health": "green",
-  "status_summary": "Map v1 frozen. M11 supplemental manual approval queue generated: 3,457 pending rows (2,210 calendar-only, 1,247 parks-only); validation PASS. Not on feeds=main until explicitly approved.",
   "active_prs": [
     {
       "branch": "cursor/viral-recurrence-memory-da92",
-      "title": "Viral Recurrence Memory",
-      "state": "open_draft"
+      "state": "open_draft",
+      "title": "Viral Recurrence Memory"
     }
   ],
+  "admin_dashboard_urls": {
+    "field_desk_admin": "https://setoxxx.github.io/nycif-field-desk/admin/",
+    "field_desk_map": "https://setoxxx.github.io/nycif-field-desk/?v=public-map-v07&resetFilters=1&feeds=main",
+    "interim_live": "https://setoxxx.github.io/nycif-live-feeds/admin/index.html",
+    "wordpress_public_map": "https://nycinfocus.com/map/"
+  },
+  "artifact_type": "nycif_project_status",
+  "blockers": [
+    "Phase 2E location_cache bulk promotion remains unauthorized.",
+    "Supplemental queue: 0 rows still pending human review."
+  ],
+  "civic_people_facing": {
+    "accepted_count": 5198,
+    "coverage_pr": 172,
+    "list_only": 1295,
+    "map_ready": 3903,
+    "merged_pr": 171,
+    "promotion_allowed": false,
+    "proposed": 489,
+    "qa_pass": true
+  },
+  "completion_percent": 92,
+  "current_phase": "Post Map v1 freeze — GPS audit + supplemental merge + admin automation",
+  "data_freshness": {
+    "last_verified_at": "2026-07-18T16:49:32Z",
+    "source": "generate_godview_project_state.py"
+  },
+  "generated_at_utc": "2026-07-18T16:49:32Z",
+  "health": "yellow",
+  "map_v1": {
+    "freeze_artifact": "status/nycif-map-v1-freeze.json",
+    "freeze_doc": "docs/wordpress-plugin-deploy/nycinfocus-map-page-v1-freeze.md",
+    "frozen": true,
+    "signed_off_at_utc": "2026-07-16T21:16:08Z"
+  },
+  "next_action": "Map chat integration (M12) on field-desk",
+  "photographer_assignment_calendar": {
+    "baseline_v1_events": 842,
+    "money_day_v2_branch": "cursor/photographer-money-day-desk-v2-da92",
+    "pr173_merged": true,
+    "today_pack_events": 14,
+    "tomorrow_pack_events": 15,
+    "v2_days_with_coverage": 37,
+    "v2_events": 327,
+    "workflow": "daily-people-facing-desk-sync.yml"
+  },
+  "project": "nycif-live-feeds",
   "recent_prs": [
     {
+      "merge_commit": "8546742",
       "number": 194,
-      "title": "Document Map v1 WordPress fullscreen display freeze",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/194",
       "state": "merged",
-      "merge_commit": "8546742"
+      "title": "Document Map v1 WordPress fullscreen display freeze",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/194"
     },
     {
       "number": 193,
+      "state": "merged",
       "title": "Align WordPress plugin deploy kit to public-map-v07 approved feed",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/193",
-      "state": "merged"
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/193"
     },
     {
       "number": 192,
+      "state": "merged",
       "title": "Ship Admin God View handshake: v02 panels + deploy workflow",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/192",
-      "state": "merged"
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/192"
     }
   ],
-  "blockers": [
-    "M11: 3,457 supplemental rows in supplemental_manual_approval_queue — human review required before public map merge.",
-    "FOIL applicant/org identity not yet filled (sapo_foil_operator_index empty).",
-    "No official live citywide soup-kitchen/pantry pin SODA feed.",
-    "Phase 2E location_cache promotion remains unauthorized."
-  ],
+  "repository": "setoxxx/nycif-live-feeds",
   "resolved_blockers": [
-    "Field-desk Pages deploy — FIELD_DESK_DEPLOY_TOKEN workflow live (issues #127/#128 closed).",
-    "WordPress /map/ fullscreen shell — live QA PASS 2026-07-16; freeze doc on main."
+    "Map v1 frozen — Field Desk Pages + WordPress /map/ PASS",
+    "Field-desk deploy automation (issues #127/#128 closed)",
+    "M11 supplemental first-pass: 3492 rows approved in queue"
   ],
-  "next_action": "Human review supplemental_manual_approval_review_sheet.csv; optional viral recurrence PR when green.",
-  "map_v1": {
-    "frozen": true,
-    "freeze_artifact": "status/nycif-map-v1-freeze.json",
-    "freeze_doc": "docs/wordpress-plugin-deploy/nycinfocus-map-page-v1-freeze.md",
-    "signed_off_at_utc": "2026-07-16T21:16:08Z"
-  },
-  "admin_dashboard_urls": {
-    "interim_live": "https://setoxxx.github.io/nycif-live-feeds/admin/index.html",
-    "field_desk_map": "https://setoxxx.github.io/nycif-field-desk/?v=public-map-v07&resetFilters=1&feeds=main",
-    "field_desk_admin": "https://setoxxx.github.io/nycif-field-desk/admin/",
-    "wordpress_public_map": "https://nycinfocus.com/map/"
-  },
-  "data_freshness": {
-    "source": "Photographer calendar build + offline daily desk sync",
-    "last_verified_at": "2026-07-16T21:21:00.000Z",
-    "notes": "Map v1 housekeeping verification; live-sync-qa snapshot datastore on main."
-  },
-  "photographer_assignment_calendar": {
-    "pr173_merged": true,
-    "money_day_v2_branch": "cursor/photographer-money-day-desk-v2-da92",
-    "baseline_v1_events": 842,
-    "v2_events": 327,
-    "v2_days_with_coverage": 37,
-    "today_pack_events": 14,
-    "tomorrow_pack_events": 15,
-    "workflow": "daily-people-facing-desk-sync.yml"
-  },
-  "civic_people_facing": {
-    "merged_pr": 171,
-    "coverage_pr": 172,
-    "accepted_count": 5198,
-    "map_ready": 3903,
-    "list_only": 1295,
-    "proposed": 489,
-    "qa_pass": true,
-    "promotion_allowed": false
-  },
   "safety": {
-    "safe_for_public_dashboard": true,
     "contains_secrets": false,
-    "write_controls": false,
     "deploy_controls": false,
-    "promotion_allowed_default": false,
-    "phase_2e_authorized": false,
     "m7c_authorized": false,
     "map_v1_shell_live": true,
-    "supplemental_public_map_merge_authorized": false
+    "phase_2e_authorized": false,
+    "promotion_allowed_default": false,
+    "safe_for_public_dashboard": true,
+    "supplemental_public_map_merge_authorized": false,
+    "write_controls": false
   },
+  "schema_version": "1.0.0",
+  "status_summary": "Discovery approved 35,043; supplemental 3,492 approved / 142 rejected. God View state v2 generated 2026-07-18T16:49:32Z.",
   "viral_recurrence_memory": {
     "branch": "cursor/viral-recurrence-memory-da92",
     "historical_rows": 2450,
     "match_count": 334,
-    "returning_likely": 279,
-    "next_14d_magnets": 40
-  }
+    "next_14d_magnets": 40,
+    "returning_likely": 279
+  },
+  "visibility": "public"
 }

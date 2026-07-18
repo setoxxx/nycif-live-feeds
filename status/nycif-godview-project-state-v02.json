@@ -1,0 +1,749 @@
+{
+  "artifact_links": {
+    "discovery_godview_digest": "data/events_discovery_godview_digest_v02.json",
+    "github_tracker": "status/nycif-github-tracker.json",
+    "live_pipeline_dashboard": "status/nycif-live-pipeline-dashboard.json",
+    "map_v1_freeze": "status/nycif-map-v1-freeze.json",
+    "project_status_legacy": "status/nycif-project-status.json"
+  },
+  "artifact_type": "nycif_godview_project_state",
+  "blockers": [
+    {
+      "severity": "medium",
+      "text": "Phase 2E location_cache bulk promotion remains unauthorized."
+    },
+    {
+      "severity": "low",
+      "text": "Supplemental queue: 0 rows still pending human review."
+    }
+  ],
+  "chat_integration_handoff": {
+    "constraints": [
+      "Read-only event context from discovery feed",
+      "No GPS review / manual approval artifacts in chat",
+      "No publish or promotion controls in chat UI"
+    ],
+    "depends_on": [
+      "Map v1 frozen",
+      "schema-v1-discovery feed on feeds=main",
+      "Stacked event picker shipped",
+      "Dynamic God View state on main"
+    ],
+    "open_decisions": [
+      "Chat UI placement: side panel vs modal",
+      "Model/API provider",
+      "Offline fallback behavior"
+    ],
+    "status": "not_started",
+    "target_repo": "setoxxx/nycif-field-desk"
+  },
+  "command_center": {
+    "completion_percent": 92,
+    "current_gate": "Dynamic God View project state on main",
+    "current_objective": "Stabilize Map v1 and operate from dynamic God View state",
+    "current_stage": "Post Map v1 freeze — GPS audit + supplemental merge + admin automation",
+    "future_work_lock": "No MOME/DOB/Newsroom/Phase 2E bulk promotion until explicitly authorized",
+    "health": "yellow",
+    "next_gate": "Map chat integration (M12) on field-desk"
+  },
+  "counts": {
+    "discovery_approved_events": 35043,
+    "discovery_major_events": 827,
+    "discovery_review_events": 4435,
+    "supplemental_approved": 3492,
+    "supplemental_pending": 0,
+    "supplemental_rejected": 142,
+    "white_island_cluster_count": 0
+  },
+  "decisions": [
+    {
+      "date": "2026-07-16",
+      "rationale": "Public map shell is production-ready; supplemental merge remains gated.",
+      "status": "active",
+      "title": "Map v1 freeze"
+    },
+    {
+      "date": "2026-07-18",
+      "rationale": "Stop editing admin HTML for timeline/issues; regenerate from pipeline artifacts.",
+      "status": "active",
+      "title": "God View must be JSON-driven"
+    },
+    {
+      "date": "ongoing",
+      "rationale": "location_cache and public map changes require explicit authorization.",
+      "status": "active",
+      "title": "No silent GPS promotion"
+    }
+  ],
+  "deployment": {
+    "deploy_workflow": ".github/workflows/field-desk-complete-map-deploy.yml",
+    "discovery_refresh_workflow": ".github/workflows/discovery-feed-refresh.yml",
+    "field_desk_admin": "https://setoxxx.github.io/nycif-field-desk/admin/",
+    "field_desk_map": "https://setoxxx.github.io/nycif-field-desk/",
+    "state_artifact": "status/nycif-godview-project-state-v02.json",
+    "wordpress_map": "https://nycinfocus.com/map/"
+  },
+  "generated_at_utc": "2026-07-18T16:49:32Z",
+  "github_tracker": {
+    "artifact_type": "nycif_github_tracker",
+    "closed_issues_recent": [
+      {
+        "closed_at": "2026-07-16T20:37:53Z",
+        "number": 128,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "ACTION: merge Complete-the-Map Pages handshake (push blocked for cursor bot)",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/128"
+      },
+      {
+        "closed_at": "2026-07-16T20:36:01Z",
+        "number": 127,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "Apply Complete-the-Map frontend runtime (sport emojis + lane lighting JS)",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/127"
+      },
+      {
+        "closed_at": "2026-07-16T20:50:12Z",
+        "number": 126,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "test",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/126"
+      },
+      {
+        "closed_at": "2026-07-13T22:29:16Z",
+        "number": 102,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "Merge Live Pipeline admin panel (Milestone 8)",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/102"
+      }
+    ],
+    "generated_at_utc": "2026-07-18T16:49:32Z",
+    "open_issues_field_desk": [
+      {
+        "labels": [
+          "project-control",
+          "admin-dashboard",
+          "xri",
+          "safety-gate"
+        ],
+        "number": 93,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "NYCIF Operator Control Board — Admin Dashboard / XRI / Public Map",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/93"
+      },
+      {
+        "labels": [
+          "project-control",
+          "admin-dashboard",
+          "xri",
+          "safety-gate"
+        ],
+        "number": 76,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "NYCIF Operator Control Board — Admin Dashboard / XRI / Public Map",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/76"
+      },
+      {
+        "labels": [
+          "data",
+          "map",
+          "safety",
+          "planning",
+          "automation"
+        ],
+        "number": 26,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "Fix major-event feed automation and July 4 coverage from NYC Open Data",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/26"
+      },
+      {
+        "labels": [
+          "data",
+          "map",
+          "safety",
+          "planning",
+          "automation"
+        ],
+        "number": 25,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "Audit and fix Open Data event automation for July 4 and major citywide events",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/25"
+      },
+      {
+        "labels": [
+          "data",
+          "map",
+          "safety",
+          "planning",
+          "automation"
+        ],
+        "number": 24,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "Audit Open Data automation and restore major event coverage for July 4",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/24"
+      },
+      {
+        "labels": [
+          "documentation",
+          "map",
+          "safety"
+        ],
+        "number": 20,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "Pre-production readiness gate for special overlays",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/20"
+      },
+      {
+        "labels": [
+          "documentation",
+          "map",
+          "safety"
+        ],
+        "number": 19,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "Pre-production readiness gate for special overlays",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/19"
+      },
+      {
+        "labels": [
+          "map",
+          "safety",
+          "planning"
+        ],
+        "number": 17,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "Plan public main-map integration for approved special overlays",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/17"
+      },
+      {
+        "labels": [
+          "documentation",
+          "map",
+          "safety"
+        ],
+        "number": 15,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "Pre-production readiness gate for special overlays",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/15"
+      },
+      {
+        "labels": [
+          "enhancement",
+          "data",
+          "map"
+        ],
+        "number": 12,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "Expand smoke/vape/cannabis intel and add legal dispensary comparison layer",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/12"
+      },
+      {
+        "labels": [
+          "enhancement",
+          "data",
+          "map"
+        ],
+        "number": 9,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "Create active feed workflow for nightlife intelligence dissemination",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/9"
+      },
+      {
+        "labels": [
+          "enhancement",
+          "data",
+          "map"
+        ],
+        "number": 7,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "Create nightlife trending-score layer from 311 noise complaints",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/7"
+      },
+      {
+        "labels": [
+          "bug",
+          "data",
+          "map"
+        ],
+        "number": 5,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "Fix 5PM Spots using NY SLA liquor license source plus geocoding",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/5"
+      },
+      {
+        "labels": [
+          "bug",
+          "data",
+          "map",
+          "frontend"
+        ],
+        "number": 2,
+        "repo": "setoxxx/nycif-field-desk",
+        "title": "Standalone special overlays map shows 0 licensed retailer pins despite 9,053 generated records on main",
+        "url": "https://github.com/setoxxx/nycif-field-desk/issues/2"
+      }
+    ],
+    "open_issues_live_feeds": [],
+    "open_prs": [
+      {
+        "branch": "cursor/gps-audit-marine-park-trans-latina-c1f9",
+        "draft": true,
+        "number": 296,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "Fix Marine Park, Trans Latina, and Uncle Tony GPS; rebuild discovery feed",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/296"
+      },
+      {
+        "branch": "cursor/playground-278-gps-dedupe-c1f9",
+        "draft": false,
+        "number": 289,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "Fix Playground 278 Clowning Around GPS and dedupe (preview v=12)",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/289"
+      },
+      {
+        "branch": "cursor/supplemental-rejected-pass-batch-1-c1f9",
+        "draft": true,
+        "number": 266,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 rejected pass: Child-in-Parent fix + batches 1-3",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/266"
+      },
+      {
+        "branch": "cursor/supplemental-batch-71-final-c1f9",
+        "draft": true,
+        "number": 265,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 71: final first-pass rejections ranks 3401-3457",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/265"
+      },
+      {
+        "branch": "cursor/supplemental-batch-70-mixed-c1f9",
+        "draft": true,
+        "number": 264,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 70: rejections ranks 3351-3400",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/264"
+      },
+      {
+        "branch": "cursor/supplemental-batch-69-mixed-c1f9",
+        "draft": true,
+        "number": 263,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 69: rejections ranks 3301-3350",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/263"
+      },
+      {
+        "branch": "cursor/supplemental-batch-68-mixed-c1f9",
+        "draft": true,
+        "number": 262,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 68: rejections ranks 3251-3300",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/262"
+      },
+      {
+        "branch": "cursor/supplemental-batch-67-mixed-c1f9",
+        "draft": true,
+        "number": 261,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 67: rejections ranks 3201-3250",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/261"
+      },
+      {
+        "branch": "cursor/supplemental-batch-66-mixed-c1f9",
+        "draft": true,
+        "number": 260,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 66: rejections ranks 3151-3200",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/260"
+      },
+      {
+        "branch": "cursor/supplemental-batch-65-mixed-c1f9",
+        "draft": true,
+        "number": 259,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 65: rejections ranks 3101-3150",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/259"
+      },
+      {
+        "branch": "cursor/supplemental-batch-64-mixed-c1f9",
+        "draft": true,
+        "number": 258,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 64: rejections ranks 3051-3100",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/258"
+      },
+      {
+        "branch": "cursor/supplemental-batch-63-mixed-c1f9",
+        "draft": true,
+        "number": 257,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 63: rejections ranks 3001-3050",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/257"
+      },
+      {
+        "branch": "cursor/supplemental-batch-62-mixed-c1f9",
+        "draft": true,
+        "number": 256,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 62: rejections ranks 2951-3000",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/256"
+      },
+      {
+        "branch": "cursor/supplemental-batch-61-mixed-c1f9",
+        "draft": true,
+        "number": 255,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 61: rejections ranks 2901-2950",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/255"
+      },
+      {
+        "branch": "cursor/supplemental-batch-60-mixed-c1f9",
+        "draft": true,
+        "number": 254,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 60: rejections ranks 2851-2900",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/254"
+      },
+      {
+        "branch": "cursor/supplemental-batch-59-mixed-c1f9",
+        "draft": true,
+        "number": 253,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 59: rejections ranks 2801-2850",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/253"
+      },
+      {
+        "branch": "cursor/supplemental-batch-58-mixed-c1f9",
+        "draft": true,
+        "number": 252,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 58: rejections ranks 2751-2800",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/252"
+      },
+      {
+        "branch": "cursor/supplemental-batch-57-mixed-c1f9",
+        "draft": true,
+        "number": 251,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 57: rejections ranks 2701-2750",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/251"
+      },
+      {
+        "branch": "cursor/supplemental-batch-56-mixed-c1f9",
+        "draft": true,
+        "number": 250,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 56: rejections ranks 2651-2700",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/250"
+      },
+      {
+        "branch": "cursor/supplemental-batch-55-mixed-c1f9",
+        "draft": true,
+        "number": 249,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 55: rejections ranks 2601-2650",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/249"
+      },
+      {
+        "branch": "cursor/supplemental-batch-54-mixed-c1f9",
+        "draft": true,
+        "number": 248,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 54: rejections ranks 2551-2600",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/248"
+      },
+      {
+        "branch": "cursor/supplemental-batch-53-mixed-c1f9",
+        "draft": true,
+        "number": 247,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 53: rejections ranks 2501-2550",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/247"
+      },
+      {
+        "branch": "cursor/supplemental-batch-52-mixed-c1f9",
+        "draft": true,
+        "number": 246,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 52: rejections ranks 2451-2500",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/246"
+      },
+      {
+        "branch": "cursor/supplemental-batch-51-mixed-c1f9",
+        "draft": true,
+        "number": 245,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 51: mixed decisions ranks 2401-2450",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/245"
+      },
+      {
+        "branch": "cursor/supplemental-batch-50-parks-c1f9",
+        "draft": true,
+        "number": 244,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "M11 supplemental batch 50: parks-only approvals ranks 2351-2400",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/244"
+      }
+    ],
+    "recent_merged_prs": [
+      {
+        "merged_at": "2026-07-18T16:11:21Z",
+        "number": 295,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "Fix filters disclaimer contrast and News assignments section for live map",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/295"
+      },
+      {
+        "merged_at": "2026-07-18T16:04:30Z",
+        "number": 294,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "Fix stacked popup map pan when selecting events",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/294"
+      },
+      {
+        "merged_at": "2026-07-18T16:00:45Z",
+        "number": 293,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "Stacked pin picker: fixed scroll list with times, side popup placement",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/293"
+      },
+      {
+        "merged_at": "2026-07-18T15:25:47Z",
+        "number": 292,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "Fix field-desk public-map UI test path resolution",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/292"
+      },
+      {
+        "merged_at": "2026-07-18T15:23:59Z",
+        "number": 291,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "Tip jar header layout + stacked event picker with back button",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/291"
+      },
+      {
+        "merged_at": "2026-07-18T12:40:13Z",
+        "number": 288,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "Fix Uncle Tony duplicate pin and Playground 278 GPS",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/288"
+      },
+      {
+        "merged_at": "2026-07-18T05:07:44Z",
+        "number": 287,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "Tip jar: enlarge payment links when panel opens",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/287"
+      },
+      {
+        "merged_at": "2026-07-18T05:03:33Z",
+        "number": 286,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "Tip jar: pulsing hearts + brand-tint hovers on payment links",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/286"
+      },
+      {
+        "merged_at": "2026-07-18T04:58:59Z",
+        "number": 285,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "Fix supplemental deploy test tip jar path for field-desk layout",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/285"
+      },
+      {
+        "merged_at": "2026-07-18T04:56:38Z",
+        "number": 284,
+        "repo": "setoxxx/nycif-live-feeds",
+        "title": "Add shared tip jar to production map; draft Phase 4 press/chat plan",
+        "url": "https://github.com/setoxxx/nycif-live-feeds/pull/284"
+      }
+    ]
+  },
+  "qa_gates": {
+    "backend_reliability_gate": {
+      "artifact": "data/backend_reliability_gate_report.json",
+      "generated_at_utc": "2026-07-14T01:28:15.888866+00:00",
+      "qa_pass": false
+    },
+    "discovery_taxonomy": {
+      "artifact": "data/events_discovery_taxonomy_v02_audit.json",
+      "generated_at_utc": "2026-07-18T11:36:43Z",
+      "qa_pass": true
+    },
+    "public_map_gps_audit": {
+      "artifact": "data/reports/public_map_gps_audit_report.json",
+      "generated_at_utc": null,
+      "qa_pass": false
+    },
+    "supplemental_validation": {
+      "artifact": "data/supplemental_manual_approval_validation_report.json",
+      "generated_at_utc": "2026-07-18T00:39:55.740539+00:00",
+      "qa_pass": true
+    }
+  },
+  "repository": "setoxxx/nycif-live-feeds",
+  "resolved_blockers": [
+    {
+      "resolved_at_utc": "2026-07-16T21:16:08Z",
+      "text": "Map v1 frozen — Field Desk Pages + WordPress /map/ PASS"
+    },
+    {
+      "resolved_at_utc": "2026-07-16T20:37:53Z",
+      "text": "Field-desk deploy automation (issues #127/#128 closed)"
+    },
+    {
+      "resolved_at_utc": "2026-07-18T16:49:32Z",
+      "text": "M11 supplemental first-pass: 3492 rows approved in queue"
+    }
+  ],
+  "risks": [
+    {
+      "control": "generate_godview_project_state.py on CI + freshness banner in UI",
+      "title": "Stale admin status misleads operators"
+    },
+    {
+      "control": "Rejected rows excluded in discovery projector; dedupe corrections in queue",
+      "title": "Supplemental calendar duplicates on map"
+    },
+    {
+      "control": "M12 locked until handoff; read-only context; no publish in chat UI",
+      "title": "Chat feature scope creep"
+    }
+  ],
+  "safety": {
+    "deploy_controls": false,
+    "phase_2e_authorized": false,
+    "promotion_allowed_default": false,
+    "safe_for_public_dashboard": true,
+    "write_controls": false
+  },
+  "schema_version": "2.0.0",
+  "timeline": {
+    "later": [
+      {
+        "status": "locked",
+        "summary": "Unauthorized until explicit human promotion language",
+        "title": "Phase 2E bulk location_cache promotion"
+      },
+      {
+        "status": "locked",
+        "summary": "Shadow corroboration only — not connected to public map",
+        "title": "MOME / DOB shadow connectors"
+      },
+      {
+        "status": "locked",
+        "summary": "Not authorized",
+        "title": "M7-C duplicate-key enforcement"
+      }
+    ],
+    "next": [
+      {
+        "artifacts": [
+          "status/nycif-godview-project-state-v02.json#chat_integration_handoff"
+        ],
+        "status": "not_started",
+        "summary": "Field-desk UI; read-only discovery context; no publish controls",
+        "target_repo": "setoxxx/nycif-field-desk",
+        "title": "Map chat integration (M12)"
+      },
+      {
+        "artifacts": [
+          "data/supplemental_manual_approval_queue.json"
+        ],
+        "status": "active",
+        "summary": "142 rejected supplemental rows documented; batch PRs optional",
+        "title": "Supplemental rejected-pass tail cleanup"
+      },
+      {
+        "artifacts": [
+          "data/supplemental_approved_export_feed.json"
+        ],
+        "status": "ready",
+        "summary": "3492 approved supplemental rows in export feed",
+        "title": "Merge remaining approved supplemental into discovery fold"
+      }
+    ],
+    "now": [
+      {
+        "artifacts": [
+          "status/nycif-godview-project-state-v02.json"
+        ],
+        "status": "in_progress",
+        "summary": "Generator + control panel JS wired to status/nycif-godview-project-state-v02.json",
+        "title": "Dynamic God View project state"
+      },
+      {
+        "artifacts": [
+          "data/reports/public_map_gps_audit_report.json",
+          "data/reports/authorized_location_cache_corrections_report.json"
+        ],
+        "pr_urls": [
+          "https://github.com/setoxxx/nycif-live-feeds/pull/296"
+        ],
+        "status": "in_progress",
+        "summary": "Authorized location_cache corrections + discovery feed rebuild",
+        "title": "GPS quality pass (Marine Park, Trans Latina, Uncle Tony)"
+      },
+      {
+        "artifacts": [
+          "status/nycif-live-pipeline-dashboard.json",
+          "status/nycif-project-status.json"
+        ],
+        "status": "in_progress",
+        "summary": "Project status, pipeline dashboard, milestone snapshots",
+        "title": "Regenerate stale status/*.json from live artifacts"
+      }
+    ]
+  },
+  "visibility": "public",
+  "workstreams": [
+    {
+      "artifacts": [
+        "status/nycif-map-v1-freeze.json",
+        "data/schema-v1-discovery/"
+      ],
+      "id": "map_v1",
+      "status": "complete",
+      "summary": "Field Desk Pages + WordPress /map/ shell; discovery feeds=main",
+      "title": "Map v1 — public discovery experience"
+    },
+    {
+      "artifacts": [
+        "data/backend_reliability_gate_report.json",
+        "data/reports/public_map_gps_audit_report.json"
+      ],
+      "id": "gps_pipeline",
+      "status": "active",
+      "summary": "Phase 1 reliability + authorized cache corrections; audit-driven fixes",
+      "title": "GPS pipeline & pin integrity"
+    },
+    {
+      "artifacts": [
+        "data/supplemental_manual_approval_queue.json",
+        "data/supplemental_approved_export_feed.json"
+      ],
+      "id": "supplemental_m11",
+      "status": "active",
+      "summary": "3492 approved · 142 rejected · 0 pending",
+      "title": "M11 supplemental calendar + Parks"
+    },
+    {
+      "artifacts": [
+        "status/nycif-godview-project-state-v02.json"
+      ],
+      "id": "godview_admin",
+      "status": "active",
+      "summary": "Dynamic project control center + live pipeline + discovery queues",
+      "title": "God View admin / operator desk"
+    },
+    {
+      "blockers": [
+        "God View dynamic state",
+        "Chat UI placement decision"
+      ],
+      "id": "map_chat_m12",
+      "status": "locked",
+      "summary": "Next — after God View state lands; field-desk repo only",
+      "title": "Map chat (M12)"
+    }
+  ]
+}

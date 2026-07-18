@@ -47,10 +47,10 @@
     "parks_facility_reference_generated_at_utc": "2026-07-14T01:26:30.234850+00:00",
     "staged_manifest_generated_at_utc": "2026-07-14T01:52:02.516390+00:00"
   },
-  "generated_at_utc": "2026-07-14T02:02:16.987049+00:00",
+  "generated_at_utc": "2026-07-18T16:49:34.021545+00:00",
   "headline": "Live pipeline snapshot for NYCIF admin dashboards (read-only).",
   "location_resolver": {
-    "gazetteer_key_count": 45956,
+    "gazetteer_key_count": 0,
     "gazetteer_path": "data/nyc_location_gazetteer.json",
     "manual_review_status": "pending",
     "promotion_allowed": false,
@@ -62,11 +62,11 @@
   },
   "multi_source": {
     "calendar_only_unique_keys": 2502,
-    "calendar_parks_coord_proposals_count": 1455,
+    "calendar_parks_coord_proposals_count": 1177,
     "calendar_sync_qa_pass": true,
     "citywide_calendar_dataset_id": "nyc-citywide-events-calendar-api",
     "gps_unfilled_proposal_count": 0,
-    "location_gazetteer_key_count": 45956,
+    "location_gazetteer_key_count": 0,
     "location_resolver_resolved_count": 0,
     "location_resolver_unresolved_count": 0,
     "parks_bigapps_sync_qa_pass": true,
@@ -74,10 +74,10 @@
     "parks_permit_overlap_unique_keys": 19,
     "permit_dataset_id": "tvpp-9vvx",
     "permit_only_unique_keys": 5114,
-    "supplemental_calendar_only_queue_count": 2502,
-    "supplemental_parks_only_queue_count": 1530,
-    "supplemental_staging_event_count": 4032,
-    "supplemental_staging_with_coordinates_count": 2961,
+    "supplemental_calendar_only_queue_count": 2210,
+    "supplemental_parks_only_queue_count": 1247,
+    "supplemental_staging_event_count": 3457,
+    "supplemental_staging_with_coordinates_count": 3438,
     "title_date_overlap_unique_keys": 84
   },
   "progress_bars": {
@@ -233,18 +233,18 @@
   "schema_version": "1.0.0",
   "supplemental_review": {
     "calendar_only_review_queue": "data/supplemental_calendar_only_review_queue.json",
-    "calendar_only_with_parks_match_count": 1455,
-    "calendar_only_without_parks_match_count": 1047,
+    "calendar_only_with_parks_match_count": 1177,
+    "calendar_only_without_parks_match_count": 1033,
     "calendar_parks_coord_match_proposals": "data/calendar_parks_coord_match_proposals.json",
     "gps_unfilled_review_queue": "data/gps_review_geocoding_unfilled_review_queue.json",
     "manual_review_status": "pending",
     "parks_only_review_queue": "data/supplemental_parks_only_review_queue.json",
-    "parks_only_with_coordinates_count": 1518,
+    "parks_only_with_coordinates_count": 1236,
     "promotion_allowed": false,
-    "supplemental_staging_event_count": 4032,
+    "supplemental_staging_event_count": 3457,
     "supplemental_staging_feed": "data/supplemental_events_staging_feed.json",
     "supplemental_staging_manifest": "data/supplemental_events_staging_manifest.json",
-    "supplemental_staging_with_coordinates_count": 2961
+    "supplemental_staging_with_coordinates_count": 3438
   },
   "visibility": "public"
 }

@@ -1,0 +1,31 @@
+{
+  "artifact_type": "godview_project_state_report",
+  "counts": {
+    "discovery_approved_events": 35043,
+    "discovery_major_events": 827,
+    "discovery_review_events": 4435,
+    "supplemental_approved": 3492,
+    "supplemental_pending": 0,
+    "supplemental_rejected": 142,
+    "white_island_cluster_count": 0
+  },
+  "generated_at_utc": "2026-07-18T16:49:32Z",
+  "github_tracker_fetched": true,
+  "open_prs_count": 25,
+  "output_path": "status/nycif-godview-project-state-v02.json",
+  "qa_gates": {
+    "backend_reliability_gate": false,
+    "discovery_taxonomy": true,
+    "public_map_gps_audit": false,
+    "supplemental_validation": true
+  },
+  "qa_pass": true,
+  "safety": {
+    "deploy_controls": false,
+    "phase_2e_authorized": false,
+    "promotion_allowed_default": false,
+    "safe_for_public_dashboard": true,
+    "write_controls": false
+  },
+  "tracker_path": "status/nycif-github-tracker.json"
+}

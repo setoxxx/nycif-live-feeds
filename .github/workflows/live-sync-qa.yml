@@ -186,6 +186,9 @@ jobs:
       - name: Generate live pipeline dashboard status
         run: python scripts/generate_live_pipeline_dashboard_status.py
 
+      - name: Generate God View project state
+        run: python scripts/generate_godview_project_state.py --fetch-github
+
       - name: Build backend reliability gate report
         run: python scripts/backend_reliability_gate.py || echo "BACKEND_GATE_FAILED=true" >> "$GITHUB_ENV"
 

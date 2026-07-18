@@ -55,6 +55,8 @@ jobs:
           cp "$ADMIN_SRC/discovery-godview-panel-v02.js" ./admin/discovery-godview-panel-v02.js
           cp "$ADMIN_SRC/civic-godview-panel-v01.js" ./admin/civic-godview-panel-v01.js
           cp "$ADMIN_SRC/photographer-calendar-panel-v01.js" ./admin/photographer-calendar-panel-v01.js
+          cp "$ADMIN_SRC/god-view-project-control-v01.js" ./admin/god-view-project-control-v01.js
+          cp "$ADMIN_SRC/legacy-admin-data-v01.js" ./admin/legacy-admin-data-v01.js
 
           grep -q "[/basketball/i, '🏀']" app-schema-v1-major-all-v01.js
           grep -q reviewManifest app-schema-v1-major-all-v01.js
@@ -83,6 +85,8 @@ jobs:
           node --check admin/discovery-godview-panel-v02.js
           node --check admin/civic-godview-panel-v01.js
           node --check admin/photographer-calendar-panel-v01.js
+          node --check admin/god-view-project-control-v01.js
+          node --check admin/legacy-admin-data-v01.js
 
           git add \
             app-schema-v1-major-all-v01.js \
@@ -96,7 +100,9 @@ jobs:
             admin/live-pipeline-panel-v02.js \
             admin/discovery-godview-panel-v02.js \
             admin/civic-godview-panel-v01.js \
-            admin/photographer-calendar-panel-v01.js
+            admin/photographer-calendar-panel-v01.js \
+            admin/god-view-project-control-v01.js \
+            admin/legacy-admin-data-v01.js
 
           if git diff --cached --quiet; then
             echo "Field-desk already has canonical map + admin runtime."
