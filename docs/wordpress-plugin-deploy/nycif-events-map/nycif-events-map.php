@@ -16,7 +16,7 @@ if (!defined('ABSPATH')) {
 define('NYCIF_EVENTS_MAP_VERSION', '1.3.2');
 define('NYCIF_MAP_EMBED_URL', 'https://setoxxx.github.io/nycif-field-desk/');
 define('NYCIF_APPROVED_FEED_REF', 'main');
-define('NYCIF_RUNTIME_CACHE_BUST', 'public-map-v09');
+define('NYCIF_RUNTIME_CACHE_BUST', 'public-map-v10');
 define('NYCIF_STAGED_FEED_URL', 'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nycif_staged_live_events.json');
 define('NYCIF_ALL_FEED_URL', 'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/nycif_all_radar_map_events.json');
 define('NYCIF_DASHBOARD_URL', 'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/status/nycif-live-pipeline-dashboard.json');

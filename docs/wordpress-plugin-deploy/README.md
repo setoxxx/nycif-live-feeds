@@ -1,6 +1,6 @@
 # NYCIF Events Map — WordPress plugin deploy
 
-> **Production `/map/` page (FROZEN):** read [`nycinfocus-map-page-v1-freeze.md`](./nycinfocus-map-page-v1-freeze.md) before any WordPress or embed change. That doc is the signed-off fullscreen display contract for https://nycinfocus.com/map/.
+> **Production `/map/` page (FROZEN):** read [`nycinfocus-map-page-v1-freeze.md`](./nycinfocus-map-page-v1-freeze.md) before any WordPress or embed change. For WordPress deploys, copy the prompt from [`CHATGPT-WORDPRESS-DEPLOY-PROMPT.md`](./CHATGPT-WORDPRESS-DEPLOY-PROMPT.md) into ChatGPT (or any agent with WP admin access).
 
 Copy `nycif-events-map/` into your WordPress plugins directory:
 
@@ -15,17 +15,17 @@ Page or post shortcode (for **in-article** embeds — **not** for `/map/`):
 
 ```
 [nycif_events_map]
-[nycif_events_map height="90vh" cache="public-map-v09" feeds="main"]
+[nycif_events_map height="90vh" cache="public-map-v10" feeds="main"]
 ```
 
 Settings: **WP Admin → Settings → NYCIF Events Map**
 
-## Canonical embed URL (2026-07-18 — RC release / public-map-v09)
+## Canonical embed URL (2026-07-18 — RC release / public-map-v10)
 
 Approved public discovery feed on GitHub Pages:
 
 ```
-https://setoxxx.github.io/nycif-field-desk/?v=public-map-v09&resetFilters=1&feeds=main
+https://setoxxx.github.io/nycif-field-desk/?v=public-map-v10&resetFilters=1&feeds=main
 ```
 
 **Retire** legacy params: `?feed=staged&v=nycif-map-publish-02` (misleading; runtime ignores staged autoload on current index).

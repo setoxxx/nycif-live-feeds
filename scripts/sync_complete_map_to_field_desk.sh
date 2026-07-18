@@ -12,6 +12,7 @@ test -d "$DEST/.git" || { echo "field-desk not found at $DEST"; exit 1; }
 cp "$MAP/app-schema-v1-major-all-v01.js" "$DEST/app-schema-v1-major-all-v01.js"
 cp "$SRC/discovery-taxonomy-v02/discovery-patch-v02.js" "$DEST/discovery-patch-v02.js"
 cp "$SRC/discovery-taxonomy-v02/public-approved-overlays-v01.js" "$DEST/public-approved-overlays-v01.js"
+cp "$MAP/public-display-mode-v01.js" "$DEST/public-display-mode-v01.js"
 cp "$MAP/index.html" "$DEST/index.html"
 cp "$MAP/public-map-v01.css" "$DEST/public-map-v01.css"
 cp "$MAP/service-worker.js" "$DEST/service-worker.js"
@@ -22,8 +23,10 @@ cd "$DEST"
 node --check app-schema-v1-major-all-v01.js
 node --check discovery-patch-v02.js
 node --check nycif-tip-jar-v01.js
+node --check public-display-mode-v01.js
 node --check service-worker.js
-grep -q public-map-v09 index.html
+grep -q public-map-v10 index.html
+grep -q public-display-mode-v01.js index.html
 grep -q 'nycif-tip-jar-v01.js?v=06' index.html
 
 BRANCH="cursor/rc-public-map-v08-c1f9"
@@ -32,6 +35,7 @@ git add \
   app-schema-v1-major-all-v01.js \
   discovery-patch-v02.js \
   public-approved-overlays-v01.js \
+  public-display-mode-v01.js \
   index.html \
   public-map-v01.css \
   service-worker.js \
