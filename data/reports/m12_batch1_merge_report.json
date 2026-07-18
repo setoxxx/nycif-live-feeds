@@ -1,0 +1,31 @@
+{
+  "artifact_type": "m12_batch1_merge_report",
+  "generated_at_utc": "2026-07-18T19:50:47Z",
+  "phase": "m12_batch1_market_merge",
+  "batch": 1,
+  "category": "market",
+  "rows_approved": 22,
+  "review_ranks": "3645-3666",
+  "feeds_main_approved_total": {
+    "before": 30951,
+    "after": 30973,
+    "net_change": 22
+  },
+  "supplemental_export_count": 3520,
+  "qa_pass": true,
+  "conflict_pair_count": 0,
+  "safety": {
+    "location_cache_modified": false,
+    "promotion_allowed": false,
+    "public_map_modified": true,
+    "staged_feed_modified": false
+  },
+  "sample_merged_titles": [
+    "Elmhurst Greenmarket Tuesday",
+    "Ft Washington Greenmarket Tuesday",
+    "Jackson Heights Greenmarket Sunday",
+    "Corona Greenmarket Friday",
+    "Down to Earth Park Slope Farmers Market"
+  ],
+  "next_required_step": "Review batch 2 volunteer rows in data/staging/m12_batch2_pending_review.json"
+}

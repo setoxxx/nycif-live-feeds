@@ -1,0 +1,448 @@
+{
+  "allow_live_geosearch": false,
+  "appended_to_calendar_queue_count": 21,
+  "artifact_type": "m12_geocode_list_only_civic_report",
+  "category": "market",
+  "filled_count": 22,
+  "generated_at_utc": "2026-07-18T19:42:44.359884+00:00",
+  "missing_from_snapshot_count": 0,
+  "next_required_step": "Run build_supplemental_events_staging_feed.py then incremental_supplemental_intake.py --skip-rebuild. Do not approve until human review.",
+  "phase": "m12_geocode_list_only_civic_events",
+  "proposals": [
+    {
+      "address": "41 AVENUE between 80 STREET and 81 STREET  Queens",
+      "category": "market",
+      "date": "2026-07-14",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'Elmhurst Greenmarket Tuesday'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.757795,
+        "proposed_lng": -73.829374
+      },
+      "source_event_id": "1045336",
+      "status": "filled",
+      "title": "Elmhurst Greenmarket Tuesday"
+    },
+    {
+      "address": "FT WASHINGTON AVENUE between WEST  168 STREET and WEST  169 STREET  Manhattan",
+      "category": "market",
+      "date": "2026-07-14",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'Ft Washington Greenmarket Tuesday'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.842318,
+        "proposed_lng": -73.942117
+      },
+      "source_event_id": "1045496",
+      "status": "filled",
+      "title": "Ft Washington Greenmarket Tuesday"
+    },
+    {
+      "address": "EAST  192 STREET between GRAND CONCOURSE and VALENTINE AVENUE  Bronx",
+      "category": "market",
+      "date": "2026-07-14",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'Poe Park Greenmarket Tuesday'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.863856,
+        "proposed_lng": -73.895593
+      },
+      "source_event_id": "1046296",
+      "status": "filled",
+      "title": "Poe Park Greenmarket Tuesday"
+    },
+    {
+      "address": "EAST  163 STREET between BRUCKNER BOULEVARD and SOUTHERN BOULEVARD  Bronx",
+      "category": "market",
+      "date": "2026-07-15",
+      "fill": null,
+      "source_event_id": "1045616",
+      "status": "unfilled",
+      "title": "HHFM Hunts Point Market"
+    },
+    {
+      "address": "CLARKSON AVENUE between EAST   37 STREET and EAST   38 STREET  Brooklyn",
+      "category": "market",
+      "date": "2026-07-15",
+      "fill": null,
+      "source_event_id": "1045656",
+      "status": "unfilled",
+      "title": "HHFM Kings County Hospital Market"
+    },
+    {
+      "address": "MADISON AVENUE between EAST   98 STREET and EAST   99 STREET  Manhattan",
+      "category": "market",
+      "date": "2026-07-15",
+      "fill": null,
+      "source_event_id": "1046136",
+      "status": "unfilled",
+      "title": "Mount Sinai Greenmarket Wednesday"
+    },
+    {
+      "address": "EAST  125 STREET between PARK AVENUE and LEXINGTON AVENUE  Manhattan",
+      "category": "market",
+      "date": "2026-07-15",
+      "fill": null,
+      "source_event_id": "1045236",
+      "status": "unfilled",
+      "title": "East 125th Street Farmstand"
+    },
+    {
+      "address": "WEST  175 STREET between BROADWAY and WADSWORTH AVENUE  Manhattan",
+      "category": "market",
+      "date": "2026-07-16",
+      "fill": null,
+      "source_event_id": "1044136",
+      "status": "unfilled",
+      "title": "175 street Greenmarket Thursday"
+    },
+    {
+      "address": "BROADWAY between WEST  113 STREET and WEST  116 STREET  Manhattan",
+      "category": "market",
+      "date": "2026-07-16",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'Columbia Thursday Sunday Greenmarket'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.802502,
+        "proposed_lng": -73.95005
+      },
+      "source_event_id": "1045036",
+      "status": "filled",
+      "title": "Columbia Thursday Sunday Greenmarket"
+    },
+    {
+      "address": "EAST  104 STREET between THIRD AVENUE and SECOND AVENUE  Manhattan",
+      "category": "market",
+      "date": "2026-07-16",
+      "fill": null,
+      "source_event_id": "1045576",
+      "status": "unfilled",
+      "title": "HHFM East Harlem Market"
+    },
+    {
+      "address": "WEST   97 STREET between COLUMBUS AVENUE and AMSTERDAM AVENUE  Manhattan",
+      "category": "market",
+      "date": "2026-07-17",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for '97 Street Greenmarket Friday'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.793315,
+        "proposed_lng": -73.967341
+      },
+      "source_event_id": "1044476",
+      "status": "filled",
+      "title": "97 Street Greenmarket Friday"
+    },
+    {
+      "address": "ROOSEVELT AVENUE between 103 STREET and 104 STREET  Queens",
+      "category": "market",
+      "date": "2026-07-17",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'Corona Greenmarket  Friday'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.764041,
+        "proposed_lng": -73.814528
+      },
+      "source_event_id": "1045076",
+      "status": "filled",
+      "title": "Corona Greenmarket  Friday"
+    },
+    {
+      "address": "LENOX AVENUE between WEST  136 STREET and WEST  137 STREET  Manhattan",
+      "category": "market",
+      "date": "2026-07-17",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'HHFM Harlem Hospital Market'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.815549,
+        "proposed_lng": -73.941669
+      },
+      "source_event_id": "1045596",
+      "status": "filled",
+      "title": "HHFM Harlem Hospital Market"
+    },
+    {
+      "address": "PELHAM PARKWAY SOUTH between WILSON AVENUE and EASTCHESTER ROAD  Bronx",
+      "category": "market",
+      "date": "2026-07-17",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'HHFM Jacobi Hospital Market'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.856873,
+        "proposed_lng": -73.843999
+      },
+      "source_event_id": "1045636",
+      "status": "filled",
+      "title": "HHFM Jacobi Hospital Market"
+    },
+    {
+      "address": "SECOND AVENUE between EAST   97 STREET and EAST   99 STREET  Manhattan",
+      "category": "market",
+      "date": "2026-07-17",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'HHFM Metropolitan Market'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.784909,
+        "proposed_lng": -73.946343
+      },
+      "source_event_id": "1045696",
+      "status": "filled",
+      "title": "HHFM Metropolitan Market"
+    },
+    {
+      "address": "WEST   23 STREET between 8 AVENUE and 9 AVENUE  Manhattan",
+      "category": "market",
+      "date": "2026-07-18",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'Down to Earth Chelsea Farmers Market'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.745901,
+        "proposed_lng": -73.999919
+      },
+      "source_event_id": "1045196",
+      "status": "filled",
+      "title": "Down to Earth Chelsea Farmers Market"
+    },
+    {
+      "address": "ISHAM STREET between SEAMAN AVENUE and COOPER STREET  Manhattan",
+      "category": "market",
+      "date": "2026-07-18",
+      "fill": null,
+      "source_event_id": "1045816",
+      "status": "unfilled",
+      "title": "Inwood Greenmarket Saturday"
+    },
+    {
+      "address": "SCHENCK AVENUE between NEW LOTS AVENUE and LIVONIA AVENUE  Brooklyn",
+      "category": "market",
+      "date": "2026-07-18",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'East New York Farmers Market'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.665672,
+        "proposed_lng": -73.8888
+      },
+      "source_event_id": "1045256",
+      "status": "filled",
+      "title": "East New York Farmers Market"
+    },
+    {
+      "address": "10 AVENUE between WEST   57 STREET and WEST   58 STREET  Manhattan",
+      "category": "market",
+      "date": "2026-07-18",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for '57 Street Saturday Greenmarket'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.765055,
+        "proposed_lng": -73.97614
+      },
+      "source_event_id": "1044376",
+      "status": "filled",
+      "title": "57 Street Saturday Greenmarket"
+    },
+    {
+      "address": "EAST   82 STREET between 1 AVENUE and YORK AVENUE  Manhattan",
+      "category": "market",
+      "date": "2026-07-18",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for '82 Street Greenmarket Saturday'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.774589,
+        "proposed_lng": -73.951609
+      },
+      "source_event_id": "1044416",
+      "status": "filled",
+      "title": "82 Street Greenmarket Saturday"
+    },
+    {
+      "address": "LENOX AVENUE between WEST  117 STREET and WEST  118 STREET  Manhattan",
+      "category": "market",
+      "date": "2026-07-18",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'HHFM Lenox Avenue Market'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.802916,
+        "proposed_lng": -73.950128
+      },
+      "source_event_id": "1045676",
+      "status": "filled",
+      "title": "HHFM Lenox Avenue Market"
+    },
+    {
+      "address": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET  Brooklyn",
+      "category": "market",
+      "date": "2026-07-18",
+      "fill": null,
+      "source_event_id": "1046436",
+      "status": "unfilled",
+      "title": "RiseBoro Farmers Markets at Maria Hernandez Park"
+    },
+    {
+      "address": "2 AVENUE between EAST   32 STREET and EAST   33 STREET  Manhattan",
+      "category": "market",
+      "date": "2026-07-19",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'Murray Hill Farmers Market'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.746663,
+        "proposed_lng": -73.982954
+      },
+      "source_event_id": "1046156",
+      "status": "filled",
+      "title": "Murray Hill Farmers Market"
+    },
+    {
+      "address": "4 STREET between 5 AVENUE and DEAD END  Brooklyn",
+      "category": "market",
+      "date": "2026-07-19",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'Down to Earth Park Slope Farmers Market'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.66991,
+        "proposed_lng": -73.979066
+      },
+      "source_event_id": "1045216",
+      "status": "filled",
+      "title": "Down to Earth Park Slope Farmers Market"
+    },
+    {
+      "address": "CARROLL STREET between SMITH STREET and COURT STREET  Brooklyn",
+      "category": "market",
+      "date": "2026-07-19",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'Carroll Gardens Greenmarket Sunday'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.681072,
+        "proposed_lng": -73.995515
+      },
+      "source_event_id": "1044916",
+      "status": "filled",
+      "title": "Carroll Gardens Greenmarket Sunday"
+    },
+    {
+      "address": "CORTELYOU ROAD between RUGBY ROAD and ARGYLE ROAD  Brooklyn",
+      "category": "market",
+      "date": "2026-07-19",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'Cortelyou Greenmarket Sunday'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.640351,
+        "proposed_lng": -73.96603
+      },
+      "source_event_id": "1045096",
+      "status": "filled",
+      "title": "Cortelyou Greenmarket Sunday"
+    },
+    {
+      "address": "QUEENS BOULEVARD between 69 ROAD and 70 AVENUE  Queens",
+      "category": "market",
+      "date": "2026-07-19",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'Forest Hills Greenmarket Sunday'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.727077,
+        "proposed_lng": -73.855153
+      },
+      "source_event_id": "1045476",
+      "status": "filled",
+      "title": "Forest Hills Greenmarket Sunday"
+    },
+    {
+      "address": "79 STREET between NORTHERN BOULEVARD and 34 AVENUE  Queens",
+      "category": "market",
+      "date": "2026-07-19",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'Jackson Heights Greenmarket Sunday'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.718927,
+        "proposed_lng": -73.875609
+      },
+      "source_event_id": "1045836",
+      "status": "filled",
+      "title": "Jackson Heights Greenmarket Sunday"
+    },
+    {
+      "address": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET  Brooklyn",
+      "category": "market",
+      "date": "2026-07-19",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'RiseBoro Farmers Markets at Irving Square Park'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.693166,
+        "proposed_lng": -73.90784
+      },
+      "source_event_id": "1046416",
+      "status": "filled",
+      "title": "RiseBoro Farmers Markets at Irving Square Park"
+    },
+    {
+      "address": "AVENUE OF AMERICAS between CARMINE STREET and WEST    3 STREET  Manhattan",
+      "category": "market",
+      "date": "2026-08-06",
+      "fill": {
+        "confidence_reason": "M12 read-only location_cache memory match for 'south villge  farmers market'; manual review only.",
+        "fill_method": "location_cache_readonly_memory",
+        "geocoder_confidence": "high",
+        "geocoder_source": "location_cache_readonly_memory",
+        "proposed_lat": 40.727677,
+        "proposed_lng": -73.991661
+      },
+      "source_event_id": "1046576",
+      "status": "filled",
+      "title": "south villge  farmers market"
+    }
+  ],
+  "proposals_path": "data/staging/m12_geocode_proposals_market.json",
+  "qa_pass": false,
+  "queue_path": "data/supplemental_calendar_only_review_queue.json",
+  "safety": {
+    "location_cache_modified": false,
+    "manual_review_status": "pending",
+    "promotion_allowed": false,
+    "public_map_modified": false
+  },
+  "target_count": 30,
+  "unfilled_count": 8
+}
