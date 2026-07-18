@@ -70,4 +70,5 @@ if git diff --cached --quiet; then
 fi
 
 git commit -m "Deploy supplemental approved export preview (3493 events)"
+git pull --rebase origin main
 git push origin main

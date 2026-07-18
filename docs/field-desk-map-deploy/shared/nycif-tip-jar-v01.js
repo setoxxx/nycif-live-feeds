@@ -75,12 +75,30 @@
         background: rgba(17,24,39,.96);
         box-shadow: 0 16px 36px rgba(0,0,0,.35);
         color: #fde68a;
+        transform-origin: top right;
+      }
+      .nycif-tip-jar.is-open .nycif-tip-jar-panel {
+        min-width: 252px;
+        padding: 14px 14px 16px;
+        border-color: rgba(251,191,36,.5);
+        box-shadow: 0 20px 44px rgba(0,0,0,.42), 0 0 0 1px rgba(251,191,36,.12);
+      }
+      .nycif-tip-jar.is-open .nycif-tip-jar-btn {
+        transform: scale(1.04);
+        border-color: rgba(252,211,77,.75);
+      }
+      .nycif-tip-jar-btn {
+        transition: transform .2s ease, border-color .2s ease;
       }
       .nycif-tip-jar-panel[hidden] { display: none; }
       .nycif-tip-jar-panel h3 {
         margin: 0 0 8px;
         font: 700 12px/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         color: #fcd34d;
+      }
+      .nycif-tip-jar.is-open .nycif-tip-jar-panel h3 {
+        margin-bottom: 10px;
+        font-size: 13px;
       }
       .nycif-tip-jar-panel a {
         display: flex;
@@ -94,7 +112,24 @@
         color: #fff7ed;
         text-decoration: none;
         font: 600 13px/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
+        transition: background .18s ease, border-color .18s ease, box-shadow .18s ease,
+          transform .22s ease, padding .22s ease;
+      }
+      .nycif-tip-jar.is-open .nycif-tip-jar-panel a {
+        gap: 12px;
+        padding: 12px 14px;
+        margin-top: 8px;
+        border-radius: 12px;
+        font-size: 15px;
+        transform: scale(1);
+        animation: nycif-tip-jar-link-pop 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+      }
+      .nycif-tip-jar.is-open .nycif-tip-jar-panel a:nth-child(2) { animation-delay: 0.04s; }
+      .nycif-tip-jar.is-open .nycif-tip-jar-panel a:nth-child(3) { animation-delay: 0.12s; }
+      .nycif-tip-jar.is-open .nycif-tip-jar-panel a:nth-child(4) { animation-delay: 0.2s; }
+      @keyframes nycif-tip-jar-link-pop {
+        0% { opacity: 0; transform: scale(0.88) translateY(-6px); }
+        100% { opacity: 1; transform: scale(1) translateY(0); }
       }
       .nycif-tip-jar-panel a:hover {
         background: rgba(251,191,36,.12);
@@ -121,11 +156,22 @@
         height: 24px;
         display: grid;
         place-items: center;
+        transition: width .22s ease, height .22s ease, flex-basis .22s ease;
+      }
+      .nycif-tip-jar.is-open .nycif-tip-jar-panel .pay-emoji-wrap {
+        flex: 0 0 36px;
+        width: 36px;
+        height: 36px;
       }
       .nycif-tip-jar-panel .pay-emoji {
         font-size: 18px;
         line-height: 1;
         display: block;
+        transition: font-size .22s ease, transform .22s ease;
+      }
+      .nycif-tip-jar.is-open .nycif-tip-jar-panel .pay-emoji {
+        font-size: 28px;
+        transform: scale(1);
       }
       .nycif-tip-jar-panel .pay-heart {
         position: absolute;
@@ -138,6 +184,12 @@
         pointer-events: none;
         opacity: 0;
         transform: scale(0.85);
+        transition: font-size .22s ease, top .22s ease, right .22s ease;
+      }
+      .nycif-tip-jar.is-open .nycif-tip-jar-panel .pay-heart {
+        top: -2px;
+        right: -4px;
+        font-size: 11px;
       }
       .nycif-tip-jar-panel:not([hidden]) .pay-heart {
         opacity: 0.92;
@@ -161,6 +213,9 @@
           animation: none !important;
           opacity: 0.85;
           transform: none;
+        }
+        .nycif-tip-jar.is-open .nycif-tip-jar-panel a {
+          animation: none;
         }
         .nycif-tip-jar.shake .nycif-tip-jar-emoji {
           animation: none;
@@ -202,25 +257,27 @@
     const panel = document.getElementById('nycifTipJarPanel');
     if (!button || !panel) return;
 
-    button.addEventListener('click', (event) => {
-      event.stopPropagation();
-      const open = panel.hidden;
+    const setPanelOpen = (open) => {
       panel.hidden = !open;
       button.setAttribute('aria-expanded', String(open));
+      root.classList.toggle('is-open', open);
       if (open) root.classList.remove('shake');
+    };
+
+    button.addEventListener('click', (event) => {
+      event.stopPropagation();
+      setPanelOpen(panel.hidden);
     });
 
     document.addEventListener('click', (event) => {
       if (!root.contains(event.target)) {
-        panel.hidden = true;
-        button.setAttribute('aria-expanded', 'false');
+        setPanelOpen(false);
       }
     });
 
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape' && !panel.hidden) {
-        panel.hidden = true;
-        button.setAttribute('aria-expanded', 'false');
+        setPanelOpen(false);
       }
     });
 
@@ -240,7 +297,7 @@
   }
 
   window.NYCIF_TIP_JAR = {
-    VERSION: 'nycif-tip-jar-v02',
+    VERSION: 'nycif-tip-jar-v03',
     TIP_JAR_LINKS,
     install: installTipJar,
   };
