@@ -943,10 +943,16 @@ def main() -> int:
     review = [e for e in accepted if e["nycif"]["data_layer"] != "approved_staged"]
     seen_approved_ids = {e.get("id") for e in approved}
     folded = 0
+    fold_skipped_pending = 0
+    from discovery_approved_dedupe import supplemental_fold_eligible  # noqa: E402
+
     for e in review:
         if e.get("event_role") != "public_event":
             continue
         if e.get("category") not in PUBLIC_SUPPLEMENTAL_CATEGORIES:
+            continue
+        if not supplemental_fold_eligible(e):
+            fold_skipped_pending += 1
             continue
         eid = e.get("id")
         if not eid or eid in seen_approved_ids:
@@ -961,7 +967,7 @@ def main() -> int:
         approved.append(pub)
         seen_approved_ids.add(eid)
         folded += 1
-    print(json.dumps({"public_supplemental_folded_into_approved": folded}))
+    print(json.dumps({"public_supplemental_folded_into_approved": folded, "fold_skipped_pending_or_unready": fold_skipped_pending}))
     baseline_approved_total = len(approved)
     from supplemental_discovery_merge import (  # noqa: E402
         fold_approved_supplemental_export,
@@ -980,6 +986,16 @@ def main() -> int:
         errors=[],
     )
     print(json.dumps({"supplemental_approved_export_merge": supplemental_merge_stats}))
+    from discovery_approved_dedupe import dedupe_approved_events  # noqa: E402
+
+    approved, dedupe_stats = dedupe_approved_events(approved)
+    write_json("data/reports/discovery_approved_dedupe_report.json", {
+        "artifact_type": "discovery_approved_dedupe_report",
+        "generated_at_utc": generated_at,
+        "qa_pass": True,
+        **dedupe_stats,
+    })
+    print(json.dumps({"discovery_approved_dedupe": dedupe_stats}))
     major = [
         e
         for e in approved
