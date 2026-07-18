@@ -1,18 +1,18 @@
 {
   "artifact_type": "nyc_feast_festival_reference_match_report",
-  "generated_at_utc": "2026-07-18T21:10:57Z",
+  "generated_at_utc": "2026-07-18T21:57:43Z",
   "qa_pass": true,
-  "seed_count": 143,
+  "seed_count": 163,
   "status_counts": {
-    "not_in_raw_snapshot": 129,
-    "title_match": 10,
+    "not_in_raw_snapshot": 146,
+    "title_match": 13,
     "confirmed_permit_id": 1,
     "permit_id_mismatch": 3
   },
-  "confirmed_in_raw_snapshot": 11,
+  "confirmed_in_raw_snapshot": 14,
   "multi_day_confirmed_in_raw_snapshot": 1,
   "permit_id_mismatch_count": 3,
-  "not_in_raw_snapshot_count": 129,
+  "not_in_raw_snapshot_count": 146,
   "confirmed_samples": [
     {
       "key": "dumbo-drop-block-party",
@@ -67,6 +67,34 @@
       "notes": []
     },
     {
+      "key": "mount-carmel-bradley-avenue-staten-island",
+      "canonical_name": "Feast of Our Lady of Mount Carmel (Bradley Avenue, Staten Island)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "872477",
+      "projected_start": "2026-07-12",
+      "projected_end": "2026-07-12",
+      "location_hint": "BRADLEY AVENUE",
+      "borough": "Staten Island",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "948699",
+        "event_name": "Feast of Our Lady of Mount Carmel",
+        "event_type": "Religious Event",
+        "start_date_time": "2026-07-12T13:00:00.000",
+        "end_date_time": "2026-07-12T15:30:00.000",
+        "event_borough": "Staten Island",
+        "event_location": "BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE,  WESTWOOD AVENUE between GRAVES STREET and BRADLEY AVENUE,  BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE,  GRAVES STREET between WESTWOOD AVENUE and HOLDEN BOULEVARD,  HOLDEN BOULEVARD between GRAVES STREET and BRADLEY AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
       "key": "mount-carmel-rosebank",
       "canonical_name": "Feast of Our Lady of Mount Carmel (Rosebank)",
       "event_kind": "religious_feast",
@@ -91,6 +119,62 @@
         "span_days": 1
       },
       "notes": []
+    },
+    {
+      "key": "st-bernard-madonna-del-carmine-bergen-beach",
+      "canonical_name": "Feast of Madonna del Carmine (St. Bernard, Bergen Beach)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": "820048",
+      "projected_start": "2026-07-23",
+      "projected_end": "2026-07-26",
+      "location_hint": "EAST 69 STREET & AVENUE U",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "948699",
+        "event_name": "Feast of Our Lady of Mount Carmel",
+        "event_type": "Religious Event",
+        "start_date_time": "2026-07-12T13:00:00.000",
+        "end_date_time": "2026-07-12T15:30:00.000",
+        "event_borough": "Staten Island",
+        "event_location": "BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE,  WESTWOOD AVENUE between GRAVES STREET and BRADLEY AVENUE,  BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE,  GRAVES STREET between WESTWOOD AVENUE and HOLDEN BOULEVARD,  HOLDEN BOULEVARD between GRAVES STREET and BRADLEY AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
+      "key": "st-irene-festival-astoria",
+      "canonical_name": "St. Irene Festival (Astoria)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": "818506",
+      "projected_start": "2026-07-23",
+      "projected_end": "2026-07-26",
+      "location_hint": "23 AVENUE",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "955268",
+        "event_name": "St. Irene Feast Annual celebration",
+        "event_type": "Religious Event",
+        "start_date_time": "2026-07-26T11:30:00.000",
+        "end_date_time": "2026-07-26T13:00:00.000",
+        "event_borough": "Queens",
+        "event_location": "3607 23 AVENUE, 23 AVENUE between 36 STREET and 33 STREET,  33 STREET between 23 AVENUE and DITMARS BOULEVARD,  DITMARS BOULEVARD between 33 STREET and 36 STREET,  36 STREET between DITMARS BOULEVARD and 23 AVENUE, 3607 23 AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
     },
     {
       "key": "fourth-avenue-brooklyn-fall-festival",

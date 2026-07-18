@@ -1,6 +1,6 @@
 {
   "artifact_type": "nyc_sapo_feast_festival_reference",
-  "generated_at_utc": "2026-07-18T21:10:57Z",
+  "generated_at_utc": "2026-07-18T21:57:43Z",
   "source_seed": "data/staging/nyc_feast_festival_reference_seed.json",
   "warning": "Projected feast/fair rows are mapping hints only. Permit IDs from external lists are often wrong; only raw-match rows are SAPO-confirmed in this snapshot.",
   "emoji_guide": {
@@ -688,6 +688,24 @@
       ]
     },
     {
+      "key": "annual-feast-st-theresa-bronx",
+      "canonical_name": "Annual Feast of St. Theresa (Bronx)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": "826727",
+      "projected_start": "2026-06-17",
+      "projected_end": "2026-06-21",
+      "location_hint": "ST THERESA AVENUE",
+      "borough": "Bronx",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "flatiron-district-summer-kickoff",
       "canonical_name": "Flatiron District Summer Kickoff",
       "event_kind": "street_fair",
@@ -698,6 +716,60 @@
       "projected_end": "2026-06-20",
       "location_hint": "5 AVENUE",
       "borough": "Manhattan",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "annual-feast-procession-bellerose",
+      "canonical_name": "Annual Feast Procession (Bellerose)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "853836",
+      "projected_start": "2026-06-21",
+      "projected_end": "2026-06-21",
+      "location_hint": "248 STREET",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "feast-corpus-christi-bronx",
+      "canonical_name": "Feast of Corpus Christi (Bronx)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "862181",
+      "projected_start": "2026-06-21",
+      "projected_end": "2026-06-21",
+      "location_hint": "EAST 207 STREET",
+      "borough": "Bronx",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "feast-corpus-christi-williamsburg",
+      "canonical_name": "Feast of Corpus Christi (Williamsburg)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "867831",
+      "projected_start": "2026-06-21",
+      "projected_end": "2026-06-21",
+      "location_hint": "METROPOLITAN AVENUE",
+      "borough": "Brooklyn",
       "source": "google_studio_bulk_patch",
       "match_status": "not_in_raw_snapshot",
       "raw_match": null,
@@ -733,6 +805,42 @@
       "projected_start": "2026-06-24",
       "projected_end": "2026-06-28",
       "location_hint": "ASTORIA PARK PARKING LOT",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "feast-sacred-heart-carroll-gardens",
+      "canonical_name": "Feast of the Sacred Heart (Carroll Gardens)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "840716",
+      "projected_start": "2026-06-26",
+      "projected_end": "2026-06-26",
+      "location_hint": "SUMMIT STREET",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "our-lady-perpetual-help-springfield-gardens",
+      "canonical_name": "Our Lady of Perpetual Help Feast (Springfield Gardens)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "869822",
+      "projected_start": "2026-06-26",
+      "projected_end": "2026-06-26",
+      "location_hint": "SPRINGFIELD BOULEVARD",
       "borough": "Queens",
       "source": "google_studio_bulk_patch",
       "match_status": "not_in_raw_snapshot",
@@ -858,6 +966,34 @@
       ]
     },
     {
+      "key": "mount-carmel-bradley-avenue-staten-island",
+      "canonical_name": "Feast of Our Lady of Mount Carmel (Bradley Avenue, Staten Island)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "872477",
+      "projected_start": "2026-07-12",
+      "projected_end": "2026-07-12",
+      "location_hint": "BRADLEY AVENUE",
+      "borough": "Staten Island",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "948699",
+        "event_name": "Feast of Our Lady of Mount Carmel",
+        "event_type": "Religious Event",
+        "start_date_time": "2026-07-12T13:00:00.000",
+        "end_date_time": "2026-07-12T15:30:00.000",
+        "event_borough": "Staten Island",
+        "event_location": "BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE,  WESTWOOD AVENUE between GRAVES STREET and BRADLEY AVENUE,  BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE,  GRAVES STREET between WESTWOOD AVENUE and HOLDEN BOULEVARD,  HOLDEN BOULEVARD between GRAVES STREET and BRADLEY AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
       "key": "financial-district-summer-festival",
       "canonical_name": "Financial District Summer Festival",
       "event_kind": "street_fair",
@@ -886,6 +1022,24 @@
       "projected_end": "2026-07-12",
       "location_hint": "MONTAGUE STREET",
       "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "our-lady-mount-carmel-belmont-bronx",
+      "canonical_name": "Our Lady of Mount Carmel Feast (Belmont, Bronx)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "863895",
+      "projected_start": "2026-07-12",
+      "projected_end": "2026-07-12",
+      "location_hint": "EAST 187 STREET",
+      "borough": "Bronx",
       "source": "google_studio_bulk_patch",
       "match_status": "not_in_raw_snapshot",
       "raw_match": null,
@@ -956,6 +1110,24 @@
       ]
     },
     {
+      "key": "st-gabriels-episcopal-street-fair",
+      "canonical_name": "St. Gabriel's Episcopal Church Street Fair",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "832820",
+      "projected_start": "2026-07-18",
+      "projected_end": "2026-07-18",
+      "location_hint": "HAWTHORNE STREET",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "vanderbilt-avenue-summer-fair",
       "canonical_name": "Vanderbilt Avenue Open Streets & Summer Fair",
       "event_kind": "street_fair",
@@ -989,6 +1161,62 @@
       "raw_match": null,
       "notes": [
         "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "st-bernard-madonna-del-carmine-bergen-beach",
+      "canonical_name": "Feast of Madonna del Carmine (St. Bernard, Bergen Beach)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": "820048",
+      "projected_start": "2026-07-23",
+      "projected_end": "2026-07-26",
+      "location_hint": "EAST 69 STREET & AVENUE U",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "948699",
+        "event_name": "Feast of Our Lady of Mount Carmel",
+        "event_type": "Religious Event",
+        "start_date_time": "2026-07-12T13:00:00.000",
+        "end_date_time": "2026-07-12T15:30:00.000",
+        "event_borough": "Staten Island",
+        "event_location": "BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE,  WESTWOOD AVENUE between GRAVES STREET and BRADLEY AVENUE,  BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE,  GRAVES STREET between WESTWOOD AVENUE and HOLDEN BOULEVARD,  HOLDEN BOULEVARD between GRAVES STREET and BRADLEY AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
+      "key": "st-irene-festival-astoria",
+      "canonical_name": "St. Irene Festival (Astoria)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "claimed_permit_id": "818506",
+      "projected_start": "2026-07-23",
+      "projected_end": "2026-07-26",
+      "location_hint": "23 AVENUE",
+      "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "955268",
+        "event_name": "St. Irene Feast Annual celebration",
+        "event_type": "Religious Event",
+        "start_date_time": "2026-07-26T11:30:00.000",
+        "end_date_time": "2026-07-26T13:00:00.000",
+        "event_borough": "Queens",
+        "event_location": "3607 23 AVENUE, 23 AVENUE between 36 STREET and 33 STREET,  33 STREET between 23 AVENUE and DITMARS BOULEVARD,  DITMARS BOULEVARD between 33 STREET and 36 STREET,  36 STREET between DITMARS BOULEVARD and 23 AVENUE, 3607 23 AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
       ]
     },
     {
@@ -1110,6 +1338,24 @@
       ]
     },
     {
+      "key": "church-annual-festival-mermaid-avenue",
+      "canonical_name": "Church Annual Festival (Mermaid Avenue, Coney Island)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "819645",
+      "projected_start": "2026-08-08",
+      "projected_end": "2026-08-08",
+      "location_hint": "MERMAID AVENUE",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "eighth-avenue-summer-stroll",
       "canonical_name": "Eighth Avenue Summer Stroll",
       "event_kind": "street_fair",
@@ -1210,6 +1456,24 @@
       "projected_end": "2026-08-09",
       "location_hint": "GRAND AVENUE",
       "borough": "Queens",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "feast-our-lady-el-cisne-park-slope",
+      "canonical_name": "Feast of Our Lady of El Cisne (Park Slope)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "877073",
+      "projected_start": "2026-08-15",
+      "projected_end": "2026-08-15",
+      "location_hint": "9 STREET",
+      "borough": "Brooklyn",
       "source": "google_studio_bulk_patch",
       "match_status": "not_in_raw_snapshot",
       "raw_match": null,
@@ -1550,6 +1814,24 @@
       ]
     },
     {
+      "key": "st-george-church-bay-ridge-festival",
+      "canonical_name": "Annual Festival of St. George Church (Bay Ridge)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "875124",
+      "projected_start": "2026-09-06",
+      "projected_end": "2026-09-06",
+      "location_hint": "11 AVENUE",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "brazilian-day-festival",
       "canonical_name": "Brazilian Day Festival",
       "event_kind": "cultural_festival",
@@ -1650,6 +1932,24 @@
       ]
     },
     {
+      "key": "feast-of-the-cross-bay-ridge",
+      "canonical_name": "Feast of the Cross (Bay Ridge)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "887428",
+      "projected_start": "2026-09-12",
+      "projected_end": "2026-09-12",
+      "location_hint": "84 STREET",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "park-avenue-autumn-fair",
       "canonical_name": "Park Avenue Autumn Fair",
       "event_kind": "street_fair",
@@ -1668,6 +1968,24 @@
       ]
     },
     {
+      "key": "procession-holy-cross-east-flatbush",
+      "canonical_name": "Procession for the Feast of the Holy Cross (East Flatbush)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "881905",
+      "projected_start": "2026-09-12",
+      "projected_end": "2026-09-12",
+      "location_hint": "CHURCH AVENUE",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
       "key": "upper-east-side-first-avenue-festival",
       "canonical_name": "Upper East Side First Avenue Festival",
       "event_kind": "street_fair",
@@ -1678,6 +1996,60 @@
       "projected_end": "2026-09-12",
       "location_hint": "1 AVENUE",
       "borough": "Manhattan",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "feast-figli-maria-ss-addolorata-bensonhurst",
+      "canonical_name": "Feast of Figli Maria SS. Addolorata (Bensonhurst)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "885625",
+      "projected_start": "2026-09-13",
+      "projected_end": "2026-09-13",
+      "location_hint": "15 AVENUE",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "feast-our-lady-of-sorrows-carroll-gardens",
+      "canonical_name": "Feast of Our Lady of Sorrows (Carroll Gardens)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "878162",
+      "projected_start": "2026-09-13",
+      "projected_end": "2026-09-13",
+      "location_hint": "SUMMIT STREET",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "parish-feast-day-maspeth",
+      "canonical_name": "Parish Feast Day (Maspeth)",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "claimed_permit_id": "880645",
+      "projected_start": "2026-09-13",
+      "projected_end": "2026-09-13",
+      "location_hint": "56 ROAD",
+      "borough": "Queens",
       "source": "google_studio_bulk_patch",
       "match_status": "not_in_raw_snapshot",
       "raw_match": null,
@@ -2699,6 +3071,24 @@
       "projected_start": "2027-01-01",
       "projected_end": "2027-01-01",
       "location_hint": "STILLWELL AVENUE and BOARDWALK",
+      "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "not_in_raw_snapshot",
+      "raw_match": null,
+      "notes": [
+        "Not present in committed raw snapshot yet; keep projected row for registry/emoji mapping."
+      ]
+    },
+    {
+      "key": "gerritsen-beach-st-patricks-parade",
+      "canonical_name": "Gerritsen Beach St. Patrick's Day Parade",
+      "event_kind": "parade",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "claimed_permit_id": null,
+      "projected_start": "2027-03-27",
+      "projected_end": "2027-03-27",
+      "location_hint": "GERRITSEN AVENUE",
       "borough": "Brooklyn",
       "source": "google_studio_bulk_patch",
       "match_status": "not_in_raw_snapshot",

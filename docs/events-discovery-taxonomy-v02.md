@@ -1,14 +1,14 @@
 # Discovery taxonomy v02
 
-Generated: `2026-07-18T21:14:56Z`
+Generated: `2026-07-18T22:01:59Z`
 
-- Accepted canonical records: **33388**
+- Accepted canonical records: **33408**
 - Invalid/rejected documented: **0**
-- Standalone public events: **33237**
+- Standalone public events: **33257**
 - Grouped supporting records: **5**
 - List-only: **93**
-- Categories: `{'parks': 5443, 'civic': 274, 'media': 47, 'sports': 23532, 'market': 576, 'fitness': 566, 'arts': 390, 'education': 255, 'volunteer': 162, 'family': 1908, 'services': 30, 'environment': 6, 'housing': 21, 'general': 160, 'tours': 15, 'government': 1, 'jobs': 2}`
-- Interests: `{'parks': 8106, 'market': 769, 'civic': 275, 'media': 47, 'sports': 23535, 'fitness': 566, 'family': 2036, 'education': 1152, 'arts': 395, 'volunteer': 162, 'services': 30, 'environment': 39, 'housing': 21, 'general': 160, 'tours': 15, 'government': 1, 'jobs': 2}`
+- Categories: `{'parks': 5443, 'civic': 290, 'media': 47, 'sports': 23532, 'market': 576, 'fitness': 566, 'arts': 394, 'education': 255, 'volunteer': 162, 'family': 1908, 'services': 30, 'environment': 6, 'housing': 21, 'general': 160, 'tours': 15, 'government': 1, 'jobs': 2}`
+- Interests: `{'parks': 8106, 'market': 785, 'civic': 291, 'media': 47, 'sports': 23535, 'fitness': 566, 'family': 2036, 'education': 1152, 'arts': 399, 'volunteer': 162, 'services': 30, 'environment': 39, 'housing': 21, 'general': 160, 'tours': 15, 'government': 1, 'jobs': 2}`
 
 ## Filter handshake
 

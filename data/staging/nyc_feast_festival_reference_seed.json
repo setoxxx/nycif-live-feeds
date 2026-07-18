@@ -1,6 +1,6 @@
 {
   "artifact_type": "nyc_feast_festival_reference_seed",
-  "version": 2,
+  "version": 3,
   "notes": [
     "Curated from operator/Google Studio projected feast lists for mapping and registry aliases.",
     "claimed_permit_id values are hints only and frequently mismatch the committed raw snapshot.",
@@ -742,6 +742,28 @@
       "bulk_import_batch": "google_studio_parts_1_9_2026"
     },
     {
+      "key": "annual-feast-st-theresa-bronx",
+      "canonical_name": "Annual Feast of St. Theresa (Bronx)",
+      "aliases": [
+        "Annual Feast of St. Theresa (Bronx)",
+        "St. Theresa Feast Bronx",
+        "Feast of St Theresa Throggs Neck"
+      ],
+      "claimed_permit_id": "826727",
+      "projected_start": "2026-06-17",
+      "projected_end": "2026-06-21",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "borough": "Bronx",
+      "location_hint": "ST THERESA AVENUE",
+      "display_location": "ST THERESA AVENUE between WESTCHESTER AVENUE and HUTCHINSON RIVER PARKWAY, Bronx, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
+    },
+    {
       "key": "flatiron-district-summer-kickoff",
       "canonical_name": "Flatiron District Summer Kickoff",
       "aliases": [
@@ -760,6 +782,72 @@
       "reference_lng": null,
       "source": "google_studio_bulk_patch",
       "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "annual-feast-procession-bellerose",
+      "canonical_name": "Annual Feast Procession (Bellerose)",
+      "aliases": [
+        "Annual Feast Procession (Bellerose)",
+        "Bellerose Feast Procession",
+        "248 Street Feast Procession"
+      ],
+      "claimed_permit_id": "853836",
+      "projected_start": "2026-06-21",
+      "projected_end": "2026-06-21",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "248 STREET",
+      "display_location": "248 STREET between HILLSIDE AVENUE and 85 AVENUE, Queens, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
+    },
+    {
+      "key": "feast-corpus-christi-bronx",
+      "canonical_name": "Feast of Corpus Christi (Bronx)",
+      "aliases": [
+        "Feast of Corpus Christi (Bronx)",
+        "Corpus Christi Feast Bronx",
+        "Corpus Christi Procession Bronx"
+      ],
+      "claimed_permit_id": "862181",
+      "projected_start": "2026-06-21",
+      "projected_end": "2026-06-21",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Bronx",
+      "location_hint": "EAST 207 STREET",
+      "display_location": "EAST 207 STREET between BAINBRIDGE AVENUE and PERRY AVENUE, Bronx, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
+    },
+    {
+      "key": "feast-corpus-christi-williamsburg",
+      "canonical_name": "Feast of Corpus Christi (Williamsburg)",
+      "aliases": [
+        "Feast of Corpus Christi (Williamsburg)",
+        "Corpus Christi Procession Williamsburg",
+        "Corpus Christi Feast Metropolitan Avenue"
+      ],
+      "claimed_permit_id": "867831",
+      "projected_start": "2026-06-21",
+      "projected_end": "2026-06-21",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "METROPOLITAN AVENUE",
+      "display_location": "METROPOLITAN AVENUE between BEDFORD AVENUE and BERRY STREET, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
     },
     {
       "key": "seventh-heaven-street-fair",
@@ -800,6 +888,50 @@
       "reference_lng": null,
       "source": "google_studio_bulk_patch",
       "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "feast-sacred-heart-carroll-gardens",
+      "canonical_name": "Feast of the Sacred Heart (Carroll Gardens)",
+      "aliases": [
+        "Feast of the Sacred Heart (Carroll Gardens)",
+        "Sacred Heart Feast Brooklyn",
+        "Sacred Heart Summit Street"
+      ],
+      "claimed_permit_id": "840716",
+      "projected_start": "2026-06-26",
+      "projected_end": "2026-06-26",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "SUMMIT STREET",
+      "display_location": "SUMMIT STREET between HICKS STREET and COLUMBIA STREET, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
+    },
+    {
+      "key": "our-lady-perpetual-help-springfield-gardens",
+      "canonical_name": "Our Lady of Perpetual Help Feast (Springfield Gardens)",
+      "aliases": [
+        "Our Lady of Perpetual Help Feast (Springfield Gardens)",
+        "OLPH Feast Springfield Boulevard",
+        "Our Lady of Perpetual Help Festival Queens"
+      ],
+      "claimed_permit_id": "869822",
+      "projected_start": "2026-06-26",
+      "projected_end": "2026-06-26",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "SPRINGFIELD BOULEVARD",
+      "display_location": "SPRINGFIELD BOULEVARD between 93 AVENUE and DAVENPORT AVENUE, Queens, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
     },
     {
       "key": "nyc-pridefest",
@@ -918,6 +1050,28 @@
       "bulk_import_batch": "google_studio_parts_1_9_2026"
     },
     {
+      "key": "mount-carmel-bradley-avenue-staten-island",
+      "canonical_name": "Feast of Our Lady of Mount Carmel (Bradley Avenue, Staten Island)",
+      "aliases": [
+        "Feast of Our Lady of Mount Carmel (Bradley Avenue, Staten Island)",
+        "Mount Carmel Feast Bradley Avenue",
+        "Westwood Mount Carmel Staten Island"
+      ],
+      "claimed_permit_id": "872477",
+      "projected_start": "2026-07-12",
+      "projected_end": "2026-07-12",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Staten Island",
+      "location_hint": "BRADLEY AVENUE",
+      "display_location": "BRADLEY AVENUE between HOLDEN BOULEVARD and WESTWOOD AVENUE, Staten Island, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
+    },
+    {
       "key": "financial-district-summer-festival",
       "canonical_name": "Financial District Summer Festival",
       "aliases": [
@@ -956,6 +1110,29 @@
       "reference_lng": null,
       "source": "google_studio_bulk_patch",
       "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "our-lady-mount-carmel-belmont-bronx",
+      "canonical_name": "Our Lady of Mount Carmel Feast (Belmont, Bronx)",
+      "aliases": [
+        "Our Lady of Mount Carmel Feast (Belmont, Bronx)",
+        "Mount Carmel Feast Arthur Avenue",
+        "OLMC Feast Belmont Bronx",
+        "Our Lady of Mt Carmel Feast Belmont"
+      ],
+      "claimed_permit_id": "863895",
+      "projected_start": "2026-07-12",
+      "projected_end": "2026-07-12",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Bronx",
+      "location_hint": "EAST 187 STREET",
+      "display_location": "EAST 187 STREET between BELMONT AVENUE and HUGHES AVENUE, Bronx, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
     },
     {
       "key": "mount-carmel-rosebank",
@@ -1014,6 +1191,28 @@
       "bulk_import_batch": "google_studio_parts_1_9_2026"
     },
     {
+      "key": "st-gabriels-episcopal-street-fair",
+      "canonical_name": "St. Gabriel's Episcopal Church Street Fair",
+      "aliases": [
+        "St. Gabriel's Episcopal Church Street Fair",
+        "St Gabriels Episcopal Street Fair",
+        "St. Gabriel Church Street Fair"
+      ],
+      "claimed_permit_id": "832820",
+      "projected_start": "2026-07-18",
+      "projected_end": "2026-07-18",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "HAWTHORNE STREET",
+      "display_location": "HAWTHORNE STREET between NOSTRAND AVENUE and NEW YORK AVENUE, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
+    },
+    {
       "key": "vanderbilt-avenue-summer-fair",
       "canonical_name": "Vanderbilt Avenue Open Streets & Summer Fair",
       "aliases": [
@@ -1052,6 +1251,55 @@
       "reference_lng": null,
       "source": "google_studio_bulk_patch",
       "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "st-bernard-madonna-del-carmine-bergen-beach",
+      "canonical_name": "Feast of Madonna del Carmine (St. Bernard, Bergen Beach)",
+      "aliases": [
+        "Feast of Madonna del Carmine (St. Bernard, Bergen Beach)",
+        "Feast of Our Lady of Mount Carmel St. Bernard",
+        "St. Bernard Parish Feast",
+        "St. Bernard of Clairvaux Feast",
+        "Gioiosa Marina Social Club Feast",
+        "Bergen Beach Mount Carmel Feast",
+        "FEAST OF OUR LADY OF MOUNT CARMEL Avenue U"
+      ],
+      "claimed_permit_id": "820048",
+      "projected_start": "2026-07-23",
+      "projected_end": "2026-07-26",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "borough": "Brooklyn",
+      "location_hint": "EAST 69 STREET & AVENUE U",
+      "display_location": "EAST 69 STREET between VETERANS AVENUE and AVENUE U, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
+    },
+    {
+      "key": "st-irene-festival-astoria",
+      "canonical_name": "St. Irene Festival (Astoria)",
+      "aliases": [
+        "St. Irene Festival (Astoria)",
+        "St Irene Feast Astoria",
+        "St. Irene Feast Annual Celebration",
+        "St Irene Church Festival"
+      ],
+      "claimed_permit_id": "818506",
+      "projected_start": "2026-07-23",
+      "projected_end": "2026-07-26",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": true,
+      "borough": "Queens",
+      "location_hint": "23 AVENUE",
+      "display_location": "23 AVENUE between 35 STREET and 37 STREET, Queens, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
     },
     {
       "key": "tudor-city-neighborhood-festival",
@@ -1173,6 +1421,28 @@
       "display_location": "PLEASANT AVENUE between EAST 114 STREET and EAST 116 STREET, Manhattan, NY"
     },
     {
+      "key": "church-annual-festival-mermaid-avenue",
+      "canonical_name": "Church Annual Festival (Mermaid Avenue, Coney Island)",
+      "aliases": [
+        "Church Annual Festival (Mermaid Avenue, Coney Island)",
+        "Mermaid Avenue Church Festival",
+        "Coney Island Church Festival"
+      ],
+      "claimed_permit_id": "819645",
+      "projected_start": "2026-08-08",
+      "projected_end": "2026-08-08",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "MERMAID AVENUE",
+      "display_location": "MERMAID AVENUE between WEST 21 STREET and WEST 22 STREET, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
+    },
+    {
       "key": "eighth-avenue-summer-stroll",
       "canonical_name": "Eighth Avenue Summer Stroll",
       "aliases": [
@@ -1291,6 +1561,28 @@
       "reference_lng": null,
       "source": "google_studio_bulk_patch",
       "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "feast-our-lady-el-cisne-park-slope",
+      "canonical_name": "Feast of Our Lady of El Cisne (Park Slope)",
+      "aliases": [
+        "Feast of Our Lady of El Cisne (Park Slope)",
+        "Religious Feast of Our Lady of El Cisne",
+        "El Cisne Feast Brooklyn"
+      ],
+      "claimed_permit_id": "877073",
+      "projected_start": "2026-08-15",
+      "projected_end": "2026-08-15",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "9 STREET",
+      "display_location": "9 STREET between 4 AVENUE and 5 AVENUE, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
     },
     {
       "key": "feast-assumption-arthur-avenue",
@@ -1643,6 +1935,28 @@
       "bulk_import_batch": "google_studio_parts_1_9_2026"
     },
     {
+      "key": "st-george-church-bay-ridge-festival",
+      "canonical_name": "Annual Festival of St. George Church (Bay Ridge)",
+      "aliases": [
+        "Annual Festival of St. George Church (Bay Ridge)",
+        "St. George Church Festival Bay Ridge",
+        "St. George Parish Festival Brooklyn"
+      ],
+      "claimed_permit_id": "875124",
+      "projected_start": "2026-09-06",
+      "projected_end": "2026-09-06",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "11 AVENUE",
+      "display_location": "11 AVENUE between 67 STREET and 66 STREET, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
+    },
+    {
       "key": "brazilian-day-festival",
       "canonical_name": "Brazilian Day Festival",
       "aliases": [
@@ -1737,6 +2051,28 @@
       "display_location": "MULBERRY STREET between CANAL STREET and EAST HOUSTON STREET, Manhattan, NY"
     },
     {
+      "key": "feast-of-the-cross-bay-ridge",
+      "canonical_name": "Feast of the Cross (Bay Ridge)",
+      "aliases": [
+        "Feast of the Cross (Bay Ridge)",
+        "Feast of the Holy Cross Bay Ridge",
+        "Holy Cross Feast 84th Street"
+      ],
+      "claimed_permit_id": "887428",
+      "projected_start": "2026-09-12",
+      "projected_end": "2026-09-12",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "84 STREET",
+      "display_location": "84 STREET between RIDGE BOULEVARD and 3 AVENUE, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
+    },
+    {
       "key": "park-avenue-autumn-fair",
       "canonical_name": "Park Avenue Autumn Fair",
       "aliases": [
@@ -1757,6 +2093,28 @@
       "bulk_import_batch": "google_studio_parts_1_9_2026"
     },
     {
+      "key": "procession-holy-cross-east-flatbush",
+      "canonical_name": "Procession for the Feast of the Holy Cross (East Flatbush)",
+      "aliases": [
+        "Procession for the Feast of the Holy Cross (East Flatbush)",
+        "Feast of the Holy Cross Procession",
+        "Holy Cross Church Avenue Procession"
+      ],
+      "claimed_permit_id": "881905",
+      "projected_start": "2026-09-12",
+      "projected_end": "2026-09-12",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "CHURCH AVENUE",
+      "display_location": "CHURCH AVENUE between VERONICA PLACE and WOODS PLACE, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
+    },
+    {
       "key": "upper-east-side-first-avenue-festival",
       "canonical_name": "Upper East Side First Avenue Festival",
       "aliases": [
@@ -1775,6 +2133,73 @@
       "reference_lng": null,
       "source": "google_studio_bulk_patch",
       "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "feast-figli-maria-ss-addolorata-bensonhurst",
+      "canonical_name": "Feast of Figli Maria SS. Addolorata (Bensonhurst)",
+      "aliases": [
+        "Feast of Figli Maria SS. Addolorata (Bensonhurst)",
+        "Figli Maria SS Addolorata",
+        "Addolorata Feast Bensonhurst",
+        "Associazione Culturale Pugliese Feast"
+      ],
+      "claimed_permit_id": "885625",
+      "projected_start": "2026-09-13",
+      "projected_end": "2026-09-13",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "15 AVENUE",
+      "display_location": "15 AVENUE between 72 STREET and 73 STREET, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
+    },
+    {
+      "key": "feast-our-lady-of-sorrows-carroll-gardens",
+      "canonical_name": "Feast of Our Lady of Sorrows (Carroll Gardens)",
+      "aliases": [
+        "Feast of Our Lady of Sorrows (Carroll Gardens)",
+        "Our Lady of Sorrows Feast",
+        "Sorrows Feast Summit Street"
+      ],
+      "claimed_permit_id": "878162",
+      "projected_start": "2026-09-13",
+      "projected_end": "2026-09-13",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "SUMMIT STREET",
+      "display_location": "SUMMIT STREET between HICKS STREET and UNION STREET, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
+    },
+    {
+      "key": "parish-feast-day-maspeth",
+      "canonical_name": "Parish Feast Day (Maspeth)",
+      "aliases": [
+        "Parish Feast Day (Maspeth)",
+        "Maspeth Parish Feast",
+        "Parish Feast 56 Road Maspeth"
+      ],
+      "claimed_permit_id": "880645",
+      "projected_start": "2026-09-13",
+      "projected_end": "2026-09-13",
+      "event_kind": "religious_feast",
+      "map_emoji": "🎡",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "56 ROAD",
+      "display_location": "56 ROAD between 61 STREET and 64 STREET, Queens, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
     },
     {
       "key": "sunset-park-fifth-avenue-festival",
@@ -2819,7 +3244,29 @@
       "reference_lng": null,
       "source": "google_studio_bulk_patch",
       "bulk_import_batch": "google_studio_parts_1_9_2026"
+    },
+    {
+      "key": "gerritsen-beach-st-patricks-parade",
+      "canonical_name": "Gerritsen Beach St. Patrick's Day Parade",
+      "aliases": [
+        "Gerritsen Beach St. Patrick's Day Parade",
+        "Gerritsen Beach St Patricks Parade",
+        "Gerritsen Avenue St Patricks Parade"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2027-03-27",
+      "projected_end": "2027-03-27",
+      "event_kind": "parade",
+      "map_emoji": "🎊",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "GERRITSEN AVENUE",
+      "display_location": "GERRITSEN AVENUE between WHITNEY AVENUE and CYRUS AVENUE, Brooklyn, NY",
+      "reference_lat": null,
+      "reference_lng": null,
+      "source": "google_studio_bulk_patch",
+      "bulk_import_batch": "operator_gap_fill_2026_07"
     }
   ],
-  "last_bulk_merge_at_utc": "2026-07-18T21:10:39Z"
+  "last_bulk_merge_at_utc": "2026-07-18T21:57:41Z"
 }

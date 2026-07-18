@@ -16,7 +16,7 @@ class ProjectedFeastDiscoveryTests(unittest.TestCase):
         self.assertTrue(path.exists())
         payload = json.loads(path.read_text(encoding="utf-8"))
         events = payload.get("events") if isinstance(payload, dict) else []
-        self.assertGreaterEqual(len(events), 100)
+        self.assertGreaterEqual(len(events), 150)
 
     def test_projected_feast_bulk_coverage_in_approved(self) -> None:
         approved = json.loads((ROOT / "data/events_discovery_v02_approved.json").read_text(encoding="utf-8"))
@@ -25,7 +25,7 @@ class ProjectedFeastDiscoveryTests(unittest.TestCase):
             for e in approved.get("events", [])
             if e.get("nycif", {}).get("projected_feast_reference")
         ]
-        self.assertGreaterEqual(len(projected), 100)
+        self.assertGreaterEqual(len(projected), 150)
 
     def test_san_gennaro_in_approved_discovery(self) -> None:
         approved = json.loads((ROOT / "data/events_discovery_v02_approved.json").read_text(encoding="utf-8"))
@@ -40,6 +40,20 @@ class ProjectedFeastDiscoveryTests(unittest.TestCase):
         self.assertEqual(str(event.get("end_date_time") or "")[:10], "2026-09-20")
         self.assertEqual(event["nycif"]["coordinate_status"], "map_ready")
         self.assertTrue(event["nycif"]["is_major"])
+
+
+    def test_st_bernard_bergen_beach_in_approved_discovery(self) -> None:
+        approved = json.loads((ROOT / "data/events_discovery_v02_approved.json").read_text(encoding="utf-8"))
+        hits = [
+            e
+            for e in approved.get("events", [])
+            if (e.get("source") or {}).get("source_event_id") == "st-bernard-madonna-del-carmine-bergen-beach"
+        ]
+        self.assertEqual(len(hits), 1)
+        event = hits[0]
+        self.assertIn("St. Bernard", event["title"])
+        self.assertEqual(event["nycif"]["coordinate_status"], "map_ready")
+        self.assertTrue(event["nycif"]["projected_feast_reference"])
 
 
 if __name__ == "__main__":
