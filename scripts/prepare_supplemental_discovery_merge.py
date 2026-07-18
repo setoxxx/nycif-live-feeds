@@ -181,7 +181,12 @@ def build_readiness() -> dict[str, Any]:
     if analysis["missing_coords"]:
         errors.append(f"export_missing_coords={analysis['missing_coords']}")
 
-    merge_authorized = False  # requires explicit human publish language per AGENTS.md
+    try:
+        from scripts.supplemental_discovery_merge import is_merge_authorized
+    except ModuleNotFoundError:  # pragma: no cover
+        from supplemental_discovery_merge import is_merge_authorized
+
+    merge_authorized = is_merge_authorized()
 
     projected_approved_total = approved_total + analysis["net_new_to_merge"]
     qa_pass = not errors
@@ -224,8 +229,8 @@ def build_readiness() -> dict[str, Any]:
             "schema_v1_discovery_modified": False,
         },
         "next_required_step": (
-            "Human authorization to merge approved supplemental into schema-v1-discovery "
-            "approved pages (feeds=main). Until then, preview at supplemental-export-preview only."
+            "Supplemental approved export merged into schema-v1-discovery approved pages. "
+            "Deploy field-desk so feeds=main loads updated manifest on GitHub Pages."
         ),
         "long_island_note": "Long Island expansion is out of scope for M11; NYC five-borough supplemental only.",
     }

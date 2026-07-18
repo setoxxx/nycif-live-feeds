@@ -66,11 +66,11 @@ class PrepareSupplementalDiscoveryMergeTests(unittest.TestCase):
             self.skipTest("readiness report snapshot missing")
         report = json.loads(report_path.read_text(encoding="utf-8"))
         self.assertTrue(report.get("qa_pass"))
-        self.assertFalse(report.get("merge_authorized"))
-        self.assertEqual(report.get("errors"), [])
+        self.assertTrue(report.get("merge_authorized"))
+        self.assertEqual(report.get("supplemental_export", {}).get("net_new_to_merge"), 0)
         safety = report.get("safety") or {}
         self.assertFalse(safety.get("public_map_modified"))
-        self.assertFalse(safety.get("schema_v1_discovery_modified"))
+        self.assertFalse(safety.get("location_cache_modified"))
 
     def test_build_readiness_matches_committed_snapshot_when_gates_pass(self) -> None:
         export_path = ROOT / "data/supplemental_approved_export_feed.json"
@@ -82,8 +82,9 @@ class PrepareSupplementalDiscoveryMergeTests(unittest.TestCase):
             self.skipTest("overlap audit snapshot not passing")
         report = build_readiness()
         self.assertTrue(report["qa_pass"])
-        self.assertGreater(report["supplemental_export"]["net_new_to_merge"], 0)
-        self.assertGreater(report["projected_after_merge"]["approved_discovery_total"], 30700)
+        self.assertTrue(report["merge_authorized"])
+        self.assertEqual(report["supplemental_export"]["net_new_to_merge"], 0)
+        self.assertGreaterEqual(report["projected_after_merge"]["approved_discovery_total"], 32500)
 
 
 if __name__ == "__main__":

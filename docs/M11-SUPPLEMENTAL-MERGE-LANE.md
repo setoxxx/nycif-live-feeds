@@ -2,17 +2,28 @@
 
 NYC five-borough supplemental calendar/Parks coverage merges into `schema-v1-discovery` **only after explicit human authorization**. Long Island expansion is a later lane.
 
-## Current state (prep only)
+**Authorized:** `supplemental_public_map_merge_authorized: true` in `status/nycif-project-status.json`
+
+## Current state (merged 2026-07-18)
+
+| Metric | Value |
+|--------|-------|
+| Approved discovery total (`feeds=main`) | **32,529** |
+| Net-new supplemental merged | **1,810** |
+| Duplicates skipped | 1,682 |
+| Overlap coord conflicts | 0 |
+| Pending human review | 0 |
+
+Merge report: `data/reports/supplemental_discovery_merge_report.json`
+
+## Prep artifacts (pre-merge / ongoing QA)
 
 | Artifact | Role |
 |----------|------|
 | `data/supplemental_manual_approval_queue.json` | Human approval source of truth |
-| `data/supplemental_approved_export_feed.json` | Approved export for field-desk preview (`production_feed: false`) |
+| `data/supplemental_approved_export_feed.json` | Approved export for field-desk preview |
 | `data/reports/supplemental_overlap_key_coord_conflict_audit_report.json` | Zero coord conflicts required |
-| `data/reports/supplemental_discovery_merge_readiness_report.json` | Merge prep QA gate |
-| `data/staging/supplemental_discovery_merge_proposal/summary.json` | Staging summary (no discovery writes) |
-
-**Not authorized yet:** `status/nycif-project-status.json` → `supplemental_public_map_merge_authorized: false`
+| `data/reports/supplemental_discovery_merge_readiness_report.json` | Merge prep QA gate (`net_new_to_merge` should be 0 after merge) |
 
 ## QA gates (must all pass)
 
@@ -41,9 +52,8 @@ Merge prep compares `(source_dataset, source_event_id, event_date)` between supp
 
 ## What this lane does **not** do
 
-- Does not edit `data/schema-v1-discovery/approved/**` (feeds=main)
-- Does not set `promotion_allowed: true` or `production_feed: true`
-- Does not modify `location_cache.json`, staged live feeds, or the public WordPress map
+- Does not set GPS `promotion_allowed: true` or edit `location_cache.json`
+- Does not modify staged live feeds directly
 - Does not expand to Long Island
 
 ## Preview (safe)
@@ -53,14 +63,12 @@ Field-desk supplemental preview (not feeds=main):
 - `docs/field-desk-map-deploy/supplemental-export-preview/`
 - Sync: `./scripts/sync_supplemental_export_preview_to_field_desk.sh`
 
-## Next step after human authorization
+## Field-desk deploy (after merge lands on main)
 
-When explicitly instructed (e.g. “merge approved supplemental into discovery” / “promote supplemental to feeds=main”):
+Discovery `feeds=main` total is now **32,529** approved events. Deploy field-desk so the map loads the updated manifest SHAs (workflow: **Deploy to Field Desk Pages**). WordPress `/map/` iframe URL unchanged unless a new `v=` cache-bust is requested.
 
-1. Implement or run discovery merge (`project_events_discovery_v02.py` or dedicated merge script) ingesting `supplemental_approved_export_feed.json`
-2. Rebuild discovery pages + manifest
-3. Run full schema-v1 / discovery QA in CI
-4. Field-desk deploy with updated `feeds=main` snapshot SHAs
-5. WordPress map unchanged unless new deploy is requested
+## Later lanes
 
-Until then, **feeds=main** remains the signed-off RC discovery feed (~30,719 approved events).
+- Long Island expansion (out of scope for M11)
+- Paid events
+- GPS Phase 2E hardening (`location_cache` promotion still unauthorized)
