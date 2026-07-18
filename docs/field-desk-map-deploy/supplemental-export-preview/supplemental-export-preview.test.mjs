@@ -16,7 +16,14 @@ const deployRoot = existsSync(join(previewDir, 'index.html'))
   : join(previewDir, '..');
 const canonicalProductionIndex = join(deployRoot, 'schema-v1-major-all-v01', 'index.html');
 const source = readFileSync(join(previewDir, 'supplemental-approved-export-preview-v01.js'), 'utf8');
-const tipJarPath = join(previewDir, '..', 'shared', 'nycif-tip-jar-v01.js');
+const tipJarCandidates = [
+  join(previewDir, '..', 'shared', 'nycif-tip-jar-v01.js'),
+  join(previewDir, 'nycif-tip-jar-v01.js'),
+];
+const tipJarPath = tipJarCandidates.find(candidate => existsSync(candidate));
+if (!tipJarPath) {
+  throw new Error(`nycif-tip-jar-v01.js not found (checked: ${tipJarCandidates.join(', ')})`);
+}
 const tipJarSource = readFileSync(tipJarPath, 'utf8');
 const redirectSource = readFileSync(join(previewDir, 'supplemental-preview-desk-redirect.js'), 'utf8');
 const previewHtml = readFileSync(join(previewDir, 'approved-export-preview.html'), 'utf8');
