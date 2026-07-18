@@ -1241,47 +1241,106 @@
     if (state.search || state.borough !== 'all') {
       return 'No events match your current search or borough. Try widening your filters.';
     }
+    const otherDayHint = categoryOtherDayHint();
+    if (otherDayHint) {
+      return otherDayHint;
+    }
     return `No events found for ${friendlyDateLabel(selectedDateKey())} yet. Try another day or check back soon.`;
   }
 
-  // Gray out category filters that have no events in the loaded set ("not ready
-  // yet"), and show a live count on the ones that do. Recomputes only when the
-  // loaded event count changes, so it is cheap across renders.
-  let _catAvailAt = -1;
-  function updateCategoryAvailability() {
-    if (_catAvailAt === state.events.length) return;
-    _catAvailAt = state.events.length;
-    const counts = {};
+  function categoryKeysForEvent(e) {
+    const keys = new Set();
+    if (e.categoryKey && (CATEGORY_META[e.categoryKey] || state.categories[e.categoryKey] != null)) {
+      keys.add(e.categoryKey);
+    }
+    for (const interest of e.interests || []) {
+      if (CATEGORY_META[interest] || state.categories[interest] != null) {
+        keys.add(interest);
+      }
+    }
+    return keys;
+  }
+
+  function categoryOtherDayHint() {
+    const active = ALL_CATEGORY_KEYS.filter(k => state.categories[k]);
+    if (active.length !== 1) {
+      return '';
+    }
+    const key = active[0];
+    const label = (CATEGORY_META[key] || {}).label || key;
+    let otherDays = 0;
     for (const e of state.events) {
-      const keys = new Set();
-      if (e.categoryKey && (CATEGORY_META[e.categoryKey] || state.categories[e.categoryKey] != null)) {
-        keys.add(e.categoryKey);
+      if (!sourceMatches(e) || dateMatches(e)) {
+        continue;
       }
-      for (const interest of e.interests || []) {
-        if (CATEGORY_META[interest] || state.categories[interest] != null) {
-          keys.add(interest);
-        }
+      if (categoryKeysForEvent(e).has(key)) {
+        otherDays += 1;
       }
+    }
+    if (!otherDays) {
+      return '';
+    }
+    return `No ${label.toLowerCase()} events on ${friendlyDateLabel(selectedDateKey())}, but ${otherDays.toLocaleString()} on other days in this feed — try another date chip.`;
+  }
+
+  // Gray out category filters that have no events for the selected date, and
+  // show a live count on the ones that do. Recomputes when the loaded event set
+  // or selected date changes.
+  let _catAvailKey = '';
+  function updateCategoryAvailability() {
+    const cacheKey = `${state.events.length}|${selectedDateKey()}`;
+    if (_catAvailKey === cacheKey) return;
+    _catAvailKey = cacheKey;
+    const dateCounts = {};
+    const totalCounts = {};
+    const pinCounts = {};
+    for (const e of state.events) {
+      if (!sourceMatches(e)) {
+        continue;
+      }
+      const keys = categoryKeysForEvent(e);
       for (const key of keys) {
-        counts[key] = (counts[key] || 0) + 1;
+        totalCounts[key] = (totalCounts[key] || 0) + 1;
+        if (dateMatches(e)) {
+          dateCounts[key] = (dateCounts[key] || 0) + 1;
+          if (markerEligible(e)) {
+            pinCounts[key] = (pinCounts[key] || 0) + 1;
+          }
+        }
       }
     }
     document.querySelectorAll('[data-cat]').forEach(input => {
       const key = input.getAttribute('data-cat');
-      const n = counts[key] || 0;
+      const onDate = dateCounts[key] || 0;
+      const inFeed = totalCounts[key] || 0;
+      const pins = pinCounts[key] || 0;
       const label = input.closest('.check');
       if (label) {
-        label.classList.toggle('check--empty', n === 0);
+        label.classList.toggle('check--empty', inFeed === 0);
         let badge = label.querySelector('.check-count');
         if (!badge) {
           badge = document.createElement('small');
           badge.className = 'check-count';
           label.appendChild(badge);
         }
-        badge.textContent = n === 0 ? 'not ready' : n.toLocaleString();
+        if (inFeed === 0) {
+          badge.textContent = 'not ready';
+          badge.title = '';
+        } else if (onDate === 0) {
+          badge.textContent = `0 · ${inFeed.toLocaleString()} other days`;
+          badge.title = `${inFeed.toLocaleString()} ${(CATEGORY_META[key] || {}).label || key} events on other days in this feed`;
+        } else if (pins < onDate) {
+          badge.textContent = `${onDate.toLocaleString()} · ${pins.toLocaleString()} on map`;
+          badge.title = `${onDate.toLocaleString()} list-visible today; ${pins.toLocaleString()} with map pins (${onDate - pins} list-only)`;
+        } else {
+          badge.textContent = onDate.toLocaleString();
+          badge.title = inFeed > onDate
+            ? `${onDate.toLocaleString()} today · ${inFeed.toLocaleString()} total in feed`
+            : '';
+        }
       }
       // Empty lanes are non-interactive; enabling one would just show nothing.
-      input.disabled = n === 0;
+      input.disabled = inFeed === 0;
     });
   }
 
