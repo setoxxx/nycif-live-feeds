@@ -132,6 +132,12 @@ jobs:
             echo "No pending supplemental rows; skipping net-new review."
           fi
 
+      - name: Apply supplemental row corrections (M11)
+        run: python3 scripts/apply_supplemental_row_corrections.py
+
+      - name: Rebuild supplemental location memory after row corrections
+        run: python3 scripts/build_supplemental_location_memory.py
+
       - name: Publish supplemental approved export for field-desk preview
         run: |
           python3 scripts/build_supplemental_approved_export_feed.py
