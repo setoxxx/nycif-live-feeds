@@ -52,7 +52,7 @@ node --check supplemental-preview-desk-redirect.js
 node --check supplemental-approved-export-preview-v01.js
 node --check nycif-tip-jar-v01.js
 node --test tools/public-map/supplemental-export-preview.test.mjs
-grep -q "3,492" approved-export-preview.html
+grep -q "3,491" approved-export-preview.html
 grep -q "supplemental_approved_export_feed" supplemental-approved-export-preview-v01.js
 
 git add \
@@ -69,6 +69,6 @@ if git diff --cached --quiet; then
   exit 0
 fi
 
-git commit -m "Deploy supplemental approved export preview (3492 events)"
+git commit -m "Deploy supplemental approved export preview (3491 events)"
 git pull --rebase origin main
 git push origin main
