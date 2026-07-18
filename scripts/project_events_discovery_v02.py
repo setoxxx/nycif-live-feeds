@@ -36,6 +36,7 @@ from schema_v1_common import DEFAULT_TIMEZONE, envelope  # noqa: E402
 
 STAGED = ROOT / "data" / "nycif_staged_live_events.json"
 SUPP = ROOT / "data" / "supplemental_events_staging_feed.json"
+SUPP_APPROVAL_QUEUE = ROOT / "data" / "supplemental_manual_approval_queue.json"
 RAW = ROOT / "data" / "raw_nyc_open_data_snapshot.json"
 CAL = ROOT / "data" / "nyc_citywide_events_calendar_snapshot.json"
 PARKS = ROOT / "data" / "nyc_parks_bigapps_events_snapshot.json"
@@ -46,6 +47,39 @@ SCHEMA_MAJOR = ROOT / "data" / "events_schema_v1_major.json"
 
 def load_events(path: Path) -> list[dict]:
     return extract_rows(json.loads(path.read_text(encoding="utf-8")))
+
+
+def rejected_supplemental_keys() -> set[tuple[str, str]]:
+    payload = json.loads(SUPP_APPROVAL_QUEUE.read_text(encoding="utf-8")) if SUPP_APPROVAL_QUEUE.exists() else {}
+    rows = payload.get("approval_queue") if isinstance(payload, dict) else []
+    rejected: set[tuple[str, str]] = set()
+    if not isinstance(rows, list):
+        return rejected
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        if str(row.get("manual_review_status") or "").lower() != "rejected":
+            continue
+        dataset = str(row.get("source_dataset") or "").strip()
+        source_event_id = str(row.get("source_event_id") or "").strip()
+        if dataset and source_event_id:
+            rejected.add((dataset, source_event_id))
+    return rejected
+
+
+def filter_supplemental_rows(rows: list[dict]) -> tuple[list[dict], list[dict]]:
+    rejected = rejected_supplemental_keys()
+    if not rejected:
+        return rows, []
+    kept: list[dict] = []
+    dropped: list[dict] = []
+    for row in rows:
+        dataset, source_event_id = source_parts_safe(row)
+        if (dataset, source_event_id) in rejected:
+            dropped.append(row)
+        else:
+            kept.append(row)
+    return kept, dropped
 
 
 def title_of(row: dict) -> str:
@@ -580,7 +614,8 @@ def find_samples(events: list[dict]) -> list[dict]:
 def main() -> int:
     generated_at = utc_now()
     staged_rows = load_events(STAGED)
-    supp_rows = load_events(SUPP)
+    all_supp_rows = load_events(SUPP)
+    supp_rows, dropped_supplemental = filter_supplemental_rows(all_supp_rows)
     raw_rows = load_events(RAW)
     cal_rows = load_events(CAL)
     parks_rows = load_events(PARKS)
@@ -597,7 +632,7 @@ def main() -> int:
 
     # Build set of supplemental source keys already covered
     supp_keys = set()
-    for row in supp_rows:
+    for row in all_supp_rows:
         d, s = source_parts_safe(row)
         day = preserve_date(row)
         supp_keys.add((d, s, day))
@@ -1038,6 +1073,12 @@ def build_discovery_pages(approved: list, review: list, major: list, generated_a
         pages = []
         total = len(events)
         count = max(1, (total + page_size - 1) // page_size) if total else 1
+        layer_dir = ROOT / "data" / "schema-v1-discovery" / name / "pages"
+        layer_dir.mkdir(parents=True, exist_ok=True)
+        for stale_page in layer_dir.glob("page-*.json"):
+            page_num = int(stale_page.stem.split("-")[-1])
+            if page_num > count:
+                stale_page.unlink()
         for i in range(count):
             chunk = events[i * page_size : (i + 1) * page_size]
             page_name = f"page-{i + 1:04d}.json"

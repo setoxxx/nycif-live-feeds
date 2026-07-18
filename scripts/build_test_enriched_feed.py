@@ -31,6 +31,7 @@ RAW_PAGE_LIMIT = 50000
 MAX_RAW_ROWS = 300000
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
+RAW_SNAPSHOT_PATH = DATA_DIR / "raw_nyc_open_data_snapshot.json"
 ENRICHED_PATH = ROOT / "nycif_all_radar_map_events.json"
 LOCATION_CACHE_PATH = DATA_DIR / "location_cache.json"
 TEST_FEED_PATH = DATA_DIR / "nycif_live_test_enriched_events.json"
@@ -56,7 +57,14 @@ def save_json_file(path: Path, payload: Any) -> None:
 
 
 def fetch_raw_rows() -> list[dict[str, Any]]:
-    """Fetch all available NYC Open Data rows instead of Socrata's default first page."""
+    """Fetch NYC Open Data rows, preferring committed snapshot when offline."""
+    import os
+
+    use_snapshot = os.environ.get("NYCIF_USE_RAW_SNAPSHOT", "").strip().lower() in {"1", "true", "yes"}
+    if use_snapshot or RAW_SNAPSHOT_PATH.exists():
+        payload = load_json_file(RAW_SNAPSHOT_PATH, [])
+        if isinstance(payload, list) and payload:
+            return [normalize_raw_row(row) for row in payload if isinstance(row, dict)]
     rows: list[dict[str, Any]] = []
     offset = 0
     while True:
@@ -71,7 +79,7 @@ def fetch_raw_rows() -> list[dict[str, Any]]:
             payload = json.loads(response.read().decode("utf-8"))
         if not isinstance(payload, list):
             raise RuntimeError("NYC Open Data response was not a list")
-        page_rows = [row for row in payload if isinstance(row, dict)]
+        page_rows = [normalize_raw_row(row) for row in payload if isinstance(row, dict)]
         rows.extend(page_rows)
         if len(page_rows) < RAW_PAGE_LIMIT:
             break
@@ -87,6 +95,23 @@ def rows_from_payload(payload: Any) -> list[dict[str, Any]]:
     if isinstance(payload, dict) and isinstance(payload.get("events"), list):
         return [row for row in payload["events"] if isinstance(row, dict)]
     return []
+
+
+def normalize_raw_row(raw: dict[str, Any]) -> dict[str, Any]:
+    """Align snapshot field names with live NYC Open Data API rows."""
+    row = dict(raw)
+    event_id = str(row.get("event_id") or row.get("source_event_id") or "").strip()
+    if event_id:
+        row["event_id"] = event_id
+    if not row.get("event_name") and row.get("title"):
+        row["event_name"] = row.get("title")
+    if not row.get("event_borough") and row.get("borough"):
+        row["event_borough"] = row.get("borough")
+    if not row.get("event_location") and row.get("location"):
+        row["event_location"] = row.get("location")
+    if not row.get("cemsid") and row.get("source_cemsid") is not None:
+        row["cemsid"] = row.get("source_cemsid")
+    return row
 
 
 def location_cache_entries() -> dict[str, dict[str, Any]]:
@@ -177,6 +202,10 @@ def find_match(
     cache: dict[str, dict[str, Any]],
     resolver: NYCLocationResolver | None = None,
 ) -> tuple[str, dict[str, Any] | None]:
+    keys = cache_keys(raw)
+    for key in keys:
+        if key in cache:
+            return "location_cache", cache[key]
     event_id = str(raw.get("event_id") or "").strip()
     if event_id and event_id in indexes["event_id"]:
         return "event_id", indexes["event_id"][event_id]
@@ -193,10 +222,6 @@ def find_match(
     ])
     if text_key in indexes["text"]:
         return "text_date_location", indexes["text"][text_key]
-    keys = cache_keys(raw)
-    for key in keys:
-        if key in cache:
-            return "location_cache", cache[key]
     if resolver is not None:
         location = str(raw.get("event_location") or "")
         result = resolver.resolve(

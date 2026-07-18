@@ -1,0 +1,67 @@
+{
+  "artifact_type": "authorized_location_cache_corrections_report",
+  "authorization_reason": "Explicit user authorization 2026-07-18: full GPS audit, Marine Park + Trans Latina + Uncle Tony fixes",
+  "authorized_by": "Howard Weiss",
+  "explicit_cache_writes": [
+    {
+      "cache_key": "event_id:957082",
+      "lat": 40.753,
+      "lng": -73.84593,
+      "reason": "Corona Plaza / Roosevelt Avenue Queens parade route"
+    },
+    {
+      "cache_key": "location:queens:roosevelt avenue between national street and 104 street roosevelt avenue between national street and 97 street 97 street between roosevelt avenue and 37 avenue 37 avenue between 97 street and junction boulevard junction boulevard between 37 avenue and roosevelt avenue roosevelt avenue between junction boulevard and national street roosevelt avenue between national street and 104 street",
+      "lat": 40.753,
+      "lng": -73.84593,
+      "reason": "Trans Latina March parade route location key"
+    },
+    {
+      "cache_key": "location:bk:playground 278 in marine park",
+      "lat": 40.6074677,
+      "lng": -73.9391634,
+      "reason": "Uncle Tony supplemental approval — Playground 278"
+    },
+    {
+      "cache_key": "supplemental:nyc-parks-bigapps-events:2141011",
+      "lat": 40.6074677,
+      "lng": -73.9391634,
+      "reason": "Uncle Tony Parks source_event_id 2141011"
+    },
+    {
+      "cache_key": "location:brooklyn:marine park handball 03",
+      "lat": 40.6079,
+      "lng": -73.935,
+      "reason": "Marine Park handball court cluster correction"
+    },
+    {
+      "cache_key": "location:brooklyn:marine park handball 05",
+      "lat": 40.6079,
+      "lng": -73.935,
+      "reason": "Marine Park handball court cluster correction"
+    },
+    {
+      "cache_key": "event_id:959109",
+      "lat": 40.6079,
+      "lng": -73.935,
+      "reason": "Marine Park handball court cluster correction"
+    },
+    {
+      "cache_key": "event_id:959110",
+      "lat": 40.6079,
+      "lng": -73.935,
+      "reason": "Marine Park handball court cluster correction"
+    }
+  ],
+  "generated_at_utc": "2026-07-18T16:29:20.320375+00:00",
+  "location_cache_count_after": 40151,
+  "location_cache_count_before": 40147,
+  "location_cache_modified": true,
+  "location_cache_net_new_entries": 4,
+  "marine_park_playground_278_remapped_count": 0,
+  "marine_park_white_island_remapped_count": 0,
+  "phase": "authorized_public_map_gps_correction",
+  "promotion_performed": true,
+  "public_map_modified": false,
+  "qa_pass": true,
+  "staged_feed_modified": false
+}
