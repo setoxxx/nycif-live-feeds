@@ -29,9 +29,9 @@ if ! grep -q 'supplemental-preview-desk-redirect.js' desk.html; then
 fi
 
 if ! grep -q 'supplemental-approved-export-preview-v01.js' desk.html; then
-  sed -i 's|feed-status-panel-v01.js?v=01"></script>|feed-status-panel-v01.js?v=01"></script>\n  <script src="./supplemental-approved-export-preview-v01.js?v=07"></script>|' desk.html
+  sed -i 's|feed-status-panel-v01.js?v=01"></script>|feed-status-panel-v01.js?v=01"></script>\n  <script src="./supplemental-approved-export-preview-v01.js?v=08"></script>|' desk.html
 fi
-sed -i 's|supplemental-approved-export-preview-v01.js?v=0[0-9]|supplemental-approved-export-preview-v01.js?v=07|g' desk.html
+sed -i 's|supplemental-approved-export-preview-v01.js?v=0[0-9]|supplemental-approved-export-preview-v01.js?v=08|g' desk.html
 grep -q 'supplemental-approved-export-preview-v01.js' desk.html
 
 if ! grep -q "Supplemental approved export preview" README.md; then

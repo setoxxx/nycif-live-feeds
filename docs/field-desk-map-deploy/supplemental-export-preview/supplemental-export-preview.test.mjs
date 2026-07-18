@@ -125,13 +125,16 @@ test('normalizePin keeps only approved rows with NYC coordinates', () => {
     promotion_allowed: false,
     lat: 40.75,
     lng: -73.98,
+    date: '2026-07-18',
     title: 'Test event',
   }, 0);
   assert.ok(good);
   assert.equal(good.title, 'Test event');
+  assert.equal(good.dateKey, '2026-07-18');
 
-  assert.equal(previewApi.normalizePin({ manual_review_status: 'pending', lat: 40.75, lng: -73.98 }, 1), null);
-  assert.equal(previewApi.normalizePin({ manual_review_status: 'approved', lat: 0, lng: 0 }, 2), null);
+  assert.equal(previewApi.normalizePin({ manual_review_status: 'pending', lat: 40.75, lng: -73.98, date: '2026-07-18' }, 1), null);
+  assert.equal(previewApi.normalizePin({ manual_review_status: 'approved', lat: 0, lng: 0, date: '2026-07-18' }, 2), null);
+  assert.equal(previewApi.normalizePin({ manual_review_status: 'approved', lat: 40.75, lng: -73.98 }, 3), null);
 });
 
 test('desk.html loads preview module but production index.html does not', () => {
@@ -162,11 +165,43 @@ test('formatMapRenderMeta reports cap when viewport exceeds soft cap', () => {
   const api = loadWithUrl('https://x/approved-export-preview.html', {
     nycifSupplementalExportPreview: '1',
   });
-  const capped = api.formatMapRenderMeta({ drawn: 600, inView: 1200, total: 3493 });
+  const capped = api.formatMapRenderMeta({
+    drawn: 600,
+    inView: 1200,
+    total: 249,
+    loadedTotal: 3493,
+    selectedDate: '2026-07-18',
+  });
+  assert.match(capped, /249 events on today/);
+  assert.match(capped, /3,493 loaded total/);
   assert.match(capped, /600 shown of 1,200 in view/);
-  assert.match(capped, /pan\/zoom for more/);
 });
 
-test('standalone preview html uses cache bust v=07', () => {
-  assert.match(previewHtml, /supplemental-approved-export-preview-v01\.js\?v=07/);
+test('filterPinsForSelectedDate matches public map single-day rule', () => {
+  const api = loadWithUrl('https://x/approved-export-preview.html', {
+    nycifSupplementalExportPreview: '1',
+  });
+  const pins = [
+    { date: '2026-07-18', lat: 40.75, lng: -73.98, title: 'A' },
+    { date: '2026-07-19', lat: 40.76, lng: -73.97, title: 'B' },
+    { date: '2026-07-18', lat: 40.77, lng: -73.96, title: 'C' },
+  ];
+  const filtered = api.filterPinsForSelectedDate(pins, '2026-07-18');
+  assert.equal(filtered.length, 2);
+  assert.deepEqual(filtered.map(p => p.title), ['A', 'C']);
+});
+
+test('dateChipModel exposes eight forward day choices', () => {
+  const api = loadWithUrl('https://x/approved-export-preview.html', {
+    nycifSupplementalExportPreview: '1',
+  });
+  const chips = api.dateChipModel(new Date(2026, 6, 18));
+  assert.equal(chips.length, 8);
+  assert.equal(chips[0].label, 'Today');
+  assert.equal(chips[1].label, 'Tomorrow');
+});
+
+test('standalone preview html uses cache bust v=08', () => {
+  assert.match(previewHtml, /supplemental-approved-export-preview-v01\.js\?v=08/);
+  assert.match(previewHtml, /previewDateChips/);
 });
