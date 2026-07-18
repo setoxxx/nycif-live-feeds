@@ -129,6 +129,14 @@ CALENDAR_PARKS_PROPOSALS_PATH = DATA_DIR / "calendar_parks_coord_match_proposals
 PARKS_PROPERTIES_PATH = DATA_DIR / "nyc_parks_properties_reference.json"
 
 INTERSECTION_PATTERN = re.compile(r"^(.+?)\s+and\s+(.+)$", flags=re.IGNORECASE)
+BETWEEN_INTERSECTION_PATTERN = re.compile(
+    r"^(.+?)\s+between\s+(.+?)\s+and\s+(.+)$",
+    flags=re.IGNORECASE,
+)
+BOROUGH_SUFFIX_PATTERN = re.compile(
+    r"\s+(Queens|Manhattan|Brooklyn|Bronx|Staten Island)\s*$",
+    flags=re.IGNORECASE,
+)
 
 UNGEOCODABLE_LOCATION_MARKERS = (
     "citywide",
@@ -182,10 +190,27 @@ def _display_primary_segment(display: Any) -> str:
     return text.split(",")[0].strip()
 
 
+def _strip_borough_suffix(segment: str) -> str:
+    match = BOROUGH_SUFFIX_PATTERN.search(segment)
+    if match:
+        return segment[: match.start()].strip()
+    return segment.strip()
+
+
 def parse_intersection(display: Any) -> tuple[str, str] | None:
     segment = _display_primary_segment(display)
     if not segment:
         return None
+    segment = _strip_borough_suffix(segment)
+    between = BETWEEN_INTERSECTION_PATTERN.match(segment)
+    if between:
+        main = between.group(1).strip()
+        cross1 = between.group(2).strip()
+        cross2 = between.group(3).strip()
+        if main and cross1:
+            return main, cross1
+        if cross1 and cross2:
+            return cross1, cross2
     match = INTERSECTION_PATTERN.match(segment)
     if not match:
         return None

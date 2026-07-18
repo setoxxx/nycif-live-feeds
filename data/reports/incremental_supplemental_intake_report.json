@@ -1,55 +1,59 @@
 {
   "after_status_counts": {
-    "approved": 3492,
-    "pending": 10,
+    "approved": 3498,
+    "pending": 26,
     "rejected": 142
   },
   "artifact_type": "incremental_supplemental_intake_report",
   "before_status_counts": {
-    "approved": 3492,
-    "pending": 4,
+    "approved": 3498,
+    "pending": 5,
     "rejected": 142
   },
   "dry_run": false,
   "export": {
-    "export_event_count": 3492,
+    "export_event_count": 3498,
     "path": "data/supplemental_approved_export_feed.json",
     "skipped_approved_without_coordinates": 0
   },
-  "generated_at_utc": "2026-07-18T19:30:06.277467+00:00",
+  "generated_at_utc": "2026-07-18T19:42:47.924648+00:00",
   "merge": {
     "disposition_preserved": true,
-    "existing_queue_count": 3638,
-    "existing_unique_overlap_key_count": 2465,
+    "existing_queue_count": 3645,
+    "existing_unique_overlap_key_count": 2472,
     "net_new_auto_resolved_count": 0,
     "net_new_auto_resolved_pct": 0.0,
     "net_new_needing_human_review_count": 0,
     "net_new_overlap_keys_sample": [
-      "access benefits at fair fares promotion manhattan|2026-07-14",
-      "access benefits at fair fares promotion queens|2026-07-14",
-      "access benefits at local neighborhoodstat 2026 season butler houses|2026-07-14",
-      "access benefits at resource event for seniors at jonas bronck apartments bronx|2026-07-15",
-      "access benefits at the riverside church food pantry manhattan|2026-07-14",
-      "access benefits fair fares promotion brooklyn|2026-07-14"
+      "57 street saturday greenmarket|2026-07-18",
+      "82 street greenmarket saturday|2026-07-18",
+      "97 street greenmarket friday|2026-07-17",
+      "carroll gardens greenmarket sunday|2026-07-19",
+      "columbia thursday sunday greenmarket|2026-07-16",
+      "corona greenmarket friday|2026-07-17",
+      "cortelyou greenmarket sunday|2026-07-19",
+      "down to earth chelsea farmers market|2026-07-18",
+      "down to earth park slope farmers market|2026-07-19",
+      "east new york farmers market|2026-07-18"
     ],
-    "net_new_row_count": 6,
-    "net_new_with_coordinates_count": 6,
+    "net_new_row_count": 21,
+    "net_new_with_coordinates_count": 21,
     "net_new_with_coordinates_pct": 100.0,
-    "preserved_row_count": 3638,
-    "staging_event_count": 2899,
+    "preserved_row_count": 3645,
+    "staging_event_count": 2930,
     "stale_overlap_keys_sample": [
       "40 in focus summerstage through the lens of photographer jack vartoogian|2026-07-16",
       "40 in focus summerstage through the lens of photographer jack vartoogian|2026-07-17",
       "7 17 restoration fridays at highland park|2026-07-17",
-      "access benefits at northeast bronx ymca|2026-07-17",
-      "access benefits at oti internet access survey promotion bronx|2026-07-17",
-      "access benefits at oti internet access survey promotion brooklyn|2026-07-16",
-      "access benefits at oti internet access survey promotion flushing|2026-07-17",
-      "access benefits at oti internet access survey promotion jamaica|2026-07-17",
-      "access benefits at oti internet access survey promotion manhattan|2026-07-17",
-      "adult hike reed 8217 s basket willow park|2026-07-16"
+      "adult hike reed 8217 s basket willow park|2026-07-16",
+      "adult hike reed s basket willow park|2026-07-16",
+      "alfred e smith recreation center summer camp extended day|2026-07-16",
+      "alfred e smith recreation center summer camp extended day|2026-07-17",
+      "alfred e smith recreation center summer camp regular day|2026-07-16",
+      "alfred e smith recreation center summer camp regular day|2026-07-17",
+      "art meets books|2026-07-16"
     ],
-    "stale_queue_key_count": 496
+    "stale_queue_key_count": 490
   },
   "next_required_step": "Run validate_supplemental_manual_approvals.py. Review net-new pending rows only.",
   "phase": "m11_incremental_supplemental_intake",
@@ -62,7 +66,7 @@
   },
   "scale_benefit": {
     "memory_auto_fill_on_net_new_pct": 0.0,
-    "net_new_rows_on_this_sync": 6,
+    "net_new_rows_on_this_sync": 21,
     "net_new_still_needing_human_review": 0
   },
   "skip_rebuild": true
