@@ -44,7 +44,12 @@
     return;
   }
 
-  const VERSION = 'supplemental-approved-export-preview-v04';
+  const VERSION = 'supplemental-approved-export-preview-v06';
+  const TIP_JAR_LINKS = [
+    { id: 'cashapp', label: 'Cash App', emoji: '💵', url: 'https://cash.app/$NYCINFOCUS' },
+    { id: 'venmo', label: 'Venmo', emoji: '💙', url: 'https://venmo.com/u/Howie-Doin' },
+    { id: 'paypal', label: 'PayPal', emoji: '🅿️', url: 'https://py.pl/oxvv2Mgg0bztfniKXwpQWA' },
+  ];
   const VIEWPORT_BUFFER = 0.15;
   const MARKER_SOFT_CAP = 600;
   const DAY_WINDOW = 7;
@@ -63,6 +68,12 @@
     'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/supplemental_approved_export_feed.json';
   const DEFAULT_LITE_PINS_URL =
     'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/supplemental_approved_export_map_pins.json';
+  const DEFAULT_ANNIVERSARY_URL =
+    'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/supplemental_cultural_anniversary_staging.json';
+  const DEFAULT_GEOFENCE_URL =
+    'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/supplemental_press_geofence_staging.json';
+  const DEFAULT_PRECINCT_SHARD_BASE_URL =
+    'https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/nypd_precincts/';
   const LOCAL_EXPORT_URL = './data/supplemental_approved_export_feed.json';
   const DIST_EXPORT_URL = './data/supplemental_approved_export_feed.dist.json';
   const NYC = { minLat: 40.4774, maxLat: 40.9176, minLng: -74.2591, maxLng: -73.7004 };
@@ -75,6 +86,11 @@
     layer: null,
     banner: null,
     dateMode: 'today',
+    anniversaryByKey: new Map(),
+    geofenceByKey: new Map(),
+    precinctGeometryCache: new Map(),
+    activeGeofenceLayer: null,
+    enrichmentLoaded: false,
   };
 
   const dateKey = d => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -241,6 +257,36 @@
       );
     }
     return DEFAULT_LITE_PINS_URL;
+  }
+
+  function anniversaryStagingUrl() {
+    try {
+      const custom = new URL(location.href).searchParams.get('anniversaryStaging');
+      if (custom && /^https?:\/\//.test(custom)) return custom;
+    } catch {
+      /* fall through */
+    }
+    return DEFAULT_ANNIVERSARY_URL;
+  }
+
+  function geofenceStagingUrl() {
+    try {
+      const custom = new URL(location.href).searchParams.get('geofenceStaging');
+      if (custom && /^https?:\/\//.test(custom)) return custom;
+    } catch {
+      /* fall through */
+    }
+    return DEFAULT_GEOFENCE_URL;
+  }
+
+  function precinctShardBaseUrl() {
+    try {
+      const custom = new URL(location.href).searchParams.get('precinctShards');
+      if (custom && /^https?:\/\//.test(custom)) return custom;
+    } catch {
+      /* fall through */
+    }
+    return DEFAULT_PRECINCT_SHARD_BASE_URL;
   }
 
   function boundsFromPins(pins) {
@@ -440,6 +486,12 @@
         color: rgba(255,255,255,.72);
       }
       .nycif-supplemental-preview-marker-shell { background: transparent; border: 0; }
+      .nycif-supplemental-preview-marker-wrap {
+        position: relative;
+        display: inline-block;
+        width: 34px;
+        height: 34px;
+      }
       .nycif-supplemental-preview-marker {
         display: grid;
         place-items: center;
@@ -451,6 +503,22 @@
         background: #7c3aed;
         color: #fff;
         font-size: 15px;
+      }
+      .nycif-supplemental-preview-anniversary-badge {
+        position: absolute;
+        top: -3px;
+        right: -5px;
+        min-width: 16px;
+        height: 16px;
+        padding: 0 4px;
+        border-radius: 999px;
+        background: #fbbf24;
+        color: #78350f;
+        border: 1.5px solid #fff;
+        font: 800 9px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        display: grid;
+        place-items: center;
+        box-shadow: 0 4px 10px rgba(0,0,0,.22);
       }
       .nycif-supplemental-preview-popup {
         min-width: 240px;
@@ -482,6 +550,31 @@
       .nycif-supplemental-preview-popup p { margin: 4px 0; color: #111827; }
       .nycif-supplemental-preview-popup strong { color: #0f172a; }
       .nycif-supplemental-preview-popup .note { color: #4b5563; font-size: 11px; }
+      .nycif-supplemental-preview-popup .anniversary-tag {
+        display: inline-flex;
+        border-radius: 999px;
+        padding: 3px 7px;
+        margin-top: 6px;
+        background: rgba(251,191,36,.18);
+        color: #92400e;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+      }
+      .nycif-supplemental-preview-popup .geofence-tag {
+        display: inline-flex;
+        border-radius: 999px;
+        padding: 3px 7px;
+        margin-top: 6px;
+        margin-left: 6px;
+        background: rgba(56,189,248,.16);
+        color: #0369a1;
+        font-size: 10px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .04em;
+      }
       .nycif-supplemental-preview-date-chips {
         display: flex;
         gap: 8px;
@@ -505,8 +598,149 @@
         border-color: rgba(167,139,250,.55);
         color: #ede9fe;
       }
+      .nycif-tip-jar {
+        position: fixed;
+        top: 12px;
+        right: 12px;
+        z-index: 1300;
+        display: grid;
+        justify-items: end;
+        gap: 8px;
+      }
+      .nycif-tip-jar-btn {
+        width: 52px;
+        height: 52px;
+        border: 2px solid rgba(251,191,36,.55);
+        border-radius: 999px;
+        background: linear-gradient(180deg, rgba(120,53,15,.95), rgba(69,26,3,.95));
+        box-shadow: 0 10px 24px rgba(0,0,0,.35);
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        padding: 0;
+      }
+      .nycif-tip-jar-btn:focus-visible {
+        outline: 2px solid #fbbf24;
+        outline-offset: 2px;
+      }
+      .nycif-tip-jar-emoji {
+        font-size: 26px;
+        line-height: 1;
+        transform-origin: 50% 85%;
+        display: block;
+      }
+      .nycif-tip-jar.shake .nycif-tip-jar-emoji {
+        animation: nycif-tip-jar-shake 0.55s ease-in-out;
+      }
+      @keyframes nycif-tip-jar-shake {
+        0%, 100% { transform: rotate(0deg) translateY(0); }
+        15% { transform: rotate(-14deg) translateY(1px); }
+        30% { transform: rotate(12deg) translateY(-1px); }
+        45% { transform: rotate(-10deg) translateY(1px); }
+        60% { transform: rotate(8deg) translateY(0); }
+        75% { transform: rotate(-6deg) translateY(1px); }
+      }
+      .nycif-tip-jar-panel {
+        min-width: 220px;
+        padding: 12px;
+        border-radius: 14px;
+        border: 1px solid rgba(251,191,36,.35);
+        background: rgba(17,24,39,.96);
+        box-shadow: 0 16px 36px rgba(0,0,0,.35);
+        color: #fde68a;
+      }
+      .nycif-tip-jar-panel[hidden] { display: none; }
+      .nycif-tip-jar-panel h3 {
+        margin: 0 0 8px;
+        font: 700 12px/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: #fcd34d;
+      }
+      .nycif-tip-jar-panel a {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        margin-top: 6px;
+        border-radius: 10px;
+        background: rgba(255,255,255,.05);
+        color: #fff7ed;
+        text-decoration: none;
+        font: 600 13px/1.2 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+      .nycif-tip-jar-panel a:hover {
+        background: rgba(251,191,36,.14);
+      }
+      .nycif-tip-jar-panel .pay-emoji {
+        font-size: 18px;
+        width: 22px;
+        text-align: center;
+      }
     `;
     document.head.appendChild(style);
+  }
+
+  function ensureTipJar() {
+    if (!previewExportMode() || document.getElementById('nycifTipJar')) return;
+
+    const root = document.createElement('div');
+    root.id = 'nycifTipJar';
+    root.className = 'nycif-tip-jar';
+    root.innerHTML = `
+      <button type="button" class="nycif-tip-jar-btn" id="nycifTipJarBtn"
+        aria-expanded="false" aria-controls="nycifTipJarPanel" aria-label="Open tip jar">
+        <span class="nycif-tip-jar-emoji" aria-hidden="true">🫙</span>
+      </button>
+      <div class="nycif-tip-jar-panel" id="nycifTipJarPanel" hidden>
+        <h3>Tip jar — support NYC In Focus</h3>
+        ${TIP_JAR_LINKS.map(link => `
+          <a href="${esc(link.url)}" target="_blank" rel="noopener noreferrer">
+            <span class="pay-emoji" aria-hidden="true">${link.emoji}</span>
+            <span>${esc(link.label)}</span>
+          </a>
+        `).join('')}
+      </div>
+    `;
+    document.body.appendChild(root);
+
+    const button = document.getElementById('nycifTipJarBtn');
+    const panel = document.getElementById('nycifTipJarPanel');
+    if (!button || !panel) return;
+
+    button.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const open = panel.hidden;
+      panel.hidden = !open;
+      button.setAttribute('aria-expanded', String(open));
+      if (open) root.classList.remove('shake');
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!root.contains(event.target)) {
+        panel.hidden = true;
+        button.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !panel.hidden) {
+        panel.hidden = true;
+        button.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    const scheduleRandomShake = () => {
+      const waitMs = 5000 + Math.floor(Math.random() * 9000);
+      window.setTimeout(() => {
+        if (!panel.hidden) {
+          scheduleRandomShake();
+          return;
+        }
+        root.classList.add('shake');
+        window.setTimeout(() => root.classList.remove('shake'), 560);
+        scheduleRandomShake();
+      }, waitMs);
+    };
+    scheduleRandomShake();
   }
 
   function ensureBanner() {
@@ -547,18 +781,191 @@
     }
   }
 
+  function pinKey(pin) {
+    return String(pin?.id || pin?.overlap_key || '');
+  }
+
+  function anniversaryBadgeLabel(pin) {
+    if (!pin?.culturalAnniversary) return '';
+    if (Number.isFinite(pin.anniversaryNumber)) return String(pin.anniversaryNumber);
+    return 'A';
+  }
+
+  function markerIconHtml(pin) {
+    const badge = anniversaryBadgeLabel(pin);
+    const badgeHtml = badge
+      ? `<span class="nycif-supplemental-preview-anniversary-badge">${esc(badge)}</span>`
+      : '';
+    return `<span class="nycif-supplemental-preview-marker-wrap"><span class="nycif-supplemental-preview-marker">🟣</span>${badgeHtml}</span>`;
+  }
+
   function popupHtml(pin) {
+    const anniversaryBits = pin.culturalAnniversary
+      ? `<span class="anniversary-tag">${pin.anniversaryNumber ? `${esc(pin.anniversaryNumber)}${pin.anniversaryNumber === 1 ? 'st' : pin.anniversaryNumber === 2 ? 'nd' : pin.anniversaryNumber === 3 ? 'rd' : 'th'} year` : 'Annual event'}</span>`
+      : '';
+    const geofenceBits = pin.assignedPrecinct
+      ? `<span class="geofence-tag">Precinct ${esc(pin.assignedPrecinct)}</span>`
+      : '';
     return `<article class="nycif-supplemental-preview-popup">
       <div class="preview-tag">Preview / not production</div>
+      ${anniversaryBits || geofenceBits ? `<div>${anniversaryBits}${geofenceBits}</div>` : ''}
       <h2>${esc(pin.title)}</h2>
       ${pin.displayLocation ? `<p>${esc(pin.displayLocation)}</p>` : ''}
       ${pin.borough ? `<p><strong>Borough:</strong> ${esc(pin.borough)}</p>` : ''}
       ${pin.date ? `<p><strong>Date:</strong> ${esc(pin.date)}</p>` : ''}
+      ${pin.anniversaryStory ? `<p><strong>Cultural story:</strong> ${esc(pin.anniversaryStory)}</p>` : ''}
+      ${pin.assignedPrecinct ? `<p><strong>NYPD precinct geofence:</strong> ${esc(pin.assignedPrecinct)} (tap pin to outline boundary)</p>` : ''}
+      ${pin.pressReleaseCandidate ? `<p><strong>Press candidate:</strong> yes (preview heuristic only)</p>` : ''}
+      ${pin.geofenceStory && pin.pressReleaseCandidate ? `<p class="note">${esc(pin.geofenceStory)}</p>` : ''}
       ${pin.intakeType ? `<p><strong>Intake:</strong> ${esc(pin.intakeType)}</p>` : ''}
       ${pin.geocoderSource ? `<p><strong>Geocoder source:</strong> ${esc(pin.geocoderSource)}</p>` : ''}
       ${pin.geocoderConfidence ? `<p><strong>Confidence:</strong> ${esc(pin.geocoderConfidence)}</p>` : ''}
       <p class="note">Approved supplemental export preview only. promotion_allowed=false. Not on public map.</p>
     </article>`;
+  }
+
+  function clearActiveGeofence(map) {
+    if (state.activeGeofenceLayer && map) {
+      map.removeLayer(state.activeGeofenceLayer);
+      state.activeGeofenceLayer = null;
+    }
+  }
+
+  async function loadPrecinctGeometry(precinct) {
+    const key = String(precinct || '');
+    if (!key) return null;
+    if (state.precinctGeometryCache.has(key)) {
+      return state.precinctGeometryCache.get(key);
+    }
+    const base = precinctShardBaseUrl();
+    const url = `${base}precinct-${encodeURIComponent(key)}.json`;
+    const response = await fetch(`${url}?cache=${Date.now()}`, {
+      cache: 'no-store',
+      headers: { Accept: 'application/json' },
+    });
+    if (!response.ok) return null;
+    const payload = await response.json();
+    const geometry = payload?.geometry;
+    if (!geometry || typeof geometry !== 'object') return null;
+    state.precinctGeometryCache.set(key, geometry);
+    return geometry;
+  }
+
+  async function showPrecinctGeofenceForPin(map, pin) {
+    if (!map || !pin?.assignedPrecinct || !pin?.geofenceEnabled) return;
+    try {
+      const geometry = await loadPrecinctGeometry(pin.assignedPrecinct);
+      if (!geometry) return;
+      clearActiveGeofence(map);
+      state.activeGeofenceLayer = window.L.geoJSON(
+        { type: 'Feature', properties: { precinct: pin.assignedPrecinct }, geometry },
+        {
+          style: {
+            color: '#38bdf8',
+            weight: 2,
+            fillColor: '#38bdf8',
+            fillOpacity: 0.14,
+          },
+        }
+      ).addTo(map);
+    } catch (error) {
+      console.warn('Precinct geofence preview failed', error);
+    }
+  }
+
+  function applyEnrichmentToPins() {
+    for (const pin of state.pins) {
+      const key = pinKey(pin);
+      const anniversary = state.anniversaryByKey.get(key);
+      const geofence = state.geofenceByKey.get(key);
+      if (anniversary) {
+        pin.culturalAnniversary = true;
+        pin.anniversaryNumber = anniversary.anniversary_number;
+        pin.editionYear = anniversary.edition_year;
+        pin.anniversaryStory = anniversary.story_placeholder || '';
+      }
+      if (geofence) {
+        pin.assignedPrecinct = geofence.assigned_precinct;
+        pin.geofenceEnabled = geofence.geofence_enabled_preview === true;
+        pin.pressReleaseCandidate = geofence.press_release_candidate === true;
+        pin.geofenceStory = geofence.story_placeholder || '';
+      }
+      pin.marker = null;
+    }
+  }
+
+  function validateAnniversaryPayload(payload) {
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+      throw new Error('Anniversary staging must be a JSON object');
+    }
+    if (payload.artifact_type !== 'supplemental_cultural_anniversary_staging') {
+      throw new Error(`Refusing non-anniversary artifact: ${payload.artifact_type || 'unknown'}`);
+    }
+    if (payload.production_feed === true || payload.promotion_allowed === true) {
+      throw new Error('Refusing production/promotion anniversary artifact in preview mode');
+    }
+    if (!Array.isArray(payload.rows)) {
+      throw new Error('Anniversary staging missing rows array');
+    }
+    return payload;
+  }
+
+  function validateGeofencePayload(payload) {
+    if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
+      throw new Error('Geofence staging must be a JSON object');
+    }
+    if (payload.artifact_type !== 'supplemental_press_geofence_staging') {
+      throw new Error(`Refusing non-geofence artifact: ${payload.artifact_type || 'unknown'}`);
+    }
+    if (payload.production_feed === true || payload.promotion_allowed === true) {
+      throw new Error('Refusing production/promotion geofence artifact in preview mode');
+    }
+    if (!Array.isArray(payload.rows)) {
+      throw new Error('Geofence staging missing rows array');
+    }
+    return payload;
+  }
+
+  async function loadPreviewEnrichment() {
+    const [anniversaryResult, geofenceResult] = await Promise.allSettled([
+      fetch(`${anniversaryStagingUrl()}?cache=${Date.now()}`, {
+        cache: 'no-store',
+        headers: { Accept: 'application/json' },
+      }).then(async (response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return validateAnniversaryPayload(await response.json());
+      }),
+      fetch(`${geofenceStagingUrl()}?cache=${Date.now()}`, {
+        cache: 'no-store',
+        headers: { Accept: 'application/json' },
+      }).then(async (response) => {
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return validateGeofencePayload(await response.json());
+      }),
+    ]);
+
+    state.anniversaryByKey = new Map();
+    state.geofenceByKey = new Map();
+
+    if (anniversaryResult.status === 'fulfilled') {
+      for (const row of anniversaryResult.value.rows) {
+        if (row?.overlap_key) state.anniversaryByKey.set(String(row.overlap_key), row);
+      }
+    } else {
+      console.warn('Anniversary staging unavailable for preview.', anniversaryResult.reason);
+    }
+
+    if (geofenceResult.status === 'fulfilled') {
+      for (const row of geofenceResult.value.rows) {
+        if (row?.overlap_key) state.geofenceByKey.set(String(row.overlap_key), row);
+      }
+    } else {
+      console.warn('Geofence staging unavailable for preview.', geofenceResult.reason);
+    }
+
+    applyEnrichmentToPins();
+    state.enrichmentLoaded = true;
+    return state;
   }
 
   function expandedBounds(map) {
@@ -573,13 +980,13 @@
   }
 
   function makePreviewMarker(pin) {
-    return window.L.marker([pin.lat, pin.lng], {
+    const marker = window.L.marker([pin.lat, pin.lng], {
       icon: window.L.divIcon({
         className: 'nycif-supplemental-preview-marker-shell',
-        html: '<span class="nycif-supplemental-preview-marker">🟣</span>',
-        iconSize: [34, 34],
-        iconAnchor: [17, 17],
-        popupAnchor: [0, -18],
+        html: markerIconHtml(pin),
+        iconSize: [38, 38],
+        iconAnchor: [19, 19],
+        popupAnchor: [0, -20],
       }),
       title: pin.title,
       riseOnHover: true,
@@ -591,6 +998,11 @@
       autoClose: true,
       closeOnClick: true,
     });
+    marker.on('click', () => {
+      const map = window.NYCIF_MAIN_MAP;
+      if (map) showPrecinctGeofenceForPin(map, pin);
+    });
+    return marker;
   }
 
   function ensureMarker(pin) {
@@ -622,7 +1034,12 @@
     const dayCount = filterPinsForSelectedDate(state.pins, selected).length;
     const loaded = state.pins.length;
     const kind = state.feedMeta?.feedKind || 'map';
-    return `${dayCount.toLocaleString()} on ${friendlyDateLabel(selected)} · ${loaded.toLocaleString()} approved export row(s) total · ${kind}`;
+    const anni = state.anniversaryByKey?.size || 0;
+    const geo = state.geofenceByKey?.size || 0;
+    let line = `${dayCount.toLocaleString()} on ${friendlyDateLabel(selected)} · ${loaded.toLocaleString()} approved export row(s) total · ${kind}`;
+    if (anni) line += ` · ${anni} cultural anniversary`;
+    if (geo) line += ` · ${geo} precinct geofence`;
+    return line;
   }
 
   function buildDateChips(containerId) {
@@ -810,13 +1227,15 @@
     setStatus(`Loading supplemental map pins from ${liteUrl}…`);
     try {
       try {
-        return await loadPinsFromLiteFeed(liteUrl);
+        await loadPinsFromLiteFeed(liteUrl);
       } catch (liteError) {
         console.warn('Lite map pins unavailable; falling back to full export feed.', liteError);
         const fullUrl = feedUrl();
         setStatus(`Loading full supplemental export feed from ${fullUrl}…`);
-        return await loadPinsFromFullFeed(fullUrl);
+        await loadPinsFromFullFeed(fullUrl);
       }
+      await loadPreviewEnrichment();
+      return state;
     } finally {
       state.loading = false;
     }
@@ -878,6 +1297,7 @@
   function bootDeskOverlay() {
     suppressServiceWorkerForPreview();
     installStyles();
+    ensureTipJar();
     ensureBanner();
     ensureControls();
     scheduleDeskAutoEnable();
@@ -886,6 +1306,7 @@
   function bootStandaloneMap(mapElId) {
     suppressServiceWorkerForPreview();
     installStyles();
+    ensureTipJar();
     ensureBanner();
     const mapNode = document.getElementById(mapElId || 'map');
     if (!mapNode || !window.L) return Promise.reject(new Error('Map container not ready'));
@@ -918,6 +1339,7 @@
 
   const api = {
     VERSION,
+    TIP_JAR_LINKS,
     VIEWPORT_BUFFER,
     MARKER_SOFT_CAP,
     DAY_WINDOW,
@@ -926,11 +1348,21 @@
     previewExportMode,
     feedUrl,
     mapPinsUrl,
+    anniversaryStagingUrl,
+    geofenceStagingUrl,
+    precinctShardBaseUrl,
     validateExportPayload,
     validateMapPinsPayload,
+    validateAnniversaryPayload,
+    validateGeofencePayload,
     certifyLitePin,
     normalizePin,
     certifyCoord,
+    pinKey,
+    anniversaryBadgeLabel,
+    markerIconHtml,
+    applyEnrichmentToPins,
+    loadPreviewEnrichment,
     validCalendarDate,
     pinDateKey,
     dateMatchesPin,

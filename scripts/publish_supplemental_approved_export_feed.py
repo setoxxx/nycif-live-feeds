@@ -35,6 +35,13 @@ EXPORT_PATH = DATA_DIR / "supplemental_approved_export_feed.json"
 DIST_DIR = ROOT / "dist"
 DIST_EXPORT_PATH = DIST_DIR / "supplemental_approved_export_feed.json"
 DIST_MAP_PINS_PATH = DIST_DIR / "supplemental_approved_export_map_pins.json"
+ANNIVERSARY_STAGING_PATH = DATA_DIR / "supplemental_cultural_anniversary_staging.json"
+GEOFENCE_STAGING_PATH = DATA_DIR / "supplemental_press_geofence_staging.json"
+PRECINCT_REFERENCE_PATH = DATA_DIR / "nypd_precinct_boundaries_reference.json"
+DIST_ANNIVERSARY_PATH = DIST_DIR / "supplemental_cultural_anniversary_staging.json"
+DIST_GEOFENCE_PATH = DIST_DIR / "supplemental_press_geofence_staging.json"
+DIST_PRECINCT_PATH = DIST_DIR / "nypd_precinct_boundaries_reference.json"
+DIST_PRECINCT_SHARD_DIR = DIST_DIR / "nypd_precincts"
 REPORT_PATH = DATA_DIR / "reports" / "supplemental_approved_export_publish_report.json"
 
 FIELD_DESK_RAW_URL = (
@@ -44,6 +51,21 @@ FIELD_DESK_RAW_URL = (
 FIELD_DESK_MAP_PINS_URL = (
     "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/"
     "dist/supplemental_approved_export_map_pins.json"
+)
+FIELD_DESK_ANNIVERSARY_URL = (
+    "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/"
+    "dist/supplemental_cultural_anniversary_staging.json"
+)
+FIELD_DESK_GEOFENCE_URL = (
+    "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/"
+    "dist/supplemental_press_geofence_staging.json"
+)
+FIELD_DESK_PRECINCT_URL = (
+    "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/"
+    "dist/nypd_precinct_boundaries_reference.json"
+)
+FIELD_DESK_PRECINCT_SHARD_BASE_URL = (
+    "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/dist/nypd_precincts/"
 )
 FIELD_DESK_BACKEND_DATA_URL = (
     "https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/"
@@ -99,6 +121,58 @@ def build_map_pins_payload(payload: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def publish_precinct_shards(source: Path) -> dict[str, Any] | None:
+    if not source.exists():
+        return None
+    payload = load_json_file(source, {})
+    precincts = payload.get("precincts") if isinstance(payload, dict) else None
+    if not isinstance(precincts, list):
+        return None
+    DIST_PRECINCT_SHARD_DIR.mkdir(parents=True, exist_ok=True)
+    for child in DIST_PRECINCT_SHARD_DIR.glob("precinct-*.json"):
+        child.unlink()
+    shard_paths: list[str] = []
+    for row in precincts:
+        if not isinstance(row, dict):
+            continue
+        precinct = str(row.get("precinct") or "").strip()
+        geometry = row.get("geometry")
+        if not precinct or not isinstance(geometry, dict):
+            continue
+        shard_path = DIST_PRECINCT_SHARD_DIR / f"precinct-{precinct}.json"
+        save_json_file(
+            shard_path,
+            {
+                "artifact_type": "nypd_precinct_boundary_shard",
+                "precinct": precinct,
+                "geometry": geometry,
+                "production_feed": False,
+                "promotion_allowed": False,
+            },
+        )
+        shard_paths.append(repo_relative(shard_path))
+    return {
+        "shard_dir": repo_relative(DIST_PRECINCT_SHARD_DIR),
+        "shard_count": len(shard_paths),
+        "shard_base_url": FIELD_DESK_PRECINCT_SHARD_BASE_URL,
+    }
+
+
+def copy_optional_artifact(source: Path, dest: Path) -> dict[str, Any] | None:
+    if not source.exists():
+        return None
+    payload = load_json_file(source, {})
+    if not isinstance(payload, dict):
+        raise ValueError(f"artifact must be object: {repo_relative(source)}")
+    shutil.copy2(source, dest)
+    return {
+        "source_path": repo_relative(source),
+        "published_path": repo_relative(dest),
+        "artifact_type": payload.get("artifact_type"),
+        "row_count": len(payload.get("rows") or payload.get("precincts") or []),
+    }
+
+
 def publish_export_feed() -> dict[str, Any]:
     payload = validate_export_payload(load_json_file(EXPORT_PATH, {}))
     if not EXPORT_PATH.exists():
@@ -108,6 +182,20 @@ def publish_export_feed() -> dict[str, Any]:
     shutil.copy2(EXPORT_PATH, DIST_EXPORT_PATH)
     map_pins = build_map_pins_payload(payload)
     save_json_file(DIST_MAP_PINS_PATH, map_pins)
+
+    enrichment: dict[str, Any] = {}
+    anniversary_publish = copy_optional_artifact(ANNIVERSARY_STAGING_PATH, DIST_ANNIVERSARY_PATH)
+    if anniversary_publish:
+        enrichment["anniversary_staging"] = anniversary_publish
+    geofence_publish = copy_optional_artifact(GEOFENCE_STAGING_PATH, DIST_GEOFENCE_PATH)
+    if geofence_publish:
+        enrichment["press_geofence_staging"] = geofence_publish
+    precinct_publish = copy_optional_artifact(PRECINCT_REFERENCE_PATH, DIST_PRECINCT_PATH)
+    if precinct_publish:
+        enrichment["precinct_boundaries"] = precinct_publish
+        shard_publish = publish_precinct_shards(PRECINCT_REFERENCE_PATH)
+        if shard_publish:
+            enrichment["precinct_shards"] = shard_publish
 
     generated_at = utc_now_iso()
     report = {
@@ -125,7 +213,11 @@ def publish_export_feed() -> dict[str, Any]:
             "dist_raw": FIELD_DESK_RAW_URL,
             "map_pins_raw": FIELD_DESK_MAP_PINS_URL,
             "backend_data_raw": FIELD_DESK_BACKEND_DATA_URL,
+            "anniversary_staging_raw": FIELD_DESK_ANNIVERSARY_URL,
+            "press_geofence_staging_raw": FIELD_DESK_GEOFENCE_URL,
+            "precinct_boundaries_raw": FIELD_DESK_PRECINCT_URL,
         },
+        "preview_enrichment": enrichment,
         "safety": {
             "production_feed": False,
             "promotion_allowed": False,

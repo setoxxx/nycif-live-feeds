@@ -159,6 +159,32 @@ test('uses public map RC marker cap and viewport buffer', () => {
   assert.ok(!/nycif-supplemental-dots-canvas/.test(source), 'canvas layer removed');
   assert.match(source, /layerGroup/);
   assert.match(source, /divIcon/);
+  assert.match(source, /anniversary-badge/);
+  assert.match(source, /showPrecinctGeofenceForPin/);
+});
+
+test('anniversaryBadgeLabel renders year count or annual fallback', () => {
+  const api = loadWithUrl('https://x/approved-export-preview.html', {
+    nycifSupplementalExportPreview: '1',
+  });
+  assert.equal(api.anniversaryBadgeLabel({ culturalAnniversary: true, anniversaryNumber: 15 }), '15');
+  assert.equal(api.anniversaryBadgeLabel({ culturalAnniversary: true }), 'A');
+});
+
+test('standalone preview html uses cache bust v=10', () => {
+  assert.match(previewHtml, /supplemental-approved-export-preview-v01\.js\?v=10/);
+  assert.match(previewHtml, /cultural anniversary badges/i);
+});
+
+test('tip jar links include Cash App, Venmo, and PayPal', () => {
+  const api = loadWithUrl('https://x/approved-export-preview.html', {
+    nycifSupplementalExportPreview: '1',
+  });
+  assert.equal(api.TIP_JAR_LINKS.length, 3);
+  assert.match(source, /nycif-tip-jar/);
+  assert.match(source, /cash\.app\/\$NYCINFOCUS/);
+  assert.match(source, /venmo\.com\/u\/Howie-Doin/);
+  assert.match(source, /py\.pl\/oxvv2Mgg0bztfniKXwpQWA/);
 });
 
 test('formatMapRenderMeta reports cap when viewport exceeds soft cap', () => {
@@ -199,9 +225,4 @@ test('dateChipModel exposes eight forward day choices', () => {
   assert.equal(chips.length, 8);
   assert.equal(chips[0].label, 'Today');
   assert.equal(chips[1].label, 'Tomorrow');
-});
-
-test('standalone preview html uses cache bust v=08', () => {
-  assert.match(previewHtml, /supplemental-approved-export-preview-v01\.js\?v=08/);
-  assert.match(previewHtml, /previewDateChips/);
 });

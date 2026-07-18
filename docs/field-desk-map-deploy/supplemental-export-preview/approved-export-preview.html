@@ -129,7 +129,7 @@
 
     <section class="panel" aria-label="Map">
       <h2>Supplemental approved export map</h2>
-      <p class="meta">Showing one calendar day at a time, like the production public map. Use the date chips to browse days.</p>
+      <p class="meta">Showing one calendar day at a time, like the production public map. Cultural anniversary badges and NYPD precinct geofences are preview-only enrichments.</p>
       <div id="previewDateChips" aria-label="Select date"></div>
       <div id="map" aria-label="Supplemental approved export preview map"></div>
       <p class="meta" id="mapMeta">Initializing map…</p>
@@ -137,7 +137,7 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="./supplemental-approved-export-preview-v01.js?v=08"></script>
+  <script src="./supplemental-approved-export-preview-v01.js?v=10"></script>
   <script>
     function esc(value) {
       return String(value ?? '').replace(/[&<>"']/g, ch => ({
