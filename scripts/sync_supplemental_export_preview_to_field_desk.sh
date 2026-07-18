@@ -14,9 +14,9 @@ cp "$SRC/approved-export-preview.html" "$DEST/approved-export-preview.html"
 cp "$SRC/supplemental-export-preview.test.mjs" "$DEST/tools/public-map/supplemental-export-preview.test.mjs"
 
 if ! grep -q 'supplemental-approved-export-preview-v01.js' "$DEST/desk.html"; then
-  sed -i 's|feed-status-panel-v01.js?v=01"></script>|feed-status-panel-v01.js?v=01"></script>\n  <script src="./supplemental-approved-export-preview-v01.js?v=03"></script>|' "$DEST/desk.html"
+  sed -i 's|feed-status-panel-v01.js?v=01"></script>|feed-status-panel-v01.js?v=01"></script>\n  <script src="./supplemental-approved-export-preview-v01.js?v=04"></script>|' "$DEST/desk.html"
 fi
-sed -i 's|supplemental-approved-export-preview-v01.js?v=0[12]|supplemental-approved-export-preview-v01.js?v=03|g' "$DEST/desk.html"
+sed -i 's|supplemental-approved-export-preview-v01.js?v=0[0-9]|supplemental-approved-export-preview-v01.js?v=04|g' "$DEST/desk.html"
 
 cd "$DEST"
 node --check supplemental-approved-export-preview-v01.js

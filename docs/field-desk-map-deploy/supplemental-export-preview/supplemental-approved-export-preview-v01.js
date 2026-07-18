@@ -374,78 +374,88 @@
       throw new Error('Leaflet is not loaded');
     }
     SupplementalDotsLayerClass = window.L.Layer.extend({
-    initialize(pins) {
-      this._pins = pins;
-    },
-    onAdd(map) {
-      this._map = map;
-      this._canvas = window.L.DomUtil.create('canvas', 'nycif-supplemental-dots-canvas');
-      map.getPanes().overlayPane.appendChild(this._canvas);
-      map.on('move zoom moveend zoomend resize viewreset', this._reset, this);
-      map.on('click', this._onMapClick, this);
-      this._reset();
-      return this;
-    },
-    onRemove(map) {
-      map.off('move zoom moveend zoomend resize viewreset', this._reset, this);
-      map.off('click', this._onMapClick, this);
-      window.L.DomUtil.remove(this._canvas);
-    },
-    _reset() {
-      const map = this._map;
-      const size = map.getSize();
-      const topLeft = map.containerPointToLayerPoint([0, 0]);
-      window.L.DomUtil.setPosition(this._canvas, topLeft);
-      this._canvas.width = size.x;
-      this._canvas.height = size.y;
-      this._topLeft = topLeft;
-      this._redraw();
-    },
-    _redraw() {
-      const map = this._map;
-      const ctx = this._canvas.getContext('2d');
-      if (!ctx) return;
-      ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
-      const bounds = map.getBounds();
-      const topLeft = this._topLeft;
-      ctx.fillStyle = '#7c3aed';
-      ctx.strokeStyle = '#ede9fe';
-      ctx.lineWidth = 1;
-      for (const pin of this._pins) {
-        if (!bounds.contains([pin.lat, pin.lng])) continue;
-        const pt = map.latLngToContainerPoint([pin.lat, pin.lng]);
-        const x = pt.x - topLeft.x;
-        const y = pt.y - topLeft.y;
-        ctx.beginPath();
-        ctx.arc(x, y, 5, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.stroke();
-      }
-    },
-    _onMapClick(event) {
-      const map = this._map;
-      const clickPt = map.latLngToContainerPoint(event.latlng);
-      let best = null;
-      let bestDist = 14;
-      const bounds = map.getBounds();
-      for (const pin of this._pins) {
-        if (!bounds.contains([pin.lat, pin.lng])) continue;
-        const pt = map.latLngToContainerPoint([pin.lat, pin.lng]);
-        const dx = pt.x - clickPt.x;
-        const dy = pt.y - clickPt.y;
-        const dist = Math.hypot(dx, dy);
-        if (dist < bestDist) {
-          bestDist = dist;
-          best = pin;
+      initialize(pins) {
+        this._pins = pins;
+      },
+      onAdd(map) {
+        this._map = map;
+        this._canvas = window.L.DomUtil.create('canvas', 'nycif-supplemental-dots-canvas leaflet-layer');
+        window.L.DomUtil.addClass(this._canvas, 'leaflet-zoom-animated');
+        map.getPanes().overlayPane.appendChild(this._canvas);
+        map.on('resize viewreset zoomend', this._resize, this);
+        map.on('move moveend zoom zoomanim', this._redraw, this);
+        map.on('click', this._onMapClick, this);
+        this._resize();
+        return this;
+      },
+      onRemove(map) {
+        map.off('resize viewreset zoomend', this._resize, this);
+        map.off('move moveend zoom zoomanim', this._redraw, this);
+        map.off('click', this._onMapClick, this);
+        window.L.DomUtil.remove(this._canvas);
+      },
+      _resize() {
+        const map = this._map;
+        const size = map.getSize();
+        this._canvas.width = size.x;
+        this._canvas.height = size.y;
+        this._redraw();
+      },
+      _layerOrigin() {
+        return this._map.containerPointToLayerPoint([0, 0]);
+      },
+      _pinPoint(pin) {
+        const origin = this._layerOrigin();
+        const layerPoint = this._map.latLngToLayerPoint([pin.lat, pin.lng]);
+        return {
+          x: layerPoint.x - origin.x,
+          y: layerPoint.y - origin.y,
+        };
+      },
+      _redraw() {
+        const map = this._map;
+        const ctx = this._canvas.getContext('2d');
+        if (!ctx) return;
+        window.L.DomUtil.setPosition(this._canvas, this._layerOrigin());
+        ctx.clearRect(0, 0, this._canvas.width, this._canvas.height);
+        ctx.fillStyle = '#7c3aed';
+        ctx.strokeStyle = '#ede9fe';
+        ctx.lineWidth = 1;
+        const pad = 12;
+        const w = this._canvas.width + pad;
+        const h = this._canvas.height + pad;
+        for (const pin of this._pins) {
+          const point = this._pinPoint(pin);
+          if (point.x < -pad || point.y < -pad || point.x > w || point.y > h) continue;
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
         }
-      }
-      if (best) {
-        window.L.popup({ maxWidth: 350, minWidth: 250 })
-          .setLatLng([best.lat, best.lng])
-          .setContent(popupHtml(best))
-          .openOn(map);
-      }
-    }
+      },
+      _onMapClick(event) {
+        const map = this._map;
+        const clickPt = map.latLngToLayerPoint(event.latlng);
+        const origin = this._layerOrigin();
+        const clickX = clickPt.x - origin.x;
+        const clickY = clickPt.y - origin.y;
+        let best = null;
+        let bestDist = 14;
+        for (const pin of this._pins) {
+          const point = this._pinPoint(pin);
+          const dist = Math.hypot(point.x - clickX, point.y - clickY);
+          if (dist < bestDist) {
+            bestDist = dist;
+            best = pin;
+          }
+        }
+        if (best) {
+          window.L.popup({ maxWidth: 350, minWidth: 250 })
+            .setLatLng([best.lat, best.lng])
+            .setContent(popupHtml(best))
+            .openOn(map);
+        }
+      },
     });
     return SupplementalDotsLayerClass;
   }
