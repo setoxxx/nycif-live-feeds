@@ -233,12 +233,6 @@
       return;
     }
 
-    const stack = source.__nycifStack;
-    if (stack?.events?.length > 1) {
-      window.requestAnimationFrame(() => syncStackPopupPlacement(source));
-      return;
-    }
-
     const selectedLocation = source.getLatLng();
     const currentCenter = map.getCenter();
 
@@ -941,7 +935,6 @@
     marker.setPopupContent(events.length === 1 ? popupRoot(events[0]) : popupPicker(events, marker));
     if (marker.isPopupOpen()) {
       marker.getPopup().update();
-      syncStackPopupPlacement(marker);
       syncPopupBackButton(marker);
     } else {
       marker.openPopup();
@@ -956,7 +949,6 @@
     marker.setPopupContent(popupRoot(selected));
     if (marker.isPopupOpen()) {
       marker.getPopup().update();
-      syncStackPopupPlacement(marker);
       syncPopupBackButton(marker);
     } else {
       marker.openPopup();
@@ -973,30 +965,15 @@
     const markerPoint = map.latLngToContainerPoint(marker.getLatLng());
     const mapWidth = map.getSize().x;
     const popupWidth = el.offsetWidth || 320;
-    const preferRight = (mapWidth - markerPoint.x) >= (popupWidth * 0.55);
+    const roomRight = mapWidth - markerPoint.x;
+    const roomLeft = markerPoint.x;
+    const preferRight = roomRight >= popupWidth + 24 || roomRight >= roomLeft;
     const sideClass = preferRight ? 'nycif-event-popup--side-right' : 'nycif-event-popup--side-left';
     el.classList.remove('nycif-event-popup--side-right', 'nycif-event-popup--side-left');
     el.classList.add(sideClass);
-    const offsetX = preferRight ? 22 : -(popupWidth * 0.42);
-    popup.options.offset = L.point(offsetX, -8);
+    const offsetX = preferRight ? 20 : -(popupWidth * 0.38);
+    popup.options.offset = L.point(offsetX, -6);
     popup.update();
-    const mapHeight = map.getSize().y;
-    const verticalDrift = Math.abs(markerPoint.y - mapHeight * 0.5);
-    if (verticalDrift > mapHeight * 0.18) {
-      popupCentering = true;
-      map.panTo(marker.getLatLng(), { animate: true, duration: 0.28 });
-      map.once('moveend', () => {
-        popupCentering = false;
-      });
-    }
-    window.requestAnimationFrame(() => {
-      const point = map.latLngToContainerPoint(marker.getLatLng());
-      const targetX = mapWidth * (preferRight ? 0.38 : 0.62);
-      const panX = targetX - point.x;
-      if (Math.abs(panX) > 12 && !popupCentering) {
-        map.panBy([panX, 0], { animate: true });
-      }
-    });
   }
 
   function syncPopupBackButton(marker) {
