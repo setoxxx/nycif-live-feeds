@@ -1,0 +1,291 @@
+{
+  "artifact_type": "nyc_feast_festival_reference_seed_bulk_patch",
+  "batch": "operator_gap_fill_wave5_2026_07",
+  "notes": [
+    "Wave 5: priority gap-fill for Woodhaven/Ozone Park, Gravesend/Bensonhurst, Dyker Heights, Parkchester, and Pleasant Plains/Travis SI corridors.",
+    "Dates projected +1 year from 2025 bkfu-528j historical permits where available; parish carnivals from recurring 2024/2025 operator research where SAPO rows are thin.",
+    "claimed_permit_id is hint only; match on canonical_name + display_location + dates."
+  ],
+  "entries": [
+    {
+      "key": "holy-cross-greek-cultural-festival-bay-ridge",
+      "canonical_name": "Holy Cross Greek Cultural Festival (Bay Ridge / Dyker Heights)",
+      "aliases": [
+        "Holy Cross Greek Cultural Festival",
+        "Holy Cross Church Festival Bay Ridge",
+        "Dyker Heights Greek Festival"
+      ],
+      "claimed_permit_id": "826195",
+      "projected_start": "2026-09-18",
+      "projected_end": "2026-09-21",
+      "event_kind": "religious_feast",
+      "typical_multi_day": true,
+      "borough": "Brooklyn",
+      "location_hint": "RIDGE BOULEVARD",
+      "display_location": "RIDGE BOULEVARD between 85 STREET and 86 STREET, Brooklyn, NY",
+      "reference_lat": 40.6228,
+      "reference_lng": -74.0305,
+      "bulk_import_batch": "operator_gap_fill_wave5_2026_07"
+    },
+    {
+      "key": "st-helena-parish-carnival-parkchester",
+      "canonical_name": "St. Helena Parish Carnival (Parkchester)",
+      "aliases": [
+        "St. Helena Parish Carnival",
+        "St. Helena Church Carnival Parkchester",
+        "Parkchester Parish Carnival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-07-25",
+      "projected_end": "2026-08-04",
+      "event_kind": "religious_feast",
+      "typical_multi_day": true,
+      "borough": "Bronx",
+      "location_hint": "OLMSTEAD AVENUE",
+      "display_location": "1315 OLMSTEAD AVENUE, Parkchester, Bronx, NY",
+      "reference_lat": 40.8405,
+      "reference_lng": -73.8588,
+      "bulk_import_batch": "operator_gap_fill_wave5_2026_07"
+    },
+    {
+      "key": "nativity-bvm-assumption-feast-ozone-park",
+      "canonical_name": "Nativity BVM Assumption Feast (Ozone Park)",
+      "aliases": [
+        "Nativity of the Blessed Virgin Mary Feast Ozone Park",
+        "Nativity BVM Feast Ozone Park",
+        "St. Stanislaus Nativity Parish Feast"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-15",
+      "projected_end": "2026-08-15",
+      "event_kind": "religious_feast",
+      "typical_multi_day": false,
+      "borough": "Queens",
+      "location_hint": "91 STREET",
+      "display_location": "101-41 91 STREET, Ozone Park, Queens, NY",
+      "reference_lat": 40.6812,
+      "reference_lng": -73.8445,
+      "bulk_import_batch": "operator_gap_fill_wave5_2026_07"
+    },
+    {
+      "key": "st-finbar-feast-procession-bath-beach",
+      "canonical_name": "St. Finbar Feast Procession (Bath Beach / Bensonhurst)",
+      "aliases": [
+        "St. Finbar Feast Procession",
+        "St. Finbar Patron Feast Bath Beach",
+        "St. Finbar Parish Procession"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-09-28",
+      "projected_end": "2026-09-28",
+      "event_kind": "religious_feast",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "BAY 20 STREET",
+      "display_location": "138 BAY 20 STREET, Bath Beach, Brooklyn, NY",
+      "reference_lat": 40.5905,
+      "reference_lng": -73.9965,
+      "bulk_import_batch": "operator_gap_fill_wave5_2026_07"
+    },
+    {
+      "key": "corpus-christi-procession-dyker-heights",
+      "canonical_name": "Corpus Christi Procession (Dyker Heights / Bay Ridge)",
+      "aliases": [
+        "Corpus Christi Procession Dyker Heights",
+        "St. Ephrem Corpus Christi Procession",
+        "Brooklyn Deanery Corpus Christi Procession"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-22",
+      "projected_end": "2026-06-22",
+      "event_kind": "religious_feast",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "BAY RIDGE PARKWAY",
+      "display_location": "BAY RIDGE PARKWAY between 13 AVENUE and 14 AVENUE, Brooklyn, NY",
+      "reference_lat": 40.6285,
+      "reference_lng": -74.0255,
+      "bulk_import_batch": "operator_gap_fill_wave5_2026_07"
+    },
+    {
+      "key": "our-lady-of-grace-feast-gravesend",
+      "canonical_name": "Our Lady of Grace Feast (Gravesend)",
+      "aliases": [
+        "Our Lady of Grace Parish Feast",
+        "Our Lady of Grace Feast Gravesend",
+        "OLG Gravesend Feast"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-15",
+      "projected_end": "2026-08-15",
+      "event_kind": "religious_feast",
+      "typical_multi_day": false,
+      "borough": "Brooklyn",
+      "location_hint": "AVENUE W",
+      "display_location": "252 AVENUE W, Gravesend, Brooklyn, NY",
+      "reference_lat": 40.5895,
+      "reference_lng": -73.985,
+      "bulk_import_batch": "operator_gap_fill_wave5_2026_07"
+    },
+    {
+      "key": "st-raymond-parish-summer-festival-parkchester",
+      "canonical_name": "St. Raymond Parish Summer Festival (Parkchester / Castle Hill)",
+      "aliases": [
+        "St. Raymond Parish Festival",
+        "St. Raymond Church Summer Festival Bronx",
+        "Castle Hill Parish Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-06-28",
+      "projected_end": "2026-06-29",
+      "event_kind": "religious_feast",
+      "typical_multi_day": true,
+      "borough": "Bronx",
+      "location_hint": "CASTLE HILL AVENUE",
+      "display_location": "CASTLE HILL AVENUE at TREMONT AVENUE, Parkchester, Bronx, NY",
+      "reference_lat": 40.8236,
+      "reference_lng": -73.8512,
+      "bulk_import_batch": "operator_gap_fill_wave5_2026_07"
+    },
+    {
+      "key": "st-thomas-apostle-summer-festival-woodhaven",
+      "canonical_name": "St. Thomas the Apostle Summer Festival (Woodhaven)",
+      "aliases": [
+        "St. Thomas the Apostle Festival Woodhaven",
+        "St. Thomas Apostle Parish Festival",
+        "Woodhaven St. Thomas Church Festival"
+      ],
+      "claimed_permit_id": null,
+      "projected_start": "2026-08-16",
+      "projected_end": "2026-08-17",
+      "event_kind": "religious_feast",
+      "typical_multi_day": true,
+      "borough": "Queens",
+      "location_hint": "WOODHAVEN",
+      "display_location": "88-01 88 STREET, Woodhaven, Queens, NY",
+      "reference_lat": 40.6925,
+      "reference_lng": -73.8568,
+      "bulk_import_batch": "operator_gap_fill_wave5_2026_07"
+    },
+    {
+      "key": "bogota-street-block-party-travis",
+      "canonical_name": "Bogota Street Block Party (Travis / Pleasant Plains)",
+      "aliases": [
+        "Bogota Street Block Party",
+        "Travis Bogota Street Block Party",
+        "Pleasant Plains Bogota Block Party"
+      ],
+      "claimed_permit_id": "863634",
+      "projected_start": "2026-08-16",
+      "projected_end": "2026-08-16",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Staten Island",
+      "location_hint": "BOGOTA STREET",
+      "display_location": "BOGOTA STREET between TRAVIS AVENUE and DEAD END, Staten Island, NY",
+      "bulk_import_batch": "operator_gap_fill_wave5_2026_07"
+    },
+    {
+      "key": "crossfield-avenue-block-party-annadale",
+      "canonical_name": "Crossfield Avenue Block Party (Annadale)",
+      "aliases": [
+        "Crossfield Ave Block Party",
+        "Annadale Crossfield Block Party"
+      ],
+      "claimed_permit_id": "852942",
+      "projected_start": "2026-08-23",
+      "projected_end": "2026-08-23",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Staten Island",
+      "location_hint": "CROSSFIELD AVENUE",
+      "display_location": "CROSSFIELD AVENUE between ANNADALE ROAD and DORVAL AVENUE, Staten Island, NY",
+      "bulk_import_batch": "operator_gap_fill_wave5_2026_07"
+    },
+    {
+      "key": "scranton-avenue-block-party-great-kills",
+      "canonical_name": "Scranton Avenue Block Party (Great Kills)",
+      "aliases": [
+        "Scranton Avenue Block Party",
+        "Great Kills Scranton Block Party"
+      ],
+      "claimed_permit_id": "862869",
+      "projected_start": "2026-08-23",
+      "projected_end": "2026-08-23",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Staten Island",
+      "location_hint": "SCRANTON AVENUE",
+      "display_location": "SCRANTON AVENUE between RICHMOND AVENUE and WAINWRIGHT AVENUE, Staten Island, NY",
+      "bulk_import_batch": "operator_gap_fill_wave5_2026_07"
+    },
+    {
+      "key": "leverett-avenue-block-party-eltingville",
+      "canonical_name": "Leverett Avenue Block Party (Eltingville / Pleasant Plains)",
+      "aliases": [
+        "Leverett Avenue Block Party",
+        "Eltingville Leverett Block Party"
+      ],
+      "claimed_permit_id": "863398",
+      "projected_start": "2026-07-26",
+      "projected_end": "2026-07-26",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Staten Island",
+      "location_hint": "LEVERETT AVENUE",
+      "display_location": "LEVERETT AVENUE between RICHMOND AVENUE and WAINWRIGHT AVENUE, Staten Island, NY",
+      "bulk_import_batch": "operator_gap_fill_wave5_2026_07"
+    },
+    {
+      "key": "brookfield-avenue-block-party-eltingville",
+      "canonical_name": "Brookfield Avenue Block Party (Eltingville)",
+      "aliases": [
+        "Brookfield Block Party Eltingville",
+        "Brookfield Avenue Block Party Staten Island"
+      ],
+      "claimed_permit_id": "859974",
+      "projected_start": "2026-07-12",
+      "projected_end": "2026-07-12",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Staten Island",
+      "location_hint": "BROOKFIELD AVENUE",
+      "display_location": "BROOKFIELD AVENUE between LEVERETT AVENUE and GENESEE AVENUE, Staten Island, NY",
+      "bulk_import_batch": "operator_gap_fill_wave5_2026_07"
+    },
+    {
+      "key": "colon-avenue-block-party-eltingville",
+      "canonical_name": "Colon Avenue Block Party (Eltingville)",
+      "aliases": [
+        "Colon Avenue Block Party",
+        "Eltingville Colon Block Party"
+      ],
+      "claimed_permit_id": "861997",
+      "projected_start": "2026-07-26",
+      "projected_end": "2026-07-26",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Staten Island",
+      "location_hint": "COLON AVENUE",
+      "display_location": "COLON AVENUE between LEVERETT AVENUE and BARLOW AVENUE, Staten Island, NY",
+      "bulk_import_batch": "operator_gap_fill_wave5_2026_07"
+    },
+    {
+      "key": "middle-loop-road-block-party-staten-island",
+      "canonical_name": "Middle Loop Road Block Party (Staten Island)",
+      "aliases": [
+        "Middle Loop Road Block Party",
+        "Scranton Middle Loop Block Party"
+      ],
+      "claimed_permit_id": "866253",
+      "projected_start": "2026-08-16",
+      "projected_end": "2026-08-16",
+      "event_kind": "street_fair",
+      "typical_multi_day": false,
+      "borough": "Staten Island",
+      "location_hint": "MIDDLE LOOP ROAD",
+      "display_location": "MIDDLE LOOP ROAD between ARMSTRONG AVENUE and EAST SCRANTON AVENUE, Staten Island, NY",
+      "bulk_import_batch": "operator_gap_fill_wave5_2026_07"
+    }
+  ]
+}

@@ -1,18 +1,18 @@
 {
   "artifact_type": "nyc_feast_festival_reference_match_report",
-  "generated_at_utc": "2026-07-18T23:08:17Z",
+  "generated_at_utc": "2026-07-19T00:01:41Z",
   "qa_pass": true,
-  "seed_count": 223,
+  "seed_count": 238,
   "status_counts": {
-    "not_in_raw_snapshot": 180,
-    "title_match": 37,
+    "not_in_raw_snapshot": 188,
+    "title_match": 44,
     "confirmed_permit_id": 3,
     "permit_id_mismatch": 3
   },
-  "confirmed_in_raw_snapshot": 40,
+  "confirmed_in_raw_snapshot": 47,
   "multi_day_confirmed_in_raw_snapshot": 1,
   "permit_id_mismatch_count": 3,
-  "not_in_raw_snapshot_count": 180,
+  "not_in_raw_snapshot_count": 188,
   "confirmed_samples": [
     {
       "key": "dumbo-drop-block-party",
@@ -105,6 +105,34 @@
       "projected_end": "2026-07-11",
       "location_hint": "ESSEX STREET",
       "borough": "Brooklyn",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
+      "key": "brookfield-avenue-block-party-eltingville",
+      "canonical_name": "Brookfield Avenue Block Party (Eltingville)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "859974",
+      "projected_start": "2026-07-12",
+      "projected_end": "2026-07-12",
+      "location_hint": "BROOKFIELD AVENUE",
+      "borough": "Staten Island",
       "source": "google_studio_bulk_patch",
       "match_status": "title_match",
       "raw_match": {
@@ -477,6 +505,34 @@
       ]
     },
     {
+      "key": "colon-avenue-block-party-eltingville",
+      "canonical_name": "Colon Avenue Block Party (Eltingville)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "861997",
+      "projected_start": "2026-07-26",
+      "projected_end": "2026-07-26",
+      "location_hint": "COLON AVENUE",
+      "borough": "Staten Island",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
+    },
+    {
       "key": "great-kills-road-block-party",
       "canonical_name": "Great Kills Road Block Party",
       "event_kind": "street_fair",
@@ -501,6 +557,34 @@
         "span_days": 1
       },
       "notes": []
+    },
+    {
+      "key": "leverett-avenue-block-party-eltingville",
+      "canonical_name": "Leverett Avenue Block Party (Eltingville / Pleasant Plains)",
+      "event_kind": "street_fair",
+      "map_emoji": "🎉",
+      "typical_multi_day": false,
+      "claimed_permit_id": "863398",
+      "projected_start": "2026-07-26",
+      "projected_end": "2026-07-26",
+      "location_hint": "LEVERETT AVENUE",
+      "borough": "Staten Island",
+      "source": "google_studio_bulk_patch",
+      "match_status": "title_match",
+      "raw_match": {
+        "source_dataset": "tvpp-9vvx",
+        "source_event_id": "919112",
+        "event_name": "Block Party",
+        "event_type": "Block Party",
+        "start_date_time": "2026-07-18T11:00:00.000",
+        "end_date_time": "2026-07-18T18:00:00.000",
+        "event_borough": "Brooklyn",
+        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+        "span_days": 1
+      },
+      "notes": [
+        "Title matched a different permit ID than the projected one."
+      ]
     },
     {
       "key": "howard-beach-chicot-road-block-party",
@@ -613,88 +697,6 @@
       "notes": [
         "Title matched a different permit ID than the projected one."
       ]
-    },
-    {
-      "key": "our-lady-of-victory-block-party-bed-stuy",
-      "canonical_name": "Our Lady of Victory Block Party (Bedford-Stuyvesant)",
-      "event_kind": "religious_feast",
-      "map_emoji": "🎡",
-      "typical_multi_day": false,
-      "claimed_permit_id": "836150",
-      "projected_start": "2026-08-08",
-      "projected_end": "2026-08-08",
-      "location_hint": "MACDONOUGH STREET",
-      "borough": "Brooklyn",
-      "source": "google_studio_bulk_patch",
-      "match_status": "title_match",
-      "raw_match": {
-        "source_dataset": "tvpp-9vvx",
-        "source_event_id": "919112",
-        "event_name": "Block Party",
-        "event_type": "Block Party",
-        "start_date_time": "2026-07-18T11:00:00.000",
-        "end_date_time": "2026-07-18T18:00:00.000",
-        "event_borough": "Brooklyn",
-        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
-        "span_days": 1
-      },
-      "notes": [
-        "Title matched a different permit ID than the projected one."
-      ]
-    },
-    {
-      "key": "st-rocco-baxter-street-little-italy",
-      "canonical_name": "St. Rocco Feast (Baxter Street, Little Italy)",
-      "event_kind": "religious_feast",
-      "map_emoji": "🎡",
-      "typical_multi_day": true,
-      "claimed_permit_id": "856930",
-      "projected_start": "2026-08-15",
-      "projected_end": "2026-08-16",
-      "location_hint": "BAXTER STREET",
-      "borough": "Manhattan",
-      "source": "google_studio_bulk_patch",
-      "match_status": "title_match",
-      "raw_match": {
-        "source_dataset": "tvpp-9vvx",
-        "source_event_id": "919112",
-        "event_name": "Block Party",
-        "event_type": "Block Party",
-        "start_date_time": "2026-07-18T11:00:00.000",
-        "end_date_time": "2026-07-18T18:00:00.000",
-        "event_borough": "Brooklyn",
-        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
-        "span_days": 1
-      },
-      "notes": [
-        "Title matched a different permit ID than the projected one."
-      ]
-    },
-    {
-      "key": "stapleton-back-to-school-block-party",
-      "canonical_name": "Stapleton Back to School Block Party (Staten Island)",
-      "event_kind": "street_fair",
-      "map_emoji": "🎉",
-      "typical_multi_day": false,
-      "claimed_permit_id": null,
-      "projected_start": "2026-08-15",
-      "projected_end": "2026-08-15",
-      "location_hint": "BROWNELL STREET",
-      "borough": "Staten Island",
-      "source": "google_studio_bulk_patch",
-      "match_status": "title_match",
-      "raw_match": {
-        "source_dataset": "tvpp-9vvx",
-        "source_event_id": "919112",
-        "event_name": "Block Party",
-        "event_type": "Block Party",
-        "start_date_time": "2026-07-18T11:00:00.000",
-        "end_date_time": "2026-07-18T18:00:00.000",
-        "event_borough": "Brooklyn",
-        "event_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
-        "span_days": 1
-      },
-      "notes": []
     }
   ],
   "permit_id_mismatches": [

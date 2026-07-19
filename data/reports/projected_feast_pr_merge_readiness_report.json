@@ -1,21 +1,22 @@
 {
   "artifact_type": "projected_feast_pr_merge_readiness_report",
-  "generated_at_utc": "2026-07-18T23:14:19Z",
-  "pr_number": 312,
-  "branch": "cursor/multiday-feast-discovery-c1f9",
+  "generated_at_utc": "2026-07-19T00:08:36Z",
+  "pr_number": null,
+  "branch": "cursor/wave5-feast-gap-fill-c1f9",
   "qa_pass": true,
-  "seed_count": 223,
-  "intake_count": 220,
-  "map_ready_count": 220,
+  "seed_count": 238,
+  "intake_count": 235,
+  "map_ready_count": 235,
   "list_only_count": 0,
-  "projected_discovery_count": 218,
-  "religious_feast_discovery_count": 50,
+  "projected_discovery_count": 233,
+  "religious_feast_discovery_count": 58,
   "waves_merged": [
     "google_studio_bulk",
     "gap_wave1",
     "gap_wave2",
     "gap_wave3",
-    "gap_wave4"
+    "gap_wave4",
+    "gap_wave5"
   ],
   "wave4_added_keys": [
     "church-at-the-park-marine-park",
@@ -43,12 +44,29 @@
     "our-lady-of-the-angel-woodhaven-feast",
     "resurrection-parish-gerritsen-beach-feast"
   ],
+  "wave5_added_keys": [
+    "holy-cross-greek-cultural-festival-bay-ridge",
+    "st-helena-parish-carnival-parkchester",
+    "nativity-bvm-assumption-feast-ozone-park",
+    "st-finbar-feast-procession-bath-beach",
+    "corpus-christi-procession-dyker-heights",
+    "our-lady-of-grace-feast-gravesend",
+    "st-raymond-parish-summer-festival-parkchester",
+    "st-thomas-apostle-summer-festival-woodhaven",
+    "bogota-street-block-party-travis",
+    "crossfield-avenue-block-party-annadale",
+    "scranton-avenue-block-party-great-kills",
+    "leverett-avenue-block-party-eltingville",
+    "brookfield-avenue-block-party-eltingville",
+    "colon-avenue-block-party-eltingville",
+    "middle-loop-road-block-party-staten-island"
+  ],
   "raw_sapo_confirmed_count": 3,
-  "title_match_count": 37,
+  "title_match_count": 44,
   "permit_id_mismatch_count": 3,
   "match_report_status_counts": {
-    "not_in_raw_snapshot": 180,
-    "title_match": 37,
+    "not_in_raw_snapshot": 188,
+    "title_match": 44,
     "confirmed_permit_id": 3,
     "permit_id_mismatch": 3
   },
@@ -62,16 +80,13 @@
   "promotion_allowed_all_false": true,
   "public_map_modified": false,
   "recommended_next_steps": [
-    "Merge PR #312 to main",
-    "Verify pins in setoxxx/nycif-field-desk using projected_feast_field_desk_verification_checklist.json",
+    "Merge wave5 gap-fill PR to main",
+    "Verify new wave5 pins in setoxxx/nycif-field-desk using projected_feast_field_desk_verification_checklist.json",
     "Optional: run sync_nyc_open_data.py when human authorizes network sync",
     "Phase 2E promotion ONLY with explicit human approval to update location_cache.json"
   ],
-  "wave5_gaps": [
-    "Woodhaven / Ozone Park dedicated parish carnivals (thin SAPO religious coverage)",
-    "Gravesend / Bensonhurst parish feasts beyond existing rows",
-    "Dyker Heights summer church events (beyond Christmas lights)",
-    "Parkchester dedicated parish feast rows",
-    "Pleasant Plains parish carnivals beyond Travis July 4 parade"
+  "wave6_gaps": [
+    "Thin SAPO title_match corridors still needing human spot-check",
+    "Operator review of parish-projected rows without 2026 raw confirmation"
   ]
 }

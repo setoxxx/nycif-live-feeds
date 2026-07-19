@@ -1,0 +1,137 @@
+{
+  "artifact_type": "projected_feast_title_match_spotcheck_wave6",
+  "generated_at_utc": "2026-07-19T00:25:29Z",
+  "qa_pass": true,
+  "sample_size": 10,
+  "total_title_match_count": 44,
+  "verdict_counts": {
+    "review": 10
+  },
+  "summary": "Sampled 10 highest-risk generic title_match rows. Pass = street corridor overlap; review = generic raw title needs operator corridor check.",
+  "not_in_raw_snapshot_notes": {
+    "jul_sep_count": 104,
+    "expected_projected_only": "Majority are projected-only feasts not yet in SAPO raw — normal.",
+    "wave5_religious_without_raw": [
+      "st-helena-parish-carnival-parkchester",
+      "nativity-bvm-assumption-feast-ozone-park",
+      "st-finbar-feast-procession-bath-beach",
+      "corpus-christi-procession-dyker-heights",
+      "our-lady-of-grace-feast-gravesend",
+      "st-raymond-parish-summer-festival-parkchester",
+      "st-thomas-apostle-summer-festival-woodhaven"
+    ],
+    "candidate_for_next_sync": "Wave5 parish-projected rows Jul–Sep without raw confirmation — monitor after optional SAPO sync."
+  },
+  "rows": [
+    {
+      "key": "dumbo-drop-block-party",
+      "canonical_name": "DUMBO Drop Block Party",
+      "claimed_permit_id": null,
+      "raw_event_id": "919112",
+      "raw_event_name": "Block Party",
+      "raw_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+      "display_location": null,
+      "verdict": "review",
+      "reason": "generic raw title without street token overlap — likely false match or parks SAPO string"
+    },
+    {
+      "key": "st-matthews-st-gregory-block-party-crown-heights",
+      "canonical_name": "St. Matthews–St. Gregory Block Party (Crown Heights)",
+      "claimed_permit_id": "833564",
+      "raw_event_id": "919112",
+      "raw_event_name": "Block Party",
+      "raw_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+      "display_location": null,
+      "verdict": "review",
+      "reason": "generic raw title without street token overlap — likely false match or parks SAPO string"
+    },
+    {
+      "key": "ridgewood-essex-street-block-party",
+      "canonical_name": "Essex Street Block Party (Ridgewood)",
+      "claimed_permit_id": "859845",
+      "raw_event_id": "919112",
+      "raw_event_name": "Block Party",
+      "raw_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+      "display_location": null,
+      "verdict": "review",
+      "reason": "generic raw title without street token overlap — likely false match or parks SAPO string"
+    },
+    {
+      "key": "brookfield-avenue-block-party-eltingville",
+      "canonical_name": "Brookfield Avenue Block Party (Eltingville)",
+      "claimed_permit_id": "859974",
+      "raw_event_id": "919112",
+      "raw_event_name": "Block Party",
+      "raw_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+      "display_location": null,
+      "verdict": "review",
+      "reason": "generic raw title without street token overlap — likely false match or parks SAPO string"
+    },
+    {
+      "key": "eltingville-block-party-south-shore",
+      "canonical_name": "Eltingville Block Party (South Shore)",
+      "claimed_permit_id": null,
+      "raw_event_id": "919112",
+      "raw_event_name": "Block Party",
+      "raw_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+      "display_location": null,
+      "verdict": "review",
+      "reason": "generic raw title without street token overlap — likely false match or parks SAPO string"
+    },
+    {
+      "key": "goodall-street-south-beach-block-party",
+      "canonical_name": "Goodall Street Block Party (South Beach)",
+      "claimed_permit_id": "850037",
+      "raw_event_id": "919112",
+      "raw_event_name": "Block Party",
+      "raw_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+      "display_location": null,
+      "verdict": "review",
+      "reason": "generic raw title without street token overlap — likely false match or parks SAPO string"
+    },
+    {
+      "key": "ridgewood-madison-street-block-party",
+      "canonical_name": "Madison Street Block Party (Ridgewood)",
+      "claimed_permit_id": null,
+      "raw_event_id": "919112",
+      "raw_event_name": "Block Party",
+      "raw_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+      "display_location": null,
+      "verdict": "review",
+      "reason": "generic raw title without street token overlap — likely false match or parks SAPO string"
+    },
+    {
+      "key": "naughton-avenue-new-dorp-block-party",
+      "canonical_name": "Naughton Avenue Block Party (New Dorp)",
+      "claimed_permit_id": "844572",
+      "raw_event_id": "919112",
+      "raw_event_name": "Block Party",
+      "raw_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+      "display_location": null,
+      "verdict": "review",
+      "reason": "generic raw title without street token overlap — likely false match or parks SAPO string"
+    },
+    {
+      "key": "flushing-community-block-party-downing",
+      "canonical_name": "Flushing Community Block Party (Downing Street)",
+      "claimed_permit_id": "859273",
+      "raw_event_id": "919112",
+      "raw_event_name": "Block Party",
+      "raw_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+      "display_location": null,
+      "verdict": "review",
+      "reason": "generic raw title without street token overlap — likely false match or parks SAPO string"
+    },
+    {
+      "key": "beulah-church-block-party-east-flatbush",
+      "canonical_name": "Beulah Church Annual Block Party (East Flatbush)",
+      "claimed_permit_id": "845108",
+      "raw_event_id": "919112",
+      "raw_event_name": "Block Party",
+      "raw_location": "STRAUSS STREET between SUTTER AVENUE and BLAKE AVENUE",
+      "display_location": null,
+      "verdict": "review",
+      "reason": "generic raw title without street token overlap — likely false match or parks SAPO string"
+    }
+  ]
+}
