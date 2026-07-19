@@ -1,6 +1,6 @@
 {
   "artifact_type": "projected_feast_field_desk_verification_checklist",
-  "generated_at_utc": "2026-07-18T23:14:19Z",
+  "generated_at_utc": "2026-07-19T00:08:36Z",
   "target_repo": "setoxxx/nycif-field-desk",
   "pr_number": 312,
   "backend_branch": "cursor/multiday-feast-discovery-c1f9",
@@ -10,7 +10,7 @@
     {
       "id": "load_projected_rows",
       "check": "Discovery approved feed loads projected_feast_reference rows from nyc-projected-feast-reference dataset",
-      "expected": ">= 218 projected pins"
+      "expected": ">= 233 projected pins"
     },
     {
       "id": "st_bernard_multiday_pin",

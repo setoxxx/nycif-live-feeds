@@ -80,8 +80,10 @@ class ProjectedFeastDiscoveryTests(unittest.TestCase):
         self.assertEqual(report.get("list_only_count"), 0)
         self.assertTrue(report.get("protected_files_unchanged"))
         self.assertTrue(report.get("promotion_allowed_all_false"))
-        self.assertEqual(report.get("pr_number"), 312)
+        self.assertEqual(report.get("pr_number"), None)
         self.assertIn("gap_wave4", report.get("waves_merged", []))
+        self.assertIn("gap_wave5", report.get("waves_merged", []))
+        self.assertGreaterEqual(len(report.get("wave5_added_keys", [])), 12)
 
     def test_field_desk_verification_checklist_exists(self) -> None:
         path = ROOT / "data/reports/projected_feast_field_desk_verification_checklist.json"
