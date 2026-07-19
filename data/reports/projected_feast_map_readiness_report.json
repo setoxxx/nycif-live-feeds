@@ -1,42 +1,42 @@
 {
   "artifact_type": "projected_feast_map_readiness_report",
-  "generated_at_utc": "2026-07-18T23:14:19Z",
+  "generated_at_utc": "2026-07-19T00:08:36Z",
   "reference_today": "2026-07-18",
   "qa_pass": true,
-  "seed_count": 223,
-  "intake_count": 220,
-  "map_ready_count": 220,
+  "seed_count": 238,
+  "intake_count": 235,
+  "map_ready_count": 235,
   "list_only_count": 0,
-  "projected_discovery_count": 218,
-  "religious_feast_discovery_count": 50,
+  "projected_discovery_count": 233,
+  "religious_feast_discovery_count": 58,
   "borough_breakdown": {
     "seed": {
-      "Queens": 47,
+      "Queens": 49,
       "Manhattan": 82,
-      "Brooklyn": 64,
-      "Bronx": 17,
-      "Staten Island": 13
+      "Brooklyn": 68,
+      "Bronx": 19,
+      "Staten Island": 20
     },
     "discovery": {
-      "Queens": 46,
+      "Queens": 48,
       "Manhattan": 80,
-      "Brooklyn": 62,
-      "Bronx": 17,
-      "Staten Island": 13
+      "Brooklyn": 66,
+      "Bronx": 19,
+      "Staten Island": 20
     }
   },
   "event_kind_breakdown": {
     "seed": {
       "parade": 16,
-      "street_fair": 89,
+      "street_fair": 96,
       "cultural_festival": 50,
       "food_festival": 10,
-      "religious_feast": 53,
+      "religious_feast": 61,
       "holiday_market": 5
     },
     "discovery": {
-      "civic": 51,
-      "arts": 167
+      "civic": 54,
+      "arts": 179
     }
   },
   "top_20_upcoming_multi_day_feasts": [
@@ -54,6 +54,14 @@
       "end": "2026-07-26",
       "borough": "Queens",
       "days": 4,
+      "coordinate_status": "map_ready"
+    },
+    {
+      "title": "St. Helena Parish Carnival (Parkchester)",
+      "start": "2026-07-25",
+      "end": "2026-08-04",
+      "borough": "Bronx",
+      "days": 11,
       "coordinate_status": "map_ready"
     },
     {
@@ -77,6 +85,14 @@
       "start": "2026-08-15",
       "end": "2026-08-16",
       "borough": "Manhattan",
+      "days": 2,
+      "coordinate_status": "map_ready"
+    },
+    {
+      "title": "St. Thomas the Apostle Summer Festival (Woodhaven)",
+      "start": "2026-08-16",
+      "end": "2026-08-17",
+      "borough": "Queens",
       "days": 2,
       "coordinate_status": "map_ready"
     },

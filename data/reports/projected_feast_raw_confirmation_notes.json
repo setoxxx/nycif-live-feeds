@@ -1,14 +1,14 @@
 {
   "artifact_type": "projected_feast_raw_confirmation_notes",
-  "generated_at_utc": "2026-07-18T23:14:19Z",
+  "generated_at_utc": "2026-07-19T00:08:36Z",
   "match_report_status_counts": {
-    "not_in_raw_snapshot": 180,
-    "title_match": 37,
+    "not_in_raw_snapshot": 188,
+    "title_match": 44,
     "confirmed_permit_id": 3,
     "permit_id_mismatch": 3
   },
   "confirmed_permit_id_count": 3,
-  "title_match_count": 37,
+  "title_match_count": 44,
   "permit_id_mismatch_count": 3,
   "confirmed_permit_id": [
     {
@@ -53,6 +53,13 @@
       "canonical_name": "Essex Street Block Party (Ridgewood)",
       "match_status": "title_match",
       "claimed_permit_id": "859845",
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "brookfield-avenue-block-party-eltingville",
+      "canonical_name": "Brookfield Avenue Block Party (Eltingville)",
+      "match_status": "title_match",
+      "claimed_permit_id": "859974",
       "raw_event_id": "919112"
     },
     {
@@ -133,10 +140,24 @@
       "raw_event_id": "919112"
     },
     {
+      "key": "colon-avenue-block-party-eltingville",
+      "canonical_name": "Colon Avenue Block Party (Eltingville)",
+      "match_status": "title_match",
+      "claimed_permit_id": "861997",
+      "raw_event_id": "919112"
+    },
+    {
       "key": "great-kills-road-block-party",
       "canonical_name": "Great Kills Road Block Party",
       "match_status": "title_match",
       "claimed_permit_id": null,
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "leverett-avenue-block-party-eltingville",
+      "canonical_name": "Leverett Avenue Block Party (Eltingville / Pleasant Plains)",
+      "match_status": "title_match",
+      "claimed_permit_id": "863398",
       "raw_event_id": "919112"
     },
     {
@@ -189,10 +210,38 @@
       "raw_event_id": "919112"
     },
     {
+      "key": "bogota-street-block-party-travis",
+      "canonical_name": "Bogota Street Block Party (Travis / Pleasant Plains)",
+      "match_status": "title_match",
+      "claimed_permit_id": "863634",
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "middle-loop-road-block-party-staten-island",
+      "canonical_name": "Middle Loop Road Block Party (Staten Island)",
+      "match_status": "title_match",
+      "claimed_permit_id": "866253",
+      "raw_event_id": "919112"
+    },
+    {
       "key": "ozone-park-108th-street-block-party",
       "canonical_name": "108th Street Block Party (Ozone Park)",
       "match_status": "title_match",
       "claimed_permit_id": "872178",
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "crossfield-avenue-block-party-annadale",
+      "canonical_name": "Crossfield Avenue Block Party (Annadale)",
+      "match_status": "title_match",
+      "claimed_permit_id": "852942",
+      "raw_event_id": "919112"
+    },
+    {
+      "key": "scranton-avenue-block-party-great-kills",
+      "canonical_name": "Scranton Avenue Block Party (Great Kills)",
+      "match_status": "title_match",
+      "claimed_permit_id": "862869",
       "raw_event_id": "919112"
     },
     {
@@ -261,34 +310,6 @@
     {
       "key": "ridgewood-fall-festival",
       "canonical_name": "Ridgewood Fall Festival",
-      "match_status": "title_match",
-      "claimed_permit_id": null,
-      "raw_event_id": "922552"
-    },
-    {
-      "key": "columbus-avenue-festival",
-      "canonical_name": "Columbus Avenue Festival",
-      "match_status": "title_match",
-      "claimed_permit_id": "914582",
-      "raw_event_id": "922552"
-    },
-    {
-      "key": "bleecker-street-fall-festival",
-      "canonical_name": "Bleecker Street Fall Festival",
-      "match_status": "title_match",
-      "claimed_permit_id": null,
-      "raw_event_id": "922552"
-    },
-    {
-      "key": "hells-kitchen-fall-festival",
-      "canonical_name": "Hell's Kitchen Fall Festival",
-      "match_status": "title_match",
-      "claimed_permit_id": null,
-      "raw_event_id": "922552"
-    },
-    {
-      "key": "university-place-fall-festival",
-      "canonical_name": "University Place Fall Festival",
       "match_status": "title_match",
       "claimed_permit_id": null,
       "raw_event_id": "922552"
