@@ -1,0 +1,124 @@
+{
+  "artifact_type": "projected_feast_field_desk_verification_wave5",
+  "generated_at_utc": "2026-07-19T00:26:00Z",
+  "target_repo": "setoxxx/nycif-field-desk",
+  "backend_branch": "cursor/wave5-feast-gap-fill-c1f9",
+  "pr_number": 314,
+  "feed_path": "data/events_discovery_v02_approved.json",
+  "feed_shards_path": "data/schema-v1-discovery/approved/pages/",
+  "qa_pass": true,
+  "overall_score": "10/11",
+  "baseline": {
+    "seed_count": 238,
+    "intake_map_ready": 235,
+    "projected_discovery_count": 233,
+    "religious_feast_discovery_count": 58,
+    "list_only_count": 0
+  },
+  "verification_items": [
+    {
+      "id": "load_projected_rows",
+      "check": ">= 233 projected_feast_reference pins in approved feed",
+      "status": "PASS",
+      "actual": 233
+    },
+    {
+      "id": "st_bernard_multiday_pin",
+      "check": "St. Bernard Madonna del Carmine Jul 23–26 — map_ready, major",
+      "status": "PASS",
+      "key": "st-bernard-madonna-del-carmine-bergen-beach",
+      "dates": "2026-07-23 to 2026-07-26",
+      "coordinate_status": "map_ready",
+      "is_major": true,
+      "emoji_expected": "🎡"
+    },
+    {
+      "id": "san_gennaro_major",
+      "check": "Feast of San Gennaro Sep 10–20 — map_ready major",
+      "status": "PASS",
+      "key": "feast-of-san-gennaro",
+      "dates": "2026-09-10 to 2026-09-20",
+      "coordinate_status": "map_ready",
+      "is_major": true
+    },
+    {
+      "id": "raw_906428_olmc",
+      "check": "tvpp-9vvx:906428 raw OLMC Williamsburg in discovery (not projected duplicate)",
+      "status": "PASS",
+      "id_in_discovery": "review_supplemental:tvpp-9vvx:906428@2026-07-08",
+      "title": "Our Lady of Mt. Carmel Church Feast",
+      "source_dataset": "tvpp-9vvx",
+      "projected_feast_reference": false,
+      "coordinate_status": "map_ready"
+    },
+    {
+      "id": "puerto_rican_parade",
+      "check": "National Puerto Rican Day Parade — map_ready major",
+      "status": "PASS",
+      "key": "national-puerto-rican-day-parade",
+      "coordinate_status": "map_ready",
+      "is_major": true
+    },
+    {
+      "id": "wave5_religious_spotcheck",
+      "check": "Wave 5 religious pins (4 of 4 sampled)",
+      "status": "PASS",
+      "samples": [
+        {"key": "holy-cross-greek-cultural-festival-bay-ridge", "dates": "2026-09-18 to 2026-09-21", "status": "PASS"},
+        {"key": "st-helena-parish-carnival-parkchester", "dates": "2026-07-25 to 2026-08-04", "status": "PASS"},
+        {"key": "st-thomas-apostle-summer-festival-woodhaven", "dates": "2026-08-16 to 2026-08-17", "status": "PASS"},
+        {"key": "corpus-christi-procession-dyker-heights", "dates": "2026-06-22", "status": "PASS"}
+      ]
+    },
+    {
+      "id": "wave5_si_block_parties",
+      "check": "Wave 5 SI block parties (2 of 2 sampled)",
+      "status": "PASS",
+      "samples": [
+        {"key": "bogota-street-block-party-travis", "dates": "2026-08-16", "status": "PASS"},
+        {"key": "scranton-avenue-block-party-great-kills", "dates": "2026-08-23", "status": "PASS"}
+      ]
+    },
+    {
+      "id": "religious_feast_coverage",
+      "check": "religious_feast projected >= 58",
+      "status": "PASS",
+      "actual": 58
+    },
+    {
+      "id": "list_only_zero",
+      "check": "list_only = 0",
+      "status": "PASS",
+      "actual": 0
+    },
+    {
+      "id": "no_review_artifacts_as_live",
+      "check": "No gps_review_* / manual_approval_* in approved discovery feed",
+      "status": "PASS",
+      "review_artifact_count_in_approved": 0
+    },
+    {
+      "id": "projected_vs_raw_styling",
+      "check": "Projected rows styled differently from raw SAPO where applicable",
+      "status": "PARTIAL",
+      "notes": [
+        "Field-desk uses same pin classes for tvpp-9vvx and nyc-projected-feast-reference.",
+        "No projected-specific UI label in production map (known from Wave 4 audit).",
+        "Differentiation available via source.dataset in feed JSON only.",
+        "Not a blocker for merge."
+      ]
+    }
+  ],
+  "field_desk_code_audit": {
+    "feed_loader": "schema-v1-discovery major + approved shards (not monolith JSON)",
+    "feeds_query_param": "?feeds=<branch> for pre-merge verification",
+    "emoji_rules": "Title regex: feast/giglio/carmel/carnival → 🎡; street_fair → 🎉",
+    "multiday_class": "marker--multiday when span > 1 day (max 21)",
+    "gps_review_safety": "BLOCKED_ARTIFACT_TYPES in supplemental preview; not loaded on public map"
+  },
+  "notes": [
+    "Verification performed against backend feed artifacts on cursor/wave5-feast-gap-fill-c1f9.",
+    "PR #314 not yet merged to main at audit time — merge before field-desk production deploy.",
+    "Phase 4 SAPO sync skipped (not authorized this run)."
+  ]
+}

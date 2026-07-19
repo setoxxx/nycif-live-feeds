@@ -15,7 +15,7 @@
   "artifact_type": "nycif_project_status",
   "blockers": [
     "Phase 2E location_cache bulk promotion remains unauthorized.",
-    "Supplemental queue: 0 rows still pending human review."
+    "Supplemental queue: 4 rows still pending human review."
   ],
   "civic_people_facing": {
     "accepted_count": 5198,
@@ -30,10 +30,10 @@
   "completion_percent": 92,
   "current_phase": "Post Map v1 freeze — GPS audit + supplemental merge + admin automation",
   "data_freshness": {
-    "last_verified_at": "2026-07-18T16:49:32Z",
+    "last_verified_at": "2026-07-19T00:25:12Z",
     "source": "generate_godview_project_state.py"
   },
-  "generated_at_utc": "2026-07-18T16:49:32Z",
+  "generated_at_utc": "2026-07-19T00:25:12Z",
   "health": "yellow",
   "map_v1": {
     "freeze_artifact": "status/nycif-map-v1-freeze.json",
@@ -78,7 +78,7 @@
   "resolved_blockers": [
     "Map v1 frozen — Field Desk Pages + WordPress /map/ PASS",
     "Field-desk deploy automation (issues #127/#128 closed)",
-    "M11 supplemental first-pass: 3492 rows approved in queue"
+    "M11 supplemental first-pass: 3543 rows approved in queue"
   ],
   "safety": {
     "contains_secrets": false,
@@ -92,7 +92,7 @@
     "write_controls": false
   },
   "schema_version": "1.0.0",
-  "status_summary": "Discovery approved 35,043; supplemental 3,492 approved / 142 rejected. God View state v2 generated 2026-07-18T16:49:32Z.",
+  "status_summary": "Discovery approved 31,268; supplemental 3,543 approved / 143 rejected. God View state v2 generated 2026-07-19T00:25:12Z.",
   "viral_recurrence_memory": {
     "branch": "cursor/viral-recurrence-memory-da92",
     "historical_rows": 2450,

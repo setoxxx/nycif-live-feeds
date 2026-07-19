@@ -30,7 +30,7 @@
       "url": "https://github.com/setoxxx/nycif-field-desk/issues/102"
     }
   ],
-  "generated_at_utc": "2026-07-18T16:49:32Z",
+  "generated_at_utc": "2026-07-19T00:25:12Z",
   "open_issues_field_desk": [
     {
       "labels": [
@@ -199,12 +199,20 @@
   "open_issues_live_feeds": [],
   "open_prs": [
     {
-      "branch": "cursor/gps-audit-marine-park-trans-latina-c1f9",
+      "branch": "cursor/wave5-feast-gap-fill-c1f9",
       "draft": true,
-      "number": 296,
+      "number": 314,
       "repo": "setoxxx/nycif-live-feeds",
-      "title": "Fix Marine Park, Trans Latina, and Uncle Tony GPS; rebuild discovery feed",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/296"
+      "title": "Wave 5 feast gap-fill: seed 223→238, discovery 219→233",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/314"
+    },
+    {
+      "branch": "cursor/raw-sapo-sync-post-wave4-c1f9",
+      "draft": true,
+      "number": 313,
+      "repo": "setoxxx/nycif-live-feeds",
+      "title": "Sync raw SAPO snapshot post-Wave 4 (219 projected discovery, list_only=0)",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/313"
     },
     {
       "branch": "cursor/playground-278-gps-dedupe-c1f9",
@@ -389,86 +397,78 @@
       "repo": "setoxxx/nycif-live-feeds",
       "title": "M11 supplemental batch 51: mixed decisions ranks 2401-2450",
       "url": "https://github.com/setoxxx/nycif-live-feeds/pull/245"
-    },
-    {
-      "branch": "cursor/supplemental-batch-50-parks-c1f9",
-      "draft": true,
-      "number": 244,
-      "repo": "setoxxx/nycif-live-feeds",
-      "title": "M11 supplemental batch 50: parks-only approvals ranks 2351-2400",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/244"
     }
   ],
   "recent_merged_prs": [
     {
-      "merged_at": "2026-07-18T16:11:21Z",
-      "number": 295,
+      "merged_at": "2026-07-18T23:37:44Z",
+      "number": 312,
       "repo": "setoxxx/nycif-live-feeds",
-      "title": "Fix filters disclaimer contrast and News assignments section for live map",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/295"
+      "title": "Multiday feast discovery + Wave 4 neighborhood gap-fill (seed 223, 218 discovery pins)",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/312"
     },
     {
-      "merged_at": "2026-07-18T16:04:30Z",
-      "number": 294,
+      "merged_at": "2026-07-18T20:12:09Z",
+      "number": 311,
       "repo": "setoxxx/nycif-live-feeds",
-      "title": "Fix stacked popup map pan when selecting events",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/294"
+      "title": "Use grocery cart emoji for farmers markets and HHFM rows",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/311"
     },
     {
-      "merged_at": "2026-07-18T16:00:45Z",
-      "number": 293,
+      "merged_at": "2026-07-18T20:15:45Z",
+      "number": 310,
       "repo": "setoxxx/nycif-live-feeds",
-      "title": "Stacked pin picker: fixed scroll list with times, side popup placement",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/293"
+      "title": "M12 batch 3 civic (+11) and batch 4 housing (+1) merge",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/310"
     },
     {
-      "merged_at": "2026-07-18T15:25:47Z",
-      "number": 292,
+      "merged_at": "2026-07-18T19:54:33Z",
+      "number": 309,
       "repo": "setoxxx/nycif-live-feeds",
-      "title": "Fix field-desk public-map UI test path resolution",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/292"
+      "title": "M12 batch 2 volunteer merge + civic batch 3 staging",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/309"
     },
     {
-      "merged_at": "2026-07-18T15:23:59Z",
-      "number": 291,
+      "merged_at": "2026-07-18T19:51:30Z",
+      "number": 308,
       "repo": "setoxxx/nycif-live-feeds",
-      "title": "Tip jar header layout + stacked event picker with back button",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/291"
+      "title": "M12 full-season pin coverage audit + market batch 1 geocode staging",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/308"
     },
     {
-      "merged_at": "2026-07-18T12:40:13Z",
-      "number": 288,
+      "merged_at": "2026-07-18T19:34:55Z",
+      "number": 307,
       "repo": "setoxxx/nycif-live-feeds",
-      "title": "Fix Uncle Tony duplicate pin and Playground 278 GPS",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/288"
+      "title": "Approve and merge 6 geocoded Access Benefits supplemental rows",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/307"
     },
     {
-      "merged_at": "2026-07-18T05:07:44Z",
-      "number": 287,
+      "merged_at": "2026-07-18T19:28:39Z",
+      "number": 306,
       "repo": "setoxxx/nycif-live-feeds",
-      "title": "Tip jar: enlarge payment links when panel opens",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/287"
+      "title": "Geocode unlinked Access Benefits services for supplemental intake",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/306"
     },
     {
-      "merged_at": "2026-07-18T05:03:33Z",
-      "number": 286,
+      "merged_at": "2026-07-18T19:24:46Z",
+      "number": 305,
       "repo": "setoxxx/nycif-live-feeds",
-      "title": "Tip jar: pulsing hearts + brand-tint hovers on payment links",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/286"
+      "title": "Discovery dedupe + supplemental fold gate + filter QA",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/305"
     },
     {
-      "merged_at": "2026-07-18T04:58:59Z",
-      "number": 285,
+      "merged_at": "2026-07-18T19:17:45Z",
+      "number": 304,
       "repo": "setoxxx/nycif-live-feeds",
-      "title": "Fix supplemental deploy test tip jar path for field-desk layout",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/285"
+      "title": "Fix category filter counts to match selected date",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/304"
     },
     {
-      "merged_at": "2026-07-18T04:56:38Z",
-      "number": 284,
+      "merged_at": "2026-07-18T19:05:33Z",
+      "number": 303,
       "repo": "setoxxx/nycif-live-feeds",
-      "title": "Add shared tip jar to production map; draft Phase 4 press/chat plan",
-      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/284"
+      "title": "M11: Merge approved supplemental into discovery (feeds=main)",
+      "url": "https://github.com/setoxxx/nycif-live-feeds/pull/303"
     }
   ]
 }

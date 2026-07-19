@@ -1,0 +1,64 @@
+{
+  "artifact_type": "projected_feast_permit_mismatch_triage_wave6",
+  "generated_at_utc": "2026-07-19T00:25:22Z",
+  "qa_pass": true,
+  "row_count": 3,
+  "summary": "All 3 permit_id_mismatch rows are stale/wrong claimed_permit_id hints — raw permit exists but is unrelated sports/MUTS event. Keep projected rows; do NOT edit seed without human approval.",
+  "recommended_action": "Clear or null claimed_permit_id in seed only after human review; match on canonical_name + display_location + dates.",
+  "rows": [
+    {
+      "key": "giglio-east-harlem",
+      "canonical_name": "Giglio Society of East Harlem Feast",
+      "claimed_permit_id": "907551",
+      "raw_event_id": "907551",
+      "raw_event_name": "Soccer - Non Regulation",
+      "raw_event_type": "Sport - Adult",
+      "raw_location": "St. Vartan Park: Soccer-01",
+      "verdict": "false_permit_hint",
+      "corridor_match": "incorrect",
+      "notes": [
+        "Raw permit ID collision — unrelated SAPO row reused same ID in snapshot.",
+        "Projected feast remains valid via title/location/date matching only.",
+        "Do not treat raw_match as confirmation of this feast."
+      ],
+      "seed_edit_allowed": false,
+      "suggested_claimed_permit_id": null
+    },
+    {
+      "key": "feast-of-san-gennaro",
+      "canonical_name": "Feast of San Gennaro",
+      "claimed_permit_id": "912345",
+      "raw_event_id": "912345",
+      "raw_event_name": "Softball (Little league)",
+      "raw_event_type": "Sport - Youth",
+      "raw_location": "James J Walker Park: Softball-01",
+      "verdict": "false_permit_hint",
+      "corridor_match": "incorrect",
+      "notes": [
+        "Raw permit ID collision — unrelated SAPO row reused same ID in snapshot.",
+        "Projected feast remains valid via title/location/date matching only.",
+        "Do not treat raw_match as confirmation of this feast."
+      ],
+      "seed_edit_allowed": false,
+      "suggested_claimed_permit_id": null
+    },
+    {
+      "key": "atlantic-antic",
+      "canonical_name": "Atlantic Antic Street Festival",
+      "claimed_permit_id": "913221",
+      "raw_event_id": "913221",
+      "raw_event_name": "MUTS- Alexander Hamilton Playground",
+      "raw_event_type": "Special Event",
+      "raw_location": "Alexander Hamilton Playground: Basketball-01",
+      "verdict": "false_permit_hint",
+      "corridor_match": "incorrect",
+      "notes": [
+        "Raw permit ID collision — unrelated SAPO row reused same ID in snapshot.",
+        "Projected feast remains valid via title/location/date matching only.",
+        "Do not treat raw_match as confirmation of this feast."
+      ],
+      "seed_edit_allowed": false,
+      "suggested_claimed_permit_id": null
+    }
+  ]
+}
