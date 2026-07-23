@@ -215,6 +215,59 @@ def dedupe_approved_events(events: list[dict[str, Any]]) -> tuple[list[dict[str,
 
 SHARED_CEMS_TARGET_DATASET = "tvpp-9vvx"
 SHARED_CEMS_CONTRACT_VERSION = "shared-cems-occurrence-v1"
+SHARED_CEMS_PRIVATE_REPORT_PATH = (
+    "data/reports/discovery_shared_cems_occurrence_dedupe_report.json"
+)
+SHARED_CEMS_PUBLIC_SUMMARY_PATH = (
+    "data/schema-v1-discovery/shared-cems-occurrence-dedupe-summary.json"
+)
+SHARED_CEMS_PUBLIC_SUMMARY_STATS = (
+    ("input_count", "input_count"),
+    ("output_count", "output_count"),
+    ("safe_group_count", "group_count"),
+    ("safe_group_member_count", "group_member_count"),
+    ("representative_count", "representative_count"),
+    ("suppressed_projection_count", "suppressed_projection_count"),
+    ("blocked_group_count", "blocked_group_count"),
+    ("blocked_record_count", "blocked_record_count"),
+    ("fatal_blocked_group_count", "fatal_blocked_group_count"),
+    ("qa_pass", "qa_pass"),
+)
+SHARED_CEMS_PROHIBITED_PUBLIC_KEYS = frozenset(
+    {
+        "groups",
+        "blocked_groups",
+        "source_references",
+        "source_identity",
+        "source_event_id",
+        "source_cemsid",
+        "cemsids",
+        "public_event_payload",
+        "raw_source_evidence",
+        "all_committed_source_evidence",
+    }
+)
+
+
+def build_shared_cems_public_summary(
+    stats: Mapping[str, Any],
+    generated_at_utc: str,
+) -> dict[str, Any]:
+    """Build the explicitly allowlisted public Batch 2A summary."""
+
+    summary = {
+        "artifact_type": "discovery_shared_cems_occurrence_dedupe_summary",
+        "generated_at_utc": generated_at_utc,
+        "contract_version": stats["contract_version"],
+        "target_dataset": stats["target_dataset"],
+    }
+    summary.update(
+        {
+            public_name: stats[stats_name]
+            for public_name, stats_name in SHARED_CEMS_PUBLIC_SUMMARY_STATS
+        }
+    )
+    return summary
 
 
 def _canonical_json_bytes(value: Any) -> bytes:
@@ -395,6 +448,41 @@ def _representative_sort_key(event: Mapping[str, Any]) -> tuple[Any, ...]:
     return (1, 0, canonical_id)
 
 
+def _external_member_references(
+    events: Sequence[Mapping[str, Any]],
+    member_set: frozenset[int],
+) -> list[dict[str, str]]:
+    """Find retained records that depend on a candidate member identity."""
+
+    member_ids = {
+        str(events[index].get("id") or "")
+        for index in member_set
+        if events[index].get("id")
+    }
+    references: list[dict[str, str]] = []
+    for index, event in enumerate(events):
+        if index in member_set:
+            continue
+        for field in ("parent_event_id", "event_group_id"):
+            target_id = str(event.get(field) or "")
+            if target_id in member_ids:
+                references.append(
+                    {
+                        "referrer_id": str(event.get("id") or ""),
+                        "field": field,
+                        "target_id": target_id,
+                    }
+                )
+    return sorted(
+        references,
+        key=lambda item: (
+            item["target_id"],
+            item["referrer_id"],
+            item["field"],
+        ),
+    )
+
+
 def _source_reference(
     event: Mapping[str, Any],
     cemsids_by_source: Mapping[tuple[str, str], frozenset[str]],
@@ -536,6 +624,9 @@ def dedupe_shared_cems_occurrences(
 
         ordered_members = sorted(members, key=_representative_sort_key)
         payload_differences = _display_payload_differences(ordered_members)
+        external_references = _external_member_references(events, member_set)
+        if external_references:
+            fatal_reasons.append("externally_referenced_candidate_member")
         references = [
             _source_reference(event, cemsids_by_source, evidence_by_source)
             for event in ordered_members
@@ -560,6 +651,7 @@ def dedupe_shared_cems_occurrences(
                     "member_count": len(ordered_members),
                     "member_ids": [str(event.get("id") or "") for event in ordered_members],
                     "differing_fields": payload_differences,
+                    "external_references": external_references,
                     "display_payload_sha256": [
                         {
                             "id": str(event.get("id") or ""),
