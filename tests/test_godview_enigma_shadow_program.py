@@ -133,8 +133,15 @@ class EnigmaShadowProgramTests(unittest.TestCase):
         a, _ = build_state(fetch_github=False)
         b, _ = build_state(fetch_github=False)
         self.assertEqual(_normalize_generated(a), _normalize_generated(b))
-        # the program block is fully static (no timestamp inside)
-        self.assertEqual(build_enigma_shadow_program(), build_enigma_shadow_program())
+        # The program block is fully static (no timestamp inside): two independent
+        # state builds must embed the same block, and it must equal the canonical
+        # builder's output. Comparing independently derived values — not one
+        # expression against itself — is what makes this able to catch a regression.
+        program_a = a["enigma_shadow_program"]
+        program_b = b["enigma_shadow_program"]
+        canonical_program = build_enigma_shadow_program()
+        self.assertEqual(program_a, program_b)
+        self.assertEqual(program_a, canonical_program)
 
     def test_no_private_or_credential_or_local_path_in_public_artifact(self) -> None:
         blob = json.dumps(self.state, ensure_ascii=False)
