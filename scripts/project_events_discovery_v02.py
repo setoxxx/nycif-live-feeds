@@ -1086,7 +1086,14 @@ def main() -> int:
         errors=[],
     )
     print(json.dumps({"supplemental_approved_export_merge": supplemental_merge_stats}))
-    from discovery_approved_dedupe import dedupe_approved_events  # noqa: E402
+    from discovery_approved_dedupe import (  # noqa: E402
+        SHARED_CEMS_PRIVATE_REPORT_PATH,
+        SHARED_CEMS_PUBLIC_SUMMARY_PATH,
+        build_cems_source_lookup,
+        build_shared_cems_public_summary,
+        dedupe_approved_events,
+        dedupe_shared_cems_occurrences,
+    )
 
     approved, dedupe_stats = dedupe_approved_events(approved)
     write_json("data/reports/discovery_approved_dedupe_report.json", {
@@ -1096,6 +1103,38 @@ def main() -> int:
         **dedupe_stats,
     })
     print(json.dumps({"discovery_approved_dedupe": dedupe_stats}))
+    cemsids_by_source, cems_evidence_by_source = build_cems_source_lookup(
+        {
+            "data/raw_nyc_open_data_snapshot.json": raw_rows,
+            "data/nycif_staged_live_events.json": staged_rows,
+        }
+    )
+    approved, shared_cems_stats = dedupe_shared_cems_occurrences(
+        approved,
+        cemsids_by_source,
+        cems_evidence_by_source,
+    )
+    if not shared_cems_stats["qa_pass"]:
+        raise RuntimeError(
+            "Shared-CEMS occurrence dedupe fatal integrity blocks: "
+            + str(shared_cems_stats["fatal_blocked_group_count"])
+        )
+    post_dedupe_validation = validate_events(approved)
+    if not post_dedupe_validation["qa_pass"]:
+        raise RuntimeError(
+            "Shared-CEMS post-dedupe schema validation failed: "
+            + json.dumps(
+                post_dedupe_validation["error_counts"],
+                sort_keys=True,
+            )
+        )
+    print(json.dumps({"discovery_shared_cems_occurrence_dedupe": {
+        "group_count": shared_cems_stats["group_count"],
+        "suppressed_projection_count": shared_cems_stats["suppressed_projection_count"],
+        "blocked_group_count": shared_cems_stats["blocked_group_count"],
+        "blocked_record_count": shared_cems_stats["blocked_record_count"],
+        "fatal_blocked_group_count": shared_cems_stats["fatal_blocked_group_count"],
+    }}))
     major = [
         e
         for e in approved
@@ -1119,6 +1158,21 @@ def main() -> int:
 
     # Build discovery page shards under data/schema-v1-discovery/
     build_discovery_pages(approved, review, major, generated_at)
+    write_json(
+        SHARED_CEMS_PRIVATE_REPORT_PATH,
+        {
+            "artifact_type": "discovery_shared_cems_occurrence_dedupe_report",
+            "generated_at_utc": generated_at,
+            **shared_cems_stats,
+        },
+    )
+    write_json(
+        SHARED_CEMS_PUBLIC_SUMMARY_PATH,
+        build_shared_cems_public_summary(
+            shared_cems_stats,
+            generated_at,
+        ),
+    )
 
     dump_md(
         "docs/events-discovery-taxonomy-v02.md",
