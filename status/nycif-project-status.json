@@ -28,12 +28,63 @@
     "qa_pass": true
   },
   "completion_percent": 92,
-  "current_phase": "Post Map v1 freeze — GPS audit + supplemental merge + admin automation",
+  "current_phase": "Map v1 operating · Enigma SHADOW-1 owner accepted (shadow-only)",
   "data_freshness": {
-    "last_verified_at": "2026-07-22T12:15:21Z",
+    "last_verified_at": "2026-07-23T02:26:28Z",
     "source": "generate_godview_project_state.py"
   },
-  "generated_at_utc": "2026-07-22T12:15:21Z",
+  "enigma_shadow_program": {
+    "authority": {
+      "deployment_authorized": false,
+      "public_promotion_authorized": false,
+      "publication_authorized": false,
+      "real_feed_authorized": false,
+      "shadow_only": true,
+      "synthetic_fixture_only": true,
+      "v1_is_sole_production_authority": true
+    },
+    "fixture_accounting": {
+      "accepted_rows": 9,
+      "distinct_occurrences": 7,
+      "duplicate_groups": 2,
+      "in_viewport": 4,
+      "outside_viewport": 0,
+      "requested": 12,
+      "silent_loss": 0,
+      "unpinnable": 3
+    },
+    "gates": {
+      "A": "complete",
+      "B": "complete",
+      "C": "complete",
+      "D": "complete",
+      "E": "accepted_with_conditions",
+      "F": "owner_accepted"
+    },
+    "next_phase": {
+      "name": "SHADOW-2 Gate A",
+      "purpose": "real-data governance, source selection, snapshot boundary, sanitization, retention, and comparison metrics",
+      "status": "not_authorized"
+    },
+    "owner_decision": "APPROVE SHADOW-ONLY — PARK BOTH MINORS",
+    "parked_minors": [
+      "Genericize malformed-manifest JSON error wording",
+      "Darken decorative borough labels to exceed 4.5:1 contrast"
+    ],
+    "production_promotion": "not_authorized",
+    "program": "SHADOW-1",
+    "real_data_comparison": "not_started",
+    "status": "owner_accepted_shadow_only",
+    "synthetic_validation": "complete",
+    "test_totals": {
+      "bundle_producer": 125,
+      "enigma_core": 127,
+      "isolation": 16,
+      "total": 329,
+      "viewer": 61
+    }
+  },
+  "generated_at_utc": "2026-07-23T02:26:28Z",
   "health": "yellow",
   "map_v1": {
     "freeze_artifact": "status/nycif-map-v1-freeze.json",
@@ -41,7 +92,7 @@
     "frozen": true,
     "signed_off_at_utc": "2026-07-18T17:55:00Z"
   },
-  "next_action": "Map chat integration (M12) on field-desk",
+  "next_action": "SHADOW-2 Gate A — real-data governance (not authorized)",
   "photographer_assignment_calendar": {
     "baseline_v1_events": 842,
     "money_day_v2_branch": "cursor/photographer-money-day-desk-v2-da92",
@@ -92,7 +143,7 @@
     "write_controls": false
   },
   "schema_version": "1.0.0",
-  "status_summary": "Discovery approved 31,213; supplemental 3,543 approved / 143 rejected. God View state v2 generated 2026-07-22T12:15:21Z.",
+  "status_summary": "Discovery approved 31,213; supplemental 3,543 approved / 143 rejected. God View state v2 generated 2026-07-23T02:26:28Z.",
   "viral_recurrence_memory": {
     "branch": "cursor/viral-recurrence-memory-da92",
     "historical_rows": 2450,

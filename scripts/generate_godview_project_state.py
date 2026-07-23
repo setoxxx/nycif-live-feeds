@@ -635,7 +635,13 @@ def build_state(*, fetch_github: bool = False) -> tuple[dict[str, Any], dict[str
 
 
 def refresh_legacy_project_status(state: dict[str, Any]) -> None:
-    """Keep status/nycif-project-status.json aligned for older panels."""
+    """Keep status/nycif-project-status.json aligned for older panels.
+
+    Additive and non-destructive: unrelated Map V1, GPS, supplemental, M12,
+    photographer, and PR context already in the artifact is preserved. The
+    public-safe Enigma SHADOW-1 program block is mirrored verbatim from the
+    canonical God View project state so the two artifacts cannot drift.
+    """
     legacy_path = STATUS / "nycif-project-status.json"
     legacy = load_json(legacy_path, {})
     if not isinstance(legacy, dict):
@@ -643,6 +649,7 @@ def refresh_legacy_project_status(state: dict[str, Any]) -> None:
     counts = state.get("counts") or {}
     legacy.update(
         {
+            "enigma_shadow_program": state.get("enigma_shadow_program"),
             "artifact_type": "nycif_project_status",
             "schema_version": "1.0.0",
             "generated_at_utc": state.get("generated_at_utc"),
