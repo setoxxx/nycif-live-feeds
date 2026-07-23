@@ -39,12 +39,12 @@
   },
   "command_center": {
     "completion_percent": 92,
-    "current_gate": "Dynamic God View project state on main",
-    "current_objective": "Stabilize Map v1 and operate from dynamic God View state",
-    "current_stage": "Post Map v1 freeze — GPS audit + supplemental merge + admin automation",
-    "future_work_lock": "No MOME/DOB/Newsroom/Phase 2E bulk promotion until explicitly authorized",
+    "current_gate": "God View SHADOW-1 completion refresh",
+    "current_objective": "Close SHADOW-1 in God View and prepare SHADOW-2 governance",
+    "current_stage": "Map v1 operating · Enigma SHADOW-1 owner accepted (shadow-only)",
+    "future_work_lock": "No real feed, real producer, deployment, publication, or public-map promotion (Enigma or Phase 2E/MOME/DOB) without separate explicit owner authorization",
     "health": "yellow",
-    "next_gate": "Map chat integration (M12) on field-desk"
+    "next_gate": "SHADOW-2 Gate A — real-data governance (not authorized)"
   },
   "counts": {
     "discovery_approved_events": 31213,
@@ -56,6 +56,12 @@
     "white_island_cluster_count": 0
   },
   "decisions": [
+    {
+      "date": "2026-07-22",
+      "rationale": "Gates A–F complete; owner APPROVE SHADOW-ONLY with two minors parked. Synthetic fixture only; no real feed, deployment, or public-map promotion. V1 remains the sole production and publishing authority.",
+      "status": "active",
+      "title": "Enigma SHADOW-1 owner-accepted (shadow-only)"
+    },
     {
       "date": "2026-07-16",
       "rationale": "Public map shell is production-ready; supplemental merge remains gated.",
@@ -83,7 +89,58 @@
     "state_artifact": "status/nycif-godview-project-state-v02.json",
     "wordpress_map": "https://nycinfocus.com/map/"
   },
-  "generated_at_utc": "2026-07-23T12:13:42Z",
+  "enigma_shadow_program": {
+    "authority": {
+      "deployment_authorized": false,
+      "public_promotion_authorized": false,
+      "publication_authorized": false,
+      "real_feed_authorized": false,
+      "shadow_only": true,
+      "synthetic_fixture_only": true,
+      "v1_is_sole_production_authority": true
+    },
+    "fixture_accounting": {
+      "accepted_rows": 9,
+      "distinct_occurrences": 7,
+      "duplicate_groups": 2,
+      "in_viewport": 4,
+      "outside_viewport": 0,
+      "requested": 12,
+      "silent_loss": 0,
+      "unpinnable": 3
+    },
+    "gates": {
+      "A": "complete",
+      "B": "complete",
+      "C": "complete",
+      "D": "complete",
+      "E": "accepted_with_conditions",
+      "F": "owner_accepted"
+    },
+    "next_phase": {
+      "name": "SHADOW-2 Gate A",
+      "purpose": "real-data governance, source selection, snapshot boundary, sanitization, retention, and comparison metrics",
+      "status": "not_authorized"
+    },
+    "owner_decision": "APPROVE SHADOW-ONLY — PARK BOTH MINORS",
+    "parked_minors": [
+      "Genericize malformed-manifest JSON error wording",
+      "Darken decorative borough labels to exceed 4.5:1 contrast"
+    ],
+    "production_promotion": "not_authorized",
+    "program": "SHADOW-1",
+    "real_data_comparison": "not_started",
+    "status": "owner_accepted_shadow_only",
+    "synthetic_validation": "complete",
+    "test_totals": {
+      "bundle_producer": 125,
+      "enigma_core": 127,
+      "isolation": 16,
+      "total": 329,
+      "viewer": 61
+    }
+  },
+  "generated_at_utc": "2026-07-23T15:48:41Z",
   "github_tracker": {
     "artifact_type": "nycif_github_tracker",
     "closed_issues_recent": [],
@@ -126,11 +183,15 @@
       "text": "Field-desk deploy automation (issues #127/#128 closed)"
     },
     {
-      "resolved_at_utc": "2026-07-23T12:13:42Z",
+      "resolved_at_utc": "2026-07-23T15:48:41Z",
       "text": "M11 supplemental first-pass: 3543 rows approved in queue"
     }
   ],
   "risks": [
+    {
+      "control": "God View marks Enigma as shadow-only/synthetic-fixture-only; SHADOW-2 real-data governance is not_authorized; real feed, real producer, deployment, and public promotion each require separate explicit owner authorization",
+      "title": "SHADOW-1 acceptance mistaken for production authorization"
+    },
     {
       "control": "generate_godview_project_state.py on CI + freshness banner in UI",
       "title": "Stale admin status misleads operators"
@@ -156,6 +217,26 @@
     "later": [
       {
         "status": "locked",
+        "summary": "Governed, sanitized, retention-bounded snapshot of a first real source — not authorized",
+        "title": "Frozen real-data snapshot (SHADOW-2)"
+      },
+      {
+        "status": "locked",
+        "summary": "Shadow comparison metrics vs V1; private only; no public map — not authorized",
+        "title": "Private V1 / Enigma comparison (SHADOW-2)"
+      },
+      {
+        "status": "locked",
+        "summary": "Criteria a shadow result would need before any promotion could even be proposed — not authorized",
+        "title": "Promotion-readiness design"
+      },
+      {
+        "status": "locked",
+        "summary": "Any real-data or public exposure would require its own separate owner authorization — not authorized",
+        "title": "Limited controlled pilot"
+      },
+      {
+        "status": "locked",
         "summary": "Unauthorized until explicit human promotion language",
         "title": "Phase 2E bulk location_cache promotion"
       },
@@ -171,6 +252,22 @@
       }
     ],
     "next": [
+      {
+        "artifacts": [
+          "status/nycif-godview-project-state-v02.json#enigma_shadow_program"
+        ],
+        "status": "locked",
+        "summary": "NOT AUTHORIZED — real-data source selection, snapshot boundary, sanitization, retention, comparison metrics; separate owner authorization required",
+        "title": "SHADOW-2 Gate A — real-data governance"
+      },
+      {
+        "artifacts": [
+          "status/nycif-godview-project-state-v02.json#enigma_shadow_program"
+        ],
+        "status": "not_started",
+        "summary": "Genericize malformed-manifest JSON error wording; darken decorative borough labels >4.5:1",
+        "title": "Enigma parked-minor maintenance (optional)"
+      },
       {
         "artifacts": [
           "status/nycif-godview-project-state-v02.json#chat_integration_handoff"
@@ -198,6 +295,22 @@
       }
     ],
     "now": [
+      {
+        "artifacts": [
+          "status/nycif-godview-project-state-v02.json#enigma_shadow_program"
+        ],
+        "status": "in_progress",
+        "summary": "Enigma SHADOW-1 Gates A–F complete + owner accepted (shadow-only); refreshing God View status",
+        "title": "God View SHADOW-1 closeout refresh"
+      },
+      {
+        "artifacts": [
+          "status/nycif-godview-project-state-v02.json#enigma_shadow_program"
+        ],
+        "status": "complete",
+        "summary": "Decisions, core lane, bundle producer, private SVG viewer, browser QA, owner acceptance — synthetic fixture only",
+        "title": "Enigma SHADOW-1 program (Gates A–F)"
+      },
       {
         "artifacts": [
           "status/nycif-godview-project-state-v02.json"

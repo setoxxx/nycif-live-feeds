@@ -244,6 +244,18 @@ def fetch_github_tracker(generated_at: str) -> dict[str, Any]:
 def build_timeline(supp: dict[str, int], gps_audit_pass: bool | None) -> dict[str, list[dict[str, Any]]]:
     now = [
         {
+            "title": "God View SHADOW-1 closeout refresh",
+            "status": "in_progress",
+            "summary": "Enigma SHADOW-1 Gates A–F complete + owner accepted (shadow-only); refreshing God View status",
+            "artifacts": ["status/nycif-godview-project-state-v02.json#enigma_shadow_program"],
+        },
+        {
+            "title": "Enigma SHADOW-1 program (Gates A–F)",
+            "status": "complete",
+            "summary": "Decisions, core lane, bundle producer, private SVG viewer, browser QA, owner acceptance — synthetic fixture only",
+            "artifacts": ["status/nycif-godview-project-state-v02.json#enigma_shadow_program"],
+        },
+        {
             "title": "Dynamic God View project state",
             "status": "in_progress",
             "summary": "Generator + control panel JS wired to status/nycif-godview-project-state-v02.json",
@@ -265,6 +277,18 @@ def build_timeline(supp: dict[str, int], gps_audit_pass: bool | None) -> dict[st
     ]
     nxt = [
         {
+            "title": "SHADOW-2 Gate A — real-data governance",
+            "status": "locked",
+            "summary": "NOT AUTHORIZED — real-data source selection, snapshot boundary, sanitization, retention, comparison metrics; separate owner authorization required",
+            "artifacts": ["status/nycif-godview-project-state-v02.json#enigma_shadow_program"],
+        },
+        {
+            "title": "Enigma parked-minor maintenance (optional)",
+            "status": "not_started",
+            "summary": "Genericize malformed-manifest JSON error wording; darken decorative borough labels >4.5:1",
+            "artifacts": ["status/nycif-godview-project-state-v02.json#enigma_shadow_program"],
+        },
+        {
             "title": "Map chat integration (M12)",
             "status": "not_started",
             "summary": "Field-desk UI; read-only discovery context; no publish controls",
@@ -285,6 +309,26 @@ def build_timeline(supp: dict[str, int], gps_audit_pass: bool | None) -> dict[st
         },
     ]
     later = [
+        {
+            "title": "Frozen real-data snapshot (SHADOW-2)",
+            "status": "locked",
+            "summary": "Governed, sanitized, retention-bounded snapshot of a first real source — not authorized",
+        },
+        {
+            "title": "Private V1 / Enigma comparison (SHADOW-2)",
+            "status": "locked",
+            "summary": "Shadow comparison metrics vs V1; private only; no public map — not authorized",
+        },
+        {
+            "title": "Promotion-readiness design",
+            "status": "locked",
+            "summary": "Criteria a shadow result would need before any promotion could even be proposed — not authorized",
+        },
+        {
+            "title": "Limited controlled pilot",
+            "status": "locked",
+            "summary": "Any real-data or public exposure would require its own separate owner authorization — not authorized",
+        },
         {
             "title": "Phase 2E bulk location_cache promotion",
             "status": "locked",
@@ -345,6 +389,68 @@ def build_workstreams(supp: dict[str, int], map_freeze: dict[str, Any]) -> list[
     ]
 
 
+def build_enigma_shadow_program() -> dict[str, Any]:
+    """Public-safe Enigma SHADOW-1 program status (additive; static, deterministic).
+
+    Contains only synthetic-fixture, non-authoritative program facts. No private
+    national-pilot URLs, commit SHAs, filesystem paths, or raw payloads.
+    """
+    return {
+        "program": "SHADOW-1",
+        "status": "owner_accepted_shadow_only",
+        "owner_decision": "APPROVE SHADOW-ONLY — PARK BOTH MINORS",
+        "synthetic_validation": "complete",
+        "real_data_comparison": "not_started",
+        "production_promotion": "not_authorized",
+        "gates": {
+            "A": "complete",
+            "B": "complete",
+            "C": "complete",
+            "D": "complete",
+            "E": "accepted_with_conditions",
+            "F": "owner_accepted",
+        },
+        "test_totals": {
+            "isolation": 16,
+            "enigma_core": 127,
+            "bundle_producer": 125,
+            "viewer": 61,
+            "total": 329,
+        },
+        "fixture_accounting": {
+            "requested": 12,
+            "accepted_rows": 9,
+            "distinct_occurrences": 7,
+            "in_viewport": 4,
+            "outside_viewport": 0,
+            "unpinnable": 3,
+            "duplicate_groups": 2,
+            "silent_loss": 0,
+        },
+        "parked_minors": [
+            "Genericize malformed-manifest JSON error wording",
+            "Darken decorative borough labels to exceed 4.5:1 contrast",
+        ],
+        "authority": {
+            "v1_is_sole_production_authority": True,
+            "shadow_only": True,
+            "synthetic_fixture_only": True,
+            "real_feed_authorized": False,
+            "deployment_authorized": False,
+            "public_promotion_authorized": False,
+            "publication_authorized": False,
+        },
+        "next_phase": {
+            "name": "SHADOW-2 Gate A",
+            "status": "not_authorized",
+            "purpose": (
+                "real-data governance, source selection, snapshot boundary, "
+                "sanitization, retention, and comparison metrics"
+            ),
+        },
+    }
+
+
 def build_state(*, fetch_github: bool = False) -> tuple[dict[str, Any], dict[str, Any]]:
     generated_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
@@ -394,14 +500,18 @@ def build_state(*, fetch_github: bool = False) -> tuple[dict[str, Any], dict[str
             "safe_for_public_dashboard": True,
         },
         "command_center": {
-            "current_objective": "Stabilize Map v1 and operate from dynamic God View state",
-            "current_stage": "Post Map v1 freeze — GPS audit + supplemental merge + admin automation",
-            "current_gate": "Dynamic God View project state on main",
-            "next_gate": "Map chat integration (M12) on field-desk",
-            "future_work_lock": "No MOME/DOB/Newsroom/Phase 2E bulk promotion until explicitly authorized",
+            "current_objective": "Close SHADOW-1 in God View and prepare SHADOW-2 governance",
+            "current_stage": "Map v1 operating · Enigma SHADOW-1 owner accepted (shadow-only)",
+            "current_gate": "God View SHADOW-1 completion refresh",
+            "next_gate": "SHADOW-2 Gate A — real-data governance (not authorized)",
+            "future_work_lock": (
+                "No real feed, real producer, deployment, publication, or public-map "
+                "promotion (Enigma or Phase 2E/MOME/DOB) without separate explicit owner authorization"
+            ),
             "health": "green" if backend_gate["qa_pass"] and discovery_audit["qa_pass"] else "yellow",
             "completion_percent": 92,
         },
+        "enigma_shadow_program": build_enigma_shadow_program(),
         "timeline": build_timeline(supp, gps_audit.get("qa_pass")),
         "workstreams": build_workstreams(supp, map_freeze if isinstance(map_freeze, dict) else {}),
         "qa_gates": {
@@ -420,6 +530,16 @@ def build_state(*, fetch_github: bool = False) -> tuple[dict[str, Any], dict[str
         "blockers": blockers,
         "resolved_blockers": [item for item in resolved if item.get("text")],
         "decisions": [
+            {
+                "date": "2026-07-22",
+                "title": "Enigma SHADOW-1 owner-accepted (shadow-only)",
+                "rationale": (
+                    "Gates A–F complete; owner APPROVE SHADOW-ONLY with two minors parked. "
+                    "Synthetic fixture only; no real feed, deployment, or public-map promotion. "
+                    "V1 remains the sole production and publishing authority."
+                ),
+                "status": "active",
+            },
             {
                 "date": "2026-07-16",
                 "title": "Map v1 freeze",
@@ -440,6 +560,14 @@ def build_state(*, fetch_github: bool = False) -> tuple[dict[str, Any], dict[str
             },
         ],
         "risks": [
+            {
+                "title": "SHADOW-1 acceptance mistaken for production authorization",
+                "control": (
+                    "God View marks Enigma as shadow-only/synthetic-fixture-only; SHADOW-2 real-data "
+                    "governance is not_authorized; real feed, real producer, deployment, and public "
+                    "promotion each require separate explicit owner authorization"
+                ),
+            },
             {
                 "title": "Stale admin status misleads operators",
                 "control": "generate_godview_project_state.py on CI + freshness banner in UI",
@@ -507,7 +635,13 @@ def build_state(*, fetch_github: bool = False) -> tuple[dict[str, Any], dict[str
 
 
 def refresh_legacy_project_status(state: dict[str, Any]) -> None:
-    """Keep status/nycif-project-status.json aligned for older panels."""
+    """Keep status/nycif-project-status.json aligned for older panels.
+
+    Additive and non-destructive: unrelated Map V1, GPS, supplemental, M12,
+    photographer, and PR context already in the artifact is preserved. The
+    public-safe Enigma SHADOW-1 program block is mirrored verbatim from the
+    canonical God View project state so the two artifacts cannot drift.
+    """
     legacy_path = STATUS / "nycif-project-status.json"
     legacy = load_json(legacy_path, {})
     if not isinstance(legacy, dict):
@@ -515,6 +649,7 @@ def refresh_legacy_project_status(state: dict[str, Any]) -> None:
     counts = state.get("counts") or {}
     legacy.update(
         {
+            "enigma_shadow_program": state.get("enigma_shadow_program"),
             "artifact_type": "nycif_project_status",
             "schema_version": "1.0.0",
             "generated_at_utc": state.get("generated_at_utc"),
