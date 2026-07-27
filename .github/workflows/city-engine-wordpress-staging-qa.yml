@@ -1,0 +1,43 @@
+name: City Engine WordPress Staging QA
+
+on:
+  pull_request:
+    paths:
+      - "docs/wordpress-plugin-deploy/nycif-city-engine-staging/**"
+      - "docs/wordpress-plugin-deploy/nycif-events-map/nycif-events-map.php"
+      - "tests/test_city_engine_wordpress_staging_contract.py"
+      - ".github/workflows/city-engine-wordpress-staging-qa.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/wordpress-plugin-deploy/nycif-city-engine-staging/**"
+      - "docs/wordpress-plugin-deploy/nycif-events-map/nycif-events-map.php"
+      - "tests/test_city_engine_wordpress_staging_contract.py"
+      - ".github/workflows/city-engine-wordpress-staging-qa.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  protected-staging-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run protected staging contract tests
+        run: python3 tests/test_city_engine_wordpress_staging_contract.py
+
+      - name: Lint staging plugin PHP
+        run: php -l docs/wordpress-plugin-deploy/nycif-city-engine-staging/nycif-city-engine-staging.php
+
+      - name: Confirm public plugin source is unchanged by staging package
+        run: git diff --exit-code origin/main...HEAD -- docs/wordpress-plugin-deploy/nycif-events-map/nycif-events-map.php
