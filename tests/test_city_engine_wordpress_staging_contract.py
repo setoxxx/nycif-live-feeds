@@ -78,8 +78,8 @@ class CityEngineWordPressStagingContractTests(unittest.TestCase):
 
     def test_documentation_preserves_no_public_change_boundary(self):
         for phrase in (
-            "Fail closed",
-            "does not",
+            "Reviewed package prepared; WordPress unchanged.",
+            "does not authorize production use",
             "modify public page 2647 or `/map/`",
             "change the existing `[nycif_events_map]` shortcode",
             "change `feeds=main`",
