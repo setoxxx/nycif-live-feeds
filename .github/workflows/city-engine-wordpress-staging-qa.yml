@@ -40,4 +40,10 @@ jobs:
         run: php -l docs/wordpress-plugin-deploy/nycif-city-engine-staging/nycif-city-engine-staging.php
 
       - name: Confirm public plugin source is unchanged by staging package
-        run: git diff --exit-code origin/main...HEAD -- docs/wordpress-plugin-deploy/nycif-events-map/nycif-events-map.php
+        shell: bash
+        run: |
+          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            git diff --exit-code HEAD^1 HEAD -- docs/wordpress-plugin-deploy/nycif-events-map/nycif-events-map.php
+          else
+            git diff --exit-code HEAD^ HEAD -- docs/wordpress-plugin-deploy/nycif-events-map/nycif-events-map.php
+          fi
