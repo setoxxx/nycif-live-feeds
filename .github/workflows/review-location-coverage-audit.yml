@@ -6,13 +6,16 @@ on:
       - "scripts/audit_review_location_coverage.py"
       - "scripts/refine_review_location_coverage.py"
       - "scripts/refine_review_location_cross_source.py"
+      - "scripts/run_review_location_cross_source.py"
       - "scripts/resolve_remaining_review_locations.py"
       - "scripts/run_review_location_resolution_audit.py"
       - "tests/test_review_location_coverage.py"
       - "tests/test_refine_review_location_coverage.py"
       - "tests/test_refine_review_location_cross_source.py"
+      - "tests/test_run_review_location_cross_source.py"
       - "tests/test_resolve_remaining_review_locations.py"
       - "tests/test_review_location_audit_runner.py"
+      - "tests/test_review_location_street_segments.py"
       - ".github/workflows/review-location-coverage-audit.yml"
       - "data/schema-v1-discovery/approved/**"
       - "data/schema-v1-discovery/review/**"
@@ -60,8 +63,10 @@ jobs:
             tests/test_review_location_coverage.py \
             tests/test_refine_review_location_coverage.py \
             tests/test_refine_review_location_cross_source.py \
+            tests/test_run_review_location_cross_source.py \
             tests/test_resolve_remaining_review_locations.py \
-            tests/test_review_location_audit_runner.py
+            tests/test_review_location_audit_runner.py \
+            tests/test_review_location_street_segments.py
 
       - name: Build baseline 2,426-record location audit
         env:
@@ -82,15 +87,6 @@ jobs:
             --report /tmp/review-location-coverage-refined.json \
             --proposals /tmp/review-location-resolution-refined.json
 
-      - name: Refine from official cross-source event counterparts
-        shell: bash
-        run: |
-          python3 scripts/refine_review_location_cross_source.py \
-            --input-report /tmp/review-location-coverage-refined.json \
-            --input-proposals /tmp/review-location-resolution-refined.json \
-            --report /tmp/review-location-coverage-cross-source.json \
-            --proposals /tmp/review-location-resolution-cross-source.json
-
       - name: Download official NYC DCP borough boundaries
         shell: bash
         run: |
@@ -98,6 +94,16 @@ jobs:
             'https://data.cityofnewyork.us/api/v3/views/gthc-hcne/query.geojson?accessType=DOWNLOAD' \
             --output /tmp/nyc-dcp-borough-boundaries.geojson
           test -s /tmp/nyc-dcp-borough-boundaries.geojson
+
+      - name: Refine from official cross-source event counterparts
+        shell: bash
+        run: |
+          python3 scripts/run_review_location_cross_source.py \
+            --input-report /tmp/review-location-coverage-refined.json \
+            --input-proposals /tmp/review-location-resolution-refined.json \
+            --borough-boundaries /tmp/nyc-dcp-borough-boundaries.geojson \
+            --report /tmp/review-location-coverage-cross-source.json \
+            --proposals /tmp/review-location-resolution-cross-source.json
 
       - name: Resolve remaining physical locations with official boundaries
         env:
@@ -151,6 +157,7 @@ jobs:
           assert cross['cross_source_refinement']['newly_resolved_count'] == (
             refined['unresolved_count'] - cross['unresolved_count']
           )
+          assert cross['cross_source_refinement']['official_boundary_coordinate_evidence'] is True
           assert report['official_resolution']['newly_resolved_count'] == (
             cross['unresolved_count'] - report['unresolved_count']
           )
