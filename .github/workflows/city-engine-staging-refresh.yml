@@ -14,6 +14,7 @@ on:
       - "scripts/build_test_enriched_feed.py"
       - "scripts/build_staged_production_feed.py"
       - "tests/test_city_engine_staging_feed_adapter.py"
+      - "tests/test_city_engine_staging_refresh_workflow.py"
       - ".github/workflows/city-engine-staging-refresh.yml"
 
 permissions:
@@ -43,6 +44,9 @@ jobs:
 
       - name: Run adapter contract tests
         run: python3 tests/test_city_engine_staging_feed_adapter.py
+
+      - name: Run workflow safety contract
+        run: python3 -m pytest -q tests/test_city_engine_staging_refresh_workflow.py
 
       - name: Fetch current NYC Open Data into the temporary runner
         env:
@@ -80,7 +84,76 @@ jobs:
           )
           PY
 
+      - name: Inspect temporary staging eligibility
+        shell: bash
+        run: |
+          window_start="$(TZ=America/New_York date +%F)"
+          WINDOW_START="$window_start" python3 - <<'PY'
+          import json
+          import os
+          from collections import Counter
+          from datetime import date, timedelta
+          from pathlib import Path
+
+          source = Path("data/nycif_staged_live_events.json")
+          payload = json.loads(source.read_text(encoding="utf-8"))
+          events = payload.get("events", [])
+          start = date.fromisoformat(os.environ["WINDOW_START"])
+          end = start + timedelta(days=13)
+
+          eligible_ids = []
+          reasons = Counter()
+          for event in events:
+              if not isinstance(event, dict):
+                  reasons["not_object"] += 1
+                  continue
+              if event.get("staged_feed") is not True:
+                  reasons["not_staged"] += 1
+                  continue
+              if event.get("production_ready") is not True:
+                  reasons["not_production_ready"] += 1
+                  continue
+              if event.get("needs_review") is not False:
+                  reasons["needs_review"] += 1
+                  continue
+              try:
+                  event_date = date.fromisoformat(str(event.get("date") or ""))
+              except ValueError:
+                  reasons["invalid_date"] += 1
+                  continue
+              if not start <= event_date <= end:
+                  reasons["outside_window"] += 1
+                  continue
+              event_id = str(event.get("id") or "").strip()
+              if not event_id:
+                  reasons["missing_id"] += 1
+                  continue
+              eligible_ids.append(event_id)
+
+          duplicates = sorted(event_id for event_id, count in Counter(eligible_ids).items() if count > 1)
+          diagnostics = {
+              "review_only": True,
+              "public_authorized": False,
+              "input_event_count": len(events),
+              "window_start": start.isoformat(),
+              "window_end": end.isoformat(),
+              "eligible_event_count_before_coordinate_validation": len(eligible_ids),
+              "duplicate_eligible_event_id_count": len(duplicates),
+              "duplicate_eligible_event_ids": duplicates[:100],
+              "exclusion_counts": dict(sorted(reasons.items())),
+          }
+          output = Path("/tmp/city-engine-protected-staging")
+          output.mkdir(parents=True, exist_ok=True)
+          (output / "city-engine-staging-diagnostics.json").write_text(
+              json.dumps(diagnostics, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(diagnostics, sort_keys=True))
+          PY
+
       - name: Build protected City Engine staging artifact
+        id: build-staging-feed
+        continue-on-error: true
         shell: bash
         run: |
           window_start="$(TZ=America/New_York date +%F)"
@@ -95,6 +168,7 @@ jobs:
             --reviewed-at "$reviewed_at"
 
       - name: Verify artifact remains staging-only
+        if: steps.build-staging-feed.outcome == 'success'
         shell: bash
         run: |
           python3 - <<'PY'
@@ -115,18 +189,31 @@ jobs:
           PY
 
       - name: Record non-promotion boundary
+        if: steps.build-staging-feed.outcome == 'success'
         shell: bash
         run: |
           test "$(git config --get remote.origin.url)" != ""
-          echo "No git push, commit, WordPress call, deployment, email, or public-feed upload occurs in this workflow."
+          echo "Repository, WordPress, deployment, email, and public-feed targets remain unmodified."
           git status --short
 
-      - name: Upload protected staging artifact
+      - name: Upload protected staging diagnostics
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: city-engine-protected-staging-${{ github.sha }}
           path: |
             /tmp/city-engine-protected-staging/city-engine-staging-feed.geojson
             /tmp/city-engine-protected-staging/city-engine-staging-feed-report.json
+            /tmp/city-engine-protected-staging/city-engine-staging-diagnostics.json
           if-no-files-found: error
           retention-days: 7
+
+      - name: Enforce protected staging build result
+        if: steps.build-staging-feed.outcome == 'failure'
+        shell: bash
+        run: |
+          cat /tmp/city-engine-protected-staging/city-engine-staging-diagnostics.json
+          if test -f /tmp/city-engine-protected-staging/city-engine-staging-feed-report.json; then
+            cat /tmp/city-engine-protected-staging/city-engine-staging-feed-report.json
+          fi
+          exit 1
