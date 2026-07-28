@@ -15,13 +15,16 @@ def test_node_id_padding_is_normalized():
 
 def test_official_street_aliases_share_canonical_keys():
     assert canonical_street_key("AV OF THE AMERICAS") == "6 AVE"
+    assert canonical_street_key("AVE OF THE AMERICAS") == "6 AVE"
     assert canonical_street_key("6 Avenue") == "6 AVE"
     assert canonical_street_key("MAC DOUGAL ST") == "MACDOUGAL ST"
     assert canonical_street_key("MacDougal Street") == "MACDOUGAL ST"
 
 
 def test_query_variants_include_lion_aliases():
-    assert "AV OF THE AMERICAS" in official_street_variants("6 Avenue")
+    variants = official_street_variants("6 Avenue")
+    assert "AV OF THE AMERICAS" in variants
+    assert "AVE OF THE AMERICAS" in variants
     assert "MAC DOUGAL ST" in official_street_variants("MacDougal Street")
 
 
@@ -34,7 +37,7 @@ def test_node_index_joins_padded_line_ids_to_integer_node_ids():
             "NodeIDTo": "0021472",
         },
         {
-            "Street": "AV OF THE AMERICAS",
+            "Street": "AVE OF THE AMERICAS",
             "SAFStreetName": None,
             "NodeIDFrom": "0021470",
             "NodeIDTo": "0021500",
