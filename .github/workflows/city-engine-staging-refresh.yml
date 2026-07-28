@@ -1,0 +1,132 @@
+name: City Engine Protected Staging Refresh
+
+on:
+  workflow_dispatch:
+    inputs:
+      allow_live_fetch:
+        description: "Type yes to allow live NYC Open Data retrieval for a temporary protected-staging artifact"
+        required: true
+        default: "no"
+  pull_request:
+    paths:
+      - "scripts/build_city_engine_staging_feed.py"
+      - "scripts/sync_nyc_open_data.py"
+      - "scripts/build_test_enriched_feed.py"
+      - "scripts/build_staged_production_feed.py"
+      - "tests/test_city_engine_staging_feed_adapter.py"
+      - ".github/workflows/city-engine-staging-refresh.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: city-engine-protected-staging-refresh-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  protected-staging-refresh:
+    if: github.event_name == 'pull_request' || github.event.inputs.allow_live_fetch == 'yes'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pipeline dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Run adapter contract tests
+        run: python3 tests/test_city_engine_staging_feed_adapter.py
+
+      - name: Fetch current NYC Open Data into the temporary runner
+        env:
+          NYCIF_ALLOW_LIVE_GEOSEARCH: "yes"
+        run: python3 scripts/sync_nyc_open_data.py
+
+      - name: Build temporary enriched event intake
+        env:
+          NYCIF_ALLOW_LIVE_GEOSEARCH: "yes"
+        run: python3 scripts/build_test_enriched_feed.py
+
+      - name: Build temporary staged-event snapshot
+        run: python3 scripts/build_staged_production_feed.py
+
+      - name: Create temporary source metadata
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          staged = json.loads(Path("data/nycif_staged_live_events.json").read_text(encoding="utf-8"))
+          events = staged.get("events", [])
+          metadata = {
+              "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+              "event_count": len(events),
+              "review_only": True,
+              "public_authorized": False,
+              "runner_ephemeral": True,
+          }
+          Path("/tmp/city-engine-source-metadata.json").write_text(
+              json.dumps(metadata, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Build protected City Engine staging artifact
+        shell: bash
+        run: |
+          window_start="$(TZ=America/New_York date +%F)"
+          reviewed_at="$(date -u +%Y-%m-%dT%H:%M:%S+00:00)"
+          python3 scripts/build_city_engine_staging_feed.py \
+            --input data/nycif_staged_live_events.json \
+            --metadata /tmp/city-engine-source-metadata.json \
+            --output-dir /tmp/city-engine-protected-staging \
+            --window-start "$window_start" \
+            --window-days 14 \
+            --max-source-age-hours 2 \
+            --reviewed-at "$reviewed_at"
+
+      - name: Verify artifact remains staging-only
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          output = Path("/tmp/city-engine-protected-staging")
+          report = json.loads((output / "city-engine-staging-feed-report.json").read_text())
+          feed = json.loads((output / "city-engine-staging-feed.geojson").read_text())
+
+          assert report["ready_for_protected_staging"] is True
+          assert report["feed_written"] is True
+          assert report["counts"]["included"] > 0
+          assert feed["metadata"]["review_only"] is True
+          assert feed["metadata"]["public_authorized"] is False
+          assert all(feature["properties"]["public_display_eligible"] is False for feature in feed["features"])
+          assert all(feature["properties"]["staging_display_eligible"] is True for feature in feed["features"])
+          PY
+
+      - name: Record non-promotion boundary
+        shell: bash
+        run: |
+          test "$(git config --get remote.origin.url)" != ""
+          echo "No git push, commit, WordPress call, deployment, email, or public-feed upload occurs in this workflow."
+          git status --short
+
+      - name: Upload protected staging artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: city-engine-protected-staging-${{ github.sha }}
+          path: |
+            /tmp/city-engine-protected-staging/city-engine-staging-feed.geojson
+            /tmp/city-engine-protected-staging/city-engine-staging-feed-report.json
+          if-no-files-found: error
+          retention-days: 7
