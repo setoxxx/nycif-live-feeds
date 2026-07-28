@@ -84,7 +84,7 @@ jobs:
           )
           PY
 
-      - name: Inspect temporary staging eligibility
+      - name: Inspect temporary staging occurrence identities
         shell: bash
         run: |
           window_start="$(TZ=America/New_York date +%F)"
@@ -153,15 +153,17 @@ jobs:
               )
 
           id_counts = Counter(eligible_ids)
-          duplicate_ids = sorted(event_id for event_id, count in id_counts.items() if count > 1)
-          equivalent_duplicate_ids = sorted(
-              event_id for event_id in duplicate_ids if len(signatures_by_id[event_id]) == 1
+          repeated_parent_ids = sorted(event_id for event_id, count in id_counts.items() if count > 1)
+          multi_occurrence_parent_ids = sorted(
+              event_id for event_id in repeated_parent_ids if len(signatures_by_id[event_id]) > 1
           )
-          conflicting_duplicate_ids = sorted(
-              event_id for event_id in duplicate_ids if len(signatures_by_id[event_id]) > 1
+          equivalent_duplicate_rows = sum(
+              id_counts[event_id] - len(signatures_by_id[event_id])
+              for event_id in repeated_parent_ids
           )
-          equivalent_duplicate_rows = sum(id_counts[event_id] - 1 for event_id in equivalent_duplicate_ids)
-          conflicting_duplicate_rows = sum(id_counts[event_id] - 1 for event_id in conflicting_duplicate_ids)
+          derived_occurrence_count = sum(
+              len(signatures_by_id[event_id]) for event_id in multi_occurrence_parent_ids
+          )
 
           diagnostics = {
               "review_only": True,
@@ -170,12 +172,11 @@ jobs:
               "window_start": start.isoformat(),
               "window_end": end.isoformat(),
               "eligible_event_count_before_coordinate_validation": len(eligible_ids),
-              "duplicate_eligible_event_id_count": len(duplicate_ids),
-              "equivalent_duplicate_event_id_count": len(equivalent_duplicate_ids),
+              "repeated_source_parent_id_count": len(repeated_parent_ids),
+              "multi_occurrence_source_parent_id_count": len(multi_occurrence_parent_ids),
+              "derived_occurrence_count_before_coordinate_validation": derived_occurrence_count,
               "equivalent_duplicate_row_count": equivalent_duplicate_rows,
-              "conflicting_duplicate_event_id_count": len(conflicting_duplicate_ids),
-              "conflicting_duplicate_row_count": conflicting_duplicate_rows,
-              "conflicting_duplicate_event_ids": conflicting_duplicate_ids[:100],
+              "sample_multi_occurrence_source_parent_ids": multi_occurrence_parent_ids[:100],
               "exclusion_counts": dict(sorted(reasons.items())),
           }
           output = Path("/tmp/city-engine-protected-staging")
@@ -214,13 +215,16 @@ jobs:
           output = Path("/tmp/city-engine-protected-staging")
           report = json.loads((output / "city-engine-staging-feed-report.json").read_text())
           feed = json.loads((output / "city-engine-staging-feed.geojson").read_text())
+          event_ids = [feature["properties"]["event_id"] for feature in feed["features"]]
 
           assert report["ready_for_protected_staging"] is True
           assert report["feed_written"] is True
           assert report["counts"]["included"] > 0
-          assert report["counts"]["conflicting_duplicate_ids"] == 0
+          assert report["counts"]["identity_collisions"] == 0
+          assert len(event_ids) == len(set(event_ids))
           assert feed["metadata"]["review_only"] is True
           assert feed["metadata"]["public_authorized"] is False
+          assert all(feature["properties"]["source_parent_event_id"] for feature in feed["features"])
           assert all(feature["properties"]["public_display_eligible"] is False for feature in feed["features"])
           assert all(feature["properties"]["staging_display_eligible"] is True for feature in feed["features"])
           PY
