@@ -81,6 +81,9 @@ class Counters:
     invalid_identity: int = 0
     invalid_date: int = 0
     invalid_coordinates: int = 0
+    equivalent_duplicates_collapsed: int = 0
+    conflicting_duplicate_rows: int = 0
+    conflicting_duplicate_ids: int = 0
 
     def as_dict(self) -> dict[str, int]:
         return dict(vars(self))
@@ -238,18 +241,24 @@ def feature_from_event(event: dict[str, Any], last_checked: str) -> dict[str, An
     }
 
 
+def normalized_feature_signature(feature: dict[str, Any]) -> str:
+    """Return a deterministic signature for the rendered City Engine record."""
+    return json.dumps(feature, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
 def build_feed(
     payload: Any,
     *,
     window: BuildWindow,
     last_checked: str,
-) -> tuple[dict[str, Any], Counters]:
+) -> tuple[dict[str, Any], Counters, list[str]]:
     if not isinstance(payload, dict) or not isinstance(payload.get("events"), list):
         raise FeedBuildError("Input must be an object containing an events array")
 
     counters = Counters(input=len(payload["events"]))
-    features: list[dict[str, Any]] = []
-    seen_ids: set[str] = set()
+    features_by_id: dict[str, dict[str, Any]] = {}
+    signatures_by_id: dict[str, str] = {}
+    conflicting_ids: set[str] = set()
 
     for raw_event in payload["events"]:
         if not isinstance(raw_event, dict):
@@ -284,11 +293,27 @@ def build_feed(
             continue
 
         normalized_id = event_id.strip()
-        if normalized_id in seen_ids:
-            raise FeedBuildError(f"Duplicate eligible event id: {normalized_id}")
-        seen_ids.add(normalized_id)
-        features.append(feature_from_event(raw_event, last_checked))
+        feature = feature_from_event(raw_event, last_checked)
+        signature = normalized_feature_signature(feature)
+        previous_signature = signatures_by_id.get(normalized_id)
 
+        if previous_signature is None:
+            features_by_id[normalized_id] = feature
+            signatures_by_id[normalized_id] = signature
+            continue
+
+        if previous_signature == signature:
+            counters.equivalent_duplicates_collapsed += 1
+            continue
+
+        counters.conflicting_duplicate_rows += 1
+        conflicting_ids.add(normalized_id)
+
+    for event_id in conflicting_ids:
+        features_by_id.pop(event_id, None)
+
+    counters.conflicting_duplicate_ids = len(conflicting_ids)
+    features = list(features_by_id.values())
     features.sort(key=lambda item: (
         item["properties"]["start_date"],
         item["properties"]["start_time"],
@@ -307,10 +332,11 @@ def build_feed(
             "window_end": window.end.isoformat(),
             "event_count": len(features),
             "last_checked": last_checked,
+            "equivalent_duplicates_collapsed": counters.equivalent_duplicates_collapsed,
         },
         "features": features,
     }
-    return feed, counters
+    return feed, counters, sorted(conflicting_ids)
 
 
 def sha256_file(path: Path) -> str:
@@ -348,8 +374,12 @@ def main() -> int:
     source_fresh = 0 <= source_age_hours <= args.max_source_age_hours
 
     payload = load_json(args.input)
-    feed, counters = build_feed(payload, window=window, last_checked=source_generated.isoformat())
-    ready = source_fresh and counters.included > 0
+    feed, counters, conflicting_ids = build_feed(
+        payload,
+        window=window,
+        last_checked=source_generated.isoformat(),
+    )
+    ready = source_fresh and counters.included > 0 and not conflicting_ids
 
     report = {
         "schema_version": "1",
@@ -367,6 +397,7 @@ def main() -> int:
         "window_start": window.start.isoformat(),
         "window_end": window.end.isoformat(),
         "counts": counters.as_dict(),
+        "conflicting_duplicate_event_ids": conflicting_ids[:100],
         "ready_for_protected_staging": ready,
         "feed_written": False,
         "blocking_reasons": [],
@@ -375,6 +406,8 @@ def main() -> int:
         report["blocking_reasons"].append("source feed is stale")
     if counters.included == 0:
         report["blocking_reasons"].append("no eligible events in the requested window")
+    if conflicting_ids:
+        report["blocking_reasons"].append("conflicting duplicate event ids require review")
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     report_path = args.output_dir / "city-engine-staging-feed-report.json"
@@ -392,6 +425,8 @@ def main() -> int:
         "ready_for_protected_staging": ready,
         "feed_written": report["feed_written"],
         "event_count": counters.included,
+        "equivalent_duplicates_collapsed": counters.equivalent_duplicates_collapsed,
+        "conflicting_duplicate_ids": counters.conflicting_duplicate_ids,
         "blocking_reasons": report["blocking_reasons"],
     }, sort_keys=True))
     return 0 if ready or args.report_only else 2
