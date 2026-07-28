@@ -8,6 +8,7 @@ on:
       - "scripts/refine_review_location_cross_source.py"
       - "scripts/run_review_location_cross_source.py"
       - "scripts/resolve_review_locations_from_lion.py"
+      - "scripts/run_review_locations_from_lion.py"
       - "scripts/resolve_remaining_review_locations.py"
       - "scripts/run_review_location_resolution_audit.py"
       - "tests/test_review_location_coverage.py"
@@ -111,7 +112,7 @@ jobs:
       - name: Resolve stated street segments from official NYC LION nodes
         shell: bash
         run: |
-          python3 scripts/resolve_review_locations_from_lion.py \
+          python3 scripts/run_review_locations_from_lion.py \
             --input-report /tmp/review-location-coverage-cross-source.json \
             --input-proposals /tmp/review-location-resolution-cross-source.json \
             --borough-boundaries /tmp/nyc-dcp-borough-boundaries.geojson \
