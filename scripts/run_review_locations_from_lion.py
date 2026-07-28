@@ -41,6 +41,7 @@ def canonical_street_key(value: Any) -> str:
     key = _original_street_key(value)
     aliases = {
         "AV OF THE AMERICAS": "6 AVE",
+        "AVE OF THE AMERICAS": "6 AVE",
         "AVENUE OF THE AMERICAS": "6 AVE",
         "6TH AVE": "6 AVE",
         "6TH AVENUE": "6 AVE",
@@ -63,6 +64,7 @@ def official_street_variants(value: Any) -> set[str]:
                 "SIXTH AVE",
                 "SIXTH AVENUE",
                 "AV OF THE AMERICAS",
+                "AVE OF THE AMERICAS",
                 "AVENUE OF THE AMERICAS",
             }
         )
