@@ -1,0 +1,21 @@
+{
+  "artifact_type": "source_lineage_registry_v01",
+  "status": "registry_seed_pending_full_contract_rows",
+  "note": "This seed file marks the protected source-lineage contract lane. The full registry rows must be added before the source-lineage contract workflow can be treated as evidence.",
+  "launch_authorized": false,
+  "public_surface_changes_authorized": false,
+  "entries": [],
+  "safety_assertions": {
+    "production_feed_modified": false,
+    "data_location_cache_json_modified": false,
+    "wordpress_modified": false,
+    "public_map_modified": false,
+    "homepage_modified": false,
+    "navigation_modified": false,
+    "theme_modified": false,
+    "approval_state_modified": false,
+    "promotion_allowed": false,
+    "proposal_only": true,
+    "public_launch_authorized": false
+  }
+}
