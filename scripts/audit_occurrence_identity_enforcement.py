@@ -1,0 +1,383 @@
+#!/usr/bin/env python3
+"""Protected audit for occurrence-key enforcement in discovery intake.
+
+The audit compares the legacy source-ID-only behavior against the required
+source + source event ID + event date occurrence identity. It writes protected
+/tmp evidence only and does not modify production feeds or public surfaces.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import sys
+from collections import Counter
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts"))
+
+from discovery_v02 import extract_rows, stable_canonical_id  # noqa: E402
+from occurrence_identity_contract import (  # noqa: E402
+    classify_open_data_occurrence,
+    occurrence_key,
+    occurrence_key_set,
+    source_key,
+    source_key_set,
+)
+
+RAW = ROOT / "data" / "raw_nyc_open_data_snapshot.json"
+STAGED = ROOT / "data" / "nycif_staged_live_events.json"
+CALENDAR = ROOT / "data" / "nyc_citywide_events_calendar_snapshot.json"
+PARKS = ROOT / "data" / "nyc_parks_bigapps_events_snapshot.json"
+SUPPLEMENTAL = ROOT / "data" / "supplemental_events_staging_feed.json"
+SUPPLEMENTAL_QUEUE = ROOT / "data" / "supplemental_manual_approval_queue.json"
+DISPOSITION = ROOT / "data" / "row_disposition_events.json"
+PROJECTED_FEAST = ROOT / "data" / "staging" / "projected_feast_events_map_intake.json"
+REGISTRY = ROOT / "data" / "source_lineage_registry_v01.json"
+LOCATION_CACHE = ROOT / "data" / "location_cache.json"
+
+SEASON_START = "2026-07-14"
+SEASON_END = "2026-12-27"
+
+SAFETY_ASSERTIONS = {
+    "production_feed_modified": False,
+    "data_location_cache_json_modified": False,
+    "wordpress_modified": False,
+    "public_map_modified": False,
+    "homepage_modified": False,
+    "navigation_modified": False,
+    "theme_modified": False,
+    "approval_state_modified": False,
+    "promotion_allowed": False,
+    "proposal_only": True,
+    "public_launch_authorized": False,
+}
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def load_json(path: Path) -> Any:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def load_rows(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        return []
+    return extract_rows(load_json(path))
+
+
+def sha256_file(path: Path) -> str | None:
+    if not path.exists():
+        return None
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def safe_path(path: Path) -> Path:
+    resolved = path.resolve()
+    tmp = Path("/tmp").resolve()
+    if resolved != tmp and tmp not in resolved.parents:
+        raise ValueError(f"protected output must remain under /tmp: {resolved}")
+    resolved.parent.mkdir(parents=True, exist_ok=True)
+    return resolved
+
+
+def write_json(path: Path, payload: Any) -> None:
+    safe_path(path).write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def write_text(path: Path, text: str) -> None:
+    safe_path(path).write_text(text, encoding="utf-8")
+
+
+def is_rejected(row: dict[str, Any]) -> bool:
+    disposition = str(row.get("disposition") or "").lower()
+    reason = str(row.get("reason") or "").lower()
+    manual = str(row.get("manual_review_status") or "").lower()
+    return disposition in {"rejected", "drop", "invalid"} or "reject" in reason or manual == "rejected"
+
+
+def rejected_open_data_keys(rows: list[dict[str, Any]]) -> tuple[set[tuple[str, str]], set[tuple[str, str, str]]]:
+    sources: set[tuple[str, str]] = set()
+    occurrences: set[tuple[str, str, str]] = set()
+    for row in rows:
+        if not is_rejected(row):
+            continue
+        sources.add(source_key(row))
+        occurrences.add(occurrence_key(row))
+    return sources, occurrences
+
+
+def rejected_supplemental_sources(rows: list[dict[str, Any]]) -> set[tuple[str, str]]:
+    return {source_key(row) for row in rows if is_rejected(row)}
+
+
+def classify_calendar_parks_row(
+    row: dict[str, Any],
+    *,
+    accepted_supplemental_occurrences: set[tuple[str, str, str]],
+    all_supplemental_sources: set[tuple[str, str]],
+    rejected_supplemental_source_keys: set[tuple[str, str]],
+) -> str:
+    occurrence = occurrence_key(row)
+    source = source_key(row)
+    if source in rejected_supplemental_source_keys:
+        return "rejected_by_manual_supplemental_review"
+    if occurrence in accepted_supplemental_occurrences:
+        return "represented_by_supplemental_occurrence"
+    if source in all_supplemental_sources:
+        return "occurrence_hidden_by_supplemental_source_id_match"
+    return "accepted_via_current_unlinked_raw_intake"
+
+
+def duplicate_report_for_after_fix(
+    *,
+    staged_rows: list[dict[str, Any]],
+    supplemental_rows: list[dict[str, Any]],
+    raw_rows: list[dict[str, Any]],
+    after_dispositions: dict[int, str],
+) -> dict[str, Any]:
+    ids: list[str] = []
+    for i, row in enumerate(staged_rows):
+        ids.append(stable_canonical_id(row, data_layer="approved_staged", index=i))
+    for i, row in enumerate(supplemental_rows):
+        ids.append(stable_canonical_id(row, data_layer="review_supplemental", index=i))
+    for i, row in enumerate(raw_rows):
+        if after_dispositions.get(i) == "accepted_via_occurrence_keyed_unstaged_intake":
+            ids.append(stable_canonical_id(row, data_layer="review_supplemental", index=200000 + i))
+    counts = Counter(ids)
+    duplicates = {key: value for key, value in counts.items() if value > 1}
+    return {
+        "duplicate_canonical_id_count": sum(value - 1 for value in duplicates.values()),
+        "duplicate_canonical_id_groups": [
+            {"canonical_id": key, "count": value} for key, value in sorted(duplicates.items())[:100]
+        ],
+        "duplicate_safety_pass": not duplicates,
+    }
+
+
+def source_lineage_contract_check() -> dict[str, Any]:
+    registry = load_json(REGISTRY)
+    entries = registry.get("entries") or []
+    occurrence_required = [row for row in entries if isinstance(row, dict) and row.get("requires_occurrence_key")]
+    source_id_only = [row.get("id") for row in occurrence_required if row.get("identity_granularity") == "source_id_only"]
+    safety_ok = registry.get("safety_assertions") == SAFETY_ASSERTIONS
+    return {
+        "registry_path": str(REGISTRY.relative_to(ROOT)),
+        "registry_sha256": sha256_file(REGISTRY),
+        "registry_entry_count": len(entries),
+        "occurrence_key_required_entries": len(occurrence_required),
+        "source_id_only_violations": source_id_only,
+        "safety_assertions_pass": safety_ok,
+        "source_lineage_contract_compliance_pass": safety_ok and not source_id_only,
+    }
+
+
+def make_markdown(summary: dict[str, Any]) -> str:
+    return f"""# Occurrence identity enforcement audit
+
+Generated: {summary['generated_at_utc']}
+
+## Result
+
+- Audit execution integrity: **{summary['audit_execution_integrity_pass']}**
+- Occurrence identity implementation correctness: **{summary['occurrence_identity_implementation_correctness_pass']}**
+- Raw-disposition accounting: **{summary['raw_disposition_accounting_pass']}**
+- Duplicate safety: **{summary['duplicate_safety_pass']}**
+- Source-lineage contract compliance: **{summary['source_lineage_contract_compliance_pass']}**
+- Launch readiness: **{summary['launch_readiness']}**
+
+## Counts
+
+- Open Data hidden before source-ID fix: **{summary['before_open_data_in_window_hidden_by_source_id']}**
+- Open Data hidden after dated-occurrence fix: **{summary['after_open_data_in_window_hidden_by_source_id']}**
+- Duplicate canonical IDs after simulated fix: **{summary['duplicate_canonical_id_count']}**
+- Raw source rows accounted: **{summary['raw_rows_accounted']} / {summary['raw_source_rows']}**
+
+Workflow success means the protected implementation/audit ran correctly. It does **not** authorize launch.
+"""
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--out-dir", type=Path, default=Path("/tmp/occurrence-identity-enforcement"))
+    args = parser.parse_args()
+
+    required = [RAW, STAGED, CALENDAR, PARKS, SUPPLEMENTAL, SUPPLEMENTAL_QUEUE, DISPOSITION, REGISTRY]
+    missing = [str(path.relative_to(ROOT)) for path in required if not path.exists()]
+    if missing:
+        raise FileNotFoundError("missing required inputs: " + ", ".join(missing))
+
+    raw_rows = load_rows(RAW)
+    staged_rows = load_rows(STAGED)
+    calendar_rows = load_rows(CALENDAR)
+    parks_rows = load_rows(PARKS)
+    supplemental_rows = load_rows(SUPPLEMENTAL)
+    supplemental_queue = load_rows(SUPPLEMENTAL_QUEUE)
+    disposition_rows = load_rows(DISPOSITION)
+    projected_rows = load_rows(PROJECTED_FEAST)
+
+    staged_sources = source_key_set(staged_rows)
+    staged_occurrences = occurrence_key_set(staged_rows)
+    rejected_open_sources, rejected_open_occurrences = rejected_open_data_keys(disposition_rows)
+
+    before_open_counts: Counter[str] = Counter()
+    after_open_counts: Counter[str] = Counter()
+    open_ledger: list[dict[str, Any]] = []
+    after_dispositions: dict[int, str] = {}
+    for i, row in enumerate(raw_rows):
+        before = classify_open_data_occurrence(
+            row,
+            staged_source_keys=staged_sources,
+            staged_occurrence_keys=staged_occurrences,
+            rejected_source_keys=rejected_open_sources,
+            rejected_occurrence_keys=rejected_open_occurrences,
+            season_start=SEASON_START,
+            season_end=SEASON_END,
+            matching_mode="source_id_only",
+        )
+        after = classify_open_data_occurrence(
+            row,
+            staged_source_keys=staged_sources,
+            staged_occurrence_keys=staged_occurrences,
+            rejected_source_keys=rejected_open_sources,
+            rejected_occurrence_keys=rejected_open_occurrences,
+            season_start=SEASON_START,
+            season_end=SEASON_END,
+            matching_mode="dated_occurrence",
+        )
+        before_open_counts[before] += 1
+        after_open_counts[after] += 1
+        after_dispositions[i] = after
+        dataset, source_event_id, event_date = occurrence_key(row)
+        open_ledger.append(
+            {
+                "dataset": dataset,
+                "source_event_id": source_event_id,
+                "event_date": None if event_date == "undated" else event_date,
+                "before_disposition": before,
+                "after_disposition": after,
+            }
+        )
+
+    rejected_supp_sources = rejected_supplemental_sources(supplemental_queue)
+    accepted_supp_rows = [row for row in supplemental_rows if source_key(row) not in rejected_supp_sources]
+    accepted_supp_occurrences = occurrence_key_set(accepted_supp_rows)
+    all_supp_sources = source_key_set(supplemental_rows)
+    calparks_counts: Counter[str] = Counter()
+    for row in [*calendar_rows, *parks_rows]:
+        disposition = classify_calendar_parks_row(
+            row,
+            accepted_supplemental_occurrences=accepted_supp_occurrences,
+            all_supplemental_sources=all_supp_sources,
+            rejected_supplemental_source_keys=rejected_supp_sources,
+        )
+        calparks_counts[disposition] += 1
+
+    duplicate_report = duplicate_report_for_after_fix(
+        staged_rows=staged_rows,
+        supplemental_rows=supplemental_rows,
+        raw_rows=raw_rows,
+        after_dispositions=after_dispositions,
+    )
+    lineage = source_lineage_contract_check()
+
+    before_hidden = before_open_counts.get("in_window_occurrence_hidden_by_source_id_match", 0)
+    after_hidden = after_open_counts.get("in_window_occurrence_hidden_by_source_id_match", 0)
+    raw_source_rows = len(raw_rows) + len(calendar_rows) + len(parks_rows)
+    raw_rows_accounted = sum(after_open_counts.values()) + sum(calparks_counts.values())
+    raw_accounting_pass = raw_rows_accounted == raw_source_rows
+
+    safety = dict(SAFETY_ASSERTIONS)
+    safety["location_cache_sha256"] = sha256_file(LOCATION_CACHE)
+
+    generated_at = utc_now()
+    summary = {
+        "artifact_type": "occurrence_identity_enforcement_summary",
+        "generated_at_utc": generated_at,
+        "repository": "setoxxx/nycif-live-feeds",
+        "repository_sha": os.environ.get("AUDIT_SOURCE_SHA") or os.environ.get("GITHUB_SHA"),
+        "season_start": SEASON_START,
+        "season_end": SEASON_END,
+        "before_open_data_in_window_hidden_by_source_id": before_hidden,
+        "after_open_data_in_window_hidden_by_source_id": after_hidden,
+        "known_issue_324_baseline_hidden_count": 4203,
+        "known_issue_324_baseline_matches_computed_before": before_hidden == 4203,
+        "duplicate_canonical_id_count": duplicate_report["duplicate_canonical_id_count"],
+        "raw_source_rows": raw_source_rows,
+        "raw_rows_accounted": raw_rows_accounted,
+        "raw_disposition_accounting_pass": raw_accounting_pass,
+        "generated_reference_additions_count": len(projected_rows),
+        "generated_reference_additions_counted_as_raw": False,
+        "source_lineage_contract_compliance_pass": lineage["source_lineage_contract_compliance_pass"],
+        "audit_execution_integrity_pass": True,
+        "occurrence_identity_implementation_correctness_pass": after_hidden == 0 and before_hidden > 0,
+        "duplicate_safety_pass": duplicate_report["duplicate_safety_pass"],
+        "launch_readiness": False,
+        "issue_132_gate_pass": False,
+        "safety": safety,
+    }
+    summary["qa_pass"] = all(
+        [
+            summary["audit_execution_integrity_pass"],
+            summary["occurrence_identity_implementation_correctness_pass"],
+            summary["raw_disposition_accounting_pass"],
+            summary["duplicate_safety_pass"],
+            summary["source_lineage_contract_compliance_pass"],
+        ]
+    )
+
+    out = safe_path(args.out_dir)
+    write_json(out / "occurrence_identity_enforcement_summary.json", summary)
+    write_json(
+        out / "before_after_occurrence_reconciliation.json",
+        {
+            "before_matching_mode": "source_id_only",
+            "after_matching_mode": "dated_occurrence",
+            "before_open_data_dispositions": dict(sorted(before_open_counts.items())),
+            "after_open_data_dispositions": dict(sorted(after_open_counts.items())),
+            "calendar_parks_dispositions": dict(sorted(calparks_counts.items())),
+        },
+    )
+    write_json(
+        out / "hidden_occurrence_resolution_report.json",
+        {
+            "before_hidden_count": before_hidden,
+            "after_hidden_count": after_hidden,
+            "resolved_hidden_count": before_hidden - after_hidden,
+            "sample_resolved_occurrences": [
+                row for row in open_ledger if row["before_disposition"] == "in_window_occurrence_hidden_by_source_id_match"
+            ][:100],
+        },
+    )
+    write_json(out / "duplicate_canonical_id_report.json", duplicate_report)
+    write_json(
+        out / "raw_disposition_ledger_summary.json",
+        {
+            "raw_source_rows": raw_source_rows,
+            "raw_rows_accounted": raw_rows_accounted,
+            "raw_disposition_accounting_pass": raw_accounting_pass,
+            "open_data_rows": len(raw_rows),
+            "calendar_rows": len(calendar_rows),
+            "parks_rows": len(parks_rows),
+        },
+    )
+    write_json(out / "source_lineage_contract_check.json", lineage)
+    write_json(out / "public_surface_safety_assertions.json", safety)
+    write_text(out / "occurrence_identity_enforcement_report.md", make_markdown(summary))
+    print(json.dumps(summary, indent=2, sort_keys=True))
+    return 0 if summary["qa_pass"] else 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
