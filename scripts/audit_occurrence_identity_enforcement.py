@@ -10,7 +10,6 @@ feeds or public surfaces.
 
 from __future__ import annotations
 
-import argparse
 import hashlib
 import json
 import os
@@ -43,6 +42,18 @@ PROJECTED_FEAST = ROOT / "data" / "staging" / "projected_feast_events_map_intake
 REGISTRY = ROOT / "data" / "source_lineage_registry_v01.json"
 LOCATION_CACHE = ROOT / "data" / "location_cache.json"
 PROJECTOR = ROOT / "scripts" / "project_events_discovery_v02.py"
+OUTPUT_DIR = Path("/tmp/occurrence-identity-enforcement")
+OUTPUT_FILENAMES = {
+    "occurrence_identity_enforcement_summary.json",
+    "before_after_occurrence_reconciliation.json",
+    "hidden_occurrence_resolution_report.json",
+    "duplicate_canonical_id_report.json",
+    "raw_disposition_ledger_summary.json",
+    "source_lineage_contract_check.json",
+    "projector_occurrence_identity_check.json",
+    "public_surface_safety_assertions.json",
+    "occurrence_identity_enforcement_report.md",
+}
 
 SEASON_START = "2026-07-14"
 SEASON_END = "2026-12-27"
@@ -86,21 +97,33 @@ def sha256_file(path: Path) -> str | None:
     return digest.hexdigest()
 
 
-def safe_path(path: Path) -> Path:
-    resolved = path.resolve()
+def prepare_output_dir() -> Path:
+    resolved = OUTPUT_DIR.resolve()
     tmp = Path("/tmp").resolve()
     if resolved != tmp and tmp not in resolved.parents:
         raise ValueError(f"protected output must remain under /tmp: {resolved}")
-    resolved.parent.mkdir(parents=True, exist_ok=True)
+    resolved.mkdir(parents=True, exist_ok=True)
     return resolved
 
 
-def write_json(path: Path, payload: Any) -> None:
-    safe_path(path).write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+def output_path(output_dir: Path, filename: str) -> Path:
+    if filename not in OUTPUT_FILENAMES:
+        raise ValueError(f"unexpected protected output filename: {filename}")
+    path = (output_dir / filename).resolve()
+    if path.parent != output_dir.resolve():
+        raise ValueError(f"protected output must stay in {output_dir}: {path}")
+    return path
 
 
-def write_text(path: Path, text: str) -> None:
-    safe_path(path).write_text(text, encoding="utf-8")
+def write_json(output_dir: Path, filename: str, payload: Any) -> None:
+    output_path(output_dir, filename).write_text(
+        json.dumps(payload, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def write_text(output_dir: Path, filename: str, text: str) -> None:
+    output_path(output_dir, filename).write_text(text, encoding="utf-8")
 
 
 def is_rejected(row: dict[str, Any]) -> bool:
@@ -239,10 +262,6 @@ Workflow success means the protected implementation/audit ran correctly. It does
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--out-dir", type=Path, default=Path("/tmp/occurrence-identity-enforcement"))
-    args = parser.parse_args()
-
     required = [RAW, STAGED, CALENDAR, PARKS, SUPPLEMENTAL, SUPPLEMENTAL_QUEUE, DISPOSITION, REGISTRY, PROJECTOR]
     missing = [str(path.relative_to(ROOT)) for path in required if not path.exists()]
     if missing:
@@ -370,10 +389,11 @@ def main() -> int:
         ]
     )
 
-    out = safe_path(args.out_dir)
-    write_json(out / "occurrence_identity_enforcement_summary.json", summary)
+    out = prepare_output_dir()
+    write_json(out, "occurrence_identity_enforcement_summary.json", summary)
     write_json(
-        out / "before_after_occurrence_reconciliation.json",
+        out,
+        "before_after_occurrence_reconciliation.json",
         {
             "before_matching_mode": "source_id_only",
             "after_matching_mode": "dated_occurrence",
@@ -383,7 +403,8 @@ def main() -> int:
         },
     )
     write_json(
-        out / "hidden_occurrence_resolution_report.json",
+        out,
+        "hidden_occurrence_resolution_report.json",
         {
             "before_hidden_count": before_hidden,
             "after_hidden_count": after_hidden,
@@ -393,9 +414,10 @@ def main() -> int:
             ][:100],
         },
     )
-    write_json(out / "duplicate_canonical_id_report.json", duplicate_report)
+    write_json(out, "duplicate_canonical_id_report.json", duplicate_report)
     write_json(
-        out / "raw_disposition_ledger_summary.json",
+        out,
+        "raw_disposition_ledger_summary.json",
         {
             "raw_source_rows": raw_source_rows,
             "raw_rows_accounted": raw_rows_accounted,
@@ -405,10 +427,10 @@ def main() -> int:
             "parks_rows": len(parks_rows),
         },
     )
-    write_json(out / "source_lineage_contract_check.json", lineage)
-    write_json(out / "projector_occurrence_identity_check.json", projector)
-    write_json(out / "public_surface_safety_assertions.json", safety)
-    write_text(out / "occurrence_identity_enforcement_report.md", make_markdown(summary))
+    write_json(out, "source_lineage_contract_check.json", lineage)
+    write_json(out, "projector_occurrence_identity_check.json", projector)
+    write_json(out, "public_surface_safety_assertions.json", safety)
+    write_text(out, "occurrence_identity_enforcement_report.md", make_markdown(summary))
     print(json.dumps(summary, indent=2, sort_keys=True))
     return 0 if summary["qa_pass"] else 1
 
