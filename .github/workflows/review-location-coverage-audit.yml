@@ -10,6 +10,7 @@ on:
       - "scripts/refine_review_locations_from_parks.py"
       - "scripts/resolve_review_locations_from_lion.py"
       - "scripts/run_review_locations_from_lion.py"
+      - "scripts/run_review_locations_from_lion_resilient.py"
       - "scripts/resolve_review_locations_from_lion_nodes.py"
       - "scripts/resolve_remaining_review_locations.py"
       - "scripts/run_review_location_resolution_audit.py"
@@ -20,6 +21,7 @@ on:
       - "tests/test_refine_review_locations_from_parks.py"
       - "tests/test_resolve_review_locations_from_lion.py"
       - "tests/test_run_review_locations_from_lion.py"
+      - "tests/test_run_review_locations_from_lion_resilient.py"
       - "tests/test_resolve_review_locations_from_lion_nodes.py"
       - "tests/test_resolve_remaining_review_locations.py"
       - "tests/test_review_location_audit_runner.py"
@@ -76,6 +78,7 @@ jobs:
             tests/test_refine_review_locations_from_parks.py \
             tests/test_resolve_review_locations_from_lion.py \
             tests/test_run_review_locations_from_lion.py \
+            tests/test_run_review_locations_from_lion_resilient.py \
             tests/test_resolve_review_locations_from_lion_nodes.py \
             tests/test_resolve_remaining_review_locations.py \
             tests/test_review_location_audit_runner.py \
@@ -131,9 +134,19 @@ jobs:
       - name: Resolve stated street segments from official NYC LION line-node graph
         shell: bash
         run: |
-          python3 scripts/run_review_locations_from_lion.py \
+          python3 scripts/run_review_locations_from_lion_resilient.py \
             --input-report /tmp/review-location-coverage-parks.json \
             --input-proposals /tmp/review-location-resolution-parks.json \
+            --borough-boundaries /tmp/nyc-dcp-borough-boundaries.geojson \
+            --report /tmp/review-location-coverage-lion-line.json \
+            --proposals /tmp/review-location-resolution-lion-line.json
+
+      - name: Apply current LION node-only fallback to remaining street segments
+        shell: bash
+        run: |
+          python3 scripts/resolve_review_locations_from_lion_nodes.py \
+            --input-report /tmp/review-location-coverage-lion-line.json \
+            --input-proposals /tmp/review-location-resolution-lion-line.json \
             --borough-boundaries /tmp/nyc-dcp-borough-boundaries.geojson \
             --report /tmp/review-location-coverage-lion.json \
             --proposals /tmp/review-location-resolution-lion.json
@@ -170,6 +183,7 @@ jobs:
           refined = json.loads(Path('/tmp/review-location-coverage-refined.json').read_text())
           cross = json.loads(Path('/tmp/review-location-coverage-cross-source.json').read_text())
           parks = json.loads(Path('/tmp/review-location-coverage-parks.json').read_text())
+          line = json.loads(Path('/tmp/review-location-coverage-lion-line.json').read_text())
           lion = json.loads(Path('/tmp/review-location-coverage-lion.json').read_text())
           report = json.loads(Path('/tmp/review-location-coverage-audit.json').read_text())
           proposals = json.loads(Path('/tmp/review-location-resolution-proposals.json').read_text())
@@ -187,7 +201,8 @@ jobs:
           assert refined['unresolved_count'] <= baseline['unresolved_count']
           assert cross['unresolved_count'] <= refined['unresolved_count']
           assert parks['unresolved_count'] <= cross['unresolved_count']
-          assert lion['unresolved_count'] <= parks['unresolved_count']
+          assert line['unresolved_count'] <= parks['unresolved_count']
+          assert lion['unresolved_count'] <= line['unresolved_count']
           assert report['unresolved_count'] <= lion['unresolved_count']
           assert refined['refinement']['newly_resolved_count'] == (
             baseline['unresolved_count'] - refined['unresolved_count']
@@ -199,8 +214,11 @@ jobs:
           assert parks['parks_counterpart_refinement']['newly_resolved_count'] == (
             cross['unresolved_count'] - parks['unresolved_count']
           )
+          assert line['lion_line_resolution']['newly_resolved_count'] == (
+            parks['unresolved_count'] - line['unresolved_count']
+          )
           assert lion['lion_resolution']['newly_resolved_count'] == (
-            parks['unresolved_count'] - lion['unresolved_count']
+            line['unresolved_count'] - lion['unresolved_count']
           )
           assert report['official_resolution']['newly_resolved_count'] == (
             lion['unresolved_count'] - report['unresolved_count']
@@ -253,6 +271,8 @@ jobs:
             /tmp/review-location-resolution-cross-source.json
             /tmp/review-location-coverage-parks.json
             /tmp/review-location-resolution-parks.json
+            /tmp/review-location-coverage-lion-line.json
+            /tmp/review-location-resolution-lion-line.json
             /tmp/review-location-coverage-lion.json
             /tmp/review-location-resolution-lion.json
             /tmp/review-location-coverage-audit.json
