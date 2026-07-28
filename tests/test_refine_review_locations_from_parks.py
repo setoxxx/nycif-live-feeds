@@ -101,8 +101,8 @@ def test_generic_location_without_distinctive_tokens_does_not_resolve():
     boundaries = [("Queens", square(-73.90, 40.70, -73.70, 40.90))]
     final_report, final_payload = parks.refine_payload(
         report(),
-        {"target_count": 1, "proposals": [proposal(location="Parking lot under bridge")]},
-        [parks_event(display_location="Parking lot", location="Parking lot", description="Parking lot under bridge")],
+        {"target_count": 1, "proposals": [proposal(location="Parking lot")]},
+        [parks_event(display_location="Parking lot", location="Parking lot", description="Parking lot")],
         boundaries=boundaries,
     )
     assert final_payload["proposals"][0]["disposition"] == "unresolved"
