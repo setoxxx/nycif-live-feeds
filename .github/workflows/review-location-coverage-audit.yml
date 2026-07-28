@@ -7,21 +7,25 @@ on:
       - "scripts/refine_review_location_coverage.py"
       - "scripts/refine_review_location_cross_source.py"
       - "scripts/run_review_location_cross_source.py"
+      - "scripts/refine_review_locations_from_parks.py"
       - "scripts/resolve_review_locations_from_lion.py"
-      - "scripts/run_review_locations_from_lion.py"
+      - "scripts/resolve_review_locations_from_lion_nodes.py"
       - "scripts/resolve_remaining_review_locations.py"
       - "scripts/run_review_location_resolution_audit.py"
       - "tests/test_review_location_coverage.py"
       - "tests/test_refine_review_location_coverage.py"
       - "tests/test_refine_review_location_cross_source.py"
       - "tests/test_run_review_location_cross_source.py"
+      - "tests/test_refine_review_locations_from_parks.py"
       - "tests/test_resolve_review_locations_from_lion.py"
+      - "tests/test_resolve_review_locations_from_lion_nodes.py"
       - "tests/test_resolve_remaining_review_locations.py"
       - "tests/test_review_location_audit_runner.py"
       - "tests/test_review_location_street_segments.py"
       - ".github/workflows/review-location-coverage-audit.yml"
       - "data/schema-v1-discovery/approved/**"
       - "data/schema-v1-discovery/review/**"
+      - "data/nyc_parks_bigapps_events_snapshot.json"
       - "data/nyc_location_gazetteer.json"
       - "data/nyc_geosearch_gazetteer_cache.json"
       - "data/supplemental_location_gazetteer_overlay.json"
@@ -67,7 +71,9 @@ jobs:
             tests/test_refine_review_location_coverage.py \
             tests/test_refine_review_location_cross_source.py \
             tests/test_run_review_location_cross_source.py \
+            tests/test_refine_review_locations_from_parks.py \
             tests/test_resolve_review_locations_from_lion.py \
+            tests/test_resolve_review_locations_from_lion_nodes.py \
             tests/test_resolve_remaining_review_locations.py \
             tests/test_review_location_audit_runner.py \
             tests/test_review_location_street_segments.py
@@ -109,12 +115,22 @@ jobs:
             --report /tmp/review-location-coverage-cross-source.json \
             --proposals /tmp/review-location-resolution-cross-source.json
 
-      - name: Resolve stated street segments from official NYC LION nodes
+      - name: Resolve exact NYC Parks event counterparts
         shell: bash
         run: |
-          python3 scripts/run_review_locations_from_lion.py \
+          python3 scripts/refine_review_locations_from_parks.py \
             --input-report /tmp/review-location-coverage-cross-source.json \
             --input-proposals /tmp/review-location-resolution-cross-source.json \
+            --borough-boundaries /tmp/nyc-dcp-borough-boundaries.geojson \
+            --report /tmp/review-location-coverage-parks.json \
+            --proposals /tmp/review-location-resolution-parks.json
+
+      - name: Resolve stated street segments from current official NYC LION nodes
+        shell: bash
+        run: |
+          python3 scripts/resolve_review_locations_from_lion_nodes.py \
+            --input-report /tmp/review-location-coverage-parks.json \
+            --input-proposals /tmp/review-location-resolution-parks.json \
             --borough-boundaries /tmp/nyc-dcp-borough-boundaries.geojson \
             --report /tmp/review-location-coverage-lion.json \
             --proposals /tmp/review-location-resolution-lion.json
@@ -150,6 +166,7 @@ jobs:
           baseline = json.loads(Path('/tmp/review-location-coverage-baseline.json').read_text())
           refined = json.loads(Path('/tmp/review-location-coverage-refined.json').read_text())
           cross = json.loads(Path('/tmp/review-location-coverage-cross-source.json').read_text())
+          parks = json.loads(Path('/tmp/review-location-coverage-parks.json').read_text())
           lion = json.loads(Path('/tmp/review-location-coverage-lion.json').read_text())
           report = json.loads(Path('/tmp/review-location-coverage-audit.json').read_text())
           proposals = json.loads(Path('/tmp/review-location-resolution-proposals.json').read_text())
@@ -163,9 +180,11 @@ jobs:
           assert sum(report['disposition_counts'].values()) == expected
           assert proposals['target_count'] == expected
           assert len(proposals['proposals']) == expected
+
           assert refined['unresolved_count'] <= baseline['unresolved_count']
           assert cross['unresolved_count'] <= refined['unresolved_count']
-          assert lion['unresolved_count'] <= cross['unresolved_count']
+          assert parks['unresolved_count'] <= cross['unresolved_count']
+          assert lion['unresolved_count'] <= parks['unresolved_count']
           assert report['unresolved_count'] <= lion['unresolved_count']
           assert refined['refinement']['newly_resolved_count'] == (
             baseline['unresolved_count'] - refined['unresolved_count']
@@ -174,8 +193,11 @@ jobs:
             refined['unresolved_count'] - cross['unresolved_count']
           )
           assert cross['cross_source_refinement']['official_boundary_coordinate_evidence'] is True
+          assert parks['parks_counterpart_refinement']['newly_resolved_count'] == (
+            cross['unresolved_count'] - parks['unresolved_count']
+          )
           assert lion['lion_resolution']['newly_resolved_count'] == (
-            cross['unresolved_count'] - lion['unresolved_count']
+            parks['unresolved_count'] - lion['unresolved_count']
           )
           assert report['official_resolution']['newly_resolved_count'] == (
             lion['unresolved_count'] - report['unresolved_count']
@@ -185,6 +207,15 @@ jobs:
           assert report['official_resolution']['borough_boundary_source_url'].startswith(
             'https://data.cityofnewyork.us/'
           )
+
+          flyer_rows = [
+            item for item in proposals['proposals']
+            if 'please see the flyer' in str(item.get('location') or '').lower()
+          ]
+          assert flyer_rows
+          assert all(item.get('disposition') == 'unresolved' for item in flyer_rows)
+          assert all(item.get('pin_eligible') is False for item in flyer_rows)
+
           assert report['safety'] == {
             'location_cache_modified': False,
             'production_feed_modified': False,
@@ -217,6 +248,8 @@ jobs:
             /tmp/review-location-resolution-refined.json
             /tmp/review-location-coverage-cross-source.json
             /tmp/review-location-resolution-cross-source.json
+            /tmp/review-location-coverage-parks.json
+            /tmp/review-location-resolution-parks.json
             /tmp/review-location-coverage-lion.json
             /tmp/review-location-resolution-lion.json
             /tmp/review-location-coverage-audit.json
