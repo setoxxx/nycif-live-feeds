@@ -89,11 +89,33 @@ def test_builds_protected_feed_and_excludes_ineligible_rows():
         temp.cleanup()
 
 
-def test_duplicate_eligible_ids_fail_closed():
+def test_equivalent_duplicate_rows_collapse_to_one_feature():
     temp, root, output_dir, result = run_adapter([event(), event()])
     try:
+        assert result.returncode == 0, result.stderr
+        feed = json.loads((output_dir / "city-engine-staging-feed.geojson").read_text())
+        report = json.loads((output_dir / "city-engine-staging-feed-report.json").read_text())
+        assert len(feed["features"]) == 1
+        assert report["counts"]["included"] == 1
+        assert report["counts"]["equivalent_duplicates_collapsed"] == 1
+        assert report["counts"]["conflicting_duplicate_ids"] == 0
+        assert report["ready_for_protected_staging"] is True
+    finally:
+        temp.cleanup()
+
+
+def test_conflicting_duplicate_ids_fail_closed_with_report():
+    temp, root, output_dir, result = run_adapter([
+        event(),
+        event(display_location="Flushing Meadows Corona Park", lat=40.7498, lng=-73.8408),
+    ])
+    try:
         assert result.returncode == 2
-        assert "Duplicate eligible event id" in result.stderr
+        report = json.loads((output_dir / "city-engine-staging-feed-report.json").read_text())
+        assert report["ready_for_protected_staging"] is False
+        assert report["counts"]["conflicting_duplicate_ids"] == 1
+        assert report["conflicting_duplicate_event_ids"] == ["nyc_open_data:tvpp-9vvx:trans-latina-2026"]
+        assert "conflicting duplicate event ids require review" in report["blocking_reasons"]
         assert not (output_dir / "city-engine-staging-feed.geojson").exists()
     finally:
         temp.cleanup()
@@ -118,6 +140,7 @@ def test_stale_source_writes_report_but_not_feed():
 
 if __name__ == "__main__":
     test_builds_protected_feed_and_excludes_ineligible_rows()
-    test_duplicate_eligible_ids_fail_closed()
+    test_equivalent_duplicate_rows_collapse_to_one_feature()
+    test_conflicting_duplicate_ids_fail_closed_with_report()
     test_stale_source_writes_report_but_not_feed()
     print("City Engine protected staging feed adapter tests passed.")
