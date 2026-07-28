@@ -2,8 +2,10 @@
 """Protected audit for occurrence-key enforcement in discovery intake.
 
 The audit compares the legacy source-ID-only behavior against the required
-source + source event ID + event date occurrence identity. It writes protected
-/tmp evidence only and does not modify production feeds or public surfaces.
+source + source event ID + event date occurrence identity. It also verifies the
+real discovery projector now uses dated occurrence keys in the Open Data intake
+path. It writes protected /tmp evidence only and does not modify production
+feeds or public surfaces.
 """
 
 from __future__ import annotations
@@ -40,6 +42,7 @@ DISPOSITION = ROOT / "data" / "row_disposition_events.json"
 PROJECTED_FEAST = ROOT / "data" / "staging" / "projected_feast_events_map_intake.json"
 REGISTRY = ROOT / "data" / "source_lineage_registry_v01.json"
 LOCATION_CACHE = ROOT / "data" / "location_cache.json"
+PROJECTOR = ROOT / "scripts" / "project_events_discovery_v02.py"
 
 SEASON_START = "2026-07-14"
 SEASON_END = "2026-12-27"
@@ -183,6 +186,32 @@ def source_lineage_contract_check() -> dict[str, Any]:
     }
 
 
+def projector_occurrence_identity_check() -> dict[str, Any]:
+    text = PROJECTOR.read_text(encoding="utf-8")
+    required_snippets = {
+        "imports_occurrence_identity_contract": "from occurrence_identity_contract import" in text,
+        "builds_staged_occurrence_keys": "staged_occurrence_keys = occurrence_key_set(staged_rows)" in text,
+        "uses_raw_occurrence_key": "raw_occurrence_key = occurrence_key(row)" in text,
+        "skips_staged_by_occurrence_key": "if raw_occurrence_key in staged_occurrence_keys:" in text,
+        "uses_rejected_occurrence_keys": "rejected_keys, rejected_occurrence_keys = rejected_open_data_identity_sets(rejected_disp)" in text,
+        "checks_rejected_occurrence_before_source_fallback": "raw_occurrence_key in rejected_occurrence_keys" in text,
+        "projects_feast_by_occurrence_key": "projected_occurrence_key = occurrence_key(row)" in text,
+        "dedupes_projected_by_occurrence_key": "if projected_occurrence_key in accepted_occurrence_keys:" in text,
+        "records_projected_occurrence_after_accept": "accepted_occurrence_keys.add(projected_occurrence_key)" in text,
+    }
+    forbidden_snippets = {
+        "raw_open_data_source_id_skip_pattern": "if (dataset, source_event_id) in staged_keys:\n            continue" in text,
+        "projected_feast_source_id_only_skip_pattern": "if (dataset, source_event_id) in accepted_keys:\n                continue" in text,
+    }
+    return {
+        "projector_path": str(PROJECTOR.relative_to(ROOT)),
+        "projector_sha256": sha256_file(PROJECTOR),
+        "required_snippets": required_snippets,
+        "forbidden_snippets": forbidden_snippets,
+        "projector_occurrence_identity_pass": all(required_snippets.values()) and not any(forbidden_snippets.values()),
+    }
+
+
 def make_markdown(summary: dict[str, Any]) -> str:
     return f"""# Occurrence identity enforcement audit
 
@@ -191,6 +220,7 @@ Generated: {summary['generated_at_utc']}
 ## Result
 
 - Audit execution integrity: **{summary['audit_execution_integrity_pass']}**
+- Projector implementation correctness: **{summary['projector_implementation_correctness_pass']}**
 - Occurrence identity implementation correctness: **{summary['occurrence_identity_implementation_correctness_pass']}**
 - Raw-disposition accounting: **{summary['raw_disposition_accounting_pass']}**
 - Duplicate safety: **{summary['duplicate_safety_pass']}**
@@ -201,7 +231,7 @@ Generated: {summary['generated_at_utc']}
 
 - Open Data hidden before source-ID fix: **{summary['before_open_data_in_window_hidden_by_source_id']}**
 - Open Data hidden after dated-occurrence fix: **{summary['after_open_data_in_window_hidden_by_source_id']}**
-- Duplicate canonical IDs after simulated fix: **{summary['duplicate_canonical_id_count']}**
+- Duplicate canonical IDs after projector fix: **{summary['duplicate_canonical_id_count']}**
 - Raw source rows accounted: **{summary['raw_rows_accounted']} / {summary['raw_source_rows']}**
 
 Workflow success means the protected implementation/audit ran correctly. It does **not** authorize launch.
@@ -213,7 +243,7 @@ def main() -> int:
     parser.add_argument("--out-dir", type=Path, default=Path("/tmp/occurrence-identity-enforcement"))
     args = parser.parse_args()
 
-    required = [RAW, STAGED, CALENDAR, PARKS, SUPPLEMENTAL, SUPPLEMENTAL_QUEUE, DISPOSITION, REGISTRY]
+    required = [RAW, STAGED, CALENDAR, PARKS, SUPPLEMENTAL, SUPPLEMENTAL_QUEUE, DISPOSITION, REGISTRY, PROJECTOR]
     missing = [str(path.relative_to(ROOT)) for path in required if not path.exists()]
     if missing:
         raise FileNotFoundError("missing required inputs: " + ", ".join(missing))
@@ -291,6 +321,7 @@ def main() -> int:
         after_dispositions=after_dispositions,
     )
     lineage = source_lineage_contract_check()
+    projector = projector_occurrence_identity_check()
 
     before_hidden = before_open_counts.get("in_window_occurrence_hidden_by_source_id_match", 0)
     after_hidden = after_open_counts.get("in_window_occurrence_hidden_by_source_id_match", 0)
@@ -319,6 +350,7 @@ def main() -> int:
         "raw_disposition_accounting_pass": raw_accounting_pass,
         "generated_reference_additions_count": len(projected_rows),
         "generated_reference_additions_counted_as_raw": False,
+        "projector_implementation_correctness_pass": projector["projector_occurrence_identity_pass"],
         "source_lineage_contract_compliance_pass": lineage["source_lineage_contract_compliance_pass"],
         "audit_execution_integrity_pass": True,
         "occurrence_identity_implementation_correctness_pass": after_hidden == 0 and before_hidden > 0,
@@ -330,6 +362,7 @@ def main() -> int:
     summary["qa_pass"] = all(
         [
             summary["audit_execution_integrity_pass"],
+            summary["projector_implementation_correctness_pass"],
             summary["occurrence_identity_implementation_correctness_pass"],
             summary["raw_disposition_accounting_pass"],
             summary["duplicate_safety_pass"],
@@ -373,6 +406,7 @@ def main() -> int:
         },
     )
     write_json(out / "source_lineage_contract_check.json", lineage)
+    write_json(out / "projector_occurrence_identity_check.json", projector)
     write_json(out / "public_surface_safety_assertions.json", safety)
     write_text(out / "occurrence_identity_enforcement_report.md", make_markdown(summary))
     print(json.dumps(summary, indent=2, sort_keys=True))
