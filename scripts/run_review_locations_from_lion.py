@@ -43,6 +43,12 @@ def canonical_street_key(value: Any) -> str:
         "AV OF THE AMERICAS": "6 AVE",
         "AVE OF THE AMERICAS": "6 AVE",
         "AVENUE OF THE AMERICAS": "6 AVE",
+        "AV OF AMERICAS": "6 AVE",
+        "AVE OF AMERICAS": "6 AVE",
+        "AVENUE OF AMERICAS": "6 AVE",
+        "AMERICAS AV": "6 AVE",
+        "AMERICAS AVE": "6 AVE",
+        "AMERICAS AVENUE": "6 AVE",
         "6TH AVE": "6 AVE",
         "6TH AVENUE": "6 AVE",
         "MAC DOUGAL ST": "MACDOUGAL ST",
@@ -66,6 +72,12 @@ def official_street_variants(value: Any) -> set[str]:
                 "AV OF THE AMERICAS",
                 "AVE OF THE AMERICAS",
                 "AVENUE OF THE AMERICAS",
+                "AV OF AMERICAS",
+                "AVE OF AMERICAS",
+                "AVENUE OF AMERICAS",
+                "AMERICAS AV",
+                "AMERICAS AVE",
+                "AMERICAS AVENUE",
             }
         )
     if key == "MACDOUGAL ST":
