@@ -21,6 +21,7 @@ def test_refresh_workflow_is_artifact_only_and_read_only():
         "staging_display_eligible\"] is True",
         "actions/upload-artifact@v4",
         "retention-days: 7",
+        "cancel-in-progress: true",
     )
     for value in required:
         assert value in text
