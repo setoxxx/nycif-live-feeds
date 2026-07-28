@@ -1,0 +1,76 @@
+name: Strict Source Reconciliation Audit
+
+on:
+  pull_request:
+    paths:
+      - "scripts/audit_strict_source_reconciliation.py"
+      - "scripts/test_strict_source_reconciliation.py"
+      - ".github/workflows/strict-source-reconciliation-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: strict-source-reconciliation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  strict-source-reconciliation:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run focused reason-code tests
+        run: python scripts/test_strict_source_reconciliation.py
+
+      - name: Build protected strict reconciliation artifact
+        run: |
+          python scripts/audit_strict_source_reconciliation.py \
+            --report /tmp/strict-source-reconciliation-report.json \
+            --ledger /tmp/strict-source-reconciliation-ledger.json
+
+      - name: Enforce protected audit assertions
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('/tmp/strict-source-reconciliation-report.json').read_text())
+          assert report['strict_reconciliation_pass'] is True
+          assert report['qa_pass'] is True
+          equations = report['equations']
+          assert equations['open_data_raw_equals_explicit_dispositions'] is True
+          assert equations['calendar_parks_raw_equals_explicit_dispositions'] is True
+          assert equations['all_raw_rows_equal_explicit_dispositions'] is True
+          safety = report['safety']
+          assert safety == {
+              'location_cache_modified': False,
+              'production_feed_modified': False,
+              'promotion_allowed': False,
+              'proposal_only': True,
+              'public_map_modified': False,
+              'wordpress_modified': False,
+          }
+          PY
+
+      - name: Verify repository remained unchanged
+        run: test -z "$(git status --porcelain)"
+
+      - name: Upload protected audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: strict-source-reconciliation-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            /tmp/strict-source-reconciliation-report.json
+            /tmp/strict-source-reconciliation-ledger.json
+          retention-days: 7
