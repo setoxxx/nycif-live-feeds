@@ -1,0 +1,72 @@
+name: Incoming Data Residual Audit
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/audit_incoming_data_residuals.py'
+      - '.github/workflows/incoming-data-residual-audit.yml'
+      - 'scripts/project_events_discovery_v02.py'
+      - 'scripts/occurrence_identity_contract.py'
+      - 'data/source_lineage_registry_v01.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: incoming-data-residual-audit-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  incoming-data-residual-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.11'
+
+      - name: Record exact audit SHA
+        run: echo "AUDIT_SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Protected incoming data residual audit
+        run: python scripts/audit_incoming_data_residuals.py
+
+      - name: Verify protected summary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          summary = json.loads(Path('/tmp/incoming-data-residual-audit/incoming_data_residual_summary.json').read_text())
+          assert summary['qa_pass'] is True, summary
+          assert summary['public_production_untouched'] is True, summary
+          assert summary['launch_readiness'] is False, summary
+          safety = summary['safety']
+          assert safety['production_feed_modified'] is False
+          assert safety['data_location_cache_json_modified'] is False
+          assert safety['wordpress_modified'] is False
+          assert safety['public_map_modified'] is False
+          assert safety['homepage_modified'] is False
+          assert safety['navigation_modified'] is False
+          assert safety['theme_modified'] is False
+          assert safety['approval_state_modified'] is False
+          assert safety['credentials_modified'] is False
+          assert safety['deployment_settings_modified'] is False
+          assert safety['plugin_activation_modified'] is False
+          assert safety['schedule_enabled'] is False
+          assert safety['proposal_only'] is True
+          assert safety['public_launch_authorized'] is False
+          PY
+
+      - name: Verify checkout stayed clean
+        run: test -z "$(git status --porcelain)"
+
+      - name: Upload protected incoming data residual artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: incoming-data-residual-audit-${{ env.AUDIT_SOURCE_SHA }}
+          path: /tmp/incoming-data-residual-audit
+          retention-days: 7
