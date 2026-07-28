@@ -9,6 +9,7 @@ on:
       - "scripts/run_review_location_cross_source.py"
       - "scripts/refine_review_locations_from_parks.py"
       - "scripts/resolve_review_locations_from_lion.py"
+      - "scripts/run_review_locations_from_lion.py"
       - "scripts/resolve_review_locations_from_lion_nodes.py"
       - "scripts/resolve_remaining_review_locations.py"
       - "scripts/run_review_location_resolution_audit.py"
@@ -18,6 +19,7 @@ on:
       - "tests/test_run_review_location_cross_source.py"
       - "tests/test_refine_review_locations_from_parks.py"
       - "tests/test_resolve_review_locations_from_lion.py"
+      - "tests/test_run_review_locations_from_lion.py"
       - "tests/test_resolve_review_locations_from_lion_nodes.py"
       - "tests/test_resolve_remaining_review_locations.py"
       - "tests/test_review_location_audit_runner.py"
@@ -73,6 +75,7 @@ jobs:
             tests/test_run_review_location_cross_source.py \
             tests/test_refine_review_locations_from_parks.py \
             tests/test_resolve_review_locations_from_lion.py \
+            tests/test_run_review_locations_from_lion.py \
             tests/test_resolve_review_locations_from_lion_nodes.py \
             tests/test_resolve_remaining_review_locations.py \
             tests/test_review_location_audit_runner.py \
@@ -125,10 +128,10 @@ jobs:
             --report /tmp/review-location-coverage-parks.json \
             --proposals /tmp/review-location-resolution-parks.json
 
-      - name: Resolve stated street segments from current official NYC LION nodes
+      - name: Resolve stated street segments from official NYC LION line-node graph
         shell: bash
         run: |
-          python3 scripts/resolve_review_locations_from_lion_nodes.py \
+          python3 scripts/run_review_locations_from_lion.py \
             --input-report /tmp/review-location-coverage-parks.json \
             --input-proposals /tmp/review-location-resolution-parks.json \
             --borough-boundaries /tmp/nyc-dcp-borough-boundaries.geojson \
