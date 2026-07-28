@@ -6,6 +6,7 @@ on:
       - "scripts/audit_review_location_coverage.py"
       - "scripts/refine_review_location_coverage.py"
       - "scripts/resolve_remaining_review_locations.py"
+      - "scripts/run_review_location_resolution_audit.py"
       - "tests/test_review_location_coverage.py"
       - "tests/test_refine_review_location_coverage.py"
       - "tests/test_resolve_remaining_review_locations.py"
@@ -98,7 +99,7 @@ jobs:
           if test "$ALLOW_LIVE_GEOSEARCH" = "yes"; then
             args+=(--allow-live-geosearch)
           fi
-          python3 scripts/resolve_remaining_review_locations.py "${args[@]}"
+          python3 scripts/run_review_location_resolution_audit.py "${args[@]}"
 
       - name: Enforce staging-only boundary
         env:
@@ -128,22 +129,22 @@ jobs:
           assert refined['unresolved_count'] <= baseline['unresolved_count']
           assert report['unresolved_count'] <= refined['unresolved_count']
           assert refined['refinement']['newly_resolved_count'] == (
-              baseline['unresolved_count'] - refined['unresolved_count']
+            baseline['unresolved_count'] - refined['unresolved_count']
           )
           assert report['official_resolution']['newly_resolved_count'] == (
-              refined['unresolved_count'] - report['unresolved_count']
+            refined['unresolved_count'] - report['unresolved_count']
           )
           assert len(report['official_resolution']['borough_boundary_sha256']) == 64
           assert report['official_resolution']['borough_boundary_source_url'].startswith(
-              'https://data.cityofnewyork.us/'
+            'https://data.cityofnewyork.us/'
           )
           assert report['safety'] == {
-              'location_cache_modified': False,
-              'production_feed_modified': False,
-              'promotion_allowed': False,
-              'proposal_only': True,
-              'public_map_modified': False,
-              'wordpress_modified': False,
+            'location_cache_modified': False,
+            'production_feed_modified': False,
+            'promotion_allowed': False,
+            'proposal_only': True,
+            'public_map_modified': False,
+            'wordpress_modified': False,
           }
           assert all(item.get('disposition') for item in proposals['proposals'])
           assert all(item.get('location_classified') is True for item in proposals['proposals'])
