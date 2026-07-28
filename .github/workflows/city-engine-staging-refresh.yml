@@ -1,0 +1,260 @@
+name: City Engine Protected Staging Refresh
+
+on:
+  workflow_dispatch:
+    inputs:
+      allow_live_fetch:
+        description: "Type yes to allow live NYC Open Data retrieval for a temporary protected-staging artifact"
+        required: true
+        default: "no"
+  pull_request:
+    paths:
+      - "scripts/build_city_engine_staging_feed.py"
+      - "scripts/sync_nyc_open_data.py"
+      - "scripts/build_test_enriched_feed.py"
+      - "scripts/build_staged_production_feed.py"
+      - "tests/test_city_engine_staging_feed_adapter.py"
+      - "tests/test_city_engine_staging_refresh_workflow.py"
+      - ".github/workflows/city-engine-staging-refresh.yml"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: city-engine-protected-staging-refresh-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  protected-staging-refresh:
+    if: github.event_name == 'pull_request' || github.event.inputs.allow_live_fetch == 'yes'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pipeline dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Run adapter contract tests
+        run: python3 tests/test_city_engine_staging_feed_adapter.py
+
+      - name: Run workflow safety contract
+        run: python3 -m pytest -q tests/test_city_engine_staging_refresh_workflow.py
+
+      - name: Fetch current NYC Open Data into the temporary runner
+        env:
+          NYCIF_ALLOW_LIVE_GEOSEARCH: "yes"
+        run: python3 scripts/sync_nyc_open_data.py
+
+      - name: Build temporary enriched event intake
+        env:
+          NYCIF_ALLOW_LIVE_GEOSEARCH: "yes"
+        run: python3 scripts/build_test_enriched_feed.py
+
+      - name: Build temporary staged-event snapshot
+        run: python3 scripts/build_staged_production_feed.py
+
+      - name: Create temporary source metadata
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          staged = json.loads(Path("data/nycif_staged_live_events.json").read_text(encoding="utf-8"))
+          events = staged.get("events", [])
+          metadata = {
+              "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+              "event_count": len(events),
+              "review_only": True,
+              "public_authorized": False,
+              "runner_ephemeral": True,
+          }
+          Path("/tmp/city-engine-source-metadata.json").write_text(
+              json.dumps(metadata, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          PY
+
+      - name: Inspect temporary staging occurrence identities
+        shell: bash
+        run: |
+          window_start="$(TZ=America/New_York date +%F)"
+          WINDOW_START="$window_start" python3 - <<'PY'
+          import json
+          import os
+          from collections import Counter, defaultdict
+          from datetime import date, timedelta
+          from pathlib import Path
+
+          source = Path("data/nycif_staged_live_events.json")
+          payload = json.loads(source.read_text(encoding="utf-8"))
+          events = payload.get("events", [])
+          start = date.fromisoformat(os.environ["WINDOW_START"])
+          end = start + timedelta(days=13)
+
+          eligible_ids = []
+          signatures_by_id = defaultdict(set)
+          reasons = Counter()
+          for event in events:
+              if not isinstance(event, dict):
+                  reasons["not_object"] += 1
+                  continue
+              if event.get("staged_feed") is not True:
+                  reasons["not_staged"] += 1
+                  continue
+              if event.get("production_ready") is not True:
+                  reasons["not_production_ready"] += 1
+                  continue
+              if event.get("needs_review") is not False:
+                  reasons["needs_review"] += 1
+                  continue
+              try:
+                  event_date = date.fromisoformat(str(event.get("date") or ""))
+              except ValueError:
+                  reasons["invalid_date"] += 1
+                  continue
+              if not start <= event_date <= end:
+                  reasons["outside_window"] += 1
+                  continue
+              event_id = str(event.get("id") or "").strip()
+              if not event_id:
+                  reasons["missing_id"] += 1
+                  continue
+
+              signature_fields = {
+                  "title": event.get("title"),
+                  "date": event.get("date"),
+                  "start_date_time": event.get("start_date_time"),
+                  "end_date_time": event.get("end_date_time"),
+                  "borough": event.get("borough"),
+                  "category": event.get("category"),
+                  "display_location": event.get("display_location"),
+                  "location": event.get("location"),
+                  "lat": event.get("lat"),
+                  "lng": event.get("lng"),
+                  "event_agency": event.get("event_agency"),
+                  "event_type": event.get("event_type"),
+                  "source_dataset": event.get("source_dataset"),
+                  "source_event_id": event.get("source_event_id"),
+                  "street_closure_type": event.get("street_closure_type"),
+              }
+              eligible_ids.append(event_id)
+              signatures_by_id[event_id].add(
+                  json.dumps(signature_fields, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+              )
+
+          id_counts = Counter(eligible_ids)
+          repeated_parent_ids = sorted(event_id for event_id, count in id_counts.items() if count > 1)
+          multi_occurrence_parent_ids = sorted(
+              event_id for event_id in repeated_parent_ids if len(signatures_by_id[event_id]) > 1
+          )
+          equivalent_duplicate_rows = sum(
+              id_counts[event_id] - len(signatures_by_id[event_id])
+              for event_id in repeated_parent_ids
+          )
+          derived_occurrence_count = sum(
+              len(signatures_by_id[event_id]) for event_id in multi_occurrence_parent_ids
+          )
+
+          diagnostics = {
+              "review_only": True,
+              "public_authorized": False,
+              "input_event_count": len(events),
+              "window_start": start.isoformat(),
+              "window_end": end.isoformat(),
+              "eligible_event_count_before_coordinate_validation": len(eligible_ids),
+              "repeated_source_parent_id_count": len(repeated_parent_ids),
+              "multi_occurrence_source_parent_id_count": len(multi_occurrence_parent_ids),
+              "derived_occurrence_count_before_coordinate_validation": derived_occurrence_count,
+              "equivalent_duplicate_row_count": equivalent_duplicate_rows,
+              "sample_multi_occurrence_source_parent_ids": multi_occurrence_parent_ids[:100],
+              "exclusion_counts": dict(sorted(reasons.items())),
+          }
+          output = Path("/tmp/city-engine-protected-staging")
+          output.mkdir(parents=True, exist_ok=True)
+          (output / "city-engine-staging-diagnostics.json").write_text(
+              json.dumps(diagnostics, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          print(json.dumps(diagnostics, sort_keys=True))
+          PY
+
+      - name: Build protected City Engine staging artifact
+        id: build_staging_feed
+        continue-on-error: true
+        shell: bash
+        run: |
+          window_start="$(TZ=America/New_York date +%F)"
+          reviewed_at="$(date -u +%Y-%m-%dT%H:%M:%S+00:00)"
+          python3 scripts/build_city_engine_staging_feed.py \
+            --input data/nycif_staged_live_events.json \
+            --metadata /tmp/city-engine-source-metadata.json \
+            --output-dir /tmp/city-engine-protected-staging \
+            --window-start "$window_start" \
+            --window-days 14 \
+            --max-source-age-hours 2 \
+            --reviewed-at "$reviewed_at"
+
+      - name: Verify artifact remains staging-only
+        if: steps.build_staging_feed.outcome == 'success'
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          output = Path("/tmp/city-engine-protected-staging")
+          report = json.loads((output / "city-engine-staging-feed-report.json").read_text())
+          feed = json.loads((output / "city-engine-staging-feed.geojson").read_text())
+          event_ids = [feature["properties"]["event_id"] for feature in feed["features"]]
+
+          assert report["ready_for_protected_staging"] is True
+          assert report["feed_written"] is True
+          assert report["counts"]["included"] > 0
+          assert report["counts"]["identity_collisions"] == 0
+          assert len(event_ids) == len(set(event_ids))
+          assert feed["metadata"]["review_only"] is True
+          assert feed["metadata"]["public_authorized"] is False
+          assert all(feature["properties"]["source_parent_event_id"] for feature in feed["features"])
+          assert all(feature["properties"]["public_display_eligible"] is False for feature in feed["features"])
+          assert all(feature["properties"]["staging_display_eligible"] is True for feature in feed["features"])
+          PY
+
+      - name: Record non-promotion boundary
+        if: steps.build_staging_feed.outcome == 'success'
+        shell: bash
+        run: |
+          test "$(git config --get remote.origin.url)" != ""
+          echo "Repository, WordPress, deployment, email, and public-feed targets remain unmodified."
+          git status --short
+
+      - name: Upload protected staging diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: city-engine-protected-staging-${{ github.sha }}
+          path: |
+            /tmp/city-engine-protected-staging/city-engine-staging-feed.geojson
+            /tmp/city-engine-protected-staging/city-engine-staging-feed-report.json
+            /tmp/city-engine-protected-staging/city-engine-staging-diagnostics.json
+          if-no-files-found: error
+          retention-days: 7
+
+      - name: Enforce protected staging build result
+        if: steps.build_staging_feed.outcome == 'failure'
+        shell: bash
+        run: |
+          cat /tmp/city-engine-protected-staging/city-engine-staging-diagnostics.json
+          if test -f /tmp/city-engine-protected-staging/city-engine-staging-feed-report.json; then
+            cat /tmp/city-engine-protected-staging/city-engine-staging-feed-report.json
+          fi
+          exit 1

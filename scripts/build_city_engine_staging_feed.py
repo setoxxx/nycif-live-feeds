@@ -22,6 +22,7 @@ from urllib.parse import urlparse
 NYC_LATITUDE = (40.45, 40.95)
 NYC_LONGITUDE = (-74.30, -73.65)
 DATASET_ID = re.compile(r"^[a-z0-9]{4}-[a-z0-9]{4}$")
+OCCURRENCE_HASH_LENGTH = 20
 BOROUGHS = {
     "manhattan": "Manhattan",
     "brooklyn": "Brooklyn",
@@ -81,6 +82,10 @@ class Counters:
     invalid_identity: int = 0
     invalid_date: int = 0
     invalid_coordinates: int = 0
+    equivalent_duplicates_collapsed: int = 0
+    multi_occurrence_source_ids: int = 0
+    derived_occurrence_ids: int = 0
+    identity_collisions: int = 0
 
     def as_dict(self) -> dict[str, int]:
         return dict(vars(self))
@@ -180,11 +185,11 @@ def valid_coordinates(lat: Any, lng: Any) -> bool:
 
 
 def feature_from_event(event: dict[str, Any], last_checked: str) -> dict[str, Any]:
-    event_id = str(event["id"]).strip()
+    source_parent_event_id = str(event["id"]).strip()
     title = str(event["title"]).strip()
     event_date = parse_date_value(event.get("date"))
     if event_date is None:
-        raise FeedBuildError(f"Eligible event {event_id} has an invalid date")
+        raise FeedBuildError(f"Eligible event {source_parent_event_id} has an invalid date")
 
     lat = float(event["lat"])
     lng = float(event["lng"])
@@ -203,7 +208,8 @@ def feature_from_event(event: dict[str, Any], last_checked: str) -> dict[str, An
     official_url = source_url(event)
 
     properties: dict[str, Any] = {
-        "event_id": event_id,
+        "event_id": source_parent_event_id,
+        "source_parent_event_id": source_parent_event_id,
         "title": title,
         "description": description,
         "category": normalize_category(event.get("category")),
@@ -232,10 +238,39 @@ def feature_from_event(event: dict[str, Any], last_checked: str) -> dict[str, An
 
     return {
         "type": "Feature",
-        "id": event_id,
+        "id": source_parent_event_id,
         "geometry": {"type": "Point", "coordinates": [lng, lat]},
         "properties": properties,
     }
+
+
+def occurrence_signature(feature: dict[str, Any]) -> str:
+    """Return a stable signature for a distinct occurrence beneath a source parent ID."""
+    properties = {
+        key: value
+        for key, value in feature["properties"].items()
+        if key not in {"event_id", "source_parent_event_id", "last_checked"}
+    }
+    identity = {
+        "geometry": feature["geometry"],
+        "properties": properties,
+    }
+    return json.dumps(identity, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def assign_event_id(feature: dict[str, Any], event_id: str) -> dict[str, Any]:
+    properties = dict(feature["properties"])
+    properties["event_id"] = event_id
+    return {
+        **feature,
+        "id": event_id,
+        "properties": properties,
+    }
+
+
+def derived_occurrence_id(source_parent_event_id: str, signature: str) -> str:
+    suffix = hashlib.sha256(signature.encode("utf-8")).hexdigest()[:OCCURRENCE_HASH_LENGTH]
+    return f"{source_parent_event_id}:occ:{suffix}"
 
 
 def build_feed(
@@ -243,13 +278,12 @@ def build_feed(
     *,
     window: BuildWindow,
     last_checked: str,
-) -> tuple[dict[str, Any], Counters]:
+) -> tuple[dict[str, Any], Counters, list[str]]:
     if not isinstance(payload, dict) or not isinstance(payload.get("events"), list):
         raise FeedBuildError("Input must be an object containing an events array")
 
     counters = Counters(input=len(payload["events"]))
-    features: list[dict[str, Any]] = []
-    seen_ids: set[str] = set()
+    occurrences_by_parent: dict[str, dict[str, dict[str, Any]]] = {}
 
     for raw_event in payload["events"]:
         if not isinstance(raw_event, dict):
@@ -283,11 +317,45 @@ def build_feed(
             counters.invalid_coordinates += 1
             continue
 
-        normalized_id = event_id.strip()
-        if normalized_id in seen_ids:
-            raise FeedBuildError(f"Duplicate eligible event id: {normalized_id}")
-        seen_ids.add(normalized_id)
-        features.append(feature_from_event(raw_event, last_checked))
+        source_parent_event_id = event_id.strip()
+        feature = feature_from_event(raw_event, last_checked)
+        signature = occurrence_signature(feature)
+        occurrence_group = occurrences_by_parent.setdefault(source_parent_event_id, {})
+        if signature in occurrence_group:
+            counters.equivalent_duplicates_collapsed += 1
+            continue
+        occurrence_group[signature] = feature
+
+    features: list[dict[str, Any]] = []
+    assigned_signatures: dict[str, str] = {}
+    collision_ids: set[str] = set()
+
+    for source_parent_event_id in sorted(occurrences_by_parent):
+        occurrence_group = occurrences_by_parent[source_parent_event_id]
+        occurrence_items = sorted(occurrence_group.items())
+        multiple_occurrences = len(occurrence_items) > 1
+        if multiple_occurrences:
+            counters.multi_occurrence_source_ids += 1
+
+        for signature, feature in occurrence_items:
+            event_id = (
+                derived_occurrence_id(source_parent_event_id, signature)
+                if multiple_occurrences
+                else source_parent_event_id
+            )
+            if multiple_occurrences:
+                counters.derived_occurrence_ids += 1
+
+            previous_signature = assigned_signatures.get(event_id)
+            if previous_signature is not None and previous_signature != signature:
+                collision_ids.add(event_id)
+                continue
+            assigned_signatures[event_id] = signature
+            features.append(assign_event_id(feature, event_id))
+
+    if collision_ids:
+        features = [feature for feature in features if feature["id"] not in collision_ids]
+    counters.identity_collisions = len(collision_ids)
 
     features.sort(key=lambda item: (
         item["properties"]["start_date"],
@@ -307,10 +375,13 @@ def build_feed(
             "window_end": window.end.isoformat(),
             "event_count": len(features),
             "last_checked": last_checked,
+            "equivalent_duplicates_collapsed": counters.equivalent_duplicates_collapsed,
+            "multi_occurrence_source_ids": counters.multi_occurrence_source_ids,
+            "derived_occurrence_ids": counters.derived_occurrence_ids,
         },
         "features": features,
     }
-    return feed, counters
+    return feed, counters, sorted(collision_ids)
 
 
 def sha256_file(path: Path) -> str:
@@ -348,8 +419,12 @@ def main() -> int:
     source_fresh = 0 <= source_age_hours <= args.max_source_age_hours
 
     payload = load_json(args.input)
-    feed, counters = build_feed(payload, window=window, last_checked=source_generated.isoformat())
-    ready = source_fresh and counters.included > 0
+    feed, counters, collision_ids = build_feed(
+        payload,
+        window=window,
+        last_checked=source_generated.isoformat(),
+    )
+    ready = source_fresh and counters.included > 0 and not collision_ids
 
     report = {
         "schema_version": "1",
@@ -367,6 +442,7 @@ def main() -> int:
         "window_start": window.start.isoformat(),
         "window_end": window.end.isoformat(),
         "counts": counters.as_dict(),
+        "identity_collision_event_ids": collision_ids[:100],
         "ready_for_protected_staging": ready,
         "feed_written": False,
         "blocking_reasons": [],
@@ -375,6 +451,8 @@ def main() -> int:
         report["blocking_reasons"].append("source feed is stale")
     if counters.included == 0:
         report["blocking_reasons"].append("no eligible events in the requested window")
+    if collision_ids:
+        report["blocking_reasons"].append("derived occurrence identity collision")
 
     args.output_dir.mkdir(parents=True, exist_ok=True)
     report_path = args.output_dir / "city-engine-staging-feed-report.json"
@@ -392,6 +470,10 @@ def main() -> int:
         "ready_for_protected_staging": ready,
         "feed_written": report["feed_written"],
         "event_count": counters.included,
+        "equivalent_duplicates_collapsed": counters.equivalent_duplicates_collapsed,
+        "multi_occurrence_source_ids": counters.multi_occurrence_source_ids,
+        "derived_occurrence_ids": counters.derived_occurrence_ids,
+        "identity_collisions": counters.identity_collisions,
         "blocking_reasons": report["blocking_reasons"],
     }, sort_keys=True))
     return 0 if ready or args.report_only else 2

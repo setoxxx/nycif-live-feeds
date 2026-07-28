@@ -23,9 +23,11 @@ from urllib.parse import urlencode
 
 try:
     from scripts.gps_identity import normalize_text_legacy
+    from scripts.nyc_clock import nyc_today_iso
     from scripts.nyc_location_resolver import NYCLocationResolver
 except ModuleNotFoundError:  # pragma: no cover - direct script execution
     from gps_identity import normalize_text_legacy
+    from nyc_clock import nyc_today_iso
     from nyc_location_resolver import NYCLocationResolver
 
 RAW_URL = "https://data.cityofnewyork.us/resource/tvpp-9vvx.json"
@@ -38,6 +40,7 @@ REPORT_PATH = DATA_DIR / "live_sync_report.json"
 LOCATION_CACHE_PATH = DATA_DIR / "location_cache.json"
 ENRICHED_PATH = ROOT / "nycif_all_radar_map_events.json"
 TODAY_UTC = datetime.now(timezone.utc).date().isoformat()
+TODAY_NYC = nyc_today_iso()
 
 
 def load_json_file(path: Path, default: Any) -> Any:
@@ -241,7 +244,7 @@ def main() -> int:
     location_cache = load_location_cache()
     index = build_enriched_index(enriched)
     resolver = NYCLocationResolver.load_default()
-    current_future = [row for row in raw_rows if date_key(row.get("start_date_time")) >= TODAY_UTC]
+    current_future = [row for row in raw_rows if date_key(row.get("start_date_time")) >= TODAY_NYC]
 
     match_counts: dict[str, int] = {}
     matched_with_gps = 0
@@ -267,6 +270,8 @@ def main() -> int:
         "raw_url": RAW_URL,
         "raw_page_limit": RAW_PAGE_LIMIT,
         "today_utc": TODAY_UTC,
+        "today_nyc": TODAY_NYC,
+        "date_boundary_timezone": "America/New_York",
         "raw_rows_loaded": len(raw_rows),
         "current_future_rows": len(current_future),
         "raw_rows_with_cemsid": sum(1 for row in raw_rows if split_ids(row.get("cemsid"))),

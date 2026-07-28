@@ -21,9 +21,11 @@ from urllib.parse import urlencode
 
 try:
     from scripts.gps_identity import normalize_text_legacy
+    from scripts.nyc_clock import nyc_today_iso
     from scripts.nyc_location_resolver import NYCLocationResolver
 except ModuleNotFoundError:  # pragma: no cover - direct script execution
     from gps_identity import normalize_text_legacy
+    from nyc_clock import nyc_today_iso
     from nyc_location_resolver import NYCLocationResolver
 
 RAW_URL = "https://data.cityofnewyork.us/resource/tvpp-9vvx.json"
@@ -37,6 +39,7 @@ LOCATION_CACHE_PATH = DATA_DIR / "location_cache.json"
 TEST_FEED_PATH = DATA_DIR / "nycif_live_test_enriched_events.json"
 MANIFEST_PATH = DATA_DIR / "test_enriched_feed_manifest.json"
 TODAY_UTC = datetime.now(timezone.utc).date().isoformat()
+TODAY_NYC = nyc_today_iso()
 
 
 def load_json_file(path: Path, default: Any) -> Any:
@@ -321,7 +324,7 @@ def build_event(raw: dict[str, Any], match_type: str, match: dict[str, Any] | No
 
 def main() -> int:
     raw_rows = fetch_raw_rows()
-    raw_current = [row for row in raw_rows if date_key(row.get("start_date_time")) >= TODAY_UTC]
+    raw_current = [row for row in raw_rows if date_key(row.get("start_date_time")) >= TODAY_NYC]
     enriched = rows_from_payload(load_json_file(ENRICHED_PATH, []))
     cache = location_cache_entries()
     indexes = build_indexes(enriched)
@@ -357,6 +360,9 @@ def main() -> int:
         "generated_at_utc": feed["generated_at_utc"],
         "source_dataset": "tvpp-9vvx",
         "production_feed": False,
+        "today_utc": TODAY_UTC,
+        "today_nyc": TODAY_NYC,
+        "date_boundary_timezone": "America/New_York",
         "raw_page_limit": RAW_PAGE_LIMIT,
         "raw_rows_loaded": len(raw_rows),
         "current_future_rows": len(raw_current),
