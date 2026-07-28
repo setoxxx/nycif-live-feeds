@@ -1,0 +1,113 @@
+name: Review Location Coverage Audit
+
+on:
+  pull_request:
+    paths:
+      - "scripts/audit_review_location_coverage.py"
+      - "tests/test_review_location_coverage.py"
+      - ".github/workflows/review-location-coverage-audit.yml"
+      - "data/schema-v1-discovery/review/**"
+      - "data/nyc_location_gazetteer.json"
+      - "data/nyc_geosearch_gazetteer_cache.json"
+      - "data/supplemental_location_gazetteer_overlay.json"
+  workflow_dispatch:
+    inputs:
+      expected_target_count:
+        description: "Expected null-borough review count"
+        required: true
+        default: "2404"
+      allow_live_geosearch:
+        description: "Type yes to allow temporary live NYC GeoSearch lookups"
+        required: true
+        default: "no"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: review-location-coverage-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install test dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Run focused regression tests
+        run: python3 -m pytest -q tests/test_review_location_coverage.py
+
+      - name: Build complete 2,404-record location audit
+        env:
+          EXPECTED_TARGET_COUNT: ${{ github.event.inputs.expected_target_count || '2404' }}
+          ALLOW_LIVE_GEOSEARCH: ${{ github.event.inputs.allow_live_geosearch || 'no' }}
+        shell: bash
+        run: |
+          args=(
+            --expected-target-count "$EXPECTED_TARGET_COUNT"
+            --report /tmp/review-location-coverage-audit.json
+            --proposals /tmp/review-location-resolution-proposals.json
+          )
+          if test "$ALLOW_LIVE_GEOSEARCH" = "yes"; then
+            args+=(--allow-live-geosearch)
+          fi
+          python3 scripts/audit_review_location_coverage.py "${args[@]}"
+
+      - name: Enforce staging-only boundary
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(Path('/tmp/review-location-coverage-audit.json').read_text())
+          proposals = json.loads(Path('/tmp/review-location-resolution-proposals.json').read_text())
+
+          assert report['qa_pass'] is True
+          assert report['target_null_borough_count'] == 2404
+          assert report['accounted_count'] == 2404
+          assert report['location_classified_count'] == 2404
+          assert report['zero_silent_null_borough_records'] is True
+          assert sum(report['disposition_counts'].values()) == 2404
+          assert proposals['target_count'] == 2404
+          assert len(proposals['proposals']) == 2404
+          assert report['safety'] == {
+              'location_cache_modified': False,
+              'production_feed_modified': False,
+              'promotion_allowed': False,
+              'proposal_only': True,
+              'public_map_modified': False,
+              'wordpress_modified': False,
+          }
+          assert all(item.get('disposition') for item in proposals['proposals'])
+          assert all(item.get('location_classified') is True for item in proposals['proposals'])
+          assert all(item.get('promotion_allowed') is False for item in proposals['proposals'])
+          assert all(item.get('public_map_modified') is False for item in proposals['proposals'])
+          PY
+
+      - name: Verify repository remains unchanged
+        shell: bash
+        run: |
+          git status --short
+          test -z "$(git status --porcelain)"
+
+      - name: Upload protected audit artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-location-coverage-${{ github.sha }}
+          path: |
+            /tmp/review-location-coverage-audit.json
+            /tmp/review-location-resolution-proposals.json
+          if-no-files-found: error
+          retention-days: 7
