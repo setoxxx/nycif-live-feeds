@@ -50,8 +50,21 @@ jobs:
 
       - name: Project discovery in isolated temp copy
         run: |
-          mkdir -p /tmp/discovery-work
-          tar --exclude=.git -cf - . | (cd /tmp/discovery-work && tar -xf -)
+          python - <<'PY'
+          from pathlib import Path
+          import shutil
+
+          source = Path.cwd().resolve()
+          destination = Path('/tmp/discovery-work').resolve()
+          if destination.exists():
+              shutil.rmtree(destination)
+
+          def ignore_unneeded(path, names):
+              ignored = {'.git', '__pycache__', '.pytest_cache', '.mypy_cache'}
+              return ignored.intersection(names)
+
+          shutil.copytree(source, destination, ignore=ignore_unneeded, symlinks=False)
+          PY
           cd /tmp/discovery-work
           python scripts/project_events_discovery_v02.py
           python scripts/test_events_discovery_v02.py
