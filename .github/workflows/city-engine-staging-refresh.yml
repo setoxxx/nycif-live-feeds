@@ -91,7 +91,7 @@ jobs:
           WINDOW_START="$window_start" python3 - <<'PY'
           import json
           import os
-          from collections import Counter
+          from collections import Counter, defaultdict
           from datetime import date, timedelta
           from pathlib import Path
 
@@ -102,6 +102,7 @@ jobs:
           end = start + timedelta(days=13)
 
           eligible_ids = []
+          signatures_by_id = defaultdict(set)
           reasons = Counter()
           for event in events:
               if not isinstance(event, dict):
@@ -128,9 +129,40 @@ jobs:
               if not event_id:
                   reasons["missing_id"] += 1
                   continue
-              eligible_ids.append(event_id)
 
-          duplicates = sorted(event_id for event_id, count in Counter(eligible_ids).items() if count > 1)
+              signature_fields = {
+                  "title": event.get("title"),
+                  "date": event.get("date"),
+                  "start_date_time": event.get("start_date_time"),
+                  "end_date_time": event.get("end_date_time"),
+                  "borough": event.get("borough"),
+                  "category": event.get("category"),
+                  "display_location": event.get("display_location"),
+                  "location": event.get("location"),
+                  "lat": event.get("lat"),
+                  "lng": event.get("lng"),
+                  "event_agency": event.get("event_agency"),
+                  "event_type": event.get("event_type"),
+                  "source_dataset": event.get("source_dataset"),
+                  "source_event_id": event.get("source_event_id"),
+                  "street_closure_type": event.get("street_closure_type"),
+              }
+              eligible_ids.append(event_id)
+              signatures_by_id[event_id].add(
+                  json.dumps(signature_fields, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+              )
+
+          id_counts = Counter(eligible_ids)
+          duplicate_ids = sorted(event_id for event_id, count in id_counts.items() if count > 1)
+          equivalent_duplicate_ids = sorted(
+              event_id for event_id in duplicate_ids if len(signatures_by_id[event_id]) == 1
+          )
+          conflicting_duplicate_ids = sorted(
+              event_id for event_id in duplicate_ids if len(signatures_by_id[event_id]) > 1
+          )
+          equivalent_duplicate_rows = sum(id_counts[event_id] - 1 for event_id in equivalent_duplicate_ids)
+          conflicting_duplicate_rows = sum(id_counts[event_id] - 1 for event_id in conflicting_duplicate_ids)
+
           diagnostics = {
               "review_only": True,
               "public_authorized": False,
@@ -138,8 +170,12 @@ jobs:
               "window_start": start.isoformat(),
               "window_end": end.isoformat(),
               "eligible_event_count_before_coordinate_validation": len(eligible_ids),
-              "duplicate_eligible_event_id_count": len(duplicates),
-              "duplicate_eligible_event_ids": duplicates[:100],
+              "duplicate_eligible_event_id_count": len(duplicate_ids),
+              "equivalent_duplicate_event_id_count": len(equivalent_duplicate_ids),
+              "equivalent_duplicate_row_count": equivalent_duplicate_rows,
+              "conflicting_duplicate_event_id_count": len(conflicting_duplicate_ids),
+              "conflicting_duplicate_row_count": conflicting_duplicate_rows,
+              "conflicting_duplicate_event_ids": conflicting_duplicate_ids[:100],
               "exclusion_counts": dict(sorted(reasons.items())),
           }
           output = Path("/tmp/city-engine-protected-staging")
@@ -152,7 +188,7 @@ jobs:
           PY
 
       - name: Build protected City Engine staging artifact
-        id: build-staging-feed
+        id: build_staging_feed
         continue-on-error: true
         shell: bash
         run: |
@@ -168,7 +204,7 @@ jobs:
             --reviewed-at "$reviewed_at"
 
       - name: Verify artifact remains staging-only
-        if: steps.build-staging-feed.outcome == 'success'
+        if: steps.build_staging_feed.outcome == 'success'
         shell: bash
         run: |
           python3 - <<'PY'
@@ -182,6 +218,7 @@ jobs:
           assert report["ready_for_protected_staging"] is True
           assert report["feed_written"] is True
           assert report["counts"]["included"] > 0
+          assert report["counts"]["conflicting_duplicate_ids"] == 0
           assert feed["metadata"]["review_only"] is True
           assert feed["metadata"]["public_authorized"] is False
           assert all(feature["properties"]["public_display_eligible"] is False for feature in feed["features"])
@@ -189,7 +226,7 @@ jobs:
           PY
 
       - name: Record non-promotion boundary
-        if: steps.build-staging-feed.outcome == 'success'
+        if: steps.build_staging_feed.outcome == 'success'
         shell: bash
         run: |
           test "$(git config --get remote.origin.url)" != ""
@@ -209,7 +246,7 @@ jobs:
           retention-days: 7
 
       - name: Enforce protected staging build result
-        if: steps.build-staging-feed.outcome == 'failure'
+        if: steps.build_staging_feed.outcome == 'failure'
         shell: bash
         run: |
           cat /tmp/city-engine-protected-staging/city-engine-staging-diagnostics.json
