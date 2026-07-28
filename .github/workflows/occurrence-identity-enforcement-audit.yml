@@ -37,9 +37,7 @@ jobs:
         run: python scripts/test_occurrence_identity_contract.py
 
       - name: Protected occurrence identity enforcement audit
-        run: |
-          python scripts/audit_occurrence_identity_enforcement.py \
-            --out-dir /tmp/occurrence-identity-enforcement
+        run: python scripts/audit_occurrence_identity_enforcement.py
 
       - name: Protected source-lineage contract check
         run: |
