@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Run remaining review-location resolution with bounded, memoized GeoSearch.
+"""Run remaining review-location resolution with exact, bounded GeoSearch.
 
-This wrapper changes only audit execution behavior. It preserves the underlying
-resolver's confidence threshold and result schema, caches both successes and
-failures for repeated queries, and lowers the live HTTP timeout so a temporary
-GeoSearch outage cannot consume the entire review workflow.
+This wrapper changes only audit execution behavior. Each extracted candidate is
+looked up exactly once, successes and failures are memoized, and live requests
+use a short timeout. Broad resolver fallbacks are intentionally disabled here:
+the caller already extracts parent/facility candidates, and every returned
+coordinate must still pass official NYC borough-polygon validation.
 """
 
 from __future__ import annotations
@@ -30,14 +31,26 @@ except ModuleNotFoundError:  # pragma: no cover
     from nyc_location_gazetteer import valid_nyc_lat_lng
     from nyc_location_resolver import GEOSEARCH_BASE, NYCLocationResolver, ResolveResult, utc_now_iso
 
-AUDIT_HTTP_TIMEOUT_SEC = 4
-AUDIT_REQUEST_DELAY_SEC = 0.05
+AUDIT_HTTP_TIMEOUT_SEC = 2
+AUDIT_REQUEST_DELAY_SEC = 0.02
 
 
 class BoundedMemoizedResolver(NYCLocationResolver):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self._audit_resolution_cache: dict[tuple[str, str | None, tuple[str, ...]], ResolveResult] = {}
+
+    @staticmethod
+    def _unresolved(reason: str) -> ResolveResult:
+        return ResolveResult(
+            resolved=False,
+            tier="unresolved",
+            lat=None,
+            lng=None,
+            source=None,
+            confidence=None,
+            confidence_reason=reason,
+        )
 
     def resolve(
         self,
@@ -46,18 +59,47 @@ class BoundedMemoizedResolver(NYCLocationResolver):
         borough: str | None = None,
         cache_keys: list[str] | None = None,
     ) -> ResolveResult:
+        display = str(display_location or "").strip()
         key = (
-            str(display_location or "").strip().lower(),
+            display.lower(),
             str(borough).strip().lower() if borough else None,
             tuple(cache_keys or []),
         )
-        if key not in self._audit_resolution_cache:
-            self._audit_resolution_cache[key] = super().resolve(
-                display_location=display_location,
-                borough=borough,
-                cache_keys=cache_keys,
-            )
-        return self._audit_resolution_cache[key]
+        cached_result = self._audit_resolution_cache.get(key)
+        if cached_result is not None:
+            return cached_result
+
+        if not display:
+            result = self._unresolved("Missing display_location.")
+            self._audit_resolution_cache[key] = result
+            return result
+
+        for cache_key in cache_keys or []:
+            hit = self.gazetteer.lookup(cache_key)
+            if hit and valid_nyc_lat_lng(hit.get("lat"), hit.get("lng")):
+                result = self._from_entry("tier_1_location_cache_key", hit)
+                result.label = result.label or display
+                result.query_used = display
+                self._audit_resolution_cache[key] = result
+                return result
+
+        hit = self.gazetteer.lookup_display(display, borough)
+        if hit and valid_nyc_lat_lng(hit.get("lat"), hit.get("lng")):
+            result = self._from_entry("tier_1_gazetteer_display", hit)
+            result.label = result.label or display
+            result.query_used = display
+            self._audit_resolution_cache[key] = result
+            return result
+
+        result = self._resolve_geosearch(display, borough)
+        if result is None:
+            result = self._unresolved("No exact NYC GeoSearch result for the extracted candidate.")
+            result.query_used = display
+        else:
+            result.label = result.label or display
+            result.query_used = display
+        self._audit_resolution_cache[key] = result
+        return result
 
     def _geosearch_live(self, query: str) -> dict[str, Any] | None:
         params = urllib.parse.urlencode({"text": query, "size": 5})
@@ -89,7 +131,7 @@ class BoundedMemoizedResolver(NYCLocationResolver):
                 "lng": lng,
                 "label": props.get("label") or props.get("name"),
                 "confidence": "high" if confidence_score >= 0.75 else "medium",
-                "confidence_reason": f"NYC GeoSearch match for query '{query}'.",
+                "confidence_reason": f"Exact NYC GeoSearch match for query '{query}'.",
                 "source": "nyc_geosearch_planninglabs",
                 "query": query,
                 "cached_at_utc": utc_now_iso(),
