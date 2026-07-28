@@ -33,6 +33,10 @@ from discovery_v02 import (  # noqa: E402
     write_json,
 )
 from schema_v1_common import DEFAULT_TIMEZONE, envelope  # noqa: E402
+from occurrence_identity_contract import (  # noqa: E402
+    occurrence_key,
+    occurrence_key_set,
+)
 
 STAGED = ROOT / "data" / "nycif_staged_live_events.json"
 SUPP = ROOT / "data" / "supplemental_events_staging_feed.json"
@@ -125,7 +129,15 @@ def staged_source_keys(rows: list[dict]) -> set[tuple[str, str]]:
 
 
 def rejected_open_data_keys(dispositions: list[dict]) -> set[tuple[str, str]]:
-    rejected: set[tuple[str, str]] = set()
+    rejected, _occurrences = rejected_open_data_identity_sets(dispositions)
+    return rejected
+
+
+def rejected_open_data_identity_sets(
+    dispositions: list[dict],
+) -> tuple[set[tuple[str, str]], set[tuple[str, str, str]]]:
+    rejected_sources: set[tuple[str, str]] = set()
+    rejected_occurrences: set[tuple[str, str, str]] = set()
     for row in dispositions:
         if str(row.get("disposition") or "").lower() not in {"rejected", "drop", "invalid"} and "reject" not in str(
             row.get("reason") or ""
@@ -134,8 +146,11 @@ def rejected_open_data_keys(dispositions: list[dict]) -> set[tuple[str, str]]:
         dataset = str(row.get("source_dataset") or "nyc-open-data").strip()
         source_event_id = str(row.get("source_event_id") or "").strip()
         if dataset and source_event_id:
-            rejected.add((dataset, source_event_id))
-    return rejected
+            rejected_sources.add((dataset, source_event_id))
+            day = _parse_iso_date(row.get("date") or row.get("event_date") or row.get("start_date_time"))
+            if day:
+                rejected_occurrences.add((dataset, source_event_id, day))
+    return rejected_sources, rejected_occurrences
 
 
 def source_url_of(row: dict) -> str | None:
@@ -735,13 +750,15 @@ def main() -> int:
         or "reject" in str(e.get("reason") or "").lower()
     ]
     staged_keys = staged_source_keys(staged_rows)
-    rejected_keys = rejected_open_data_keys(rejected_disp)
+    staged_occurrence_keys = occurrence_key_set(staged_rows)
+    rejected_keys, rejected_occurrence_keys = rejected_open_data_identity_sets(rejected_disp)
     unstaged_intake_count = 0
     for i, row in enumerate(raw_rows):
         dataset, source_event_id = source_parts_safe(row)
-        if (dataset, source_event_id) in staged_keys:
+        raw_occurrence_key = occurrence_key(row)
+        if raw_occurrence_key in staged_occurrence_keys:
             continue
-        if (dataset, source_event_id) in rejected_keys:
+        if raw_occurrence_key in rejected_occurrence_keys or (dataset, source_event_id) in rejected_keys:
             continue
         if not event_overlaps_season(row, SEASON_START_DATE, SEASON_END_DATE):
             continue
@@ -766,14 +783,17 @@ def main() -> int:
     if PROJECTED_FEAST.exists():
         projected_rows = load_events(PROJECTED_FEAST)
         accepted_keys = {source_parts_safe(row) for row in staged_rows}
+        accepted_occurrence_keys = occurrence_key_set(staged_rows)
         for e in accepted:
             src = e.get("source") if isinstance(e.get("source"), dict) else {}
             accepted_keys.add(
                 (str(src.get("dataset") or ""), str(src.get("source_event_id") or ""))
             )
+            accepted_occurrence_keys.add(occurrence_key(e))
         for i, row in enumerate(projected_rows):
             dataset, source_event_id = source_parts_safe(row)
-            if (dataset, source_event_id) in accepted_keys:
+            projected_occurrence_key = occurrence_key(row)
+            if projected_occurrence_key in accepted_occurrence_keys:
                 continue
             event = build_base_event(
                 row,
@@ -791,6 +811,7 @@ def main() -> int:
             )
             accepted.append(event)
             accepted_keys.add((dataset, source_event_id))
+            accepted_occurrence_keys.add(projected_occurrence_key)
             projected_feast_count += 1
 
     for row in rejected_disp:
@@ -937,7 +958,7 @@ def main() -> int:
         "reconciles": reconciles_accept and cal_parks_gap == 0,
         "notes": [
             "Generated schema dumps and duplicative all-radar/enriched feeds excluded from raw intake.",
-            "Open-data accounting uses staged + unstaged season intake + disposition rejects.",
+            "Open-data accounting uses staged dated occurrences + occurrence-keyed unstaged season intake + disposition rejects.",
         ],
     }
     # Soften reconciles if disposition rejects double-count / overlap — document honesty
