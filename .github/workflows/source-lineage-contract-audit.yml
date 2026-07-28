@@ -1,0 +1,85 @@
+name: Source Lineage Contract Audit
+
+on:
+  pull_request:
+    paths:
+      - "data/source_lineage_registry_v01.json"
+      - "docs/source-lineage-contract-v01.md"
+      - "scripts/audit_source_lineage_contract.py"
+      - "scripts/test_source_lineage_contract.py"
+      - ".github/workflows/source-lineage-contract-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: source-lineage-contract-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-lineage-contract:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      AUDIT_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Check out exact audit source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.AUDIT_SOURCE_SHA }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run focused source-lineage contract tests
+        run: python scripts/test_source_lineage_contract.py
+
+      - name: Build protected source-lineage contract artifact
+        run: |
+          python scripts/audit_source_lineage_contract.py \
+            --out-dir /tmp/source-lineage-contract
+
+      - name: Enforce protected audit-integrity assertions
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          report = json.loads(Path('/tmp/source-lineage-contract/source_lineage_registry_audit_summary.json').read_text())
+          assert report['repository_sha'] == os.environ['AUDIT_SOURCE_SHA']
+          assert report['audit_execution_integrity_pass'] is True
+          assert report['raw_vs_generated_rules_pass'] is True
+          assert report['public_surface_gate_pass'] is True
+          assert report['performance_readiness_pass'] is True
+          assert report['launch_readiness'] is False
+          assert report['issue_132_gate_pass'] is False
+          safety = report['safety']
+          assert safety == {
+              'approval_state_modified': False,
+              'data_location_cache_json_modified': False,
+              'homepage_modified': False,
+              'navigation_modified': False,
+              'production_feed_modified': False,
+              'promotion_allowed': False,
+              'proposal_only': True,
+              'public_launch_authorized': False,
+              'public_map_modified': False,
+              'theme_modified': False,
+              'wordpress_modified': False,
+          }
+          PY
+
+      - name: Verify repository remained unchanged
+        run: test -z "$(git status --porcelain)"
+
+      - name: Upload protected audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-lineage-contract-${{ env.AUDIT_SOURCE_SHA }}
+          path: /tmp/source-lineage-contract
+          retention-days: 7
