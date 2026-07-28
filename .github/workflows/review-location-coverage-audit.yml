@@ -5,8 +5,10 @@ on:
     paths:
       - "scripts/audit_review_location_coverage.py"
       - "scripts/refine_review_location_coverage.py"
+      - "scripts/resolve_remaining_review_locations.py"
       - "tests/test_review_location_coverage.py"
       - "tests/test_refine_review_location_coverage.py"
+      - "tests/test_resolve_remaining_review_locations.py"
       - ".github/workflows/review-location-coverage-audit.yml"
       - "data/schema-v1-discovery/review/**"
       - "data/nyc_location_gazetteer.json"
@@ -21,7 +23,7 @@ on:
       allow_live_geosearch:
         description: "Type yes to allow temporary live NYC GeoSearch lookups"
         required: true
-        default: "no"
+        default: "yes"
 
 permissions:
   contents: read
@@ -33,7 +35,7 @@ concurrency:
 jobs:
   audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
 
     steps:
       - name: Check out repository
@@ -51,23 +53,18 @@ jobs:
         run: |
           python3 -m pytest -q \
             tests/test_review_location_coverage.py \
-            tests/test_refine_review_location_coverage.py
+            tests/test_refine_review_location_coverage.py \
+            tests/test_resolve_remaining_review_locations.py
 
       - name: Build baseline 2,426-record location audit
         env:
           EXPECTED_TARGET_COUNT: ${{ github.event.inputs.expected_target_count || '2426' }}
-          ALLOW_LIVE_GEOSEARCH: ${{ github.event.inputs.allow_live_geosearch || 'no' }}
         shell: bash
         run: |
-          args=(
-            --expected-target-count "$EXPECTED_TARGET_COUNT"
-            --report /tmp/review-location-coverage-baseline.json
+          python3 scripts/audit_review_location_coverage.py \
+            --expected-target-count "$EXPECTED_TARGET_COUNT" \
+            --report /tmp/review-location-coverage-baseline.json \
             --proposals /tmp/review-location-resolution-baseline.json
-          )
-          if test "$ALLOW_LIVE_GEOSEARCH" = "yes"; then
-            args+=(--allow-live-geosearch)
-          fi
-          python3 scripts/audit_review_location_coverage.py "${args[@]}"
 
       - name: Refine from exact same-snapshot location evidence
         shell: bash
@@ -75,8 +72,33 @@ jobs:
           python3 scripts/refine_review_location_coverage.py \
             --base-report /tmp/review-location-coverage-baseline.json \
             --base-proposals /tmp/review-location-resolution-baseline.json \
-            --report /tmp/review-location-coverage-audit.json \
+            --report /tmp/review-location-coverage-refined.json \
+            --proposals /tmp/review-location-resolution-refined.json
+
+      - name: Download official NYC DCP borough boundaries
+        shell: bash
+        run: |
+          curl --fail --location --retry 3 --retry-delay 2 \
+            'https://data.cityofnewyork.us/api/v3/views/gthc-hcne/query.geojson?accessType=DOWNLOAD' \
+            --output /tmp/nyc-dcp-borough-boundaries.geojson
+          test -s /tmp/nyc-dcp-borough-boundaries.geojson
+
+      - name: Resolve remaining physical locations with official boundaries
+        env:
+          ALLOW_LIVE_GEOSEARCH: ${{ github.event_name == 'pull_request' && 'yes' || github.event.inputs.allow_live_geosearch || 'no' }}
+        shell: bash
+        run: |
+          args=(
+            --input-report /tmp/review-location-coverage-refined.json
+            --input-proposals /tmp/review-location-resolution-refined.json
+            --borough-boundaries /tmp/nyc-dcp-borough-boundaries.geojson
+            --report /tmp/review-location-coverage-audit.json
             --proposals /tmp/review-location-resolution-proposals.json
+          )
+          if test "$ALLOW_LIVE_GEOSEARCH" = "yes"; then
+            args+=(--allow-live-geosearch)
+          fi
+          python3 scripts/resolve_remaining_review_locations.py "${args[@]}"
 
       - name: Enforce staging-only boundary
         env:
@@ -90,6 +112,7 @@ jobs:
 
           expected = int(os.environ['EXPECTED_TARGET_COUNT'])
           baseline = json.loads(Path('/tmp/review-location-coverage-baseline.json').read_text())
+          refined = json.loads(Path('/tmp/review-location-coverage-refined.json').read_text())
           report = json.loads(Path('/tmp/review-location-coverage-audit.json').read_text())
           proposals = json.loads(Path('/tmp/review-location-resolution-proposals.json').read_text())
 
@@ -102,9 +125,17 @@ jobs:
           assert sum(report['disposition_counts'].values()) == expected
           assert proposals['target_count'] == expected
           assert len(proposals['proposals']) == expected
-          assert report['unresolved_count'] <= baseline['unresolved_count']
-          assert report['refinement']['newly_resolved_count'] == (
-              baseline['unresolved_count'] - report['unresolved_count']
+          assert refined['unresolved_count'] <= baseline['unresolved_count']
+          assert report['unresolved_count'] <= refined['unresolved_count']
+          assert refined['refinement']['newly_resolved_count'] == (
+              baseline['unresolved_count'] - refined['unresolved_count']
+          )
+          assert report['official_resolution']['newly_resolved_count'] == (
+              refined['unresolved_count'] - report['unresolved_count']
+          )
+          assert len(report['official_resolution']['borough_boundary_sha256']) == 64
+          assert report['official_resolution']['borough_boundary_source_url'].startswith(
+              'https://data.cityofnewyork.us/'
           )
           assert report['safety'] == {
               'location_cache_modified': False,
@@ -134,7 +165,10 @@ jobs:
           path: |
             /tmp/review-location-coverage-baseline.json
             /tmp/review-location-resolution-baseline.json
+            /tmp/review-location-coverage-refined.json
+            /tmp/review-location-resolution-refined.json
             /tmp/review-location-coverage-audit.json
             /tmp/review-location-resolution-proposals.json
+            /tmp/nyc-dcp-borough-boundaries.geojson
           if-no-files-found: warn
           retention-days: 7
