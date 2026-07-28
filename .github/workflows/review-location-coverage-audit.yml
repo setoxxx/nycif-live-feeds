@@ -7,12 +7,14 @@ on:
       - "scripts/refine_review_location_coverage.py"
       - "scripts/refine_review_location_cross_source.py"
       - "scripts/run_review_location_cross_source.py"
+      - "scripts/resolve_review_locations_from_lion.py"
       - "scripts/resolve_remaining_review_locations.py"
       - "scripts/run_review_location_resolution_audit.py"
       - "tests/test_review_location_coverage.py"
       - "tests/test_refine_review_location_coverage.py"
       - "tests/test_refine_review_location_cross_source.py"
       - "tests/test_run_review_location_cross_source.py"
+      - "tests/test_resolve_review_locations_from_lion.py"
       - "tests/test_resolve_remaining_review_locations.py"
       - "tests/test_review_location_audit_runner.py"
       - "tests/test_review_location_street_segments.py"
@@ -64,6 +66,7 @@ jobs:
             tests/test_refine_review_location_coverage.py \
             tests/test_refine_review_location_cross_source.py \
             tests/test_run_review_location_cross_source.py \
+            tests/test_resolve_review_locations_from_lion.py \
             tests/test_resolve_remaining_review_locations.py \
             tests/test_review_location_audit_runner.py \
             tests/test_review_location_street_segments.py
@@ -105,14 +108,24 @@ jobs:
             --report /tmp/review-location-coverage-cross-source.json \
             --proposals /tmp/review-location-resolution-cross-source.json
 
+      - name: Resolve stated street segments from official NYC LION nodes
+        shell: bash
+        run: |
+          python3 scripts/resolve_review_locations_from_lion.py \
+            --input-report /tmp/review-location-coverage-cross-source.json \
+            --input-proposals /tmp/review-location-resolution-cross-source.json \
+            --borough-boundaries /tmp/nyc-dcp-borough-boundaries.geojson \
+            --report /tmp/review-location-coverage-lion.json \
+            --proposals /tmp/review-location-resolution-lion.json
+
       - name: Resolve remaining physical locations with official boundaries
         env:
           ALLOW_LIVE_GEOSEARCH: ${{ github.event_name == 'pull_request' && 'yes' || github.event.inputs.allow_live_geosearch || 'no' }}
         shell: bash
         run: |
           args=(
-            --input-report /tmp/review-location-coverage-cross-source.json
-            --input-proposals /tmp/review-location-resolution-cross-source.json
+            --input-report /tmp/review-location-coverage-lion.json
+            --input-proposals /tmp/review-location-resolution-lion.json
             --borough-boundaries /tmp/nyc-dcp-borough-boundaries.geojson
             --report /tmp/review-location-coverage-audit.json
             --proposals /tmp/review-location-resolution-proposals.json
@@ -136,6 +149,7 @@ jobs:
           baseline = json.loads(Path('/tmp/review-location-coverage-baseline.json').read_text())
           refined = json.loads(Path('/tmp/review-location-coverage-refined.json').read_text())
           cross = json.loads(Path('/tmp/review-location-coverage-cross-source.json').read_text())
+          lion = json.loads(Path('/tmp/review-location-coverage-lion.json').read_text())
           report = json.loads(Path('/tmp/review-location-coverage-audit.json').read_text())
           proposals = json.loads(Path('/tmp/review-location-resolution-proposals.json').read_text())
 
@@ -150,7 +164,8 @@ jobs:
           assert len(proposals['proposals']) == expected
           assert refined['unresolved_count'] <= baseline['unresolved_count']
           assert cross['unresolved_count'] <= refined['unresolved_count']
-          assert report['unresolved_count'] <= cross['unresolved_count']
+          assert lion['unresolved_count'] <= cross['unresolved_count']
+          assert report['unresolved_count'] <= lion['unresolved_count']
           assert refined['refinement']['newly_resolved_count'] == (
             baseline['unresolved_count'] - refined['unresolved_count']
           )
@@ -158,8 +173,11 @@ jobs:
             refined['unresolved_count'] - cross['unresolved_count']
           )
           assert cross['cross_source_refinement']['official_boundary_coordinate_evidence'] is True
+          assert lion['lion_resolution']['newly_resolved_count'] == (
+            cross['unresolved_count'] - lion['unresolved_count']
+          )
           assert report['official_resolution']['newly_resolved_count'] == (
-            cross['unresolved_count'] - report['unresolved_count']
+            lion['unresolved_count'] - report['unresolved_count']
           )
           assert report['allow_live_geosearch'] == report['official_resolution']['allow_live_geosearch']
           assert len(report['official_resolution']['borough_boundary_sha256']) == 64
@@ -198,6 +216,8 @@ jobs:
             /tmp/review-location-resolution-refined.json
             /tmp/review-location-coverage-cross-source.json
             /tmp/review-location-resolution-cross-source.json
+            /tmp/review-location-coverage-lion.json
+            /tmp/review-location-resolution-lion.json
             /tmp/review-location-coverage-audit.json
             /tmp/review-location-resolution-proposals.json
             /tmp/nyc-dcp-borough-boundaries.geojson
