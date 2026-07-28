@@ -1,0 +1,45 @@
+name: NYC Event Date Boundary QA
+
+on:
+  pull_request:
+    paths:
+      - "scripts/nyc_clock.py"
+      - "scripts/sync_nyc_open_data.py"
+      - "scripts/build_test_enriched_feed.py"
+      - "tests/test_nyc_clock.py"
+      - ".github/workflows/nyc-event-date-boundary-qa.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "scripts/nyc_clock.py"
+      - "scripts/sync_nyc_open_data.py"
+      - "scripts/build_test_enriched_feed.py"
+      - "tests/test_nyc_clock.py"
+      - ".github/workflows/nyc-event-date-boundary-qa.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  nyc-date-boundary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pytest
+        run: python3 -m pip install pytest==9.0.2
+
+      - name: Test New York event date boundary
+        run: python3 -m pytest -q tests/test_nyc_clock.py
+
+      - name: Compile affected scripts
+        run: python3 -m py_compile scripts/nyc_clock.py scripts/sync_nyc_open_data.py scripts/build_test_enriched_feed.py
