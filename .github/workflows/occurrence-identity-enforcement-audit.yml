@@ -1,0 +1,93 @@
+name: Occurrence Identity Enforcement Audit
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/occurrence_identity_contract.py'
+      - 'scripts/test_occurrence_identity_contract.py'
+      - 'scripts/audit_occurrence_identity_enforcement.py'
+      - '.github/workflows/occurrence-identity-enforcement-audit.yml'
+      - 'scripts/project_events_discovery_v02.py'
+      - 'data/source_lineage_registry_v01.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: occurrence-identity-enforcement-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  occurrence-identity-enforcement:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Record exact audit SHA
+        run: echo "AUDIT_SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+
+      - name: Focused occurrence identity tests
+        run: python scripts/test_occurrence_identity_contract.py
+
+      - name: Protected occurrence identity enforcement audit
+        run: |
+          python scripts/audit_occurrence_identity_enforcement.py \
+            --out-dir /tmp/occurrence-identity-enforcement
+
+      - name: Protected source-lineage contract check
+        run: |
+          python scripts/audit_source_lineage_contract.py \
+            --out-dir /tmp/source-lineage-contract-check
+          cp /tmp/source-lineage-contract-check/source_lineage_registry_audit_summary.json \
+            /tmp/occurrence-identity-enforcement/source_lineage_contract_audit_summary.json
+
+      - name: Project discovery in isolated temp copy
+        run: |
+          mkdir -p /tmp/discovery-work
+          tar --exclude=.git -cf - . | (cd /tmp/discovery-work && tar -xf -)
+          cd /tmp/discovery-work
+          python scripts/project_events_discovery_v02.py
+          python scripts/test_events_discovery_v02.py
+
+      - name: Verify checkout stayed clean
+        run: test -z "$(git status --porcelain)"
+
+      - name: Verify protected summary
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          summary = json.loads(Path('/tmp/occurrence-identity-enforcement/occurrence_identity_enforcement_summary.json').read_text())
+          assert summary['qa_pass'] is True, summary
+          assert summary['after_open_data_in_window_hidden_by_source_id'] == 0, summary
+          assert summary['duplicate_canonical_id_count'] == 0, summary
+          assert summary['raw_disposition_accounting_pass'] is True, summary
+          assert summary['source_lineage_contract_compliance_pass'] is True, summary
+          assert summary['launch_readiness'] is False, summary
+          safety = summary['safety']
+          assert safety['production_feed_modified'] is False
+          assert safety['data_location_cache_json_modified'] is False
+          assert safety['wordpress_modified'] is False
+          assert safety['public_map_modified'] is False
+          assert safety['homepage_modified'] is False
+          assert safety['navigation_modified'] is False
+          assert safety['theme_modified'] is False
+          assert safety['approval_state_modified'] is False
+          assert safety['promotion_allowed'] is False
+          assert safety['proposal_only'] is True
+          assert safety['public_launch_authorized'] is False
+          PY
+
+      - name: Upload protected occurrence identity artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: occurrence-identity-enforcement-${{ env.AUDIT_SOURCE_SHA }}
+          path: /tmp/occurrence-identity-enforcement
+          retention-days: 7
