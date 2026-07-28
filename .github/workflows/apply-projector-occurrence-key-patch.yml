@@ -1,0 +1,41 @@
+name: Apply Projector Occurrence-Key Patch
+
+on:
+  pull_request:
+    paths:
+      - scripts/apply_projector_occurrence_key_patch.py
+      - .github/workflows/apply-projector-occurrence-key-patch.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: apply-projector-occurrence-key-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  apply-projector-patch:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Apply projector occurrence-key patch
+        run: python scripts/apply_projector_occurrence_key_patch.py
+      - name: Commit projector patch if changed
+        run: |
+          if git diff --quiet -- scripts/project_events_discovery_v02.py; then
+            echo "No projector patch needed."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/project_events_discovery_v02.py
+          git commit -m "Enforce dated occurrence identity in projector"
+          git push
