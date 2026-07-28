@@ -1,0 +1,38 @@
+name: City Engine Protected Staging Feed QA
+
+on:
+  pull_request:
+    paths:
+      - "scripts/build_city_engine_staging_feed.py"
+      - "tests/test_city_engine_staging_feed_adapter.py"
+      - ".github/workflows/city-engine-protected-staging-feed-qa.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "scripts/build_city_engine_staging_feed.py"
+      - "tests/test_city_engine_staging_feed_adapter.py"
+      - ".github/workflows/city-engine-protected-staging-feed-qa.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  adapter-contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run protected staging feed adapter tests
+        run: python3 tests/test_city_engine_staging_feed_adapter.py
+
+      - name: Compile adapter and tests
+        run: python3 -m compileall scripts/build_city_engine_staging_feed.py tests/test_city_engine_staging_feed_adapter.py
