@@ -20,16 +20,19 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PYTHONDONTWRITEBYTECODE: "1"
+      AUDIT_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
-      - name: Check out repository
+      - name: Check out exact audit source
         uses: actions/checkout@v4
+        with:
+          ref: ${{ env.AUDIT_SOURCE_SHA }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Run focused reason-code tests
+      - name: Run focused occurrence reason-code tests
         run: python scripts/test_strict_source_reconciliation.py
 
       - name: Build protected strict reconciliation artifact
@@ -38,19 +41,23 @@ jobs:
             --report /tmp/strict-source-reconciliation-report.json \
             --ledger /tmp/strict-source-reconciliation-ledger.json
 
-      - name: Enforce protected audit assertions
+      - name: Enforce protected audit-integrity assertions
         run: |
           python - <<'PY'
           import json
+          import os
           from pathlib import Path
 
           report = json.loads(Path('/tmp/strict-source-reconciliation-report.json').read_text())
-          assert report['strict_reconciliation_pass'] is True
+          assert report['repository_sha'] == os.environ['AUDIT_SOURCE_SHA']
+          assert report['strict_accounting_pass'] is True
           assert report['qa_pass'] is True
           equations = report['equations']
           assert equations['open_data_raw_equals_explicit_dispositions'] is True
           assert equations['calendar_parks_raw_equals_explicit_dispositions'] is True
           assert equations['all_raw_rows_equal_explicit_dispositions'] is True
+          assert isinstance(report['pipeline_completeness_pass'], bool)
+          assert isinstance(report['issue_132_pipeline_gate_pass'], bool)
           safety = report['safety']
           assert safety == {
               'location_cache_modified': False,
@@ -69,7 +76,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: strict-source-reconciliation-${{ github.event.pull_request.head.sha || github.sha }}
+          name: strict-source-reconciliation-${{ env.AUDIT_SOURCE_SHA }}
           path: |
             /tmp/strict-source-reconciliation-report.json
             /tmp/strict-source-reconciliation-ledger.json
