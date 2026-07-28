@@ -1,0 +1,92 @@
+name: Source Repository Lineage Audit
+
+on:
+  pull_request:
+    paths:
+      - "scripts/audit_source_repository_lineage.py"
+      - "scripts/test_source_repository_lineage.py"
+      - ".github/workflows/source-repository-lineage-audit.yml"
+      - "docs/source-repository-lineage-audit-v01.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: source-repository-lineage-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  source-repository-lineage:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+      AUDIT_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Check out exact audit source
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.AUDIT_SOURCE_SHA }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run focused source-lineage audit tests
+        run: python scripts/test_source_repository_lineage.py
+
+      - name: Build protected source-lineage artifact
+        run: |
+          python scripts/audit_source_repository_lineage.py \
+            --out-dir /tmp/source-repository-lineage
+
+      - name: Enforce protected audit-integrity assertions
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          summary = json.loads(Path('/tmp/source-repository-lineage/audit_summary.json').read_text())
+          assert summary['repository_sha'] == os.environ['AUDIT_SOURCE_SHA']
+          assert summary['audit_execution_integrity_pass'] is True
+          assert isinstance(summary['source_lineage_completeness_pass'], bool)
+          assert summary['launch_readiness_pass'] is False
+          assert summary['issue_132_gate_pass'] is False
+          assert summary['existing_inventory']['uses_hardcoded_source_catalog'] is True
+          assert summary['existing_inventory']['raw_intake_limited_to_three_catalog_paths'] is True
+          assert summary['missing_from_existing_source_catalog_count'] >= 1
+          safety = summary['safety']
+          assert safety['location_cache_modified'] is False
+          assert safety['production_feed_modified'] is False
+          assert safety['promotion_allowed'] is False
+          assert safety['proposal_only'] is True
+          assert safety['public_map_modified'] is False
+          assert safety['wordpress_modified'] is False
+          assert safety['homepage_modified'] is False
+          assert safety['navigation_modified'] is False
+          assert safety['theme_modified'] is False
+          assert safety['approval_state_modified'] is False
+          for name in [
+              'repository_inventory.json',
+              'source_file_lineage.json',
+              'cross_repo_dataflow.md',
+              'unexplained_sources.json',
+              'generated_output_double_counting_risks.json',
+              'public_surface_mutation_safety.json',
+              'audit_summary.json',
+          ]:
+              assert Path('/tmp/source-repository-lineage', name).exists(), name
+          PY
+
+      - name: Verify repository remained unchanged
+        run: test -z "$(git status --porcelain)"
+
+      - name: Upload protected audit evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: source-repository-lineage-${{ env.AUDIT_SOURCE_SHA }}
+          path: /tmp/source-repository-lineage/*
+          retention-days: 7
