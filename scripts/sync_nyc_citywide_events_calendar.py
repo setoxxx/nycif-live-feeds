@@ -97,6 +97,14 @@ def mmddyyyy(value: date) -> str:
     return value.strftime("%m/%d/%Y")
 
 
+def bool_flag(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    if value is None:
+        return False
+    return str(value).strip().lower() in {"1", "true", "yes", "y"}
+
+
 def normalize_calendar_item(item: dict[str, Any]) -> dict[str, Any]:
     boroughs = item.get("boroughs")
     if isinstance(boroughs, list):
@@ -119,7 +127,7 @@ def normalize_calendar_item(item: dict[str, Any]) -> dict[str, Any]:
         "date_part": item.get("datePart"),
         "time_part": item.get("timePart"),
         "all_day": item.get("allDay"),
-        "canceled": bool(item.get("canceled")),
+        "canceled": bool_flag(item.get("canceled")),
         "permalink": item.get("permalink"),
         "description_html": item.get("desc"),
         "short_description": item.get("shortDesc"),
