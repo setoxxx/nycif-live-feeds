@@ -47,11 +47,19 @@ jobs:
           base = Path('/tmp/incoming-data-residual-audit')
           summary = json.loads((base / 'incoming_data_residual_summary.json').read_text())
           completion = json.loads((base / 'incoming_data_completion_queues.json').read_text())
+          lane_index = json.loads((base / 'incoming_data_completion_lane_index.json').read_text())
           assert summary['qa_pass'] is True, summary
           assert summary['public_production_untouched'] is True, summary
           assert summary['launch_readiness'] is False, summary
           assert completion['daily_update_implication']['production_promotion_allowed'] is False, completion
           assert completion['daily_update_implication']['schedule_enabled'] is False, completion
+          assert lane_index['daily_update_implication']['production_promotion_allowed'] is False, lane_index
+          for lane, filename in completion['lane_artifacts'].items():
+              payload = json.loads((base / filename).read_text())
+              assert payload['lane'] == lane, payload
+              assert payload['count'] == completion['lane_counts'][lane], payload
+              assert payload['production_promotion_allowed'] is False, payload
+              assert payload['schedule_enabled'] is False, payload
           safety = summary['safety']
           assert safety['production_feed_modified'] is False
           assert safety['data_location_cache_json_modified'] is False
