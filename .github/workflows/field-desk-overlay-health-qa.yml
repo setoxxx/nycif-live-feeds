@@ -1,0 +1,32 @@
+name: Field Desk Overlay Health QA
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/check_field_desk_overlay_health.py'
+      - 'scripts/test_field_desk_overlay_health.py'
+      - 'scripts/build_daily_data_health.py'
+      - '.github/workflows/field-desk-overlay-health-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  overlay-health-qa:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile overlay health integration
+        run: |
+          python -m py_compile \
+            scripts/check_field_desk_overlay_health.py \
+            scripts/test_field_desk_overlay_health.py \
+            scripts/build_daily_data_health.py
+      - name: Deterministic freshness and duplicate tests
+        run: python scripts/test_field_desk_overlay_health.py
+      - name: Verify currently served Field Desk overlays
+        run: python scripts/check_field_desk_overlay_health.py
