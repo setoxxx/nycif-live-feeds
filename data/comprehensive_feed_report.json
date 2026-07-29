@@ -1,59 +1,60 @@
 {
- "generated_at_utc": "2026-07-29T12:34:13Z",
- "source_rows": 28550,
- "kept": 28578,
+ "generated_at_utc": "2026-07-29T21:54:27Z",
+ "source_rows": 33074,
+ "kept": 33102,
  "dropped_older_than_window": 0,
- "map_ready": 28575,
+ "map_ready": 33099,
  "list_only": 3,
- "multi_day": 13,
- "past_in_window": 12706,
- "new_this_run": 0,
+ "multi_day": 24,
+ "past_in_window": 20,
+ "new_this_run": 17254,
  "category_counts": {
-  "general": 5552,
-  "civic": 189,
-  "media": 15,
-  "sports": 22630,
-  "market": 104,
-  "parks": 56,
-  "arts": 30,
-  "services": 1,
-  "environment": 1
+  "general": 6058,
+  "media": 32,
+  "sports": 26424,
+  "civic": 297,
+  "market": 121,
+  "parks": 133,
+  "arts": 35,
+  "services": 2
  },
  "event_type_counts": {
-  "Special Event": 5552,
-  "Street Event": 28,
-  "Production Event": 15,
-  "Sport - Youth": 14178,
-  "Farmers Market": 96,
-  "Sport - Adult": 8447,
-  "Plaza Partner Event": 54,
+  "Special Event": 6058,
+  "Production Event": 30,
+  "Sport - Youth": 17322,
+  "Street Event": 64,
+  "Sport - Adult": 9096,
+  "Farmers Market": 113,
+  "Plaza Partner Event": 125,
+  "Open Street Partner Event": 14,
+  "Plaza Event": 8,
   "Sidewalk Sale": 8,
-  "Open Street Partner Event": 12,
-  "Religious Event": 9,
-  "Block Party": 119,
-  "Plaza Event": 2,
-  "Parade": 21,
-  "Open Culture": 2,
-  "Health Fair": 1,
-  "Clean-Up": 1,
-  "Athletic Race / Tour": 5,
-  "Street Festival": 28
+  "Single Block Festival": 3,
+  "Block Party": 183,
+  "Athletic Race / Tour": 6,
+  "Religious Event": 12,
+  "Health Fair": 2,
+  "Street Festival": 32,
+  "Parade": 23,
+  "Stationary Demonstration": 1,
+  "Theater Load in and Load Outs": 2
  },
  "category_coverage": {
   "arts": {
-   "count": 30,
+   "count": 35,
    "event_types": [
-    "Open Culture",
+    "Single Block Festival",
     "Street Festival"
    ]
   },
   "civic": {
-   "count": 189,
+   "count": 297,
    "event_types": [
     "Block Party",
     "Open Street Partner Event",
     "Parade",
     "Religious Event",
+    "Stationary Demonstration",
     "Street Event"
    ]
   },
@@ -62,10 +63,8 @@
    "event_types": []
   },
   "environment": {
-   "count": 1,
-   "event_types": [
-    "Clean-Up"
-   ]
+   "count": 0,
+   "event_types": []
   },
   "family": {
    "count": 0,
@@ -76,7 +75,7 @@
    "event_types": []
   },
   "general": {
-   "count": 5552,
+   "count": 6058,
    "event_types": [
     "Special Event"
    ]
@@ -94,33 +93,34 @@
    "event_types": []
   },
   "market": {
-   "count": 104,
+   "count": 121,
    "event_types": [
     "Farmers Market",
     "Sidewalk Sale"
    ]
   },
   "media": {
-   "count": 15,
+   "count": 32,
    "event_types": [
-    "Production Event"
+    "Production Event",
+    "Theater Load in and Load Outs"
    ]
   },
   "parks": {
-   "count": 56,
+   "count": 133,
    "event_types": [
     "Plaza Event",
     "Plaza Partner Event"
    ]
   },
   "services": {
-   "count": 1,
+   "count": 2,
    "event_types": [
     "Health Fair"
    ]
   },
   "sports": {
-   "count": 22630,
+   "count": 26424,
    "event_types": [
     "Athletic Race / Tour",
     "Sport - Adult",
