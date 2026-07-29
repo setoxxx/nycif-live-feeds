@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Rebuild the official Calendar/Parks supplemental occurrence intake.
 
-Every source occurrence is keyed by dataset + source event ID + occurrence date.
-Human rejection decisions remain authoritative. Other valid official public
-listings are approved for discovery intake; rows without coordinates remain
-list-only rather than being silently dropped.
+Every source occurrence is keyed by dataset + source event ID + exact source
+start occurrence. Human rejection decisions remain authoritative. Other valid
+official public listings are approved for discovery intake; rows without
+coordinates remain list-only rather than being silently dropped.
 """
 
 from __future__ import annotations
@@ -50,27 +50,32 @@ def source_parts(row: dict[str, Any]) -> tuple[str, str]:
     return dataset, source_event_id
 
 
-def occurrence_day(row: dict[str, Any]) -> str:
+def occurrence_start(row: dict[str, Any]) -> str:
     for value in (
         row.get("start_date_time"),
         row.get("startDate"),
         row.get("start_date"),
         row.get("date"),
     ):
-        match = re.match(r"^(\d{4}-\d{2}-\d{2})", str(value or "").strip())
-        if match:
-            return match.group(1)
+        text = str(value or "").strip()
+        if text:
+            return text
     return ""
+
+
+def occurrence_day(row: dict[str, Any]) -> str:
+    match = re.match(r"^(\d{4}-\d{2}-\d{2})", occurrence_start(row))
+    return match.group(1) if match else ""
 
 
 def occurrence_key(row: dict[str, Any]) -> tuple[str, str, str]:
     dataset, source_event_id = source_parts(row)
-    return dataset, source_event_id, occurrence_day(row)
+    return dataset, source_event_id, occurrence_start(row)
 
 
 def decision_maps() -> tuple[dict[tuple[str, str], str], dict[tuple[str, str, str], str]]:
     by_source: dict[tuple[str, str], str] = {}
-    by_occurrence: dict[tuple[str, str, str], str] = {}
+    by_day: dict[tuple[str, str, str], str] = {}
     for row in rows(load(QUEUE, {})):
         dataset, source_event_id = source_parts(row)
         if not dataset or not source_event_id:
@@ -79,19 +84,19 @@ def decision_maps() -> tuple[dict[tuple[str, str], str], dict[tuple[str, str, st
         by_source[(dataset, source_event_id)] = status
         day = occurrence_day(row)
         if day:
-            by_occurrence[(dataset, source_event_id, day)] = status
-    return by_source, by_occurrence
+            by_day[(dataset, source_event_id, day)] = status
+    return by_source, by_day
 
 
 def approved_row(row: dict[str, Any], status: str) -> dict[str, Any]:
     out = dict(row)
     dataset, source_event_id = source_parts(out)
-    day = occurrence_day(out)
+    start = occurrence_start(out)
     out["source_dataset"] = dataset
     out["source_event_id"] = source_event_id
     out["manual_review_status"] = status
     out["official_source_occurrence"] = True
-    out["official_source_occurrence_key"] = f"{dataset}:{source_event_id}@{day}"
+    out["official_source_occurrence_key"] = f"{dataset}:{source_event_id}@{start}"
     out["approval_decision_reason"] = (
         out.get("approval_decision_reason")
         or "official_city_source_daily_occurrence_intake"
@@ -105,7 +110,7 @@ def approved_row(row: dict[str, Any], status: str) -> dict[str, Any]:
 
 def main() -> int:
     generated = datetime.now(timezone.utc).isoformat()
-    by_source, by_occurrence = decision_maps()
+    by_source, by_day = decision_maps()
     input_rows = rows(load(CALENDAR, [])) + rows(load(PARKS, {}))
 
     accepted: dict[tuple[str, str, str], dict[str, Any]] = {}
@@ -114,16 +119,17 @@ def main() -> int:
     canceled = 0
     for row in input_rows:
         dataset, source_event_id = source_parts(row)
+        start = occurrence_start(row)
         day = occurrence_day(row)
         title = str(row.get("title") or row.get("name") or "").strip()
-        if not dataset or not source_event_id or not day or not title:
+        if not dataset or not source_event_id or not start or not day or not title:
             invalid += 1
             continue
         if bool(row.get("canceled")):
             canceled += 1
             continue
-        key = (dataset, source_event_id, day)
-        status = by_occurrence.get(key) or by_source.get((dataset, source_event_id)) or "approved"
+        key = (dataset, source_event_id, start)
+        status = by_day.get((dataset, source_event_id, day)) or by_source.get((dataset, source_event_id)) or "approved"
         if status == "rejected":
             rejected += 1
             continue
@@ -134,7 +140,7 @@ def main() -> int:
     events = sorted(
         accepted.values(),
         key=lambda row: (
-            occurrence_day(row),
+            occurrence_start(row),
             source_parts(row)[0],
             source_parts(row)[1],
         ),
@@ -158,8 +164,9 @@ def main() -> int:
         "human_rejected": rejected,
         "canceled_excluded": canceled,
         "invalid_missing_identity": invalid,
-        "duplicate_occurrences_collapsed": max(0, len(input_rows) - rejected - canceled - invalid - len(events)),
+        "duplicate_exact_occurrences_collapsed": max(0, len(input_rows) - rejected - canceled - invalid - len(events)),
         "cross_date_occurrences_collapsed": 0,
+        "same_day_distinct_times_preserved": True,
         "output": str(OUT.relative_to(ROOT)),
     }
     OUT.write_text(json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
