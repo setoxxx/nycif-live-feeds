@@ -56,15 +56,24 @@ def test_exact_occurrence_duplicate_is_suppressed() -> None:
     assert kept[0]["source_event_id"] == "1001-copy", kept
 
 
-def test_calendar_occurrence_identity_includes_date() -> None:
-    base = {
+def calendar_base() -> dict:
+    return {
         "source_dataset": "nyc-citywide-events-calendar-api",
         "source_event_id": "abc",
         "title": "Recurring workshop",
     }
-    first = {**base, "start_date_time": "2026-08-01T10:00:00"}
-    second = {**base, "start_date_time": "2026-08-08T10:00:00"}
+
+
+def test_calendar_occurrence_identity_includes_date() -> None:
+    first = {**calendar_base(), "start_date_time": "2026-08-01T10:00:00"}
+    second = {**calendar_base(), "start_date_time": "2026-08-08T10:00:00"}
     assert occurrence_key(first) != occurrence_key(second)
+
+
+def test_calendar_occurrence_identity_includes_same_day_time() -> None:
+    morning = {**calendar_base(), "start_date_time": "2026-08-01T10:00:00"}
+    afternoon = {**calendar_base(), "start_date_time": "2026-08-01T14:00:00"}
+    assert occurrence_key(morning) != occurrence_key(afternoon)
 
 
 def main() -> int:
@@ -72,6 +81,7 @@ def main() -> int:
         test_recurring_dates_are_preserved,
         test_exact_occurrence_duplicate_is_suppressed,
         test_calendar_occurrence_identity_includes_date,
+        test_calendar_occurrence_identity_includes_same_day_time,
     ]
     for test in tests:
         test()
