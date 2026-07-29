@@ -9,6 +9,7 @@ builder.
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -51,6 +52,14 @@ def blocker_messages(health: dict[str, Any]) -> list[str]:
 
 def main() -> int:
     health = load(HEALTH)
+    previous_commit = os.environ.get("PREVIOUS_PUBLIC_FEED_SHA", "").strip()
+    if previous_commit:
+        health["rollback"] = {
+            "previous_public_feed_commit": previous_commit,
+            "strategy": "Failed runs do not commit; revert the READY refresh commit to restore this prior commit.",
+        }
+        save(HEALTH, health)
+
     state = load(STATE)
     ready = bool(health.get("release_ready")) and health.get("status") == "READY"
     summary = source_summary(health)
