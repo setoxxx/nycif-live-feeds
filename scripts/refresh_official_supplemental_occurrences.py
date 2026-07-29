@@ -44,6 +44,14 @@ def rows(payload: Any) -> list[dict[str, Any]]:
     return []
 
 
+def bool_flag(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    if value is None:
+        return False
+    return str(value).strip().lower() in {"1", "true", "yes", "y"}
+
+
 def source_parts(row: dict[str, Any]) -> tuple[str, str]:
     source = row.get("source") if isinstance(row.get("source"), dict) else {}
     dataset = str(row.get("source_dataset") or source.get("dataset") or "").strip()
@@ -127,7 +135,7 @@ def main() -> int:
         if not dataset or not source_event_id or not start or not day or not title:
             invalid += 1
             continue
-        if bool(row.get("canceled")):
+        if bool_flag(row.get("canceled")):
             source_canceled += 1
             continue
         key = (dataset, source_event_id, start)
