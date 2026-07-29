@@ -2,8 +2,9 @@
 """Build the launch-blocking daily data health contract for God View.
 
 The report distinguishes a freshly regenerated wrapper from genuinely fresh,
-successfully fetched source data. The daily production workflow must stop
-before committing public feed artifacts unless this script returns success.
+successfully fetched source data. Every JSON family loaded by the public map or
+News Desk overlays is included. The daily production workflow must stop before
+committing public feed artifacts unless this script returns success.
 """
 
 from __future__ import annotations
@@ -93,16 +94,25 @@ def source_status(
     }
 
 
-def artifact_status(name: str, path: Path, count_keys: tuple[str, ...]) -> dict[str, Any]:
+def artifact_status(
+    name: str,
+    path: Path,
+    count_keys: tuple[str, ...],
+    *,
+    require_qa: bool = False,
+) -> dict[str, Any]:
     payload = load(path, {}) or {}
     generated = timestamp(payload)
     age = age_hours(generated)
+    qa_pass = bool(payload.get("qa_pass", True))
+    fresh = age is not None and 0 <= age <= MAX_SOURCE_AGE_HOURS
     return {
         "name": name,
         "artifact": str(path.relative_to(ROOT)),
         "generated_at_utc": generated,
         "age_hours": age,
-        "fresh": age is not None and 0 <= age <= MAX_SOURCE_AGE_HOURS,
+        "qa_pass": qa_pass,
+        "fresh": fresh and (qa_pass or not require_qa),
         "record_count": first_value(payload, count_keys),
     }
 
@@ -139,7 +149,6 @@ def main() -> int:
     ]
 
     staged = load(DATA / "staged_live_manifest.json", {}) or {}
-    approved = load(DATA / "schema-v1-discovery" / "approved" / "manifest.json", {}) or {}
     reconciliation = load(DATA / "events_discovery_reconciliation_v02.json", {}) or {}
     schema_validation = load(DATA / "events_discovery_schema_validation_v02.json", {}) or {}
     cems = load(
@@ -147,6 +156,9 @@ def main() -> int:
         {},
     ) or {}
     cross_source = load(DATA / "reports" / "discovery_approved_dedupe_report.json", {}) or {}
+    runtime_fallback = load(DATA / "runtime_fallback_feed_report.json", {}) or {}
+    photographer = load(DATA / "photographer_assignment_calendar_report.json", {}) or {}
+    viral = load(DATA / "photographer_viral_recurrence_report.json", {}) or {}
 
     derived = [
         artifact_status("Map-ready staged feed", DATA / "staged_live_manifest.json", ("staged_feed_events",)),
@@ -159,11 +171,31 @@ def main() -> int:
             "Cross-source dedupe evidence",
             DATA / "reports" / "discovery_approved_dedupe_report.json",
             ("output_count",),
+            require_qa=True,
         ),
         artifact_status(
             "Shared-CEMS dedupe evidence",
             DATA / "schema-v1-discovery" / "shared-cems-occurrence-dedupe-summary.json",
             ("output_count",),
+            require_qa=True,
+        ),
+        artifact_status(
+            "Emergency major fallback",
+            DATA / "runtime_fallback_feed_report.json",
+            ("output_event_count",),
+            require_qa=True,
+        ),
+        artifact_status(
+            "News Desk money-day calendar",
+            DATA / "photographer_assignment_calendar_report.json",
+            ("total_events",),
+            require_qa=True,
+        ),
+        artifact_status(
+            "News Desk viral recurrence overlay",
+            DATA / "photographer_viral_recurrence_report.json",
+            ("match_count",),
+            require_qa=True,
         ),
     ]
 
@@ -176,6 +208,11 @@ def main() -> int:
     ) == 0
     cems_clean = bool(cems.get("qa_pass")) and int(cems.get("fatal_blocked_group_count") or 0) == 0
     cross_source_clean = bool(cross_source.get("qa_pass"))
+    runtime_fallback_clean = bool(runtime_fallback.get("qa_pass")) and int(
+        runtime_fallback.get("duplicate_ids") or 0
+    ) == 0
+    photographer_clean = bool(photographer.get("qa_pass"))
+    viral_clean = bool(viral.get("qa_pass"))
     cross_date_suppressed = int(staged.get("cross_date_street_occurrences_suppressed") or 0)
     exact_occurrence_suppressed = int(staged.get("exact_occurrence_duplicates_suppressed") or 0)
 
@@ -194,8 +231,8 @@ def main() -> int:
         if not item["fresh"]:
             blockers.append(
                 blocker(
-                    "derived_artifact_stale",
-                    f"{item['name']} is missing or older than {MAX_SOURCE_AGE_HOURS:g} hours.",
+                    "runtime_artifact_not_fresh_and_valid",
+                    f"{item['name']} is missing, stale, or failed its generation QA.",
                     item["artifact"],
                 )
             )
@@ -203,7 +240,7 @@ def main() -> int:
         blockers.append(
             blocker(
                 "strict_reconciliation_failed",
-                f"Source accounting is not strict; Calendar/Parks unaccounted gap is {gap}.",
+                f"Source accounting is not strict; Calendar/Parks unexplained gap is {gap}.",
                 "data/events_discovery_reconciliation_v02.json",
             )
         )
@@ -231,6 +268,22 @@ def main() -> int:
                 "data/schema-v1-discovery/shared-cems-occurrence-dedupe-summary.json",
             )
         )
+    if not runtime_fallback_clean:
+        blockers.append(
+            blocker(
+                "runtime_fallback_failed",
+                "The emergency major fallback was not rebuilt from the authoritative major feed.",
+                "data/runtime_fallback_feed_report.json",
+            )
+        )
+    if not photographer_clean or not viral_clean:
+        blockers.append(
+            blocker(
+                "news_desk_overlay_failed",
+                "The money-day or viral News Desk overlay did not rebuild successfully.",
+                "data/photographer_assignment_calendar_report.json",
+            )
+        )
     if cross_date_suppressed:
         blockers.append(
             blocker(
@@ -243,7 +296,7 @@ def main() -> int:
     release_ready = not blockers
     payload = {
         "artifact_type": "nycif_daily_data_health",
-        "schema_version": "1.1.0",
+        "schema_version": "1.2.0",
         "generated_at_utc": generated,
         "company_focus": "News Desk live-data completeness, freshness, and duplicate safety",
         "status": "READY" if release_ready else "BLOCKED",
@@ -251,18 +304,30 @@ def main() -> int:
         "daily_refresh_required": True,
         "sources": sources,
         "derived_artifacts": derived,
+        "runtime_feeds": {
+            "primary_major": "data/schema-v1-discovery/major/events.json",
+            "same-ref_fallback": "data/events_discovery_v02_major.json",
+            "main_emergency": "nycif_major_radar_map_events.json",
+            "approved_pages": "data/schema-v1-discovery/approved/",
+            "review_pages": "data/schema-v1-discovery/review/",
+            "money_overlay": "data/photographer_assignment_calendar_2mo.json",
+            "viral_overlay": "data/photographer_viral_recurrence_matches.json",
+        },
         "pipeline": {
             "strict_reconciliation": strict_reconciliation,
             "calendar_parks_unaccounted_gap": gap,
             "canonical_identity_clean": canonical_ids_clean,
             "cross_source_dedupe_clean": cross_source_clean,
             "shared_cems_dedupe_clean": cems_clean,
+            "runtime_fallback_clean": runtime_fallback_clean,
+            "photographer_money_day_clean": photographer_clean,
+            "viral_recurrence_clean": viral_clean,
             "exact_occurrence_duplicates_suppressed": exact_occurrence_suppressed,
             "cross_date_street_occurrences_suppressed": cross_date_suppressed,
         },
         "blockers": blockers,
         "operating_rule": "Do not commit or publish a refreshed public feed unless status is READY.",
-        "rollback_rule": "A failed refresh leaves the current main-branch feed unchanged; rollback points to the previous READY commit.",
+        "rollback_rule": "A failed refresh leaves public feed JSON unchanged and publishes only a BLOCKED God View status.",
         "enigma": {
             "production_authority": False,
             "mode": "shadow_only",

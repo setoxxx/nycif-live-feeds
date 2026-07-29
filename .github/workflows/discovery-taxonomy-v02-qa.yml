@@ -33,6 +33,8 @@ jobs:
             scripts/build_staged_production_feed.py \
             scripts/refresh_official_supplemental_occurrences.py \
             scripts/enforce_strict_discovery_reconciliation.py \
+            scripts/refresh_runtime_fallback_feeds.py \
+            scripts/record_blocked_daily_data_health.py \
             scripts/build_daily_data_health.py \
             scripts/apply_daily_data_health_to_godview.py
       - name: Inventory sources
@@ -43,6 +45,26 @@ jobs:
         run: python scripts/project_events_discovery_v02.py
       - name: Enforce strict source reconciliation
         run: python scripts/enforce_strict_discovery_reconciliation.py
+      - name: Rebuild News Desk money and viral overlays
+        run: python scripts/run_daily_people_facing_desk_sync.py --skip-network-sync
+      - name: Rebuild emergency runtime fallback
+        run: python scripts/refresh_runtime_fallback_feeds.py
+      - name: Verify complete runtime families
+        run: |
+          python - <<'PY'
+          import json
+          major = json.load(open('data/schema-v1-discovery/major/events.json'))
+          emergency = json.load(open('nycif_major_radar_map_events.json'))
+          fallback = json.load(open('data/runtime_fallback_feed_report.json'))
+          photographer = json.load(open('data/photographer_assignment_calendar_report.json'))
+          viral = json.load(open('data/photographer_viral_recurrence_report.json'))
+          major_rows = major.get('events', []) if isinstance(major, dict) else major
+          assert major_rows and len(emergency) == len(major_rows)
+          assert fallback.get('qa_pass') and fallback.get('duplicate_ids') == 0
+          assert photographer.get('qa_pass')
+          assert viral.get('qa_pass')
+          print({'major': len(major_rows), 'emergency': len(emergency), 'money': photographer.get('total_events'), 'viral': viral.get('match_count')})
+          PY
       - name: Discovery filter QA report
         run: python scripts/build_discovery_filter_qa_report.py
       - name: Build discovery God View digest
