@@ -3,11 +3,15 @@
 
 from __future__ import annotations
 
+import sys
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 
-from scripts import check_field_desk_overlay_health as health
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from scripts import check_field_desk_overlay_health as health  # noqa: E402
 
 
 def row(identifier: str, title: str, *, lat: float = 40.7, lng: float = -73.9) -> dict:
