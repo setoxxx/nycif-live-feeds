@@ -11,6 +11,7 @@ public feed artifacts unless this script returns success.
 from __future__ import annotations
 
 import json
+import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -20,6 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 STATUS = ROOT / "status"
 OUT = STATUS / "nycif-daily-data-health.json"
+FIELD_DESK_OVERLAY_HEALTH = STATUS / "nycif-field-desk-overlay-health.json"
 MAX_SOURCE_AGE_HOURS = 36.0
 
 
@@ -127,6 +129,32 @@ def blocker(code: str, message: str, artifact: str) -> dict[str, str]:
     }
 
 
+def refresh_field_desk_overlay_health() -> dict[str, Any]:
+    result = subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "check_field_desk_overlay_health.py")],
+        cwd=str(ROOT),
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    payload = load(FIELD_DESK_OVERLAY_HEALTH, {}) or {}
+    if not isinstance(payload, dict):
+        payload = {}
+    if result.returncode != 0 and not payload:
+        payload = {
+            "qa_pass": False,
+            "overlay_count": 0,
+            "blockers": [
+                {
+                    "code": "overlay_health_process_failed",
+                    "message": (result.stderr or result.stdout or "Field Desk overlay health process failed")[-2000:],
+                }
+            ],
+        }
+    payload["check_exit_code"] = result.returncode
+    return payload
+
+
 def main() -> int:
     generated = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
@@ -160,7 +188,7 @@ def main() -> int:
     runtime_fallback = load(DATA / "runtime_fallback_feed_report.json", {}) or {}
     photographer = load(DATA / "photographer_assignment_calendar_report.json", {}) or {}
     viral = load(DATA / "photographer_viral_recurrence_report.json", {}) or {}
-    field_desk_overlay = load(STATUS / "nycif-field-desk-overlay-health.json", {}) or {}
+    field_desk_overlay = refresh_field_desk_overlay_health()
 
     derived = [
         artifact_status("Map-ready staged feed", DATA / "staged_live_manifest.json", ("staged_feed_events",)),
@@ -199,12 +227,6 @@ def main() -> int:
             ("match_count",),
             require_qa=True,
         ),
-        artifact_status(
-            "Field Desk auxiliary public overlays",
-            STATUS / "nycif-field-desk-overlay-health.json",
-            ("overlay_count",),
-            require_qa=True,
-        ),
     ]
 
     equations = reconciliation.get("equations") if isinstance(reconciliation, dict) else {}
@@ -221,9 +243,11 @@ def main() -> int:
     ) == 0
     photographer_clean = bool(photographer.get("qa_pass"))
     viral_clean = bool(viral.get("qa_pass"))
-    field_desk_overlays_clean = bool(field_desk_overlay.get("qa_pass")) and int(
-        field_desk_overlay.get("overlay_count") or 0
-    ) == 3
+    field_desk_overlays_clean = (
+        bool(field_desk_overlay.get("qa_pass"))
+        and int(field_desk_overlay.get("overlay_count") or 0) == 3
+        and int(field_desk_overlay.get("check_exit_code") or 0) == 0
+    )
     cross_date_suppressed = int(staged.get("cross_date_street_occurrences_suppressed") or 0)
     exact_occurrence_suppressed = int(staged.get("exact_occurrence_duplicates_suppressed") or 0)
 
@@ -296,11 +320,13 @@ def main() -> int:
             )
         )
     if not field_desk_overlays_clean:
+        details = field_desk_overlay.get("blockers") or []
         blockers.append(
             blocker(
                 "field_desk_public_overlays_failed",
-                "Nightlife, legal cannabis, or smoke/vape correlation is stale, count-misaligned, or contains duplicate public markers.",
-                "status/nycif-field-desk-overlay-health.json",
+                "Nightlife, legal cannabis, or smoke/vape correlation is stale, count-misaligned, or contains duplicate public markers. "
+                + json.dumps(details, ensure_ascii=False)[:1200],
+                "nycif-field-desk/data/reports/",
             )
         )
     if cross_date_suppressed:
