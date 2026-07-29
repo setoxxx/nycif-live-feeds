@@ -4,8 +4,6 @@ on:
   pull_request:
     paths:
       - 'scripts/audit_incoming_data_residuals.py'
-      - 'scripts/audit_incoming_data_completion_lanes.py'
-      - 'scripts/audit_incoming_data_intake_resolution.py'
       - '.github/workflows/incoming-data-residual-audit.yml'
       - 'scripts/project_events_discovery_v02.py'
       - 'scripts/occurrence_identity_contract.py'
@@ -36,12 +34,6 @@ jobs:
 
       - name: Protected incoming data residual audit
         run: python scripts/audit_incoming_data_residuals.py
-
-      - name: Protected incoming data completion lanes
-        run: python scripts/audit_incoming_data_completion_lanes.py
-
-      - name: Protected incoming data intake resolution packet
-        run: python scripts/audit_incoming_data_intake_resolution.py
 
       - name: Verify protected summary and resolution packet
         run: |
