@@ -20,13 +20,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Compile overlay health integration
+      - name: Compile auxiliary runtime health integration
         run: |
           python -m py_compile \
             scripts/check_field_desk_overlay_health.py \
             scripts/test_field_desk_overlay_health.py \
-            scripts/build_daily_data_health.py
+            scripts/build_daily_data_health.py \
+            scripts/build_comprehensive_event_feed.py
       - name: Deterministic freshness and duplicate tests
         run: python scripts/test_field_desk_overlay_health.py
-      - name: Verify currently served Field Desk overlays
+      - name: Regenerate Newly added sort feed from current approved pages
+        run: python scripts/build_comprehensive_event_feed.py
+      - name: Verify currently served auxiliary runtime feeds
         run: python scripts/check_field_desk_overlay_health.py
