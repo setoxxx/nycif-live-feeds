@@ -65,7 +65,7 @@ def run_case(*, duplicate_overlay: bool = False, duplicate_new: bool = False, st
     original_new = health.NEWLY_ADDED_PATH
     try:
         health.fetch_json = lambda path: payloads[path]
-        with tempfile.TemporaryDirectory() as directory:
+        with tempfile.TemporaryDirectory(dir=ROOT) as directory:
             directory_path = Path(directory)
             health.OUT = directory_path / "overlay-health.json"
             health.NEWLY_ADDED_PATH = directory_path / "nycif_new_events.json"
