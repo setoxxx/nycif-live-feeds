@@ -2,13 +2,8 @@
 """Build a staged production-shaped feed from the test enriched feed.
 
 This script creates staged outputs only. It does not overwrite production feeds.
-
-Inputs:
-- data/nycif_live_test_enriched_events.json
-
-Outputs:
-- data/nycif_staged_live_events.json
-- data/staged_live_manifest.json
+It deduplicates only exact street-event occurrences; recurring dates are always
+preserved as distinct occurrences.
 """
 
 from __future__ import annotations
@@ -75,6 +70,20 @@ def date_key(row: dict[str, Any]) -> str:
     return ""
 
 
+def time_key(row: dict[str, Any], *keys: str) -> str:
+    for key in keys:
+        raw = str(row.get(key) or "").strip()
+        if raw:
+            return raw
+    return ""
+
+
+def cems_key(row: dict[str, Any]) -> str:
+    raw = row.get("source_cemsid") or row.get("cemsid") or []
+    values = raw if isinstance(raw, list) else [raw]
+    return ",".join(sorted({str(value).strip() for value in values if str(value).strip()}))
+
+
 def street_text(row: dict[str, Any]) -> str:
     return " ".join(
         str(row.get(key) or "")
@@ -101,7 +110,7 @@ def is_one_day_street_event(row: dict[str, Any]) -> bool:
     )
 
 
-def one_day_street_key(row: dict[str, Any]) -> str:
+def exact_street_occurrence_key(row: dict[str, Any]) -> str:
     try:
         lat = f"{float(row.get('lat')):.5f}"
         lng = f"{float(row.get('lng')):.5f}"
@@ -115,6 +124,10 @@ def one_day_street_key(row: dict[str, Any]) -> str:
             normalize_text_legacy(row.get("display_location") or row.get("location") or row.get("address")),
             lat,
             lng,
+            date_key(row),
+            time_key(row, "start_date_time", "start", "date"),
+            time_key(row, "end_date_time", "end", "end_date"),
+            cems_key(row),
         ]
     )
 
@@ -136,11 +149,6 @@ def priority_score(row: dict[str, Any]) -> int:
 
 
 def choose_street_keeper(a: dict[str, Any], b: dict[str, Any]) -> dict[str, Any]:
-    # For one-day street-style events, keep the earliest source date. If dates tie, keep the stronger row.
-    da = date_key(a)
-    db = date_key(b)
-    if da and db and da != db:
-        return a if da < db else b
     return b if priority_score(b) > priority_score(a) else a
 
 
@@ -167,7 +175,7 @@ def apply_one_day_street_dedupe(rows: list[dict[str, Any]]) -> tuple[list[dict[s
         if not is_one_day_street_event(row):
             passthrough.append(row)
             continue
-        key = one_day_street_key(row)
+        key = exact_street_occurrence_key(row)
         if not key.strip("|"):
             passthrough.append(row)
             continue
@@ -178,13 +186,12 @@ def apply_one_day_street_dedupe(rows: list[dict[str, Any]]) -> tuple[list[dict[s
         kept = choose_street_keeper(existing, row)
         removed = row if kept is existing else existing
         keyed[key] = kept
-        rejected.append(reject_sample(removed, "one_day_street_duplicate_suppressed", kept))
+        rejected.append(reject_sample(removed, "exact_street_occurrence_duplicate_suppressed", kept))
 
     return [*passthrough, *keyed.values()], rejected
 
 
 def staged_event(row: dict[str, Any]) -> dict[str, Any]:
-    # Keep production app-friendly fields while retaining source keys for QA traceability.
     return {
         "id": row.get("id"),
         "title": row.get("title"),
@@ -218,10 +225,17 @@ def main() -> int:
     source_payload = load_json_file(TEST_FEED_PATH, {})
     rows = rows_from_test_feed(source_payload)
     eligible_rows = [row for row in rows if row.get("needs_review") is False and valid_lat_lng(row)]
-    staged_source_rows, one_day_street_rejected_rows = apply_one_day_street_dedupe(eligible_rows)
+    staged_source_rows, exact_rejected_rows = apply_one_day_street_dedupe(eligible_rows)
     staged_rows = [staged_event(row) for row in staged_source_rows]
     skipped_rows = [row for row in rows if not (row.get("needs_review") is False and valid_lat_lng(row))]
-    staged_rows.sort(key=lambda row: (row.get("date") or "9999-99-99", row.get("start_date_time") or "", row.get("borough") or "", row.get("title") or ""))
+    staged_rows.sort(
+        key=lambda row: (
+            row.get("date") or "9999-99-99",
+            row.get("start_date_time") or "",
+            row.get("borough") or "",
+            row.get("title") or "",
+        )
+    )
 
     generated_at = datetime.now(timezone.utc).isoformat()
     match_counts: dict[str, int] = {}
@@ -253,15 +267,17 @@ def main() -> int:
         "eligible_rows_before_one_day_street_dedupe": len(eligible_rows),
         "staged_feed_events": len(staged_rows),
         "skipped_needs_review_or_bad_gps": len(skipped_rows),
-        "one_day_street_duplicates_suppressed": len(one_day_street_rejected_rows),
+        "exact_occurrence_duplicates_suppressed": len(exact_rejected_rows),
+        "cross_date_street_occurrences_suppressed": 0,
+        "one_day_street_duplicates_suppressed": len(exact_rejected_rows),
         "duplicate_policy": {
-            "one_day_street_events": "dedupe by title + borough + location + coordinate; keep earliest source date; recurring sports and park events are not deduped by this rule",
+            "street_events": "dedupe only exact title + borough + location + coordinate + date + start/end + CEMS occurrence; recurring dates remain distinct",
             "production_feeds_modified": False,
         },
         "match_counts": match_counts,
         "borough_counts": borough_counts,
         "category_counts": category_counts,
-        "sample_one_day_street_rejected_rows": one_day_street_rejected_rows[:25],
+        "sample_exact_occurrence_rejected_rows": exact_rejected_rows[:25],
         "sample_skipped_rows": [
             {
                 "title": row.get("title"),
