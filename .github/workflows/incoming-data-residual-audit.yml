@@ -5,6 +5,7 @@ on:
     paths:
       - 'scripts/audit_incoming_data_residuals.py'
       - 'scripts/audit_incoming_data_completion_lanes.py'
+      - 'scripts/audit_incoming_data_intake_resolution.py'
       - '.github/workflows/incoming-data-residual-audit.yml'
       - 'scripts/project_events_discovery_v02.py'
       - 'scripts/occurrence_identity_contract.py'
@@ -39,7 +40,10 @@ jobs:
       - name: Protected incoming data completion lanes
         run: python scripts/audit_incoming_data_completion_lanes.py
 
-      - name: Verify protected summary
+      - name: Protected incoming data intake resolution packet
+        run: python scripts/audit_incoming_data_intake_resolution.py
+
+      - name: Verify protected summary and resolution packet
         run: |
           python - <<'PY'
           import json
@@ -48,12 +52,24 @@ jobs:
           summary = json.loads((base / 'incoming_data_residual_summary.json').read_text())
           completion = json.loads((base / 'incoming_data_completion_queues.json').read_text())
           lane_index = json.loads((base / 'incoming_data_completion_lane_index.json').read_text())
+          resolution = json.loads((base / 'incoming_data_intake_resolution_packet.json').read_text())
+          blockers = json.loads((base / 'incoming_data_unresolved_blockers.json').read_text())
           assert summary['qa_pass'] is True, summary
           assert summary['public_production_untouched'] is True, summary
           assert summary['launch_readiness'] is False, summary
           assert completion['daily_update_implication']['production_promotion_allowed'] is False, completion
           assert completion['daily_update_implication']['schedule_enabled'] is False, completion
           assert lane_index['daily_update_implication']['production_promotion_allowed'] is False, lane_index
+          assert resolution['qa_pass'] is True, resolution
+          assert resolution['resolution_counts']['unresolved_blockers'] == 0, resolution
+          assert blockers['count'] == 0, blockers
+          assert resolution['safety']['production_promotion_allowed'] is False, resolution
+          assert resolution['safety']['schedule_enabled'] is False, resolution
+          assert resolution['safety']['public_launch_authorized'] is False, resolution
+          assert json.loads((base / 'incoming_data_candidate_review_feed.json').read_text())['count'] == resolution['resolution_counts']['candidate_review_feed']
+          assert json.loads((base / 'incoming_data_list_only_backlog_feed.json').read_text())['count'] == resolution['resolution_counts']['list_only_backlog_feed']
+          assert json.loads((base / 'incoming_data_parent_grouping_fallbacks.json').read_text())['count'] == resolution['resolution_counts']['parent_grouping_fallbacks']
+          assert json.loads((base / 'incoming_data_non_public_exclusion_dispositions.json').read_text())['count'] == resolution['resolution_counts']['non_public_exclusions']
           for lane, filename in completion['lane_artifacts'].items():
               payload = json.loads((base / filename).read_text())
               assert payload['lane'] == lane, payload
