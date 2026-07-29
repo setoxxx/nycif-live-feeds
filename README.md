@@ -4,6 +4,14 @@ Public JSON feed files for NYC In Focus map pages.
 
 This repository contains public event-feed data only.
 
+> **Code name: Enigma** — the normalization/processing system. Its GPS converter
+> (`scripts/geocode_unfilled_gps_proposals.py`) resolves unmapped NYC locations
+> to latitude/longitude via NYC Planning **GeoSearch**, writing a staging file
+> for manual review (never auto-promoted). It pairs with **Borg**
+> (`nycif-data-pipeline`, data aggregation), whose Culture geocoding lane bridges
+> to Enigma. Code names are branding only and rename nothing; canonical glossary:
+> [`nycif-data-pipeline/docs/CODENAMES.md`](https://github.com/setoxxx/nycif-data-pipeline/blob/main/docs/CODENAMES.md).
+
 ## Setup
 
 Supported Python version: 3.11 (matches every workflow's `actions/setup-python` declaration; no other version is tested).
