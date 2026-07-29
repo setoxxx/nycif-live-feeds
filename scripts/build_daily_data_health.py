@@ -3,8 +3,9 @@
 
 The report distinguishes a freshly regenerated wrapper from genuinely fresh,
 successfully fetched source data. Every JSON family loaded by the public map or
-News Desk overlays is included. The daily production workflow must stop before
-committing public feed artifacts unless this script returns success.
+News Desk overlays is included, including auxiliary overlays served from the
+Field Desk repository. The daily production workflow must stop before committing
+public feed artifacts unless this script returns success.
 """
 
 from __future__ import annotations
@@ -159,6 +160,7 @@ def main() -> int:
     runtime_fallback = load(DATA / "runtime_fallback_feed_report.json", {}) or {}
     photographer = load(DATA / "photographer_assignment_calendar_report.json", {}) or {}
     viral = load(DATA / "photographer_viral_recurrence_report.json", {}) or {}
+    field_desk_overlay = load(STATUS / "nycif-field-desk-overlay-health.json", {}) or {}
 
     derived = [
         artifact_status("Map-ready staged feed", DATA / "staged_live_manifest.json", ("staged_feed_events",)),
@@ -197,6 +199,12 @@ def main() -> int:
             ("match_count",),
             require_qa=True,
         ),
+        artifact_status(
+            "Field Desk auxiliary public overlays",
+            STATUS / "nycif-field-desk-overlay-health.json",
+            ("overlay_count",),
+            require_qa=True,
+        ),
     ]
 
     equations = reconciliation.get("equations") if isinstance(reconciliation, dict) else {}
@@ -213,6 +221,9 @@ def main() -> int:
     ) == 0
     photographer_clean = bool(photographer.get("qa_pass"))
     viral_clean = bool(viral.get("qa_pass"))
+    field_desk_overlays_clean = bool(field_desk_overlay.get("qa_pass")) and int(
+        field_desk_overlay.get("overlay_count") or 0
+    ) == 3
     cross_date_suppressed = int(staged.get("cross_date_street_occurrences_suppressed") or 0)
     exact_occurrence_suppressed = int(staged.get("exact_occurrence_duplicates_suppressed") or 0)
 
@@ -284,6 +295,14 @@ def main() -> int:
                 "data/photographer_assignment_calendar_report.json",
             )
         )
+    if not field_desk_overlays_clean:
+        blockers.append(
+            blocker(
+                "field_desk_public_overlays_failed",
+                "Nightlife, legal cannabis, or smoke/vape correlation is stale, count-misaligned, or contains duplicate public markers.",
+                "status/nycif-field-desk-overlay-health.json",
+            )
+        )
     if cross_date_suppressed:
         blockers.append(
             blocker(
@@ -296,7 +315,7 @@ def main() -> int:
     release_ready = not blockers
     payload = {
         "artifact_type": "nycif_daily_data_health",
-        "schema_version": "1.2.0",
+        "schema_version": "1.3.0",
         "generated_at_utc": generated,
         "company_focus": "News Desk live-data completeness, freshness, and duplicate safety",
         "status": "READY" if release_ready else "BLOCKED",
@@ -312,7 +331,11 @@ def main() -> int:
             "review_pages": "data/schema-v1-discovery/review/",
             "money_overlay": "data/photographer_assignment_calendar_2mo.json",
             "viral_overlay": "data/photographer_viral_recurrence_matches.json",
+            "active_nightlife_overlay": "nycif-field-desk/data/nycif_active_nightlife_feed.json",
+            "legal_cannabis_overlay": "nycif-field-desk/data/nycif_legal_cannabis_dispensaries.json",
+            "smoke_vape_correlation_overlay": "nycif-field-desk/data/nycif_smoke_vape_cannabis_correlation.json",
         },
+        "field_desk_overlay_health": field_desk_overlay,
         "pipeline": {
             "strict_reconciliation": strict_reconciliation,
             "calendar_parks_unaccounted_gap": gap,
@@ -322,6 +345,7 @@ def main() -> int:
             "runtime_fallback_clean": runtime_fallback_clean,
             "photographer_money_day_clean": photographer_clean,
             "viral_recurrence_clean": viral_clean,
+            "field_desk_public_overlays_clean": field_desk_overlays_clean,
             "exact_occurrence_duplicates_suppressed": exact_occurrence_suppressed,
             "cross_date_street_occurrences_suppressed": cross_date_suppressed,
         },
