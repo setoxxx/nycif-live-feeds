@@ -22,6 +22,7 @@ on:
       - 'scripts/enforce_strict_discovery_reconciliation.py'
       - 'scripts/refresh_runtime_fallback_feeds.py'
       - 'scripts/record_blocked_daily_data_health.py'
+      - 'scripts/check_field_desk_overlay_health.py'
       - 'scripts/build_daily_data_health.py'
       - 'scripts/apply_daily_data_health_to_godview.py'
       - 'scripts/test_daily_production_hardening.py'
@@ -31,7 +32,7 @@ permissions:
 
 concurrency:
   group: discovery-feed-refresh
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   refresh-discovery-feed:
@@ -53,7 +54,8 @@ jobs:
           python scripts/test_daily_production_hardening.py
           python -m py_compile \
             scripts/refresh_runtime_fallback_feeds.py \
-            scripts/record_blocked_daily_data_health.py
+            scripts/record_blocked_daily_data_health.py \
+            scripts/check_field_desk_overlay_health.py
 
       - name: Build, validate, and commit READY discovery feed
         id: production
@@ -127,6 +129,7 @@ jobs:
           supplemental = json.load(open("data/supplemental_events_staging_feed.json"))
           reconciliation = json.load(open("data/events_discovery_reconciliation_v02.json"))
           health = json.load(open("status/nycif-daily-data-health.json"))
+          overlay_health = json.load(open("status/nycif-field-desk-overlay-health.json"))
           major = json.load(open("data/schema-v1-discovery/major/events.json"))
           emergency = json.load(open("nycif_major_radar_map_events.json"))
           fallback_report = json.load(open("data/runtime_fallback_feed_report.json"))
@@ -165,6 +168,8 @@ jobs:
               sys.exit("strict source reconciliation did not pass")
           if not health.get("release_ready") or health.get("status") != "READY":
               sys.exit("daily data health is not READY")
+          if not overlay_health.get("qa_pass") or overlay_health.get("overlay_count") != 3:
+              sys.exit("Field Desk auxiliary overlay health did not pass")
           if not isinstance(major_events, list) or not major_events:
               sys.exit("major feed has no events")
           if not isinstance(emergency, list) or len(emergency) != len(major_events):
@@ -186,7 +191,8 @@ jobs:
               f"READY: {len(raw)} permits, {len(calendar_rows)} Calendar, {len(parks_rows)} Parks, "
               f"{len(staged_events)} staged, {manifest.get('total')} approved, "
               f"{len(emergency)} emergency, {photographer.get('total_events')} money-day, "
-              f"{viral.get('match_count')} viral, {whats_new['new_this_run']} newly added"
+              f"{viral.get('match_count')} viral, 3 auxiliary overlays, "
+              f"{whats_new['new_this_run']} newly added"
           )
           PY
 
@@ -257,6 +263,7 @@ jobs:
               data/events_schema_v1_civic_*.json \
               data/schema-v1-civic-review \
               status/nycif-daily-data-health.json \
+              status/nycif-field-desk-overlay-health.json \
               status/nycif-last-known-good-feed.json \
               status/nycif-godview-project-state-v02.json \
               status/nycif-github-tracker.json \
@@ -326,6 +333,7 @@ jobs:
 
           git add \
             status/nycif-daily-data-health.json \
+            status/nycif-field-desk-overlay-health.json \
             status/nycif-godview-project-state-v02.json \
             status/nycif-github-tracker.json \
             status/nycif-project-status.json \
