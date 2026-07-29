@@ -52,7 +52,6 @@ jobs:
           mkdir -p ./tools/public-map
           cp "$MAP_SRC/schema-v1-major-all-v01/public-map-ui.test.mjs" ./tools/public-map/public-map-ui.test.mjs
 
-          # Retire orphaned public-map runtimes from Pages root (desk.html still uses app-v06-safe.js).
           rm -f ./staged-map-mode-v01.css
 
           cp "$ADMIN_SRC/index.html" ./admin/index.html
@@ -61,6 +60,7 @@ jobs:
           cp "$ADMIN_SRC/civic-godview-panel-v01.js" ./admin/civic-godview-panel-v01.js
           cp "$ADMIN_SRC/photographer-calendar-panel-v01.js" ./admin/photographer-calendar-panel-v01.js
           cp "$ADMIN_SRC/god-view-project-control-v01.js" ./admin/god-view-project-control-v01.js
+          cp "$ADMIN_SRC/daily-data-health-panel-v01.js" ./admin/daily-data-health-panel-v01.js
           cp "$ADMIN_SRC/legacy-admin-data-v01.js" ./admin/legacy-admin-data-v01.js
 
           grep -q "[/basketball/i, '🏀']" app-schema-v1-major-all-v01.js
@@ -88,12 +88,14 @@ jobs:
           grep -q discovery-godview-panel-v02 admin/index.html
           grep -q live-pipeline-panel-v02 admin/index.html
           grep -q god-view-project-control-v01 admin/index.html
+          grep -q daily-data-health-panel-v01 admin/index.html
           grep -q legacy-admin-data-v01 admin/index.html
           node --check admin/live-pipeline-panel-v02.js
           node --check admin/discovery-godview-panel-v02.js
           node --check admin/civic-godview-panel-v01.js
           node --check admin/photographer-calendar-panel-v01.js
           node --check admin/god-view-project-control-v01.js
+          node --check admin/daily-data-health-panel-v01.js
           node --check admin/legacy-admin-data-v01.js
 
           git add \
@@ -112,11 +114,12 @@ jobs:
             admin/civic-godview-panel-v01.js \
             admin/photographer-calendar-panel-v01.js \
             admin/god-view-project-control-v01.js \
+            admin/daily-data-health-panel-v01.js \
             admin/legacy-admin-data-v01.js
 
           if git diff --cached --quiet; then
             echo "Field-desk already has canonical map + admin runtime."
             exit 0
           fi
-          git commit -m "Deploy RC public map v08: tip jar strobe, centered panel, legacy cleanup"
+          git commit -m "Deploy God View daily data health command panel"
           git push origin main
