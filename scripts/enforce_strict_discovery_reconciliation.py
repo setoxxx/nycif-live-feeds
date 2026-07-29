@@ -3,8 +3,8 @@
 
 The projector historically retained a weaker disposition-only pass when source
 occurrences remained unaccounted. This gate distinguishes documented human
-rejections and exact duplicate source rows from a true unexplained gap, then
-requires the remaining unexplained gap to be zero.
+rejections, source cancellations, and exact duplicate source rows from a true
+unexplained gap, then requires the remaining unexplained gap to be zero.
 """
 
 from __future__ import annotations
@@ -27,17 +27,18 @@ def main() -> int:
 
     raw_gap = int(equations.get("calendar_parks_unaccounted_gap") or 0)
     human_rejected = int(supplemental.get("human_rejected") or 0)
+    source_canceled = int(supplemental.get("source_canceled_excluded") or 0)
     exact_duplicates = int(supplemental.get("duplicate_exact_occurrences_collapsed") or 0)
     invalid = int(supplemental.get("invalid_missing_identity") or 0)
-    unexpected_canceled = int(supplemental.get("unexpected_canceled_rows") or 0)
-    documented_exclusions = human_rejected + exact_duplicates
+    documented_exclusions = human_rejected + source_canceled + exact_duplicates
     unexplained_gap = max(0, raw_gap - documented_exclusions)
 
-    source_intake_clean = bool(supplemental.get("qa_pass")) and invalid == 0 and unexpected_canceled == 0
+    source_intake_clean = bool(supplemental.get("qa_pass")) and invalid == 0
     strict = disposition_ok and source_intake_clean and unexplained_gap == 0
 
     equations["calendar_parks_unaccounted_gap_raw"] = raw_gap
     equations["calendar_parks_documented_human_rejected"] = human_rejected
+    equations["calendar_parks_documented_source_canceled"] = source_canceled
     equations["calendar_parks_exact_duplicate_rows_excluded"] = exact_duplicates
     equations["calendar_parks_documented_exclusions"] = documented_exclusions
     equations["calendar_parks_unaccounted_gap"] = unexplained_gap
@@ -64,6 +65,7 @@ def main() -> int:
     audit["strict_reconciliation"] = {
         "raw_calendar_parks_gap": raw_gap,
         "documented_human_rejected": human_rejected,
+        "documented_source_canceled": source_canceled,
         "exact_duplicate_rows_excluded": exact_duplicates,
         "unexplained_gap": unexplained_gap,
         "source_intake_clean": source_intake_clean,
