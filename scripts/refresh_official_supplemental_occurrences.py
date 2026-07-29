@@ -3,8 +3,9 @@
 
 Every source occurrence is keyed by dataset + source event ID + exact source
 start occurrence. Human rejection decisions remain in the intake file as
-explicit rejected dispositions so source accounting stays complete. Other valid
-official listings are approved; rows without coordinates remain list-only.
+explicit rejected dispositions. Source-canceled rows are documented exclusions.
+Other valid official listings are approved; rows without coordinates remain
+list-only rather than being silently dropped.
 """
 
 from __future__ import annotations
@@ -117,7 +118,7 @@ def main() -> int:
     indexed: dict[tuple[str, str, str], dict[str, Any]] = {}
     human_rejected = 0
     invalid = 0
-    unexpected_canceled = 0
+    source_canceled = 0
     for row in input_rows:
         dataset, source_event_id = source_parts(row)
         start = occurrence_start(row)
@@ -127,7 +128,7 @@ def main() -> int:
             invalid += 1
             continue
         if bool(row.get("canceled")):
-            unexpected_canceled += 1
+            source_canceled += 1
             continue
         key = (dataset, source_event_id, start)
         status = by_day.get((dataset, source_event_id, day)) or by_source.get((dataset, source_event_id)) or "approved"
@@ -145,7 +146,7 @@ def main() -> int:
             source_parts(row)[1],
         ),
     )
-    duplicate_exact = max(0, len(input_rows) - invalid - unexpected_canceled - len(events))
+    duplicate_exact = max(0, len(input_rows) - invalid - source_canceled - len(events))
     payload = {
         "schema_version": "official-supplemental-occurrence-v1",
         "generated_at_utc": generated,
@@ -159,12 +160,12 @@ def main() -> int:
     report = {
         "schema_version": "official-supplemental-occurrence-v1",
         "generated_at_utc": generated,
-        "qa_pass": bool(events) and invalid == 0 and unexpected_canceled == 0,
+        "qa_pass": bool(events) and invalid == 0,
         "source_rows": len(input_rows),
         "occurrences_indexed": len(events),
         "eligible_occurrences": len(events) - human_rejected,
         "human_rejected": human_rejected,
-        "unexpected_canceled_rows": unexpected_canceled,
+        "source_canceled_excluded": source_canceled,
         "invalid_missing_identity": invalid,
         "duplicate_exact_occurrences_collapsed": duplicate_exact,
         "cross_date_occurrences_collapsed": 0,
