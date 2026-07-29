@@ -1,14 +1,13 @@
 name: Discovery Feed Refresh
 
-# Rebuilds the public discovery event feed the Field Desk map consumes
-# (data/schema-v1-discovery/**) from the committed source snapshots on main
-# and commits the result back to main.
+# Fetches fresh NYC permit data, resolves map-ready locations, rebuilds the
+# public discovery event feed the Field Desk map consumes
+# (data/schema-v1-discovery/**), and commits the result back to main.
 #
-# The builder scripts and an initial feed already live on main, but the
-# existing discovery-taxonomy-v02-qa.yml only VALIDATES (contents: read, no
-# schedule, no commit) — so without this workflow the committed feed never
-# refreshes and goes stale. This adds the scheduled rebuild-and-commit so the
-# frontend can safely pin its feed ref to `main`.
+# The prior workflow rebuilt only from committed snapshots. That allowed the
+# derived feed to refresh while newly issued permits never entered the source
+# snapshot. The live intake refresh now runs inside the same retry loop so each
+# derived commit is built from the current NYC Open Data export.
 
 on:
   workflow_dispatch:
@@ -36,64 +35,105 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Verify live intake regression contract
+        run: python scripts/test_live_event_intake_refresh.py
+
       - name: Build and commit discovery feed
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # The discovery feed is derived state. If main advances between our
-          # checkout and our push (the staged-feed pipeline, a PR merge), the
-          # correct resolution is to rebuild on the new tip and try again —
-          # never merge, rebase-with-conflicts, or force-push over it.
+          # The source snapshots and discovery feed are derived state. If main
+          # advances between checkout and push, rebuild everything from the new
+          # tip and try again. Never merge, resolve generated conflicts, or
+          # force-push over main.
           for attempt in 1 2 3; do
             git fetch origin main
             git reset --hard FETCH_HEAD
 
-            # Two-step pipeline: the schema-v1 major build produces the major
-            # key set that the discovery projector reads to flag Featured
+            # Pull the complete current NYC permit dataset, resolve new street
+            # locations, and rebuild the map-ready staged feed before projecting
+            # the public discovery pages.
+            python scripts/live_event_intake_refresh.py
+
+            # Two-step discovery pipeline: the schema-v1 major build produces
+            # the major key set that the projector reads to flag Featured
             # events; the projector then writes data/schema-v1-discovery/**.
             python scripts/build_events_schema_v1_major.py
-            # Offline feast/festival harvest from committed snapshots (no city pull).
             python scripts/build_street_festivals_feed.py
             python scripts/project_events_discovery_v02.py
 
-            # "What's New" diff + category coverage over the full staged
-            # snapshot: surfaces newly-arrived permits for the admin panel and
-            # the category lanes that have data (so the map grays the empties).
-            # The frontend already loads the full event set via the discovery
-            # approved pages, so this emits only the diff + coverage, not a
-            # second copy of every event. Derived from the committed staged
-            # snapshot (the live city pull itself is the human-gated
-            # live-sync-qa workflow, not this scheduled job).
+            # "What's New" diff + category coverage over the fresh staged
+            # snapshot. This emits only the diff + coverage because the frontend
+            # loads the full event set through the discovery approved pages.
             python scripts/build_comprehensive_event_feed.py
 
             python scripts/generate_godview_project_state.py --fetch-github
 
-            # Fail closed: never commit an empty or malformed public feed.
+            # Fail closed: never commit an empty or malformed public feed, and
+            # ensure the live source, enrichment and staging chain completed.
             python - <<'PY'
-          import json, glob, sys
+          import glob
+          import json
+          import sys
+
+          raw = json.load(open("data/raw_nyc_open_data_snapshot.json"))
+          live = json.load(open("data/live_sync_report.json"))
+          test_manifest = json.load(open("data/test_enriched_feed_manifest.json"))
+          staged_manifest = json.load(open("data/staged_live_manifest.json"))
+          staged = json.load(open("data/nycif_staged_live_events.json"))
           major = json.load(open("data/schema-v1-discovery/major/events.json"))
+          manifest = json.load(open("data/schema-v1-discovery/approved/manifest.json"))
+          pages = glob.glob("data/schema-v1-discovery/approved/pages/*.json")
+          report = json.load(open("data/comprehensive_feed_report.json"))
+          whats_new = json.load(open("data/nycif_new_events.json"))
+
+          if not isinstance(raw, list) or not raw:
+              sys.exit("live NYC Open Data snapshot is empty")
+          if live.get("raw_rows_loaded") != len(raw):
+              sys.exit(
+                  f"live sync count {live.get('raw_rows_loaded')} != raw snapshot {len(raw)}"
+              )
+          if test_manifest.get("raw_rows_loaded") != len(raw):
+              sys.exit(
+                  f"test enrichment count {test_manifest.get('raw_rows_loaded')} != raw snapshot {len(raw)}"
+              )
+          staged_events = staged.get("events") if isinstance(staged, dict) else None
+          if not isinstance(staged_events, list) or not staged_events:
+              sys.exit("staged map-ready feed has no events")
+          if staged_manifest.get("staged_feed_events") != len(staged_events):
+              sys.exit(
+                  f"staged manifest count {staged_manifest.get('staged_feed_events')} != staged rows {len(staged_events)}"
+              )
           if not major.get("events"):
               sys.exit("major feed has no events")
-          man = json.load(open("data/schema-v1-discovery/approved/manifest.json"))
-          pages = glob.glob("data/schema-v1-discovery/approved/pages/*.json")
-          if man.get("page_count") != len(pages) or not pages:
-              sys.exit(f"approved manifest page_count {man.get('page_count')} != {len(pages)} page files")
-          if not man.get("latest_date"):
+          if manifest.get("page_count") != len(pages) or not pages:
+              sys.exit(
+                  f"approved manifest page_count {manifest.get('page_count')} != {len(pages)} page files"
+              )
+          if not manifest.get("latest_date"):
               sys.exit("approved manifest missing latest_date")
-          rep = json.load(open("data/comprehensive_feed_report.json"))
-          if not rep.get("qa_pass") or rep.get("kept", 0) < 1:
+          if not report.get("qa_pass") or report.get("kept", 0) < 1:
               sys.exit("coverage report failed QA / scanned no events")
-          nw = json.load(open("data/nycif_new_events.json"))
-          if "new_this_run" not in nw:
+          if "new_this_run" not in whats_new:
               sys.exit("what's-new diff missing new_this_run")
-          print(f"validated: {len(major['events'])} major, {man.get('total')} approved "
-                f"across {len(pages)} pages, {rep['kept']} scanned "
-                f"({nw['new_this_run']} new this run)")
+
+          print(
+              f"validated: {len(raw)} live source rows, {len(staged_events)} staged map-ready events, "
+              f"{len(major['events'])} major, {manifest.get('total')} approved across {len(pages)} pages, "
+              f"{report['kept']} scanned ({whats_new['new_this_run']} new this run)"
+          )
           PY
 
             git add \
+              data/raw_nyc_open_data_snapshot.json \
+              data/live_sync_report.json \
+              data/nycif_live_test_enriched_events.json \
+              data/test_enriched_feed_manifest.json \
+              data/nycif_staged_live_events.json \
+              data/staged_live_manifest.json \
+              data/nyc_geosearch_gazetteer_cache.json \
               data/schema-v1-discovery \
               data/nycif_new_events.json \
               data/comprehensive_feed_report.json \
@@ -117,13 +157,13 @@ jobs:
               docs/events-discovery-taxonomy-v02.md \
               docs/field-desk-map-deploy
             if git diff --cached --quiet; then
-              echo "No discovery feed changes to commit."
+              echo "No live source or discovery feed changes to commit."
               exit 0
             fi
 
-            git commit -m "Refresh discovery event feed"
+            git commit -m "Refresh live event intake and discovery feed"
             if git push origin HEAD:main; then
-              echo "Pushed discovery feed on attempt ${attempt}."
+              echo "Pushed live source and discovery feed on attempt ${attempt}."
               exit 0
             fi
 
@@ -131,5 +171,5 @@ jobs:
             sleep $((attempt * 10))
           done
 
-          echo "::error::Could not push discovery feed after 3 attempts; main kept advancing. Re-run the workflow."
+          echo "::error::Could not push live source and discovery feed after 3 attempts; main kept advancing. Re-run the workflow."
           exit 1
