@@ -43,9 +43,31 @@ from audit_incoming_data_residuals import (  # noqa: E402
 )
 from occurrence_identity_contract import occurrence_key, occurrence_key_set  # noqa: E402
 
+LANE_ORDER = [
+    "ready_review_public_candidate",
+    "needs_coordinate_review",
+    "needs_classification_review",
+    "needs_parent_grouping_or_list_only",
+    "exclude_or_keep_list_only_non_public",
+    "needs_date_window_review",
+    "needs_manual_review",
+]
+
+LANE_OUTPUTS = {
+    "ready_review_public_candidate": "incoming_data_ready_review_public_candidates.json",
+    "needs_coordinate_review": "incoming_data_coordinate_backlog_queue.json",
+    "needs_classification_review": "incoming_data_classification_review_queue.json",
+    "needs_parent_grouping_or_list_only": "incoming_data_parent_grouping_queue.json",
+    "exclude_or_keep_list_only_non_public": "incoming_data_non_public_exclusion_queue.json",
+    "needs_date_window_review": "incoming_data_date_window_repair_queue.json",
+    "needs_manual_review": "incoming_data_manual_review_queue.json",
+}
+
 OUTPUT_FILENAMES = {
     "incoming_data_completion_queues.json",
     "incoming_data_completion_plan.md",
+    "incoming_data_completion_lane_index.json",
+    *LANE_OUTPUTS.values(),
 }
 
 LANE_ACTIONS = {
@@ -199,24 +221,15 @@ def residual_rows() -> tuple[list[dict[str, Any]], dict[str, Any]]:
     return residuals, reconciliation
 
 
-def build_completion_queues(residuals: list[dict[str, Any]]) -> dict[str, Any]:
+def build_completion_queues(residuals: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str, list[dict[str, Any]]]]:
     buckets: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for item in residuals:
         lane = completion_lane(item)
         item["completion_lane"] = lane
         item["recommended_action"] = LANE_ACTIONS[lane]
-        buckets[lane].append(item)
+        buckets[lane].append(compact_item(item))
 
-    lane_order = [
-        "ready_review_public_candidate",
-        "needs_coordinate_review",
-        "needs_classification_review",
-        "needs_parent_grouping_or_list_only",
-        "exclude_or_keep_list_only_non_public",
-        "needs_date_window_review",
-        "needs_manual_review",
-    ]
-    lane_counts = {lane: len(buckets.get(lane, [])) for lane in lane_order}
+    lane_counts = {lane: len(buckets.get(lane, [])) for lane in LANE_ORDER}
     auto_promotion_blockers = (
         lane_counts["needs_classification_review"]
         + lane_counts["needs_parent_grouping_or_list_only"]
@@ -225,11 +238,11 @@ def build_completion_queues(residuals: list[dict[str, Any]]) -> dict[str, Any]:
         + lane_counts["needs_manual_review"]
     )
     queue_samples = {
-        lane: [compact_item(item) for item in buckets.get(lane, [])[:200]]
-        for lane in lane_order
+        lane: buckets.get(lane, [])[:200]
+        for lane in LANE_ORDER
         if buckets.get(lane)
     }
-    return {
+    completion = {
         "artifact_type": "incoming_data_completion_queues",
         "generated_at_utc": utc_now(),
         "repository": "setoxxx/nycif-live-feeds",
@@ -239,6 +252,7 @@ def build_completion_queues(residuals: list[dict[str, Any]]) -> dict[str, Any]:
         "lane_counts": lane_counts,
         "reason_counts": count_reason(residuals),
         "queue_samples": queue_samples,
+        "lane_artifacts": LANE_OUTPUTS,
         "completion_policy": {
             "ready_review_public_candidate": "Queue into manual review feed candidates only; do not auto-promote to production.",
             "needs_coordinate_review": "Keep list-only until geocoded; this can coexist with a safe artifact refresh.",
@@ -256,6 +270,36 @@ def build_completion_queues(residuals: list[dict[str, Any]]) -> dict[str, Any]:
             "schedule_enabled": False,
         },
         "safety": SAFETY_ASSERTIONS | {"location_cache_sha256": sha256_file(LOCATION_CACHE)},
+    }
+    return completion, {lane: buckets.get(lane, []) for lane in LANE_ORDER}
+
+
+def make_lane_payload(lane: str, items: list[dict[str, Any]], completion: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "artifact_type": "incoming_data_completion_lane",
+        "lane": lane,
+        "generated_at_utc": completion["generated_at_utc"],
+        "repository": completion["repository"],
+        "repository_sha": completion["repository_sha"],
+        "season_start": completion["season_start"],
+        "season_end": completion["season_end"],
+        "count": len(items),
+        "recommended_action": LANE_ACTIONS[lane],
+        "production_promotion_allowed": False,
+        "schedule_enabled": False,
+        "items": items,
+    }
+
+
+def make_lane_index(completion: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "artifact_type": "incoming_data_completion_lane_index",
+        "generated_at_utc": completion["generated_at_utc"],
+        "repository_sha": completion["repository_sha"],
+        "lane_counts": completion["lane_counts"],
+        "lane_artifacts": completion["lane_artifacts"],
+        "daily_update_implication": completion["daily_update_implication"],
+        "safety": completion["safety"],
     }
 
 
@@ -278,6 +322,16 @@ def make_plan(completion: dict[str, Any], reconciliation: dict[str, Any]) -> str
 - Date/window repair: **{counts.get('needs_date_window_review', 0)}**
 - Other manual review: **{counts.get('needs_manual_review', 0)}**
 
+## Full lane artifacts
+
+- `incoming_data_ready_review_public_candidates.json`
+- `incoming_data_coordinate_backlog_queue.json`
+- `incoming_data_classification_review_queue.json`
+- `incoming_data_parent_grouping_queue.json`
+- `incoming_data_non_public_exclusion_queue.json`
+- `incoming_data_date_window_repair_queue.json`
+- `incoming_data_manual_review_queue.json`
+
 ## Completion order
 
 1. Queue ready review public candidates for manual review.
@@ -291,9 +345,12 @@ This plan does not enable the 3 AM updater and does not authorize launch.
 
 def main() -> int:
     residuals, reconciliation = residual_rows()
-    completion = build_completion_queues(residuals)
+    completion, lane_items = build_completion_queues(residuals)
     output_dir = prepare_output_dir()
     write_json(output_dir, "incoming_data_completion_queues.json", completion)
+    write_json(output_dir, "incoming_data_completion_lane_index.json", make_lane_index(completion))
+    for lane, filename in LANE_OUTPUTS.items():
+        write_json(output_dir, filename, make_lane_payload(lane, lane_items.get(lane, []), completion))
     write_text(output_dir, "incoming_data_completion_plan.md", make_plan(completion, reconciliation))
     print(json.dumps({"completion_lane_counts": completion["lane_counts"], **completion["daily_update_implication"]}, indent=2, sort_keys=True))
     return 0
