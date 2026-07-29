@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from scripts.build_staged_production_feed import apply_one_day_street_dedupe  # noqa: E402
 from scripts.refresh_official_supplemental_occurrences import occurrence_key  # noqa: E402
+from scripts.sync_nyc_citywide_events_calendar import bool_flag  # noqa: E402
 
 
 def street_row(day: str, source_event_id: str, *, priority: int = 0) -> dict:
@@ -76,12 +77,23 @@ def test_calendar_occurrence_identity_includes_same_day_time() -> None:
     assert occurrence_key(morning) != occurrence_key(afternoon)
 
 
+def test_calendar_cancellation_flags_are_typed_safely() -> None:
+    assert bool_flag(True) is True
+    assert bool_flag("true") is True
+    assert bool_flag("1") is True
+    assert bool_flag(False) is False
+    assert bool_flag("false") is False
+    assert bool_flag("0") is False
+    assert bool_flag(None) is False
+
+
 def main() -> int:
     tests = [
         test_recurring_dates_are_preserved,
         test_exact_occurrence_duplicate_is_suppressed,
         test_calendar_occurrence_identity_includes_date,
         test_calendar_occurrence_identity_includes_same_day_time,
+        test_calendar_cancellation_flags_are_typed_safely,
     ]
     for test in tests:
         test()
