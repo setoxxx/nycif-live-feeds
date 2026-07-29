@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""Refresh the live NYC permit snapshot and rebuild the map-ready staged intake.
+"""Refresh all official NYC event sources and rebuild the map-ready intake.
 
-This is the narrow orchestration layer used by the scheduled discovery refresh.
-It keeps the existing sync, enrichment and staging builders intact while fixing
-street-segment geocoding for locations written as "STREET between X and Y".
+This is the orchestration layer used by the scheduled discovery refresh. It
+pulls permitted events, the NYC Citywide Calendar, and NYC Parks BigApps in one
+transaction before enrichment and staging. It also keeps the existing street-
+segment geocoding correction for locations written as "STREET between X and Y".
 """
 
 from __future__ import annotations
@@ -33,13 +34,7 @@ def resolve_street_segment_by_intersections(
     display: str,
     borough: str | None,
 ) -> ResolveResult | None:
-    """Resolve a street segment from its two real intersections.
-
-    The legacy resolver queried generic house numbers on each cross street and
-    embedded the borough twice. Querying the two intersections is both more
-    precise and compatible with the resolver's existing borough appending.
-    """
-
+    """Resolve a street segment from its two real intersections."""
     parsed = parse_street_between(display)
     if not parsed:
         return None
@@ -91,9 +86,6 @@ def install_street_segment_patch() -> None:
 
 
 def main() -> int:
-    # The sync writes the new source snapshot. The enrichment builder must then
-    # consume that exact snapshot and may use NYC Planning GeoSearch for new
-    # locations that are not yet in the committed gazetteer/cache.
     os.environ["NYCIF_USE_RAW_SNAPSHOT"] = "yes"
     os.environ["NYCIF_ALLOW_LIVE_GEOSEARCH"] = "yes"
     install_street_segment_patch()
@@ -102,15 +94,21 @@ def main() -> int:
         from scripts import (
             build_staged_production_feed,
             build_test_enriched_feed,
+            sync_nyc_citywide_events_calendar,
             sync_nyc_open_data,
+            sync_nyc_parks_bigapps_events,
         )
     except ModuleNotFoundError:  # pragma: no cover - direct script execution
         import build_staged_production_feed  # type: ignore[no-redef]
         import build_test_enriched_feed  # type: ignore[no-redef]
+        import sync_nyc_citywide_events_calendar  # type: ignore[no-redef]
         import sync_nyc_open_data  # type: ignore[no-redef]
+        import sync_nyc_parks_bigapps_events  # type: ignore[no-redef]
 
     for name, runner in (
         ("sync_nyc_open_data", sync_nyc_open_data.main),
+        ("sync_nyc_citywide_events_calendar", sync_nyc_citywide_events_calendar.main),
+        ("sync_nyc_parks_bigapps_events", sync_nyc_parks_bigapps_events.main),
         ("build_test_enriched_feed", build_test_enriched_feed.main),
         ("build_staged_production_feed", build_staged_production_feed.main),
     ):

@@ -1,0 +1,279 @@
+#!/usr/bin/env python3
+"""Build the launch-blocking daily data health contract for God View.
+
+The report distinguishes a freshly regenerated wrapper from genuinely fresh,
+successfully fetched source data. The daily production workflow must stop
+before committing public feed artifacts unless this script returns success.
+"""
+
+from __future__ import annotations
+
+import json
+import sys
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
+DATA = ROOT / "data"
+STATUS = ROOT / "status"
+OUT = STATUS / "nycif-daily-data-health.json"
+MAX_SOURCE_AGE_HOURS = 36.0
+
+
+def load(path: Path, default: Any = None) -> Any:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return default
+
+
+def timestamp(payload: Any) -> str | None:
+    if not isinstance(payload, dict):
+        return None
+    for key in ("generated_at_utc", "generated_at", "last_run_utc"):
+        value = payload.get(key)
+        if value:
+            return str(value)
+    return None
+
+
+def parse_utc(value: str | None) -> datetime | None:
+    if not value:
+        return None
+    try:
+        parsed = datetime.fromisoformat(value.strip().replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def age_hours(value: str | None) -> float | None:
+    parsed = parse_utc(value)
+    if not parsed:
+        return None
+    return round((datetime.now(timezone.utc) - parsed).total_seconds() / 3600, 2)
+
+
+def first_value(payload: dict[str, Any], keys: tuple[str, ...]) -> Any:
+    for key in keys:
+        if payload.get(key) is not None:
+            return payload.get(key)
+    return None
+
+
+def source_status(
+    name: str,
+    path: Path,
+    count_keys: tuple[str, ...],
+    *,
+    require_live_mode: bool = False,
+) -> dict[str, Any]:
+    payload = load(path, {}) or {}
+    generated = timestamp(payload)
+    age = age_hours(generated)
+    qa_pass = bool(payload.get("qa_pass", True))
+    fetch_mode = str(payload.get("fetch_mode") or "live")
+    live_mode = not require_live_mode or fetch_mode == "live"
+    fresh = age is not None and 0 <= age <= MAX_SOURCE_AGE_HOURS
+    return {
+        "name": name,
+        "artifact": str(path.relative_to(ROOT)),
+        "generated_at_utc": generated,
+        "age_hours": age,
+        "max_age_hours": MAX_SOURCE_AGE_HOURS,
+        "qa_pass": qa_pass,
+        "fetch_mode": fetch_mode,
+        "live_fetch": live_mode,
+        "fresh": fresh and qa_pass and live_mode,
+        "record_count": first_value(payload, count_keys),
+        "error": payload.get("error") or payload.get("live_fetch_error"),
+    }
+
+
+def artifact_status(name: str, path: Path, count_keys: tuple[str, ...]) -> dict[str, Any]:
+    payload = load(path, {}) or {}
+    generated = timestamp(payload)
+    age = age_hours(generated)
+    return {
+        "name": name,
+        "artifact": str(path.relative_to(ROOT)),
+        "generated_at_utc": generated,
+        "age_hours": age,
+        "fresh": age is not None and 0 <= age <= MAX_SOURCE_AGE_HOURS,
+        "record_count": first_value(payload, count_keys),
+    }
+
+
+def blocker(code: str, message: str, artifact: str) -> dict[str, str]:
+    return {
+        "code": code,
+        "severity": "critical",
+        "message": message,
+        "artifact": artifact,
+    }
+
+
+def main() -> int:
+    generated = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+    sources = [
+        source_status(
+            "NYC permitted events",
+            DATA / "live_sync_report.json",
+            ("raw_rows_loaded", "source_rows"),
+        ),
+        source_status(
+            "NYC Citywide Calendar",
+            DATA / "nyc_citywide_events_calendar_sync_report.json",
+            ("snapshot_rows", "rows", "source_rows", "event_count"),
+        ),
+        source_status(
+            "NYC Parks BigApps",
+            DATA / "nyc_parks_bigapps_events_sync_report.json",
+            ("snapshot_rows", "rows", "source_rows", "event_count"),
+            require_live_mode=True,
+        ),
+    ]
+
+    staged = load(DATA / "staged_live_manifest.json", {}) or {}
+    approved = load(DATA / "schema-v1-discovery" / "approved" / "manifest.json", {}) or {}
+    reconciliation = load(DATA / "events_discovery_reconciliation_v02.json", {}) or {}
+    schema_validation = load(DATA / "events_discovery_schema_validation_v02.json", {}) or {}
+    cems = load(
+        DATA / "schema-v1-discovery" / "shared-cems-occurrence-dedupe-summary.json",
+        {},
+    ) or {}
+    cross_source = load(DATA / "reports" / "discovery_approved_dedupe_report.json", {}) or {}
+
+    derived = [
+        artifact_status("Map-ready staged feed", DATA / "staged_live_manifest.json", ("staged_feed_events",)),
+        artifact_status(
+            "Approved public discovery feed",
+            DATA / "schema-v1-discovery" / "approved" / "manifest.json",
+            ("total",),
+        ),
+        artifact_status(
+            "Cross-source dedupe evidence",
+            DATA / "reports" / "discovery_approved_dedupe_report.json",
+            ("output_count",),
+        ),
+        artifact_status(
+            "Shared-CEMS dedupe evidence",
+            DATA / "schema-v1-discovery" / "shared-cems-occurrence-dedupe-summary.json",
+            ("output_count",),
+        ),
+    ]
+
+    equations = reconciliation.get("equations") if isinstance(reconciliation, dict) else {}
+    equations = equations if isinstance(equations, dict) else {}
+    gap = int(equations.get("calendar_parks_unaccounted_gap") or 0)
+    strict_reconciliation = bool(reconciliation.get("reconciles_strict")) and gap == 0
+    canonical_ids_clean = bool(schema_validation.get("qa_pass")) and int(
+        schema_validation.get("error_count") or 0
+    ) == 0
+    cems_clean = bool(cems.get("qa_pass")) and int(cems.get("fatal_blocked_group_count") or 0) == 0
+    cross_source_clean = bool(cross_source.get("qa_pass"))
+    cross_date_suppressed = int(staged.get("cross_date_street_occurrences_suppressed") or 0)
+    exact_occurrence_suppressed = int(staged.get("exact_occurrence_duplicates_suppressed") or 0)
+
+    blockers: list[dict[str, str]] = []
+    for source in sources:
+        if not source["fresh"]:
+            detail = source.get("error") or source.get("fetch_mode") or "missing/expired report"
+            blockers.append(
+                blocker(
+                    "source_not_live_and_fresh",
+                    f"{source['name']} is not a successful live fetch within {MAX_SOURCE_AGE_HOURS:g} hours ({detail}).",
+                    source["artifact"],
+                )
+            )
+    for item in derived:
+        if not item["fresh"]:
+            blockers.append(
+                blocker(
+                    "derived_artifact_stale",
+                    f"{item['name']} is missing or older than {MAX_SOURCE_AGE_HOURS:g} hours.",
+                    item["artifact"],
+                )
+            )
+    if not strict_reconciliation:
+        blockers.append(
+            blocker(
+                "strict_reconciliation_failed",
+                f"Source accounting is not strict; Calendar/Parks unaccounted gap is {gap}.",
+                "data/events_discovery_reconciliation_v02.json",
+            )
+        )
+    if not canonical_ids_clean:
+        blockers.append(
+            blocker(
+                "canonical_identity_failed",
+                "Canonical identity/schema validation did not pass with zero errors.",
+                "data/events_discovery_schema_validation_v02.json",
+            )
+        )
+    if not cross_source_clean:
+        blockers.append(
+            blocker(
+                "cross_source_dedupe_failed",
+                "Cross-source approved-feed dedupe did not pass in this generation.",
+                "data/reports/discovery_approved_dedupe_report.json",
+            )
+        )
+    if not cems_clean:
+        blockers.append(
+            blocker(
+                "cems_dedupe_failed",
+                "Shared-CEMS occurrence dedupe failed or contains fatal blocked groups.",
+                "data/schema-v1-discovery/shared-cems-occurrence-dedupe-summary.json",
+            )
+        )
+    if cross_date_suppressed:
+        blockers.append(
+            blocker(
+                "cross_date_occurrence_loss",
+                f"{cross_date_suppressed} legitimate dated street occurrences were suppressed across dates.",
+                "data/staged_live_manifest.json",
+            )
+        )
+
+    release_ready = not blockers
+    payload = {
+        "artifact_type": "nycif_daily_data_health",
+        "schema_version": "1.1.0",
+        "generated_at_utc": generated,
+        "company_focus": "News Desk live-data completeness, freshness, and duplicate safety",
+        "status": "READY" if release_ready else "BLOCKED",
+        "release_ready": release_ready,
+        "daily_refresh_required": True,
+        "sources": sources,
+        "derived_artifacts": derived,
+        "pipeline": {
+            "strict_reconciliation": strict_reconciliation,
+            "calendar_parks_unaccounted_gap": gap,
+            "canonical_identity_clean": canonical_ids_clean,
+            "cross_source_dedupe_clean": cross_source_clean,
+            "shared_cems_dedupe_clean": cems_clean,
+            "exact_occurrence_duplicates_suppressed": exact_occurrence_suppressed,
+            "cross_date_street_occurrences_suppressed": cross_date_suppressed,
+        },
+        "blockers": blockers,
+        "operating_rule": "Do not commit or publish a refreshed public feed unless status is READY.",
+        "rollback_rule": "A failed refresh leaves the current main-branch feed unchanged; rollback points to the previous READY commit.",
+        "enigma": {
+            "production_authority": False,
+            "mode": "shadow_only",
+            "note": "V1 remains the production authority until a separately governed real-data Enigma phase is authorized.",
+        },
+    }
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
+    print(json.dumps(payload, indent=2))
+    return 0 if release_ready else 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())

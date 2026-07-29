@@ -2,7 +2,8 @@
 """Fetch NYC Citywide Events Calendar API snapshot (staging only).
 
 This script does NOT modify protected feeds or publish to the public map.
-It writes a staging snapshot plus a sync report for multi-source coverage QA.
+It writes an active-listing snapshot plus a sync report for multi-source
+coverage QA. Source-canceled listings are explicitly counted and excluded.
 
 Source: https://api.nyc.gov/calendar/* (same API as nyc.gov/main/events)
 """
@@ -34,7 +35,7 @@ PUBLIC_KEY_FALLBACK_URLS = (
 SEARCH_PATH = "calendar/search"
 CATEGORIES_PATH = "calendar/categories"
 DEFAULT_WINDOW_DAYS = int(os.environ.get("NYC_EVENT_CAL_WINDOW_DAYS", "183"))
-PAGE_SIZE = 12  # API returns 12 items per page (observed 2026-07)
+PAGE_SIZE = 12
 
 
 def save_json(path: Path, payload: Any) -> None:
@@ -42,16 +43,6 @@ def save_json(path: Path, payload: Any) -> None:
     with path.open("w", encoding="utf-8") as handle:
         json.dump(payload, handle, indent=2, ensure_ascii=False, sort_keys=True)
         handle.write("\n")
-
-
-def load_json(path: Path, default: Any) -> Any:
-    if not path.exists() or path.stat().st_size == 0:
-        return default
-    try:
-        with path.open("r", encoding="utf-8") as handle:
-            return json.load(handle)
-    except Exception:
-        return default
 
 
 def fetch_public_key(url: str) -> str:
@@ -106,6 +97,14 @@ def mmddyyyy(value: date) -> str:
     return value.strftime("%m/%d/%Y")
 
 
+def bool_flag(value: Any) -> bool:
+    if isinstance(value, bool):
+        return value
+    if value is None:
+        return False
+    return str(value).strip().lower() in {"1", "true", "yes", "y"}
+
+
 def normalize_calendar_item(item: dict[str, Any]) -> dict[str, Any]:
     boroughs = item.get("boroughs")
     if isinstance(boroughs, list):
@@ -128,7 +127,7 @@ def normalize_calendar_item(item: dict[str, Any]) -> dict[str, Any]:
         "date_part": item.get("datePart"),
         "time_part": item.get("timePart"),
         "all_day": item.get("allDay"),
-        "canceled": item.get("canceled"),
+        "canceled": bool_flag(item.get("canceled")),
         "permalink": item.get("permalink"),
         "description_html": item.get("desc"),
         "short_description": item.get("shortDesc"),
@@ -214,7 +213,10 @@ def main() -> int:
         print(json.dumps(report, indent=2, ensure_ascii=False))
         return 1
 
-    normalized = [normalize_calendar_item(item) for item in raw_items]
+    normalized_all = [normalize_calendar_item(item) for item in raw_items]
+    canceled_rows = [row for row in normalized_all if row.get("canceled")]
+    normalized = [row for row in normalized_all if not row.get("canceled")]
+
     deduped: dict[str, dict[str, Any]] = {}
     for row in normalized:
         dedupe_key = "|".join(
@@ -237,13 +239,17 @@ def main() -> int:
 
     report = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "qa_pass": True,
+        "qa_pass": bool(rows),
+        "fetch_mode": "live",
         "api_gateway": API_GATEWAY,
         "api_key_source": key_source,
         "search_path": SEARCH_PATH,
         "window_days": DEFAULT_WINDOW_DAYS,
         "window": window_meta,
         "categories_available": categories,
+        "source_rows_received": len(normalized_all),
+        "canceled_excluded": len(canceled_rows),
+        "duplicate_exact_occurrences_collapsed": len(normalized) - len(rows),
         "snapshot_rows": len(rows),
         "category_counts": dict(sorted(category_counts.items())),
         "borough_counts": dict(sorted(borough_counts.items())),
@@ -258,7 +264,7 @@ def main() -> int:
     save_json(SNAPSHOT_PATH, rows)
     save_json(REPORT_PATH, report)
     print(json.dumps(report, indent=2, ensure_ascii=False))
-    return 0
+    return 0 if report["qa_pass"] else 1
 
 
 if __name__ == "__main__":

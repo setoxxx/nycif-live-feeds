@@ -1,13 +1,9 @@
 name: Discovery Feed Refresh
 
-# Fetches fresh NYC permit data, resolves map-ready locations, rebuilds the
-# public discovery event feed the Field Desk map consumes
-# (data/schema-v1-discovery/**), and commits the result back to main.
-#
-# The prior workflow rebuilt only from committed snapshots. That allowed the
-# derived feed to refresh while newly issued permits never entered the source
-# snapshot. The live intake refresh now runs inside the same retry loop so each
-# derived commit is built from the current NYC Open Data export.
+# Atomic daily production transaction for the NYC In Focus News Desk.
+# Fetches all required official event sources, rebuilds occurrence-safe staging,
+# projects/deduplicates public discovery data, requires strict reconciliation,
+# updates God View, and commits only when daily data health is READY.
 
 on:
   workflow_dispatch:
@@ -19,7 +15,12 @@ on:
     paths:
       - '.github/workflows/discovery-feed-refresh.yml'
       - 'scripts/live_event_intake_refresh.py'
-      - 'scripts/test_live_event_intake_refresh.py'
+      - 'scripts/build_staged_production_feed.py'
+      - 'scripts/refresh_official_supplemental_occurrences.py'
+      - 'scripts/enforce_strict_discovery_reconciliation.py'
+      - 'scripts/build_daily_data_health.py'
+      - 'scripts/apply_daily_data_health_to_godview.py'
+      - 'scripts/test_daily_production_hardening.py'
 
 permissions:
   contents: write
@@ -42,44 +43,51 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Verify live intake regression contract
-        run: python scripts/test_live_event_intake_refresh.py
+      - name: Verify daily production contracts
+        run: |
+          python scripts/test_live_event_intake_refresh.py
+          python scripts/test_daily_production_hardening.py
 
-      - name: Build and commit discovery feed
+      - name: Build, validate, and commit READY discovery feed
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          # The source snapshots and discovery feed are derived state. If main
-          # advances between checkout and push, rebuild everything from the new
-          # tip and try again. Never merge, resolve generated conflicts, or
-          # force-push over main.
+          # If main advances before push, discard all generated work, reset to the
+          # new tip, and rebuild the complete transaction. Never merge generated
+          # conflicts or force-push over another successful data refresh.
           for attempt in 1 2 3; do
             git fetch origin main
             git reset --hard FETCH_HEAD
+            PREVIOUS_PUBLIC_FEED_SHA="$(git rev-parse HEAD)"
+            export PREVIOUS_PUBLIC_FEED_SHA
 
-            # Pull the complete current NYC permit dataset, resolve new street
-            # locations, and rebuild the map-ready staged feed before projecting
-            # the public discovery pages.
+            # One official-source transaction: permitted events, Citywide
+            # Calendar, Parks BigApps, enrichment and map-ready staging.
             python scripts/live_event_intake_refresh.py
 
-            # Two-step discovery pipeline: the schema-v1 major build produces
-            # the major key set that the projector reads to flag Featured
-            # events; the projector then writes data/schema-v1-discovery/**.
+            # Rebuild exact Calendar/Parks occurrence intake. Human rejection
+            # decisions remain authoritative; recurring dates stay distinct.
+            python scripts/refresh_official_supplemental_occurrences.py
+
+            # Public discovery projection and duplicate controls.
             python scripts/build_events_schema_v1_major.py
             python scripts/build_street_festivals_feed.py
             python scripts/project_events_discovery_v02.py
-
-            # "What's New" diff + category coverage over the fresh staged
-            # snapshot. This emits only the diff + coverage because the frontend
-            # loads the full event set through the discovery approved pages.
+            python scripts/enforce_strict_discovery_reconciliation.py
             python scripts/build_comprehensive_event_feed.py
 
-            python scripts/generate_godview_project_state.py --fetch-github
+            # Fail-closed production health. This command returns nonzero unless
+            # every required source/artifact is fresh and every strict identity,
+            # reconciliation, and dedupe gate passes.
+            python scripts/build_daily_data_health.py
 
-            # Fail closed: never commit an empty or malformed public feed, and
-            # ensure the live source, enrichment and staging chain completed.
+            # Regenerate the canonical project state, then make the daily data
+            # health contract the visible God View company objective.
+            python scripts/generate_godview_project_state.py --fetch-github
+            python scripts/apply_daily_data_health_to_godview.py
+
             python - <<'PY'
           import glob
           import json
@@ -87,55 +95,98 @@ jobs:
 
           raw = json.load(open("data/raw_nyc_open_data_snapshot.json"))
           live = json.load(open("data/live_sync_report.json"))
+          calendar = json.load(open("data/nyc_citywide_events_calendar_snapshot.json"))
+          calendar_report = json.load(open("data/nyc_citywide_events_calendar_sync_report.json"))
+          parks = json.load(open("data/nyc_parks_bigapps_events_snapshot.json"))
+          parks_report = json.load(open("data/nyc_parks_bigapps_events_sync_report.json"))
           test_manifest = json.load(open("data/test_enriched_feed_manifest.json"))
           staged_manifest = json.load(open("data/staged_live_manifest.json"))
           staged = json.load(open("data/nycif_staged_live_events.json"))
+          supplemental = json.load(open("data/supplemental_events_staging_feed.json"))
+          reconciliation = json.load(open("data/events_discovery_reconciliation_v02.json"))
+          health = json.load(open("status/nycif-daily-data-health.json"))
           major = json.load(open("data/schema-v1-discovery/major/events.json"))
           manifest = json.load(open("data/schema-v1-discovery/approved/manifest.json"))
           pages = glob.glob("data/schema-v1-discovery/approved/pages/*.json")
           report = json.load(open("data/comprehensive_feed_report.json"))
           whats_new = json.load(open("data/nycif_new_events.json"))
 
-          if not isinstance(raw, list) or not raw:
-              sys.exit("live NYC Open Data snapshot is empty")
-          if live.get("raw_rows_loaded") != len(raw):
-              sys.exit(
-                  f"live sync count {live.get('raw_rows_loaded')} != raw snapshot {len(raw)}"
-              )
-          if test_manifest.get("raw_rows_loaded") != len(raw):
-              sys.exit(
-                  f"test enrichment count {test_manifest.get('raw_rows_loaded')} != raw snapshot {len(raw)}"
-              )
+          calendar_rows = calendar if isinstance(calendar, list) else calendar.get("events", [])
+          parks_rows = parks.get("events", []) if isinstance(parks, dict) else parks
+          supplemental_rows = supplemental.get("events", []) if isinstance(supplemental, dict) else supplemental
           staged_events = staged.get("events") if isinstance(staged, dict) else None
+
+          if not isinstance(raw, list) or not raw:
+              sys.exit("live NYC permitted-event snapshot is empty")
+          if live.get("raw_rows_loaded") != len(raw):
+              sys.exit(f"live sync count {live.get('raw_rows_loaded')} != raw snapshot {len(raw)}")
+          if not calendar_report.get("qa_pass") or not calendar_rows:
+              sys.exit("Citywide Calendar live sync failed or returned no events")
+          if not parks_report.get("qa_pass") or parks_report.get("fetch_mode") != "live" or not parks_rows:
+              sys.exit("Parks BigApps was not a successful live fetch")
+          if len(supplemental_rows) < len(calendar_rows) + len(parks_rows) - int(calendar_report.get("canceled_excluded", 0) or 0):
+              print("Supplemental occurrence total is lower than raw source total; strict reconciliation remains authoritative.")
+          if test_manifest.get("raw_rows_loaded") != len(raw):
+              sys.exit("test enrichment count does not match current permitted-event snapshot")
           if not isinstance(staged_events, list) or not staged_events:
               sys.exit("staged map-ready feed has no events")
           if staged_manifest.get("staged_feed_events") != len(staged_events):
-              sys.exit(
-                  f"staged manifest count {staged_manifest.get('staged_feed_events')} != staged rows {len(staged_events)}"
-              )
+              sys.exit("staged manifest count does not match staged rows")
+          if staged_manifest.get("cross_date_street_occurrences_suppressed") != 0:
+              sys.exit("cross-date recurring street occurrences were suppressed")
+          if not reconciliation.get("reconciles_strict"):
+              sys.exit("strict source reconciliation did not pass")
+          if not health.get("release_ready") or health.get("status") != "READY":
+              sys.exit("daily data health is not READY")
           if not major.get("events"):
               sys.exit("major feed has no events")
           if manifest.get("page_count") != len(pages) or not pages:
-              sys.exit(
-                  f"approved manifest page_count {manifest.get('page_count')} != {len(pages)} page files"
-              )
+              sys.exit("approved manifest page count does not match page files")
           if not manifest.get("latest_date"):
               sys.exit("approved manifest missing latest_date")
           if not report.get("qa_pass") or report.get("kept", 0) < 1:
-              sys.exit("coverage report failed QA / scanned no events")
+              sys.exit("coverage report failed QA or scanned no events")
           if "new_this_run" not in whats_new:
               sys.exit("what's-new diff missing new_this_run")
 
           print(
-              f"validated: {len(raw)} live source rows, {len(staged_events)} staged map-ready events, "
-              f"{len(major['events'])} major, {manifest.get('total')} approved across {len(pages)} pages, "
-              f"{report['kept']} scanned ({whats_new['new_this_run']} new this run)"
+              f"READY: {len(raw)} permits, {len(calendar_rows)} Calendar, {len(parks_rows)} Parks, "
+              f"{len(staged_events)} staged, {manifest.get('total')} approved, "
+              f"{whats_new['new_this_run']} newly added"
           )
+          PY
+
+            # Git history is the rollback store. A failed run never reaches this
+            # point, so main remains the last serving feed. A successful run
+            # records the exact previous public-feed commit for one-step rollback.
+            python - <<'PY'
+          import json
+          import os
+          from datetime import datetime, timezone
+
+          approved = json.load(open("data/schema-v1-discovery/approved/manifest.json"))
+          health = json.load(open("status/nycif-daily-data-health.json"))
+          pointer = {
+              "artifact_type": "nycif_last_known_good_feed_pointer",
+              "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+              "previous_public_feed_commit": os.environ["PREVIOUS_PUBLIC_FEED_SHA"],
+              "candidate_health_status": health.get("status"),
+              "candidate_approved_generated_at_utc": approved.get("generated_at_utc"),
+              "candidate_approved_events": approved.get("total"),
+              "rollback_instruction": "Reset or revert the candidate refresh commit to restore previous_public_feed_commit.",
+          }
+          open("status/nycif-last-known-good-feed.json", "w").write(json.dumps(pointer, indent=2, sort_keys=True) + "\n")
           PY
 
             git add \
               data/raw_nyc_open_data_snapshot.json \
               data/live_sync_report.json \
+              data/nyc_citywide_events_calendar_snapshot.json \
+              data/nyc_citywide_events_calendar_sync_report.json \
+              data/nyc_parks_bigapps_events_snapshot.json \
+              data/nyc_parks_bigapps_events_sync_report.json \
+              data/supplemental_events_staging_feed.json \
+              data/official_supplemental_occurrence_refresh_report.json \
               data/nycif_live_test_enriched_events.json \
               data/test_enriched_feed_manifest.json \
               data/nycif_staged_live_events.json \
@@ -156,6 +207,10 @@ jobs:
               data/events_discovery_schema_validation_v02.json \
               data/events_schema_v1_major.json \
               data/events_schema_v1_major_report.json \
+              data/reports/discovery_approved_dedupe_report.json \
+              data/reports/discovery_shared_cems_occurrence_dedupe_report.json \
+              status/nycif-daily-data-health.json \
+              status/nycif-last-known-good-feed.json \
               status/nycif-godview-project-state-v02.json \
               status/nycif-github-tracker.json \
               status/nycif-project-status.json \
@@ -163,20 +218,21 @@ jobs:
               data/reports/godview_project_state_report.json \
               docs/events-discovery-taxonomy-v02.md \
               docs/field-desk-map-deploy
+
             if git diff --cached --quiet; then
-              echo "No live source or discovery feed changes to commit."
+              echo "No source or public feed changes to commit."
               exit 0
             fi
 
-            git commit -m "Refresh live event intake and discovery feed"
+            git commit -m "Refresh READY News Desk live-data feed"
             if git push origin HEAD:main; then
-              echo "Pushed live source and discovery feed on attempt ${attempt}."
+              echo "Pushed READY daily production feed on attempt ${attempt}."
               exit 0
             fi
 
-            echo "Push rejected (main advanced since fetch); rebuilding on the new tip (attempt ${attempt} of 3)."
+            echo "Push rejected because main advanced; rebuilding the full transaction (attempt ${attempt} of 3)."
             sleep $((attempt * 10))
           done
 
-          echo "::error::Could not push live source and discovery feed after 3 attempts; main kept advancing. Re-run the workflow."
+          echo "::error::Could not push a READY daily feed after 3 attempts; main remained unchanged."
           exit 1
