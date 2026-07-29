@@ -2,9 +2,9 @@
 """Rebuild the official Calendar/Parks supplemental occurrence intake.
 
 Every source occurrence is keyed by dataset + source event ID + exact source
-start occurrence. Human rejection decisions remain authoritative. Other valid
-official public listings are approved for discovery intake; rows without
-coordinates remain list-only rather than being silently dropped.
+start occurrence. Human rejection decisions remain in the intake file as
+explicit rejected dispositions so source accounting stays complete. Other valid
+official listings are approved; rows without coordinates remain list-only.
 """
 
 from __future__ import annotations
@@ -88,7 +88,7 @@ def decision_maps() -> tuple[dict[tuple[str, str], str], dict[tuple[str, str, st
     return by_source, by_day
 
 
-def approved_row(row: dict[str, Any], status: str) -> dict[str, Any]:
+def intake_row(row: dict[str, Any], status: str) -> dict[str, Any]:
     out = dict(row)
     dataset, source_event_id = source_parts(out)
     start = occurrence_start(out)
@@ -97,9 +97,10 @@ def approved_row(row: dict[str, Any], status: str) -> dict[str, Any]:
     out["manual_review_status"] = status
     out["official_source_occurrence"] = True
     out["official_source_occurrence_key"] = f"{dataset}:{source_event_id}@{start}"
-    out["approval_decision_reason"] = (
-        out.get("approval_decision_reason")
-        or "official_city_source_daily_occurrence_intake"
+    out["approval_decision_reason"] = out.get("approval_decision_reason") or (
+        "human_rejected_official_source_occurrence"
+        if status == "rejected"
+        else "official_city_source_daily_occurrence_intake"
     )
     out["promotion_allowed"] = False
     out["public_map_modified"] = False
@@ -113,10 +114,10 @@ def main() -> int:
     by_source, by_day = decision_maps()
     input_rows = rows(load(CALENDAR, [])) + rows(load(PARKS, {}))
 
-    accepted: dict[tuple[str, str, str], dict[str, Any]] = {}
-    rejected = 0
+    indexed: dict[tuple[str, str, str], dict[str, Any]] = {}
+    human_rejected = 0
     invalid = 0
-    canceled = 0
+    unexpected_canceled = 0
     for row in input_rows:
         dataset, source_event_id = source_parts(row)
         start = occurrence_start(row)
@@ -126,25 +127,25 @@ def main() -> int:
             invalid += 1
             continue
         if bool(row.get("canceled")):
-            canceled += 1
+            unexpected_canceled += 1
             continue
         key = (dataset, source_event_id, start)
         status = by_day.get((dataset, source_event_id, day)) or by_source.get((dataset, source_event_id)) or "approved"
-        if status == "rejected":
-            rejected += 1
-            continue
         if status == "pending":
             status = "approved"
-        accepted[key] = approved_row(row, status)
+        if status == "rejected":
+            human_rejected += 1
+        indexed[key] = intake_row(row, status)
 
     events = sorted(
-        accepted.values(),
+        indexed.values(),
         key=lambda row: (
             occurrence_start(row),
             source_parts(row)[0],
             source_parts(row)[1],
         ),
     )
+    duplicate_exact = max(0, len(input_rows) - invalid - unexpected_canceled - len(events))
     payload = {
         "schema_version": "official-supplemental-occurrence-v1",
         "generated_at_utc": generated,
@@ -158,13 +159,14 @@ def main() -> int:
     report = {
         "schema_version": "official-supplemental-occurrence-v1",
         "generated_at_utc": generated,
-        "qa_pass": bool(events) and invalid == 0,
+        "qa_pass": bool(events) and invalid == 0 and unexpected_canceled == 0,
         "source_rows": len(input_rows),
-        "occurrences_written": len(events),
-        "human_rejected": rejected,
-        "canceled_excluded": canceled,
+        "occurrences_indexed": len(events),
+        "eligible_occurrences": len(events) - human_rejected,
+        "human_rejected": human_rejected,
+        "unexpected_canceled_rows": unexpected_canceled,
         "invalid_missing_identity": invalid,
-        "duplicate_exact_occurrences_collapsed": max(0, len(input_rows) - rejected - canceled - invalid - len(events)),
+        "duplicate_exact_occurrences_collapsed": duplicate_exact,
         "cross_date_occurrences_collapsed": 0,
         "same_day_distinct_times_preserved": True,
         "output": str(OUT.relative_to(ROOT)),
