@@ -154,7 +154,11 @@ def main() -> int:
     expected_list = int(reconciliation.get("list_only_coordinate_records") or 0)
 
     map_rows = [row for row in approved if precedent(row) is not None]
-    invalid_map_rows = [str(row.get("id") or "") for row in approved if approved_status(row) == "map_ready" and precedent(row) is None]
+    excluded_map_ready_rows = [
+        str(row.get("id") or "")
+        for row in approved
+        if approved_status(row) == "map_ready" and precedent(row) is None
+    ]
 
     by_source_id: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
     by_location: dict[str, list[dict[str, Any]]] = defaultdict(list)
@@ -241,12 +245,19 @@ def main() -> int:
         )
 
     now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    selected_proposals_valid = all(
+        valid_nyc(num(item.get("lat")), num(item.get("lng")))
+        and norm(item.get("borough")) in NYC_BOROUGHS
+        and item.get("method") in {"exact_source_event_id_precedent", "exact_location_precedent"}
+        and bool(item.get("evidence_canonical_ids"))
+        for item in proposals
+    )
     equations = {
         "queue_declared_count_matches_rows": int(missing_payload.get("count") or 0) == len(targets),
         "list_only_matches_reconciliation": len(targets) == expected_list,
         "list_equals_ledger": len(targets) == len(ledger),
         "proposal_count_matches": len(proposals) == reasons.get("supported_coordinate_proposal", 0),
-        "all_map_ready_precedents_valid": not invalid_map_rows,
+        "all_selected_proposals_valid": selected_proposals_valid,
         "canonical_ids_present_and_unique": len({str(item.get("canonical_id") or "") for item in targets}) == len(targets) and all(item.get("canonical_id") for item in targets),
         "list_fingerprints_unique": len({entry["fingerprint_sha256"] for entry in ledger}) == len(ledger),
         "all_records_reason_coded": sum(reasons.values()) == len(targets),
@@ -254,19 +265,19 @@ def main() -> int:
     qa_pass = all(equations.values())
     report = {
         "artifact_type": "stage8_list_only_coordinate_inventory",
-        "schema_version": "2.1.0",
+        "schema_version": "2.2.0",
         "generated_at_utc": now,
         "source_snapshot_generated_at_utc": reconciliation.get("generated_at_utc"),
         "approved_projection_total": len(approved),
         "certified_precedent_total": len(map_rows),
+        "excluded_existing_map_ready_from_precedent_index_count": len(excluded_map_ready_rows),
+        "excluded_existing_map_ready_sample": excluded_map_ready_rows[:100],
         "list_only_total": len(targets),
         "expected_from_reconciliation": {"list_only_total": expected_list},
         "reason_counts": dict(sorted(reasons.items())),
         "proposal_method_counts": dict(sorted(methods.items())),
         "proposal_total": len(proposals),
         "ledger_total": len(ledger),
-        "invalid_map_ready_precedent_count": len(invalid_map_rows),
-        "invalid_map_ready_precedent_sample": invalid_map_rows[:100],
         "equations": equations,
         "production_data_modified": False,
         "promotion_allowed": False,
@@ -278,7 +289,7 @@ def main() -> int:
         PROPOSALS,
         {
             "artifact_type": "stage8_supported_coordinate_proposals",
-            "schema_version": "2.1.0",
+            "schema_version": "2.2.0",
             "generated_at_utc": now,
             "source_snapshot_generated_at_utc": reconciliation.get("generated_at_utc"),
             "promotion_allowed": False,
