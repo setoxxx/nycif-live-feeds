@@ -61,7 +61,7 @@ jobs:
         run: |
           python scripts/certify_stage8_supported_coordinate_resolution.py
           python scripts/certify_event_923896_outputs.py
-      - name: Stage only authorized generated artifacts
+      - name: Commit and rebase authorized generated artifacts
         run: |
           git add -A
           bad="$(git diff --cached --name-only | grep -Ev '^(data/|status/|nycif_major_radar_map_events\.json$|docs/events-discovery-taxonomy-v02\.md$|docs/field-desk-map-deploy/)' || true)"
@@ -77,6 +77,8 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git commit -m 'Apply 632 supported Stage 8 coordinates [skip ci]'
+          git fetch origin feature/stage8-list-only-coordinate-resolution
+          git rebase origin/feature/stage8-list-only-coordinate-resolution
           git push origin HEAD:feature/stage8-list-only-coordinate-resolution
       - name: Verify committed Stage 8 certificate
         run: |
