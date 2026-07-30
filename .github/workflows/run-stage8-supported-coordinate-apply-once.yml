@@ -1,0 +1,102 @@
+name: Stage 8 Supported Coordinate Apply Once
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - .stage8-apply-trigger
+      - scripts/stage8_apply_supported_coordinate_proposals.py
+      - scripts/certify_stage8_supported_coordinate_resolution.py
+
+permissions:
+  contents: write
+
+jobs:
+  apply-rebuild-certify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/stage8-list-only-coordinate-resolution
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify baseline production contracts
+        run: |
+          python scripts/test_live_event_intake_refresh.py
+          python scripts/test_daily_production_hardening.py
+      - name: Regenerate and verify Stage 8 proposal evidence
+        run: |
+          python scripts/stage8_list_only_coordinate_inventory.py
+          python scripts/stage8_match_supported_coordinate_proposals.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          inventory=json.loads(Path('data/reports/stage8_list_only_coordinate_inventory.json').read_text())
+          match=json.loads(Path('data/reports/stage8_supported_coordinate_match_report.json').read_text())
+          assert inventory['qa_pass'] is True
+          assert inventory['proposal_total'] == 632
+          assert inventory['list_only_total'] == 997
+          assert match['qa_pass'] is True
+          assert match['proposal_total'] == 632
+          assert match['all_proposals_match_exactly_once'] is True
+          assert match['apply_allowed'] is False
+          PY
+      - name: Apply supported coordinates to supplemental staging
+        env:
+          NYCIF_STAGE8_APPLY: '1'
+        run: python scripts/stage8_apply_supported_coordinate_proposals.py
+      - name: Rebuild every downstream production projection
+        run: |
+          python scripts/build_events_schema_v1_major.py
+          python scripts/build_street_festivals_feed.py
+          python scripts/project_events_discovery_v02.py
+          python scripts/enforce_strict_discovery_reconciliation.py
+          python scripts/build_comprehensive_event_feed.py
+          python scripts/run_daily_people_facing_desk_sync.py --skip-network-sync
+          python scripts/refresh_runtime_fallback_feeds.py
+          python scripts/build_daily_data_health.py
+      - name: Certify Stage 8 and permanent block-party fixture
+        run: |
+          python scripts/certify_stage8_supported_coordinate_resolution.py
+          python scripts/certify_event_923896_outputs.py
+      - name: Stage only authorized generated artifacts
+        run: |
+          git add -A
+          bad="$(git diff --cached --name-only | grep -Ev '^(data/|status/|nycif_major_radar_map_events\.json$|docs/events-discovery-taxonomy-v02\.md$|docs/field-desk-map-deploy/)' || true)"
+          if [ -n "$bad" ]; then
+            echo 'Unexpected generated paths:' >&2
+            echo "$bad" >&2
+            exit 1
+          fi
+          if git diff --cached --quiet; then
+            echo 'Stage 8 apply produced no generated changes' >&2
+            exit 1
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Apply 632 supported Stage 8 coordinates [skip ci]'
+          git push origin HEAD:feature/stage8-list-only-coordinate-resolution
+      - name: Verify committed Stage 8 certificate
+        run: |
+          git cat-file -e HEAD:data/reports/stage8_supported_coordinate_resolution_certificate.json
+          git cat-file -e HEAD:data/reports/stage8_supported_coordinate_apply_report.json
+          git cat-file -e HEAD:data/events_discovery_reconciliation_v02.json
+          git cat-file -e HEAD:data/events_discovery_missing_coordinates_v02.json
+          python scripts/certify_stage8_supported_coordinate_resolution.py
+          python scripts/certify_event_923896_outputs.py
+      - name: Upload Stage 8 production evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage8-supported-coordinate-resolution
+          path: |
+            data/reports/stage8_list_only_coordinate_inventory.json
+            data/reports/stage8_list_only_coordinate_proposals.json
+            data/reports/stage8_supported_coordinate_match_report.json
+            data/reports/stage8_supported_coordinate_apply_report.json
+            data/reports/stage8_supported_coordinate_resolution_certificate.json
+            data/events_discovery_reconciliation_v02.json
+            data/events_discovery_missing_coordinates_v02.json
+            status/nycif-daily-data-health.json
+          if-no-files-found: error
