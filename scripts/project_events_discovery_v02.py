@@ -540,13 +540,14 @@ def possible_duplicates(events: list[dict]) -> list[dict]:
             {
                 "group_key": f"{key[0]}|{key[1]}|{key[2]}",
                 "count": len(members),
-                "ids": [m["id"] for m in members[:20]],
-                "titles": list({m["title"] for m in members})[:10],
+                "ids": sorted(m["id"] for m in members),
+                "titles": sorted({m["title"] for m in members}),
                 "reason_for_review": "same_title_date_borough_insufficient_for_auto_merge",
                 "recommended_action": "manual_duplicate_review",
             }
         )
-    return out[:500]
+    out.sort(key=lambda item: (-int(item["count"]), str(item["group_key"])))
+    return out
 
 
 def validate_events(events: list[dict]) -> dict:
@@ -832,6 +833,11 @@ def main() -> int:
         )
 
     accepted, group_report = group_events(accepted)
+    write_json(
+        "data/events_discovery_accepted_canonical_v02.json",
+        envelope(accepted, generated_at_utc=generated_at, next_cursor=None)
+        | {"classification_version": CLASSIFICATION_VERSION, "artifact_type": "accepted_canonical_discovery_v02"},
+    )
     legacy_report = legacy_major_quarantine(accepted, legacy_major)
     write_json(
         "data/events_discovery_legacy_major_quarantine_v02.json",
@@ -843,14 +849,31 @@ def main() -> int:
                 "demoted": legacy_report["demoted"],
                 "quarantined": len(legacy_report["quarantined"]),
             },
-            "items": legacy_report["quarantined"][:500],
+            "items": legacy_report["quarantined"],
         },
     )
 
     dupes = possible_duplicates(accepted)
+    duplicate_ids = {
+        canonical_id
+        for group in dupes
+        for canonical_id in group.get("ids", [])
+        if canonical_id
+    }
     write_json(
         "data/events_discovery_possible_duplicates_v02.json",
-        {"generated_at_utc": generated_at, "count": len(dupes), "groups": dupes},
+        {
+            "artifact_type": "events_discovery_possible_duplicates_v02",
+            "schema_version": "2.0.0",
+            "generated_at_utc": generated_at,
+            "canonical_population_count": len(accepted),
+            "count": len(dupes),
+            "candidate_record_count": sum(int(group.get("count") or 0) for group in dupes),
+            "unique_candidate_id_count": len(duplicate_ids),
+            "truncated": False,
+            "auto_merge_allowed": False,
+            "groups": dupes,
+        },
     )
 
     # Queues
@@ -866,15 +889,15 @@ def main() -> int:
     ]
     write_json(
         "data/events_discovery_low_confidence_v02.json",
-        {"generated_at_utc": generated_at, "count": len(low_conf), "items": low_conf[:2000]},
+        {"generated_at_utc": generated_at, "count": len(low_conf), "items": low_conf},
     )
     write_json(
         "data/events_discovery_missing_coordinates_v02.json",
-        {"generated_at_utc": generated_at, "count": len(missing_coords), "items": missing_coords[:2000]},
+        {"generated_at_utc": generated_at, "count": len(missing_coords), "items": missing_coords},
     )
     write_json(
         "data/events_discovery_invalid_records_v02.json",
-        {"generated_at_utc": generated_at, "count": len(invalid), "items": invalid[:2000]},
+        {"generated_at_utc": generated_at, "count": len(invalid), "items": invalid},
     )
 
     validation = validate_events(accepted)
