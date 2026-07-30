@@ -1,6 +1,11 @@
 name: Run Stage 8 List-Only Inventory Once
 
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - scripts/stage8_list_only_coordinate_inventory.py
+      - .stage8-pr-trigger
   issues:
     types: [opened]
   push:
@@ -14,7 +19,7 @@ permissions:
 
 jobs:
   inventory:
-    if: github.event_name == 'push' || github.event.issue.title == 'RUN STAGE 8 LIST-ONLY INVENTORY'
+    if: github.event_name == 'pull_request' || github.event_name == 'push' || github.event.issue.title == 'RUN STAGE 8 LIST-ONLY INVENTORY'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -33,12 +38,14 @@ jobs:
           from pathlib import Path
           report = json.loads(Path('data/reports/stage8_list_only_coordinate_inventory.json').read_text())
           proposals = json.loads(Path('data/reports/stage8_list_only_coordinate_proposals.json').read_text())
+          assert report['schema_version'] == '2.1.0'
           assert report['qa_pass'] is True
           assert report['list_only_total'] == 997
           assert report['expected_from_reconciliation']['list_only_total'] == 997
           assert report['equations']['list_only_matches_reconciliation'] is True
-          assert report['equations']['all_statuses_known'] is True
-          assert report['equations']['all_map_ready_coordinates_valid'] is True
+          assert report['equations']['queue_declared_count_matches_rows'] is True
+          assert report['equations']['all_records_reason_coded'] is True
+          assert report['equations']['all_map_ready_precedents_valid'] is True
           assert report['production_data_modified'] is False
           assert report['promotion_allowed'] is False
           assert proposals['promotion_allowed'] is False
@@ -66,8 +73,6 @@ jobs:
           p=json.loads(Path('data/reports/stage8_list_only_coordinate_inventory.json').read_text())
           print('## Stage 8 inventory completed')
           print(f"- QA pass: `{str(p['qa_pass']).lower()}`")
-          print(f"- Approved canonical records: `{p['approved_total']}`")
-          print(f"- Map-ready records: `{p['map_ready_total']}`")
           print(f"- List-only records: `{p['list_only_total']}`")
           print(f"- Supported coordinate proposals: `{p['proposal_total']}`")
           print('- Production event data modified: `false`')
