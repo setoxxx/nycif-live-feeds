@@ -11,6 +11,7 @@ public feed artifacts unless this script returns success.
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -22,7 +23,10 @@ DATA = ROOT / "data"
 STATUS = ROOT / "status"
 OUT = STATUS / "nycif-daily-data-health.json"
 FIELD_DESK_OVERLAY_HEALTH = STATUS / "nycif-field-desk-overlay-health.json"
+APPROVED_PAGES = DATA / "schema-v1-discovery" / "approved" / "pages"
 MAX_SOURCE_AGE_HOURS = 36.0
+REQUIRED_EVENT_ID = "923896"
+REQUIRED_EVENT_DATE = "2026-08-01"
 
 
 def load(path: Path, default: Any = None) -> Any:
@@ -66,6 +70,10 @@ def first_value(payload: dict[str, Any], keys: tuple[str, ...]) -> Any:
         if payload.get(key) is not None:
             return payload.get(key)
     return None
+
+
+def normalized_text(value: Any) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
 
 
 def source_status(
@@ -129,6 +137,133 @@ def blocker(code: str, message: str, artifact: str) -> dict[str, str]:
     }
 
 
+def event_rows(payload: Any) -> list[dict[str, Any]]:
+    if isinstance(payload, list):
+        return [row for row in payload if isinstance(row, dict)]
+    if isinstance(payload, dict):
+        for key in ("events", "items", "records"):
+            rows = payload.get(key)
+            if isinstance(rows, list):
+                return [row for row in rows if isinstance(row, dict)]
+    return []
+
+
+def event_source_id(event: dict[str, Any]) -> str:
+    source = event.get("source") if isinstance(event.get("source"), dict) else {}
+    return str(
+        event.get("source_event_id")
+        or source.get("source_event_id")
+        or source.get("event_id")
+        or ""
+    ).strip()
+
+
+def event_location_text(event: dict[str, Any]) -> str:
+    value = event.get("display_location") or event.get("location") or event.get("address") or ""
+    if isinstance(value, dict):
+        value = " ".join(
+            str(value.get(key) or "")
+            for key in ("name", "display_name", "address", "street", "description")
+        )
+    return str(value)
+
+
+def event_coordinates(event: dict[str, Any]) -> tuple[float | None, float | None]:
+    location = event.get("location") if isinstance(event.get("location"), dict) else {}
+    lat_value = event.get("latitude")
+    if lat_value is None:
+        lat_value = event.get("lat")
+    if lat_value is None:
+        lat_value = location.get("latitude") or location.get("lat")
+    lng_value = event.get("longitude")
+    if lng_value is None:
+        lng_value = event.get("lng")
+    if lng_value is None:
+        lng_value = location.get("longitude") or location.get("lng") or location.get("lon")
+    try:
+        return float(lat_value), float(lng_value)
+    except (TypeError, ValueError):
+        return None, None
+
+
+def required_event_status(pages_root: Path = APPROVED_PAGES) -> dict[str, Any]:
+    """Prove that required event 923896 is public exactly once with its Brooklyn pin."""
+    matches: list[tuple[str, dict[str, Any]]] = []
+    page_files = sorted(pages_root.glob("page-*.json")) if pages_root.exists() else []
+    for page in page_files:
+        for event in event_rows(load(page, {})):
+            if event_source_id(event) == REQUIRED_EVENT_ID:
+                matches.append((page.name, event))
+
+    failures: list[str] = []
+    if len(matches) != 1:
+        failures.append(f"expected exactly one approved occurrence; found {len(matches)}")
+
+    page_name = None
+    event_id = None
+    start_value = None
+    borough = None
+    location_text = None
+    latitude = None
+    longitude = None
+    coordinate_status = None
+
+    if matches:
+        page_name, event = matches[0]
+        event_id = event.get("id")
+        start_value = event.get("start_date") or event.get("start_date_time") or event.get("start")
+        borough = event.get("borough")
+        if not borough and isinstance(event.get("location"), dict):
+            borough = event["location"].get("borough")
+        location_text = event_location_text(event)
+        latitude, longitude = event_coordinates(event)
+        nycif = event.get("nycif") if isinstance(event.get("nycif"), dict) else {}
+        coordinate_status = event.get("coordinate_status") or nycif.get("coordinate_status")
+
+        if not str(start_value or "").startswith(REQUIRED_EVENT_DATE):
+            failures.append(f"occurrence date is {start_value!r}, expected {REQUIRED_EVENT_DATE}")
+        if normalized_text(borough) != "brooklyn":
+            failures.append(f"borough is {borough!r}, expected Brooklyn")
+
+        normalized_location = normalized_text(location_text)
+        for required_text in ("east 74 street", "avenue u", "avenue t"):
+            if required_text not in normalized_location:
+                failures.append(f"location is missing {required_text!r}: {location_text!r}")
+
+        if latitude is None or longitude is None:
+            failures.append("approved occurrence has no numeric coordinates")
+        else:
+            if not 40.60 <= latitude <= 40.64:
+                failures.append(f"latitude {latitude} is outside the certified Brooklyn segment envelope")
+            if not -73.93 <= longitude <= -73.88:
+                failures.append(f"longitude {longitude} is outside the certified Brooklyn segment envelope")
+
+        if coordinate_status and str(coordinate_status).lower() != "map_ready":
+            failures.append(f"coordinate status is {coordinate_status!r}, expected map_ready")
+
+    return {
+        "name": "Required Brooklyn block party 923896",
+        "source_event_id": REQUIRED_EVENT_ID,
+        "required_date": REQUIRED_EVENT_DATE,
+        "approved_pages_scanned": len(page_files),
+        "match_count": len(matches),
+        "page": page_name,
+        "event_id": event_id,
+        "start": start_value,
+        "borough": borough,
+        "location": location_text,
+        "latitude": latitude,
+        "longitude": longitude,
+        "coordinate_status": coordinate_status,
+        "qa_pass": not failures,
+        "failures": failures,
+        "operating_rule": (
+            "Event 923896 must appear exactly once in the approved public feed on 2026-08-01 "
+            "with the East 74 Street / Avenue U / Avenue T Brooklyn segment pin."
+        ),
+    }
+
+
 def refresh_field_desk_overlay_health() -> dict[str, Any]:
     result = subprocess.run(
         [sys.executable, str(ROOT / "scripts" / "check_field_desk_overlay_health.py")],
@@ -189,6 +324,7 @@ def main() -> int:
     photographer = load(DATA / "photographer_assignment_calendar_report.json", {}) or {}
     viral = load(DATA / "photographer_viral_recurrence_report.json", {}) or {}
     field_desk_overlay = refresh_field_desk_overlay_health()
+    required_event = required_event_status()
 
     derived = [
         artifact_status("Map-ready staged feed", DATA / "staged_live_manifest.json", ("staged_feed_events",)),
@@ -248,6 +384,7 @@ def main() -> int:
         and int(field_desk_overlay.get("overlay_count") or 0) == 3
         and int(field_desk_overlay.get("check_exit_code") or 0) == 0
     )
+    required_event_clean = bool(required_event.get("qa_pass"))
     cross_date_suppressed = int(staged.get("cross_date_street_occurrences_suppressed") or 0)
     exact_occurrence_suppressed = int(staged.get("exact_occurrence_duplicates_suppressed") or 0)
 
@@ -329,6 +466,15 @@ def main() -> int:
                 "nycif-field-desk/data/reports/",
             )
         )
+    if not required_event_clean:
+        blockers.append(
+            blocker(
+                "required_event_923896_failed",
+                "Required event 923896 is missing, duplicated, assigned to the wrong date/location, or has a non-Brooklyn pin: "
+                + json.dumps(required_event.get("failures") or [], ensure_ascii=False),
+                "data/schema-v1-discovery/approved/pages/",
+            )
+        )
     if cross_date_suppressed:
         blockers.append(
             blocker(
@@ -341,7 +487,7 @@ def main() -> int:
     release_ready = not blockers
     payload = {
         "artifact_type": "nycif_daily_data_health",
-        "schema_version": "1.3.0",
+        "schema_version": "1.4.0",
         "generated_at_utc": generated,
         "company_focus": "News Desk live-data completeness, freshness, and duplicate safety",
         "status": "READY" if release_ready else "BLOCKED",
@@ -355,6 +501,7 @@ def main() -> int:
             "main_emergency": "nycif_major_radar_map_events.json",
             "approved_pages": "data/schema-v1-discovery/approved/",
             "review_pages": "data/schema-v1-discovery/review/",
+            "newly_added_sort": "data/nycif_new_events.json",
             "money_overlay": "data/photographer_assignment_calendar_2mo.json",
             "viral_overlay": "data/photographer_viral_recurrence_matches.json",
             "active_nightlife_overlay": "nycif-field-desk/data/nycif_active_nightlife_feed.json",
@@ -362,6 +509,9 @@ def main() -> int:
             "smoke_vape_correlation_overlay": "nycif-field-desk/data/nycif_smoke_vape_cannabis_correlation.json",
         },
         "field_desk_overlay_health": field_desk_overlay,
+        "required_event_checks": {
+            "event_923896": required_event,
+        },
         "pipeline": {
             "strict_reconciliation": strict_reconciliation,
             "calendar_parks_unaccounted_gap": gap,
@@ -372,6 +522,7 @@ def main() -> int:
             "photographer_money_day_clean": photographer_clean,
             "viral_recurrence_clean": viral_clean,
             "field_desk_public_overlays_clean": field_desk_overlays_clean,
+            "required_event_923896_public_and_correct": required_event_clean,
             "exact_occurrence_duplicates_suppressed": exact_occurrence_suppressed,
             "cross_date_street_occurrences_suppressed": cross_date_suppressed,
         },
