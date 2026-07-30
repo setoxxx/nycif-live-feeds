@@ -19,7 +19,6 @@ from stage8_match_supported_coordinate_proposals import (
     location,
     norm,
     source_id,
-    valid_nyc if False else norm,
 )
 
 REPORT = ROOT / "data" / "reports" / "stage8_supported_coordinate_apply_report.json"
