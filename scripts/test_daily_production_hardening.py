@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Deterministic regressions for the daily production hardening path."""
+"""Deterministic regressions for the daily production hardening path.
+
+This comment-only revision is the authorized Stage 7 production-refresh trigger.
+"""
 
 from __future__ import annotations
 
