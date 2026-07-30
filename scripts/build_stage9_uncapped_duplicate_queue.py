@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Rebuild the possible-duplicate queue without a 500-group cap.
 
-The approved and review exports overlap because reviewed supplemental records can
-also be folded into approved output. Their canonical-ID union reconstructs the
-accepted discovery population used by the projector before output splitting.
+The approved output can contain folded review-supplemental projections. The
+projector's accepted canonical population is therefore reconstructed from:
+- approved records whose data layer is ``approved_staged``; plus
+- every record in the review projection.
+The resulting canonical-ID union must equal strict reconciliation exactly.
 """
 from __future__ import annotations
 
@@ -43,6 +45,11 @@ def write(path: Path, payload: Any) -> None:
         handle.write("\n")
 
 
+def data_layer(row: dict[str, Any]) -> str:
+    nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
+    return str(nycif.get("data_layer") or "").strip()
+
+
 def canonical_union(*collections: list[dict[str, Any]]) -> list[dict[str, Any]]:
     by_id: dict[str, dict[str, Any]] = {}
     for collection in collections:
@@ -54,14 +61,32 @@ def canonical_union(*collections: list[dict[str, Any]]) -> list[dict[str, Any]]:
             if existing is None:
                 by_id[cid] = row
                 continue
-            # Prefer the approved projection when the same canonical record is in
-            # both exports, while requiring immutable identity fields to agree.
             for key in ("title", "start_date_time", "borough"):
                 left = str(existing.get(key) or "")
                 right = str(row.get(key) or "")
                 if left and right and left != right:
                     raise RuntimeError(f"canonical projection mismatch for {cid}: {key}")
     return list(by_id.values())
+
+
+def canonical_population(
+    approved: list[dict[str, Any]], review: list[dict[str, Any]], expected: int
+) -> tuple[list[dict[str, Any]], dict[str, int]]:
+    approved_staged = [row for row in approved if data_layer(row) == "approved_staged"]
+    canonical = canonical_union(approved_staged, review)
+    diagnostics = {
+        "approved_projection_count": len(approved),
+        "approved_staged_projection_count": len(approved_staged),
+        "approved_folded_supplemental_projection_count": len(approved) - len(approved_staged),
+        "review_projection_count": len(review),
+        "canonical_union_count": len(canonical),
+    }
+    if len(canonical) != expected:
+        raise RuntimeError(
+            "canonical projector split mismatch: "
+            f"expected {expected}, got {len(canonical)}; diagnostics={diagnostics}"
+        )
+    return canonical, diagnostics
 
 
 def possible_duplicates(events: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -109,25 +134,18 @@ def main() -> int:
     approved = rows(load(APPROVED))
     review = rows(load(REVIEW))
     reconciliation = load(RECONCILIATION)
-    canonical = canonical_union(approved, review)
     expected = int(reconciliation.get("accepted_canonical_records") or 0)
-    if len(canonical) != expected:
-        raise RuntimeError(f"canonical union mismatch: expected {expected}, got {len(canonical)}")
+    canonical, diagnostics = canonical_population(approved, review, expected)
 
     groups = possible_duplicates(canonical)
-    candidate_ids = {
-        cid
-        for group in groups
-        for cid in group["ids"]
-    }
+    candidate_ids = {cid for group in groups for cid in group["ids"]}
     candidate_record_count = sum(int(group["count"]) for group in groups)
     payload = {
         "artifact_type": "events_discovery_possible_duplicates_v02",
-        "schema_version": "2.0.0",
+        "schema_version": "2.1.0",
         "generated_at_utc": reconciliation.get("generated_at_utc"),
         "canonical_population_count": len(canonical),
-        "approved_projection_count": len(approved),
-        "review_projection_count": len(review),
+        **diagnostics,
         "count": len(groups),
         "candidate_record_count": candidate_record_count,
         "unique_candidate_id_count": len(candidate_ids),
