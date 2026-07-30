@@ -1,0 +1,56 @@
+{
+  "schema_version": "1.0.0",
+  "mode": "shadow_only",
+  "production_promotion_default": false,
+  "operating_rule": "No candidate may enter a public feed unless it is current, event-like, locatable, additive, occurrence-safe and independently approved after shadow evidence.",
+  "candidates": [
+    {
+      "id": "mome-film-permits",
+      "dataset_id": "tg4x-b46p",
+      "agency": "Mayor's Office of Media and Entertainment",
+      "role": "event_candidate",
+      "primary_date_field": "startdatetime",
+      "end_date_field": "enddatetime",
+      "source_id_field": "eventid",
+      "borough_field": "borough",
+      "location_fields": ["parkingheld"],
+      "title_fields": ["eventtype", "category", "subcategoryname"],
+      "required_fields": ["eventid", "eventtype", "startdatetime", "enddatetime", "borough", "parkingheld"],
+      "promotion_policy": "shadow_until_current_rows_location_resolution_and_occurrence_dedupe_pass"
+    },
+    {
+      "id": "dob-approved-permits",
+      "dataset_id": "rbx6-tga4",
+      "agency": "Department of Buildings",
+      "role": "infrastructure_corroboration",
+      "primary_date_field_candidates": ["issued_date", "issuance_date", "permit_issued_date", "filing_date"],
+      "source_id_field": "work_permit",
+      "borough_field_candidates": ["borough", "borough_code"],
+      "location_fields": ["house_no", "street_name", "bin"],
+      "required_fields": ["job_filing_number", "work_permit"],
+      "promotion_policy": "never_as_general_event_feed"
+    },
+    {
+      "id": "dot-street-construction-permits",
+      "dataset_id": "tqtj-sjs8",
+      "agency": "Department of Transportation",
+      "role": "infrastructure_corroboration",
+      "primary_date_field_candidates": ["permitissueddate", "permitstartdate", "permitexpirationdate"],
+      "source_id_field": "permitnumber",
+      "borough_field_candidates": ["boroughname", "borough"],
+      "location_fields": ["onstreetname", "fromstreetname", "tostreetname"],
+      "required_fields": ["permitnumber", "permitstatusshortdesc", "permittypedesc"],
+      "promotion_policy": "never_as_general_event_feed"
+    },
+    {
+      "id": "dot-weekday-traffic-updates",
+      "dataset_id": "vihk-m25f",
+      "agency": "Department of Transportation",
+      "role": "advisory_candidate",
+      "primary_date_field_candidates": ["date", "start_date", "startdate", "week"],
+      "location_fields": ["location", "street", "borough"],
+      "required_fields": [],
+      "promotion_policy": "blocked_when_stale_or_non_automated"
+    }
+  ]
+}
