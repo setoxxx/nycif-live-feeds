@@ -1,0 +1,105 @@
+name: Run Stage 6 City Source Audit Once
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  audit:
+    if: github.event.issue.title == 'RUN STAGE 6 CITY SOURCE AUDIT'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Stage 6 branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/stage-6-city-source-shadow-audit
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run deterministic tests
+        run: python -m unittest tests/test_stage6_city_source_audit.py
+      - name: Run live official-source shadow audit
+        run: python scripts/audit_stage6_city_sources.py | tee /tmp/stage6.json
+      - name: Prove production feeds are unchanged
+        run: |
+          git diff --exit-code -- \
+            data/schema-v1-discovery/approved \
+            data/schema-v1-discovery/review \
+            nycif_all_radar_map_events.json \
+            nycif_major_radar_map_events.json
+      - name: Commit shadow evidence
+        id: commit
+        run: |
+          git add \
+            data/reports/stage6_city_source_shadow_audit.json \
+            data/reports/stage6_city_source_shadow_audit.md
+          if git diff --cached --quiet; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+          else
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -m 'Record Stage 6 city-source shadow audit [skip ci]'
+            git push origin HEAD:feature/stage-6-city-source-shadow-audit
+            echo 'changed=true' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Verify committed evidence
+        run: |
+          git cat-file -e HEAD:data/reports/stage6_city_source_shadow_audit.json
+          git cat-file -e HEAD:data/reports/stage6_city_source_shadow_audit.md
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('data/reports/stage6_city_source_shadow_audit.json').read_text())
+          assert report['qa_pass'] is True
+          assert report['status'] == 'PASS'
+          assert report['production_feeds_modified'] is False
+          assert report['source_count'] == 4
+          assert all(source['production_promotion_allowed'] is False for source in report['sources'])
+          PY
+      - name: Report success
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHANGED: ${{ steps.commit.outputs.changed }}
+        run: |
+          summary="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path('data/reports/stage6_city_source_shadow_audit.json').read_text())
+          print(f"status: {report['status']}")
+          print(f"approved events indexed: {report['approved_events_indexed']}")
+          for source in report['sources']:
+              print(f"{source['dataset_id']} | {source['dataset_name']} | rows={source['row_count']} | future={source['current_future_count']} | {source['disposition']}")
+          PY
+          )"
+          body=$(cat <<EOF
+          Stage 6 city-source shadow audit passed.
+
+          - committed evidence: ${CHANGED:-false}
+          - production feeds modified: false
+          - production promotions: zero
+
+          \`\`\`
+          ${summary}
+          \`\`\`
+          EOF
+          )
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --body "$body"
+          gh issue close "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --reason completed
+      - name: Remove one-time runner
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WORKFLOW_PATH: .github/workflows/run-stage6-city-source-audit-once.yml
+        run: |
+          sha="$(gh api "repos/${{ github.repository }}/contents/${WORKFLOW_PATH}?ref=main" --jq .sha 2>/dev/null || true)"
+          if [ -n "$sha" ]; then
+            gh api --method DELETE "repos/${{ github.repository }}/contents/${WORKFLOW_PATH}" \
+              -f message='Remove completed Stage 6 audit runner' \
+              -f sha="$sha" \
+              -f branch='main'
+          fi
