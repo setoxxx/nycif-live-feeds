@@ -1,0 +1,43 @@
+name: Stage 6 City Source Shadow Audit
+
+on:
+  pull_request:
+    paths:
+      - config/stage6_city_source_candidates.json
+      - scripts/audit_stage6_city_sources.py
+      - tests/test_stage6_city_source_audit.py
+      - .github/workflows/stage6-city-source-shadow-audit.yml
+  workflow_dispatch:
+  schedule:
+    - cron: '41 10 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Run deterministic tests
+        run: python -m unittest tests/test_stage6_city_source_audit.py
+      - name: Audit official city candidates in shadow mode
+        run: python scripts/audit_stage6_city_sources.py
+      - name: Verify no production feed changed
+        run: |
+          git diff --exit-code -- \
+            data/schema-v1-discovery/approved \
+            data/schema-v1-discovery/review \
+            nycif_all_radar_map_events.json \
+            nycif_major_radar_map_events.json
+      - name: Upload shadow evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage6-city-source-shadow-audit
+          path: |
+            data/reports/stage6_city_source_shadow_audit.json
+            data/reports/stage6_city_source_shadow_audit.md
+          if-no-files-found: error
