@@ -71,7 +71,13 @@ def source_event_id(row: dict[str, Any]) -> str:
 
 
 def raw_event_id(row: dict[str, Any]) -> str:
-    return str(row.get("event_id") or row.get("eventid") or row.get("eventid_sapo") or "").strip()
+    return str(
+        row.get("source_event_id")
+        or row.get("event_id")
+        or row.get("eventid")
+        or row.get("eventid_sapo")
+        or ""
+    ).strip()
 
 
 def raw_date(row: dict[str, Any]) -> str:
