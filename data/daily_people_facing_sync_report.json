@@ -1,27 +1,27 @@
 {
   "civic": {
-    "accepted": 4911,
+    "accepted": 4884,
     "date_time_location_qa_pass": true,
     "list_only": 1293,
     "map_coverage_qa_pass": true,
-    "map_ready": 3618
+    "map_ready": 3591
   },
   "failed_steps": [],
-  "generated_at_utc": "2026-07-30T00:08:57Z",
+  "generated_at_utc": "2026-07-30T14:36:57Z",
   "location_cache_modified": false,
   "notes": "Safe daily desk sync. Does not run build_staged_production_feed / build_location_cache / public WordPress publish. Pin integrity gate fail-closed: qa_pass requires ZERO bad map_ready pins. Full permit→staged refresh remains live-sync-qa (manual dispatch).",
   "photographer_calendar": {
-    "days_with_coverage": 31,
-    "events_removed_vs_baseline": 583,
+    "days_with_coverage": 30,
+    "events_removed_vs_baseline": 644,
     "month_counts": [
       {
-        "days_with_events": 3,
-        "event_count": 28,
+        "days_with_events": 2,
+        "event_count": 13,
         "label": "July 2026"
       },
       {
         "days_with_events": 28,
-        "event_count": 231,
+        "event_count": 185,
         "label": "August 2026"
       }
     ],
@@ -29,84 +29,60 @@
       "qa_pass": true,
       "today": {
         "borough_cluster_count": 3,
-        "date": "2026-07-29",
-        "map_ready_count": 9,
-        "total_events": 9
+        "date": "2026-07-30",
+        "map_ready_count": 6,
+        "total_events": 7
       },
       "tomorrow": {
-        "borough_cluster_count": 3,
-        "date": "2026-07-30",
-        "map_ready_count": 10,
+        "borough_cluster_count": 2,
+        "date": "2026-07-31",
+        "map_ready_count": 6,
         "top_go_shoot": [
           {
-            "borough": "Queens",
-            "score": 510,
-            "time": "2026-07-30T19:00:00.000-04:00",
-            "title": "Summer Concert Series - Queensboro Dance Festival"
+            "borough": "Manhattan",
+            "score": 380,
+            "time": "2026-07-31T17:00:00.000",
+            "title": "ISKCON60 GALA FESTIVAL"
           },
           {
             "borough": "Manhattan",
             "score": 380,
-            "time": "2026-07-30T08:00:00.000",
-            "title": "SummerStage Festival - July"
-          },
-          {
-            "borough": "Bronx",
-            "score": 370,
-            "time": "2026-07-30T17:00:00.000",
-            "title": "Summer Series Cross Country 5K Race 3"
+            "time": "2026-07-31T16:00:00.000",
+            "title": "LES Girls Club Summer Street Fair"
           },
           {
             "borough": "Manhattan",
             "score": 340,
-            "time": "2026-07-30T09:30:00.000",
-            "title": "Columbus Circle Food Market"
-          },
-          {
-            "borough": "Manhattan",
-            "score": 340,
-            "time": "2026-07-30T08:00:00.000",
-            "title": "Farmers Market"
-          },
-          {
-            "borough": "Manhattan",
-            "score": 340,
-            "time": "2026-07-30T08:00:00.000",
-            "title": "HHFM East Harlem Market"
+            "time": "2026-07-31T08:00:00.000",
+            "title": "HHFM Harlem Hospital Market"
           },
           {
             "borough": "Bronx",
             "score": 340,
-            "time": "2026-07-30T07:00:00.000",
-            "title": "HHFM Mt. Eden Market"
+            "time": "2026-07-31T08:00:00.000",
+            "title": "HHFM Jacobi Hospital Market"
           },
           {
             "borough": "Manhattan",
             "score": 340,
-            "time": "2026-07-30T09:00:00.000",
-            "title": "NYP Youth Market - Audubon"
+            "time": "2026-07-31T08:00:00.000",
+            "title": "HHFM Metropolitan Market"
           },
           {
             "borough": "Manhattan",
-            "score": 330,
-            "time": "2026-07-30T08:00:00.000",
-            "title": "Live Music and Dance Performances and Circus Arts"
-          },
-          {
-            "borough": "Queens",
             "score": 310,
-            "time": "2026-07-30T19:00:00.000-04:00",
-            "title": "Summer Concert Series - Queensboro Dance Festival"
+            "time": "2026-07-31T12:00:00.000",
+            "title": "TSQ LIVE: 45/46 Plaza Programming"
           }
         ],
-        "total_events": 11
+        "total_events": 6
       }
     },
     "pin_integrity": {
       "demotion_count": 0,
       "demotion_reason_counts": {},
-      "map_ready_after_total": 3924,
-      "map_ready_before_total": 3924,
+      "map_ready_after_total": 3829,
+      "map_ready_before_total": 3829,
       "qa_pass": true,
       "report": "data/pin_integrity_gate_report.json"
     },
@@ -115,18 +91,18 @@
     "shoot_day_certified": {
       "pack": "data/photographer_shoot_day_certified_pack.json",
       "qa_pass": true,
-      "today_certified_pins": 9,
-      "tomorrow_certified_pins": 10
+      "today_certified_pins": 6,
+      "tomorrow_certified_pins": 6
     },
-    "total_events": 259,
+    "total_events": 198,
     "viral_recurrence": {
       "historical_rows": 2450,
       "label_counts": {
-        "possible": 48,
-        "returning_likely": 137,
+        "possible": 45,
+        "returning_likely": 116,
         "weak": 66
       },
-      "match_count": 251,
+      "match_count": 227,
       "next_14d_crowd_magnets": 39,
       "qa_pass": true
     }

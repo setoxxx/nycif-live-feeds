@@ -1,0 +1,81 @@
+name: Stage 7 Snapshot Recovery
+
+on:
+  pull_request:
+    paths:
+      - scripts/repair_event_923896_from_snapshot.py
+      - scripts/certify_event_923896_outputs.py
+      - .github/workflows/stage7-snapshot-recovery.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  recover-and-certify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/stage7-snapshot-recovery
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify production contracts
+        run: |
+          python scripts/test_live_event_intake_refresh.py
+          python scripts/test_daily_production_hardening.py
+      - name: Repair only Event 923896 from the official committed snapshot
+        run: python scripts/repair_event_923896_from_snapshot.py
+      - name: Rebuild every downstream production projection
+        run: |
+          python scripts/build_events_schema_v1_major.py
+          python scripts/build_street_festivals_feed.py
+          python scripts/project_events_discovery_v02.py
+          python scripts/enforce_strict_discovery_reconciliation.py
+          python scripts/build_comprehensive_event_feed.py
+          python scripts/run_daily_people_facing_desk_sync.py --skip-network-sync
+          python scripts/refresh_runtime_fallback_feeds.py
+          python scripts/build_daily_data_health.py
+      - name: Certify exact-one map/list occurrence and READY health
+        run: python scripts/certify_event_923896_outputs.py
+      - name: Stage only generated production artifacts
+        id: commit
+        run: |
+          git add -A
+          bad="$(git diff --cached --name-only | grep -Ev '^(data/|status/|nycif_major_radar_map_events\.json$|docs/events-discovery-taxonomy-v02\.md$|docs/field-desk-map-deploy/)' || true)"
+          if [ -n "$bad" ]; then
+            echo 'Unexpected generated paths:' >&2
+            echo "$bad" >&2
+            exit 1
+          fi
+          if git diff --cached --quiet; then
+            echo 'changed=false' >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Complete Stage 7 exact-one map and list recovery [skip ci]'
+          git push origin HEAD:feature/stage7-snapshot-recovery
+          echo 'changed=true' >> "$GITHUB_OUTPUT"
+      - name: Verify certificate and committed files in HEAD
+        run: |
+          git cat-file -e HEAD:data/reports/event_923896_snapshot_repair.json
+          git cat-file -e HEAD:data/reports/event_923896_snapshot_recovery_certificate.json
+          git cat-file -e HEAD:status/nycif-daily-data-health.json
+          git cat-file -e HEAD:data/events_discovery_v02_approved.json
+          git cat-file -e HEAD:data/schema-v1-discovery/approved/manifest.json
+          python scripts/certify_event_923896_outputs.py
+      - name: Upload recovery evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage7-snapshot-recovery
+          path: |
+            data/reports/event_923896_snapshot_repair.json
+            data/reports/event_923896_snapshot_recovery_certificate.json
+            status/nycif-daily-data-health.json
+            data/events_discovery_reconciliation_v02.json
+            data/events_discovery_v02_approved.json
+            data/schema-v1-discovery/approved/manifest.json
+          if-no-files-found: error
