@@ -1,0 +1,19 @@
+name: Temporary Production Verification Dispatch
+
+on:
+  schedule:
+    - cron: '55 * * * *'
+  workflow_dispatch:
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  dispatch-production-refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch Discovery Feed Refresh on main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run discovery-feed-refresh.yml --repo "${{ github.repository }}" --ref main
