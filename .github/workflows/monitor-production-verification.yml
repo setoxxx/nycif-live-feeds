@@ -1,0 +1,56 @@
+name: Monitor Production Verification
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  actions: read
+  contents: write
+  issues: write
+
+jobs:
+  monitor-production-refresh:
+    if: github.event.issue.title == 'MONITOR NYCIF PRODUCTION VERIFICATION'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Find and watch the latest Discovery Feed Refresh
+        id: monitor
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          run_id="$(gh run list --repo "${{ github.repository }}" --workflow discovery-feed-refresh.yml --limit 1 --json databaseId --jq '.[0].databaseId')"
+          if [ -z "$run_id" ] || [ "$run_id" = "null" ]; then
+            echo "No Discovery Feed Refresh run was found." >&2
+            exit 1
+          fi
+          echo "run_id=$run_id" >> "$GITHUB_OUTPUT"
+          gh run watch "$run_id" --repo "${{ github.repository }}" --exit-status
+
+      - name: Report exact workflow result
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ steps.monitor.outputs.run_id }}
+        run: |
+          if [ -n "$RUN_ID" ]; then
+            details="$(gh run view "$RUN_ID" --repo "${{ github.repository }}" --json status,conclusion,url,headSha,createdAt,updatedAt --jq '.')"
+          else
+            details='{"status":"not_found","conclusion":"failure"}'
+          fi
+          gh issue comment "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --body "Production verification monitor result:\n\n\`\`\`json\n${details}\n\`\`\`"
+          gh issue close "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --reason completed
+
+      - name: Remove this one-time monitor
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WORKFLOW_PATH: .github/workflows/monitor-production-verification.yml
+        run: |
+          sha="$(gh api "repos/${{ github.repository }}/contents/${WORKFLOW_PATH}?ref=main" --jq .sha 2>/dev/null || true)"
+          if [ -n "$sha" ]; then
+            gh api --method DELETE "repos/${{ github.repository }}/contents/${WORKFLOW_PATH}" \
+              -f message='Remove completed production verification monitor' \
+              -f sha="$sha" \
+              -f branch='main'
+          fi
