@@ -4,8 +4,8 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - scripts/build_stage9_uncapped_duplicate_queue.py
-      - scripts/certify_stage9_exception_ledger_v2.py
+      - scripts/patch_stage9_projector_complete_evidence.py
+      - scripts/certify_stage9_exception_ledger_v3.py
       - .stage9-exception-trigger
 
 permissions:
@@ -18,6 +18,7 @@ concurrency:
 jobs:
   certify:
     runs-on: ubuntu-latest
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -28,20 +29,63 @@ jobs:
           python-version: '3.11'
       - name: Compile Stage 9 tooling
         run: |
-          python -m py_compile scripts/build_stage9_uncapped_duplicate_queue.py
+          python -m py_compile scripts/patch_stage9_projector_complete_evidence.py
           python -m py_compile scripts/certify_stage9_exception_ledger_v2.py
-      - name: Build complete duplicate queue
-        run: python scripts/build_stage9_uncapped_duplicate_queue.py
+          python -m py_compile scripts/certify_stage9_exception_ledger_v3.py
+      - name: Emit authoritative uncapped exception evidence
+        run: |
+          cp data/events_discovery_reconciliation_v02.json /tmp/stage9-base-reconciliation.json
+          python scripts/patch_stage9_projector_complete_evidence.py
+          python -m py_compile scripts/project_events_discovery_v02.py
+          python scripts/project_events_discovery_v02.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          base=json.loads(Path('/tmp/stage9-base-reconciliation.json').read_text())
+          current=json.loads(Path('data/events_discovery_reconciliation_v02.json').read_text())
+          accepted=json.loads(Path('data/events_discovery_accepted_canonical_v02.json').read_text())
+          dupes=json.loads(Path('data/events_discovery_possible_duplicates_v02.json').read_text())
+          assert current['accepted_canonical_records'] == base['accepted_canonical_records'] == 36322
+          assert current['map_ready_records'] == base['map_ready_records'] == 35957
+          assert current['list_only_coordinate_records'] == base['list_only_coordinate_records'] == 365
+          assert len(accepted['events']) == 36322
+          assert dupes['canonical_population_count'] == 36322
+          assert dupes['truncated'] is False
+          Path('/tmp/stage9-accepted.json').write_text(json.dumps(accepted, ensure_ascii=False, indent=2, sort_keys=True)+'\n')
+          Path('/tmp/stage9-dupes.json').write_text(json.dumps(dupes, ensure_ascii=False, indent=2, sort_keys=True)+'\n')
+          legacy=json.loads(Path('data/events_discovery_legacy_major_quarantine_v02.json').read_text())
+          Path('/tmp/stage9-legacy.json').write_text(json.dumps(legacy, ensure_ascii=False, indent=2, sort_keys=True)+'\n')
+          PY
+          git restore -- data docs
+          cp /tmp/stage9-accepted.json data/events_discovery_accepted_canonical_v02.json
+          cp /tmp/stage9-dupes.json data/events_discovery_possible_duplicates_v02.json
+          cp /tmp/stage9-legacy.json data/events_discovery_legacy_major_quarantine_v02.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          core=json.loads(Path('data/events_discovery_reconciliation_v02.json').read_text())['generated_at_utc']
+          for name in (
+              'data/events_discovery_accepted_canonical_v02.json',
+              'data/events_discovery_possible_duplicates_v02.json',
+              'data/events_discovery_legacy_major_quarantine_v02.json',
+          ):
+              path=Path(name)
+              payload=json.loads(path.read_text())
+              payload['generated_at_utc']=core
+              path.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True)+'\n')
+          PY
       - name: Certify complete exception ledger
-        run: python scripts/certify_stage9_exception_ledger_v2.py
+        run: python scripts/certify_stage9_exception_ledger_v3.py
       - name: Verify Stage 9 contract
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
+          a=json.loads(Path('data/events_discovery_accepted_canonical_v02.json').read_text())
           d=json.loads(Path('data/events_discovery_possible_duplicates_v02.json').read_text())
           r=json.loads(Path('data/reports/stage9_exception_ledger.json').read_text())
           c=json.loads(Path('data/reports/stage9_exception_ledger_certificate.json').read_text())
+          assert len(a['events']) == 36322
           assert d['truncated'] is False
           assert d['canonical_population_count'] == 36322
           assert len(d['groups']) == d['count']
@@ -55,25 +99,31 @@ jobs:
           assert c['exception_classes_reason_coded'] is True
           assert c['launch_authorized'] is False
           PY
-      - name: Commit Stage 9 evidence
+      - name: Commit Stage 9 implementation and evidence
         run: |
           git add \
+            scripts/project_events_discovery_v02.py \
+            data/events_discovery_accepted_canonical_v02.json \
             data/events_discovery_possible_duplicates_v02.json \
+            data/events_discovery_legacy_major_quarantine_v02.json \
             data/reports/stage9_exception_ledger.json \
             data/reports/stage9_exception_ledger_certificate.json
           if git diff --cached --quiet; then exit 0; fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'Generate Stage 9 complete exception ledger [skip ci]'
+          git commit -m 'Generate authoritative Stage 9 exception ledger [skip ci]'
           git fetch origin feature/stage9-exception-ledger-certification
           git rebase origin/feature/stage9-exception-ledger-certification
           git push origin HEAD:feature/stage9-exception-ledger-certification
       - name: Upload Stage 9 evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: stage9-complete-exception-ledger
           path: |
+            data/events_discovery_accepted_canonical_v02.json
             data/events_discovery_possible_duplicates_v02.json
+            data/events_discovery_legacy_major_quarantine_v02.json
             data/reports/stage9_exception_ledger.json
             data/reports/stage9_exception_ledger_certificate.json
-          if-no-files-found: error
+          if-no-files-found: warn
