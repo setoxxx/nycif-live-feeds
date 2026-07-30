@@ -1,0 +1,136 @@
+name: Stage 7 Snapshot Recovery
+
+on:
+  pull_request:
+    paths:
+      - scripts/repair_event_923896_from_snapshot.py
+      - .github/workflows/stage7-snapshot-recovery.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  recover-and-certify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify production contracts
+        run: |
+          python scripts/test_live_event_intake_refresh.py
+          python scripts/test_daily_production_hardening.py
+      - name: Repair only Event 923896 from the official committed snapshot
+        run: python scripts/repair_event_923896_from_snapshot.py
+      - name: Rebuild every downstream production projection
+        run: |
+          python scripts/build_events_schema_v1_major.py
+          python scripts/build_street_festivals_feed.py
+          python scripts/project_events_discovery_v02.py
+          python scripts/enforce_strict_discovery_reconciliation.py
+          python scripts/build_comprehensive_event_feed.py
+          python scripts/run_daily_people_facing_desk_sync.py --skip-network-sync
+          python scripts/refresh_runtime_fallback_feeds.py
+          python scripts/build_daily_data_health.py
+      - name: Certify exact-one map/list occurrence and READY health
+        run: |
+          python - <<'PY'
+          import json
+          import re
+          from pathlib import Path
+
+          EVENT_ID='923896'
+          REQUIRED_DATE='2026-08-01'
+
+          def load(path, default=None):
+              try:
+                  return json.loads(Path(path).read_text(encoding='utf-8'))
+              except Exception:
+                  return default
+
+          def rows(payload):
+              if isinstance(payload,list): return [row for row in payload if isinstance(row,dict)]
+              if isinstance(payload,dict):
+                  for key in ('events','items','records'):
+                      value=payload.get(key)
+                      if isinstance(value,list): return [row for row in value if isinstance(row,dict)]
+              return []
+
+          def sid(event):
+              source=event.get('source') if isinstance(event.get('source'),dict) else {}
+              return str(event.get('source_event_id') or source.get('source_event_id') or source.get('event_id') or '').strip()
+
+          def norm(value): return re.sub(r'[^a-z0-9]+',' ',str(value or '').lower()).strip()
+
+          def verify(event,surface):
+              failures=[]
+              start=event.get('start_date') or event.get('start_date_time') or event.get('start')
+              borough=event.get('borough')
+              location=event.get('display_location') or event.get('location') or event.get('address') or ''
+              if isinstance(location,dict):
+                  location=' '.join(str(location.get(key) or '') for key in ('name','display_name','address','street','description'))
+              loc=event.get('location') if isinstance(event.get('location'),dict) else {}
+              lat=event.get('latitude',event.get('lat',loc.get('latitude',loc.get('lat'))))
+              lng=event.get('longitude',event.get('lng',loc.get('longitude',loc.get('lng',loc.get('lon')))))
+              try: lat,lng=float(lat),float(lng)
+              except (TypeError,ValueError): lat,lng=None,None
+              nycif=event.get('nycif') if isinstance(event.get('nycif'),dict) else {}
+              coordinate_status=event.get('coordinate_status') or nycif.get('coordinate_status')
+              if not str(start or '').startswith(REQUIRED_DATE): failures.append(f'{surface}: wrong date {start!r}')
+              if norm(borough)!='brooklyn': failures.append(f'{surface}: wrong borough {borough!r}')
+              location_norm=norm(location)
+              for token in ('east 74 street','avenue u','avenue t'):
+                  if token not in location_norm: failures.append(f'{surface}: missing {token!r}')
+              if lat is None or lng is None: failures.append(f'{surface}: missing coordinates')
+              else:
+                  if not 40.60 <= lat <= 40.64: failures.append(f'{surface}: latitude {lat}')
+                  if not -73.93 <= lng <= -73.88: failures.append(f'{surface}: longitude {lng}')
+              if coordinate_status and str(coordinate_status).lower()!='map_ready': failures.append(f'{surface}: coordinate status {coordinate_status!r}')
+              return failures
+
+          page_matches=[]
+          for page in sorted(Path('data/schema-v1-discovery/approved/pages').glob('page-*.json')):
+              for event in rows(load(page,{})):
+                  if sid(event)==EVENT_ID: page_matches.append((page.name,event))
+          list_matches=[event for event in rows(load('data/events_discovery_v02_approved.json',{})) if sid(event)==EVENT_ID]
+          health=load('status/nycif-daily-data-health.json',{}) or {}
+          reconciliation=load('data/events_discovery_reconciliation_v02.json',{}) or {}
+          health_event=(((health.get('required_event_checks') or {}).get('event_923896')) or {})
+          failures=[]
+          if len(page_matches)!=1: failures.append(f'map count={len(page_matches)}')
+          if len(list_matches)!=1: failures.append(f'list count={len(list_matches)}')
+          if page_matches: failures.extend(verify(page_matches[0][1],f'page {page_matches[0][0]}'))
+          if list_matches: failures.extend(verify(list_matches[0],'approved list'))
+          if health.get('status')!='READY' or health.get('release_ready') is not True: failures.append(f"health={health.get('status')!r}")
+          if health.get('schema_version')!='1.4.0': failures.append(f"health schema={health.get('schema_version')!r}")
+          if health_event.get('qa_pass') is not True or int(health_event.get('match_count') or 0)!=1: failures.append(f'health event check={health_event}')
+          if reconciliation.get('reconciles_strict') is not True: failures.append('strict reconciliation failed')
+          certificate={
+              'qa_pass':not failures,
+              'failures':failures,
+              'map_count':len(page_matches),
+              'list_count':len(list_matches),
+              'page':page_matches[0][0] if len(page_matches)==1 else None,
+              'health_status':health.get('status'),
+              'health_schema_version':health.get('schema_version'),
+              'health_event_check':health_event,
+              'strict_reconciliation':reconciliation.get('reconciles_strict'),
+          }
+          Path('data/reports/event_923896_snapshot_recovery_certificate.json').write_text(json.dumps(certificate,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+          print(json.dumps(certificate,indent=2,sort_keys=True))
+          if failures: raise SystemExit(1)
+          PY
+      - name: Upload recovery evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage7-snapshot-recovery
+          path: |
+            data/reports/event_923896_snapshot_repair.json
+            data/reports/event_923896_snapshot_recovery_certificate.json
+            status/nycif-daily-data-health.json
+            data/events_discovery_reconciliation_v02.json
+            data/events_discovery_v02_approved.json
+            data/schema-v1-discovery/approved/manifest.json
+          if-no-files-found: error
