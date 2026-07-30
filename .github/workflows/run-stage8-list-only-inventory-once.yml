@@ -1,0 +1,81 @@
+name: Run Stage 8 List-Only Inventory Once
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  inventory:
+    if: github.event.issue.title == 'RUN STAGE 8 LIST-ONLY INVENTORY'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/stage8-list-only-coordinate-resolution
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Generate canonical Stage 8 inventory
+        run: python scripts/stage8_list_only_coordinate_inventory.py
+      - name: Verify exact reconciliation contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('data/reports/stage8_list_only_coordinate_inventory.json').read_text())
+          proposals = json.loads(Path('data/reports/stage8_list_only_coordinate_proposals.json').read_text())
+          assert report['qa_pass'] is True
+          assert report['list_only_total'] == 997
+          assert report['expected_from_reconciliation']['list_only_total'] == 997
+          assert report['equations']['list_only_matches_reconciliation'] is True
+          assert report['equations']['all_statuses_known'] is True
+          assert report['equations']['all_map_ready_coordinates_valid'] is True
+          assert report['production_data_modified'] is False
+          assert report['promotion_allowed'] is False
+          assert proposals['promotion_allowed'] is False
+          assert proposals['proposal_total'] == report['proposal_total']
+          PY
+          git diff --exit-code -- data/events_discovery_v02_approved.json data/nycif_staged_live_events.json data/supplemental_events_staging_feed.json
+      - name: Commit Stage 8 inventory evidence
+        run: |
+          git add data/reports/stage8_list_only_coordinate_inventory.json data/reports/stage8_list_only_coordinate_proposals.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Generate canonical Stage 8 coordinate inventory [skip ci]'
+          git push origin HEAD:feature/stage8-list-only-coordinate-resolution
+      - name: Comment execution result
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python - <<'PY' > /tmp/stage8-summary.md
+          import json
+          from pathlib import Path
+          p=json.loads(Path('data/reports/stage8_list_only_coordinate_inventory.json').read_text())
+          print('## Stage 8 inventory completed')
+          print(f"- QA pass: `{str(p['qa_pass']).lower()}`")
+          print(f"- Approved canonical records: `{p['approved_total']}`")
+          print(f"- Map-ready records: `{p['map_ready_total']}`")
+          print(f"- List-only records: `{p['list_only_total']}`")
+          print(f"- Supported coordinate proposals: `{p['proposal_total']}`")
+          print('- Production event data modified: `false`')
+          print('\nReason counts:')
+          for key, value in sorted(p['reason_counts'].items()):
+              print(f'- `{key}`: `{value}`')
+          PY
+          gh issue comment "${{ github.event.issue.number }}" --body-file /tmp/stage8-summary.md
+      - name: Upload Stage 8 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage8-list-only-coordinate-inventory
+          path: |
+            data/reports/stage8_list_only_coordinate_inventory.json
+            data/reports/stage8_list_only_coordinate_proposals.json
+          if-no-files-found: error
