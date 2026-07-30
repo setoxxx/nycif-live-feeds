@@ -17,14 +17,14 @@
   },
   "classification_version": "discovery-taxonomy-v02",
   "coordinate_status_counts": {
-    "list_only": 997,
-    "map_ready": 35325
+    "list_only": 365,
+    "map_ready": 35957
   },
   "display_disposition_counts": {
-    "list_only": 1064,
+    "list_only": 449,
     "maintenance_or_closure": 77,
     "private_or_reserved_activity": 27,
-    "standalone_public_event": 35154
+    "standalone_public_event": 35769
   },
   "event_role_counts": {
     "maintenance_or_closure": 77,
@@ -41,7 +41,7 @@
     "housing",
     "environment"
   ],
-  "generated_at_utc": "2026-07-30T14:36:33Z",
+  "generated_at_utc": "2026-07-30T16:32:15Z",
   "interest_counts": {
     "arts": 477,
     "civic": 506,
@@ -62,10 +62,10 @@
   },
   "kids_family_interest_count": 1771,
   "legacy_major": {
-    "demoted": 539,
-    "quarantined": 539,
+    "demoted": 0,
+    "quarantined": 0,
     "retained": 394,
-    "reviewed": 933
+    "reviewed": 394
   },
   "main_filter_order": [
     "major_only",
@@ -333,18 +333,18 @@
       ]
     },
     {
-      "borough": null,
+      "borough": "Queens",
       "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1095116@2026-07-29",
       "category": "fitness",
       "classification_confidence": "high",
       "classification_reason": "high_confidence_program_override_shape_up",
-      "coordinate_status": "list_only",
+      "coordinate_status": "map_ready",
       "coordinates": [
-        null,
-        null
+        40.745166,
+        -73.925608
       ],
       "date": "2026-07-29",
-      "display_disposition": "list_only",
+      "display_disposition": "standalone_public_event",
       "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1095116@2026-07-29",
       "event_role": "public_event",
       "filters": [
@@ -356,7 +356,7 @@
         "fitness"
       ],
       "location": "Sunnyside Community Services",
-      "marker_eligible": false,
+      "marker_eligible": true,
       "needle": "Senior Cardio Sculpt",
       "parent_event_id": null,
       "raw_category": "Parks & Recreation",
@@ -408,18 +408,18 @@
       ]
     },
     {
-      "borough": null,
+      "borough": "Queens",
       "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1095136@2026-08-03",
       "category": "fitness",
       "classification_confidence": "high",
       "classification_reason": "high_confidence_program_override_shape_up",
-      "coordinate_status": "list_only",
+      "coordinate_status": "map_ready",
       "coordinates": [
-        null,
-        null
+        40.745166,
+        -73.925608
       ],
       "date": "2026-08-03",
-      "display_disposition": "list_only",
+      "display_disposition": "standalone_public_event",
       "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1095136@2026-08-03",
       "event_role": "public_event",
       "filters": [
@@ -431,7 +431,7 @@
         "fitness"
       ],
       "location": "Sunnyside Community Services",
-      "marker_eligible": false,
+      "marker_eligible": true,
       "needle": "Senior Cardio Sculpt",
       "parent_event_id": null,
       "raw_category": "Parks & Recreation",
@@ -445,18 +445,18 @@
       ]
     },
     {
-      "borough": null,
+      "borough": "Queens",
       "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1095156@2026-08-04",
       "category": "fitness",
       "classification_confidence": "high",
       "classification_reason": "high_confidence_program_override_shape_up",
-      "coordinate_status": "list_only",
+      "coordinate_status": "map_ready",
       "coordinates": [
-        null,
-        null
+        40.745166,
+        -73.925608
       ],
       "date": "2026-08-04",
-      "display_disposition": "list_only",
+      "display_disposition": "standalone_public_event",
       "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1095156@2026-08-04",
       "event_role": "public_event",
       "filters": [
@@ -468,7 +468,7 @@
         "fitness"
       ],
       "location": "Sunnyside Community Services",
-      "marker_eligible": false,
+      "marker_eligible": true,
       "needle": "Senior Cardio Sculpt",
       "parent_event_id": null,
       "raw_category": "Parks & Recreation",
@@ -482,18 +482,18 @@
       ]
     },
     {
-      "borough": null,
+      "borough": "Bronx",
       "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1105276@2026-07-30",
       "category": "fitness",
       "classification_confidence": "high",
       "classification_reason": "high_confidence_program_override_shape_up",
-      "coordinate_status": "list_only",
+      "coordinate_status": "map_ready",
       "coordinates": [
-        null,
-        null
+        40.886242,
+        -73.914635
       ],
       "date": "2026-07-30",
-      "display_disposition": "list_only",
+      "display_disposition": "standalone_public_event",
       "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1105276@2026-07-30",
       "event_role": "public_event",
       "filters": [
@@ -505,7 +505,7 @@
         "fitness"
       ],
       "location": "NYPL - Spuyten Duyvil",
-      "marker_eligible": false,
+      "marker_eligible": true,
       "needle": "Strength In Motion",
       "parent_event_id": null,
       "raw_category": "Parks & Recreation",
@@ -708,18 +708,18 @@
       ]
     },
     {
-      "borough": null,
+      "borough": "Manhattan",
       "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1106476@2026-07-29",
       "category": "parks",
       "classification_confidence": "medium",
       "classification_reason": "authoritative_source_category",
-      "coordinate_status": "list_only",
+      "coordinate_status": "map_ready",
       "coordinates": [
-        null,
-        null
+        40.818802,
+        -73.961098
       ],
       "date": "2026-07-29",
-      "display_disposition": "list_only",
+      "display_disposition": "standalone_public_event",
       "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1106476@2026-07-29",
       "event_role": "public_event",
       "filters": [
@@ -733,7 +733,7 @@
         "education"
       ],
       "location": "On the Pier in West Harlem Piers",
-      "marker_eligible": false,
+      "marker_eligible": true,
       "needle": "Summer on the Hudson: Everybody Tango",
       "parent_event_id": null,
       "raw_category": "Parks & Recreation",
@@ -782,18 +782,18 @@
       ]
     },
     {
-      "borough": null,
+      "borough": "Bronx",
       "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1093676@2026-07-30",
       "category": "tours",
       "classification_confidence": "high",
       "classification_reason": "high_confidence_semantic_tours",
-      "coordinate_status": "list_only",
+      "coordinate_status": "map_ready",
       "coordinates": [
-        null,
-        null
+        40.898701,
+        -73.912498
       ],
       "date": "2026-07-30",
-      "display_disposition": "list_only",
+      "display_disposition": "standalone_public_event",
       "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1093676@2026-07-30",
       "event_role": "public_event",
       "filters": [
@@ -805,7 +805,7 @@
         "tours"
       ],
       "location": "Wave Hill",
-      "marker_eligible": false,
+      "marker_eligible": true,
       "needle": "Public Gallery Tour",
       "parent_event_id": null,
       "raw_category": "Parks & Recreation",
@@ -848,18 +848,18 @@
       "tags": []
     },
     {
-      "borough": null,
+      "borough": "Bronx",
       "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1093696@2026-08-01",
       "category": "tours",
       "classification_confidence": "high",
       "classification_reason": "high_confidence_semantic_tours",
-      "coordinate_status": "list_only",
+      "coordinate_status": "map_ready",
       "coordinates": [
-        null,
-        null
+        40.898701,
+        -73.912498
       ],
       "date": "2026-08-01",
-      "display_disposition": "list_only",
+      "display_disposition": "standalone_public_event",
       "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1093696@2026-08-01",
       "event_role": "public_event",
       "filters": [
@@ -871,7 +871,7 @@
         "tours"
       ],
       "location": "Wave Hill",
-      "marker_eligible": false,
+      "marker_eligible": true,
       "needle": "Public Gallery Tour",
       "parent_event_id": null,
       "raw_category": "Parks & Recreation",
@@ -1291,11 +1291,11 @@
     "accepted_canonical_records": 36322,
     "grouped_under_public_events": 0,
     "invalid_rejected": 0,
-    "list_only": 1064,
+    "list_only": 449,
     "maintenance_or_closure": 77,
-    "map_ready": 35325,
+    "map_ready": 35957,
     "private_or_reserved": 27,
-    "standalone_public_events": 35154,
+    "standalone_public_events": 35769,
     "street_closures": 88,
     "supporting_permits": 0,
     "transportation_operations": 1
