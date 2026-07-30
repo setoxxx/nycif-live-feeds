@@ -3,7 +3,8 @@
 
 Runs after the canonical God View generator so the News Desk live-data gate is
 the visible company objective without duplicating the large project-state
-builder.
+builder. Comment-only updates to this file may intentionally trigger a complete
+post-merge production verification transaction.
 """
 
 from __future__ import annotations
