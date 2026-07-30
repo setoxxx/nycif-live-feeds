@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - scripts/build_stage9_uncapped_duplicate_queue.py
-      - scripts/certify_stage9_exception_ledger.py
+      - scripts/certify_stage9_exception_ledger_v2.py
       - .stage9-exception-trigger
 
 permissions:
@@ -29,11 +29,11 @@ jobs:
       - name: Compile Stage 9 tooling
         run: |
           python -m py_compile scripts/build_stage9_uncapped_duplicate_queue.py
-          python -m py_compile scripts/certify_stage9_exception_ledger.py
+          python -m py_compile scripts/certify_stage9_exception_ledger_v2.py
       - name: Build complete duplicate queue
         run: python scripts/build_stage9_uncapped_duplicate_queue.py
       - name: Certify complete exception ledger
-        run: python scripts/certify_stage9_exception_ledger.py
+        run: python scripts/certify_stage9_exception_ledger_v2.py
       - name: Verify Stage 9 contract
         run: |
           python - <<'PY'
@@ -46,6 +46,7 @@ jobs:
           assert d['canonical_population_count'] == 36322
           assert len(d['groups']) == d['count']
           assert r['qa_pass'] is True
+          assert c['schema_version'] == '2.0.0'
           assert c['qa_pass'] is True
           assert c['accepted_canonical_records'] == 36322
           assert c['map_ready_records'] == 35957
