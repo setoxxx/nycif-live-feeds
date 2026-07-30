@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Classify every canonical approved list-only coordinate record.
+"""Classify all canonical missing-coordinate records and derive safe proposals.
 
-This Stage 8 pass is intentionally read-only. It emits coordinate proposals only
-when the current immutable approved snapshot already contains one unambiguous,
-map-ready precedent. It never mutates event data and never calls a network
-geocoder. A separate fail-closed promotion pass is required.
+The canonical target is the projector's complete missing-coordinate queue. The
+approved public projection is used only as an immutable index of already
+certified map-ready precedents. This pass never mutates production event data
+and never calls a network geocoder.
 """
 from __future__ import annotations
 
@@ -18,6 +18,7 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
+MISSING = ROOT / "data" / "events_discovery_missing_coordinates_v02.json"
 APPROVED = ROOT / "data" / "events_discovery_v02_approved.json"
 RECONCILIATION = ROOT / "data" / "events_discovery_reconciliation_v02.json"
 REPORT = ROOT / "data" / "reports" / "stage8_list_only_coordinate_inventory.json"
@@ -44,7 +45,7 @@ def rows(value: Any) -> list[dict[str, Any]]:
         for key in ("events", "items", "records"):
             if isinstance(value.get(key), list):
                 return [row for row in value[key] if isinstance(row, dict)]
-    raise RuntimeError("approved feed must be a list or contain events/items/records")
+    raise RuntimeError("payload must be a list or contain events/items/records")
 
 
 def num(value: Any) -> float | None:
@@ -67,170 +68,142 @@ def norm(value: Any) -> str:
     return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
 
 
-def nested(row: dict[str, Any], key: str) -> Any:
-    value = row.get(key)
-    if value not in (None, ""):
-        return value
+def approved_status(row: dict[str, Any]) -> str:
     nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
-    return nycif.get(key)
+    return norm(nycif.get("coordinate_status")).replace(" ", "_")
 
 
-def first(row: dict[str, Any], keys: tuple[str, ...]) -> str:
-    for key in keys:
-        value = nested(row, key)
-        if value not in (None, ""):
-            return str(value).strip()
-    return ""
-
-
-def source(row: dict[str, Any]) -> dict[str, Any]:
+def approved_source(row: dict[str, Any]) -> dict[str, Any]:
     return row.get("source") if isinstance(row.get("source"), dict) else {}
 
 
-def source_id(row: dict[str, Any]) -> str:
-    src = source(row)
-    return first(row, ("source_event_id", "event_id")) or str(src.get("source_event_id") or src.get("event_id") or "").strip()
+def approved_dataset(row: dict[str, Any]) -> str:
+    return str(approved_source(row).get("dataset") or row.get("source_dataset") or "").strip()
 
 
-def source_name(row: dict[str, Any]) -> str:
-    src = source(row)
-    return first(row, ("source_dataset", "source_name", "source_slug")) or str(src.get("dataset") or src.get("name") or src.get("slug") or "").strip()
+def approved_source_id(row: dict[str, Any]) -> str:
+    return str(approved_source(row).get("source_event_id") or row.get("source_event_id") or "").strip()
 
 
-def source_url(row: dict[str, Any]) -> str:
-    src = source(row)
-    return first(row, ("source_url", "url", "permalink", "link")) or str(src.get("source_url") or src.get("url") or "").strip()
+def approved_location(row: dict[str, Any]) -> str:
+    return str(row.get("location") or row.get("display_location") or row.get("address") or "").strip()
 
 
-def location(row: dict[str, Any]) -> str:
-    return first(row, ("display_location", "location", "event_location", "address", "venue"))
+def target_source(item: dict[str, Any]) -> dict[str, Any]:
+    return item.get("source_identity") if isinstance(item.get("source_identity"), dict) else {}
 
 
-def event_date(row: dict[str, Any]) -> str:
-    return first(row, ("event_date", "date", "start_date", "start_date_time", "start"))[:10]
+def target_dataset(item: dict[str, Any]) -> str:
+    return str(target_source(item).get("dataset") or "").strip()
 
 
-def coordinate_status(row: dict[str, Any]) -> str:
-    return norm(nested(row, "coordinate_status")).replace(" ", "_")
+def target_source_id(item: dict[str, Any]) -> str:
+    return str(target_source(item).get("source_event_id") or "").strip()
 
 
-def display_disposition(row: dict[str, Any]) -> str:
-    return norm(nested(row, "display_disposition")).replace(" ", "_")
+def target_source_url(item: dict[str, Any]) -> str:
+    return str(target_source(item).get("source_url") or "").strip()
 
 
-def canonical_id(row: dict[str, Any]) -> str:
-    return str(row.get("id") or "").strip()
+def target_location(item: dict[str, Any]) -> str:
+    return str(item.get("location") or "").strip()
 
 
-def fingerprint(row: dict[str, Any]) -> str:
+def target_date(item: dict[str, Any]) -> str:
+    return str(item.get("date") or "")[:10]
+
+
+def fingerprint(item: dict[str, Any]) -> str:
     payload = {
-        "canonical_id": canonical_id(row),
-        "dataset": source_name(row),
-        "source_event_id": source_id(row),
-        "date": event_date(row),
-        "title": str(row.get("title") or "").strip(),
-        "borough": str(row.get("borough") or "").strip(),
-        "location": location(row),
+        "canonical_id": str(item.get("canonical_id") or "").strip(),
+        "dataset": target_dataset(item),
+        "source_event_id": target_source_id(item),
+        "date": target_date(item),
+        "title": str(item.get("title") or "").strip(),
+        "location": target_location(item),
     }
     encoded = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
 
 
-def classify(row: dict[str, Any]) -> str:
-    text = " ".join(
-        norm(nested(row, key))
-        for key in ("title", "location", "display_location", "address", "venue", "description")
-    )
-    role = norm(row.get("event_role") or row.get("role")).replace(" ", "_")
-    disposition = display_disposition(row)
-    borough = norm(row.get("borough"))
+def classify(item: dict[str, Any]) -> str:
+    text = " ".join(norm(item.get(key)) for key in ("title", "location"))
+    location = target_location(item)
     if any(token in text for token in ("online event", "virtual event", "zoom", "webinar", "livestream", "live stream")):
         return "online_only"
-    if role == "private_or_reserved_activity" or disposition == "private_or_reserved_activity":
-        return "private_or_reserved"
-    if borough == "other":
-        return "outside_nyc_or_other"
-    if not location(row):
+    if not location:
         return "missing_location_text"
+    if re.search(r"\b(new jersey|long island|westchester|connecticut|outside nyc)\b", text):
+        return "outside_nyc_or_other"
     return "physical_location_unresolved"
 
 
-def precedent_tuple(row: dict[str, Any]) -> tuple[float, float, str] | None:
+def precedent(row: dict[str, Any]) -> tuple[float, float, str] | None:
     lat, lng = coords(row)
-    borough = norm(row.get("borough"))
-    if not valid_nyc(lat, lng) or borough not in NYC_BOROUGHS:
+    borough = str(row.get("borough") or "").strip()
+    if approved_status(row) != "map_ready" or not valid_nyc(lat, lng) or norm(borough) not in NYC_BOROUGHS:
         return None
-    return round(float(lat), 6), round(float(lng), 6), str(row.get("borough")).strip()
+    return round(float(lat), 6), round(float(lng), 6), borough
 
 
 def main() -> int:
-    events = rows(load(APPROVED))
+    missing_payload = load(MISSING)
+    targets = rows(missing_payload)
+    approved = rows(load(APPROVED))
     reconciliation = load(RECONCILIATION)
-    expected_total = int(reconciliation.get("accepted_canonical_records") or 0)
-    expected_map = int(reconciliation.get("map_ready_records") or 0)
     expected_list = int(reconciliation.get("list_only_coordinate_records") or 0)
 
-    statuses = Counter(coordinate_status(row) for row in events)
-    unknown_status = [row for row in events if coordinate_status(row) not in {"map_ready", "list_only"}]
-    map_rows = [row for row in events if coordinate_status(row) == "map_ready"]
-    list_rows = [row for row in events if coordinate_status(row) == "list_only"]
-    invalid_map_rows = [canonical_id(row) for row in map_rows if precedent_tuple(row) is None]
+    map_rows = [row for row in approved if precedent(row) is not None]
+    invalid_map_rows = [str(row.get("id") or "") for row in approved if approved_status(row) == "map_ready" and precedent(row) is None]
 
     by_source_id: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
-    by_location: dict[tuple[str, str], list[dict[str, Any]]] = defaultdict(list)
+    by_location: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in map_rows:
-        if precedent_tuple(row) is None:
-            continue
-        sid = source_id(row)
+        sid = approved_source_id(row)
         if sid:
-            by_source_id[(norm(source_name(row)), norm(sid))].append(row)
-        loc = norm(location(row))
-        borough = norm(row.get("borough"))
-        if loc and borough in NYC_BOROUGHS:
-            by_location[(loc, borough)].append(row)
+            by_source_id[(norm(approved_dataset(row)), norm(sid))].append(row)
+        location = norm(approved_location(row))
+        if location:
+            by_location[location].append(row)
 
     proposals: list[dict[str, Any]] = []
     ledger: list[dict[str, Any]] = []
     reasons: Counter[str] = Counter()
     methods: Counter[str] = Counter()
 
-    for row in list_rows:
-        initial_reason = classify(row)
+    for item in targets:
+        initial_reason = classify(item)
         reason = initial_reason
         proposal: dict[str, Any] | None = None
-        sid = source_id(row)
+        dataset = target_dataset(item)
+        source_id = target_source_id(item)
 
-        # Only physical, public, NYC-location candidates may receive a proposal.
         if initial_reason == "physical_location_unresolved":
-            candidates = by_source_id.get((norm(source_name(row)), norm(sid)), []) if sid else []
-            unique = {precedent_tuple(candidate) for candidate in candidates if precedent_tuple(candidate) is not None}
-            method = ""
+            candidates = by_source_id.get((norm(dataset), norm(source_id)), []) if source_id else []
+            unique = {precedent(candidate) for candidate in candidates if precedent(candidate) is not None}
             if len(unique) == 1:
                 lat, lng, borough = next(iter(unique))
-                method = "exact_source_event_id_precedent"
                 proposal = {
                     "lat": lat,
                     "lng": lng,
                     "borough": borough,
-                    "method": method,
+                    "method": "exact_source_event_id_precedent",
                     "evidence_count": len(candidates),
-                    "evidence_canonical_ids": sorted(canonical_id(candidate) for candidate in candidates)[:100],
+                    "evidence_canonical_ids": sorted(str(candidate.get("id") or "") for candidate in candidates)[:100],
                 }
 
             if proposal is None:
-                location_key = (norm(location(row)), norm(row.get("borough")))
-                candidates = by_location.get(location_key, []) if all(location_key) else []
-                unique = {precedent_tuple(candidate) for candidate in candidates if precedent_tuple(candidate) is not None}
+                candidates = by_location.get(norm(target_location(item)), []) if target_location(item) else []
+                unique = {precedent(candidate) for candidate in candidates if precedent(candidate) is not None}
                 if len(unique) == 1:
                     lat, lng, borough = next(iter(unique))
-                    method = "exact_location_borough_precedent"
                     proposal = {
                         "lat": lat,
                         "lng": lng,
                         "borough": borough,
-                        "method": method,
+                        "method": "exact_location_precedent",
                         "evidence_count": len(candidates),
-                        "evidence_canonical_ids": sorted(canonical_id(candidate) for candidate in candidates)[:100],
+                        "evidence_canonical_ids": sorted(str(candidate.get("id") or "") for candidate in candidates)[:100],
                     }
 
             if proposal is not None:
@@ -238,15 +211,14 @@ def main() -> int:
                 methods[proposal["method"]] += 1
                 proposals.append(
                     {
-                        "canonical_id": canonical_id(row),
-                        "fingerprint_sha256": fingerprint(row),
-                        "source": source_name(row),
-                        "source_event_id": sid,
-                        "source_url": source_url(row),
-                        "title": row.get("title"),
-                        "date": event_date(row),
-                        "borough": row.get("borough"),
-                        "location": location(row),
+                        "canonical_id": str(item.get("canonical_id") or "").strip(),
+                        "fingerprint_sha256": fingerprint(item),
+                        "source": dataset,
+                        "source_event_id": source_id,
+                        "source_url": target_source_url(item),
+                        "title": item.get("title"),
+                        "date": target_date(item),
+                        "location": target_location(item),
                         **proposal,
                     }
                 )
@@ -254,17 +226,15 @@ def main() -> int:
         reasons[reason] += 1
         ledger.append(
             {
-                "canonical_id": canonical_id(row),
-                "fingerprint_sha256": fingerprint(row),
-                "source": source_name(row),
-                "source_event_id": sid,
-                "source_url": source_url(row),
-                "title": row.get("title"),
-                "date": event_date(row),
-                "borough": row.get("borough"),
-                "location": location(row),
-                "event_role": row.get("event_role"),
-                "display_disposition": display_disposition(row),
+                "canonical_id": str(item.get("canonical_id") or "").strip(),
+                "fingerprint_sha256": fingerprint(item),
+                "source": dataset,
+                "source_event_id": source_id,
+                "source_url": target_source_url(item),
+                "title": item.get("title"),
+                "date": target_date(item),
+                "location": target_location(item),
+                "current_classification": item.get("current_classification"),
                 "reason_code": reason,
                 "proposal": proposal,
             }
@@ -272,39 +242,31 @@ def main() -> int:
 
     now = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     equations = {
-        "approved_matches_reconciliation": len(events) == expected_total,
-        "map_ready_matches_reconciliation": len(map_rows) == expected_map,
-        "list_only_matches_reconciliation": len(list_rows) == expected_list,
-        "approved_equals_map_plus_list": len(events) == len(map_rows) + len(list_rows),
-        "list_equals_ledger": len(list_rows) == len(ledger),
+        "queue_declared_count_matches_rows": int(missing_payload.get("count") or 0) == len(targets),
+        "list_only_matches_reconciliation": len(targets) == expected_list,
+        "list_equals_ledger": len(targets) == len(ledger),
         "proposal_count_matches": len(proposals) == reasons.get("supported_coordinate_proposal", 0),
-        "all_statuses_known": not unknown_status,
-        "all_map_ready_coordinates_valid": not invalid_map_rows,
-        "canonical_ids_unique": len({canonical_id(row) for row in events}) == len(events),
-        "list_fingerprints_unique": len({item["fingerprint_sha256"] for item in ledger}) == len(ledger),
+        "all_map_ready_precedents_valid": not invalid_map_rows,
+        "canonical_ids_present_and_unique": len({str(item.get("canonical_id") or "") for item in targets}) == len(targets) and all(item.get("canonical_id") for item in targets),
+        "list_fingerprints_unique": len({entry["fingerprint_sha256"] for entry in ledger}) == len(ledger),
+        "all_records_reason_coded": sum(reasons.values()) == len(targets),
     }
     qa_pass = all(equations.values())
     report = {
         "artifact_type": "stage8_list_only_coordinate_inventory",
-        "schema_version": "2.0.0",
+        "schema_version": "2.1.0",
         "generated_at_utc": now,
         "source_snapshot_generated_at_utc": reconciliation.get("generated_at_utc"),
-        "approved_total": len(events),
-        "map_ready_total": len(map_rows),
-        "list_only_total": len(list_rows),
-        "expected_from_reconciliation": {
-            "approved_total": expected_total,
-            "map_ready_total": expected_map,
-            "list_only_total": expected_list,
-        },
-        "coordinate_status_counts": dict(sorted(statuses.items())),
+        "approved_projection_total": len(approved),
+        "certified_precedent_total": len(map_rows),
+        "list_only_total": len(targets),
+        "expected_from_reconciliation": {"list_only_total": expected_list},
         "reason_counts": dict(sorted(reasons.items())),
         "proposal_method_counts": dict(sorted(methods.items())),
         "proposal_total": len(proposals),
         "ledger_total": len(ledger),
-        "invalid_map_ready_count": len(invalid_map_rows),
-        "invalid_map_ready_sample": invalid_map_rows[:100],
-        "unknown_status_count": len(unknown_status),
+        "invalid_map_ready_precedent_count": len(invalid_map_rows),
+        "invalid_map_ready_precedent_sample": invalid_map_rows[:100],
         "equations": equations,
         "production_data_modified": False,
         "promotion_allowed": False,
@@ -316,7 +278,7 @@ def main() -> int:
         PROPOSALS,
         {
             "artifact_type": "stage8_supported_coordinate_proposals",
-            "schema_version": "2.0.0",
+            "schema_version": "2.1.0",
             "generated_at_utc": now,
             "source_snapshot_generated_at_utc": reconciliation.get("generated_at_utc"),
             "promotion_allowed": False,
