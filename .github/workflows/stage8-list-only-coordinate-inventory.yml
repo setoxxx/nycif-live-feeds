@@ -1,54 +1,16 @@
-name: Stage 8 List-Only Coordinate Inventory
+name: Archived Stage 8 List-Only Coordinate Inventory
 
 on:
-  pull_request:
-    paths:
-      - scripts/stage8_list_only_coordinate_inventory.py
-      - .github/workflows/stage8-list-only-coordinate-inventory.yml
-      - data/events_discovery_v02_approved.json
+  workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  inventory:
+  archived:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: feature/stage8-list-only-coordinate-resolution
-          fetch-depth: 0
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: Generate fail-closed Stage 8 inventory
-        run: python scripts/stage8_list_only_coordinate_inventory.py
-      - name: Verify inventory equations and no production event mutation
+      - name: Stage 8 completion notice
         run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-          p=json.loads(Path('data/reports/stage8_list_only_coordinate_inventory.json').read_text())
-          assert p['qa_pass'] is True
-          assert p['list_only_total'] == p['ledger_total']
-          assert p['equations']['approved_equals_map_plus_list'] is True
-          q=json.loads(Path('data/reports/stage8_list_only_coordinate_proposals.json').read_text())
-          assert q['promotion_allowed'] is False
-          PY
-          git diff --exit-code -- data/events_discovery_v02_approved.json
-      - name: Commit generated Stage 8 evidence
-        run: |
-          git add data/reports/stage8_list_only_coordinate_inventory.json data/reports/stage8_list_only_coordinate_proposals.json
-          if git diff --cached --quiet; then exit 0; fi
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'Generate Stage 8 list-only coordinate inventory [skip ci]'
-          git push origin HEAD:feature/stage8-list-only-coordinate-resolution
-      - name: Upload Stage 8 evidence
-        uses: actions/upload-artifact@v4
-        with:
-          name: stage8-list-only-coordinate-inventory
-          path: |
-            data/reports/stage8_list_only_coordinate_inventory.json
-            data/reports/stage8_list_only_coordinate_proposals.json
-          if-no-files-found: error
+          echo 'Stage 8 is complete and archived.'
+          echo 'See data/reports/stage8_supported_coordinate_resolution_certificate.json.'
