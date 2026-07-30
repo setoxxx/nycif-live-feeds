@@ -7,7 +7,7 @@ on:
 
 permissions:
   actions: write
-  contents: read
+  contents: write
 
 jobs:
   dispatch-production-refresh:
@@ -17,3 +17,14 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: gh workflow run discovery-feed-refresh.yml --repo "${{ github.repository }}" --ref main
+
+      - name: Remove this one-time dispatcher
+        env:
+          GH_TOKEN: ${{ github.token }}
+          WORKFLOW_PATH: .github/workflows/temporary-production-verification-dispatch.yml
+        run: |
+          sha="$(gh api "repos/${{ github.repository }}/contents/${WORKFLOW_PATH}?ref=main" --jq .sha)"
+          gh api --method DELETE "repos/${{ github.repository }}/contents/${WORKFLOW_PATH}" \
+            -f message='Remove completed production verification dispatcher' \
+            -f sha="$sha" \
+            -f branch='main'
