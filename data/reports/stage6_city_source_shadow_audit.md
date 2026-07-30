@@ -1,6 +1,6 @@
 # Stage 6 city-source shadow audit
 
-Generated: `2026-07-30T14:05:10.945882Z`
+Generated: `2026-07-30T14:08:40.968911Z`
 
 Overall result: **PASS**
 
@@ -54,6 +54,6 @@ No production feed was modified. Each source remains shadow-only unless a separa
 - Location fields: `none`
 - Approved overlap: source IDs `0`, semantic `0`
 - Disposition: **blocked_stale_or_non_current_advisory_source**
-  - source metadata/data update is 5479.54 days old
+  - source metadata/data update is 5479.55 days old
   - current/future query unavailable: no_primary_date_field
   - no usable location fields

@@ -1,8 +1,8 @@
 {
-  "approved_events_indexed": 0,
+  "approved_events_indexed": 36359,
   "artifact_type": "nycif_stage6_city_source_shadow_audit",
   "errors": [],
-  "generated_at_utc": "2026-07-30T14:05:10.945882Z",
+  "generated_at_utc": "2026-07-30T14:08:40.968911Z",
   "mode": "shadow_only",
   "operating_rule": "No candidate may enter a public feed unless it is current, event-like, locatable, additive, occurrence-safe and independently approved after shadow evidence.",
   "production_feeds_modified": false,
@@ -70,7 +70,7 @@
       "row_count": 18290,
       "row_count_error": null,
       "source_url": "https://data.cityofnewyork.us/resource/tg4x-b46p.json",
-      "update_age_days": 0.77,
+      "update_age_days": 0.78,
       "updated_at_utc": "2026-07-29T19:30:47Z"
     },
     {
@@ -281,7 +281,7 @@
       "direct_geometry_fields": [],
       "disposition": "blocked_stale_or_non_current_advisory_source",
       "disposition_reasons": [
-        "source metadata/data update is 5479.54 days old",
+        "source metadata/data update is 5479.55 days old",
         "current/future query unavailable: no_primary_date_field",
         "no usable location fields"
       ],
@@ -301,7 +301,7 @@
       "row_count": null,
       "row_count_error": "RuntimeError: GET failed after 3 attempts: https://data.cityofnewyork.us/resource/vihk-m25f.json?%24select=count(*)+as+count: HTTP Error 403: Forbidden",
       "source_url": "https://data.cityofnewyork.us/resource/vihk-m25f.json",
-      "update_age_days": 5479.54,
+      "update_age_days": 5479.55,
       "updated_at_utc": "2011-07-30T01:03:15Z"
     }
   ],
