@@ -1,0 +1,38 @@
+{
+  "artifact_type": "stage8_supported_coordinate_resolution_certificate",
+  "baseline": {
+    "accepted": 36322,
+    "list_only": 997,
+    "map_ready": 35325
+  },
+  "coordinate_mismatch_count": 0,
+  "coordinate_mismatch_sample": [],
+  "equations": {
+    "accepted_equals_map_plus_list": true,
+    "accepted_total_unchanged": true,
+    "all_promoted_coordinates_exact": true,
+    "all_promoted_ids_emitted": true,
+    "apply_qa_pass": true,
+    "apply_total_exact": true,
+    "list_only_reduced_exactly": true,
+    "map_ready_increased_exactly": true,
+    "missing_queue_count_exact": true,
+    "no_promoted_id_remains_missing": true,
+    "proposal_total_exact": true,
+    "strict_reconciliation_pass": true
+  },
+  "generated_at_utc": "2026-07-30T16:33:13.779063Z",
+  "missing_output_count": 0,
+  "missing_output_sample": [],
+  "qa_pass": true,
+  "remaining_reason_contract": "365 unsupported records remain list-only and retain Stage 8 inventory reason codes; no coordinates invented",
+  "result": {
+    "accepted": 36322,
+    "list_only": 365,
+    "map_ready": 35957,
+    "promoted": 632
+  },
+  "schema_version": "1.0.0",
+  "unresolved_promoted_count": 0,
+  "unresolved_promoted_sample": []
+}
