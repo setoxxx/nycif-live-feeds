@@ -1,0 +1,78 @@
+name: Stage 9 Complete Exception Ledger
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - scripts/build_stage9_uncapped_duplicate_queue.py
+      - scripts/certify_stage9_exception_ledger.py
+      - .stage9-exception-trigger
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stage9-exception-ledger
+  cancel-in-progress: true
+
+jobs:
+  certify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: feature/stage9-exception-ledger-certification
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile Stage 9 tooling
+        run: |
+          python -m py_compile scripts/build_stage9_uncapped_duplicate_queue.py
+          python -m py_compile scripts/certify_stage9_exception_ledger.py
+      - name: Build complete duplicate queue
+        run: python scripts/build_stage9_uncapped_duplicate_queue.py
+      - name: Certify complete exception ledger
+        run: python scripts/certify_stage9_exception_ledger.py
+      - name: Verify Stage 9 contract
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('data/events_discovery_possible_duplicates_v02.json').read_text())
+          r=json.loads(Path('data/reports/stage9_exception_ledger.json').read_text())
+          c=json.loads(Path('data/reports/stage9_exception_ledger_certificate.json').read_text())
+          assert d['truncated'] is False
+          assert d['canonical_population_count'] == 36322
+          assert len(d['groups']) == d['count']
+          assert r['qa_pass'] is True
+          assert c['qa_pass'] is True
+          assert c['accepted_canonical_records'] == 36322
+          assert c['map_ready_records'] == 35957
+          assert c['list_only_coordinate_records'] == 365
+          assert c['exception_classes_complete'] is True
+          assert c['exception_classes_reason_coded'] is True
+          assert c['launch_authorized'] is False
+          PY
+      - name: Commit Stage 9 evidence
+        run: |
+          git add \
+            data/events_discovery_possible_duplicates_v02.json \
+            data/reports/stage9_exception_ledger.json \
+            data/reports/stage9_exception_ledger_certificate.json
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Generate Stage 9 complete exception ledger [skip ci]'
+          git fetch origin feature/stage9-exception-ledger-certification
+          git rebase origin/feature/stage9-exception-ledger-certification
+          git push origin HEAD:feature/stage9-exception-ledger-certification
+      - name: Upload Stage 9 evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage9-complete-exception-ledger
+          path: |
+            data/events_discovery_possible_duplicates_v02.json
+            data/reports/stage9_exception_ledger.json
+            data/reports/stage9_exception_ledger_certificate.json
+          if-no-files-found: error
