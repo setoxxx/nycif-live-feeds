@@ -1,119 +1,123 @@
 {
   "coordinate_status_counts": {
-    "list_only": 9,
-    "map_ready": 318
+    "list_only": 11,
+    "map_ready": 248
   },
-  "days_with_coverage": 37,
-  "generated_at_utc": "2026-07-15T00:58:47Z",
+  "days_with_coverage": 31,
+  "generated_at_utc": "2026-07-30T00:08:59Z",
   "go_shoot_sample": [
     {
-      "borough": "Bronx",
-      "date": "2026-07-14",
-      "score": 580,
-      "title": "World Cup Activation"
+      "borough": "Brooklyn",
+      "date": "2026-07-29",
+      "score": 510,
+      "title": "High School Choir Concert and Block Party"
     },
     {
       "borough": "Manhattan",
-      "date": "2026-07-14",
-      "score": 420,
-      "title": "FIFA26 NYC DOT World Cup Watch Party"
-    },
-    {
-      "borough": "Bronx",
-      "date": "2026-07-14",
-      "score": 420,
-      "title": "NYC DOT Soccer Streets World Cup Watch Party - Lou Gehrig Plaza"
-    },
-    {
-      "borough": "Queens",
-      "date": "2026-07-14",
+      "date": "2026-07-29",
       "score": 380,
-      "title": "2026 Queensboro Dance Festival"
+      "title": "Music Speaks Festival, Inc."
+    },
+    {
+      "borough": "Manhattan",
+      "date": "2026-07-29",
+      "score": 380,
+      "title": "SummerStage Festival - July"
+    },
+    {
+      "borough": "Manhattan",
+      "date": "2026-07-29",
+      "score": 340,
+      "title": "East 125th Street Farmstand"
+    },
+    {
+      "borough": "Bronx",
+      "date": "2026-07-29",
+      "score": 340,
+      "title": "HHFM Hunts Point Market"
+    },
+    {
+      "borough": "Brooklyn",
+      "date": "2026-07-29",
+      "score": 340,
+      "title": "HHFM Kings County Hospital Market"
+    },
+    {
+      "borough": "Manhattan",
+      "date": "2026-07-29",
+      "score": 340,
+      "title": "NYP Youth Market - Broadway"
+    },
+    {
+      "borough": "Manhattan",
+      "date": "2026-07-29",
+      "score": 330,
+      "title": "Live Music and Dance Performances and Circus Arts"
+    },
+    {
+      "borough": "Manhattan",
+      "date": "2026-07-29",
+      "score": 310,
+      "title": "TSQ LIVE: 45/46 Plaza Programming"
     },
     {
       "borough": "Queens",
-      "date": "2026-07-14",
-      "score": 340,
-      "title": "Elmhurst Greenmarket Tuesday"
-    },
-    {
-      "borough": "Manhattan",
-      "date": "2026-07-14",
-      "score": 340,
-      "title": "Ft Washington Greenmarket Tuesday"
-    },
-    {
-      "borough": "Manhattan",
-      "date": "2026-07-14",
-      "score": 340,
-      "title": "Green Market"
-    },
-    {
-      "borough": "Bronx",
-      "date": "2026-07-14",
-      "score": 340,
-      "title": "HHFM McKinley Square Market"
-    },
-    {
-      "borough": "Bronx",
-      "date": "2026-07-14",
-      "score": 340,
-      "title": "HHFM Mt. Eden Market"
-    },
-    {
-      "borough": "Bronx",
-      "date": "2026-07-14",
-      "score": 340,
-      "title": "Lincoln Hospital Greenmarket Tues  Friday"
+      "date": "2026-07-30",
+      "score": 510,
+      "title": "Summer Concert Series - Queensboro Dance Festival"
     }
   ],
   "lane_counts": {
-    "approved_major": 299,
-    "review_high_signal": 28
+    "approved_major": 258,
+    "review_high_signal": 1
   },
   "location_cache_modified": false,
   "money_day_quality": {
-    "events_removed_vs_baseline": 515,
+    "events_removed_vs_baseline": 583,
     "qa_pass": true,
     "report": "data/photographer_money_day_quality_report.json",
     "top_exclude_reasons": [
       [
         "no_money_day_keyword_signal",
-        4033
-      ],
-      [
-        "routine_activity_excluded",
-        884
+        1272
       ],
       [
         "thin_or_non_money_title_excluded",
-        242
+        220
+      ],
+      [
+        "routine_activity_excluded",
+        201
       ],
       [
         "below_score_threshold",
-        45
+        9
+      ],
+      [
+        "duplicate_id",
+        5
       ]
     ]
   },
   "month_counts": [
     {
-      "days_with_events": 18,
-      "event_count": 223,
+      "days_with_events": 3,
+      "event_count": 28,
       "label": "July 2026"
     },
     {
-      "days_with_events": 19,
-      "event_count": 104,
+      "days_with_events": 28,
+      "event_count": 231,
       "label": "August 2026"
     }
   ],
-  "pin_integrity_map_ready_after": 318,
+  "pin_integrity_map_ready_after": 248,
   "promotion_allowed": false,
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-07-14",
+  "reference_today_nyc": "2026-07-29",
   "schema_version": "photographer-assignment-calendar-v2-money-day",
-  "total_events": 327,
+  "total_events": 259,
   "window_end": "2026-08-31"
 }

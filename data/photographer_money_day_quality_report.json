@@ -1,27 +1,27 @@
 {
   "after_v2": {
     "coordinate_status_counts": {
-      "list_only": 9,
-      "map_ready": 318
+      "list_only": 11,
+      "map_ready": 248
     },
-    "days_with_coverage": 37,
+    "days_with_coverage": 31,
     "lane_counts": {
-      "approved_major": 299,
-      "review_high_signal": 28
+      "approved_major": 258,
+      "review_high_signal": 1
     },
     "month_counts": [
       {
-        "days_with_events": 18,
-        "event_count": 223,
+        "days_with_events": 3,
+        "event_count": 28,
         "label": "July 2026"
       },
       {
-        "days_with_events": 19,
-        "event_count": 104,
+        "days_with_events": 28,
+        "event_count": 231,
         "label": "August 2026"
       }
     ],
-    "total_events": 327
+    "total_events": 259
   },
   "baseline_v1_pr173": {
     "days_with_coverage": 43,
@@ -40,44 +40,48 @@
     "reference_today_nyc": "2026-07-14",
     "total_events": 842
   },
-  "considered_in_window": 5531,
+  "considered_in_window": 1966,
   "delta_vs_baseline": {
-    "days_coverage_after": 37,
+    "days_coverage_after": 31,
     "days_coverage_before": 43,
-    "events_kept": 327,
-    "events_removed": 515
+    "events_kept": 259,
+    "events_removed": 583
   },
-  "excluded": 5204,
+  "excluded": 1707,
   "filter_rules": [
     "Require money-day keyword signal on title/category (not location).",
     "Exclude routine sports/fitness even when major_score is high.",
     "Cap carried major_score contribution; significance alone is not enough."
   ],
-  "generated_at_utc": "2026-07-15T00:58:47Z",
-  "kept": 327,
+  "generated_at_utc": "2026-07-30T00:08:59Z",
+  "kept": 259,
   "location_cache_modified": false,
   "promotion_allowed": false,
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-07-14",
+  "reference_today_nyc": "2026-07-29",
   "schema_version": "photographer-money-day-quality-v1",
   "top_exclude_reasons": [
     [
       "no_money_day_keyword_signal",
-      4033
-    ],
-    [
-      "routine_activity_excluded",
-      884
+      1272
     ],
     [
       "thin_or_non_money_title_excluded",
-      242
+      220
+    ],
+    [
+      "routine_activity_excluded",
+      201
     ],
     [
       "below_score_threshold",
-      45
+      9
+    ],
+    [
+      "duplicate_id",
+      5
     ]
   ]
 }

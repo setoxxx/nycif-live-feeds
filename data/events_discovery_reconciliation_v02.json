@@ -1,1 +1,55 @@
-{"generated_at_utc":"2026-07-29T21:54:04Z","raw_intake_source_rows":37787,"raw_breakdown":{"raw_nyc_open_data":33352,"calendar":2781,"parks_bigapps":1654},"generated_or_duplicative_excluded_from_source_count":true,"accepted_canonical_records":37893,"invalid_rejected_source_records":0,"disposition_totals":{"standalone_public_events":36715,"records_grouped_under_public_events":0,"list_only_records":1099,"maintenance_or_closure_records":73,"private_or_reserved_records":6},"role_totals":{"public_event":37725,"street_closure":88,"maintenance_or_closure":73,"private_or_reserved_activity":6,"transportation_operation":1},"map_ready_records":36830,"list_only_coordinate_records":1063,"public_event_groups":0,"equations":{"accepted_equals_disposition_sum":true,"accepted_sum":37893,"disposition_sum":37893,"open_data_rows":33352,"open_data_staged":33074,"open_data_unstaged_intake":278,"projected_feast_reference_intake":220,"open_data_disposition_rejected":0,"calendar_parks_raw":4435,"calendar_parks_accepted_or_unlinked":4321,"calendar_parks_unaccounted_gap":114},"reconciles":true,"notes":["Generated schema dumps and duplicative all-radar/enriched feeds excluded from raw intake.","Open-data accounting uses staged dated occurrences + occurrence-keyed unstaged season intake + disposition rejects."],"reconciles_strict":false,"reconciles_disposition_layer":true}
+{
+  "accepted_canonical_records": 36322,
+  "disposition_totals": {
+    "list_only_records": 1064,
+    "maintenance_or_closure_records": 77,
+    "private_or_reserved_records": 27,
+    "records_grouped_under_public_events": 0,
+    "standalone_public_events": 35154
+  },
+  "equations": {
+    "accepted_equals_disposition_sum": true,
+    "accepted_sum": 36322,
+    "calendar_parks_accepted_or_unlinked": 2750,
+    "calendar_parks_documented_exclusions": 29,
+    "calendar_parks_documented_human_rejected": 29,
+    "calendar_parks_documented_source_canceled": 0,
+    "calendar_parks_exact_duplicate_rows_excluded": 0,
+    "calendar_parks_raw": 2779,
+    "calendar_parks_unaccounted_gap": 0,
+    "calendar_parks_unaccounted_gap_raw": 29,
+    "disposition_sum": 36322,
+    "open_data_disposition_rejected": 0,
+    "open_data_rows": 33352,
+    "open_data_staged": 33325,
+    "open_data_unstaged_intake": 27,
+    "projected_feast_reference_intake": 220
+  },
+  "generated_at_utc": "2026-07-30T00:08:37Z",
+  "generated_or_duplicative_excluded_from_source_count": true,
+  "invalid_rejected_source_records": 0,
+  "list_only_coordinate_records": 997,
+  "map_ready_records": 35325,
+  "notes": [
+    "Generated schema dumps and duplicative all-radar/enriched feeds excluded from raw intake.",
+    "Open-data accounting uses staged dated occurrences + occurrence-keyed unstaged season intake + disposition rejects."
+  ],
+  "public_event_groups": 0,
+  "raw_breakdown": {
+    "calendar": 978,
+    "parks_bigapps": 1801,
+    "raw_nyc_open_data": 33352
+  },
+  "raw_intake_source_rows": 36131,
+  "reconciles": true,
+  "reconciles_disposition_layer": true,
+  "reconciles_strict": true,
+  "role_totals": {
+    "maintenance_or_closure": 77,
+    "private_or_reserved_activity": 27,
+    "public_event": 36129,
+    "street_closure": 88,
+    "transportation_operation": 1
+  },
+  "strict_gate_reason": "all source occurrences accepted or explicitly dispositioned; disposition equation balanced"
+}

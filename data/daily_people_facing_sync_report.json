@@ -1,20 +1,133 @@
 {
+  "civic": {
+    "accepted": 4911,
+    "date_time_location_qa_pass": true,
+    "list_only": 1293,
+    "map_coverage_qa_pass": true,
+    "map_ready": 3618
+  },
   "failed_steps": [],
-  "generated_at_utc": "2026-07-15T01:13:16Z",
+  "generated_at_utc": "2026-07-30T00:08:57Z",
   "location_cache_modified": false,
-  "notes": "Viral recurrence memory offline validation; full daily chain in Actions.",
+  "notes": "Safe daily desk sync. Does not run build_staged_production_feed / build_location_cache / public WordPress publish. Pin integrity gate fail-closed: qa_pass requires ZERO bad map_ready pins. Full permit→staged refresh remains live-sync-qa (manual dispatch).",
   "photographer_calendar": {
+    "days_with_coverage": 31,
+    "events_removed_vs_baseline": 583,
+    "month_counts": [
+      {
+        "days_with_events": 3,
+        "event_count": 28,
+        "label": "July 2026"
+      },
+      {
+        "days_with_events": 28,
+        "event_count": 231,
+        "label": "August 2026"
+      }
+    ],
+    "packs": {
+      "qa_pass": true,
+      "today": {
+        "borough_cluster_count": 3,
+        "date": "2026-07-29",
+        "map_ready_count": 9,
+        "total_events": 9
+      },
+      "tomorrow": {
+        "borough_cluster_count": 3,
+        "date": "2026-07-30",
+        "map_ready_count": 10,
+        "top_go_shoot": [
+          {
+            "borough": "Queens",
+            "score": 510,
+            "time": "2026-07-30T19:00:00.000-04:00",
+            "title": "Summer Concert Series - Queensboro Dance Festival"
+          },
+          {
+            "borough": "Manhattan",
+            "score": 380,
+            "time": "2026-07-30T08:00:00.000",
+            "title": "SummerStage Festival - July"
+          },
+          {
+            "borough": "Bronx",
+            "score": 370,
+            "time": "2026-07-30T17:00:00.000",
+            "title": "Summer Series Cross Country 5K Race 3"
+          },
+          {
+            "borough": "Manhattan",
+            "score": 340,
+            "time": "2026-07-30T09:30:00.000",
+            "title": "Columbus Circle Food Market"
+          },
+          {
+            "borough": "Manhattan",
+            "score": 340,
+            "time": "2026-07-30T08:00:00.000",
+            "title": "Farmers Market"
+          },
+          {
+            "borough": "Manhattan",
+            "score": 340,
+            "time": "2026-07-30T08:00:00.000",
+            "title": "HHFM East Harlem Market"
+          },
+          {
+            "borough": "Bronx",
+            "score": 340,
+            "time": "2026-07-30T07:00:00.000",
+            "title": "HHFM Mt. Eden Market"
+          },
+          {
+            "borough": "Manhattan",
+            "score": 340,
+            "time": "2026-07-30T09:00:00.000",
+            "title": "NYP Youth Market - Audubon"
+          },
+          {
+            "borough": "Manhattan",
+            "score": 330,
+            "time": "2026-07-30T08:00:00.000",
+            "title": "Live Music and Dance Performances and Circus Arts"
+          },
+          {
+            "borough": "Queens",
+            "score": 310,
+            "time": "2026-07-30T19:00:00.000-04:00",
+            "title": "Summer Concert Series - Queensboro Dance Festival"
+          }
+        ],
+        "total_events": 11
+      }
+    },
+    "pin_integrity": {
+      "demotion_count": 0,
+      "demotion_reason_counts": {},
+      "map_ready_after_total": 3924,
+      "map_ready_before_total": 3924,
+      "qa_pass": true,
+      "report": "data/pin_integrity_gate_report.json"
+    },
     "qa_pass": true,
-    "total_events": 327,
+    "quality_qa_pass": true,
+    "shoot_day_certified": {
+      "pack": "data/photographer_shoot_day_certified_pack.json",
+      "qa_pass": true,
+      "today_certified_pins": 9,
+      "tomorrow_certified_pins": 10
+    },
+    "total_events": 259,
     "viral_recurrence": {
       "historical_rows": 2450,
       "label_counts": {
-        "possible": 25,
-        "returning_likely": 279,
-        "weak": 30
+        "possible": 48,
+        "returning_likely": 137,
+        "weak": 66
       },
-      "match_count": 334,
-      "next_14d_crowd_magnets": 40,
+      "match_count": 251,
+      "next_14d_crowd_magnets": 39,
       "qa_pass": true
     }
   },
@@ -28,7 +141,52 @@
   "staged_feed_modified": false,
   "steps": [
     {
-      "cmd": "viral-recurrence offline",
+      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_civic_people_facing_staging.py",
+      "exit_code": 0,
+      "ok": true
+    },
+    {
+      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_civic_people_facing_map_coverage.py",
+      "exit_code": 0,
+      "ok": true
+    },
+    {
+      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_photographer_assignment_calendar.py",
+      "exit_code": 0,
+      "ok": true
+    },
+    {
+      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_photographer_money_day_packs.py",
+      "exit_code": 0,
+      "ok": true
+    },
+    {
+      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/sync_nyc_permits_historical.py --skip-network",
+      "exit_code": 0,
+      "ok": true
+    },
+    {
+      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_photographer_viral_recurrence.py",
+      "exit_code": 0,
+      "ok": true
+    },
+    {
+      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_pin_integrity_gate.py",
+      "exit_code": 0,
+      "ok": true
+    },
+    {
+      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_photographer_shoot_day_certified.py",
+      "exit_code": 0,
+      "ok": true
+    },
+    {
+      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_events_discovery_godview_digest_v02.py",
+      "exit_code": 0,
+      "ok": true
+    },
+    {
+      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_civic_people_facing_godview_digest.py",
       "exit_code": 0,
       "ok": true
     }
