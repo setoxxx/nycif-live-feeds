@@ -1,0 +1,42 @@
+name: Immediate Production Verification Dispatch
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  actions: write
+  contents: write
+  issues: write
+
+jobs:
+  dispatch-production-refresh:
+    if: github.event.issue.title == 'RUN NYCIF PRODUCTION VERIFICATION'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch Discovery Feed Refresh on main
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run discovery-feed-refresh.yml --repo "${{ github.repository }}" --ref main
+
+      - name: Close verification trigger issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh issue close "${{ github.event.issue.number }}" --repo "${{ github.repository }}" --comment "Production refresh dispatched through the authorized verification workflow."
+
+      - name: Remove temporary verification dispatchers
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for path in \
+            .github/workflows/immediate-production-verification-dispatch.yml \
+            .github/workflows/temporary-production-verification-dispatch.yml
+          do
+            sha="$(gh api "repos/${{ github.repository }}/contents/${path}?ref=main" --jq .sha 2>/dev/null || true)"
+            if [ -n "$sha" ]; then
+              gh api --method DELETE "repos/${{ github.repository }}/contents/${path}" \
+                -f message="Remove completed production verification dispatcher" \
+                -f sha="$sha" \
+                -f branch='main'
+            fi
+          done
