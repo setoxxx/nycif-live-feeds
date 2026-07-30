@@ -1,0 +1,59 @@
+{
+  "artifact_type": "nycif_event_923896_snapshot_repair",
+  "certified_coordinate": {
+    "lat": 40.618,
+    "lng": -73.905
+  },
+  "generated_at_utc": "2026-07-30T14:36:30.665611Z",
+  "official_source": {
+    "borough": "Brooklyn",
+    "date": "2026-08-01",
+    "location": "EAST   74 STREET between AVENUE U and AVENUE T",
+    "source_event_id": "923896"
+  },
+  "qa_pass": true,
+  "repairs": [
+    {
+      "after": {
+        "borough": "Brooklyn",
+        "lat": 40.618,
+        "lng": -73.905,
+        "location": "EAST   74 STREET between AVENUE U and AVENUE T",
+        "location_source": "certified_event_923896_segment_midpoint",
+        "match_type": "certified_event_923896_segment_midpoint"
+      },
+      "before": {
+        "borough": "Brooklyn",
+        "lat": 40.772418,
+        "lng": -73.963278,
+        "location": "EAST   74 STREET between AVENUE U and AVENUE T",
+        "location_source": "tier_2_geosearch_cache",
+        "match_type": "tier_2_geosearch_cache"
+      },
+      "match_count": 1,
+      "path": "data/nycif_live_test_enriched_events.json"
+    },
+    {
+      "after": {
+        "borough": "Brooklyn",
+        "lat": 40.618,
+        "lng": -73.905,
+        "location": "EAST   74 STREET between AVENUE U and AVENUE T",
+        "location_source": "certified_event_923896_segment_midpoint",
+        "match_type": "certified_event_923896_segment_midpoint"
+      },
+      "before": {
+        "borough": "Brooklyn",
+        "lat": 40.772418,
+        "lng": -73.963278,
+        "location": "EAST   74 STREET between AVENUE U and AVENUE T",
+        "location_source": "tier_2_geosearch_cache",
+        "match_type": "tier_2_geosearch_cache"
+      },
+      "match_count": 1,
+      "path": "data/nycif_staged_live_events.json"
+    }
+  ],
+  "schema_version": "1.0.0",
+  "scope": "Event 923896 only; downstream production projection and health gates remain mandatory"
+}
