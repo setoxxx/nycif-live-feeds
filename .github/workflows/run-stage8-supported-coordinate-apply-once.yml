@@ -63,6 +63,10 @@ jobs:
           python scripts/certify_event_923896_outputs.py
       - name: Commit and rebase authorized generated artifacts
         run: |
+          git restore --source=HEAD -- \
+            data/reports/stage8_list_only_coordinate_inventory.json \
+            data/reports/stage8_list_only_coordinate_proposals.json \
+            data/reports/stage8_supported_coordinate_match_report.json
           git add -A
           bad="$(git diff --cached --name-only | grep -Ev '^(data/|status/|nycif_major_radar_map_events\.json$|docs/events-discovery-taxonomy-v02\.md$|docs/field-desk-map-deploy/)' || true)"
           if [ -n "$bad" ]; then
