@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - scripts/stage8_list_only_coordinate_inventory.py
+      - scripts/stage8_match_supported_coordinate_proposals.py
       - .stage8-pr-trigger
   issues:
     types: [opened]
@@ -52,35 +53,18 @@ jobs:
           assert proposals['proposal_total'] == report['proposal_total']
           PY
           git diff --exit-code -- data/events_discovery_v02_approved.json data/nycif_staged_live_events.json data/supplemental_events_staging_feed.json
-      - name: Commit Stage 8 inventory evidence
+      - name: Dry-run match supported proposals upstream
+        run: python scripts/stage8_match_supported_coordinate_proposals.py || true
+      - name: Commit Stage 8 evidence
         run: |
-          git add data/reports/stage8_list_only_coordinate_inventory.json data/reports/stage8_list_only_coordinate_proposals.json
+          git add data/reports/stage8_list_only_coordinate_inventory.json data/reports/stage8_list_only_coordinate_proposals.json data/reports/stage8_supported_coordinate_match_report.json
           if git diff --cached --quiet; then
             exit 0
           fi
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git commit -m 'Generate canonical Stage 8 coordinate inventory [skip ci]'
+          git commit -m 'Generate Stage 8 coordinate evidence [skip ci]'
           git push origin HEAD:feature/stage8-list-only-coordinate-resolution
-      - name: Comment execution result
-        if: github.event_name == 'issues'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          python - <<'PY' > /tmp/stage8-summary.md
-          import json
-          from pathlib import Path
-          p=json.loads(Path('data/reports/stage8_list_only_coordinate_inventory.json').read_text())
-          print('## Stage 8 inventory completed')
-          print(f"- QA pass: `{str(p['qa_pass']).lower()}`")
-          print(f"- List-only records: `{p['list_only_total']}`")
-          print(f"- Supported coordinate proposals: `{p['proposal_total']}`")
-          print('- Production event data modified: `false`')
-          print('\nReason counts:')
-          for key, value in sorted(p['reason_counts'].items()):
-              print(f'- `{key}`: `{value}`')
-          PY
-          gh issue comment "${{ github.event.issue.number }}" --body-file /tmp/stage8-summary.md
       - name: Upload Stage 8 evidence
         uses: actions/upload-artifact@v4
         with:
@@ -88,4 +72,5 @@ jobs:
           path: |
             data/reports/stage8_list_only_coordinate_inventory.json
             data/reports/stage8_list_only_coordinate_proposals.json
+            data/reports/stage8_supported_coordinate_match_report.json
           if-no-files-found: error
