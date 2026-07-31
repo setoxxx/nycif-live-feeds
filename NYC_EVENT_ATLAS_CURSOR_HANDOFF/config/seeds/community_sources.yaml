@@ -1,0 +1,123 @@
+# Seed sources for BIDs, Community Boards, libraries, museums, parishes.
+# Adapters attempt JSON-LD then linked ICS. Failures are recorded; nothing is invented.
+
+- id: times_square_alliance
+  name: Times Square Alliance
+  kind: bid
+  borough: Manhattan
+  category: Community Program
+  subcategory: BID
+  url: https://www.timessquarenyc.org/events
+  authority: official_local
+  confidence: High
+  method: html_jsonld_ical
+
+- id: downtown_brooklyn_bid
+  name: Downtown Brooklyn Partnership
+  kind: bid
+  borough: Brooklyn
+  category: Community Program
+  subcategory: BID
+  url: https://downtownbrooklyn.com/events/
+  authority: official_local
+  confidence: High
+  method: html_jsonld_ical
+
+- id: flushing_bid
+  name: Downtown Flushing Transit Hub BID
+  kind: bid
+  borough: Queens
+  category: Community Program
+  subcategory: BID
+  url: https://www.flushingbid.com/events
+  authority: official_local
+  confidence: High
+  method: html_jsonld_ical
+
+- id: cb1_manhattan
+  name: Manhattan Community Board 1
+  kind: community_board
+  borough: Manhattan
+  category: Community Program
+  subcategory: Community Board
+  url: https://www.nyc.gov/site/manhattancb1/index.page
+  authority: official_government
+  confidence: Medium
+  method: html_jsonld_ical
+
+- id: brooklyn_public_library
+  name: Brooklyn Public Library
+  kind: library
+  borough: Brooklyn
+  category: Community Program
+  subcategory: Library
+  url: https://www.bklynlibrary.org/calendar
+  authority: official_institution
+  confidence: High
+  method: html_jsonld_ical
+
+- id: queens_public_library
+  name: Queens Public Library
+  kind: library
+  borough: Queens
+  category: Community Program
+  subcategory: Library
+  url: https://www.queenslibrary.org/calendar
+  authority: official_institution
+  confidence: High
+  method: html_jsonld_ical
+
+- id: nypl
+  name: New York Public Library
+  kind: library
+  borough: Manhattan
+  category: Community Program
+  subcategory: Library
+  url: https://www.nypl.org/events
+  authority: official_institution
+  confidence: High
+  method: html_jsonld_ical
+
+- id: amnh
+  name: American Museum of Natural History
+  kind: museum
+  borough: Manhattan
+  category: Exhibition
+  subcategory: Museum
+  url: https://www.amnh.org/calendar
+  authority: official_institution
+  confidence: High
+  method: html_jsonld_ical
+
+- id: brooklyn_botanic_garden
+  name: Brooklyn Botanic Garden
+  kind: garden
+  borough: Brooklyn
+  category: Community Program
+  subcategory: Garden
+  url: https://www.bbg.org/visit/events
+  authority: official_institution
+  confidence: High
+  method: html_jsonld_ical
+
+- id: bronx_zoo
+  name: Bronx Zoo / WCS
+  kind: zoo
+  borough: The Bronx
+  category: Community Program
+  subcategory: Zoo
+  url: https://bronxzoo.com/events
+  authority: official_institution
+  confidence: High
+  method: html_jsonld_ical
+
+- id: our_lady_mt_carmel
+  name: Our Lady of Mount Carmel (East Harlem)
+  kind: parish
+  borough: Manhattan
+  category: Religious Event
+  subcategory: Parish
+  url: https://www.ourladymtcarmel-ny.org/
+  authority: official_local
+  confidence: High
+  method: html_jsonld_ical

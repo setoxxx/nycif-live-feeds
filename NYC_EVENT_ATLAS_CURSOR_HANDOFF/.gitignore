@@ -1,0 +1,16 @@
+.venv/
+.env
+__pycache__/
+*.pyc
+data/atlas.sqlite
+data/raw/*
+!data/raw/.gitkeep
+!data/raw/offline/
+!data/raw/offline/.gitkeep
+data/staging/*
+!data/staging/.gitkeep
+data/exports/*
+!data/exports/.gitkeep
+logs/*
+.pytest_cache/
+src/nyc_event_atlas.egg-info/
