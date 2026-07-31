@@ -1,54 +1,52 @@
 {
- "generated_at_utc": "2026-07-30T16:32:36Z",
- "source_rows": 33325,
- "kept": 33344,
+ "generated_at_utc": "2026-07-31T14:59:55Z",
+ "source_rows": 31806,
+ "kept": 31824,
  "dropped_older_than_window": 0,
- "map_ready": 33342,
- "list_only": 2,
- "multi_day": 25,
- "past_in_window": 1137,
- "new_this_run": 0,
+ "map_ready": 31818,
+ "list_only": 6,
+ "multi_day": 15,
+ "past_in_window": 0,
+ "new_this_run": 1050,
  "category_counts": {
-  "general": 6073,
-  "media": 32,
-  "sports": 26424,
-  "civic": 412,
+  "general": 5858,
+  "sports": 25392,
+  "civic": 182,
   "market": 220,
-  "parks": 155,
-  "arts": 26,
-  "services": 2
+  "parks": 142,
+  "media": 9,
+  "arts": 21
  },
  "event_type_counts": {
-  "Special Event": 6073,
-  "Production Event": 30,
-  "Sport - Youth": 17322,
-  "Street Event": 113,
-  "Sport - Adult": 9096,
-  "Farmers Market": 164,
-  "Plaza Partner Event": 125,
-  "Open Street Partner Event": 80,
-  "Plaza Event": 30,
-  "Sidewalk Sale": 56,
-  "Single Block Festival": 3,
-  "Block Party": 183,
-  "Athletic Race / Tour": 6,
-  "Religious Event": 12,
-  "Health Fair": 2,
-  "Street Festival": 23,
-  "Parade": 23,
+  "Special Event": 5858,
+  "Sport - Youth": 16484,
+  "Street Event": 52,
+  "Sport - Adult": 8903,
+  "Farmers Market": 160,
+  "Plaza Partner Event": 113,
+  "Sidewalk Sale": 60,
+  "Open Street Partner Event": 71,
+  "Plaza Event": 29,
+  "Athletic Race / Tour": 5,
+  "Production Event": 5,
+  "Theater Load in and Load Outs": 4,
+  "Street Festival": 20,
+  "Parade": 21,
+  "Block Party": 28,
+  "Religious Event": 9,
   "Stationary Demonstration": 1,
-  "Theater Load in and Load Outs": 2
+  "Single Block Festival": 1
  },
  "category_coverage": {
   "arts": {
-   "count": 26,
+   "count": 21,
    "event_types": [
     "Single Block Festival",
     "Street Festival"
    ]
   },
   "civic": {
-   "count": 412,
+   "count": 182,
    "event_types": [
     "Block Party",
     "Open Street Partner Event",
@@ -75,7 +73,7 @@
    "event_types": []
   },
   "general": {
-   "count": 6073,
+   "count": 5858,
    "event_types": [
     "Special Event"
    ]
@@ -100,27 +98,25 @@
    ]
   },
   "media": {
-   "count": 32,
+   "count": 9,
    "event_types": [
     "Production Event",
     "Theater Load in and Load Outs"
    ]
   },
   "parks": {
-   "count": 155,
+   "count": 142,
    "event_types": [
     "Plaza Event",
     "Plaza Partner Event"
    ]
   },
   "services": {
-   "count": 2,
-   "event_types": [
-    "Health Fair"
-   ]
+   "count": 0,
+   "event_types": []
   },
   "sports": {
-   "count": 26424,
+   "count": 25392,
    "event_types": [
     "Athletic Race / Tour",
     "Sport - Adult",

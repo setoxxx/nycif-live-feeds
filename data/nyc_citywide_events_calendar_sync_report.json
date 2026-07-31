@@ -2,12 +2,12 @@
   "api_gateway": "https://api.nyc.gov/",
   "api_key_source": "public_config:https://www.nyc.gov/bin/nyc/sc.ec.json",
   "borough_counts": {
-    "Bk": 149,
-    "Bx": 181,
-    "Mn": 309,
-    "Other": 19,
-    "Qn": 218,
-    "SI": 145
+    "Bk": 118,
+    "Bx": 130,
+    "Mn": 240,
+    "Other": 13,
+    "Qn": 156,
+    "SI": 107
   },
   "canceled_excluded": 0,
   "categories_available": [
@@ -35,7 +35,7 @@
     "Cultural,Featured,General Events": 1,
     "Environment,Free,Street and Neighborhood,Kids and Family,Featured,General Events": 5,
     "Featured,General Events": 1,
-    "Free,Benefits Access,General Events,Special Event": 11,
+    "Free,Benefits Access,General Events,Special Event": 23,
     "Free,Holidays,Parks & Recreation,Featured,General Events": 1,
     "Free,Parks & Recreation,Athletic,General Events": 2,
     "Free,Parks & Recreation,Education,General Events": 2,
@@ -48,18 +48,18 @@
     "Free,Parks & Recreation,Volunteer,General Events": 1,
     "Free,Property Owner Clinic,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 1,
     "General Events": 7,
-    "Parks & Recreation": 841,
+    "Parks & Recreation": 573,
     "Street and Neighborhood": 66,
     "Tenant Resource Fair ,Free,Housing Information Class,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 2,
     "Tenant Resource Fair ,Free,Job Fair,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 1,
-    "Tenant Resource Fair ,Free,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 7,
+    "Tenant Resource Fair ,Free,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 6,
     "Tenant Resource Fair ,Free,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,HPD Outreach Event": 2,
     "Tenant Resource Fair ,Free,Property Owner Clinic,Property Owner Resource Fair,Housing Ambassador Event,General Events,HPD Outreach Event": 7,
     "Tenant Resource Fair ,Free,Property Owner Resource Fair,Housing Ambassador Event,Veteran Events,HPD Outreach Event": 1
   },
-  "duplicate_exact_occurrences_collapsed": 0,
+  "duplicate_exact_occurrences_collapsed": 1,
   "fetch_mode": "live",
-  "generated_at_utc": "2026-07-29T23:56:11.498458+00:00",
+  "generated_at_utc": "2026-07-31T13:57:55.651311+00:00",
   "location_cache_modified": false,
   "manual_review_status": "pending",
   "production_feeds_modified": false,
@@ -67,15 +67,15 @@
   "public_map_modified": false,
   "qa_pass": true,
   "search_path": "calendar/search",
-  "snapshot_rows": 978,
-  "source_rows_received": 978,
+  "snapshot_rows": 721,
+  "source_rows_received": 722,
   "staged_feed_modified": false,
   "window": {
-    "end_date": "2027-01-28",
-    "items_returned": 978,
-    "num_pages_fetched": 82,
-    "reported_total_items": 978,
-    "start_date": "2026-07-29"
+    "end_date": "2027-01-30",
+    "items_returned": 722,
+    "num_pages_fetched": 61,
+    "reported_total_items": 722,
+    "start_date": "2026-07-31"
   },
   "window_days": 183
 }

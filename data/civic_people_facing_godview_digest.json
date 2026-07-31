@@ -74,10 +74,10 @@
       "quarantined": 0
     },
     "oac_activities": {
-      "accepted": 1631,
-      "list_only": 13,
-      "map_ready": 1618,
-      "quarantined": 618
+      "accepted": 1605,
+      "list_only": 12,
+      "map_ready": 1593,
+      "quarantined": 644
     },
     "ready_ny_events": {
       "accepted": 0,
@@ -130,32 +130,32 @@
     "promotion_allowed": false
   },
   "counts": {
-    "accepted": 4884,
-    "events": 1631,
+    "accepted": 4858,
+    "events": 1605,
     "help_places": 2109,
-    "list_only": 1293,
-    "map_ready": 3591,
-    "money_day_today": 7,
-    "money_day_tomorrow": 6,
+    "list_only": 1292,
+    "map_ready": 3566,
+    "money_day_today": 5,
+    "money_day_tomorrow": 16,
     "opportunities": 1144,
-    "photographer_calendar_events": 198,
-    "photographer_days_with_coverage": 30,
+    "photographer_calendar_events": 190,
+    "photographer_days_with_coverage": 28,
     "pin_demotions": 0,
-    "pin_map_ready_certified": 3829,
+    "pin_map_ready_certified": 3804,
     "proposed": 489,
-    "quarantined": 6586,
-    "shoot_day_today_certified": 6,
-    "shoot_day_tomorrow_certified": 6,
-    "upcoming_next_30_days": 399,
-    "upcoming_next_7_days": 130,
-    "viral_next_14d_magnets": 39,
-    "viral_recurrence_matches": 227,
-    "viral_returning_likely": 116
+    "quarantined": 6612,
+    "shoot_day_today_certified": 5,
+    "shoot_day_tomorrow_certified": 16,
+    "upcoming_next_30_days": 373,
+    "upcoming_next_7_days": 122,
+    "viral_next_14d_magnets": 38,
+    "viral_recurrence_matches": 223,
+    "viral_returning_likely": 125
   },
   "daily_pull": {
-    "last_run_utc": "2026-07-30T16:32:36Z",
-    "photographer_calendar_events": 198,
-    "photographer_days_with_coverage": 30,
+    "last_run_utc": "2026-07-31T14:59:56Z",
+    "photographer_calendar_events": 190,
+    "photographer_days_with_coverage": 28,
     "qa_pass": true,
     "report": "data/daily_people_facing_sync_report.json"
   },
@@ -172,7 +172,7 @@
     "honesty": "NYC Open Data does not currently provide a high-quality live citywide soup-kitchen or food-pantry pin feed suitable for map publication.",
     "status": "known_gap_human_follow_up"
   },
-  "generated_at_utc": "2026-07-30T16:33:11Z",
+  "generated_at_utc": "2026-07-31T15:00:31Z",
   "lanes": {
     "Approved": "schema-v1-discovery approved permits (unchanged)",
     "Help Places": "schema-v1-civic-review/help (markets + benefits/SNAP/drop-in/Homebase/aging/NYCHA)",
@@ -190,9 +190,9 @@
     "artifact": "data/photographer_assignment_calendar_2mo.json",
     "coordinate_status_counts": {
       "list_only": 11,
-      "map_ready": 187
+      "map_ready": 179
     },
-    "days_with_coverage": 30,
+    "days_with_coverage": 28,
     "go_shoot_these": [
       {
         "assignment_score": 550,
@@ -232,20 +232,20 @@
       },
       {
         "assignment_score": 510,
-        "borough": "Queens",
+        "borough": null,
         "category": "arts",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-07-30",
-        "display_location": "George Seuffert, Sr. Bandshell in Forest Park",
-        "end_date_time": null,
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-30&assignment=1",
-        "id": "nyc-citywide-events-calendar-api:1105736@2026-07-30",
+        "date": "2026-08-14",
+        "display_location": "Bryant Park Lawn (in Bryant Park)",
+        "end_date_time": "2026-08-14T9:30 pm",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-14&assignment=1",
+        "id": "review_supplemental:nyc-parks-bigapps-events:2172933@2026-08-14",
         "lane": "approved_major",
-        "latitude": 40.698490906468,
+        "latitude": 40.753819792011,
         "location_cache_modified": false,
-        "longitude": -73.858116269112,
-        "map_link": "https://www.google.com/maps?q=40.698490906468,-73.858116269112",
+        "longitude": -73.983734458685,
+        "map_link": "https://www.google.com/maps?q=40.753819792011,-73.983734458685",
         "money_day": true,
         "photo_pick": false,
         "pin_integrity_reason": "ok_nyc_certified",
@@ -253,12 +253,12 @@
         "promotion_allowed": false,
         "public_map_modified": false,
         "source": {
-          "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "1105736"
+          "dataset": "nyc-parks-bigapps-events",
+          "source_event_id": "2172933"
         },
-        "start_date_time": "2026-07-30T19:00:00.000-04:00",
+        "start_date_time": "2026-08-14T7:00 pm",
         "timezone": "America/New_York",
-        "title": "Summer Concert Series - Queensboro Dance Festival",
+        "title": "Bryant Park Picnic Performance: New York Guitar Festival",
         "why_selected": [
           "significance_major_floor",
           "carried_major_score_capped:120",
@@ -619,41 +619,6 @@
       },
       {
         "assignment_score": 400,
-        "borough": "Bronx",
-        "category": "parks",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-08-07",
-        "display_location": "Zimmerman Playground: Zimmerman Playground",
-        "end_date_time": "2026-08-07T14:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-07&assignment=1",
-        "id": "tvpp-9vvx:964135@2026-08-07",
-        "lane": "approved_major",
-        "latitude": 40.86616,
-        "location_cache_modified": false,
-        "longitude": -73.86874,
-        "map_link": "https://www.google.com/maps?q=40.86616,-73.86874",
-        "money_day": true,
-        "photo_pick": false,
-        "pin_integrity_reason": "ok_nyc_certified",
-        "premium_label": "Photographer Assignment Calendar (premium/operator)",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "964135"
-        },
-        "start_date_time": "2026-08-07T13:00:00.000",
-        "timezone": "America/New_York",
-        "title": "Zimmerman Playground Ribbon Cutting Ceremony",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_civic_gathering"
-        ]
-      },
-      {
-        "assignment_score": 400,
         "borough": "Brooklyn",
         "category": "civic",
         "certified_pin": true,
@@ -734,10 +699,10 @@
         "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-09&assignment=1",
         "id": "tvpp-9vvx:957653@2026-08-09",
         "lane": "approved_major",
-        "latitude": 40.741388,
+        "latitude": 40.751899,
         "location_cache_modified": false,
-        "longitude": -73.993552,
-        "map_link": "https://www.google.com/maps?q=40.741388,-73.993552",
+        "longitude": -73.984425,
+        "map_link": "https://www.google.com/maps?q=40.751899,-73.984425",
         "money_day": true,
         "photo_pick": false,
         "pin_integrity_reason": "ok_nyc_certified",
@@ -829,41 +794,6 @@
       },
       {
         "assignment_score": 400,
-        "borough": "Manhattan",
-        "category": "civic",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-08-13",
-        "display_location": "EAST  124 STREET between MADISON AVENUE and PARK AVENUE",
-        "end_date_time": "2026-08-13T16:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-13&assignment=1",
-        "id": "tvpp-9vvx:952837@2026-08-13",
-        "lane": "approved_major",
-        "latitude": 40.803725,
-        "location_cache_modified": false,
-        "longitude": -73.938535,
-        "map_link": "https://www.google.com/maps?q=40.803725,-73.938535",
-        "money_day": true,
-        "photo_pick": false,
-        "pin_integrity_reason": "ok_nyc_certified",
-        "premium_label": "Photographer Assignment Calendar (premium/operator)",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "952837"
-        },
-        "start_date_time": "2026-08-13T09:00:00.000",
-        "timezone": "America/New_York",
-        "title": "Annual Back To School Rally",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_civic_gathering"
-        ]
-      },
-      {
-        "assignment_score": 400,
         "borough": "Queens",
         "category": "parks",
         "certified_pin": true,
@@ -896,16 +826,86 @@
           "carried_major_score_capped:120",
           "keyword_civic_gathering"
         ]
+      },
+      {
+        "assignment_score": 400,
+        "borough": "Bronx",
+        "category": "parks",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-14",
+        "display_location": "Zimmerman Playground: Zimmerman Playground",
+        "end_date_time": "2026-08-14T14:00:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-14&assignment=1",
+        "id": "tvpp-9vvx:964135@2026-08-14",
+        "lane": "approved_major",
+        "latitude": 40.86616,
+        "location_cache_modified": false,
+        "longitude": -73.86874,
+        "map_link": "https://www.google.com/maps?q=40.86616,-73.86874",
+        "money_day": true,
+        "photo_pick": false,
+        "pin_integrity_reason": "ok_nyc_certified",
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "964135"
+        },
+        "start_date_time": "2026-08-14T13:00:00.000",
+        "timezone": "America/New_York",
+        "title": "Zimmerman Playground Ribbon Cutting Ceremony",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 400,
+        "borough": "Queens",
+        "category": "sports",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-15",
+        "display_location": "Phil \"Scooter\" Rizzuto Park / Smokey Oval: Phil \"Scooter\" Rizzuto Park   ,Phil \"Scooter\" Rizzuto Park / Smokey Oval: Basketball-02 ,Phil \"Scooter\" Rizzuto Park / Smokey Oval: Basketball-02",
+        "end_date_time": "2026-08-15T14:00:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-15&assignment=1",
+        "id": "tvpp-9vvx:927590@2026-08-15",
+        "lane": "approved_major",
+        "latitude": 40.69479,
+        "location_cache_modified": false,
+        "longitude": -73.82159,
+        "map_link": "https://www.google.com/maps?q=40.69479,-73.82159",
+        "money_day": true,
+        "photo_pick": false,
+        "pin_integrity_reason": "ok_nyc_certified",
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "927590"
+        },
+        "start_date_time": "2026-08-15T11:00:00.000",
+        "timezone": "America/New_York",
+        "title": "MARCH FOR JESUS",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_civic_gathering"
+        ]
       }
     ],
     "month_counts": [
       {
-        "days_with_events": 2,
-        "event_count": 13,
+        "days_with_events": 1,
+        "event_count": 5,
         "label": "July 2026"
       },
       {
-        "days_with_events": 28,
+        "days_with_events": 27,
         "event_count": 185,
         "label": "August 2026"
       }
@@ -915,21 +915,17 @@
     "premium_label": "Photographer Assignment Calendar (premium/operator) — Money-Day Desk v2",
     "qa_pass": true,
     "quality": {
-      "events_removed_vs_baseline": 644,
+      "events_removed_vs_baseline": 652,
       "qa_pass": true,
       "report": "data/photographer_money_day_quality_report.json",
       "top_exclude_reasons": [
         [
           "no_money_day_keyword_signal",
-          949
+          818
         ],
         [
           "routine_activity_excluded",
-          163
-        ],
-        [
-          "below_score_threshold",
-          7
+          139
         ],
         [
           "duplicate_id",
@@ -938,221 +934,159 @@
         [
           "thin_or_non_money_title_excluded",
           4
+        ],
+        [
+          "below_score_threshold",
+          4
         ]
       ]
     },
     "report": "data/photographer_assignment_calendar_report.json",
     "today_pack": {
-      "borough_cluster_count": 3,
-      "date": "2026-07-30",
-      "map_ready_count": 6,
-      "total_events": 7
-    },
-    "tomorrow_pack": {
       "borough_cluster_count": 2,
       "date": "2026-07-31",
-      "map_ready_count": 6,
+      "map_ready_count": 5,
+      "total_events": 5
+    },
+    "tomorrow_pack": {
+      "borough_cluster_count": 3,
+      "date": "2026-08-01",
+      "map_ready_count": 16,
       "top_go_shoot": [
         {
+          "borough": "Brooklyn",
+          "score": 400,
+          "time": "2026-08-01T12:00:00.000",
+          "title": "Anti Gun Violence Rally"
+        },
+        {
+          "borough": "Queens",
+          "score": 400,
+          "time": "2026-08-01T16:00:00.000",
+          "title": "Parade"
+        },
+        {
           "borough": "Manhattan",
-          "score": 380,
-          "time": "2026-07-31T17:00:00.000",
-          "title": "ISKCON60 GALA FESTIVAL"
+          "score": 400,
+          "time": "2026-08-01T18:30:00.000",
+          "title": "Peaceful Candlelight Vigil"
+        },
+        {
+          "borough": "Queens",
+          "score": 400,
+          "time": "2026-08-01T19:00:00.000",
+          "title": "Prayer Vigil - Religious event - August 1. Note time 1p to 11:30p"
+        },
+        {
+          "borough": "Manhattan",
+          "score": 400,
+          "time": "2026-08-01T16:00:00.000",
+          "title": "Wedding ceremony"
         },
         {
           "borough": "Manhattan",
           "score": 380,
-          "time": "2026-07-31T16:00:00.000",
-          "title": "LES Girls Club Summer Street Fair"
+          "time": "2026-08-01T12:00:00.000",
+          "title": "187 Block Party"
+        },
+        {
+          "borough": "Queens",
+          "score": 380,
+          "time": "2026-08-01T17:00:00.000",
+          "title": "2026 Queensboro Dance Festival"
+        },
+        {
+          "borough": "Brooklyn",
+          "score": 380,
+          "time": "2026-08-01T00:00:00.000",
+          "title": "Brooklyn Beach Sports Festival"
+        },
+        {
+          "borough": "Brooklyn",
+          "score": 380,
+          "time": "2026-08-01T12:00:00",
+          "title": "East 55th Street Festival (Borough Park)"
         },
         {
           "borough": "Manhattan",
-          "score": 340,
-          "time": "2026-07-31T08:00:00.000",
-          "title": "HHFM Harlem Hospital Market"
-        },
-        {
-          "borough": "Bronx",
-          "score": 340,
-          "time": "2026-07-31T08:00:00.000",
-          "title": "HHFM Jacobi Hospital Market"
-        },
-        {
-          "borough": "Manhattan",
-          "score": 340,
-          "time": "2026-07-31T08:00:00.000",
-          "title": "HHFM Metropolitan Market"
-        },
-        {
-          "borough": "Manhattan",
-          "score": 310,
-          "time": "2026-07-31T12:00:00.000",
-          "title": "TSQ LIVE: 45/46 Plaza Programming"
+          "score": 380,
+          "time": "2026-08-01T15:00:00.000",
+          "title": "L0UBENGUELA FESTiVAL"
         }
       ],
-      "total_events": 6
+      "total_events": 16
     },
     "tomorrow_top_go_shoot": [
       {
-        "assignment_score": 380,
-        "borough": "Manhattan",
+        "assignment_score": 400,
+        "borough": "Brooklyn",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-07-31",
-        "display_location": "WEST   49 STREET between 11 AVENUE and 12 AVENUE",
-        "end_date_time": "2026-07-31T22:30:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-31&assignment=1",
-        "id": "tvpp-9vvx:959872@2026-07-31",
+        "date": "2026-08-01",
+        "display_location": "Prospect Park: Park Circle Lawn Southeast",
+        "end_date_time": "2026-08-01T18:00:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-01&assignment=1",
+        "id": "tvpp-9vvx:929369@2026-08-01",
         "lane": "approved_major",
-        "latitude": 40.759149,
+        "latitude": 40.66138,
         "location_cache_modified": false,
-        "longitude": -73.979598,
-        "map_link": "https://www.google.com/maps?q=40.759149,-73.979598",
+        "longitude": -73.96963,
+        "map_link": "https://www.google.com/maps?q=40.66138,-73.96963",
         "pin_integrity_reason": "ok_nyc_certified",
         "promotion_allowed": false,
         "public_map_modified": false,
         "source": {
           "dataset": "tvpp-9vvx",
-          "source_event_id": "959872"
+          "source_event_id": "929369"
         },
-        "start_date_time": "2026-07-31T17:00:00.000",
-        "title": "ISKCON60 GALA FESTIVAL",
+        "start_date_time": "2026-08-01T12:00:00.000",
+        "title": "Anti Gun Violence Rally",
         "why_selected": [
           "significance_major_floor",
           "carried_major_score_capped:120",
-          "keyword_street_fair_festival"
+          "keyword_civic_gathering"
         ]
       },
       {
-        "assignment_score": 380,
-        "borough": "Manhattan",
+        "assignment_score": 400,
+        "borough": "Queens",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-07-31",
-        "display_location": "EAST    8 STREET between AVENUE C and AVENUE D",
-        "end_date_time": "2026-07-31T19:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-31&assignment=1",
-        "id": "tvpp-9vvx:949295@2026-07-31",
+        "date": "2026-08-01",
+        "display_location": "46-16 ROBINSON STREET, ROBINSON STREET between HOLLY AVENUE and LABURNUM AVENUE,  LABURNUM AVENUE between ROBINSON STREET and KISSENA BOULEVARD,  KISSENA BOULEVARD between LABURNUM AVENUE and 45 AVENUE,  45 AVENUE between KISSENA BOULEVARD and SMART STREET,  SMART STREET between 45 AVENUE and HOLLY AVENUE,  HOLLY AVENUE between SMART STREET and ROBINSON STREET,  ROBINSON STREET between HOLLY AVENUE and LABURNUM AVENUE,  ROBINSON STREET between HOLLY AVENUE and LABURNUM AVENUE",
+        "end_date_time": "2026-08-01T18:30:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-01&assignment=1",
+        "id": "tvpp-9vvx:959625@2026-08-01",
         "lane": "approved_major",
-        "latitude": 40.731865,
+        "latitude": 40.751579,
         "location_cache_modified": false,
-        "longitude": -73.9958,
-        "map_link": "https://www.google.com/maps?q=40.731865,-73.9958",
+        "longitude": -73.8174655,
+        "map_link": "https://www.google.com/maps?q=40.751579,-73.8174655",
         "pin_integrity_reason": "ok_nyc_certified",
         "promotion_allowed": false,
         "public_map_modified": false,
         "source": {
           "dataset": "tvpp-9vvx",
-          "source_event_id": "949295"
+          "source_event_id": "959625"
         },
-        "start_date_time": "2026-07-31T16:00:00.000",
-        "title": "LES Girls Club Summer Street Fair",
+        "start_date_time": "2026-08-01T16:00:00.000",
+        "title": "Parade",
         "why_selected": [
           "significance_major_floor",
           "carried_major_score_capped:120",
-          "keyword_street_fair_festival"
+          "keyword_civic_gathering"
         ]
       },
       {
-        "assignment_score": 340,
+        "assignment_score": 400,
         "borough": "Manhattan",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-07-31",
-        "display_location": "LENOX AVENUE between WEST  136 STREET and WEST  137 STREET",
-        "end_date_time": "2026-07-31T15:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-31&assignment=1",
-        "id": "tvpp-9vvx:914361@2026-07-31",
-        "lane": "approved_major",
-        "latitude": 40.815549,
-        "location_cache_modified": false,
-        "longitude": -73.941669,
-        "map_link": "https://www.google.com/maps?q=40.815549,-73.941669",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "914361"
-        },
-        "start_date_time": "2026-07-31T08:00:00.000",
-        "title": "HHFM Harlem Hospital Market",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_market"
-        ]
-      },
-      {
-        "assignment_score": 340,
-        "borough": "Bronx",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-07-31",
-        "display_location": "PELHAM PARKWAY SOUTH between WILSON AVENUE and EASTCHESTER ROAD",
-        "end_date_time": "2026-07-31T15:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-31&assignment=1",
-        "id": "tvpp-9vvx:914332@2026-07-31",
-        "lane": "approved_major",
-        "latitude": 40.856873,
-        "location_cache_modified": false,
-        "longitude": -73.843999,
-        "map_link": "https://www.google.com/maps?q=40.856873,-73.843999",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "914332"
-        },
-        "start_date_time": "2026-07-31T08:00:00.000",
-        "title": "HHFM Jacobi Hospital Market",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_market"
-        ]
-      },
-      {
-        "assignment_score": 340,
-        "borough": "Manhattan",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-07-31",
-        "display_location": "SECOND AVENUE between EAST   97 STREET and EAST   99 STREET",
-        "end_date_time": "2026-07-31T15:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-31&assignment=1",
-        "id": "tvpp-9vvx:914469@2026-07-31",
-        "lane": "approved_major",
-        "latitude": 40.784909,
-        "location_cache_modified": false,
-        "longitude": -73.946343,
-        "map_link": "https://www.google.com/maps?q=40.784909,-73.946343",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "914469"
-        },
-        "start_date_time": "2026-07-31T08:00:00.000",
-        "title": "HHFM Metropolitan Market",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_market"
-        ]
-      },
-      {
-        "assignment_score": 310,
-        "borough": "Manhattan",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-07-31",
-        "display_location": "Times Square: 45/46 Broadway Pedestrian Plaza (Times Sq) BROADWAY between WEST   45 STREET and WEST   46 STREET,  WEST   46 STREET between 7 AVENUE and 8 AVENUE",
-        "end_date_time": "2026-07-31T21:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-31&assignment=1",
-        "id": "tvpp-9vvx:898494@2026-07-31",
+        "date": "2026-08-01",
+        "display_location": "Times Square: 43/44 Broadway Pedestrian Plaza (Times Sq) BROADWAY between WEST   43 STREET and WEST   44 STREET",
+        "end_date_time": "2026-08-01T19:30:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-01&assignment=1",
+        "id": "tvpp-9vvx:962086@2026-08-01",
         "lane": "approved_major",
         "latitude": 40.7562,
         "location_cache_modified": false,
@@ -1163,29 +1097,239 @@
         "public_map_modified": false,
         "source": {
           "dataset": "tvpp-9vvx",
-          "source_event_id": "898494"
+          "source_event_id": "962086"
         },
-        "start_date_time": "2026-07-31T12:00:00.000",
-        "title": "TSQ LIVE: 45/46 Plaza Programming",
+        "start_date_time": "2026-08-01T18:30:00.000",
+        "title": "Peaceful Candlelight Vigil",
         "why_selected": [
           "significance_major_floor",
           "carried_major_score_capped:120",
-          "keyword_plaza_programming"
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 400,
+        "borough": "Queens",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-01",
+        "display_location": "Flushing Meadows Corona Park: Vatican Pavillion",
+        "end_date_time": "2026-08-01T22:30:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-01&assignment=1",
+        "id": "tvpp-9vvx:906193@2026-08-01",
+        "lane": "approved_major",
+        "latitude": 40.74726,
+        "location_cache_modified": false,
+        "longitude": -73.84333,
+        "map_link": "https://www.google.com/maps?q=40.74726,-73.84333",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "906193"
+        },
+        "start_date_time": "2026-08-01T19:00:00.000",
+        "title": "Prayer Vigil - Religious event - August 1. Note time 1p to 11:30p",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 400,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-01",
+        "display_location": "Central Park: Cop Cot",
+        "end_date_time": "2026-08-01T18:00:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-01&assignment=1",
+        "id": "tvpp-9vvx:926288@2026-08-01",
+        "lane": "approved_major",
+        "latitude": 40.772148,
+        "location_cache_modified": false,
+        "longitude": -73.977782,
+        "map_link": "https://www.google.com/maps?q=40.772148,-73.977782",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "926288"
+        },
+        "start_date_time": "2026-08-01T16:00:00.000",
+        "title": "Wedding ceremony",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 380,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-01",
+        "display_location": "WEST  187 STREET between AMSTERDAM AVENUE and LAUREL HILL TERRACE",
+        "end_date_time": "2026-08-01T18:00:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-01&assignment=1",
+        "id": "tvpp-9vvx:950710@2026-08-01",
+        "lane": "approved_major",
+        "latitude": 40.810987,
+        "location_cache_modified": false,
+        "longitude": -73.9573705,
+        "map_link": "https://www.google.com/maps?q=40.810987,-73.9573705",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "950710"
+        },
+        "start_date_time": "2026-08-01T12:00:00.000",
+        "title": "187 Block Party",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_street_fair_festival"
+        ]
+      },
+      {
+        "assignment_score": 380,
+        "borough": "Queens",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-01",
+        "display_location": "Queensbridge Park: Purple 1",
+        "end_date_time": "2026-08-01T18:00:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-01&assignment=1",
+        "id": "tvpp-9vvx:914700@2026-08-01",
+        "lane": "approved_major",
+        "latitude": 40.75646,
+        "location_cache_modified": false,
+        "longitude": -73.94841,
+        "map_link": "https://www.google.com/maps?q=40.75646,-73.94841",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "914700"
+        },
+        "start_date_time": "2026-08-01T17:00:00.000",
+        "title": "2026 Queensboro Dance Festival",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_street_fair_festival"
+        ]
+      },
+      {
+        "assignment_score": 380,
+        "borough": "Brooklyn",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-01",
+        "display_location": "Coney Island Beach & Boardwalk: Stillwell Avenue Area",
+        "end_date_time": "2026-08-01T19:00:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-01&assignment=1",
+        "id": "tvpp-9vvx:923415@2026-08-01",
+        "lane": "approved_major",
+        "latitude": 40.573078,
+        "location_cache_modified": false,
+        "longitude": -73.983912,
+        "map_link": "https://www.google.com/maps?q=40.573078,-73.983912",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "923415"
+        },
+        "start_date_time": "2026-08-01T00:00:00.000",
+        "title": "Brooklyn Beach Sports Festival",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_street_fair_festival"
+        ]
+      },
+      {
+        "assignment_score": 380,
+        "borough": "Brooklyn",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-01",
+        "display_location": "EAST 55 STREET between AVENUE N and AVENUE M, Brooklyn, NY",
+        "end_date_time": "2026-08-01T22:00:00",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-01&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:east-55th-street-festival-borough-park@2026-08-01",
+        "lane": "approved_major",
+        "latitude": 40.6269565,
+        "location_cache_modified": false,
+        "longitude": -73.932151,
+        "map_link": "https://www.google.com/maps?q=40.6269565,-73.932151",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "east-55th-street-festival-borough-park"
+        },
+        "start_date_time": "2026-08-01T12:00:00",
+        "title": "East 55th Street Festival (Borough Park)",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_street_fair_festival"
+        ]
+      },
+      {
+        "assignment_score": 380,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-01",
+        "display_location": "Marcus Garvey Park: Amphitheater",
+        "end_date_time": "2026-08-01T19:00:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-01&assignment=1",
+        "id": "tvpp-9vvx:894545@2026-08-01",
+        "lane": "approved_major",
+        "latitude": 40.80449,
+        "location_cache_modified": false,
+        "longitude": -73.94367,
+        "map_link": "https://www.google.com/maps?q=40.80449,-73.94367",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "894545"
+        },
+        "start_date_time": "2026-08-01T15:00:00.000",
+        "title": "L0UBENGUELA FESTiVAL",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_street_fair_festival"
         ]
       }
     ],
-    "total_events": 198,
+    "total_events": 190,
     "viral_recurrence": {
       "artifact": "data/photographer_viral_recurrence_matches.json",
       "foil_index": "data/sapo_foil_operator_index.json",
       "foil_operator_joins": 0,
       "label_counts": {
-        "possible": 45,
-        "returning_likely": 116,
-        "weak": 66
+        "possible": 38,
+        "returning_likely": 125,
+        "weak": 60
       },
-      "match_count": 227,
-      "next_14d_crowd_magnets": 39,
+      "match_count": 223,
+      "next_14d_crowd_magnets": 38,
       "next_14d_top": [
         {
           "borough": "Manhattan",
@@ -1591,8 +1735,8 @@
     "demotion_count": 0,
     "demotion_reason_counts": {},
     "demotions": "data/pin_integrity_demotions.json",
-    "map_ready_after_total": 3829,
-    "map_ready_before_total": 3829,
+    "map_ready_after_total": 3804,
+    "map_ready_before_total": 3804,
     "qa_pass": true,
     "report": "data/pin_integrity_gate_report.json",
     "rule": "ZERO map_ready rows may fail NYC certification"
@@ -1631,54 +1775,14 @@
     "premium_label": "Shoot Day Certified Pack (premium/operator)",
     "qa_pass": true,
     "report": "data/photographer_shoot_day_certified_report.json",
-    "today_certified_pins": 6,
-    "today_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-30&assignment=1",
-    "today_needs_location": 1,
+    "today_certified_pins": 5,
+    "today_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-31&assignment=1",
+    "today_needs_location": 0,
     "today_top": [
       {
         "borough": "Manhattan",
         "recurrence_label": "returning_likely",
-        "title": "SummerStage Festival - July"
-      },
-      {
-        "borough": "Manhattan",
-        "recurrence_label": "returning_likely",
         "title": "TSQ LIVE: 45/46 Plaza Programming"
-      },
-      {
-        "borough": "Queens",
-        "recurrence_label": null,
-        "title": "Summer Concert Series - Queensboro Dance Festival"
-      },
-      {
-        "borough": "Bronx",
-        "recurrence_label": null,
-        "title": "Summer Series Cross Country 5K Race 3"
-      },
-      {
-        "borough": "Manhattan",
-        "recurrence_label": "weak",
-        "title": "HHFM East Harlem Market"
-      },
-      {
-        "borough": "Manhattan",
-        "recurrence_label": "weak",
-        "title": "NYP Youth Market - Audubon"
-      }
-    ],
-    "tomorrow_certified_pins": 6,
-    "tomorrow_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-31&assignment=1",
-    "tomorrow_needs_location": 0,
-    "tomorrow_top": [
-      {
-        "borough": "Manhattan",
-        "recurrence_label": "returning_likely",
-        "title": "TSQ LIVE: 45/46 Plaza Programming"
-      },
-      {
-        "borough": "Manhattan",
-        "recurrence_label": null,
-        "title": "ISKCON60 GALA FESTIVAL"
       },
       {
         "borough": "Manhattan",
@@ -1699,6 +1803,51 @@
         "borough": "Manhattan",
         "recurrence_label": "weak",
         "title": "HHFM Metropolitan Market"
+      }
+    ],
+    "tomorrow_certified_pins": 16,
+    "tomorrow_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-01&assignment=1",
+    "tomorrow_needs_location": 0,
+    "tomorrow_top": [
+      {
+        "borough": "Manhattan",
+        "recurrence_label": "returning_likely",
+        "title": "187 Block Party"
+      },
+      {
+        "borough": "Manhattan",
+        "recurrence_label": "returning_likely",
+        "title": "SummerStage Festival - August"
+      },
+      {
+        "borough": "Brooklyn",
+        "recurrence_label": null,
+        "title": "Anti Gun Violence Rally"
+      },
+      {
+        "borough": "Queens",
+        "recurrence_label": null,
+        "title": "Parade"
+      },
+      {
+        "borough": "Queens",
+        "recurrence_label": "weak",
+        "title": "2026 Queensboro Dance Festival"
+      },
+      {
+        "borough": "Brooklyn",
+        "recurrence_label": null,
+        "title": "Brooklyn Beach Sports Festival"
+      },
+      {
+        "borough": "Brooklyn",
+        "recurrence_label": "possible",
+        "title": "East 55th Street Festival (Borough Park)"
+      },
+      {
+        "borough": "Manhattan",
+        "recurrence_label": "possible",
+        "title": "L0UBENGUELA FESTiVAL"
       }
     ]
   }

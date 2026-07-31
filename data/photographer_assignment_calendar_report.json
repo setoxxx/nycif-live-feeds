@@ -1,59 +1,11 @@
 {
   "coordinate_status_counts": {
     "list_only": 11,
-    "map_ready": 187
+    "map_ready": 179
   },
-  "days_with_coverage": 30,
-  "generated_at_utc": "2026-07-30T16:32:39Z",
+  "days_with_coverage": 28,
+  "generated_at_utc": "2026-07-31T14:59:59Z",
   "go_shoot_sample": [
-    {
-      "borough": "Queens",
-      "date": "2026-07-30",
-      "score": 510,
-      "title": "Summer Concert Series - Queensboro Dance Festival"
-    },
-    {
-      "borough": "Manhattan",
-      "date": "2026-07-30",
-      "score": 380,
-      "title": "SummerStage Festival - July"
-    },
-    {
-      "borough": "Bronx",
-      "date": "2026-07-30",
-      "score": 370,
-      "title": "Summer Series Cross Country 5K Race 3"
-    },
-    {
-      "borough": "Manhattan",
-      "date": "2026-07-30",
-      "score": 340,
-      "title": "HHFM East Harlem Market"
-    },
-    {
-      "borough": "Manhattan",
-      "date": "2026-07-30",
-      "score": 340,
-      "title": "NYP Youth Market - Audubon"
-    },
-    {
-      "borough": "Queens",
-      "date": "2026-07-30",
-      "score": 310,
-      "title": "Summer Concert Series - Queensboro Dance Festival"
-    },
-    {
-      "borough": "Manhattan",
-      "date": "2026-07-30",
-      "score": 310,
-      "title": "TSQ LIVE: 45/46 Plaza Programming"
-    },
-    {
-      "borough": "Manhattan",
-      "date": "2026-07-31",
-      "score": 380,
-      "title": "ISKCON60 GALA FESTIVAL"
-    },
     {
       "borough": "Manhattan",
       "date": "2026-07-31",
@@ -65,29 +17,72 @@
       "date": "2026-07-31",
       "score": 340,
       "title": "HHFM Harlem Hospital Market"
+    },
+    {
+      "borough": "Bronx",
+      "date": "2026-07-31",
+      "score": 340,
+      "title": "HHFM Jacobi Hospital Market"
+    },
+    {
+      "borough": "Manhattan",
+      "date": "2026-07-31",
+      "score": 340,
+      "title": "HHFM Metropolitan Market"
+    },
+    {
+      "borough": "Manhattan",
+      "date": "2026-07-31",
+      "score": 310,
+      "title": "TSQ LIVE: 45/46 Plaza Programming"
+    },
+    {
+      "borough": "Brooklyn",
+      "date": "2026-08-01",
+      "score": 400,
+      "title": "Anti Gun Violence Rally"
+    },
+    {
+      "borough": "Queens",
+      "date": "2026-08-01",
+      "score": 400,
+      "title": "Parade"
+    },
+    {
+      "borough": "Manhattan",
+      "date": "2026-08-01",
+      "score": 400,
+      "title": "Peaceful Candlelight Vigil"
+    },
+    {
+      "borough": "Queens",
+      "date": "2026-08-01",
+      "score": 400,
+      "title": "Prayer Vigil - Religious event - August 1. Note time 1p to 11:30p"
+    },
+    {
+      "borough": "Manhattan",
+      "date": "2026-08-01",
+      "score": 400,
+      "title": "Wedding ceremony"
     }
   ],
   "lane_counts": {
-    "approved_major": 197,
-    "review_high_signal": 1
+    "approved_major": 190
   },
   "location_cache_modified": false,
   "money_day_quality": {
-    "events_removed_vs_baseline": 644,
+    "events_removed_vs_baseline": 652,
     "qa_pass": true,
     "report": "data/photographer_money_day_quality_report.json",
     "top_exclude_reasons": [
       [
         "no_money_day_keyword_signal",
-        949
+        818
       ],
       [
         "routine_activity_excluded",
-        163
-      ],
-      [
-        "below_score_threshold",
-        7
+        139
       ],
       [
         "duplicate_id",
@@ -96,28 +91,32 @@
       [
         "thin_or_non_money_title_excluded",
         4
+      ],
+      [
+        "below_score_threshold",
+        4
       ]
     ]
   },
   "month_counts": [
     {
-      "days_with_events": 2,
-      "event_count": 13,
+      "days_with_events": 1,
+      "event_count": 5,
       "label": "July 2026"
     },
     {
-      "days_with_events": 28,
+      "days_with_events": 27,
       "event_count": 185,
       "label": "August 2026"
     }
   ],
-  "pin_integrity_map_ready_after": 187,
+  "pin_integrity_map_ready_after": 179,
   "promotion_allowed": false,
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-07-30",
+  "reference_today_nyc": "2026-07-31",
   "schema_version": "photographer-assignment-calendar-v2-money-day",
-  "total_events": 198,
+  "total_events": 190,
   "window_end": "2026-08-31"
 }

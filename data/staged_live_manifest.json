@@ -1,43 +1,207 @@
 {
   "borough_counts": {
-    "Bronx": 4826,
-    "Brooklyn": 8068,
-    "Manhattan": 11611,
-    "Queens": 7371,
-    "Staten Island": 1448,
+    "Bronx": 4633,
+    "Brooklyn": 7634,
+    "Manhattan": 11074,
+    "Queens": 7117,
+    "Staten Island": 1347,
     "Unknown": 1
   },
   "category_counts": {
-    "arts": 210,
-    "fitness": 184,
-    "general": 32,
-    "market": 1342,
-    "parks": 4317,
-    "sports": 27240
+    "arts": 207,
+    "fitness": 180,
+    "general": 29,
+    "market": 1053,
+    "parks": 4197,
+    "sports": 26140
   },
   "cross_date_street_occurrences_suppressed": 0,
   "duplicate_policy": {
     "production_feeds_modified": false,
     "street_events": "dedupe only exact title + borough + location + coordinate + date + start/end + CEMS occurrence; recurring dates remain distinct"
   },
-  "eligible_rows_before_one_day_street_dedupe": 33325,
+  "eligible_rows_before_one_day_street_dedupe": 31806,
   "exact_occurrence_duplicates_suppressed": 0,
-  "generated_at_utc": "2026-07-30T00:08:34.167273+00:00",
+  "generated_at_utc": "2026-07-31T14:59:30.968509+00:00",
   "match_counts": {
-    "event_id": 800,
-    "location_cache": 31540,
-    "tier_1_gazetteer_display": 307,
-    "tier_2_geosearch_cache": 677,
-    "tier_2_geosearch_midpoint": 1
+    "event_id": 743,
+    "location_cache": 30276,
+    "tier_1_certified_segment": 1,
+    "tier_1_gazetteer_display": 325,
+    "tier_2_geosearch_cache": 455,
+    "tier_2_geosearch_midpoint": 6
   },
   "one_day_street_duplicates_suppressed": 0,
   "production_feed": false,
   "production_ready": true,
   "sample_exact_occurrence_rejected_rows": [],
-  "sample_skipped_rows": [],
-  "skipped_needs_review_or_bad_gps": 0,
+  "sample_skipped_rows": [
+    {
+      "borough": "Manhattan",
+      "display_location": "EAST   42 STREET between PARK AVENUE and LEXINGTON AVENUE",
+      "display_time": "12:01 AM",
+      "source_cemsid": [],
+      "source_event_id": "959717",
+      "title": "BTS THE CITY ARIRANG NEW YORK"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "SACKETT STREET between VAN BRUNT STREET and DEAD  END",
+      "display_time": "11:00 AM",
+      "source_cemsid": [
+        "0"
+      ],
+      "source_event_id": "961249",
+      "title": "Sackett St Open Streets Event"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "BOND STREET between LAFAYETTE STREET and BOWERY",
+      "display_time": "11:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "959256",
+      "title": "Live Music"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "53 STREET between 5 AVENUE and 4 AVENUE",
+      "display_time": "12:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "960018",
+      "title": "Summer camp/ school street close"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "10 STREET between 7 AVENUE and 8 AVENUE",
+      "display_time": "2:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "946517",
+      "title": "Family On The Block"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "WEST  129 STREET between 7 AVENUE and 8 AVENUE",
+      "display_time": "3:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "934613",
+      "title": "St. Nicholas Local NeighborhoodSTAT 2026"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "WEST   49 STREET between 11 AVENUE and 12 AVENUE",
+      "display_time": "5:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "959872",
+      "title": "ISKCON60 GALA FESTIVAL"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "NOSTRAND AVENUE between FLATBUSH AVENUE and GLENWOOD ROAD",
+      "display_time": "8:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "960998",
+      "title": "Youth Led Farmers Market"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "WEST   49 STREET between 11 AVENUE and 12 AVENUE",
+      "display_time": "8:30 AM",
+      "source_cemsid": [],
+      "source_event_id": "961235",
+      "title": "Wella Brand Event"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "EAST   43 STREET between LEXINGTON AVENUE and 3 AVENUE,  2 AVENUE between EAST   43 STREET and EAST   44 STREET,  EAST   43 STREET between 3 AVENUE and 2 AVENUE,  EAST   43 STREET between LEXINGTON AVENUE and 2 AVENUE",
+      "display_time": "8:45 AM",
+      "source_cemsid": [],
+      "source_event_id": "963305",
+      "title": "Witness for Life"
+    },
+    {
+      "borough": "Bronx",
+      "display_location": "BARKER AVENUE between BRITTON STREET and ALLERTON AVENUE",
+      "display_time": "9:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "958657",
+      "title": "Bronx Park East CA - Sunday 4"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "CLEVELAND STREET between SUTTER AVENUE and BLAKE AVENUE",
+      "display_time": "9:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "912089",
+      "title": "The Cleveland Street Block Association"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "SOUTH STREET between FULTON STREET and JOHN STREET",
+      "display_time": "9:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "949104",
+      "title": "Fulton Stall Market/Seaport Farmers Market"
+    },
+    {
+      "borough": "Queens",
+      "display_location": "174 STREET between 115 AVENUE and 116 AVENUE",
+      "display_time": "9:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "946009",
+      "title": "174th Street Block Association"
+    },
+    {
+      "borough": "Bronx",
+      "display_location": "MORRIS AVENUE between EAST  182 STREET and EAST  183 STREET",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "948762",
+      "title": "Morris Avenue Block Party"
+    },
+    {
+      "borough": "Bronx",
+      "display_location": "EAST  181 STREET between MORRIS AVENUE and WALTON AVENUE",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "944323",
+      "title": "SHARING THE GOD NEWS WITH THE COMMUNITY"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "EAST   31 STREET between CHURCH AVENUE and SNYDER AVENUE",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "948752",
+      "title": "East 31 street bt Church and Snyder ave block party"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "EAST   51 STREET between TILDEN AVENUE and BEVERLY ROAD",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "945830",
+      "title": "East 51street 4th annual block party"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "VERMONT STREET between HEGEMAN AVENUE and NEW LOTS AVENUE",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "923221",
+      "title": "Family Day Block Party"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "EAST   45 STREET between AVENUE H and AVENUE I",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "911331",
+      "title": "HI East 45th block party"
+    }
+  ],
+  "skipped_needs_review_or_bad_gps": 284,
   "source": "nycif_live_test_enriched_events.json",
   "staged_feed": true,
-  "staged_feed_events": 33325,
-  "test_feed_rows_loaded": 33325
+  "staged_feed_events": 31806,
+  "test_feed_rows_loaded": 32090
 }
