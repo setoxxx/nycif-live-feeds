@@ -1,99 +1,41 @@
 {
   "borough_counts": {
-    "Bronx": 4633,
-    "Brooklyn": 7634,
-    "Manhattan": 11074,
-    "Queens": 7117,
-    "Staten Island": 1347,
+    "Bronx": 4621,
+    "Brooklyn": 7674,
+    "Manhattan": 11042,
+    "Queens": 7139,
+    "Staten Island": 1343,
     "Unknown": 1
   },
   "category_counts": {
-    "arts": 207,
-    "fitness": 180,
-    "general": 29,
-    "market": 1053,
-    "parks": 4197,
-    "sports": 26140
+    "arts": 208,
+    "fitness": 185,
+    "general": 28,
+    "market": 1072,
+    "parks": 4237,
+    "sports": 26090
   },
   "cross_date_street_occurrences_suppressed": 0,
   "duplicate_policy": {
     "production_feeds_modified": false,
     "street_events": "dedupe only exact title + borough + location + coordinate + date + start/end + CEMS occurrence; recurring dates remain distinct"
   },
-  "eligible_rows_before_one_day_street_dedupe": 31806,
+  "eligible_rows_before_one_day_street_dedupe": 31820,
   "exact_occurrence_duplicates_suppressed": 0,
-  "generated_at_utc": "2026-07-31T14:59:30.968509+00:00",
+  "generated_at_utc": "2026-08-01T14:29:07.819651+00:00",
   "match_counts": {
-    "event_id": 743,
-    "location_cache": 30276,
+    "event_id": 725,
+    "location_cache": 30228,
     "tier_1_certified_segment": 1,
-    "tier_1_gazetteer_display": 325,
-    "tier_2_geosearch_cache": 455,
-    "tier_2_geosearch_midpoint": 6
+    "tier_1_gazetteer_display": 372,
+    "tier_2_geosearch_cache": 487,
+    "tier_2_geosearch_midpoint": 7
   },
   "one_day_street_duplicates_suppressed": 0,
   "production_feed": false,
   "production_ready": true,
   "sample_exact_occurrence_rejected_rows": [],
   "sample_skipped_rows": [
-    {
-      "borough": "Manhattan",
-      "display_location": "EAST   42 STREET between PARK AVENUE and LEXINGTON AVENUE",
-      "display_time": "12:01 AM",
-      "source_cemsid": [],
-      "source_event_id": "959717",
-      "title": "BTS THE CITY ARIRANG NEW YORK"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "SACKETT STREET between VAN BRUNT STREET and DEAD  END",
-      "display_time": "11:00 AM",
-      "source_cemsid": [
-        "0"
-      ],
-      "source_event_id": "961249",
-      "title": "Sackett St Open Streets Event"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "BOND STREET between LAFAYETTE STREET and BOWERY",
-      "display_time": "11:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "959256",
-      "title": "Live Music"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "53 STREET between 5 AVENUE and 4 AVENUE",
-      "display_time": "12:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "960018",
-      "title": "Summer camp/ school street close"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "10 STREET between 7 AVENUE and 8 AVENUE",
-      "display_time": "2:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "946517",
-      "title": "Family On The Block"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "WEST  129 STREET between 7 AVENUE and 8 AVENUE",
-      "display_time": "3:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "934613",
-      "title": "St. Nicholas Local NeighborhoodSTAT 2026"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "WEST   49 STREET between 11 AVENUE and 12 AVENUE",
-      "display_time": "5:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "959872",
-      "title": "ISKCON60 GALA FESTIVAL"
-    },
     {
       "borough": "Brooklyn",
       "display_location": "NOSTRAND AVENUE between FLATBUSH AVENUE and GLENWOOD ROAD",
@@ -192,16 +134,72 @@
     },
     {
       "borough": "Brooklyn",
+      "display_location": "SHEFFIELD AVENUE between BELMONT AVENUE and PITKIN AVENUE",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "929799",
+      "title": "GraceTowers Family Day"
+    },
+    {
+      "borough": "Brooklyn",
       "display_location": "EAST   45 STREET between AVENUE H and AVENUE I",
       "display_time": "10:00 AM",
       "source_cemsid": [],
       "source_event_id": "911331",
       "title": "HI East 45th block party"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "WORTMAN AVENUE between VERMONT STREET and VAN SICLEN AVENUE",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "947619",
+      "title": "Linden Houses Family Day"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "SOMERS STREET between EASTERN PARKWAY and MOTHER GASTON BOULEVARD",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "935959",
+      "title": "RESIDENTS BLOCK PARTY"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "SARATOGA AVENUE between BLAKE AVENUE and DUMONT AVENUE",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "918317",
+      "title": "Saratoga Avenue Block Association Annual Block Party"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "THOMAS S BOYLAND STREET between SUMPTER STREET and MACDOUGAL STREET",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "918423",
+      "title": "St. Paul Pentecostal Community Health Fair"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "KOSCIUSZKO STREET between LEWIS AVENUE and STUYVESANT AVENUE",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "879949",
+      "title": "Together We Stand Block Party/Cleanup"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "EAST   51 STREET between WINTHROP STREET and CLARKSON AVENUE",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "912373",
+      "title": "Windward E 51st Block Association"
     }
   ],
-  "skipped_needs_review_or_bad_gps": 284,
+  "skipped_needs_review_or_bad_gps": 338,
   "source": "nycif_live_test_enriched_events.json",
   "staged_feed": true,
-  "staged_feed_events": 31806,
-  "test_feed_rows_loaded": 32090
+  "staged_feed_events": 31820,
+  "test_feed_rows_loaded": 32158
 }

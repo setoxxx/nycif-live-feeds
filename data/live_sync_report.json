@@ -1,161 +1,26 @@
 {
-  "current_future_rows": 32090,
-  "current_future_rows_with_cemsid": 31466,
+  "current_future_rows": 32158,
+  "current_future_rows_with_cemsid": 31481,
   "date_boundary_timezone": "America/New_York",
   "enriched_rows_loaded": 33084,
-  "generated_at_utc": "2026-07-31T13:57:45.854285+00:00",
+  "generated_at_utc": "2026-08-01T13:21:54.525648+00:00",
   "location_cache_entries_loaded": 40151,
   "location_cache_modified": false,
-  "location_resolver_live_geosearch_calls": 4680,
+  "location_resolver_live_geosearch_calls": 5354,
   "match_counts": {
-    "event_id": 27279,
-    "location_cache": 3490,
-    "none": 284,
-    "text_date_location": 250,
+    "event_id": 27005,
+    "location_cache": 3705,
+    "none": 338,
+    "text_date_location": 243,
     "tier_1_certified_segment": 1,
-    "tier_1_gazetteer_display": 325,
-    "tier_2_geosearch_cache": 402,
-    "tier_2_geosearch_midpoint": 6,
-    "tier_3_nyc_geosearch_live": 53
+    "tier_1_gazetteer_display": 372,
+    "tier_2_geosearch_cache": 471,
+    "tier_2_geosearch_midpoint": 7,
+    "tier_3_nyc_geosearch_live": 16
   },
-  "matched_with_gps": 31806,
+  "matched_with_gps": 31820,
   "matched_without_gps_sample": [],
   "needs_enrichment_sample": [
-    {
-      "community_board": [
-        "5"
-      ],
-      "end_date_time": "2026-07-31T23:59:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "EAST   42 STREET between PARK AVENUE and LEXINGTON AVENUE",
-      "event_name": "BTS THE CITY ARIRANG NEW YORK",
-      "event_type": "Production Event",
-      "police_precinct": [
-        "14"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "959717",
-      "start_date_time": "2026-07-31T00:01:00.000",
-      "street_closure_type": "Curb Lane Only"
-    },
-    {
-      "community_board": [
-        "2"
-      ],
-      "end_date_time": "2026-07-31T20:30:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "BOND STREET between LAFAYETTE STREET and BOWERY",
-      "event_name": "Live Music",
-      "event_type": "Open Street Partner Event",
-      "police_precinct": [
-        "9"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "959256",
-      "start_date_time": "2026-07-31T11:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "6"
-      ],
-      "end_date_time": "2026-07-31T19:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "SACKETT STREET between VAN BRUNT STREET and DEAD  END",
-      "event_name": "Sackett St Open Streets Event",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "76"
-      ],
-      "source_cemsid": [
-        "0"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "961249",
-      "start_date_time": "2026-07-31T11:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "7"
-      ],
-      "end_date_time": "2026-07-31T15:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "53 STREET between 5 AVENUE and 4 AVENUE",
-      "event_name": "Summer camp/ school street close",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "72"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "960018",
-      "start_date_time": "2026-07-31T12:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "6"
-      ],
-      "end_date_time": "2026-07-31T19:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "10 STREET between 7 AVENUE and 8 AVENUE",
-      "event_name": "Family On The Block",
-      "event_type": "Block Party",
-      "police_precinct": [
-        "78"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "946517",
-      "start_date_time": "2026-07-31T14:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "10"
-      ],
-      "end_date_time": "2026-07-31T18:30:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "WEST  129 STREET between 7 AVENUE and 8 AVENUE",
-      "event_name": "St. Nicholas Local NeighborhoodSTAT 2026",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "32"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "934613",
-      "start_date_time": "2026-07-31T15:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "4"
-      ],
-      "end_date_time": "2026-07-31T22:30:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "WEST   49 STREET between 11 AVENUE and 12 AVENUE",
-      "event_name": "ISKCON60 GALA FESTIVAL",
-      "event_type": "Production Event",
-      "police_precinct": [
-        "18"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "959872",
-      "start_date_time": "2026-07-31T17:00:00.000",
-      "street_closure_type": "Curb Lane Only"
-    },
     {
       "community_board": [
         "14"
@@ -424,6 +289,25 @@
     },
     {
       "community_board": [
+        "2"
+      ],
+      "end_date_time": "2026-08-01T16:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Queens",
+      "event_location": "44 DRIVE between JACKSON AVENUE and THOMPSON AVENUE",
+      "event_name": "LIC Wellness Fest",
+      "event_type": "Single Block Festival",
+      "police_precinct": [
+        "108"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "919123",
+      "start_date_time": "2026-08-01T10:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
         "5"
       ],
       "end_date_time": "2026-08-01T17:00:00.000",
@@ -438,6 +322,25 @@
       "source_cemsid": [],
       "source_dataset": "tvpp-9vvx",
       "source_event_id": "923221",
+      "start_date_time": "2026-08-01T10:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "5"
+      ],
+      "end_date_time": "2026-08-01T17:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "SHEFFIELD AVENUE between BELMONT AVENUE and PITKIN AVENUE",
+      "event_name": "GraceTowers Family Day",
+      "event_type": "Block Party",
+      "police_precinct": [
+        "75"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "929799",
       "start_date_time": "2026-08-01T10:00:00.000",
       "street_closure_type": "Full Street Closure"
     },
@@ -497,14 +400,109 @@
       "source_event_id": "945830",
       "start_date_time": "2026-08-01T10:00:00.000",
       "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "5"
+      ],
+      "end_date_time": "2026-08-01T18:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "WORTMAN AVENUE between VERMONT STREET and VAN SICLEN AVENUE",
+      "event_name": "Linden Houses Family Day",
+      "event_type": "Block Party",
+      "police_precinct": [
+        "75"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "947619",
+      "start_date_time": "2026-08-01T10:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "17"
+      ],
+      "end_date_time": "2026-08-01T18:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "EAST   31 STREET between CHURCH AVENUE and SNYDER AVENUE",
+      "event_name": "East 31 street bt Church and Snyder ave block party",
+      "event_type": "Block Party",
+      "police_precinct": [
+        "67"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "948752",
+      "start_date_time": "2026-08-01T10:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "5"
+      ],
+      "end_date_time": "2026-08-01T19:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Bronx",
+      "event_location": "MORRIS AVENUE between EAST  182 STREET and EAST  183 STREET",
+      "event_name": "Morris Avenue Block Party",
+      "event_type": "Block Party",
+      "police_precinct": [
+        "46"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "948762",
+      "start_date_time": "2026-08-01T10:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "14"
+      ],
+      "end_date_time": "2026-08-01T19:30:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Queens",
+      "event_location": "ROCKAWAY BEACH BOULEVARD between BEACH   52 STREET and BEACH   53 STREET",
+      "event_name": "Church Without Walls",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "101"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "950652",
+      "start_date_time": "2026-08-01T10:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "9"
+      ],
+      "end_date_time": "2026-08-01T20:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "WASHINGTON AVENUE between EMPIRE BOULEVARD and FLATBUSH AVENUE",
+      "event_name": "Open Streets Little Caribbean",
+      "event_type": "Open Street Partner Event",
+      "police_precinct": [
+        "71"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "960314",
+      "start_date_time": "2026-08-01T10:30:00.000",
+      "street_closure_type": "Full Street Closure"
     }
   ],
   "production_feeds_modified": false,
   "public_map_modified": false,
   "raw_page_limit": 50000,
-  "raw_rows_loaded": 33284,
-  "raw_rows_with_cemsid": 32614,
+  "raw_rows_loaded": 33112,
+  "raw_rows_with_cemsid": 32388,
   "raw_url": "https://data.cityofnewyork.us/resource/tvpp-9vvx.json",
-  "today_nyc": "2026-07-31",
-  "today_utc": "2026-07-31"
+  "today_nyc": "2026-08-01",
+  "today_utc": "2026-08-01"
 }

@@ -1,7 +1,7 @@
 {
-  "current_calendar_events": 190,
+  "current_calendar_events": 245,
   "foil_operator_joins": 0,
-  "generated_at_utc": "2026-07-31T15:00:31Z",
+  "generated_at_utc": "2026-08-01T14:30:16Z",
   "historical_rows_considered": 2450,
   "historical_window": {
     "dataset": "bkfu-528j",
@@ -10,12 +10,12 @@
     "window_start": "2025-06-17"
   },
   "label_counts": {
-    "possible": 38,
-    "returning_likely": 125,
-    "weak": 60
+    "possible": 64,
+    "returning_likely": 134,
+    "weak": 63
   },
   "location_cache_modified": false,
-  "match_count": 223,
+  "match_count": 261,
   "matches": [
     {
       "current": {
@@ -1489,6 +1489,206 @@
     },
     {
       "current": {
+        "assignment_score": 380,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-10",
+        "display_location": "MULBERRY STREET between CANAL STREET and EAST HOUSTON STREET, Manhattan, NY",
+        "end_date_time": "2026-09-20T22:00:00",
+        "event_id": "feast-of-san-gennaro",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-10&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:feast-of-san-gennaro@2026-09-10",
+        "lane": "approved_major",
+        "latitude": 40.7198845,
+        "longitude": -73.997879,
+        "map_link": "https://www.google.com/maps?q=40.7198845,-73.997879",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "feast-of-san-gennaro"
+        },
+        "start_date_time": "2026-09-10T12:00:00",
+        "title": "Feast of San Gennaro"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "place_strong:0.86",
+        "season_delta_days:2",
+        "historical_street_closure_present"
+      ],
+      "match_score": 97,
+      "prior_year": {
+        "borough": "Manhattan",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-08",
+        "display_location": "MULBERRY STREET between CANAL STREET and EAST HOUSTON STREET,  HESTER STREET between MOTT STREET and CENTER STREET,  GRAND STREET between MOTT STREET and CENTER STREET",
+        "end_date_time": "2025-09-11T20:00:00.000",
+        "event_id": "823725",
+        "event_type": "Street Festival",
+        "police_precinct": "5,",
+        "start_date_time": "2025-09-08T10:00:00.000",
+        "street_closure_type": "Sidewalk and Street Closure",
+        "title": "Feast of San Gennaro"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "returning_likely"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-10",
+        "display_location": "MULBERRY STREET between CANAL STREET and EAST HOUSTON STREET, Manhattan, NY",
+        "end_date_time": "2026-09-20T22:00:00",
+        "event_id": "feast-of-san-gennaro",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-10&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:feast-of-san-gennaro@2026-09-10",
+        "lane": "approved_major",
+        "latitude": 40.7198845,
+        "longitude": -73.997879,
+        "map_link": "https://www.google.com/maps?q=40.7198845,-73.997879",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "feast-of-san-gennaro"
+        },
+        "start_date_time": "2026-09-10T12:00:00",
+        "title": "Feast of San Gennaro"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "place_strong:0.86",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 97,
+      "prior_year": {
+        "borough": "Manhattan",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-11",
+        "display_location": "MULBERRY STREET between CANAL STREET and EAST HOUSTON STREET,  HESTER STREET between MOTT STREET and CENTER STREET,  GRAND STREET between MOTT STREET and CENTER STREET",
+        "end_date_time": "2025-09-22T21:00:00.000",
+        "event_id": "823725",
+        "event_type": "Street Festival",
+        "police_precinct": "5,",
+        "start_date_time": "2025-09-11T10:00:00.000",
+        "street_closure_type": "Sidewalk and Street Closure",
+        "title": "Feast of San Gennaro"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "returning_likely"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Bronx",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-12",
+        "display_location": "ALLERTON AVENUE between BARNES AVENUE and WALLACE AVENUE, Bronx, NY",
+        "end_date_time": "2026-09-12T22:00:00",
+        "event_id": "allerton-international-food-festival",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:allerton-international-food-festival@2026-09-12",
+        "lane": "approved_major",
+        "latitude": 40.7309375,
+        "longitude": -73.9687085,
+        "map_link": "https://www.google.com/maps?q=40.7309375,-73.9687085",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "allerton-international-food-festival"
+        },
+        "start_date_time": "2026-09-12T12:00:00",
+        "title": "Allerton International Food Festival (Bronx)"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:0.92",
+        "place_strong:0.93",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 97,
+      "prior_year": {
+        "borough": "Bronx",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-13",
+        "display_location": "ALLERTON AVENUE between BARNES AVENUE and WALLACE AVENUE",
+        "end_date_time": "2025-09-13T17:00:00.000",
+        "event_id": "818466",
+        "event_type": "Single Block Festival",
+        "police_precinct": "49,",
+        "start_date_time": "2025-09-13T11:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Allerton International Food Festival"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "returning_likely"
+    },
+    {
+      "current": {
+        "assignment_score": 400,
+        "borough": null,
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-09-20",
+        "display_location": " ADAM CLAYTON POWELL JR BOULEVARD between WEST 110 STREET and WEST 116TH STREET  Manhattan",
+        "end_date_time": "2026-09-20T18:00:00.000-04:00",
+        "event_id": "1044396",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-20&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1044396@2026-09-20",
+        "lane": "approved_major",
+        "latitude": null,
+        "longitude": null,
+        "map_link": null,
+        "pin_integrity_reason": "missing_coords",
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1044396"
+        },
+        "start_date_time": "2026-09-20T12:30:00.000-04:00",
+        "title": "57th Annual African American Day Parade"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:0.93",
+        "place_strong:0.89",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 97,
+      "prior_year": {
+        "borough": "Manhattan",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-21",
+        "display_location": "ADAM CLAYTON POWELL JR BOULEVARD between WEST  110 STREET and WEST  116 STREET,  WEST  113 STREET between MALCOLM X BOULEVARD and FREDERICK DOUGLAS BOULEVARD,  ST NICHOLAS AVENUE between WEST  113 STREET and WEST  114 STREET,  WEST  111 STREET between MALCOLM X BOULEVARD and FREDERICK DOUGLAS BOULEVARD,  WEST  112 STREET between MALCOLM X BOULEVARD and FREDERICK DOUGLAS BOULEVARD,  WEST  114 STREET between ADAM CLAYTON POWELL JR BOULEVARD and FREDERICK DOUGLAS BOULEVARD,  WEST  114 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  115 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  110 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  126 STREET between LENOX AVENUE and FREDERICK DOUGLAS BOULEVARD,  FREDERICK DOUGLAS BOULEVARD between WEST  128 STREET and WEST  127 STREET,  LENOX AVENUE between WEST  132 STREET and WEST  133 STREET,  ST NICHOLAS AVENUE between ADAM CLAYTON POWELL JR BOULEVARD and WEST  115 STREET,  LENOX AVENUE between WEST  136 STREET and WEST  140 STREET,  WEST  125 STREET between LENOX AVENUE and ADAM CLAYTON POWELL JR BOULEVARD,  WEST  132 STREET between LENOX AVENUE and FIFTH AVENUE,  ADAM CLAYTON POWELL BOULEVARD between WEST  115 STREET and WEST  141 STREET,  MALCOLM X BOULEVARD between WEST  136 STREET and WEST  140 STREET,  WEST  135 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  136 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  137 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  ADAM CLAYTON POWELL JR BOULEVARD between WEST  125 STREET and WEST  126 STREET",
+        "end_date_time": "2025-09-21T18:00:00.000",
+        "event_id": "832867",
+        "event_type": "Parade",
+        "police_precinct": "22, 28, 32,",
+        "start_date_time": "2025-09-21T12:30:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "The 56th Annual African American Day Parade"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "returning_likely"
+    },
+    {
+      "current": {
         "assignment_score": 340,
         "borough": "Manhattan",
         "certified_pin": true,
@@ -2698,6 +2898,55 @@
         "start_date_time": "2025-08-02T00:00:00.000",
         "street_closure_type": "N/A",
         "title": "SummerStage Festival - August"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "returning_likely"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-05",
+        "display_location": "Carl Schurz Park: Basketball-01   ,Carl Schurz Park: Basketball-02   ,Carl Schurz Park: Hockey-01",
+        "end_date_time": "2026-08-05T22:00:00.000",
+        "event_id": "891324",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-05&assignment=1",
+        "id": "tvpp-9vvx:891324@2026-08-05",
+        "lane": "approved_major",
+        "latitude": 40.77514,
+        "longitude": -73.94354,
+        "map_link": "https://www.google.com/maps?q=40.77514,-73.94354",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "891324"
+        },
+        "start_date_time": "2026-08-05T20:30:00.000",
+        "title": "Sunset Film Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "place_strong:0.88",
+        "season_delta_days:1"
+      ],
+      "match_score": 94,
+      "prior_year": {
+        "borough": "Manhattan",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-08-06",
+        "display_location": "Carl Schurz Park: Basketball-01   ,Carl Schurz Park: Basketball-02",
+        "end_date_time": "2025-08-06T22:00:00.000",
+        "event_id": "826750",
+        "event_type": "Special Event",
+        "police_precinct": "19,",
+        "start_date_time": "2025-08-06T20:30:00.000",
+        "street_closure_type": "N/A",
+        "title": "Sunset Film Festival"
       },
       "promotion_allowed": false,
       "public_map_modified": false,
@@ -3930,6 +4179,55 @@
     },
     {
       "current": {
+        "assignment_score": 380,
+        "borough": "Brooklyn",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-12",
+        "display_location": "Fort Greene Park: Monument Plaza",
+        "end_date_time": "2026-09-12T19:00:00.000",
+        "event_id": "901619",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
+        "id": "tvpp-9vvx:901619@2026-09-12",
+        "lane": "approved_major",
+        "latitude": 40.69152,
+        "longitude": -73.97552,
+        "map_link": "https://www.google.com/maps?q=40.69152,-73.97552",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "901619"
+        },
+        "start_date_time": "2026-09-12T15:00:00.000",
+        "title": "Fort Greene Park Jazz Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "place_strong:0.96",
+        "season_delta_days:2"
+      ],
+      "match_score": 94,
+      "prior_year": {
+        "borough": "Brooklyn",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-14",
+        "display_location": "Fort Greene Park: Monument Plaza",
+        "end_date_time": "2025-09-14T19:00:00.000",
+        "event_id": "832558",
+        "event_type": "Special Event",
+        "police_precinct": "88,",
+        "start_date_time": "2025-09-14T15:00:00.000",
+        "street_closure_type": "N/A",
+        "title": "Fort Greene park Jazz Festival"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "returning_likely"
+    },
+    {
+      "current": {
         "assignment_score": 340,
         "borough": "Brooklyn",
         "certified_pin": true,
@@ -4134,6 +4432,57 @@
     },
     {
       "current": {
+        "assignment_score": 340,
+        "borough": "Brooklyn",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-30",
+        "display_location": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET,  KNICKERBOCKER AVENUE between WEIRFIELD STREET and HALSEY STREET",
+        "end_date_time": "2026-08-30T15:00:00.000",
+        "event_id": "923926",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-30&assignment=1",
+        "id": "tvpp-9vvx:923926@2026-08-30",
+        "lane": "approved_major",
+        "latitude": 40.693166,
+        "longitude": -73.90784,
+        "map_link": "https://www.google.com/maps?q=40.693166,-73.90784",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "923926"
+        },
+        "start_date_time": "2026-08-30T09:00:00.000",
+        "title": "RiseBoro Farmers Markets at Irving Square Park"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "place_partial:0.74",
+        "season_delta_days:1",
+        "event_type_compatible",
+        "historical_street_closure_present"
+      ],
+      "match_score": 91,
+      "prior_year": {
+        "borough": "Brooklyn",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-08-31",
+        "display_location": "KNICKERBOCKER AVENUE between WEIRFIELD STREET and HALSEY STREET",
+        "end_date_time": "2025-08-31T14:00:00.000",
+        "event_id": "843806",
+        "event_type": "Farmers Market",
+        "police_precinct": "83,",
+        "start_date_time": "2025-08-31T09:00:00.000",
+        "street_closure_type": "Sidewalk and Curb Lane Closure",
+        "title": "RiseBoro Farmers Markets at Irving Square Park"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "returning_likely"
+    },
+    {
+      "current": {
         "assignment_score": 380,
         "borough": "Queens",
         "certified_pin": true,
@@ -4177,6 +4526,56 @@
         "start_date_time": "2025-08-10T10:00:00.000",
         "street_closure_type": "Full Street Closure",
         "title": "Steinway Street Festival"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "returning_likely"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-13",
+        "display_location": "3 AVENUE between EAST 66 STREET and EAST 86 STREET, Manhattan, NY",
+        "end_date_time": "2026-09-13T22:00:00",
+        "event_id": "third-avenue-community-benefit-festival",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-13&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:third-avenue-community-benefit-festival@2026-09-13",
+        "lane": "approved_major",
+        "latitude": 40.7570875,
+        "longitude": -73.9740415,
+        "map_link": "https://www.google.com/maps?q=40.7570875,-73.9740415",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "third-avenue-community-benefit-festival"
+        },
+        "start_date_time": "2026-09-13T12:00:00",
+        "title": "Third Avenue Community Benefit Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:0.95",
+        "place_strong:0.90",
+        "season_delta_days:7",
+        "historical_street_closure_present"
+      ],
+      "match_score": 90,
+      "prior_year": {
+        "borough": "Manhattan",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-06",
+        "display_location": "3 AVENUE between EAST   66 STREET and EAST   86 STREET",
+        "end_date_time": "2025-09-06T18:00:00.000",
+        "event_id": "818873",
+        "event_type": "Street Festival",
+        "police_precinct": "19,",
+        "start_date_time": "2025-09-06T10:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "3rd Avenue Community Benefit Festival"
       },
       "promotion_allowed": false,
       "public_map_modified": false,
@@ -4341,6 +4740,55 @@
         "borough": "Manhattan",
         "certified_pin": true,
         "coordinate_status": "map_ready",
+        "date": "2026-08-01",
+        "display_location": "Sara D. Roosevelt Park: Central K Pit - Broome Street",
+        "end_date_time": "2026-08-01T16:00:00.000",
+        "event_id": "947355",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-01&assignment=1",
+        "id": "tvpp-9vvx:947355@2026-08-01",
+        "lane": "approved_major",
+        "latitude": 40.72171,
+        "longitude": -73.99155,
+        "map_link": "https://www.google.com/maps?q=40.72171,-73.99155",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "947355"
+        },
+        "start_date_time": "2026-08-01T10:00:00.000",
+        "title": "Myanmar New Year Water Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "place_strong:1.00",
+        "season_delta_days:6"
+      ],
+      "match_score": 87,
+      "prior_year": {
+        "borough": "Manhattan",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-07-26",
+        "display_location": "Sara D. Roosevelt Park: Central K Pit - Broome Street",
+        "end_date_time": "2025-07-26T17:00:00.000",
+        "event_id": "852224",
+        "event_type": "Special Event",
+        "police_precinct": "5,",
+        "start_date_time": "2025-07-26T12:00:00.000",
+        "street_closure_type": "N/A",
+        "title": "Myanmar New Year Water Festival"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "returning_likely"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
         "date": "2026-08-12",
         "display_location": "White Playground: Playground   ,White Playground: Basketball-01 ,White Playground: Basketball-02",
         "end_date_time": "2026-08-12T20:00:00.000",
@@ -4484,49 +4932,48 @@
     },
     {
       "current": {
-        "assignment_score": 310,
-        "borough": "Manhattan",
+        "assignment_score": 380,
+        "borough": "Queens",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-07-31",
-        "display_location": "Times Square: 45/46 Broadway Pedestrian Plaza (Times Sq) BROADWAY between WEST   45 STREET and WEST   46 STREET,  WEST   46 STREET between 7 AVENUE and 8 AVENUE",
-        "end_date_time": "2026-07-31T21:00:00.000",
-        "event_id": "898494",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-31&assignment=1",
-        "id": "tvpp-9vvx:898494@2026-07-31",
+        "date": "2026-09-05",
+        "display_location": "Beach 17 Playground (O'Donohue Park): Beach 17th Street Performance Space",
+        "end_date_time": "2026-09-05T21:00:00.000",
+        "event_id": "888174",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-05&assignment=1",
+        "id": "tvpp-9vvx:888174@2026-09-05",
         "lane": "approved_major",
-        "latitude": 40.7562,
-        "longitude": -73.98653,
-        "map_link": "https://www.google.com/maps?q=40.7562,-73.98653",
+        "latitude": 40.59472,
+        "longitude": -73.74772,
+        "map_link": "https://www.google.com/maps?q=40.59472,-73.74772",
         "pin_integrity_reason": "ok_nyc_certified",
         "source": {
           "dataset": "tvpp-9vvx",
-          "source_event_id": "898494"
+          "source_event_id": "888174"
         },
-        "start_date_time": "2026-07-31T12:00:00.000",
-        "title": "TSQ LIVE: 45/46 Plaza Programming"
+        "start_date_time": "2026-09-05T17:00:00.000",
+        "title": "Rockaway Beach House Music festival"
       },
       "location_cache_modified": false,
       "match_reasons": [
         "name_exactish:1.00",
-        "place_partial:0.73",
-        "season_delta_days:2",
-        "historical_street_closure_present"
+        "place_strong:0.97",
+        "season_delta_days:5"
       ],
-      "match_score": 85,
+      "match_score": 87,
       "prior_year": {
-        "borough": "Manhattan",
+        "borough": "Queens",
         "cemsid": null,
         "dataset": "bkfu-528j",
-        "date": "2025-07-29",
-        "display_location": "45/46 Broadway Pedestrian Plaza (Times Sq): 45/46 Broadway Pedestrian Plaza (Times Sq) BROADWAY between WEST   45 STREET and WEST   46 STREET",
-        "end_date_time": "2025-07-29T21:00:00.000",
-        "event_id": "813526",
-        "event_type": "Plaza Partner Event",
-        "police_precinct": "18,",
-        "start_date_time": "2025-07-29T15:00:00.000",
-        "street_closure_type": "Pedestrian Plaza",
-        "title": "TSQ LIVE: 45/46 Plaza Programming"
+        "date": "2025-08-31",
+        "display_location": "Beach 17 Playground (O'Donohue Park): Beach 17th Street Performance Space",
+        "end_date_time": "2025-08-31T20:00:00.000",
+        "event_id": "809068",
+        "event_type": "Special Event",
+        "police_precinct": "101,",
+        "start_date_time": "2025-08-31T16:00:00.000",
+        "street_closure_type": "N/A",
+        "title": "Rockaway Beach House Music festival"
       },
       "promotion_allowed": false,
       "public_map_modified": false,
@@ -4534,49 +4981,48 @@
     },
     {
       "current": {
-        "assignment_score": 310,
-        "borough": "Manhattan",
+        "assignment_score": 380,
+        "borough": "Brooklyn",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-07-31",
-        "display_location": "Times Square: 45/46 Broadway Pedestrian Plaza (Times Sq) BROADWAY between WEST   45 STREET and WEST   46 STREET,  WEST   46 STREET between 7 AVENUE and 8 AVENUE",
-        "end_date_time": "2026-07-31T21:00:00.000",
-        "event_id": "898494",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-31&assignment=1",
-        "id": "tvpp-9vvx:898494@2026-07-31",
+        "date": "2026-09-12",
+        "display_location": "Fort Greene Park: Monument Plaza",
+        "end_date_time": "2026-09-12T19:00:00.000",
+        "event_id": "901619",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
+        "id": "tvpp-9vvx:901619@2026-09-12",
         "lane": "approved_major",
-        "latitude": 40.7562,
-        "longitude": -73.98653,
-        "map_link": "https://www.google.com/maps?q=40.7562,-73.98653",
+        "latitude": 40.69152,
+        "longitude": -73.97552,
+        "map_link": "https://www.google.com/maps?q=40.69152,-73.97552",
         "pin_integrity_reason": "ok_nyc_certified",
         "source": {
           "dataset": "tvpp-9vvx",
-          "source_event_id": "898494"
+          "source_event_id": "901619"
         },
-        "start_date_time": "2026-07-31T12:00:00.000",
-        "title": "TSQ LIVE: 45/46 Plaza Programming"
+        "start_date_time": "2026-09-12T15:00:00.000",
+        "title": "Fort Greene Park Jazz Festival"
       },
       "location_cache_modified": false,
       "match_reasons": [
-        "name_exactish:0.94",
-        "place_partial:0.71",
-        "season_delta_days:1",
-        "historical_street_closure_present"
+        "name_exactish:1.00",
+        "place_strong:0.96",
+        "season_delta_days:6"
       ],
-      "match_score": 85,
+      "match_score": 87,
       "prior_year": {
-        "borough": "Manhattan",
+        "borough": "Brooklyn",
         "cemsid": null,
         "dataset": "bkfu-528j",
-        "date": "2025-07-30",
-        "display_location": "43/44 Broadway Pedestrian Plaza (Times Sq): 43/44 Broadway Pedestrian Plaza (Times Sq) BROADWAY between WEST   43 STREET and WEST   44 STREET,  WEST   43 STREET between 6 AVENUE and 7 AVENUE",
-        "end_date_time": "2025-07-30T20:00:00.000",
-        "event_id": "813529",
-        "event_type": "Plaza Partner Event",
-        "police_precinct": "14,",
-        "start_date_time": "2025-07-30T13:00:00.000",
-        "street_closure_type": "Pedestrian Plaza",
-        "title": "TSQ LIVE: 43/44 Plaza Programming"
+        "date": "2025-09-06",
+        "display_location": "Fort Greene Park: Monument Plaza",
+        "end_date_time": "2025-09-06T19:00:00.000",
+        "event_id": "832558",
+        "event_type": "Special Event",
+        "police_precinct": "88,",
+        "start_date_time": "2025-09-06T15:00:00.000",
+        "street_closure_type": "N/A",
+        "title": "Fort Greene park Jazz Festival"
       },
       "promotion_allowed": false,
       "public_map_modified": false,
@@ -6488,6 +6934,57 @@
     },
     {
       "current": {
+        "assignment_score": 340,
+        "borough": "Brooklyn",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-30",
+        "display_location": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET,  KNICKERBOCKER AVENUE between WEIRFIELD STREET and HALSEY STREET",
+        "end_date_time": "2026-08-30T15:00:00.000",
+        "event_id": "923926",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-30&assignment=1",
+        "id": "tvpp-9vvx:923926@2026-08-30",
+        "lane": "approved_major",
+        "latitude": 40.693166,
+        "longitude": -73.90784,
+        "map_link": "https://www.google.com/maps?q=40.693166,-73.90784",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "923926"
+        },
+        "start_date_time": "2026-08-30T09:00:00.000",
+        "title": "RiseBoro Farmers Markets at Irving Square Park"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "place_partial:0.74",
+        "season_delta_days:6",
+        "event_type_compatible",
+        "historical_street_closure_present"
+      ],
+      "match_score": 84,
+      "prior_year": {
+        "borough": "Brooklyn",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-08-24",
+        "display_location": "KNICKERBOCKER AVENUE between WEIRFIELD STREET and HALSEY STREET",
+        "end_date_time": "2025-08-24T14:00:00.000",
+        "event_id": "843806",
+        "event_type": "Farmers Market",
+        "police_precinct": "83,",
+        "start_date_time": "2025-08-24T09:00:00.000",
+        "street_closure_type": "Sidewalk and Curb Lane Closure",
+        "title": "RiseBoro Farmers Markets at Irving Square Park"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
         "assignment_score": 400,
         "borough": "Queens",
         "certified_pin": true,
@@ -6787,6 +7284,455 @@
     },
     {
       "current": {
+        "assignment_score": 380,
+        "borough": "Brooklyn",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-06",
+        "display_location": "11 AVENUE between 67 STREET and 66 STREET, Brooklyn, NY",
+        "end_date_time": "2026-09-06T22:00:00",
+        "event_id": "st-george-church-bay-ridge-festival",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-06&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:st-george-church-bay-ridge-festival@2026-09-06",
+        "lane": "approved_major",
+        "latitude": 40.7577355,
+        "longitude": -73.988268,
+        "map_link": "https://www.google.com/maps?q=40.7577355,-73.988268",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "st-george-church-bay-ridge-festival"
+        },
+        "start_date_time": "2026-09-06T12:00:00",
+        "title": "Annual Festival of St. George Church (Bay Ridge)"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.83",
+        "place_strong:0.89",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 82,
+      "prior_year": {
+        "borough": "Brooklyn",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-07",
+        "display_location": "11 AVENUE between 67 STREET and 66 STREET",
+        "end_date_time": "2025-09-07T18:00:00.000",
+        "event_id": "875124",
+        "event_type": "Street Event",
+        "police_precinct": "68,",
+        "start_date_time": "2025-09-07T09:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Annual Festival - St. George Church"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Brooklyn",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-12",
+        "display_location": "CHURCH AVENUE between VERONICA PLACE and WOODS PLACE, Brooklyn, NY",
+        "end_date_time": "2026-09-12T22:00:00",
+        "event_id": "procession-holy-cross-east-flatbush",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:procession-holy-cross-east-flatbush@2026-09-12",
+        "lane": "approved_major",
+        "latitude": 40.621552,
+        "longitude": -74.069238,
+        "map_link": "https://www.google.com/maps?q=40.621552,-74.069238",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "procession-holy-cross-east-flatbush"
+        },
+        "start_date_time": "2026-09-12T12:00:00",
+        "title": "Procession for the Feast of the Holy Cross (East Flatbush)"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.86",
+        "place_strong:0.79",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 82,
+      "prior_year": {
+        "borough": "Brooklyn",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-13",
+        "display_location": "2544 CHURCH AVENUE, CHURCH AVENUE between VERONICA PLACE and WOODS PLACE,  ROGERS AVENUE between CHURCH AVENUE and MARTENSE STREET,  MARTENSE STREET between ROGERS AVENUE and NOSTRAND AVENUE,  NOSTRAND AVENUE between MARTENSE STREET and SNYDER AVENUE,  SNYDER AVENUE between NOSTRAND AVENUE and BEDFORD AVENUE,  BEDFORD AVENUE between SNYDER AVENUE and CHURCH AVENUE,  CHURCH AVENUE between BEDFORD AVENUE and VERONICA PLACE, 2544 CHURCH AVENUE",
+        "end_date_time": "2025-09-13T20:00:00.000",
+        "event_id": "881905",
+        "event_type": "Religious Event",
+        "police_precinct": "67, 70,",
+        "start_date_time": "2025-09-13T19:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Procession for the Feast of the Holy Cross"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 400,
+        "borough": "Staten Island",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-13",
+        "display_location": "PORT RICHMOND AVENUE between VILLA AVENUE and VAN RIPER STREET, Staten Island, NY",
+        "end_date_time": "2026-09-13T22:00:00",
+        "event_id": "mexican-independence-day-parade-port-richmond",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-13&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:mexican-independence-day-parade-port-richmond@2026-09-13",
+        "lane": "approved_major",
+        "latitude": 40.5973085,
+        "longitude": -74.1357285,
+        "map_link": "https://www.google.com/maps?q=40.5973085,-74.1357285",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "mexican-independence-day-parade-port-richmond"
+        },
+        "start_date_time": "2026-09-13T12:00:00",
+        "title": "Mexican Independence Day Parade (Port Richmond)"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.82",
+        "place_strong:0.81",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 82,
+      "prior_year": {
+        "borough": "Staten Island",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-14",
+        "display_location": "PORT RICHMOND AVE  between VILLA AVE  and VAN RIPPPER ST",
+        "end_date_time": "2025-09-14T12:00:00.000",
+        "event_id": "878395",
+        "event_type": "Street Event",
+        "police_precinct": "121,",
+        "start_date_time": "2025-09-14T10:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Mexican Independence Day Parade"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 400,
+        "borough": "Staten Island",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-13",
+        "display_location": "PORT RICHMOND AVENUE between VILLA AVENUE and VAN RIPER STREET, Staten Island, NY",
+        "end_date_time": "2026-09-13T22:00:00",
+        "event_id": "mexican-independence-day-parade-port-richmond",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-13&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:mexican-independence-day-parade-port-richmond@2026-09-13",
+        "lane": "approved_major",
+        "latitude": 40.5973085,
+        "longitude": -74.1357285,
+        "map_link": "https://www.google.com/maps?q=40.5973085,-74.1357285",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "mexican-independence-day-parade-port-richmond"
+        },
+        "start_date_time": "2026-09-13T12:00:00",
+        "title": "Mexican Independence Day Parade (Port Richmond)"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.82",
+        "place_strong:0.77",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 82,
+      "prior_year": {
+        "borough": "Staten Island",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-14",
+        "display_location": "PORT RICHMOND AVENUE between TRANTOR PLACE and VAN RIPER STREET,  PORT RICHMOND AVENUE between VAN RIPER STREET and BENNETT STREET, Veterans Park: Whole Park Veterans",
+        "end_date_time": "2025-09-14T14:00:00.000",
+        "event_id": "878032",
+        "event_type": "Parade",
+        "police_precinct": "120, 121,",
+        "start_date_time": "2025-09-14T12:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Mexican Independence Day Parade"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Queens",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-13",
+        "display_location": "56 ROAD between 61 STREET and 64 STREET, Queens, NY",
+        "end_date_time": "2026-09-13T22:00:00",
+        "event_id": "parish-feast-day-maspeth",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-13&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:parish-feast-day-maspeth@2026-09-13",
+        "lane": "approved_major",
+        "latitude": 40.742322,
+        "longitude": -73.8602645,
+        "map_link": "https://www.google.com/maps?q=40.742322,-73.8602645",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "parish-feast-day-maspeth"
+        },
+        "start_date_time": "2026-09-13T12:00:00",
+        "title": "Parish Feast Day (Maspeth)"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.80",
+        "place_strong:0.75",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 82,
+      "prior_year": {
+        "borough": "Queens",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-14",
+        "display_location": "56 ROAD between 61 STREET and 64 STREET,  61 STREET between 56 ROAD and 56 AVENUE,  56 AVENUE between 61 STREET and 64 STREET,  64 STREET between 56 AVENUE and 56 ROAD,  56 ROAD between 61 STREET and 64 STREET",
+        "end_date_time": "2025-09-14T13:00:00.000",
+        "event_id": "880645",
+        "event_type": "Religious Event",
+        "police_precinct": "104,",
+        "start_date_time": "2025-09-14T12:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Parish Feast Day"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Bronx",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-19",
+        "display_location": "VYSE AVENUE between EAST 167 STREET and HOME STREET, Bronx, NY",
+        "end_date_time": "2026-09-19T22:00:00",
+        "event_id": "festival-del-grito-de-lares",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-19&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:festival-del-grito-de-lares@2026-09-19",
+        "lane": "approved_major",
+        "latitude": 40.7746525,
+        "longitude": -73.8574855,
+        "map_link": "https://www.google.com/maps?q=40.7746525,-73.8574855",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "festival-del-grito-de-lares"
+        },
+        "start_date_time": "2026-09-19T12:00:00",
+        "title": "Festival del Grito de Lares (Bronx)"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.90",
+        "place_strong:0.92",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 82,
+      "prior_year": {
+        "borough": "Bronx",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-20",
+        "display_location": "VYSE AVENUE between EAST  167 STREET and HOME STREET",
+        "end_date_time": "2025-09-20T19:00:00.000",
+        "event_id": "877831",
+        "event_type": "Street Event",
+        "police_precinct": "42,",
+        "start_date_time": "2025-09-20T10:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Festival Del Grito De Lares"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Queens",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-19",
+        "display_location": "SUTPHIN BOULEVARD between JAMAICA AVENUE and 89 AVENUE, Queens, NY",
+        "end_date_time": "2026-09-19T22:00:00",
+        "event_id": "sutphin-boulevard-festival-jamaica",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-19&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:sutphin-boulevard-festival-jamaica@2026-09-19",
+        "lane": "approved_major",
+        "latitude": 40.7016465,
+        "longitude": -73.825112,
+        "map_link": "https://www.google.com/maps?q=40.7016465,-73.825112",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "sutphin-boulevard-festival-jamaica"
+        },
+        "start_date_time": "2026-09-19T12:00:00",
+        "title": "Sutphin Boulevard Festival (Jamaica)"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.77",
+        "place_strong:0.91",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 82,
+      "prior_year": {
+        "borough": "Queens",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-20",
+        "display_location": "SUTPHIN BOULEVARD between JAMAICA AVENUE and 89 AVENUE",
+        "end_date_time": "2025-09-20T18:00:00.000",
+        "event_id": "829802",
+        "event_type": "Single Block Festival",
+        "police_precinct": "103,",
+        "start_date_time": "2025-09-20T10:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Sutphin Blvd Festival - Part I"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Queens",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-19",
+        "display_location": "SUTPHIN BOULEVARD between JAMAICA AVENUE and 89 AVENUE, Queens, NY",
+        "end_date_time": "2026-09-19T22:00:00",
+        "event_id": "sutphin-boulevard-festival-jamaica",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-19&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:sutphin-boulevard-festival-jamaica@2026-09-19",
+        "lane": "approved_major",
+        "latitude": 40.7016465,
+        "longitude": -73.825112,
+        "map_link": "https://www.google.com/maps?q=40.7016465,-73.825112",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "sutphin-boulevard-festival-jamaica"
+        },
+        "start_date_time": "2026-09-19T12:00:00",
+        "title": "Sutphin Boulevard Festival (Jamaica)"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.76",
+        "place_strong:0.77",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 82,
+      "prior_year": {
+        "borough": "Queens",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-20",
+        "display_location": "SUTPHIN BOULEVARD between 88 AVENUE and HILLSIDE AVENUE",
+        "end_date_time": "2025-09-20T18:00:00.000",
+        "event_id": "829808",
+        "event_type": "Single Block Festival",
+        "police_precinct": "103,",
+        "start_date_time": "2025-09-20T10:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Sutphin Blvd Festival - Part II"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Staten Island",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-19",
+        "display_location": "Westerleigh Park, Staten Island, NY",
+        "end_date_time": "2026-09-19T22:00:00",
+        "event_id": "westerleigh-folk-festival",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-19&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:westerleigh-folk-festival@2026-09-19",
+        "lane": "approved_major",
+        "latitude": 40.6198,
+        "longitude": -74.1312,
+        "map_link": "https://www.google.com/maps?q=40.6198,-74.1312",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "westerleigh-folk-festival"
+        },
+        "start_date_time": "2026-09-19T12:00:00",
+        "title": "Westerleigh Folk Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "place_partial:0.70",
+        "season_delta_days:1"
+      ],
+      "match_score": 82,
+      "prior_year": {
+        "borough": "Staten Island",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-20",
+        "display_location": "Westerleigh Park: Westerleigh Park - Whole Park",
+        "end_date_time": "2025-09-20T19:00:00.000",
+        "event_id": "808464",
+        "event_type": "Special Event",
+        "police_precinct": "120,",
+        "start_date_time": "2025-09-20T11:00:00.000",
+        "street_closure_type": "N/A",
+        "title": "Westerleigh Folk Festival"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
         "assignment_score": 340,
         "borough": "Manhattan",
         "certified_pin": true,
@@ -6990,6 +7936,55 @@
     {
       "current": {
         "assignment_score": 380,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-05",
+        "display_location": "Carl Schurz Park: Basketball-01   ,Carl Schurz Park: Basketball-02   ,Carl Schurz Park: Hockey-01",
+        "end_date_time": "2026-08-05T22:00:00.000",
+        "event_id": "891324",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-05&assignment=1",
+        "id": "tvpp-9vvx:891324@2026-08-05",
+        "lane": "approved_major",
+        "latitude": 40.77514,
+        "longitude": -73.94354,
+        "map_link": "https://www.google.com/maps?q=40.77514,-73.94354",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "891324"
+        },
+        "start_date_time": "2026-08-05T20:30:00.000",
+        "title": "Sunset Film Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "place_strong:0.98",
+        "season_delta_days:8"
+      ],
+      "match_score": 79,
+      "prior_year": {
+        "borough": "Manhattan",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-08-13",
+        "display_location": "Carl Schurz Park: Basketball-01   ,Carl Schurz Park: Basketball-02 ,Carl Schurz Park: Hockey-01",
+        "end_date_time": "2025-08-13T22:00:00.000",
+        "event_id": "826754",
+        "event_type": "Special Event",
+        "police_precinct": "19,",
+        "start_date_time": "2025-08-13T20:30:00.000",
+        "street_closure_type": "N/A",
+        "title": "Sunset Film Festival"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
         "borough": "Brooklyn",
         "certified_pin": true,
         "coordinate_status": "map_ready",
@@ -7089,6 +8084,56 @@
     },
     {
       "current": {
+        "assignment_score": 380,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-06",
+        "display_location": "6 AVENUE between WEST 42 STREET and WEST 56 STREET, Manhattan, NY",
+        "end_date_time": "2026-09-06T22:00:00",
+        "event_id": "brazilian-day-festival",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-06&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:brazilian-day-festival@2026-09-06",
+        "lane": "approved_major",
+        "latitude": 40.742934,
+        "longitude": -73.989566,
+        "map_link": "https://www.google.com/maps?q=40.742934,-73.989566",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "brazilian-day-festival"
+        },
+        "start_date_time": "2026-09-06T12:00:00",
+        "title": "Brazilian Day Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.73",
+        "place_strong:0.76",
+        "season_delta_days:6",
+        "historical_street_closure_present"
+      ],
+      "match_score": 75,
+      "prior_year": {
+        "borough": "Manhattan",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-08-31",
+        "display_location": "AVENUE OF THE AMERICAS between WEST   42 STREET and WEST   56 STREET,  EAST   46 STREET between MADISON AVENUE and 5 AVENUE,  WEST   46 STREET between 7 AVENUE and 5 AVENUE",
+        "end_date_time": "2025-08-31T18:00:00.000",
+        "event_id": "819978",
+        "event_type": "Street Festival",
+        "police_precinct": "14, 18,",
+        "start_date_time": "2025-08-31T10:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "THE 41ST ANNUAL BRAZILIAN DAY FESTIVAL"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
         "assignment_score": 400,
         "borough": "Queens",
         "certified_pin": true,
@@ -7131,6 +8176,55 @@
         "start_date_time": "2025-08-16T10:30:00.000",
         "street_closure_type": "Full Street Closure",
         "title": "MARCH FOR JESUS"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 400,
+        "borough": null,
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-09-13",
+        "display_location": "3551 69 STREET Queens",
+        "end_date_time": "2026-09-13T15:00:00.000-04:00",
+        "event_id": "1044936",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-13&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1044936@2026-09-13",
+        "lane": "approved_major",
+        "latitude": null,
+        "longitude": null,
+        "map_link": null,
+        "pin_integrity_reason": "missing_coords",
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1044936"
+        },
+        "start_date_time": "2026-09-13T11:00:00.000-04:00",
+        "title": "CENTRAL AMERICAN PARADE"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 73,
+      "prior_year": {
+        "borough": "Queens",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-14",
+        "display_location": "3551 69 STREET, 37 AVENUE between 69 STREET and 87 STREET, 3556 87 STREET,8615 37 AVENUE",
+        "end_date_time": "2025-09-14T15:00:00.000",
+        "event_id": "881373",
+        "event_type": "Parade",
+        "police_precinct": "115,",
+        "start_date_time": "2025-09-14T11:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "CENTRAL AMERICAN PARADE"
       },
       "promotion_allowed": false,
       "public_map_modified": false,
@@ -7379,6 +8473,156 @@
         "start_date_time": "2025-08-16T18:30:00.000",
         "street_closure_type": "Full Street Closure",
         "title": "Religious Feast of Our Lady of ''El Cisne''"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Brooklyn",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-12",
+        "display_location": "84 STREET between RIDGE BOULEVARD and 3 AVENUE, Brooklyn, NY",
+        "end_date_time": "2026-09-12T22:00:00",
+        "event_id": "feast-of-the-cross-bay-ridge",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:feast-of-the-cross-bay-ridge@2026-09-12",
+        "lane": "approved_major",
+        "latitude": 40.6992215,
+        "longitude": -73.96002,
+        "map_link": "https://www.google.com/maps?q=40.6992215,-73.96002",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "feast-of-the-cross-bay-ridge"
+        },
+        "start_date_time": "2026-09-12T12:00:00",
+        "title": "Feast of the Cross (Bay Ridge)"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.78",
+        "place_partial:0.73",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 70,
+      "prior_year": {
+        "borough": "Brooklyn",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-13",
+        "display_location": "8401 RIDGE BOULEVARD, 84 STREET between RIDGE BOULEVARD and 3 AVENUE,  3 AVENUE between 84 STREET and 86 STREET,  86 STREET between 3 AVENUE and RIDGE BOULEVARD,  RIDGE BOULEVARD between 86 STREET and 84 STREET, 8401 RIDGE BOULEVARD",
+        "end_date_time": "2025-09-13T21:30:00.000",
+        "event_id": "887428",
+        "event_type": "Parade",
+        "police_precinct": "68,",
+        "start_date_time": "2025-09-13T20:30:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Feast of the Cross"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Brooklyn",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-13",
+        "display_location": "15 AVENUE between 72 STREET and 73 STREET, Brooklyn, NY",
+        "end_date_time": "2026-09-13T22:00:00",
+        "event_id": "feast-figli-maria-ss-addolorata-bensonhurst",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-13&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:feast-figli-maria-ss-addolorata-bensonhurst@2026-09-13",
+        "lane": "approved_major",
+        "latitude": 40.706663,
+        "longitude": -74.006104,
+        "map_link": "https://www.google.com/maps?q=40.706663,-74.006104",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "feast-figli-maria-ss-addolorata-bensonhurst"
+        },
+        "start_date_time": "2026-09-13T12:00:00",
+        "title": "Feast of Figli Maria SS. Addolorata (Bensonhurst)"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.83",
+        "place_partial:0.71",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 70,
+      "prior_year": {
+        "borough": "Brooklyn",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-14",
+        "display_location": "15 AVENUE between 72 STREET and 73 STREET,  75 STREET between 15 AVENUE and 13 AVENUE,  13 AVENUE between 75 STREET and 69 STREET,  69 STREET between 13 AVENUE and 15 AVENUE,  15 AVENUE between 73 STREET and 72 STREET",
+        "end_date_time": "2025-09-14T18:00:00.000",
+        "event_id": "885625",
+        "event_type": "Parade",
+        "police_precinct": "62, 68,",
+        "start_date_time": "2025-09-14T14:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Feast Figli Maria SS. Addolorata"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Brooklyn",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-13",
+        "display_location": "SUMMIT STREET between HICKS STREET and UNION STREET, Brooklyn, NY",
+        "end_date_time": "2026-09-13T22:00:00",
+        "event_id": "feast-our-lady-of-sorrows-carroll-gardens",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-13&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:feast-our-lady-of-sorrows-carroll-gardens@2026-09-13",
+        "lane": "approved_major",
+        "latitude": 40.691146,
+        "longitude": -73.9982845,
+        "map_link": "https://www.google.com/maps?q=40.691146,-73.9982845",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "feast-our-lady-of-sorrows-carroll-gardens"
+        },
+        "start_date_time": "2026-09-13T12:00:00",
+        "title": "Feast of Our Lady of Sorrows (Carroll Gardens)"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.78",
+        "place_partial:0.73",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 70,
+      "prior_year": {
+        "borough": "Brooklyn",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-14",
+        "display_location": "125 SUMMIT STREET, HICKS STREET between SUMMIT STREET and UNION STREET,  UNION STREET between HICKS STREET and COURT STREET,  COURT STREET between UNION STREET and CARROLL STREET,  CARROLL STREET between COURT STREET and SMITH STREET,  SMITH STREET between CARROLL STREET and 2 PLACE,  2 PLACE between SMITH STREET and COURT STREET,  COURT STREET between 2 PLACE and 4 PLACE,  FOURTH PLACE between COURT STREET and HENRY STREET,  CLINTON STREET between FOURTH PLACE and 1 PLACE,  1 PLACE between HENRY STREET and CLINTON STREET,  SUMMIT STREET between HENRY STREET and HICKS STREET, 125 SUMMIT STREET",
+        "end_date_time": "2025-09-14T20:00:00.000",
+        "event_id": "878162",
+        "event_type": "Religious Event",
+        "police_precinct": "76,",
+        "start_date_time": "2025-09-14T16:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Feast of Our Lady of Sorrows"
       },
       "promotion_allowed": false,
       "public_map_modified": false,
@@ -7679,6 +8923,404 @@
         "start_date_time": "2025-08-16T10:00:00.000",
         "street_closure_type": "Full Street Closure",
         "title": "EIGHTH AVENUE FESTIVAL"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 400,
+        "borough": "Staten Island",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-12",
+        "display_location": "WATCHOGUE ROAD between DELMORE STREET and WADE STREET, Staten Island, NY",
+        "end_date_time": "2026-09-12T22:00:00",
+        "event_id": "car-show-parade-watchogue-staten-island",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:car-show-parade-watchogue-staten-island@2026-09-12",
+        "lane": "approved_major",
+        "latitude": 40.586,
+        "longitude": -74.1341315,
+        "map_link": "https://www.google.com/maps?q=40.586,-74.1341315",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "car-show-parade-watchogue-staten-island"
+        },
+        "start_date_time": "2026-09-12T12:00:00",
+        "title": "Car Show Parade (Watchogue, Staten Island)"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_partial:0.56",
+        "place_strong:0.78",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 68,
+      "prior_year": {
+        "borough": "Staten Island",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-13",
+        "display_location": "366 WATCHOGUE ROAD, EARLEY AVENUE between DELMORE STREET and WADE STREET,  WADE STREET between CRYSTAL AVENUE and EARLEY AVENUE, 366 WATCHOGUE ROAD",
+        "end_date_time": "2025-09-13T15:00:00.000",
+        "event_id": "880668",
+        "event_type": "Parade",
+        "police_precinct": "121,",
+        "start_date_time": "2025-09-13T08:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Car Show Parade"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-12",
+        "display_location": "1 AVENUE between EAST 68 STREET and EAST 79 STREET, Manhattan, NY",
+        "end_date_time": "2026-09-12T22:00:00",
+        "event_id": "upper-east-side-first-avenue-festival",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:upper-east-side-first-avenue-festival@2026-09-12",
+        "lane": "approved_major",
+        "latitude": 40.751724,
+        "longitude": -73.974471,
+        "map_link": "https://www.google.com/maps?q=40.751724,-73.974471",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "upper-east-side-first-avenue-festival"
+        },
+        "start_date_time": "2026-09-12T12:00:00",
+        "title": "Upper East Side First Avenue Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_partial:0.58",
+        "place_strong:0.79",
+        "season_delta_days:2",
+        "historical_street_closure_present"
+      ],
+      "match_score": 68,
+      "prior_year": {
+        "borough": "Manhattan",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-14",
+        "display_location": "LEXINGTON AVENUE between EAST   79 STREET and EAST   96 STREET",
+        "end_date_time": "2025-09-14T18:00:00.000",
+        "event_id": "818781",
+        "event_type": "Street Festival",
+        "police_precinct": "19,",
+        "start_date_time": "2025-09-14T10:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Lexington Avenue Festival"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Bronx",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-19",
+        "display_location": "HOE AVENUE between EAST 167 STREET and HOME STREET, Bronx, NY",
+        "end_date_time": "2026-09-19T22:00:00",
+        "event_id": "parish-family-feast-hoe-avenue",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-19&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:parish-family-feast-hoe-avenue@2026-09-19",
+        "lane": "approved_major",
+        "latitude": 40.7746525,
+        "longitude": -73.8574855,
+        "map_link": "https://www.google.com/maps?q=40.7746525,-73.8574855",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "parish-family-feast-hoe-avenue"
+        },
+        "start_date_time": "2026-09-19T12:00:00",
+        "title": "Parish Family Feast (Soundview, Bronx)"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_partial:0.70",
+        "place_strong:0.92",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 68,
+      "prior_year": {
+        "borough": "Bronx",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-20",
+        "display_location": "HOE AVENUE between EAST  167 STREET and HOME STREET",
+        "end_date_time": "2025-09-20T19:30:00.000",
+        "event_id": "881716",
+        "event_type": "Street Event",
+        "police_precinct": "42,",
+        "start_date_time": "2025-09-20T11:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Parish Family Feast"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-20",
+        "display_location": "ADAM CLAYTON POWELL JR BOULEVARD between WEST 110 STREET and WEST 137 STREET, Manhattan, NY",
+        "end_date_time": "2026-09-20T22:00:00",
+        "event_id": "african-american-day-festival",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-20&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:african-american-day-festival@2026-09-20",
+        "lane": "approved_major",
+        "latitude": 40.8058575,
+        "longitude": -73.943192,
+        "map_link": "https://www.google.com/maps?q=40.8058575,-73.943192",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "african-american-day-festival"
+        },
+        "start_date_time": "2026-09-20T12:00:00",
+        "title": "African American Day Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_partial:0.61",
+        "place_strong:0.93",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 68,
+      "prior_year": {
+        "borough": "Manhattan",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-21",
+        "display_location": "ADAM CLAYTON POWELL JR BOULEVARD between WEST  110 STREET and WEST  116 STREET,  WEST  113 STREET between MALCOLM X BOULEVARD and FREDERICK DOUGLAS BOULEVARD,  ST NICHOLAS AVENUE between WEST  113 STREET and WEST  114 STREET,  WEST  111 STREET between MALCOLM X BOULEVARD and FREDERICK DOUGLAS BOULEVARD,  WEST  112 STREET between MALCOLM X BOULEVARD and FREDERICK DOUGLAS BOULEVARD,  WEST  114 STREET between ADAM CLAYTON POWELL JR BOULEVARD and FREDERICK DOUGLAS BOULEVARD,  WEST  114 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  115 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  110 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  126 STREET between LENOX AVENUE and FREDERICK DOUGLAS BOULEVARD,  FREDERICK DOUGLAS BOULEVARD between WEST  128 STREET and WEST  127 STREET,  LENOX AVENUE between WEST  132 STREET and WEST  133 STREET,  ST NICHOLAS AVENUE between ADAM CLAYTON POWELL JR BOULEVARD and WEST  115 STREET,  LENOX AVENUE between WEST  136 STREET and WEST  140 STREET,  WEST  125 STREET between LENOX AVENUE and ADAM CLAYTON POWELL JR BOULEVARD,  WEST  132 STREET between LENOX AVENUE and FIFTH AVENUE,  ADAM CLAYTON POWELL BOULEVARD between WEST  115 STREET and WEST  141 STREET,  MALCOLM X BOULEVARD between WEST  136 STREET and WEST  140 STREET,  WEST  135 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  136 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  137 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  ADAM CLAYTON POWELL JR BOULEVARD between WEST  125 STREET and WEST  126 STREET",
+        "end_date_time": "2025-09-21T18:00:00.000",
+        "event_id": "832867",
+        "event_type": "Parade",
+        "police_precinct": "22, 28, 32,",
+        "start_date_time": "2025-09-21T12:30:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "The 56th Annual African American Day Parade"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Bronx",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-13",
+        "display_location": "Crotona Park, Bronx, NY",
+        "end_date_time": "2026-09-13T22:00:00",
+        "event_id": "central-american-festival-crotona-park",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-13&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:central-american-festival-crotona-park@2026-09-13",
+        "lane": "approved_major",
+        "latitude": 40.8408,
+        "longitude": -73.8944,
+        "map_link": "https://www.google.com/maps?q=40.8408,-73.8944",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "central-american-festival-crotona-park"
+        },
+        "start_date_time": "2026-09-13T12:00:00",
+        "title": "Central American Festival (Crotona Park)"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.79",
+        "place_partial:0.67",
+        "season_delta_days:1"
+      ],
+      "match_score": 67,
+      "prior_year": {
+        "borough": "Bronx",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-14",
+        "display_location": "Crotona Park: Event Lawn No BBQ",
+        "end_date_time": "2025-09-14T18:00:00.000",
+        "event_id": "810552",
+        "event_type": "Special Event",
+        "police_precinct": "42,",
+        "start_date_time": "2025-09-14T13:00:00.000",
+        "street_closure_type": "N/A",
+        "title": "CENTRAL AMERICAN FESTIVAL"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Brooklyn",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-13",
+        "display_location": "5 AVENUE between 44 STREET and 59 STREET, Brooklyn, NY",
+        "end_date_time": "2026-09-13T22:00:00",
+        "event_id": "sunset-park-fifth-avenue-festival",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-13&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:sunset-park-fifth-avenue-festival@2026-09-13",
+        "lane": "approved_major",
+        "latitude": 40.7222305,
+        "longitude": -73.976435,
+        "map_link": "https://www.google.com/maps?q=40.7222305,-73.976435",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "sunset-park-fifth-avenue-festival"
+        },
+        "start_date_time": "2026-09-13T12:00:00",
+        "title": "Sunset Park Fifth Avenue Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.89",
+        "place_strong:0.88",
+        "season_delta_days:8",
+        "historical_street_closure_present"
+      ],
+      "match_score": 67,
+      "prior_year": {
+        "borough": "Brooklyn",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-21",
+        "display_location": "5 AVENUE between 44 STREET and 59 STREET",
+        "end_date_time": "2025-09-21T18:00:00.000",
+        "event_id": "818489",
+        "event_type": "Street Festival",
+        "police_precinct": "72,",
+        "start_date_time": "2025-09-21T10:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Sunset Park 5th Ave Festival"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-19",
+        "display_location": "Morningside Park: West 113th St Picnic Area   ,Morningside Park: West 114th BBQ Area 03 ,Morningside Park: West 116th Street BBQ Area 04 ,Morningside Park: Morningside Park-Basketball-01",
+        "end_date_time": "2026-09-19T18:00:00.000",
+        "event_id": "917480",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-19&assignment=1",
+        "id": "tvpp-9vvx:917480@2026-09-19",
+        "lane": "approved_major",
+        "latitude": 40.80576,
+        "longitude": -73.95838,
+        "map_link": "https://www.google.com/maps?q=40.80576,-73.95838",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "917480"
+        },
+        "start_date_time": "2026-09-19T12:00:00.000",
+        "title": "Common Ground Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.75",
+        "place_partial:0.73",
+        "season_delta_days:1"
+      ],
+      "match_score": 67,
+      "prior_year": {
+        "borough": "Manhattan",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-20",
+        "display_location": "Morningside Park: West 114th BBQ Area 03   ,Morningside Park: West 113th St Picnic Area ,Morningside Park: West 116th Street BBQ Area 04 ,Morningside Park: Morningside Park-Basketball-01",
+        "end_date_time": "2025-09-20T18:00:00.000",
+        "event_id": "852346",
+        "event_type": "Special Event",
+        "police_precinct": "26,",
+        "start_date_time": "2025-09-20T12:00:00.000",
+        "street_closure_type": "N/A",
+        "title": "Common Ground Festival in Morningside Park"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Queens",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-27",
+        "display_location": "30 AVENUE between 29 STREET and 41 STREET, Queens, NY",
+        "end_date_time": "2026-09-27T22:00:00",
+        "event_id": "astoria-street-festival",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-27&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:astoria-street-festival@2026-09-27",
+        "lane": "approved_major",
+        "latitude": 40.748625,
+        "longitude": -73.982013,
+        "map_link": "https://www.google.com/maps?q=40.748625,-73.982013",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "astoria-street-festival"
+        },
+        "start_date_time": "2026-09-27T12:00:00",
+        "title": "Astoria Street Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.78",
+        "place_partial:0.73",
+        "season_delta_days:7",
+        "historical_street_closure_present"
+      ],
+      "match_score": 63,
+      "prior_year": {
+        "borough": "Queens",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-20",
+        "display_location": "38 AVE  between MAIN STREET  and PRINCE STREET",
+        "end_date_time": "2025-09-20T18:00:00.000",
+        "event_id": "777251",
+        "event_type": "Single Block Festival",
+        "police_precinct": "109,",
+        "start_date_time": "2025-09-20T10:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Indonesian Street Festival"
       },
       "promotion_allowed": false,
       "public_map_modified": false,
@@ -8094,6 +9736,57 @@
     },
     {
       "current": {
+        "assignment_score": 340,
+        "borough": "Brooklyn",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-30",
+        "display_location": "4 STREET between 5 AVENUE and DEAD END",
+        "end_date_time": "2026-08-30T18:00:00.000",
+        "event_id": "893705",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-30&assignment=1",
+        "id": "tvpp-9vvx:893705@2026-08-30",
+        "lane": "approved_major",
+        "latitude": 40.66991,
+        "longitude": -73.979066,
+        "map_link": "https://www.google.com/maps?q=40.66991,-73.979066",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "893705"
+        },
+        "start_date_time": "2026-08-30T06:00:00.000",
+        "title": "Down to Earth Park Slope Farmers Market"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_partial:0.63",
+        "place_partial:0.64",
+        "season_delta_days:0",
+        "event_type_compatible",
+        "historical_street_closure_present"
+      ],
+      "match_score": 62,
+      "prior_year": {
+        "borough": "Brooklyn",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-08-30",
+        "display_location": "SCHENCK AVENUE between NEW LOTS AVENUE and LIVONIA AVENUE",
+        "end_date_time": "2025-08-30T17:30:00.000",
+        "event_id": "836361",
+        "event_type": "Farmers Market",
+        "police_precinct": "75,",
+        "start_date_time": "2025-08-30T07:00:00.000",
+        "street_closure_type": "Sidewalk and Curb Lane Closure",
+        "title": "East New York Farmers Market"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
         "assignment_score": 400,
         "borough": "Queens",
         "certified_pin": true,
@@ -8194,203 +9887,53 @@
     },
     {
       "current": {
-        "assignment_score": 340,
-        "borough": "Manhattan",
+        "assignment_score": 380,
+        "borough": "Queens",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-07-31",
-        "display_location": "LENOX AVENUE between WEST  136 STREET and WEST  137 STREET",
-        "end_date_time": "2026-07-31T15:00:00.000",
-        "event_id": "914361",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-31&assignment=1",
-        "id": "tvpp-9vvx:914361@2026-07-31",
+        "date": "2026-09-06",
+        "display_location": "37 AVENUE between 83 STREET and 89 STREET, Queens, NY",
+        "end_date_time": "2026-09-06T22:00:00",
+        "event_id": "jackson-heights-37th-avenue-festival",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-06&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:jackson-heights-37th-avenue-festival@2026-09-06",
         "lane": "approved_major",
-        "latitude": 40.815549,
-        "longitude": -73.941669,
-        "map_link": "https://www.google.com/maps?q=40.815549,-73.941669",
+        "latitude": 40.7682325,
+        "longitude": -73.918968,
+        "map_link": "https://www.google.com/maps?q=40.7682325,-73.918968",
         "pin_integrity_reason": "ok_nyc_certified",
         "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "914361"
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "jackson-heights-37th-avenue-festival"
         },
-        "start_date_time": "2026-07-31T08:00:00.000",
-        "title": "HHFM Harlem Hospital Market"
+        "start_date_time": "2026-09-06T12:00:00",
+        "title": "Jackson Heights 37th Avenue Festival"
       },
       "location_cache_modified": false,
       "match_reasons": [
-        "place_strong:0.84",
-        "season_delta_days:2",
-        "event_type_compatible",
-        "historical_street_closure_present"
-      ],
-      "match_score": 58,
-      "prior_year": {
-        "borough": "Manhattan",
-        "cemsid": null,
-        "dataset": "bkfu-528j",
-        "date": "2025-07-29",
-        "display_location": "FT WASHINGTON AVENUE between WEST  168 STREET and WEST  169 STREET",
-        "end_date_time": "2025-07-29T18:00:00.000",
-        "event_id": "835493",
-        "event_type": "Farmers Market",
-        "police_precinct": "33,",
-        "start_date_time": "2025-07-29T08:00:00.000",
-        "street_closure_type": "Sidewalk and Curb Lane Closure",
-        "title": "Ft Washington Greenmarket Tuesday"
-      },
-      "promotion_allowed": false,
-      "public_map_modified": false,
-      "recurrence_label": "weak"
-    },
-    {
-      "current": {
-        "assignment_score": 340,
-        "borough": "Manhattan",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-07-31",
-        "display_location": "LENOX AVENUE between WEST  136 STREET and WEST  137 STREET",
-        "end_date_time": "2026-07-31T15:00:00.000",
-        "event_id": "914361",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-31&assignment=1",
-        "id": "tvpp-9vvx:914361@2026-07-31",
-        "lane": "approved_major",
-        "latitude": 40.815549,
-        "longitude": -73.941669,
-        "map_link": "https://www.google.com/maps?q=40.815549,-73.941669",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "914361"
-        },
-        "start_date_time": "2026-07-31T08:00:00.000",
-        "title": "HHFM Harlem Hospital Market"
-      },
-      "location_cache_modified": false,
-      "match_reasons": [
+        "name_partial:0.58",
         "place_strong:0.80",
-        "season_delta_days:1",
-        "event_type_compatible",
+        "season_delta_days:5",
         "historical_street_closure_present"
       ],
-      "match_score": 58,
+      "match_score": 61,
       "prior_year": {
-        "borough": "Manhattan",
+        "borough": "Queens",
         "cemsid": null,
         "dataset": "bkfu-528j",
-        "date": "2025-07-30",
-        "display_location": "MADISON AVENUE between EAST   98 STREET and EAST   99 STREET",
-        "end_date_time": "2025-07-30T17:00:00.000",
-        "event_id": "818264",
-        "event_type": "Farmers Market",
-        "police_precinct": "23,",
-        "start_date_time": "2025-07-30T08:00:00.000",
-        "street_closure_type": "Sidewalk and Curb Lane Closure",
-        "title": "Mt Sinai Greenmarket Wednesday"
+        "date": "2025-09-01",
+        "display_location": "30 AVENUE between 29 STREET and 41 STREET",
+        "end_date_time": "2025-09-01T18:00:00.000",
+        "event_id": "818791",
+        "event_type": "Street Festival",
+        "police_precinct": "114,",
+        "start_date_time": "2025-09-01T10:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "30th Avenue Labor Day Festival"
       },
       "promotion_allowed": false,
       "public_map_modified": false,
-      "recurrence_label": "weak"
-    },
-    {
-      "current": {
-        "assignment_score": 340,
-        "borough": "Manhattan",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-07-31",
-        "display_location": "SECOND AVENUE between EAST   97 STREET and EAST   99 STREET",
-        "end_date_time": "2026-07-31T15:00:00.000",
-        "event_id": "914469",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-31&assignment=1",
-        "id": "tvpp-9vvx:914469@2026-07-31",
-        "lane": "approved_major",
-        "latitude": 40.784909,
-        "longitude": -73.946343,
-        "map_link": "https://www.google.com/maps?q=40.784909,-73.946343",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "914469"
-        },
-        "start_date_time": "2026-07-31T08:00:00.000",
-        "title": "HHFM Metropolitan Market"
-      },
-      "location_cache_modified": false,
-      "match_reasons": [
-        "place_strong:0.80",
-        "season_delta_days:2",
-        "event_type_compatible",
-        "historical_street_closure_present"
-      ],
-      "match_score": 58,
-      "prior_year": {
-        "borough": "Manhattan",
-        "cemsid": null,
-        "dataset": "bkfu-528j",
-        "date": "2025-07-29",
-        "display_location": "FT WASHINGTON AVENUE between WEST  168 STREET and WEST  169 STREET",
-        "end_date_time": "2025-07-29T18:00:00.000",
-        "event_id": "835493",
-        "event_type": "Farmers Market",
-        "police_precinct": "33,",
-        "start_date_time": "2025-07-29T08:00:00.000",
-        "street_closure_type": "Sidewalk and Curb Lane Closure",
-        "title": "Ft Washington Greenmarket Tuesday"
-      },
-      "promotion_allowed": false,
-      "public_map_modified": false,
-      "recurrence_label": "weak"
-    },
-    {
-      "current": {
-        "assignment_score": 340,
-        "borough": "Manhattan",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-07-31",
-        "display_location": "SECOND AVENUE between EAST   97 STREET and EAST   99 STREET",
-        "end_date_time": "2026-07-31T15:00:00.000",
-        "event_id": "914469",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-31&assignment=1",
-        "id": "tvpp-9vvx:914469@2026-07-31",
-        "lane": "approved_major",
-        "latitude": 40.784909,
-        "longitude": -73.946343,
-        "map_link": "https://www.google.com/maps?q=40.784909,-73.946343",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "914469"
-        },
-        "start_date_time": "2026-07-31T08:00:00.000",
-        "title": "HHFM Metropolitan Market"
-      },
-      "location_cache_modified": false,
-      "match_reasons": [
-        "place_strong:0.91",
-        "season_delta_days:1",
-        "event_type_compatible",
-        "historical_street_closure_present"
-      ],
-      "match_score": 58,
-      "prior_year": {
-        "borough": "Manhattan",
-        "cemsid": null,
-        "dataset": "bkfu-528j",
-        "date": "2025-07-30",
-        "display_location": "MADISON AVENUE between EAST   98 STREET and EAST   99 STREET",
-        "end_date_time": "2025-07-30T17:00:00.000",
-        "event_id": "818264",
-        "event_type": "Farmers Market",
-        "police_precinct": "23,",
-        "start_date_time": "2025-07-30T08:00:00.000",
-        "street_closure_type": "Sidewalk and Curb Lane Closure",
-        "title": "Mt Sinai Greenmarket Wednesday"
-      },
-      "promotion_allowed": false,
-      "public_map_modified": false,
-      "recurrence_label": "weak"
+      "recurrence_label": "possible"
     },
     {
       "current": {
@@ -10793,49 +12336,98 @@
     },
     {
       "current": {
-        "assignment_score": 380,
-        "borough": "Manhattan",
+        "assignment_score": 340,
+        "borough": "Brooklyn",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-07-31",
-        "display_location": "EAST    8 STREET between AVENUE C and AVENUE D",
-        "end_date_time": "2026-07-31T19:00:00.000",
-        "event_id": "949295",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-31&assignment=1",
-        "id": "tvpp-9vvx:949295@2026-07-31",
+        "date": "2026-08-30",
+        "display_location": "4 STREET between 5 AVENUE and DEAD END",
+        "end_date_time": "2026-08-30T18:00:00.000",
+        "event_id": "893705",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-30&assignment=1",
+        "id": "tvpp-9vvx:893705@2026-08-30",
         "lane": "approved_major",
-        "latitude": 40.731865,
-        "longitude": -73.9958,
-        "map_link": "https://www.google.com/maps?q=40.731865,-73.9958",
+        "latitude": 40.66991,
+        "longitude": -73.979066,
+        "map_link": "https://www.google.com/maps?q=40.66991,-73.979066",
         "pin_integrity_reason": "ok_nyc_certified",
         "source": {
           "dataset": "tvpp-9vvx",
-          "source_event_id": "949295"
+          "source_event_id": "893705"
         },
-        "start_date_time": "2026-07-31T16:00:00.000",
-        "title": "LES Girls Club Summer Street Fair"
+        "start_date_time": "2026-08-30T06:00:00.000",
+        "title": "Down to Earth Park Slope Farmers Market"
       },
       "location_cache_modified": false,
       "match_reasons": [
-        "name_partial:0.56",
-        "place_partial:0.57",
-        "season_delta_days:2",
+        "place_strong:0.82",
+        "season_delta_days:0",
+        "event_type_compatible",
         "historical_street_closure_present"
       ],
-      "match_score": 56,
+      "match_score": 58,
       "prior_year": {
-        "borough": "Manhattan",
+        "borough": "Brooklyn",
         "cemsid": null,
         "dataset": "bkfu-528j",
-        "date": "2025-08-02",
-        "display_location": "LAFAYETTE STREET between CENTRE STREET and CANAL STREET,  LAFAYETTE STREET between CANAL STREET and E 10 STREET,  4 AVENUE between E 10 ST and E 14 ST,  PARK AVENUE SOUTH between E 14 ST and E 42 ST,  PARK AVENUE between E 42 ST and E 110 ST,  110 ST between PARK AVENUE and BROADWAY,  BROADWAY between W 110 ST and DYCKMAN ST,  BROOKLYN BRIDGE DRIVE between TILLARY STREET and CENTRE STREET,  ADAM CLAYTON POWELL BLVD between 110 STREET and 125TH ST,  W 114 STREET between BROADWAY and AMSTERDAM DR, Astor Place Plaza (North): Astor Place Plaza (North) 8 STREET between 4 AVE and LAFAYETTE ST, Astor Place Plaza (South): Astor Place Plaza (South) EAST    8 STREET between 4 AVENUE and LAFAYETTE STREET, Plaza de Las Americas: Plaza de Las Americas WEST  175 STREET between BROADWAY and WADSWORTH AVENUE,  WEST 112 STREET between BROADWAY and AMSTERDAM AVENUE,  WEST  144 STREET between BROADWAY and AMSTERDAM AVENUE, Mitchell Square: Mitchell Square , WEST  180 STREET between BROADWAY and WADSWORTH AVENUE, Quisqueya Plaza: Quisqueya Plaza Dyckman Street  between Broadway and Seaman Avenue,  THAYER STREET between BROADWAY and SHERMAN AVENUE,  DYCKMAN STREET between SEAMAN AVENUE and HENSHAW STREET,  CENTRE STREET between WORTH STREET and DUANE STREET,  EAST   26 STREET between MADISON AVENUE and LEXINGTON AVENUE,  EAST   27 STREET between MADISON AVENUE and LEXINGTON AVENUE,  EAST   51 STREET between MADISON AVENUE and LEXINGTON AVENUE,  EAST   52 STREET between MADISON AVENUE and LEXINGTON AVENUE,  EAST  109 STREET between PARK AVENUE and LEXINGTON AVENUE,  EAST  109 STREET between MADISON AVENUE and PARK AVENUE,  ASTOR PLACE between BROADWAY and LAFAYETTE STREET,  COOPER SQUARE between E 6TH STREET and E 8TH STREET,  ASTOR PLACE between E 8 STREET and E 9 STREET,  WEST  126 STREET between BROADWAY and OLD BROADWAY,  READE STREET between BROADWAY and ELK STREET,  CHAMBERS STREET between CENTRE STREET and ELK STREET,  ASTOR PLACE between BROADWAY and LAFAYETTE STREET,  BROADWAY",
-        "end_date_time": "2025-08-02T16:00:00.000",
-        "event_id": "837259",
-        "event_type": "Street Event",
-        "police_precinct": "1, 13, 14, 17, 18, 19, 22, 23, 24, 26, 28, 30, 33, 34, 5, 6, 84, 9,",
-        "start_date_time": "2025-08-02T07:00:00.000",
+        "date": "2025-08-30",
+        "display_location": "60 STREET between 3 AVENUE and 4 AVENUE",
+        "end_date_time": "2025-08-30T17:00:00.000",
+        "event_id": "835479",
+        "event_type": "Farmers Market",
+        "police_precinct": "72,",
+        "start_date_time": "2025-08-30T08:00:00.000",
+        "street_closure_type": "Sidewalk and Curb Lane Closure",
+        "title": "4th Avenue Sunset Park Greenmarket Saturday"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "weak"
+    },
+    {
+      "current": {
+        "assignment_score": 400,
+        "borough": null,
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-09-13",
+        "display_location": "3551 69 STREET Queens",
+        "end_date_time": "2026-09-13T15:00:00.000-04:00",
+        "event_id": "1044936",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-13&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1044936@2026-09-13",
+        "lane": "approved_major",
+        "latitude": null,
+        "longitude": null,
+        "map_link": null,
+        "pin_integrity_reason": "missing_coords",
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1044936"
+        },
+        "start_date_time": "2026-09-13T11:00:00.000-04:00",
+        "title": "CENTRAL AMERICAN PARADE"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.79",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 58,
+      "prior_year": {
+        "borough": "Bronx",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-14",
+        "display_location": "1976 CROTONA PARKWAY, SOUTHERN BOULEVARD between EAST TREMONT AVENUE and BOSTON ROAD,  BOSTON ROAD between SOUTHERN BOULEVARD and CHARLOTTE STREET ,  CHARLOTTE STREET between BOSTON ROAD and CROTONA PARK EAST",
+        "end_date_time": "2025-09-14T13:30:00.000",
+        "event_id": "830425",
+        "event_type": "Parade",
+        "police_precinct": "42, 48,",
+        "start_date_time": "2025-09-14T12:00:00.000",
         "street_closure_type": "Full Street Closure",
-        "title": "Open Streets: Summer Streets - Manhattan 1"
+        "title": "29th Annual Central American Parade"
       },
       "promotion_allowed": false,
       "public_map_modified": false,
@@ -11044,6 +12636,106 @@
     {
       "current": {
         "assignment_score": 380,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-12",
+        "display_location": "1 AVENUE between EAST 68 STREET and EAST 79 STREET, Manhattan, NY",
+        "end_date_time": "2026-09-12T22:00:00",
+        "event_id": "upper-east-side-first-avenue-festival",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:upper-east-side-first-avenue-festival@2026-09-12",
+        "lane": "approved_major",
+        "latitude": 40.751724,
+        "longitude": -73.974471,
+        "map_link": "https://www.google.com/maps?q=40.751724,-73.974471",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "upper-east-side-first-avenue-festival"
+        },
+        "start_date_time": "2026-09-12T12:00:00",
+        "title": "Upper East Side First Avenue Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_partial:0.67",
+        "place_partial:0.66",
+        "season_delta_days:0",
+        "historical_street_closure_present"
+      ],
+      "match_score": 56,
+      "prior_year": {
+        "borough": "Manhattan",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-12",
+        "display_location": "GRAND STREET between WILLETT STREET and PITT STREET",
+        "end_date_time": "2025-09-12T15:30:00.000",
+        "event_id": "848972",
+        "event_type": "Farmers Market",
+        "police_precinct": "7,",
+        "start_date_time": "2025-09-12T08:30:00.000",
+        "street_closure_type": "Sidewalk and Curb Lane Closure",
+        "title": "Lower East Side Farmstand Friday"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "weak"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Queens",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-19",
+        "display_location": "82 STREET between ROOSEVELT AVENUE and BAXTER AVENUE, Queens, NY",
+        "end_date_time": "2026-09-19T22:00:00",
+        "event_id": "viva-la-comida-festival",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-19&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:viva-la-comida-festival@2026-09-19",
+        "lane": "approved_major",
+        "latitude": 40.7661615,
+        "longitude": -73.925988,
+        "map_link": "https://www.google.com/maps?q=40.7661615,-73.925988",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "viva-la-comida-festival"
+        },
+        "start_date_time": "2026-09-19T12:00:00",
+        "title": "Viva La Comida Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_partial:0.55",
+        "place_partial:0.62",
+        "season_delta_days:2",
+        "historical_street_closure_present"
+      ],
+      "match_score": 56,
+      "prior_year": {
+        "borough": "Queens",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-21",
+        "display_location": "26 STREET between 23 AVENUE and DITMARS BOULEVARD",
+        "end_date_time": "2025-09-21T22:00:00.000",
+        "event_id": "825780",
+        "event_type": "Street Festival",
+        "police_precinct": "114,",
+        "start_date_time": "2025-09-21T17:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "SAINT MARKELLAS FESTIVAL"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "weak"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
         "borough": "Queens",
         "certified_pin": true,
         "coordinate_status": "map_ready",
@@ -11140,6 +12832,54 @@
     {
       "current": {
         "assignment_score": 380,
+        "borough": "Queens",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-02",
+        "display_location": "Roy Wilkins Park: Event Space Yellow",
+        "end_date_time": "2026-08-02T22:00:00.000",
+        "event_id": "887470",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-02&assignment=1",
+        "id": "tvpp-9vvx:887470@2026-08-02",
+        "lane": "approved_major",
+        "latitude": 40.68791,
+        "longitude": -73.77205,
+        "map_link": "https://www.google.com/maps?q=40.68791,-73.77205",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "887470"
+        },
+        "start_date_time": "2026-08-02T15:00:00.000",
+        "title": "St Albans Jazz Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "season_delta_days:14"
+      ],
+      "match_score": 55,
+      "prior_year": {
+        "borough": "Queens",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-07-19",
+        "display_location": "Archie Spigner Park: Archie Spigner Park",
+        "end_date_time": "2025-07-19T21:30:00.000",
+        "event_id": "814010",
+        "event_type": "Special Event",
+        "police_precinct": "113,",
+        "start_date_time": "2025-07-19T15:30:00.000",
+        "street_closure_type": "N/A",
+        "title": "St Albans Jazz Festival"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "weak"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
         "borough": "Bronx",
         "certified_pin": true,
         "coordinate_status": "map_ready",
@@ -11184,6 +12924,154 @@
       "promotion_allowed": false,
       "public_map_modified": false,
       "recurrence_label": "weak"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Queens",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-05",
+        "display_location": "Major Mark Park: Major Mark Park",
+        "end_date_time": "2026-09-05T18:00:00.000",
+        "event_id": "948787",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-05&assignment=1",
+        "id": "tvpp-9vvx:948787@2026-09-05",
+        "lane": "approved_major",
+        "latitude": 40.71167,
+        "longitude": -73.78854,
+        "map_link": "https://www.google.com/maps?q=40.71167,-73.78854",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "948787"
+        },
+        "start_date_time": "2026-09-05T16:30:00.000",
+        "title": "Janmastami Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.73",
+        "season_delta_days:2"
+      ],
+      "match_score": 55,
+      "prior_year": {
+        "borough": "Queens",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-07",
+        "display_location": "Athens Square: Stage Area",
+        "end_date_time": "2025-09-07T19:00:00.000",
+        "event_id": "808526",
+        "event_type": "Special Event",
+        "police_precinct": "114,",
+        "start_date_time": "2025-09-07T16:00:00.000",
+        "street_closure_type": "N/A",
+        "title": "Music Festival"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "weak"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-06",
+        "display_location": "6 AVENUE between WEST 42 STREET and WEST 56 STREET, Manhattan, NY",
+        "end_date_time": "2026-09-06T22:00:00",
+        "event_id": "brazilian-day-festival",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-06&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:brazilian-day-festival@2026-09-06",
+        "lane": "approved_major",
+        "latitude": 40.742934,
+        "longitude": -73.989566,
+        "map_link": "https://www.google.com/maps?q=40.742934,-73.989566",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "brazilian-day-festival"
+        },
+        "start_date_time": "2026-09-06T12:00:00",
+        "title": "Brazilian Day Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.81",
+        "place_partial:0.58",
+        "season_delta_days:8",
+        "historical_street_closure_present"
+      ],
+      "match_score": 55,
+      "prior_year": {
+        "borough": "Manhattan",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-14",
+        "display_location": "BROADWAY between LIBERTY STREET and BATTERY PLACE,  WHITEHALL STREET between STONE STREET and MORRIS STREET",
+        "end_date_time": "2025-09-14T18:00:00.000",
+        "event_id": "820013",
+        "event_type": "Street Festival",
+        "police_precinct": "1,",
+        "start_date_time": "2025-09-14T10:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "ROMANIA DAY FESTIVAL"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "weak"
+    },
+    {
+      "current": {
+        "assignment_score": 380,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-27",
+        "display_location": "MADISON AVENUE between EAST 23 STREET and EAST 27 STREET, Manhattan, NY",
+        "end_date_time": "2026-09-27T22:00:00",
+        "event_id": "muslim-day-festival",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-27&assignment=1",
+        "id": "review_supplemental:nyc-projected-feast-reference:muslim-day-festival@2026-09-27",
+        "lane": "approved_major",
+        "latitude": 40.7428905,
+        "longitude": -73.986065,
+        "map_link": "https://www.google.com/maps?q=40.7428905,-73.986065",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "source": {
+          "dataset": "nyc-projected-feast-reference",
+          "source_event_id": "muslim-day-festival"
+        },
+        "start_date_time": "2026-09-27T12:00:00",
+        "title": "Muslim Day Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.77",
+        "place_partial:0.60",
+        "season_delta_days:13",
+        "historical_street_closure_present"
+      ],
+      "match_score": 55,
+      "prior_year": {
+        "borough": "Manhattan",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-14",
+        "display_location": "BROADWAY between LIBERTY STREET and BATTERY PLACE,  WHITEHALL STREET between STONE STREET and MORRIS STREET",
+        "end_date_time": "2025-09-14T18:00:00.000",
+        "event_id": "820013",
+        "event_type": "Street Festival",
+        "police_precinct": "1,",
+        "start_date_time": "2025-09-14T10:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "ROMANIA DAY FESTIVAL"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "weak"
     }
   ],
   "matching_rules_documentation": [
@@ -11198,7 +13086,7 @@
   "premium_label": "Viral Recurrence Memory (premium/operator)",
   "promotion_allowed": false,
   "public_map_modified": false,
-  "reference_today_nyc": "2026-07-31",
+  "reference_today_nyc": "2026-08-01",
   "schema_version": "photographer-viral-recurrence-matches-v1",
   "staged_feed_modified": false
 }
