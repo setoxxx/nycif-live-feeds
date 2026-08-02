@@ -2,43 +2,58 @@ name: ADR-0013 Approximate Marker Audit
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/adr0013-approximate-audit.yml'
-      - 'scripts/build_approximate_municipality_stacks.py'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  repair-and-regenerate:
-    if: github.event_name == 'pull_request'
+  audit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feat/adr-0013-approximate-markers
-          fetch-depth: 0
+          ref: ${{ github.ref_name }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Correct list anchor and regenerate
+      - name: Regenerate approximate GeoJSON deterministically
+        run: |
+          python3 scripts/build_approximate_municipality_stacks.py
+          git diff --exit-code -- data/schema-v1-discovery/approximate/approximate-stacks.json
+      - name: Run approximate marker tests
+        run: |
+          PYTHONPATH=. python3 -m unittest tests.test_build_approximate_municipality_stacks
+          python3 -m unittest discover -s tests/test_enigma_shadow2 -p 'test_*.py'
+      - name: Run SHADOW-2 audit
+        run: |
+          export PYTHONPATH="${PYTHONPATH}:$(pwd)"
+          python3 -m enigma.shadow2.audit --output-dir /tmp/adr0013-audit
+      - name: Verify ADR-0013 safety and counts
         run: |
           python3 - <<'PY'
+          import json
           from pathlib import Path
-          path=Path('scripts/build_approximate_municipality_stacks.py')
-          text=path.read_text(encoding='utf-8')
-          old="'list_view_href': '#event-list'"
-          new="'list_view_href': '#eventList'"
-          if old not in text:
-              raise SystemExit('expected list anchor not found')
-          path.write_text(text.replace(old,new,1),encoding='utf-8')
+          d=json.loads(Path('data/schema-v1-discovery/approximate/approximate-stacks.json').read_text())
+          c=d['counts']
+          assert c['approximate_area']==1292, c
+          assert c['park_level_anchor']==325, c
+          assert c['visible_approximate_occurrences']==1617, c
+          assert c['excluded']['unresolved']==170, c
+          assert d['source_contracts']['approximate-clustered-events']['cluster'] is True
+          assert d['source_contracts']['approximate-facility-events']['cluster'] is False
+          assert not d['safety']['map_ready']
+          assert not d['safety']['map_safe']
+          assert not d['safety']['promotion_allowed']
+          assert not d['safety']['unresolved_geometry_emitted']
+          assert all(f['properties']['coordinate_status']=='approximate' for f in d['features'])
+          assert all(f['properties']['promotion_allowed'] is False for f in d['features'])
+          assert all(f['properties']['list_view_href']=='#eventList' for f in d['features'])
+          print(json.dumps(c, indent=2))
           PY
-          python3 scripts/build_approximate_municipality_stacks.py
-          PYTHONPATH=. python3 -m unittest tests.test_build_approximate_municipality_stacks
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add scripts/build_approximate_municipality_stacks.py data/schema-v1-discovery/approximate/approximate-stacks.json
-          git commit -m "fix(adr-0013): target the actual event list"
-          git push origin HEAD:feat/adr-0013-approximate-markers
+      - uses: actions/upload-artifact@v4
+        with:
+          name: adr0013-approximate-audit
+          path: |
+            data/schema-v1-discovery/approximate/approximate-stacks.json
+            /tmp/adr0013-audit/
+          retention-days: 14
