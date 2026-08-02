@@ -47,6 +47,24 @@ _BOROUGH_TEXT_PATTERNS = {
 }
 _LAT_KEYS = ("latitude", "lat")
 _LNG_KEYS = ("longitude", "lng", "lon", "long")
+_FACILITY_PATTERNS = {
+    "park": re.compile(r"\bpark\b", re.IGNORECASE),
+    "playground": re.compile(r"\bplayground\b", re.IGNORECASE),
+    "pool": re.compile(r"\bpool\b", re.IGNORECASE),
+    "recreation_center": re.compile(r"\b(?:recreation\s+center|rec\s+center)\b", re.IGNORECASE),
+    "field": re.compile(r"\bfields?\b", re.IGNORECASE),
+    "court": re.compile(r"\bcourts?\b", re.IGNORECASE),
+    "visitor_center": re.compile(r"\bvisitor\s+center\b", re.IGNORECASE),
+    "nature_center": re.compile(r"\bnature\s+center\b", re.IGNORECASE),
+    "gymnasium": re.compile(r"\bgymnasium\b", re.IGNORECASE),
+}
+_RELATIONAL_PATTERNS = {
+    "in_phrase": re.compile(r"\bin\b", re.IGNORECASE),
+    "at_phrase": re.compile(r"\bat\b", re.IGNORECASE),
+    "entrance_to": re.compile(r"\bentrance\s+to\b", re.IGNORECASE),
+}
+_DUPLICATE_CONTAINER_PATTERN = re.compile(r"^(.+?)\s+in\s+\1$", re.IGNORECASE)
+_CONTAINER_SPLIT_PATTERN = re.compile(r"\s+(?:in|at)\s+", re.IGNORECASE)
 
 
 def _counter_dict(counter: Counter[str]) -> dict[str, int]:
@@ -208,6 +226,238 @@ def _source_borough_from_raw(raw_matches: list[dict[str, Any]]) -> tuple[str | N
     return next(iter(candidates)), "+".join(sorted(sources)) or "raw_source"
 
 
+def build_unresolved_diagnostics(
+    review_list_only: list[dict[str, Any]],
+    raw_index: dict[tuple[str, str], list[dict[str, Any]]],
+) -> dict[str, Any]:
+    """Diagnose classifier-produced unresolved list-only occurrences without promotion."""
+    source_distribution: Counter[str] = Counter()
+    evidence_reasons: Counter[str] = Counter()
+    pipeline_reasons: Counter[str] = Counter()
+    facility_counts: Counter[str] = Counter()
+    relational_counts: Counter[str] = Counter()
+    unique_identities: set[tuple[str, str]] = set()
+    unique_identities_with_raw_coordinates: set[tuple[str, str]] = set()
+    samples: list[dict[str, Any]] = []
+
+    diagnostics: dict[str, Any] = {
+        "total_unresolved": 0,
+        "location_text": {"present": 0, "empty": 0},
+        "borough_state": {"null": 0, "populated": 0},
+        "facility_within_park_candidates": 0,
+        "duplicate_facility_container": 0,
+        "raw_to_projected_coordinate_trace": {
+            "raw_identity_match_occurrences": 0,
+            "raw_identity_missing_occurrences": 0,
+            "unresolved_occurrences_with_raw_coordinates": 0,
+            "unresolved_occurrences_with_projected_coordinates": 0,
+            "coordinate_loss_candidate_occurrences": 0,
+            "unique_source_identities": 0,
+            "unique_source_identities_with_raw_coordinates": 0,
+            "parks_unresolved_occurrences": 0,
+            "parks_raw_identity_match_occurrences": 0,
+            "parks_occurrences_with_raw_coordinates": 0,
+            "parks_occurrences_with_projected_coordinates": 0,
+            "parks_coordinate_loss_candidate_occurrences": 0,
+        },
+        "promotion_allowed": False,
+    }
+
+    for item in review_list_only:
+        if item.get("evidence_tier") != "unresolved":
+            continue
+
+        diagnostics["total_unresolved"] += 1
+        dataset = str(item.get("source_dataset") or "unknown")
+        source_event_id = str(item.get("source_event_id") or "")
+        identity = (dataset, source_event_id)
+        if all(identity):
+            unique_identities.add(identity)
+        source_distribution[dataset] += 1
+
+        location = str(item.get("location") or "").strip()
+        title = str(item.get("title") or "").strip()
+        text = location or title
+        if location:
+            diagnostics["location_text"]["present"] += 1
+        else:
+            diagnostics["location_text"]["empty"] += 1
+
+        if item.get("borough"):
+            diagnostics["borough_state"]["populated"] += 1
+        else:
+            diagnostics["borough_state"]["null"] += 1
+
+        facility_hit = False
+        for name, pattern in _FACILITY_PATTERNS.items():
+            if pattern.search(text):
+                facility_counts[name] += 1
+                facility_hit = True
+        if facility_hit:
+            facility_counts["any_facility"] += 1
+
+        relational_hit = False
+        for name, pattern in _RELATIONAL_PATTERNS.items():
+            if pattern.search(text):
+                relational_counts[name] += 1
+                relational_hit = True
+        if relational_hit:
+            relational_counts["any_relational"] += 1
+
+        parts = _CONTAINER_SPLIT_PATTERN.split(text, maxsplit=1)
+        if len(parts) == 2:
+            sub_facility = parts[0].strip()
+            container = parts[1].strip()
+            if (
+                sub_facility
+                and container
+                and sub_facility.casefold() != container.casefold()
+                and (
+                    _FACILITY_PATTERNS["park"].search(container)
+                    or _FACILITY_PATTERNS["playground"].search(container)
+                )
+            ):
+                diagnostics["facility_within_park_candidates"] += 1
+        if _DUPLICATE_CONTAINER_PATTERN.fullmatch(text):
+            diagnostics["duplicate_facility_container"] += 1
+
+        evidence_reasons[str(item.get("evidence_reason") or "none")] += 1
+        reason_fields = item.get("pipeline_reason_fields")
+        if isinstance(reason_fields, dict) and reason_fields:
+            for field, value in sorted(reason_fields.items()):
+                pipeline_reasons[f"{field}:{value}"] += 1
+        else:
+            pipeline_reasons["none_recorded"] += 1
+
+        raw_matches = raw_index.get(identity, []) if all(identity) else []
+        raw_pairs = [pair for raw in raw_matches for pair in find_coordinate_pairs(raw)]
+        projected_pairs = item.get("projected_coordinate_pairs")
+        if not isinstance(projected_pairs, list):
+            projected_pairs = []
+
+        trace = diagnostics["raw_to_projected_coordinate_trace"]
+        is_parks = "parks" in dataset.casefold() or "bigapps" in dataset.casefold()
+        if is_parks:
+            trace["parks_unresolved_occurrences"] += 1
+
+        if raw_matches:
+            trace["raw_identity_match_occurrences"] += 1
+            if is_parks:
+                trace["parks_raw_identity_match_occurrences"] += 1
+        else:
+            trace["raw_identity_missing_occurrences"] += 1
+
+        if raw_pairs:
+            trace["unresolved_occurrences_with_raw_coordinates"] += 1
+            if all(identity):
+                unique_identities_with_raw_coordinates.add(identity)
+            if is_parks:
+                trace["parks_occurrences_with_raw_coordinates"] += 1
+        if projected_pairs:
+            trace["unresolved_occurrences_with_projected_coordinates"] += 1
+            if is_parks:
+                trace["parks_occurrences_with_projected_coordinates"] += 1
+        if raw_pairs and not projected_pairs:
+            trace["coordinate_loss_candidate_occurrences"] += 1
+            if is_parks:
+                trace["parks_coordinate_loss_candidate_occurrences"] += 1
+
+        if len(samples) < 20:
+            samples.append(
+                {
+                    "id": item.get("id"),
+                    "title": title[:80],
+                    "location": location[:140],
+                    "source_dataset": dataset,
+                    "source_event_id": source_event_id,
+                    "borough": item.get("borough"),
+                    "evidence_reason": item.get("evidence_reason"),
+                    "pipeline_reason_fields": reason_fields or {},
+                    "raw_identity_matches": len(raw_matches),
+                    "raw_coordinate_pair_count": len(raw_pairs),
+                    "projected_coordinate_pair_count": len(projected_pairs),
+                }
+            )
+
+    trace = diagnostics["raw_to_projected_coordinate_trace"]
+    trace["unique_source_identities"] = len(unique_identities)
+    trace["unique_source_identities_with_raw_coordinates"] = len(
+        unique_identities_with_raw_coordinates
+    )
+    diagnostics["source_dataset_distribution"] = _counter_dict(source_distribution)
+    diagnostics["evidence_reason_distribution"] = _counter_dict(evidence_reasons)
+    diagnostics["resolver_pipeline_reason_distribution"] = _counter_dict(pipeline_reasons)
+    diagnostics["facility_terminology"] = {
+        key: facility_counts.get(key, 0)
+        for key in (
+            "any_facility",
+            "park",
+            "playground",
+            "pool",
+            "recreation_center",
+            "field",
+            "court",
+            "visitor_center",
+            "nature_center",
+            "gymnasium",
+        )
+    }
+    diagnostics["relational_patterns"] = {
+        key: relational_counts.get(key, 0)
+        for key in ("any_relational", "in_phrase", "at_phrase", "entrance_to")
+    }
+    diagnostics["representative_samples"] = samples
+    return diagnostics
+
+
+def render_unresolved_markdown(diagnostics: dict[str, Any]) -> str:
+    location = diagnostics["location_text"]
+    borough = diagnostics["borough_state"]
+    facility = diagnostics["facility_terminology"]
+    relational = diagnostics["relational_patterns"]
+    trace = diagnostics["raw_to_projected_coordinate_trace"]
+    lines = [
+        "# SHADOW-2 Unresolved Diagnostics",
+        "",
+        "Read-only diagnostic. No coordinates, statuses, promotion flags, feeds, or map state were modified.",
+        "",
+        "## Summary",
+        "",
+        f"- Total unresolved list-only occurrences: **{diagnostics['total_unresolved']:,}**",
+        f"- Location text present: **{location['present']:,}**",
+        f"- Location text empty: **{location['empty']:,}**",
+        f"- Borough null: **{borough['null']:,}**",
+        f"- Borough populated: **{borough['populated']:,}**",
+        f"- Facility terminology: **{facility['any_facility']:,}**",
+        f"- Facility-within-park candidates: **{diagnostics['facility_within_park_candidates']:,}**",
+        f"- Duplicate facility/container names: **{diagnostics['duplicate_facility_container']:,}**",
+        "",
+        "## Source distribution",
+        "",
+    ]
+    for source, count in diagnostics["source_dataset_distribution"].items():
+        lines.append(f"- `{source}`: **{count:,}**")
+    lines.extend(["", "## Facility terminology", ""])
+    for name, count in facility.items():
+        lines.append(f"- `{name}`: **{count:,}**")
+    lines.extend(["", "## Relational patterns", ""])
+    for name, count in relational.items():
+        lines.append(f"- `{name}`: **{count:,}**")
+    lines.extend(["", "## Raw-to-projected coordinate trace", ""])
+    for name, count in trace.items():
+        lines.append(f"- `{name}`: **{count:,}**")
+    lines.extend(
+        [
+            "",
+            "## Interpretation gate",
+            "",
+            "A coordinate-loss candidate means a matched raw source record contains an explicit coordinate pair while the projected unresolved occurrence does not. It is a repair lead, not authorization to promote or publish the occurrence.",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
 def build_audit(snapshot: ReadOnlySnapshot) -> dict[str, Any]:
     approved = list(snapshot.read_approved_events())
     review = list(snapshot.read_review_events())
@@ -268,12 +518,15 @@ def build_audit(snapshot: ReadOnlySnapshot) -> dict[str, Any]:
             "coordinate_status": status,
             "evidence_tier": tier,
             "evidence_reason": evidence_reason,
+            "projected_coordinate_pairs": find_coordinate_pairs(record),
             "pipeline_reason_fields": {
                 key: record.get(key)
                 for key in (
                     "review_reason",
                     "approval_decision_reason",
                     "exclusion_reason",
+                    "pipeline_reason",
+                    "resolver_reason",
                     "match_type",
                     "location_source",
                 )
@@ -308,6 +561,7 @@ def build_audit(snapshot: ReadOnlySnapshot) -> dict[str, Any]:
     list_only_sources = Counter(item["source_dataset"] or "unknown" for item in review_list_only)
     borough_null = sum(item["borough"] is None for item in review_list_only)
     borough_candidates = sum(bool(item["borough_inference"]["candidate"]) for item in review_list_only)
+    unresolved_diagnostics = build_unresolved_diagnostics(review_list_only, raw_index)
 
     classified_occurrences = len(approved) + len(review)
     raw_records = len(raw)
@@ -325,7 +579,7 @@ def build_audit(snapshot: ReadOnlySnapshot) -> dict[str, Any]:
     }
 
     return {
-        "schema_version": "shadow2-real-data-audit-v2",
+        "schema_version": "shadow2-real-data-audit-v3",
         "safety": {
             "read_only": True,
             "production_feeds_modified": False,
@@ -360,6 +614,7 @@ def build_audit(snapshot: ReadOnlySnapshot) -> dict[str, Any]:
             "borough_repair_candidate_count": borough_candidates,
             "records": review_list_only,
         },
+        "unresolved_diagnostics": unresolved_diagnostics,
         "repair_queue": repair_queue,
         "malformed_records": malformed,
         "raw_coordinate_diagnostic": raw_coordinate_diagnostic,
@@ -369,6 +624,7 @@ def build_audit(snapshot: ReadOnlySnapshot) -> dict[str, Any]:
             "SEGMENT_UNCERTIFIED is an Enigma evidence reason, not necessarily the pipeline demotion reason.",
             "The total certified_street_segment count must not be reported as the review list-only segment count.",
             "Borough repair alone must not change coordinates, coordinate_status, or promotion_allowed.",
+            "A raw-to-projected coordinate-loss candidate is a repair lead, not authorization to promote an event.",
         ],
     }
 
@@ -377,6 +633,7 @@ def render_markdown(report: dict[str, Any]) -> str:
     totals = report["input_totals"]
     evidence = report["evidence_distribution"]["total"]
     list_only = report["review_list_only"]
+    unresolved = report.get("unresolved_diagnostics", {})
     recon = report["reconciliation"]
     raw_diag = report["raw_coordinate_diagnostic"]
 
@@ -423,6 +680,23 @@ def render_markdown(report: dict[str, Any]) -> str:
     for tier, count in list_only["tier_distribution"].items():
         lines.append(f"| `{tier}` | {count:,} |")
 
+    if unresolved:
+        trace = unresolved["raw_to_projected_coordinate_trace"]
+        lines.extend(
+            [
+                "",
+                "## Unresolved diagnostics",
+                "",
+                f"- Unresolved list-only occurrences: **{unresolved['total_unresolved']:,}**",
+                f"- Location text present: **{unresolved['location_text']['present']:,}**",
+                f"- Location text empty: **{unresolved['location_text']['empty']:,}**",
+                f"- Facility terminology: **{unresolved['facility_terminology']['any_facility']:,}**",
+                f"- Facility-within-park candidates: **{unresolved['facility_within_park_candidates']:,}**",
+                f"- Raw-coordinate loss candidates: **{trace['coordinate_loss_candidate_occurrences']:,}**",
+                f"- Parks raw-coordinate loss candidates: **{trace['parks_coordinate_loss_candidate_occurrences']:,}**",
+            ]
+        )
+
     lines.extend(
         [
             "",
@@ -440,7 +714,7 @@ def render_markdown(report: dict[str, Any]) -> str:
             "",
             "## Safe implementation gate",
             "",
-            "Borough repairs are data-shape repairs only. Rebuild and rerun SHADOW-2 before considering any geocoding, coordinate-status change, exact-pin promotion, approximate-marker layer, or public map change.",
+            "Borough repairs and coordinate-retention diagnostics are data-shape investigations only. Rebuild and rerun SHADOW-2 before considering any coordinate-status change, promotion, approximate-marker layer, or public map change.",
             "",
         ]
     )
@@ -456,6 +730,10 @@ def write_reports(report: dict[str, Any], output_dir: Path) -> dict[str, str]:
         "repair_queue": output_dir / "shadow2-repair-queue.json",
         "raw_coordinate_diagnostic": output_dir / "shadow2-raw-coordinate-diagnostic.json",
     }
+    unresolved = report.get("unresolved_diagnostics")
+    if unresolved:
+        paths["unresolved_diagnostics_json"] = output_dir / "shadow2-unresolved-diagnostics.json"
+        paths["unresolved_diagnostics_markdown"] = output_dir / "shadow2-unresolved-diagnostics.md"
     paths["complete_json"].write_text(json.dumps(report, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     paths["markdown"].write_text(render_markdown(report), encoding="utf-8")
     paths["review_list_only"].write_text(
@@ -470,6 +748,15 @@ def write_reports(report: dict[str, Any], output_dir: Path) -> dict[str, str]:
         json.dumps(report["raw_coordinate_diagnostic"], indent=2, ensure_ascii=False) + "\n",
         encoding="utf-8",
     )
+    if unresolved:
+        paths["unresolved_diagnostics_json"].write_text(
+            json.dumps(unresolved, indent=2, ensure_ascii=False) + "\n",
+            encoding="utf-8",
+        )
+        paths["unresolved_diagnostics_markdown"].write_text(
+            render_unresolved_markdown(unresolved),
+            encoding="utf-8",
+        )
     return {key: str(path) for key, path in paths.items()}
 
 
@@ -480,6 +767,8 @@ def main(argv: list[str] | None = None) -> int:
 
     report = build_audit(ReadOnlySnapshot())
     paths = write_reports(report, args.output_dir)
+    unresolved = report["unresolved_diagnostics"]
+    trace = unresolved["raw_to_projected_coordinate_trace"]
     summary = {
         "qa_pass": not report["malformed_records"],
         "review_list_only_count": report["review_list_only"]["count"],
@@ -487,6 +776,13 @@ def main(argv: list[str] | None = None) -> int:
             "certified_street_segment", 0
         ),
         "borough_repair_candidate_count": report["review_list_only"]["borough_repair_candidate_count"],
+        "unresolved_count": unresolved["total_unresolved"],
+        "unresolved_location_present": unresolved["location_text"]["present"],
+        "unresolved_facility_terminology": unresolved["facility_terminology"]["any_facility"],
+        "coordinate_loss_candidate_occurrences": trace["coordinate_loss_candidate_occurrences"],
+        "parks_coordinate_loss_candidate_occurrences": trace[
+            "parks_coordinate_loss_candidate_occurrences"
+        ],
         "raw_records_with_coordinate_pairs": report["raw_coordinate_diagnostic"][
             "records_with_coordinate_pairs"
         ],
