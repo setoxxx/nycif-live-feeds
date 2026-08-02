@@ -20,18 +20,44 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Run focused SHADOW-2 tests
+      - name: Verify deterministic DPR lookup
+        run: |
+          python3 scripts/build_dpr_park_centroids.py
+          git diff --exit-code -- \
+            data/park_centroids.json \
+            data/park_centroids_ambiguous_aliases.json
+
+      - name: Run focused SHADOW-2 and DPR tests
         run: |
           python3 -m unittest discover -s tests/test_enigma_shadow2 -p 'test_*.py'
           python3 -m unittest discover -s tests -p 'test_refresh_official_supplemental_occurrences.py'
+          python3 -m unittest discover -s tests -p 'test_project_events_schema_v1.py'
+
+      - name: Validate supplemental projection without writing feeds
+        run: |
+          python3 scripts/project_events_schema_v1.py --skip-write-feeds
 
       - name: Run deterministic SHADOW-2 Step 2 audit
         run: |
           export PYTHONPATH="${PYTHONPATH}:$(pwd)"
+          mkdir -p /tmp/shadow2-audit
           python3 -m enigma.shadow2.audit --output-dir /tmp/shadow2-audit
           cat /tmp/shadow2-audit/shadow2-real-data-audit.md
 
-      - name: Upload complete SHADOW-2 Step 2 audit
+      - name: Run DPR park geometry delta audit
+        run: |
+          python3 scripts/audit_dpr_park_geometry_resolver.py \
+            --lookup data/park_centroids.json \
+            --ambiguous-aliases data/park_centroids_ambiguous_aliases.json \
+            --output-dir /tmp/shadow2-audit
+          cp data/park_centroids.json /tmp/shadow2-audit/park_centroids.json
+          cp data/park_centroids_ambiguous_aliases.json \
+            /tmp/shadow2-audit/park_centroids_ambiguous_aliases.json
+          cp data/events_schema_v1_validation_report.json \
+            /tmp/shadow2-audit/events_schema_v1_validation_report.json
+          cat /tmp/shadow2-audit/shadow2-park-geometry-delta.md
+
+      - name: Upload complete SHADOW-2 DPR audit
         uses: actions/upload-artifact@v4
         with:
           name: shadow2-step2-audit

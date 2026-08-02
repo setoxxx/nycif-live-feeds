@@ -7,10 +7,15 @@ import argparse
 import json
 import sys
 from pathlib import Path
+from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from enigma.shadow2.location_evidence import classify_location_evidence  # noqa: E402
+from nycif.normalize.facility_resolver import resolve_facility_anchor  # noqa: E402
+from nycif.normalize.park_geometry import load_park_lookup  # noqa: E402
 from schema_v1_common import (  # noqa: E402
     SCHEMA_VERSION,
     envelope,
@@ -72,6 +77,15 @@ def validate_supplemental_checks(event: dict, errors: list[str], prefix: str) ->
         errors.append(f"{prefix}: supplemental production_feed true")
     if not str(event.get("id", "")).startswith("review_supplemental:"):
         errors.append(f"{prefix}: supplemental id not namespaced")
+    if nycif.get("coordinate_status") == "approximate":
+        if nycif.get("display_disposition") != "approximate_marker":
+            errors.append(f"{prefix}: approximate anchor lacks approximate_marker disposition")
+        if nycif.get("coordinate_precision") != "park_level_anchor":
+            errors.append(f"{prefix}: approximate anchor lacks park_level_anchor precision")
+        if nycif.get("coordinate_source") != "dpr_parks_properties_centroid":
+            errors.append(f"{prefix}: approximate anchor has unexpected coordinate source")
+        if event.get("latitude") is None or event.get("longitude") is None:
+            errors.append(f"{prefix}: approximate anchor lacks coordinate pair")
 
 
 def validate_event(event: dict, errors: list[str], prefix: str) -> None:
@@ -81,12 +95,75 @@ def validate_event(event: dict, errors: list[str], prefix: str) -> None:
     validate_supplemental_checks(event, errors, prefix)
 
 
-def project_layer(rows: list[dict], *, data_layer: str) -> list[dict]:
+def apply_supplemental_park_anchor(
+    projected: dict[str, Any],
+    source_row: dict[str, Any],
+    *,
+    park_lookup: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    """Apply one reviewed DPR centroid contract without granting map-ready status."""
+    nycif = projected.get("nycif") if isinstance(projected.get("nycif"), dict) else {}
+    if nycif.get("data_layer") != "review_supplemental":
+        return projected
+    if nycif.get("coordinate_status") != "list_only":
+        return projected
+    try:
+        tier = classify_location_evidence(projected).tier.value
+    except Exception:
+        return projected
+    if tier != "unresolved":
+        return projected
+
+    probe = dict(source_row)
+    probe["evidence_tier"] = "unresolved"
+    probe["location"] = projected.get("location") or source_row.get("location")
+    probe["borough"] = projected.get("borough") or source_row.get("borough")
+    resolved = resolve_facility_anchor(probe, lookup=park_lookup)
+    if not resolved:
+        return projected
+
+    projected["latitude"] = resolved["latitude"]
+    projected["longitude"] = resolved["longitude"]
+    nycif = dict(nycif)
+    nycif.update(
+        {
+            "coordinate_status": "approximate",
+            "display_disposition": "approximate_marker",
+            "coordinate_precision": "park_level_anchor",
+            "coordinate_source": "dpr_parks_properties_centroid",
+            "park_id": resolved.get("park_id"),
+            "park_name": resolved.get("park_name"),
+            "park_borough": resolved.get("park_borough"),
+            "park_match_type": resolved.get("park_match_type"),
+            "park_query_name": resolved.get("park_query_name"),
+            "promotion_allowed": False,
+            "production_feed": False,
+            "public_map_modified": False,
+        }
+    )
+    projected["nycif"] = nycif
+    return projected
+
+
+def project_layer(
+    rows: list[dict],
+    *,
+    data_layer: str,
+    park_lookup: dict[str, dict[str, Any]] | None = None,
+) -> list[dict]:
     reset_stable_id_registry()
-    return [
-        project_event(row, index=i, data_layer=data_layer)
-        for i, row in enumerate(rows)
-    ]
+    projected_events: list[dict] = []
+    lookup = park_lookup or {}
+    for index, row in enumerate(rows):
+        projected = project_event(row, index=index, data_layer=data_layer)
+        if data_layer == "review_supplemental" and lookup:
+            projected = apply_supplemental_park_anchor(
+                projected,
+                row,
+                park_lookup=lookup,
+            )
+        projected_events.append(projected)
+    return projected_events
 
 
 def main() -> int:
@@ -97,9 +174,14 @@ def main() -> int:
     generated_at = utc_now()
     staged_rows = extract_events(json.loads(STAGED_PATH.read_text(encoding="utf-8")))
     supplemental_rows = extract_events(json.loads(SUPPLEMENTAL_PATH.read_text(encoding="utf-8")))
+    park_lookup = load_park_lookup()
 
     staged_events = project_layer(staged_rows, data_layer="approved_staged")
-    supplemental_events = project_layer(supplemental_rows, data_layer="review_supplemental")
+    supplemental_events = project_layer(
+        supplemental_rows,
+        data_layer="review_supplemental",
+        park_lookup=park_lookup,
+    )
     staged_env = envelope(staged_events, generated_at_utc=generated_at, next_cursor=None)
     supp_env = envelope(supplemental_events, generated_at_utc=generated_at, next_cursor=None)
 
@@ -144,8 +226,12 @@ def main() -> int:
             "output_path": "data/events_schema_v1_supplemental_review.json",
             "input_count": len(supplemental_rows),
             "output_total": supp_env["total"],
+            "park_lookup_aliases": len(park_lookup),
             "map_ready_count": sum(
                 1 for e in supplemental_events if e["nycif"]["coordinate_status"] == "map_ready"
+            ),
+            "approximate_count": sum(
+                1 for e in supplemental_events if e["nycif"]["coordinate_status"] == "approximate"
             ),
             "list_only_count": sum(
                 1 for e in supplemental_events if e["nycif"]["coordinate_status"] == "list_only"
