@@ -2,42 +2,72 @@ name: Enigma SHADOW-2 Audit
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/shadow2-audit.yml'
-      - 'nycif/normalize/park_geometry.py'
-      - 'scripts/build_dpr_park_centroids.py'
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
-  regenerate-dpr-lookup:
-    if: github.event_name == 'pull_request'
+  audit:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out PR branch
+      - name: Check out requested ref
         uses: actions/checkout@v4
         with:
-          ref: feat/dpr-park-geometry-resolver
-          fetch-depth: 0
+          ref: ${{ github.ref_name }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Regenerate deterministic DPR lookup
+      - name: Verify deterministic DPR lookup
         run: |
           python3 scripts/build_dpr_park_centroids.py
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/park_centroids.json data/park_centroids_ambiguous_aliases.json
-          if git diff --cached --quiet; then
-            echo "Lookup already current"
-          else
-            git commit -m "data(dpr): regenerate deterministic interior anchors"
-            git push origin HEAD:feat/dpr-park-geometry-resolver
-          fi
+          git diff --exit-code -- \
+            data/park_centroids.json \
+            data/park_centroids_ambiguous_aliases.json
+
+      - name: Run focused SHADOW-2 and DPR tests
+        run: |
+          python3 -m unittest discover -s tests/test_enigma_shadow2 -p 'test_*.py'
+          python3 -m unittest discover -s tests -p 'test_refresh_official_supplemental_occurrences.py'
+          python3 -m unittest discover -s tests -p 'test_project_events_schema_v1.py'
+
+      - name: Validate supplemental projection without writing feeds
+        run: |
+          python3 scripts/project_events_schema_v1.py --skip-write-feeds
+
+      - name: Run deterministic SHADOW-2 Step 2 audit
+        run: |
+          export PYTHONPATH="${PYTHONPATH}:$(pwd)"
+          mkdir -p /tmp/shadow2-audit
+          python3 -m enigma.shadow2.audit --output-dir /tmp/shadow2-audit
+          cat /tmp/shadow2-audit/shadow2-real-data-audit.md
+
+      - name: Run DPR park geometry delta audit
+        run: |
+          python3 scripts/audit_dpr_park_geometry_resolver.py \
+            --lookup data/park_centroids.json \
+            --output-dir /tmp/shadow2-audit
+          cp data/park_centroids.json /tmp/shadow2-audit/park_centroids.json
+          cp data/park_centroids_ambiguous_aliases.json \
+            /tmp/shadow2-audit/park_centroids_ambiguous_aliases.json
+          cp data/events_schema_v1_validation_report.json \
+            /tmp/shadow2-audit/events_schema_v1_validation_report.json
+          cat /tmp/shadow2-audit/shadow2-park-geometry-delta.md
+
+      - name: Upload complete SHADOW-2 DPR audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: shadow2-step2-audit
+          path: /tmp/shadow2-audit/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload legacy list-only artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: shadow2-audit-review-list-only
+          path: /tmp/shadow2-audit/shadow2-audit-review-list-only.json
+          if-no-files-found: error
+          retention-days: 14
