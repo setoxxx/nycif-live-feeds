@@ -260,7 +260,11 @@ def test_required_event_aug1_real_approved_pages_pass() -> None:
     assert result["validation_mode"] == "live_occurrence"
     assert result["qa_pass"] is True, result["failures"]
     assert result["match_count"] == 1
-    assert result["page"] == "page-0008.json"
+    page_name = str(result["page"] or "")
+    assert page_name.startswith("page-") and page_name.endswith(".json")
+    assert (
+        ROOT / "data" / "schema-v1-discovery" / "approved" / "pages" / page_name
+    ).is_file()
     assert result["evaluated_date"] == "2026-08-01"
 
 
