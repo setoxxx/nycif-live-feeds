@@ -34,7 +34,7 @@ jobs:
           python3 scripts/build_dpr_park_centroids.py
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/park_centroids.json data/park_centroid_ambiguous_aliases.json
+          git add data/park_centroids.json data/park_centroids_ambiguous_aliases.json
           if git diff --cached --quiet; then
             echo "Lookup already current"
           else
