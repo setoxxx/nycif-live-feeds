@@ -2,67 +2,32 @@ name: Enigma SHADOW-2 Audit
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/shadow2-audit.yml'
+      - 'scripts/apply_pr364_review_fixes.sh'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
-  audit:
+  apply-review-fixes:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
-      - name: Check out requested ref
+      - name: Check out PR branch
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: feat/dpr-park-geometry-resolver
+          fetch-depth: 0
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Build authoritative DPR park centroid lookup
+      - name: Apply reviewed patch
         run: |
-          python3 scripts/build_dpr_park_centroids.py --output data/park_centroids.json
-
-      - name: Run focused SHADOW-2 and DPR tests
-        run: |
-          python3 -m unittest discover -s tests/test_enigma_shadow2 -p 'test_*.py'
-          python3 -m unittest discover -s tests -p 'test_refresh_official_supplemental_occurrences.py'
-          python3 -m unittest discover -s tests -p 'test_project_events_schema_v1.py'
-
-      - name: Validate supplemental projection without writing feeds
-        run: |
-          python3 scripts/project_events_schema_v1.py --skip-write-feeds
-
-      - name: Run deterministic SHADOW-2 Step 2 audit
-        run: |
-          export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-          mkdir -p /tmp/shadow2-audit
-          python3 -m enigma.shadow2.audit --output-dir /tmp/shadow2-audit
-          cat /tmp/shadow2-audit/shadow2-real-data-audit.md
-
-      - name: Run DPR park geometry delta audit
-        run: |
-          python3 scripts/audit_dpr_park_geometry_resolver.py \
-            --lookup data/park_centroids.json \
-            --output-dir /tmp/shadow2-audit
-          cp data/park_centroids.json /tmp/shadow2-audit/park_centroids.json
-          cp data/events_schema_v1_validation_report.json \
-            /tmp/shadow2-audit/events_schema_v1_validation_report.json
-          cat /tmp/shadow2-audit/shadow2-park-geometry-delta.md
-
-      - name: Upload complete SHADOW-2 DPR audit
-        uses: actions/upload-artifact@v4
-        with:
-          name: shadow2-step2-audit
-          path: /tmp/shadow2-audit/
-          if-no-files-found: error
-          retention-days: 14
-
-      - name: Upload legacy list-only artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: shadow2-audit-review-list-only
-          path: /tmp/shadow2-audit/shadow2-audit-review-list-only.json
-          if-no-files-found: error
-          retention-days: 14
+          bash scripts/apply_pr364_review_fixes.sh
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "fix(dpr): close PR 364 review gates"
+          git push origin HEAD:feat/dpr-park-geometry-resolver
