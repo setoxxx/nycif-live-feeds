@@ -14,9 +14,10 @@ import json
 import re
 import subprocess
 import sys
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
@@ -27,6 +28,9 @@ APPROVED_PAGES = DATA / "schema-v1-discovery" / "approved" / "pages"
 MAX_SOURCE_AGE_HOURS = 36.0
 REQUIRED_EVENT_ID = "923896"
 REQUIRED_EVENT_DATE = "2026-08-01"
+REQUIRED_EVENT_CERTIFICATE = (
+    DATA / "reports" / "event_923896_snapshot_recovery_certificate.json"
+)
 
 
 def load(path: Path, default: Any = None) -> Any:
@@ -34,6 +38,13 @@ def load(path: Path, default: Any = None) -> Any:
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception:
         return default
+
+
+def repository_artifact(path: Path) -> str:
+    try:
+        return str(path.relative_to(ROOT))
+    except ValueError:
+        return str(path)
 
 
 def timestamp(payload: Any) -> str | None:
@@ -186,7 +197,7 @@ def event_coordinates(event: dict[str, Any]) -> tuple[float | None, float | None
         return None, None
 
 
-def required_event_status(pages_root: Path = APPROVED_PAGES) -> dict[str, Any]:
+def _required_event_live_status(pages_root: Path) -> dict[str, Any]:
     """Prove that required event 923896 is public exactly once with its Brooklyn pin."""
     matches: list[tuple[str, dict[str, Any]]] = []
     page_files = sorted(pages_root.glob("page-*.json")) if pages_root.exists() else []
@@ -261,7 +272,265 @@ def required_event_status(pages_root: Path = APPROVED_PAGES) -> dict[str, Any]:
             "Event 923896 must appear exactly once in the approved public feed on 2026-08-01 "
             "with the East 74 Street / Avenue U / Avenue T Brooklyn segment pin."
         ),
+        "validation_mode": "live_occurrence",
     }
+
+
+def _certificate_base_result(certificate_path: Path) -> dict[str, Any]:
+    return {
+        "name": "Required Brooklyn block party 923896",
+        "source_event_id": REQUIRED_EVENT_ID,
+        "required_date": REQUIRED_EVENT_DATE,
+        "approved_pages_scanned": 0,
+        "match_count": 0,
+        "page": None,
+        "event_id": None,
+        "start": None,
+        "borough": None,
+        "location": None,
+        "latitude": None,
+        "longitude": None,
+        "coordinate_status": None,
+        "validation_mode": "archived_certification",
+        "certificate_artifact": repository_artifact(certificate_path),
+        "certificate_schema_version": None,
+        "operating_rule": (
+            "Event 923896 must appear exactly once in the approved public feed on 2026-08-01 "
+            "with the East 74 Street / Avenue U / Avenue T Brooklyn segment pin."
+        ),
+    }
+
+
+def _validate_certified_surface(
+    check: dict[str, Any],
+    check_name: str,
+    failures: list[str],
+) -> None:
+    if check.get("failures") != []:
+        failures.append(f"{check_name}.failures is not empty")
+
+    event_id = str(check.get("event_id") or "")
+    if REQUIRED_EVENT_ID not in event_id or REQUIRED_EVENT_DATE not in event_id:
+        failures.append(f"{check_name}.event_id mismatch: {event_id}")
+
+    start_value = str(check.get("start") or "")
+    if not start_value.startswith(REQUIRED_EVENT_DATE):
+        failures.append(f"{check_name}.start date mismatch: {start_value}")
+
+    borough = str(check.get("borough") or "")
+    if normalized_text(borough) != "brooklyn":
+        failures.append(f"{check_name}.borough mismatch: {borough}")
+
+    location = str(check.get("location") or "")
+    normalized_location = normalized_text(location)
+    for fragment in ("east 74 street", "avenue u", "avenue t"):
+        if fragment not in normalized_location:
+            failures.append(f"{check_name}.location missing {fragment}: {location}")
+
+    try:
+        latitude = float(check.get("latitude"))
+        longitude = float(check.get("longitude"))
+        if not 40.60 <= latitude <= 40.64:
+            failures.append(f"{check_name}.latitude {latitude} outside envelope [40.60, 40.64]")
+        if not -73.93 <= longitude <= -73.88:
+            failures.append(f"{check_name}.longitude {longitude} outside envelope [-73.93, -73.88]")
+    except (TypeError, ValueError):
+        failures.append(
+            f"{check_name}.coordinates non-numeric: "
+            f"lat={check.get('latitude')}, lng={check.get('longitude')}"
+        )
+
+    coordinate_status = str(check.get("coordinate_status") or "")
+    if coordinate_status != "map_ready":
+        failures.append(f"{check_name}.coordinate_status mismatch: {coordinate_status}")
+
+
+def _required_event_certificate_status(certificate_path: Path) -> dict[str, Any]:
+    """Validate the archived Stage 7 certificate fail-closed after the event date."""
+    result = _certificate_base_result(certificate_path)
+    if not certificate_path.exists():
+        result.update(
+            {
+                "qa_pass": False,
+                "failures": [f"Certificate artifact missing: {certificate_path}"],
+            }
+        )
+        return result
+
+    try:
+        cert = json.loads(certificate_path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError, TypeError) as exc:
+        result.update(
+            {
+                "qa_pass": False,
+                "failures": [f"Certificate unreadable or malformed: {exc}"],
+            }
+        )
+        return result
+
+    if not isinstance(cert, dict):
+        result.update(
+            {
+                "qa_pass": False,
+                "failures": ["Certificate root is not a JSON object"],
+            }
+        )
+        return result
+
+    failures: list[str] = []
+    if cert.get("artifact_type") != "nycif_stage7_completion_certificate":
+        failures.append(f"artifact_type mismatch: {cert.get('artifact_type')}")
+    if cert.get("schema_version") != "1.0.0":
+        failures.append(f"schema_version mismatch: {cert.get('schema_version')}")
+    if str(cert.get("source_event_id")) != REQUIRED_EVENT_ID:
+        failures.append(f"source_event_id mismatch: {cert.get('source_event_id')}")
+    if cert.get("required_date") != REQUIRED_EVENT_DATE:
+        failures.append(f"required_date mismatch: {cert.get('required_date')}")
+    if cert.get("qa_pass") is not True:
+        failures.append(f"qa_pass is not true: {cert.get('qa_pass')}")
+    if cert.get("failures") != []:
+        failures.append(f"failures list is not empty: {cert.get('failures')}")
+    if cert.get("approved_page_match_count") != 1:
+        failures.append(f"approved_page_match_count != 1: {cert.get('approved_page_match_count')}")
+    if cert.get("approved_list_match_count") != 1:
+        failures.append(f"approved_list_match_count != 1: {cert.get('approved_list_match_count')}")
+    if cert.get("health_status") != "READY":
+        failures.append(f"health_status != READY: {cert.get('health_status')}")
+    if cert.get("health_schema_version") != "1.4.0":
+        failures.append(f"health_schema_version != 1.4.0: {cert.get('health_schema_version')}")
+    if cert.get("strict_reconciliation") is not True:
+        failures.append(f"strict_reconciliation is not true: {cert.get('strict_reconciliation')}")
+
+    approved_page = str(cert.get("approved_page") or "")
+    if not approved_page.startswith("page-") or not approved_page.endswith(".json"):
+        failures.append(f"approved_page is invalid: {approved_page}")
+
+    approved_manifest_total = cert.get("approved_manifest_total")
+    if not isinstance(approved_manifest_total, int) or approved_manifest_total <= 0:
+        failures.append(f"approved_manifest_total is invalid: {approved_manifest_total}")
+
+    health_event_check = cert.get("health_event_check")
+    if not isinstance(health_event_check, dict):
+        failures.append("health_event_check missing or not a dict")
+        health_event_check = {}
+    else:
+        if health_event_check.get("qa_pass") is not True:
+            failures.append("health_event_check.qa_pass is not true")
+        if health_event_check.get("failures") != []:
+            failures.append("health_event_check.failures is not empty")
+        if health_event_check.get("match_count") != 1:
+            failures.append(
+                f"health_event_check.match_count != 1: {health_event_check.get('match_count')}"
+            )
+        if str(health_event_check.get("source_event_id")) != REQUIRED_EVENT_ID:
+            failures.append(
+                "health_event_check.source_event_id mismatch: "
+                f"{health_event_check.get('source_event_id')}"
+            )
+        if health_event_check.get("required_date") != REQUIRED_EVENT_DATE:
+            failures.append(
+                "health_event_check.required_date mismatch: "
+                f"{health_event_check.get('required_date')}"
+            )
+        if health_event_check.get("page") != cert.get("approved_page"):
+            failures.append(
+                "health_event_check.page does not match approved_page: "
+                f"{health_event_check.get('page')} != {cert.get('approved_page')}"
+            )
+        pages_scanned = health_event_check.get("approved_pages_scanned")
+        if not isinstance(pages_scanned, int) or pages_scanned <= 0:
+            failures.append(
+                f"health_event_check.approved_pages_scanned is invalid: {pages_scanned}"
+            )
+        _validate_certified_surface(health_event_check, "health_event_check", failures)
+
+    page_check = cert.get("page_check")
+    if not isinstance(page_check, dict):
+        failures.append("page_check missing or not a dict")
+        page_check = {}
+    else:
+        _validate_certified_surface(page_check, "page_check", failures)
+        expected_surface = f"approved page {approved_page}"
+        if page_check.get("surface") != expected_surface:
+            failures.append(
+                f"page_check.surface mismatch: {page_check.get('surface')} != {expected_surface}"
+            )
+
+    list_check = cert.get("list_check")
+    if not isinstance(list_check, dict):
+        failures.append("list_check missing or not a dict")
+        list_check = {}
+    else:
+        _validate_certified_surface(list_check, "list_check", failures)
+        if list_check.get("surface") != "approved list":
+            failures.append(f"list_check.surface mismatch: {list_check.get('surface')}")
+
+    if health_event_check and page_check and list_check:
+        for field in (
+            "event_id",
+            "start",
+            "borough",
+            "location",
+            "latitude",
+            "longitude",
+            "coordinate_status",
+        ):
+            health_value = health_event_check.get(field)
+            if page_check.get(field) != health_value:
+                failures.append(
+                    f"page_check.{field} does not match health_event_check: "
+                    f"{page_check.get(field)!r} != {health_value!r}"
+                )
+            if list_check.get(field) != health_value:
+                failures.append(
+                    f"list_check.{field} does not match health_event_check: "
+                    f"{list_check.get(field)!r} != {health_value!r}"
+                )
+
+    result.update(
+        {
+            "approved_pages_scanned": health_event_check.get("approved_pages_scanned", 0),
+            "match_count": health_event_check.get("match_count", 0),
+            "page": health_event_check.get("page"),
+            "event_id": health_event_check.get("event_id"),
+            "start": health_event_check.get("start"),
+            "borough": health_event_check.get("borough"),
+            "location": health_event_check.get("location"),
+            "latitude": health_event_check.get("latitude"),
+            "longitude": health_event_check.get("longitude"),
+            "coordinate_status": health_event_check.get("coordinate_status"),
+            "qa_pass": not failures,
+            "failures": failures,
+            "certificate_schema_version": cert.get("schema_version"),
+        }
+    )
+    return result
+
+
+def required_event_status(
+    pages_root: Path = APPROVED_PAGES,
+    *,
+    current_date: date | None = None,
+    certificate_path: Path = REQUIRED_EVENT_CERTIFICATE,
+) -> dict[str, Any]:
+    """Route Event 923896 to live validation or its immutable archive certificate."""
+    evaluated = current_date or datetime.now(ZoneInfo("America/New_York")).date()
+    required_date = date.fromisoformat(REQUIRED_EVENT_DATE)
+
+    if evaluated <= required_date:
+        result = _required_event_live_status(pages_root)
+    else:
+        result = _required_event_certificate_status(certificate_path)
+
+    result["evaluated_date"] = evaluated.isoformat()
+    if not result.get("qa_pass"):
+        mode = result.get("validation_mode")
+        mode_label = "Live occurrence" if mode == "live_occurrence" else "Archived certification"
+        result["reason"] = (
+            f"{mode_label} validation failed for Event {REQUIRED_EVENT_ID}: "
+            + json.dumps(result.get("failures") or [], ensure_ascii=False)
+        )
+    return result
 
 
 def refresh_field_desk_overlay_health() -> dict[str, Any]:
@@ -467,12 +736,27 @@ def main() -> int:
             )
         )
     if not required_event_clean:
+        mode = required_event.get("validation_mode", "live_occurrence")
+        if mode == "archived_certification":
+            artifact = str(
+                required_event.get("certificate_artifact")
+                or repository_artifact(REQUIRED_EVENT_CERTIFICATE)
+            )
+            message = (
+                "Required event 923896 archived-certification validation failed: "
+                + json.dumps(required_event.get("failures") or [], ensure_ascii=False)
+            )
+        else:
+            artifact = "data/schema-v1-discovery/approved/pages/"
+            message = (
+                "Required event 923896 live-occurrence validation failed: "
+                + json.dumps(required_event.get("failures") or [], ensure_ascii=False)
+            )
         blockers.append(
             blocker(
                 "required_event_923896_failed",
-                "Required event 923896 is missing, duplicated, assigned to the wrong date/location, or has a non-Brooklyn pin: "
-                + json.dumps(required_event.get("failures") or [], ensure_ascii=False),
-                "data/schema-v1-discovery/approved/pages/",
+                message,
+                artifact,
             )
         )
     if cross_date_suppressed:
