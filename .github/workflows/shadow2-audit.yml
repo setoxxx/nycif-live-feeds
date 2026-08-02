@@ -7,13 +7,14 @@ on:
       - main
     paths:
       - '.github/workflows/shadow2-audit.yml'
-      - 'scripts/apply_pr364_review_fixes.sh'
+      - 'nycif/normalize/park_geometry.py'
+      - 'scripts/build_dpr_park_centroids.py'
 
 permissions:
   contents: write
 
 jobs:
-  apply-review-fixes:
+  regenerate-dpr-lookup:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
@@ -23,11 +24,20 @@ jobs:
           ref: feat/dpr-park-geometry-resolver
           fetch-depth: 0
 
-      - name: Apply reviewed patch
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Regenerate deterministic DPR lookup
         run: |
-          bash scripts/apply_pr364_review_fixes.sh
+          python3 scripts/build_dpr_park_centroids.py
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git commit -m "fix(dpr): close PR 364 review gates"
-          git push origin HEAD:feat/dpr-park-geometry-resolver
+          git add data/park_centroids.json data/park_centroid_ambiguous_aliases.json
+          if git diff --cached --quiet; then
+            echo "Lookup already current"
+          else
+            git commit -m "data(dpr): regenerate deterministic interior anchors"
+            git push origin HEAD:feat/dpr-park-geometry-resolver
+          fi
