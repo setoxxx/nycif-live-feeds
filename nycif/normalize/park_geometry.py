@@ -444,29 +444,34 @@ def find_park_centroid(
 
     Matching is exact after deterministic normalization. Suffix differences such
     as ``Park`` versus ``Playground`` are normalized away; broad edit-distance
-    guessing is deliberately excluded.
+    guessing is deliberately excluded. Multiple recognized park IDs fail closed.
     """
     table = lookup if lookup is not None else load_park_lookup(lookup_path)
     if not table:
         return None
     candidates = extract_park_names(location_text)
-    for candidate in reversed(candidates):
+    matched: list[tuple[str, str, dict[str, Any]]] = []
+    for candidate in candidates:
         normalized = normalize_park_name(candidate)
         if len(normalized) < 3:
             continue
         entry = table.get(normalized)
-        if not entry:
-            continue
-        result = dict(entry)
-        result.update(
-            {
-                "query_name": candidate,
-                "normalized_query": normalized,
-                "match_type": "unique_normalized_name",
-            }
-        )
-        return result
-    return None
+        if entry:
+            matched.append((candidate, normalized, entry))
+    unique_ids = {str(entry.get("park_id")) for _, _, entry in matched if entry.get("park_id")}
+    if len(unique_ids) != 1:
+        return None
+    candidate, normalized, entry = matched[-1]
+    result = dict(entry)
+    result.update(
+        {
+            "query_name": candidate,
+            "query_names": [item[0] for item in matched],
+            "normalized_query": normalized,
+            "match_type": "unique_normalized_name",
+        }
+    )
+    return result
 
 
 def _main(argv: list[str] | None = None) -> int:
