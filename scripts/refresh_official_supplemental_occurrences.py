@@ -25,6 +25,29 @@ QUEUE = DATA / "supplemental_manual_approval_queue.json"
 OUT = DATA / "supplemental_events_staging_feed.json"
 REPORT = DATA / "official_supplemental_occurrence_refresh_report.json"
 
+BOROUGH_ALIASES = {
+    "mn": "Manhattan",
+    "manhattan": "Manhattan",
+    "new york": "Manhattan",
+    "bk": "Brooklyn",
+    "brooklyn": "Brooklyn",
+    "qn": "Queens",
+    "q": "Queens",
+    "queens": "Queens",
+    "bx": "Bronx",
+    "bronx": "Bronx",
+    "the bronx": "Bronx",
+    "si": "Staten Island",
+    "staten island": "Staten Island",
+}
+_BOROUGH_TEXT_PATTERNS = {
+    "Staten Island": re.compile(r"\bStaten\s+Island\b", re.IGNORECASE),
+    "Manhattan": re.compile(r"\bManhattan\b", re.IGNORECASE),
+    "Brooklyn": re.compile(r"\bBrooklyn\b", re.IGNORECASE),
+    "Queens": re.compile(r"\bQueens\b", re.IGNORECASE),
+    "Bronx": re.compile(r"\b(?:The\s+)?Bronx\b", re.IGNORECASE),
+}
+
 
 def load(path: Path, default: Any) -> Any:
     try:
@@ -50,6 +73,54 @@ def bool_flag(value: Any) -> bool:
     if value is None:
         return False
     return str(value).strip().lower() in {"1", "true", "yes", "y"}
+
+
+def _normalize_borough_token(value: Any) -> str | None:
+    key = re.sub(r"\s+", " ", str(value or "").strip().lower())
+    return BOROUGH_ALIASES.get(key)
+
+
+def canonical_borough(value: Any) -> str | None:
+    """Return one canonical borough from a scalar/list field, or None if ambiguous."""
+    values = value if isinstance(value, (list, tuple, set)) else [value]
+    matches = {
+        canonical
+        for candidate in values
+        if (canonical := _normalize_borough_token(candidate)) is not None
+    }
+    return next(iter(matches)) if len(matches) == 1 else None
+
+
+def borough_from_text(*values: Any) -> str | None:
+    """Infer a borough only when text names exactly one canonical NYC borough."""
+    text = " ".join(str(value or "") for value in values if value not in (None, ""))
+    matches = {
+        borough
+        for borough, pattern in _BOROUGH_TEXT_PATTERNS.items()
+        if pattern.search(text)
+    }
+    return next(iter(matches)) if len(matches) == 1 else None
+
+
+def resolve_borough(row: dict[str, Any]) -> tuple[str | None, str | None]:
+    """Resolve borough without guessing from abbreviations embedded in free text."""
+    for field in ("borough", "event_borough"):
+        borough = canonical_borough(row.get(field))
+        if borough:
+            return borough, field
+
+    borough = canonical_borough(row.get("boroughs"))
+    if borough:
+        return borough, "boroughs"
+
+    borough = borough_from_text(
+        row.get("address"),
+        row.get("location"),
+        row.get("display_location"),
+    )
+    if borough:
+        return borough, "location_text"
+    return None, None
 
 
 def source_parts(row: dict[str, Any]) -> tuple[str, str]:
@@ -103,6 +174,12 @@ def intake_row(row: dict[str, Any], status: str) -> dict[str, Any]:
     start = occurrence_start(out)
     out["source_dataset"] = dataset
     out["source_event_id"] = source_event_id
+
+    borough, borough_source = resolve_borough(out)
+    if borough:
+        out["borough"] = borough
+        out["borough_resolution_source"] = borough_source
+
     out["manual_review_status"] = status
     out["official_source_occurrence"] = True
     out["official_source_occurrence_key"] = f"{dataset}:{source_event_id}@{start}"
