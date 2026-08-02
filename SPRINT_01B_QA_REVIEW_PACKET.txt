@@ -1,0 +1,259 @@
+================================================================================
+SPRINT 01B — QA REVIEW PACKET
+Mission Control Builder Verification Closeout (execution attempt + blocker)
+Prepared by: Claude Code (model claude-opus-4-8), GitHub-connected agent
+Date: 2026-08-02
+For: Howard Weiss -> independent QA agent review
+================================================================================
+Self-contained. A reviewer needs no prior chat context to evaluate this.
+
+For every statement below, verifiability is tagged:
+  [VERIFIED]     = confirmed by direct repository/API/local-execution evidence
+  [NOT VERIFIED] = requires access or evidence I do not have
+  [BLOCKED]      = cannot proceed pending a decision
+  [DECISION]     = awaiting a human/ChatGPT ruling
+
+--------------------------------------------------------------------------------
+0. EXECUTIVE SUMMARY
+--------------------------------------------------------------------------------
+- I was authorized (Execution Authorization v2.2) to perform a narrowly scoped
+  Sprint 01B "Builder Verification Closeout" on:
+    repo   : setoxxx/nycif-national-pilot  (PRIVATE)
+    branch : chatgpt/mission-control-v1-20260801
+    commit : 28f54589edac1aacc484b20b6caa5b07fc62d4e9
+- I completed ALL read-only diligence and a full LOCAL reproduction of CI.
+- I then hit a genuine BLOCKER and STOPPED before making any repository write,
+  because the authorization asks for output content that the builder cannot
+  produce without a source-code edit the authorization's write-scope does not
+  clearly grant. Howard chose "Hold for ChatGPT ruling."
+- REPOSITORY WRITES TO nycif-national-pilot THIS SESSION: NONE. [VERIFIED]
+- The only commits I made are documentation on my OWN working branch in a
+  DIFFERENT repo (setoxxx/nycif-live-feeds). See section 8.
+
+RECOMMENDATION TO THE QA AGENT: rule on the builder-source question in
+section 6 (Option A / B / D). Nothing else blocks the closeout.
+
+--------------------------------------------------------------------------------
+1. SCOPE & BOUNDARIES I OPERATED UNDER
+--------------------------------------------------------------------------------
+Authorized writes (per v2.2): the 6 generated Builder outputs, one append-only
+change-ledger entry, and ONE targeted repair only if a post-commit workflow
+fails. Explicitly forbidden: merging PR #43 or #42, changing PR #43's base,
+rebasing the stack, enabling auto-merge, Validator implementation, Pages/
+browser/accessibility/entity/analytics/national-expansion/API/feature work,
+and suppressing/removing/bypassing SonarCloud. I respected all of these; I
+made no writes at all pending the ruling. [VERIFIED]
+
+--------------------------------------------------------------------------------
+2. WHAT I COMPLETED (chronological, all read-only or local-only)
+--------------------------------------------------------------------------------
+2.1  Added setoxxx/nycif-national-pilot to my session (read) and cloned branch
+     chatgpt/mission-control-v1-20260801 locally. [VERIFIED]
+2.2  Confirmed branch HEAD == 28f54589edac1aacc484b20b6caa5b07fc62d4e9. [VERIFIED]
+2.3  Read the builder (tools/nycif_app/build_mission_control.py, 383 lines) and
+     its tests (tests/test_mission_control_builder.py, 246 lines). [VERIFIED]
+2.4  Ran unit tests: `python -m unittest tests.test_mission_control_builder -v`
+       -> Ran 10 tests ... OK. [VERIFIED]
+2.5  Ran builder with the CI fixed timestamp:
+       `python tools/nycif_app/build_mission_control.py --repo-root .
+        --generated-at 2026-08-02T01:30:00Z`
+       -> generated 6 outputs. [VERIFIED]
+2.6  Ran deterministic check:
+       `... --check --generated-at 2026-08-02T01:30:00Z`
+       -> "Mission Control outputs are current." [VERIFIED]
+2.7  Confirmed 3 required outputs are NOT committed on the branch:
+       PROJECT_ENIGMA_STATUS.md, nycif-app/god-view/hub/analytics-contract.json,
+       nycif-app/god-view/hub/release-audit.json
+     (the other 3 — mission-control.json, roadmap.json, system-health.json —
+     are tracked and get modified in place). This missing-output state is
+     exactly what the closeout is meant to remediate. [VERIFIED]
+2.8  Inspected the generated content of release-audit.json and
+     PROJECT_ENIGMA_STATUS.md and compared it to the authorization's required
+     content -> found the contradiction in section 5. [VERIFIED]
+2.9  Reset the local clone to pristine (git checkout + git clean). No repo
+     changes remain anywhere in nycif-national-pilot. [VERIFIED]
+2.10 Because the contradiction changes what would be committed to a shared
+     branch, I asked Howard how to proceed. Howard chose OPTION C = HOLD.
+     I therefore committed NOTHING to nycif-national-pilot. [VERIFIED]
+
+--------------------------------------------------------------------------------
+3. FILES CHANGED IN nycif-national-pilot
+--------------------------------------------------------------------------------
+NONE. No commits, no pushes, no branches, no PRs, no comments. [VERIFIED]
+The builder outputs were generated only in a local, uncommitted clone that was
+then reset to pristine.
+
+--------------------------------------------------------------------------------
+4. VERIFIED CI / VERIFICATION EVIDENCE (facts available for the closeout)
+--------------------------------------------------------------------------------
+These are the durable facts the closeout would record. All [VERIFIED] via the
+GitHub API and local reproduction.
+
+Verified target commit : 28f54589edac1aacc484b20b6caa5b07fc62d4e9
+Workflow               : Mission Control Builder Verification
+Successful run number   : 3
+Successful run ID       : 30727335957
+Run URL                 : https://github.com/setoxxx/nycif-national-pilot/actions/runs/30727335957
+Job name / job ID       : verify-builder / 91441348996
+Job conclusion          : success
+Test command            : python -m unittest tests.test_mission_control_builder -v
+Test result             : Ran 10 tests ... OK (reproduced locally)
+Deterministic --check   : "Mission Control outputs are current." (reproduced locally)
+Protected-file hashes   : before==after; no diff for change-ledger.json,
+                          decision-registry.json, god-view/national-map/**,
+                          .github/workflows/**
+Locked national-map     : unchanged
+Write-allowlist         : passed (all 6 generated paths within the allowlist)
+Prior failed runs       : run #1 (12880b0) failure; run #2 (400fccb) failure —
+                          both failed ONLY at "Verify Builder write allowlist"
+                          because untracked generated files were invisible to
+                          `git diff --name-only`; the fix in 28f5458 added
+                          `git ls-files --others --exclude-standard` (legitimate,
+                          strengthened detection — not a weakening).
+
+SEPARATE FINAL-REVIEW BLOCKER (do NOT resolve during closeout):
+SonarCloud check-run    : "SonarCloud Code Analysis" conclusion = CANCELLED
+                          (completed 2026-08-02T01:36:39Z). This is NOT a pass.
+                          Root cause of cancellation is [NOT VERIFIED] — needs
+                          SonarCloud dashboard access I do not have.
+
+INTEGRATION STATE:
+PR #43 "Mission Control V1: Executive Command Center and Project Memory"
+                        : OPEN, not merged; base = cursor/operational-daily-abc-48f0
+PR #42                  : OPEN; base cursor/operational-daily-abc-48f0 -> main
+                          (so #43 is stacked two levels from main)
+Combined commit status  : pending (checks are check-runs, not legacy statuses)
+
+--------------------------------------------------------------------------------
+5. THE BLOCKER — CONTRADICTION BETWEEN AUTHORIZATION AND ARCHITECTURE [BLOCKED]
+--------------------------------------------------------------------------------
+release-audit.json and PROJECT_ENIGMA_STATUS.md are 100% GENERATED from
+HARDCODED LITERALS in build_mission_control.py:
+  - derive_release_audit()    (approx lines 157-188) -> release-audit.json
+  - project_status_markdown() (approx lines 262-298) -> PROJECT_ENIGMA_STATUS.md
+
+BECAUSE CI runs the builder with `--check`, the committed copies must byte-match
+a fresh build. Consequences:
+  (a) Hand-editing the generated files -> CI `--check` FAILS. Not viable.
+  (b) Editing input DATA cannot change these fields — they are code literals,
+      not data-driven. Not viable.
+  (c) The ONLY way to change their content durably AND keep CI green is to EDIT
+      THE BUILDER SOURCE, then regenerate.
+
+AS GENERATED TODAY vs AS THE AUTHORIZATION REQUIRES:
+
+release-audit.json:
+  MC-BUILDER          today = "in_progress"   required = "DONE"
+  Builder verification today = (absent)        required = a "DONE" item
+  SonarCloud gate     today = (absent)        required = "BLOCKED"/"PENDING" item
+  overall_status      today = "in_progress"   required = stay in_progress (OK)
+  release             today = "Mission Control V2"  (keep; do not mark complete)
+
+PROJECT_ENIGMA_STATUS.md:
+  Current Sprint          today = "Mission Control V2"
+                          required = "Mission Control Builder Verification Closeout"
+  Current Release Blocker today = "Mission Control Builder"
+                          required = "Mission Control Validator"
+  Workflow evidence       today = (absent)   required = run#/ID/URL/job/SHA/etc.
+  SonarCloud line         today = (absent)   required = present as separate blocker
+  PR #43 integration line today = (absent)   required = present
+  Next Authorized Objective today = "Mission Control Validator" (already matches)
+
+CONFLICT WITH WRITE-SCOPE: the authorization grants writes for "closeout
+artifacts and one targeted repair if required by direct workflow evidence."
+The workflow is already GREEN, so a builder-source content change is neither an
+artifact nor a workflow-failure repair -> it falls outside the clear grant.
+Hence the authorization asks for output it does not clearly permit me to make.
+
+NOTE: the 10 unit tests do NOT assert on these literals, so editing them is
+TEST-SAFE. [VERIFIED]
+
+--------------------------------------------------------------------------------
+6. WHAT I NEED DECIDED  [DECISION]  (rule A, B, or D)
+--------------------------------------------------------------------------------
+OPTION A (my recommendation) — AUTHORIZE A SURGICAL BUILDER-SOURCE EDIT.
+  Edit build_mission_control.py so generated files carry the authorized status,
+  then regenerate + commit + push. Concretely:
+    derive_release_audit():
+      - MC-BUILDER status "in_progress" -> "done"
+      - ADD item MC-BUILDER-VERIFICATION = "done"
+        (evidence: workflow file + run 30727335957)
+      - ADD item MC-SONARCLOUD = "blocked"
+        (evidence: SonarCloud check-run cancelled on PR #43 head 28f5458)
+      - keep MC-VALIDATOR/PAGES/BROWSER/ACCESSIBILITY/REVIEW = not_started
+      - keep overall_status = "in_progress" (NOT complete); release unchanged
+    project_status_markdown():
+      - Current Sprint -> "Mission Control Builder Verification Closeout"
+      - add "Builder Status: DONE"
+      - add "Verified Workflow Evidence" (STATIC facts from section 4)
+      - Current Release Blocker -> "Mission Control Validator"
+      - add "Separate Final-Review Blocker: SonarCloud cancelled on PR #43"
+      - add "Integration State: PR #43 open, stacked on PR #42"
+    change-ledger.json: append ONE facts-only entry (next unique change_id) with
+      full run evidence; preserve all prior entries byte-for-byte.
+  GUARANTEES: I will NOT weaken/remove/bypass any of the 10 tests, deterministic
+  --check, protected-file hashes, locked-map hashes, write-allowlist, or fail-
+  closed behavior, and I will NOT touch/suppress SonarCloud.
+  TRADE-OFF: this edits builder application code — on-topic (this IS the Builder
+  sprint) and test-safe, but a real scope expansion only you can authorize.
+
+OPTION B — COMMIT BUILDER OUTPUT AS-IS (strictly in the literal write-scope).
+  Run builder unchanged; commit the 6 generated outputs exactly as produced +
+  a facts-only change-ledger append recording ALL evidence in section 4. CI
+  stays green trivially. TRADE-OFF: release-audit.json still says Builder
+  "in_progress" and the status doc still says sprint "Mission Control V2" /
+  blocker "Mission Control Builder"; the Definition-of-Done line "release-
+  audit.json records Builder DONE" is NOT met (that narrative lives only in the
+  change-ledger + handoff).
+
+OPTION D — DATA-MODEL REFACTOR (maintainable, larger, likely separate sprint).
+  Move the checklist/status text out of code into a new hub input file the
+  builder reads, so future status updates need no code change. Commit nothing
+  until scoped and agreed.
+
+EDGE CASE FOR OPTION A: run 30727335957 verified commit 28f5458 (current HEAD /
+"verified target commit"). Pushing the closeout commit changes HEAD and fires a
+NEW run with a NEW id; the generated doc would still cite 30727335957 against
+28f5458 (factually correct). The new commit's own run id will be reported in
+the post-commit handoff + ledger. Confirm this citation is acceptable.
+
+--------------------------------------------------------------------------------
+7. WHAT I WILL DO ONCE A RULING IS GIVEN
+--------------------------------------------------------------------------------
+- If A: make the surgical edit, regenerate with fixed ts 2026-08-02T01:30:00Z,
+  re-run tests + --check locally, commit (outputs + source + ledger append) to
+  chatgpt/mission-control-v1-20260801, push, observe the new Actions run,
+  confirm green, record SonarCloud exactly as its check-run reports, then return
+  the full 24-section evidence handoff.
+- If B: run builder as-is, commit 6 outputs + ledger append, push, observe CI,
+  return the full handoff (noting the unmet content requirements).
+- If D: return a concrete plan; commit nothing until agreed.
+Under EVERY option: no merges, no base changes, no rebases, no auto-merge, no
+Validator work, no SonarCloud suppression.
+
+--------------------------------------------------------------------------------
+8. CURRENT STATE / ROLLBACK
+--------------------------------------------------------------------------------
+- nycif-national-pilot: UNCHANGED. Nothing to roll back. [VERIFIED]
+- My working branch (docs only), repo setoxxx/nycif-live-feeds, branch
+  claude/mission-control-qa-audit-4129u0:
+    * QA_AUDIT_HANDOFF_sprint01B.txt   (commit c7f20da) — original QA audit
+    * SPRINT_01B_CLOSEOUT_BLOCKER.txt  (commit 632a9b6) — blocker escalation
+    * SPRINT_01B_QA_REVIEW_PACKET.txt  (this file)      — QA review packet
+  These are documentation only; none touch application code or the pilot repo.
+  To discard them: delete the files / reset the branch. No production impact.
+
+--------------------------------------------------------------------------------
+9. EXPLICIT RECOMMENDATION
+--------------------------------------------------------------------------------
+SPRINT 01B: NOT READY TO CLOSE.
+Reasons: (1) required generated-file content cannot be produced without a
+builder-source decision [BLOCKED -> needs ruling A/B/D]; (2) the SonarCloud
+final-review gate is CANCELLED, not passed [separate blocker, out of closeout
+scope]; (3) PR #43 remains open and stacked [integration handled later].
+The Builder verification workflow itself is genuinely green and reproducible
+[VERIFIED] — but a green workflow is not a closed sprint.
+
+================================================================================
+END OF QA REVIEW PACKET
+================================================================================
