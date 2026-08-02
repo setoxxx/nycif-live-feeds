@@ -54,7 +54,6 @@ jobs:
           python3 scripts/build_dpr_pools_lookup.py
           python3 scripts/build_dcp_facilities_lookup.py
           python3 scripts/build_dpr_ambiguous_lookup.py
-          diff -ru /tmp/facility-lookups data --exclude='*' || true
           for file in /tmp/facility-lookups/*; do cmp "$file" "data/$(basename "$file")"; done
       - name: Run focused and existing resolver tests
         run: |
@@ -65,6 +64,7 @@ jobs:
       - name: Run fixed-baseline SHADOW-2 delta
         run: python3 scripts/audit_authoritative_facility_resolvers.py
       - name: Upload source contracts, lookups, and delta
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: authoritative-facility-resolver-audit
