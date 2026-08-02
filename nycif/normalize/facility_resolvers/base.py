@@ -51,8 +51,26 @@ def resolve_exact(record: dict[str, Any], *, lookup_path: Path, candidates: Iter
             continue
         matched = dict(entry)
         matched["facility_query_name"] = candidate
+        matched["facility_matched_alias"] = key
         matches[str(entry.get("authority_id"))] = matched
     if len(matches) != 1:
         return None
     entry = next(iter(matches.values()))
-    return {"latitude": entry["lat"], "longitude": entry["lng"], "coordinate_precision": "certified_facility", "coordinate_source": coordinate_source, "coordinate_status": "approximate", "display_disposition": "approximate_marker", "promotion_allowed": False, "production_feed": False, "public_map_modified": False, "facility_name": entry.get("facility_name"), "facility_type": entry.get("facility_type"), "authority_id": entry.get("authority_id"), "facility_borough": canonical_borough(entry.get("borough")), "facility_match_type": "unique_normalized_name_and_borough", "facility_query_name": entry.get("facility_query_name")}
+    return {
+        "latitude": entry["lat"],
+        "longitude": entry["lng"],
+        "coordinate_precision": "certified_facility",
+        "coordinate_source": coordinate_source,
+        "coordinate_status": "approximate",
+        "display_disposition": "approximate_marker",
+        "promotion_allowed": False,
+        "production_feed": False,
+        "public_map_modified": False,
+        "facility_name": entry.get("facility_name"),
+        "facility_type": entry.get("facility_type"),
+        "authority_id": entry.get("authority_id"),
+        "facility_borough": canonical_borough(entry.get("borough")),
+        "facility_match_type": "unique_normalized_name_and_borough",
+        "facility_query_name": entry.get("facility_query_name"),
+        "facility_matched_alias": entry.get("facility_matched_alias"),
+    }
