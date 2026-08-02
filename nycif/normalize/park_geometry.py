@@ -20,8 +20,12 @@ from typing import Any, Iterable
 from urllib.request import Request, urlopen
 
 DATASET_ID = "enfh-gkve"
-DATASET_URL = f"https://data.cityofnewyork.us/resource/{DATASET_ID}.json?$limit=50000"
+DATASET_URL = (
+    f"https://data.cityofnewyork.us/resource/{DATASET_ID}.json"
+    "?$limit=50000&$order=gispropnum,signname,name311,location"
+)
 DEFAULT_LOOKUP_PATH = Path(__file__).resolve().parents[2] / "data" / "park_centroids.json"
+DEFAULT_AMBIGUOUS_PATH = Path(__file__).resolve().parents[2] / "data" / "park_centroids_ambiguous_aliases.json"
 
 NYC_BOUNDS = {
     "min_lat": 40.4774,
@@ -242,16 +246,156 @@ def _geometry_moments(geometry: Any) -> list[PolygonMoment]:
     return []
 
 
-def centroid_from_geometry(geometry: Any) -> tuple[float, float] | None:
+
+
+def _geometry_polygons(geometry: Any) -> list[list[list[tuple[float, float]]]]:
+    """Return normalized Polygon components as rings of (lng, lat) points."""
+    if isinstance(geometry, str):
+        try:
+            geometry = json.loads(geometry)
+        except json.JSONDecodeError:
+            return []
+    if not isinstance(geometry, dict):
+        return []
+    geom_type = str(geometry.get("type") or "").casefold()
+    if geom_type == "feature":
+        return _geometry_polygons(geometry.get("geometry"))
+    if geom_type == "geometrycollection":
+        return [
+            polygon
+            for child in geometry.get("geometries") or []
+            for polygon in _geometry_polygons(child)
+        ]
+    coordinates = geometry.get("coordinates")
+    raw_polygons = [coordinates] if geom_type == "polygon" else coordinates if geom_type == "multipolygon" else []
+    polygons: list[list[list[tuple[float, float]]]] = []
+    if not isinstance(raw_polygons, list):
+        return polygons
+    for raw_polygon in raw_polygons:
+        if not isinstance(raw_polygon, list):
+            continue
+        rings: list[list[tuple[float, float]]] = []
+        for raw_ring in raw_polygon:
+            if not isinstance(raw_ring, list):
+                continue
+            ring: list[tuple[float, float]] = []
+            for raw_point in raw_ring:
+                if not isinstance(raw_point, (list, tuple)) or len(raw_point) < 2:
+                    continue
+                x = _finite(raw_point[0])
+                y = _finite(raw_point[1])
+                if x is not None and y is not None:
+                    ring.append((x, y))
+            if len(ring) >= 3:
+                if ring[0] != ring[-1]:
+                    ring.append(ring[0])
+                rings.append(ring)
+        if rings:
+            shell_index = max(range(len(rings)), key=lambda index: abs(_ring_moment(rings[index]).signed_area) if _ring_moment(rings[index]) else 0.0)
+            shell = rings[shell_index]
+            holes = [ring for index, ring in enumerate(rings) if index != shell_index]
+            polygons.append([shell, *holes])
+    return polygons
+
+
+def _point_on_segment(x: float, y: float, a: tuple[float, float], b: tuple[float, float]) -> bool:
+    cross = (x - a[0]) * (b[1] - a[1]) - (y - a[1]) * (b[0] - a[0])
+    if abs(cross) > 1e-12:
+        return False
+    return min(a[0], b[0]) - 1e-12 <= x <= max(a[0], b[0]) + 1e-12 and min(a[1], b[1]) - 1e-12 <= y <= max(a[1], b[1]) + 1e-12
+
+
+def _point_in_ring(x: float, y: float, ring: list[tuple[float, float]]) -> bool:
+    inside = False
+    for a, b in zip(ring, ring[1:]):
+        if _point_on_segment(x, y, a, b):
+            return True
+        if (a[1] > y) != (b[1] > y):
+            crossing_x = a[0] + (y - a[1]) * (b[0] - a[0]) / (b[1] - a[1])
+            if crossing_x > x:
+                inside = not inside
+    return inside
+
+
+def _point_in_polygon(x: float, y: float, polygon: list[list[tuple[float, float]]]) -> bool:
+    return bool(polygon and _point_in_ring(x, y, polygon[0]) and not any(_point_in_ring(x, y, hole) for hole in polygon[1:]))
+
+
+def _geometry_contains_point(polygons: list[list[list[tuple[float, float]]]], x: float, y: float) -> bool:
+    return any(_point_in_polygon(x, y, polygon) for polygon in polygons)
+
+
+def _polygon_surface_point(polygon: list[list[tuple[float, float]]]) -> tuple[float, float] | None:
+    """Deterministic Shapely-style representative point using horizontal scanlines."""
+    if not polygon or not polygon[0]:
+        return None
+    shell = polygon[0]
+    ys = [point[1] for point in shell[:-1]]
+    if not ys:
+        return None
+    y_min, y_max = min(ys), max(ys)
+    moment = _polygon_moment(polygon)
+    candidate_ys = []
+    if moment:
+        candidate_ys.append(moment.centroid_y)
+    candidate_ys.extend(y_min + (y_max - y_min) * fraction for fraction in (0.5, 0.375, 0.625, 0.25, 0.75, 0.125, 0.875))
+    best: tuple[float, float, float] | None = None
+    for y in candidate_ys:
+        intersections: list[float] = []
+        for ring in polygon:
+            for a, b in zip(ring, ring[1:]):
+                if abs(a[1] - b[1]) < 1e-15:
+                    continue
+                low, high = sorted((a[1], b[1]))
+                if not (low <= y < high):
+                    continue
+                intersections.append(a[0] + (y - a[1]) * (b[0] - a[0]) / (b[1] - a[1]))
+        intersections.sort()
+        for left, right in zip(intersections[0::2], intersections[1::2]):
+            if right - left <= 1e-12:
+                continue
+            x = (left + right) / 2.0
+            if _point_in_polygon(x, y, polygon):
+                width = right - left
+                if best is None or width > best[0]:
+                    best = (width, x, y)
+    if best:
+        return best[1], best[2]
+    for a, b in zip(shell, shell[1:]):
+        x, y = (a[0] + b[0]) / 2.0, (a[1] + b[1]) / 2.0
+        if _point_in_polygon(x, y, polygon):
+            return x, y
+    return None
+
+
+def representative_point_from_geometry(geometry: Any) -> tuple[float, float, str] | None:
+    """Return (lat, lng, method), falling back to an interior point when needed."""
     moments = _geometry_moments(geometry)
-    if not moments:
+    polygons = _geometry_polygons(geometry)
+    if not moments or not polygons:
         return None
     total_area = sum(abs(moment.signed_area) for moment in moments)
     if total_area <= 1e-15:
         return None
     lng = sum(abs(moment.signed_area) * moment.centroid_x for moment in moments) / total_area
     lat = sum(abs(moment.signed_area) * moment.centroid_y for moment in moments) / total_area
-    return (lat, lng) if _valid_nyc_point(lat, lng) else None
+    if _valid_nyc_point(lat, lng) and _geometry_contains_point(polygons, lng, lat):
+        return lat, lng, "centroid"
+    ranked = sorted(
+        polygons,
+        key=lambda polygon: abs(_polygon_moment(polygon).signed_area) if _polygon_moment(polygon) else 0.0,
+        reverse=True,
+    )
+    for polygon in ranked:
+        point = _polygon_surface_point(polygon)
+        if point and _valid_nyc_point(point[1], point[0]):
+            return point[1], point[0], "point_on_surface"
+    return None
+
+def centroid_from_geometry(geometry: Any) -> tuple[float, float] | None:
+    """Backward-compatible park anchor: centroid when inside, else point-on-surface."""
+    representative = representative_point_from_geometry(geometry)
+    return (representative[0], representative[1]) if representative else None
 
 
 def _first_value(row: dict[str, Any], fields: Iterable[str]) -> str | None:
@@ -353,6 +497,7 @@ def build_park_lookup(rows: Iterable[dict[str, Any]]) -> BuildResult:
                 "names": [],
                 "boroughs": set(),
                 "moments": [],
+                "polygons": [],
             },
         )
         for name in names:
@@ -362,25 +507,42 @@ def build_park_lookup(rows: Iterable[dict[str, Any]]) -> BuildResult:
         if borough:
             group["boroughs"].add(borough)
         group["moments"].extend(moments)
+        group["polygons"].extend(_geometry_polygons(geometry))
 
     aliases: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for park_id, group in grouped.items():
+    for park_id in sorted(grouped):
+        group = grouped[park_id]
         moments = group["moments"]
+        polygons = group["polygons"]
         total_area = sum(abs(moment.signed_area) for moment in moments)
-        if total_area <= 1e-15:
+        if total_area <= 1e-15 or not polygons:
             continue
         lng = sum(abs(moment.signed_area) * moment.centroid_x for moment in moments) / total_area
         lat = sum(abs(moment.signed_area) * moment.centroid_y for moment in moments) / total_area
+        anchor_method = "centroid"
+        if not _valid_nyc_point(lat, lng) or not _geometry_contains_point(polygons, lng, lat):
+            anchor_method = "point_on_surface"
+            ranked = sorted(
+                polygons,
+                key=lambda polygon: abs(_polygon_moment(polygon).signed_area) if _polygon_moment(polygon) else 0.0,
+                reverse=True,
+            )
+            surface = next((point for polygon in ranked if (point := _polygon_surface_point(polygon))), None)
+            if not surface:
+                continue
+            lng, lat = surface
         if not _valid_nyc_point(lat, lng):
             continue
-        names = group["names"]
+        names = sorted(group["names"], key=lambda value: (value.casefold(), value))
         canonical_name = names[0]
+        boroughs = sorted(group["boroughs"], key=str.casefold)
         entry = {
             "lat": round(lat, 7),
             "lng": round(lng, 7),
             "park_id": park_id,
             "park_name": canonical_name,
-            "borough": next(iter(group["boroughs"])) if len(group["boroughs"]) == 1 else None,
+            "borough": boroughs[0] if len(boroughs) == 1 else None,
+            "anchor_method": anchor_method,
             "source_dataset": DATASET_ID,
         }
         for name in names:
@@ -408,13 +570,31 @@ def build_park_lookup(rows: Iterable[dict[str, Any]]) -> BuildResult:
     )
 
 
-def write_park_lookup(rows: Iterable[dict[str, Any]], output_path: Path = DEFAULT_LOOKUP_PATH) -> BuildResult:
+def write_park_lookup(
+    rows: Iterable[dict[str, Any]],
+    output_path: Path = DEFAULT_LOOKUP_PATH,
+    ambiguous_output_path: Path | None = None,
+) -> BuildResult:
     result = build_park_lookup(rows)
     output_path.parent.mkdir(parents=True, exist_ok=True)
     output_path.write_text(
         json.dumps(result.lookup, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
+    if ambiguous_output_path is not None:
+        ambiguous_output_path.parent.mkdir(parents=True, exist_ok=True)
+        ambiguous_output_path.write_text(
+            json.dumps(
+                {
+                    "source_dataset": DATASET_ID,
+                    "ambiguous_aliases": list(result.ambiguous_aliases),
+                },
+                ensure_ascii=False,
+                indent=2,
+                sort_keys=True,
+            ) + "\n",
+            encoding="utf-8",
+        )
     return result
 
 

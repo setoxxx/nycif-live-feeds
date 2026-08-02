@@ -13,6 +13,7 @@ sys.path.insert(0, str(ROOT))
 
 from nycif.normalize.park_geometry import (  # noqa: E402
     DATASET_URL,
+    DEFAULT_AMBIGUOUS_PATH,
     DEFAULT_LOOKUP_PATH,
     load_parks_properties,
     write_park_lookup,
@@ -23,10 +24,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", default=DATASET_URL)
     parser.add_argument("--output", type=Path, default=DEFAULT_LOOKUP_PATH)
+    parser.add_argument("--ambiguous-output", type=Path, default=DEFAULT_AMBIGUOUS_PATH)
     args = parser.parse_args(argv)
 
     rows = load_parks_properties(args.source)
-    result = write_park_lookup(rows, args.output)
+    result = write_park_lookup(rows, args.output, args.ambiguous_output)
     report = {
         "qa_pass": bool(result.lookup),
         "source": args.source,
@@ -39,6 +41,7 @@ def main(argv: list[str] | None = None) -> int:
         "ambiguous_alias_sample": list(result.ambiguous_aliases[:25]),
         "invalid_geometry_rows": result.invalid_geometry_rows,
         "output": str(args.output),
+        "ambiguous_output": str(args.ambiguous_output),
         "promotion_allowed": False,
         "public_map_modified": False,
     }
