@@ -1,0 +1,374 @@
+================================================================================
+SPRINT 04 — MISSION CONTROL BROWSER QA
+FINAL EVIDENCE HANDOFF (Living Authorization v1.0 executed)
+Prepared by: Claude Code (model claude-opus-4-8), GitHub-connected agent
+Date: 2026-08-02  |  For: Howard Weiss -> independent ChatGPT review
+================================================================================
+Evidence tags: [VERIFIED] direct evidence | [INFERRED] reasoned from evidence |
+[NOT VERIFIED] evidence unavailable | [BLOCKED] could not proceed
+
+--------------------------------------------------------------------------------
+1. EXECUTIVE SUMMARY
+--------------------------------------------------------------------------------
+Performed production-equivalent Browser QA of the generated Mission Control Pages
+artifact in a real browser (Chromium 141.0.7390.37) served over HTTP (never
+file://), at desktop/tablet/mobile viewports. The interface loads, renders real
+packaged contract data, loads every UI-required resource (200), produces no
+material console errors, has no horizontal overflow, exercises all discovered
+controls, survives direct refresh, and fails closed under 404/malformed/empty/
+delayed data. NO defects were found, so no UI changes were made. I then executed
+the Browser QA closeout: MC-BROWSER=done, blocker/objective advanced to
+Accessibility QA, Validator contract updated to require MC-BROWSER done. 68 tests
+pass; Validator and Pages verifier pass and remain read-only; the post-closeout
+CI run is GREEN. [VERIFIED]
+Recommendation (section 34): SPRINT 04 READY TO CLOSE. SonarCloud untouched
+(unresolved); no PRs merged; no production deploy; Mission Control V2 in_progress.
+
+--------------------------------------------------------------------------------
+2. STARTING BRANCH AND COMMIT
+--------------------------------------------------------------------------------
+Branch chatgpt/mission-control-v1-20260801 @ ae8a0755b304722efd3f0c31fa70dd5150a23345
+[VERIFIED] (matches authorization). Local == origin; no divergence.
+
+--------------------------------------------------------------------------------
+3. FINAL BRANCH AND COMMIT
+--------------------------------------------------------------------------------
+Branch chatgpt/mission-control-v1-20260801 @ 982baf74e5376e7c6032a2636e9a8b58ea1690a1
+[VERIFIED]. One Sprint 04 commit (closeout): 982baf7. No implementation commit was
+created — Browser QA found no defect and no CI-wired browser automation was added
+(per authorization section 14, an artificial implementation commit is not made).
+
+--------------------------------------------------------------------------------
+4. SPRINT SCOPE
+--------------------------------------------------------------------------------
+Browser QA of the Mission Control Pages surface + preserved-route smoke check +
+deterministic closeout (MC-BROWSER done). No Accessibility QA, no Browser redesign,
+no map changes, no production deploy, no PR merge/rebase. [VERIFIED]
+
+--------------------------------------------------------------------------------
+5. PREFLIGHT REPOSITORY STATE
+--------------------------------------------------------------------------------
+Branch head ae8a075 [VERIFIED]. Commit e985ac8 is NOT present on this repo
+(`git cat-file` returns "Not a valid object name"); it is the Sprint 03
+evidence-handoff commit on the separate setoxxx/nycif-live-feeds working branch —
+recorded, not a divergence. [VERIFIED] No unexplained code changes after ae8a075.
+
+--------------------------------------------------------------------------------
+6. BROWSER AND AUTOMATION ENVIRONMENT
+--------------------------------------------------------------------------------
+Playwright (Python sync API) driving pre-installed Chromium at
+/opt/pw-browsers/chromium-1194/chrome-linux/chrome via executable_path (pip
+Playwright's default build differed, so the on-disk browser was used per
+environment guidance). Browser: Chromium 141.0.7390.37. Headless. [VERIFIED]
+
+--------------------------------------------------------------------------------
+7. ARTIFACT BUILD METHOD
+--------------------------------------------------------------------------------
+tools.nycif_app.prepare_god_view_pages.prepare(output=<temp>/god-view, force=True)
+— the repository's supported preparation process, built into an isolated temp
+directory (the committed god-view/ and locked map were never written). [VERIFIED]
+
+--------------------------------------------------------------------------------
+8. HTTP SERVING METHOD
+--------------------------------------------------------------------------------
+Python http.server (SimpleHTTPRequestHandler) rooted at the temp artifact, bound
+to 127.0.0.1 on an ephemeral port; the browser loaded http://127.0.0.1:<port>/.
+No file:// URLs were used. [VERIFIED]
+
+--------------------------------------------------------------------------------
+9. MISSION CONTROL ROOT ROUTE RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+GET / -> 200 document. Title "Project Enigma · Mission Control"; H1 "Project
+Enigma Command Center"; generatedAt "Repository state generated 2026-08-02T01:30:00Z";
+heroStatus "active pilot". Page renders fully; direct refresh re-renders (h1 + 6
+metrics). No page errors.
+
+--------------------------------------------------------------------------------
+10. HTML ENTRY-POINT RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+index.html served 200 at the site root; parsed and executed; links
+./mission-control.css and loads ./hub.js. No absolute/localhost references.
+
+--------------------------------------------------------------------------------
+11. CSS LOADING RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+mission-control.css -> 200 (the only stylesheet the Mission Control entry point
+references). hub.css is packaged but NOT referenced by the Mission Control page,
+so it is correctly not requested (it belongs to other God View surfaces). No
+missing-CSS errors.
+
+--------------------------------------------------------------------------------
+12. JAVASCRIPT LOADING RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+hub.js -> 200; executed without uncaught exceptions (0 pageerror events on healthy
+load). It fetches the seven governance JSON contracts and renders them.
+
+--------------------------------------------------------------------------------
+13. NINE JSON CONTRACT NETWORK RESULTS  [VERIFIED]
+--------------------------------------------------------------------------------
+Requested by the interface and returned 200 (relative "./"):
+  mission-control.json 200 · roadmap.json 200 · system-health.json 200 ·
+  blockers.json 200 · decision-registry.json 200 · change-ledger.json 200 ·
+  capability-registry.json 200   (all MIME application/json)
+NOT requested by the current interface (packaged/deployed per Sprint 03, but the
+UI does not fetch them; analytics is rendered from mission-control.json.analytics):
+  analytics-contract.json · release-audit.json
+These two are "not represented in the interface" (authorization section 6); this
+is not an application failure. Per §4 the optional favicon (/favicon.ico) 404 is
+reported separately below and is a browser default probe, not an app error.
+Summary: 7 of the 9 packaged JSON are loaded by the browser; 2 are packaged but
+intentionally unreferenced by the UI. No unexplained 404/CORS/mixed-content/loop.
+
+--------------------------------------------------------------------------------
+14. BROWSER CONSOLE RESULTS  [VERIFIED]
+--------------------------------------------------------------------------------
+Clean root load: exactly one console error — "Failed to load resource: 404" for
+the browser's automatic /favicon.ico probe (no favicon is referenced or packaged).
+Classification: Expected/harmless (browser default request). No uncaught
+application exceptions, no rejected required-contract fetches, no JSON parse
+exceptions, no render loops, no undefined-property errors. pageerror events: 0.
+
+--------------------------------------------------------------------------------
+15. DESKTOP VIEWPORT RESULTS (1440x900)  [VERIFIED]
+--------------------------------------------------------------------------------
+Full render; no horizontal overflow (scrollWidth <= innerWidth); no console errors
+beyond the favicon probe. Screenshot: sprint04_desktop.png.
+
+--------------------------------------------------------------------------------
+16. TABLET VIEWPORT RESULTS (1024x768)  [VERIFIED]
+--------------------------------------------------------------------------------
+horizontal_overflow = false; console_errors = none; page_errors = none.
+Screenshot: sprint04_tablet.png.
+
+--------------------------------------------------------------------------------
+17. MOBILE VIEWPORT RESULTS (390x844)  [VERIFIED]
+--------------------------------------------------------------------------------
+horizontal_overflow = false; console_errors = none; page_errors = none.
+Screenshot: sprint04_mobile.png.
+
+--------------------------------------------------------------------------------
+18. RESPONSIVE LAYOUT RESULTS  [VERIFIED]
+--------------------------------------------------------------------------------
+No horizontal overflow at any tested width; content stays within the viewport;
+no console/page errors on load at any width. No layout crash observed. (Formal
+per-element overlap/clipping and zoom auditing is deferred to Accessibility QA;
+the automated overflow + error checks passed at all three widths.) [VERIFIED for
+overflow/errors; fine-grained visual overlap: INFERRED clean from screenshots.]
+
+--------------------------------------------------------------------------------
+19. INTERACTION TEST INVENTORY AND RESULTS  [VERIFIED]
+--------------------------------------------------------------------------------
+Controls discovered from the actual page and exercised:
+- Global search (#globalSearch): typing "locked" updated searchSummary to
+  "Filtering Mission Control for: locked" and filtered record lists; no error.
+- Change filter (#changeFilter) and Decision filter (#decisionFilter) selects:
+  changing to "accepted" re-rendered without error.
+- Nav anchor links (#overview/#pulse/#blockers/... ): clicking #blockers resolved
+  to the section; no error.
+- Capability acceptance <details>/<summary> accordion: toggled open; no error.
+- Direct page refresh: re-rendered correctly.
+- External links (PR #43, Actions) and route links (./map-1-1-preview/) are
+  present with target/rel; internal route links verified via preserved-route load.
+No control produced a console error, navigated to a missing page, or corrupted the
+page. [VERIFIED]
+
+--------------------------------------------------------------------------------
+20. LOADING-STATE RESULTS  [VERIFIED]
+--------------------------------------------------------------------------------
+Initial placeholders ("Loading…", "Not connected") are present in index.html and
+replaced by real data after fetch. The delayed-response case (section 21) confirms
+a delayed contract shows the loading state then renders real data — no infinite
+loading.
+
+--------------------------------------------------------------------------------
+21. FAILURE-STATE RESULTS  [VERIFIED] (via request interception; no files modified)
+--------------------------------------------------------------------------------
+- Required JSON 404 (roadmap.json): visible fatal error "Unable to render verified
+  repository state" rendered into record hosts; h1 intact; no false completion; no
+  crash. [fail-closed]
+- Malformed JSON (mission-control.json): visible fatal error; h1 intact; no
+  uncaught exception surfaced to the user; no false success. [fail-closed]
+- Structurally-valid empty object {} (blockers.json): page loads; metrics still
+  render (6); blocker list shows its empty/muted state; no crash, no false claim.
+  [graceful]
+- Delayed response (system-health.json, ~1.2s): resolves to real data (metrics 6,
+  blockers 4) after the delay; no infinite loading. [ok]
+None displayed stale success as current, silently claimed completion, hung
+without explanation, or modified repository files.
+
+--------------------------------------------------------------------------------
+22. REAL DATA RENDERING RESULTS  [VERIFIED]
+--------------------------------------------------------------------------------
+Rendered child counts match the packaged JSON (not placeholders/demo values):
+metricGrid 6, projectPulse 5, blockerList 4 (blockers.json has 4), pipelineFlow 7,
+kanbanBoard 6, healthList 15 (system-health has 15 components), changeLedger 8,
+decisionList 8 (decision-registry has 8), coverageList 4, borgMemory 4,
+toolRegistry 18 (capability-registry has 18), analyticsBody 3.
+UI reflects: overall in_progress; analytics "Not connected"; no "release ready" /
+"V2 complete" claim present in the DOM. Release-audit stage states (MC-PAGES done,
+MC-BROWSER etc.) are governance data not rendered by the current UI ("not
+represented in the interface").
+
+--------------------------------------------------------------------------------
+23. MAP 1.1 PRESERVATION RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+GET /map-1-1-preview/ -> 200; local assets (css/js/json) all 200 in the server
+log; page title present; body non-empty. Console errors are only blocked EXTERNAL
+map tile/CDN fetches (net::ERR_TUNNEL_CONNECTION_FAILED / ERR_CONNECTION_RESET)
+caused by the environment network policy — not caused by Mission Control work and
+not local-asset failures. Map 1.1 source assets unchanged this sprint.
+
+--------------------------------------------------------------------------------
+24. LOCKED NATIONAL MAP PRESERVATION RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+GET /national-map/ -> 200; local assets 200. Same external-tile console errors as
+Map 1.1 (environment policy), no local failures. god-view/national-map/** bytes
+unchanged (protected-hash compare identical; CI "Verify protected files unchanged"
+= success). The Pages verifier re-checked artifact national-map hashes against the
+locked_map_contract manifest (match).
+
+--------------------------------------------------------------------------------
+25. SCREENSHOT AND VISUAL EVIDENCE INVENTORY  [VERIFIED]
+--------------------------------------------------------------------------------
+Captured from the actual running browser (unedited), delivered to Howard:
+- sprint04_desktop.png  (1440x900, full page)
+- sprint04_tablet.png   (1024x768, full page)
+- sprint04_mobile.png   (390x844, full page)
+- sprint04_fail_404.png  (404 failure-state, fail-closed error visible)
+Raw QA reports: qa_main_report.json, qa_failure_report.json.
+
+--------------------------------------------------------------------------------
+26. DEFECTS DISCOVERED
+--------------------------------------------------------------------------------
+None. [VERIFIED] No material browser, layout, console, network, data, or
+failure-handling defect was found in the Mission Control surface.
+
+--------------------------------------------------------------------------------
+27. REPAIRS APPLIED
+--------------------------------------------------------------------------------
+None. No defect -> no UI/runtime change. MC UI source (index.html, hub.css,
+hub.js, mission-control.css) is byte-unchanged this sprint. [VERIFIED]
+
+--------------------------------------------------------------------------------
+28. FILES ADDED AND MODIFIED  [VERIFIED]
+--------------------------------------------------------------------------------
+Added: none.
+Modified (closeout commit 982baf7, 8 files, +100/-22):
+- tools/nycif_app/build_mission_control.py         (MC-BROWSER done + status)
+- tools/nycif_app/validate_mission_control.py      (require MC-BROWSER done contract)
+- tests/test_mission_control_builder.py            (closeout assertions)
+- tests/test_mission_control_validator.py          (MC-BROWSER closeout tests)
+- nycif-app/god-view/hub/release-audit.json        (regenerated: MC-BROWSER done)
+- nycif-app/god-view/hub/mission-control.json      (regenerated: pulse)
+- nycif-app/god-view/hub/change-ledger.json        (append-only entry)
+- PROJECT_ENIGMA_STATUS.md                         (regenerated: Browser DONE / Accessibility QA)
+
+--------------------------------------------------------------------------------
+29. TESTS AND LOCAL VERIFICATION RESULTS  [VERIFIED]
+--------------------------------------------------------------------------------
+python -m unittest tests.test_mission_control_builder tests.test_mission_control_validator tests.test_mission_control_pages
+  -> Ran 68 tests ... OK (12 Builder + 38 Validator + 18 Pages).
+python tools/nycif_app/validate_mission_control.py --repo-root .  -> PASSED (10 files, 16 categories), read-only.
+python tools/nycif_app/verify_mission_control_pages.py --repo-root . -> PASSED (9 JSON packaged, entry point, Map 1.1, locked map), read-only.
+python tools/nycif_app/build_mission_control.py --repo-root . --check --generated-at 2026-08-02T01:30:00Z -> "Mission Control outputs are current."
+Diff scope = exactly the 8 authorized files; locked national map, Map 1.1, deploy
+workflow, verification workflow, and MC UI source all unchanged.
+
+--------------------------------------------------------------------------------
+30. GITHUB ACTIONS WORKFLOW RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+Post-closeout run:
+  run ID     : 30751794870
+  URL        : https://github.com/setoxxx/nycif-national-pilot/actions/runs/30751794870
+  job ID     : 91507011996 (verify-builder)
+  commit     : 982baf74e5376e7c6032a2636e9a8b58ea1690a1
+  conclusion : success
+  steps (all success): Set up job; Check out branch; Set up Python; Record
+    protected hashes; Run hardened Builder tests; Run Mission Control Validator
+    tests; Run Mission Control Pages integration tests; Run Builder with fixed
+    timestamp; Validate generated JSON parses; Verify deterministic second run;
+    Verify protected files unchanged; Verify Builder write allowlist; Validate
+    Mission Control contracts (fail-closed) and verify read-only; Verify Mission
+    Control Pages integration (fail-closed) and read-only; Write verification summary.
+No cancelled/skipped required checks. (Browser QA itself is not a CI gate — it was
+performed locally to avoid adding a flaky heavyweight browser download to CI; the
+deterministic packaging/contract that guarantees the artifact is still CI-gated.)
+
+--------------------------------------------------------------------------------
+31. RELEASE AUDIT AND PROJECT STATUS RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+release-audit.json: overall_status in_progress; release "Mission Control V2".
+MC-UI/PULSE/GOVERNANCE/BUILDER/BUILDER-VERIFICATION/VALIDATOR/PAGES = done;
+MC-BROWSER = done; MC-ACCESSIBILITY = not_started; MC-REVIEW = not_started;
+MC-SONARCLOUD = blocked.
+PROJECT_ENIGMA_STATUS.md: Current Sprint "Mission Control Browser QA"; Builder /
+Validator / Pages / Browser Status all DONE; Current Release Blocker "Accessibility
+QA"; Verified Browser Evidence section; Next Authorized Objective "Accessibility
+QA"; SonarCloud separate blocker; PR #43 open & stacked on PR #42. No V2-complete
+claim.
+
+--------------------------------------------------------------------------------
+32. SONARCLOUD AND PULL REQUEST STATUS  [VERIFIED]
+--------------------------------------------------------------------------------
+SonarCloud: CANCELLED on recent runs (e.g. check-run 91503828461 on commit
+36ba132); NOT PRESENT on the closeout head 982baf7 at check time. It has NEVER
+PASSED and remains an unresolved separate final-review blocker. Not suppressed,
+removed, repaired, or represented as passing.
+PR #43: open, draft, merged=false, mergeable_state "clean", head 982baf7,
+base cursor/operational-daily-abc-48f0, 28 commits. Not merged.
+PR #42: open, draft, merged=false, base main (untouched by this sprint). PR #43
+remains stacked on PR #42.
+
+--------------------------------------------------------------------------------
+33. REMAINING BLOCKERS AND ROLLBACK INSTRUCTIONS
+--------------------------------------------------------------------------------
+Remaining: Accessibility QA (next objective) [VERIFIED]; Final review readiness
+not_started [VERIFIED]; SonarCloud unresolved [VERIFIED]; PR #43/#42 open,
+unmerged, stacked [VERIFIED].
+Rollback (undo Sprint 04 closeout):
+  git checkout chatgpt/mission-control-v1-20260801
+  git revert --no-edit 982baf74e5376e7c6032a2636e9a8b58ea1690a1
+  git push origin chatgpt/mission-control-v1-20260801
+(or reset --hard ae8a0755b304722efd3f0c31fa70dd5150a23345 && push --force-with-lease
+ if no later commits must be kept.) Effect: MC-BROWSER back to not_started, status
+doc back to Browser QA blocker, validator contract reverted, ledger entry removed.
+No production impact.
+
+--------------------------------------------------------------------------------
+34. EXPLICIT RECOMMENDATION
+--------------------------------------------------------------------------------
+SPRINT 04 READY TO CLOSE.
+
+- Browser QA is complete (real browser, HTTP-served artifact, 3 viewports,
+  network + console + data + interaction + failure-state verified; no defects).
+- Accessibility QA is next.
+- Mission Control V2 is NOT complete (overall_status in_progress; no completion claim).
+- No production deployment occurred.
+- No pull request was merged.
+- SonarCloud remains separately unresolved (CANCELLED / not present; never passed).
+
+Definition-of-Done items all satisfied [VERIFIED]: branch head recorded;
+production-equivalent artifact generated; served over HTTP; actual browser
+(Chromium 141.0.7390.37) used and recorded; root route loads; all UI-required CSS/JS
+and the seven UI JSON contracts load (the two unreferenced JSON documented);
+no material console errors; no required-resource 404s; real contract data renders;
+no false completion claim; desktop/tablet/mobile verified; discovered controls
+exercised; direct refresh verified; loading + failure behavior verified; Map 1.1
+and national-map routes preserved; locked national-map hashes unchanged; existing
+tests pass (68); Validator + Pages verifier pass and remain read-only;
+deterministic Builder --check passes; GitHub Actions run green; SonarCloud honestly
+reported; PR #43/#42 remain open and unmerged; no production deployment;
+MC-BROWSER recorded done; Accessibility QA is the next objective; V2 in_progress.
+
+Two honest caveats for reviewer awareness (neither blocks closeout):
+(1) analytics-contract.json and release-audit.json are packaged but not fetched by
+    the current UI ("not represented in the interface"); the DoD phrase "all nine
+    JSON load" reflects packaging, not browser requests — 7 are loaded by design.
+(2) Preserved map routes could not fully render map tiles because external tile/CDN
+    hosts are blocked by the environment network policy; their local assets load and
+    the routes are structurally intact and undamaged.
+
+Stop after this handoff. Do not begin Accessibility QA without a new authorization.
+================================================================================
+END OF SPRINT 04 HANDOFF — return to Howard Weiss for independent ChatGPT review
+================================================================================
