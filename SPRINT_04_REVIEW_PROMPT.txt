@@ -1,0 +1,109 @@
+================================================================================
+PASTE-TO-CHATGPT — SPRINT 04 REVIEW + NEXT-STEP REQUEST
+Repository: setoxxx/nycif-national-pilot   Branch: chatgpt/mission-control-v1-20260801
+================================================================================
+
+ROLE FOR CHATGPT
+You are the independent reviewer. Claude Code executed Release Sprint 04
+(Mission Control Browser QA) under Living Authorization v1.0. Review the evidence
+below and the attached SPRINT_04_BROWSER_QA_HANDOFF.txt (34 sections, every claim
+tagged VERIFIED / INFERRED / NOT VERIFIED / BLOCKED). Then either ratify the
+closeout or list exactly what must change. Do not assume anything not evidenced.
+
+--------------------------------------------------------------------------------
+WHAT CLAUDE CODE COMPLETED (Sprint 04)
+--------------------------------------------------------------------------------
+- Starting commit: ae8a0755b304722efd3f0c31fa70dd5150a23345
+- Final commit:    982baf74e5376e7c6032a2636e9a8b58ea1690a1  (one closeout commit)
+- Real-browser QA: Chromium 141.0.7390.37 (Playwright) against the Pages artifact
+  built via prepare_god_view_pages into a temp dir and served over HTTP (no file://).
+- Result: NO defects. Root loads; real packaged contract data renders (blockers 4,
+  decisions 8, capabilities 18, health 15); all UI-required resources 200
+  (index.html, mission-control.css, hub.js, 7 JSON); only console entry is the
+  optional favicon 404; desktop/tablet/mobile have no horizontal overflow and no
+  console errors; search/filters/nav/details/refresh work; 404/malformed/empty/
+  delayed failure-states all fail closed with no false completion claim; Map 1.1
+  and national-map routes load (local assets 200; only blocked EXTERNAL map tiles
+  error, which is the environment network policy, not MC damage).
+- No UI changes were made (no defect). Closeout only:
+    * MC-BROWSER = done (release-audit); Browser Status DONE (status doc)
+    * Current release blocker + next objective advanced to: Accessibility QA
+    * Validator contract now requires MC-BROWSER done; Accessibility/Review stay not_started
+    * overall_status stays in_progress; no "V2 complete" claim
+    * Append-only Change Ledger entry MC-20260802-006
+- Verification: 68 tests pass (12 Builder + 38 Validator + 18 Pages); Validator and
+  Pages verifier pass and remain read-only; deterministic Builder --check passes.
+- CI: post-closeout run 30751794870 (job 91507011996) on commit 982baf7 = SUCCESS,
+  all 15 steps green.
+- Unchanged/untouched: locked national map, Map 1.1 assets, production deploy
+  workflow, decision-registry, and the Mission Control UI source files.
+- SonarCloud: CANCELLED on recent runs / not present on the closeout commit; NEVER
+  passed; untouched; still a separate unresolved final-review blocker.
+- PRs: #43 open/draft/unmerged (mergeable_state clean, head 982baf7); #42 open/
+  unmerged (base main). No merges, base changes, rebases, or auto-merge.
+
+TWO HONEST CAVEATS FOR REVIEW (neither blocks closeout in Claude Code's judgment):
+  1) analytics-contract.json and release-audit.json are PACKAGED but NOT fetched by
+     the current UI ("not represented in the interface"); 7 of the 9 packaged JSON
+     are loaded by the browser by design. The DoD phrase "all nine JSON load"
+     reflects packaging, not browser requests.
+  2) Preserved map routes could not fully render tiles because external tile/CDN
+     hosts are blocked by the environment network policy; their LOCAL assets load
+     and the routes are structurally intact and undamaged.
+  3) Browser QA was Chromium-only and was run locally (not added as a CI gate, to
+     avoid a flaky heavyweight browser download in CI). The deterministic
+     packaging/contract that guarantees artifact completeness IS CI-gated.
+
+Claude Code's recommendation: SPRINT 04 READY TO CLOSE.
+
+--------------------------------------------------------------------------------
+WHAT CHATGPT SHOULD DECIDE
+--------------------------------------------------------------------------------
+A) Ratify: reply "SPRINT 04 CONFIRMED CLOSED" if the evidence supports it, OR
+B) List the specific, evidence-based items that must change before closing, OR
+C) Rule on the caveats above (esp. #1: is 7-of-9 browser-loaded acceptable, or do
+   you want analytics-contract.json / release-audit.json surfaced in the UI —
+   noting that surfacing them is new presentation, which Sprint 04 forbade).
+
+--------------------------------------------------------------------------------
+SUGGESTED NEXT SPRINT (for ChatGPT to author the authorization)
+--------------------------------------------------------------------------------
+SPRINT 05 — MISSION CONTROL ACCESSIBILITY QA  (the next authorized objective)
+Scope suggestion for the authorization Chat writes back:
+  * Repo/branch/start commit: setoxxx/nycif-national-pilot,
+    chatgpt/mission-control-v1-20260801, start 982baf7.
+  * Real-browser accessibility audit of the served Pages artifact:
+    - Semantic landmarks/headings order, labels for form controls
+      (globalSearch, changeFilter, decisionFilter already have labels/aria-labels),
+      alt text, link names.
+    - Full keyboard operability: tab order, focus visibility, no keyboard traps,
+      details/summary + selects reachable and operable by keyboard.
+    - Focus management on re-render (search/filter re-render must not strand focus).
+    - Color-contrast checks against WCAG AA for text and status tags.
+    - Reduced-motion / zoom (up to 200%) reflow without loss of content.
+    - Prefer an automated pass (e.g. axe-core injected into the page) PLUS manual
+      keyboard checks; keep it read-only and artifact-based like Sprint 04.
+  * Same guardrails: no map changes, no deploy, no PR merge/rebase, no SonarCloud
+    work; fail-closed tooling; deterministic closeout (MC-ACCESSIBILITY = done,
+    advance blocker/objective to Final review readiness) only after evidence + CI green.
+  * Decide up front whether accessibility automation should become a CI gate
+    (adds a browser to CI) or stay a local evidence pass like Browser QA.
+
+Also still-open, separate from the sprint chain:
+  * SonarCloud final-review gate remains unresolved (needs its own authorization/
+    investigation; do not represent as passing).
+  * PR #43 -> PR #42 -> main integration remains unplanned (separate authorization).
+
+--------------------------------------------------------------------------------
+SUGGESTED MESSAGE TO PASTE BACK TO CLAUDE CODE AFTER CHATGPT RULES
+--------------------------------------------------------------------------------
+  "Claude Code: Sprint 04 confirmed closed. Proceed to author/execute Sprint 05
+   Mission Control Accessibility QA on setoxxx/nycif-national-pilot, branch
+   chatgpt/mission-control-v1-20260801, starting commit 982baf7, using the scope
+   above. Keep all Sprint-04 guardrails. Return the full evidence handoff before
+   any next objective."
+(or paste ChatGPT's revised authorization instead.)
+
+================================================================================
+END
+================================================================================
