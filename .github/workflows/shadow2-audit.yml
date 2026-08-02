@@ -2,6 +2,15 @@ name: Enigma SHADOW-2 Audit
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/shadow2-audit.yml'
+      - 'nycif/normalize/**'
+      - 'scripts/build_dpr_park_centroids.py'
+      - 'scripts/audit_dpr_park_geometry_resolver.py'
+      - 'tests/test_enigma_shadow2/**'
 
 permissions:
   contents: read
@@ -13,7 +22,7 @@ jobs:
       - name: Check out requested ref
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.ref_name }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
