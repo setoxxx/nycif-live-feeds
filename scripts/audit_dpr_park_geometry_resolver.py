@@ -23,6 +23,7 @@ from nycif.normalize.park_geometry import (  # noqa: E402
     load_park_lookup,
     normalize_park_name,
 )
+from scripts.project_events_schema_v1 import project_layer  # noqa: E402
 
 SUPPLEMENTAL_STAGING = ROOT / "data" / "supplemental_events_staging_feed.json"
 BOROUGH_ALIASES = {
@@ -192,10 +193,17 @@ def unresolved_failure_reason(
 
 
 def staging_anchor_candidates(lookup: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
+    """Return only anchors produced by the actual supplemental projection contract."""
+    rows = _events(SUPPLEMENTAL_STAGING)
+    projected = project_layer(
+        rows,
+        data_layer="review_supplemental",
+        park_lookup=lookup,
+    )
     candidates: list[dict[str, Any]] = []
-    for row in _events(SUPPLEMENTAL_STAGING):
-        resolved = resolve_facility_anchor(row, lookup=lookup)
-        if not resolved:
+    for row, event in zip(rows, projected):
+        nycif = event.get("nycif") if isinstance(event.get("nycif"), dict) else {}
+        if nycif.get("coordinate_status") != "approximate":
             continue
         candidates.append(
             {
@@ -203,10 +211,10 @@ def staging_anchor_candidates(lookup: dict[str, dict[str, Any]]) -> list[dict[st
                 "source_dataset": source_identity(row)[0],
                 "source_event_id": source_identity(row)[1],
                 "occurrence_day": occurrence_day(row),
-                "title": row.get("title") or row.get("name"),
-                "location": row.get("location") or row.get("display_location"),
-                "park_id": resolved.get("park_id"),
-                "park_name": resolved.get("park_name"),
+                "title": event.get("title") or row.get("title") or row.get("name"),
+                "location": event.get("location") or row.get("location") or row.get("display_location"),
+                "park_id": nycif.get("park_id"),
+                "park_name": nycif.get("park_name"),
             }
         )
     return candidates
