@@ -1,0 +1,59 @@
+name: ADR-0013 Approximate Marker Audit
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Regenerate approximate GeoJSON deterministically
+        run: |
+          python3 scripts/build_approximate_municipality_stacks.py
+          git diff --exit-code -- data/schema-v1-discovery/approximate/approximate-stacks.json
+      - name: Run approximate marker tests
+        run: |
+          PYTHONPATH=. python3 -m unittest tests.test_build_approximate_municipality_stacks
+          python3 -m unittest discover -s tests/test_enigma_shadow2 -p 'test_*.py'
+      - name: Run SHADOW-2 audit
+        run: |
+          export PYTHONPATH="${PYTHONPATH}:$(pwd)"
+          python3 -m enigma.shadow2.audit --output-dir /tmp/adr0013-audit
+      - name: Verify ADR-0013 safety and counts
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('data/schema-v1-discovery/approximate/approximate-stacks.json').read_text())
+          c=d['counts']
+          assert c['approximate_area']==1292, c
+          assert c['park_level_anchor']==325, c
+          assert c['visible_approximate_occurrences']==1617, c
+          assert c['excluded']['unresolved']==170, c
+          assert d['source_contracts']['approximate-clustered-events']['cluster'] is True
+          assert d['source_contracts']['approximate-facility-events']['cluster'] is False
+          assert not d['safety']['map_ready']
+          assert not d['safety']['map_safe']
+          assert not d['safety']['promotion_allowed']
+          assert not d['safety']['unresolved_geometry_emitted']
+          assert all(f['properties']['coordinate_status']=='approximate' for f in d['features'])
+          assert all(f['properties']['promotion_allowed'] is False for f in d['features'])
+          assert all(f['properties']['list_view_href']=='#eventList' for f in d['features'])
+          print(json.dumps(c, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: adr0013-approximate-audit
+          path: |
+            data/schema-v1-discovery/approximate/approximate-stacks.json
+            /tmp/adr0013-audit/
+          retention-days: 14
