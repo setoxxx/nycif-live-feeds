@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Build ADR-0013 approximate event GeoJSON without promoting review records."""
 from __future__ import annotations
-import argparse, json
+import argparse, json, sys
 from collections import Counter
 from pathlib import Path
 from typing import Any, Iterable
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 APPROVED_MANIFEST = ROOT / 'data/schema-v1-discovery/approved/manifest.json'
 REVIEW_MANIFEST = ROOT / 'data/schema-v1-discovery/review/manifest.json'
 OUTPUT = ROOT / 'data/schema-v1-discovery/approximate/approximate-stacks.json'
