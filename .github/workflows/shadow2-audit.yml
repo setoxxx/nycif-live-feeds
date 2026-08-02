@@ -10,102 +10,39 @@ jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out main
+      - name: Check out requested ref
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.ref_name }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Run SHADOW-2 location audit
+      - name: Run focused SHADOW-2 tests
+        run: |
+          python3 -m unittest discover -s tests/test_enigma_shadow2 -p 'test_*.py'
+          python3 -m unittest discover -s tests -p 'test_refresh_official_supplemental_occurrences.py'
+
+      - name: Run deterministic SHADOW-2 Step 2 audit
         run: |
           export PYTHONPATH="${PYTHONPATH}:$(pwd)"
-          python3 - <<'PY'
-          import json
-          import sys
-          from pathlib import Path
+          python3 -m enigma.shadow2.audit --output-dir /tmp/shadow2-audit
+          cat /tmp/shadow2-audit/shadow2-real-data-audit.md
 
-          sys.path.insert(0, str(Path.cwd()))
+      - name: Upload complete SHADOW-2 Step 2 audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: shadow2-step2-audit
+          path: /tmp/shadow2-audit/
+          if-no-files-found: error
+          retention-days: 14
 
-          from enigma.shadow2.read_only_snapshot import ReadOnlySnapshot
-          from enigma.shadow2.location_evidence import classify_location_evidence
-
-          snapshot = ReadOnlySnapshot()
-
-          approved = list(snapshot.read_approved_events())
-          review = list(snapshot.read_review_events())
-          raw_paths = snapshot.raw_snapshot_paths()
-          raw = list(snapshot.read_raw_snapshots())
-
-          print(f"Approved events:    {len(approved)}")
-          print(f"Review events:      {len(review)}")
-          print(f"Raw snapshot files: {len(raw_paths)}")
-          print(f"Raw records:        {len(raw)}")
-
-          results = {
-              "exact_source_coordinate": 0,
-              "exact_address": 0,
-              "exact_intersection": 0,
-              "certified_street_segment": 0,
-              "certified_facility": 0,
-              "approximate_area": 0,
-              "unresolved": 0,
-              "malformed": 0,
-              "total": 0,
-          }
-
-          review_list_only = []
-
-          for record in approved + review:
-              results["total"] += 1
-              src = record.record if hasattr(record, "record") else record
-              ev = None
-
-              try:
-                  ev = classify_location_evidence(src)
-                  results[ev.tier.value] += 1
-              except Exception:
-                  results["malformed"] += 1
-
-              nycif = src.get("nycif", {}) if isinstance(src, dict) else {}
-              coord_status = nycif.get("coordinate_status") or src.get("coordinate_status", "")
-              is_review = hasattr(record, "collection") and record.collection == "review"
-
-              if coord_status == "list_only" and is_review:
-                  review_list_only.append({
-                      "id": src.get("id"),
-                      "title": str(src.get("title", ""))[:60],
-                      "location": str(src.get("location", ""))[:80],
-                      "borough": src.get("borough"),
-                      "reason": ev.reason_code.value if (ev is not None and ev.reason_code) else None,
-                      "tier": ev.tier.value if ev is not None else "classification_failed",
-                  })
-
-          print("\n--- Location Evidence Distribution ---")
-          for key, value in results.items():
-              print(f"{key}: {value}")
-
-          print(f"\nReview list-only events: {len(review_list_only)}")
-
-          print("\n--- Sample review list-only records ---")
-          for item in review_list_only[:20]:
-              print(json.dumps(item, indent=2))
-
-          out_path = Path("/tmp/shadow2_audit_review_list_only.json")
-          out_path.write_text(
-              json.dumps(review_list_only, indent=1, ensure_ascii=False),
-              encoding="utf-8",
-          )
-          print(f"\nFull audit written to: {out_path}")
-          PY
-
-      - name: Upload full list-only audit
+      - name: Upload legacy list-only artifact
         uses: actions/upload-artifact@v4
         with:
           name: shadow2-audit-review-list-only
-          path: /tmp/shadow2_audit_review_list_only.json
+          path: /tmp/shadow2-audit/shadow2-audit-review-list-only.json
           if-no-files-found: error
           retention-days: 14
