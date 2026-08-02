@@ -1,0 +1,284 @@
+================================================================================
+SPRINT 02A — MISSION CONTROL VALIDATOR CLOSEOUT
+FINAL EVIDENCE HANDOFF (Living Authorization v3.1 executed)
+Prepared by: Claude Code (model claude-opus-4-8), GitHub-connected agent
+Date: 2026-08-02  |  For: Howard Weiss -> independent ChatGPT review
+================================================================================
+Evidence tags: [VERIFIED] direct evidence | [INFERRED] reasoned from evidence |
+[NOT VERIFIED] no access/evidence | [BLOCKED] cannot proceed
+
+--------------------------------------------------------------------------------
+1. EXECUTIVE SUMMARY
+--------------------------------------------------------------------------------
+Executed the one authorized blocker: recorded verified Validator completion
+through the deterministic Builder and Validator contracts. MC-VALIDATOR is now
+"done" (with evidence) in the generated release-audit; PROJECT_ENIGMA_STATUS.md
+records Validator Status DONE and advances the blocker + next objective to
+"Pages Integration Verification"; the Validator contract now REQUIRES MC-VALIDATOR
+done and downstream stages not_started, without weakening any existing gate. All
+outputs are deterministic (no hand-edits), 44 tests pass, the Validator passes
+against the actual repo and remains read-only, and the post-push workflow is
+GREEN. [VERIFIED]
+Recommendation (section 27): SPRINT 02 READY TO CLOSE. SonarCloud untouched; no
+PRs merged. Next objective: Pages Integration Verification.
+
+--------------------------------------------------------------------------------
+2. STARTING COMMIT
+--------------------------------------------------------------------------------
+f4b4bda33569d57a74f3b6a1ff0b9ad0f98c11b2  [VERIFIED] (matches authorization)
+
+--------------------------------------------------------------------------------
+3. FINAL COMMIT
+--------------------------------------------------------------------------------
+1b038d67daa34d3f56b27f8a771d35ae31223fab  [VERIFIED]
+One commit: 1b038d6 "closeout(mission-control): record verified validator completion"
+
+--------------------------------------------------------------------------------
+4. FILES ADDED (0)  [VERIFIED]
+--------------------------------------------------------------------------------
+None. (Sprint 02A modifies existing files only.)
+
+--------------------------------------------------------------------------------
+5. FILES MODIFIED (8)  [VERIFIED]
+--------------------------------------------------------------------------------
+- tools/nycif_app/build_mission_control.py           (release-state + status literals)
+- tools/nycif_app/validate_mission_control.py        (release-audit + project-status contract)
+- tests/test_mission_control_builder.py              (updated closeout assertions)
+- tests/test_mission_control_validator.py            (added closeout contract tests)
+- nycif-app/god-view/hub/release-audit.json          (regenerated: MC-VALIDATOR done)
+- nycif-app/god-view/hub/mission-control.json        (regenerated: pulse latest_change)
+- nycif-app/god-view/hub/change-ledger.json          (append-only entry)
+- PROJECT_ENIGMA_STATUS.md                           (regenerated: Validator DONE, Pages blocker)
+Diffstat f4b4bda..1b038d6: 8 files, +131 / -22. decision-registry, locked
+national-map, and unrelated workflows (incl. the verification workflow) UNCHANGED. [VERIFIED]
+
+--------------------------------------------------------------------------------
+6. BUILDER CONTRACT CHANGES  [VERIFIED]
+--------------------------------------------------------------------------------
+derive_release_audit(): MC-VALIDATOR status "not_started" -> "done" with evidence
+[validate_mission_control.py, test_mission_control_validator.py, the workflow,
+"GitHub Actions run 30729987118", "job 91448430010"]. Unchanged: MC-BUILDER done,
+MC-BUILDER-VERIFICATION done, MC-PAGES/BROWSER/ACCESSIBILITY/REVIEW not_started,
+MC-SONARCLOUD blocked, overall_status in_progress, release "Mission Control V2".
+project_status_markdown(): Current Sprint -> "Mission Control Validator Closeout";
+added "Validator Status: DONE"; added a "Verified Validator Evidence" section
+(validator path, run 30729987118, job 91448430010, verified commit f4b4bda,
+Builder/Validator tests passed, actual-repo validation passed, 10 files, 16
+categories, read-only passed, --check passed, locked national map passed);
+Current Release Blocker and Next Authorized Objective -> "Pages Integration
+Verification". Builder Status DONE and the SonarCloud/PR/Integration lines retained.
+No V2-complete claim.
+
+--------------------------------------------------------------------------------
+7. VALIDATOR CONTRACT CHANGES  [VERIFIED]
+--------------------------------------------------------------------------------
+release-audit contract: replaced the earlier "MC-VALIDATOR must not be prematurely
+done" rule with "MC-VALIDATOR must be present and 'done'" (error MCV-RA-VALIDATOR);
+added "downstream stages MC-PAGES/BROWSER/ACCESSIBILITY/REVIEW must remain
+not_started" (error MCV-RA-DOWNSTREAM). project-status contract: current release
+blocker and next objective must now be "Pages Integration Verification"; added a
+required "Validator Status: DONE" check (error MCV-PS-VALIDATOR). NOT weakened:
+Builder done, Builder-Verification done, overall in_progress, SonarCloud blocked,
+policy flags, analytics, locked-map, evidence paths, candidate leakage, schema
+versions, duplicate IDs, references, timestamps, status enums.
+
+--------------------------------------------------------------------------------
+8. TEST CHANGES  [VERIFIED]
+--------------------------------------------------------------------------------
+Builder tests: updated the two closeout assertions (MC-VALIDATOR done; MC-PAGES
+not_started; status doc sprint/Validator-Status/blocker/objective). Validator tests:
+added 6 tests — accepts legitimate MC-VALIDATOR done; rejects MC-VALIDATOR missing
+/ in_progress / not_started / blocked (MCV-RA-VALIDATOR); rejects downstream stage
+regression MC-PAGES done (MCV-RA-DOWNSTREAM). No existing test deleted or weakened.
+Suite total 38 -> 44.
+
+--------------------------------------------------------------------------------
+9. GENERATED OUTPUT CHANGES  [VERIFIED]
+--------------------------------------------------------------------------------
+release-audit.json: MC-VALIDATOR done (+evidence); all else unchanged.
+PROJECT_ENIGMA_STATUS.md: Validator Closeout sprint; Validator Status DONE;
+Verified Validator Evidence section; blocker + next objective Pages Integration
+Verification; Release Audit list now shows Mission Control Validator DONE.
+mission-control.json: project_pulse.latest_change -> MC-20260802-003.
+roadmap.json / system-health.json / analytics-contract.json: unchanged.
+All generated files byte-match a fresh Builder run (deterministic --check passes).
+
+--------------------------------------------------------------------------------
+10. CHANGE LEDGER ENTRY  [VERIFIED]
+--------------------------------------------------------------------------------
+change_id MC-20260802-003 (prepended; all prior entries preserved byte-for-byte;
+order: -003, -002, -001, MC-20260801-003, -002, -001). change_type "changed",
+status "in_review". Records: Validator implementation + closeout completed;
+validator path; verified commit f4b4bda; run 30729987118 / job 91448430010;
+Builder + Validator tests passed; actual-repo validation passed (10 files, 16
+categories); read-only passed; deterministic --check passed; locked national-map
+verified; SonarCloud unresolved; PR #43 open & stacked on PR #42; next blocker
+Pages Integration Verification; rollback. Post-closeout run ID is recorded in this
+handoff (section 21), not baked into the ledger, to avoid a commit/run cycle.
+
+--------------------------------------------------------------------------------
+11. COMMANDS EXECUTED (local)  [VERIFIED]
+--------------------------------------------------------------------------------
+python -m unittest tests.test_mission_control_builder tests.test_mission_control_validator -v
+python tools/nycif_app/build_mission_control.py --repo-root . --generated-at 2026-08-02T01:30:00Z
+python tools/nycif_app/build_mission_control.py --repo-root . --check --generated-at 2026-08-02T01:30:00Z
+python tools/nycif_app/validate_mission_control.py --repo-root .
+(+ diff-scope and protected-hash before/after checks.)
+
+--------------------------------------------------------------------------------
+12. BUILDER TEST RESULTS  [VERIFIED]
+--------------------------------------------------------------------------------
+12 Builder tests passed (assertions updated for the closeout; none weakened).
+CI step 5 "Run hardened Builder tests" = success.
+
+--------------------------------------------------------------------------------
+13. VALIDATOR TEST RESULTS  [VERIFIED]
+--------------------------------------------------------------------------------
+32 Validator tests passed (26 prior + 6 new closeout tests). Combined local suite:
+Ran 44 tests ... OK. CI step 6 "Run Mission Control Validator tests" = success.
+
+--------------------------------------------------------------------------------
+14. ACTUAL REPOSITORY VALIDATION RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+python tools/nycif_app/validate_mission_control.py --repo-root . -> exit 0,
+"Mission Control validation PASSED. Files validated: 10. Contract categories: 16."
+Also asserted by test_actual_branch_repository_state_passes. CI step 12 = success.
+
+--------------------------------------------------------------------------------
+15. READ-ONLY VERIFICATION RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+test_validator_leaves_repository_unchanged passes (sha256 snapshot identical after
+two runs). CI step 12 git-status before/after guard printed the working tree was
+left unchanged. The Validator opens no file for writing.
+
+--------------------------------------------------------------------------------
+16. DETERMINISTIC CHECK RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+Builder --check (fixed ts 2026-08-02T01:30:00Z): "Mission Control outputs are current."
+Local + CI step 9 "Verify deterministic second run" = success.
+
+--------------------------------------------------------------------------------
+17. JSON VALIDATION RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+All 5 generated JSON files parse with schema_version; PROJECT_ENIGMA_STATUS.md
+starts with the required header. CI step 8 "Validate generated JSON parses" = success.
+
+--------------------------------------------------------------------------------
+18. PROTECTED-FILE HASH RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+Local before/after: decision-registry.json, god-view/national-map/**, and
+.github/workflows/** all IDENTICAL (this sprint did not touch the workflow).
+CI step 10 "Verify protected files unchanged" = success.
+
+--------------------------------------------------------------------------------
+19. LOCKED-MAP HASH RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+Locked national-map unchanged (hash compare identical; CI step 10 success). The
+Validator re-verified the 4 assets in system-health locked_map_contract.expected_hashes
+against on-disk sha256 (CI step 12).
+
+--------------------------------------------------------------------------------
+20. GIT DIFF / WRITE-ALLOWLIST RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+Diff scope = exactly the 8 authorized files (2 source, 2 tests, 4 generated
+[release-audit, mission-control, change-ledger, PROJECT_ENIGMA_STATUS.md]).
+No unauthorized paths changed. CI step 11 "Verify Builder write allowlist" = success.
+
+--------------------------------------------------------------------------------
+21. POST-CLOSEOUT WORKFLOW  [VERIFIED]
+--------------------------------------------------------------------------------
+run number : 7  [INFERRED from sequence; run ID is authoritative]
+run ID     : 30731991199
+URL        : https://github.com/setoxxx/nycif-national-pilot/actions/runs/30731991199
+job ID     : 91453883958 (verify-builder)
+conclusion : success
+head commit: 1b038d67daa34d3f56b27f8a771d35ae31223fab
+steps (all success):
+  1 Set up job                                                 success
+  2 Check out branch                                           success
+  3 Set up Python                                              success
+  4 Record protected hashes before build                       success
+  5 Run hardened Builder tests                                 success
+  6 Run Mission Control Validator tests                        success
+  7 Run Builder with fixed timestamp                           success
+  8 Validate generated JSON parses                             success
+  9 Verify deterministic second run                            success
+  10 Verify protected files unchanged                          success
+  11 Verify Builder write allowlist                            success
+  12 Validate Mission Control contracts (fail-closed) + read-only  success
+  13 Write verification summary                                success
+
+--------------------------------------------------------------------------------
+22. SONARCLOUD STATUS  [VERIFIED]
+--------------------------------------------------------------------------------
+On head 1b038d6: NOT PRESENT — no SonarCloud check-run posted (PR #43
+mergeable_state = "clean"; only verify-builder present). It was CANCELLED on
+earlier head commits (a88df41, 9c1a2d6) and has NEVER PASSED. Unresolved separate
+final-review blocker. Not suppressed, removed, repaired, or inferred as passing.
+
+--------------------------------------------------------------------------------
+23. PR #43 STATUS AND BASE  [VERIFIED]
+--------------------------------------------------------------------------------
+#43 open, draft true, merged false, mergeable_state "clean", head 1b038d6,
+base cursor/operational-daily-abc-48f0. commits 25, changed_files 21. Not merged.
+Base unchanged. No auto-merge.
+
+--------------------------------------------------------------------------------
+24. PR #42 STATUS AND BASE  [VERIFIED, unchanged this sprint]
+--------------------------------------------------------------------------------
+#42 open, draft true, merged false, base main, head cursor/operational-daily-abc-48f0.
+PR #43 remains stacked on PR #42. Untouched this sprint.
+
+--------------------------------------------------------------------------------
+25. REMAINING RELEASE BLOCKERS
+--------------------------------------------------------------------------------
+- Pages Integration Verification — next authorized objective / current release blocker. [VERIFIED]
+- Browser QA, Accessibility QA, Final review readiness — not_started. [VERIFIED]
+- SonarCloud final-review gate — unresolved (NOT PRESENT now / CANCELLED before). [VERIFIED]
+- PR #43 open & stacked on open PR #42; integration is separate. [VERIFIED]
+
+--------------------------------------------------------------------------------
+26. ROLLBACK INSTRUCTIONS
+--------------------------------------------------------------------------------
+Undo Sprint 02A on the branch:
+  git checkout chatgpt/mission-control-v1-20260801
+  git revert --no-edit 1b038d67daa34d3f56b27f8a771d35ae31223fab
+  git push origin chatgpt/mission-control-v1-20260801
+(or: git reset --hard f4b4bda33569d57a74f3b6a1ff0b9ad0f98c11b2 && git push --force-with-lease
+ if the branch has no later commits to keep.)
+Effect: reverts MC-VALIDATOR to not_started, the status doc to the Builder-closeout
+state, the Validator contract to the pre-closeout rules, and removes the ledger
+entry. No production systems affected (scope: Mission Control tooling + God View hub).
+
+--------------------------------------------------------------------------------
+27. EXPLICIT RECOMMENDATION
+--------------------------------------------------------------------------------
+SPRINT 02 READY TO CLOSE.
+
+Every Authorization v3.1 Definition-of-Done item is satisfied [VERIFIED]:
+ [x] MC-VALIDATOR deterministically recorded done   [x] Generated JSON validates
+ [x] Validator evidence recorded                    [x] Protected governance files unchanged
+ [x] Project Status records Validator DONE          [x] Locked national-map files unchanged
+ [x] Project Status advances blocker to Pages Integration Verification
+ [x] Validator contract requires MC-VALIDATOR done  [x] Append-only Change Ledger entry committed
+ [x] Focused closeout tests pass                    [x] Post-closeout workflow passes (run 30731991199)
+ [x] All existing Builder tests pass                [x] SonarCloud accurately reported (NOT PRESENT/unresolved)
+ [x] All existing Validator tests pass              [x] PR #43 and PR #42 accurately reported
+ [x] Actual repository validation passes
+ [x] Builder deterministic --check passes
+ [x] Validator remains read-only
+
+CAVEATS:
+- This closes the VALIDATOR sprint; the overall Mission Control V2 release is NOT
+  ready. overall_status remains in_progress; no V2-complete claim.
+- SonarCloud remains an unresolved separate blocker (section 22).
+- PR #43/#42 remain open, unmerged, stacked; integration is separate.
+- Next authorized objective: Pages Integration Verification (NOT started here).
+
+No Pages Integration, Browser QA, Accessibility QA, SonarCloud repair, integration,
+or other release blocker was begun. No PRs merged; no bases changed; no rebases;
+no auto-merge; locked national map and unrelated workflows unchanged. [VERIFIED]
+
+================================================================================
+END OF SPRINT 02A HANDOFF — return to Howard Weiss for independent ChatGPT review
+================================================================================
