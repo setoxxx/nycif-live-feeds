@@ -7,13 +7,12 @@ on:
     paths:
       - '.github/workflows/adr0013-approximate-audit.yml'
       - 'scripts/build_approximate_municipality_stacks.py'
-      - 'tests/test_build_approximate_municipality_stacks.py'
 
 permissions:
   contents: write
 
 jobs:
-  generate:
+  repair-and-regenerate:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
@@ -24,20 +23,22 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Generate and commit ADR-0013 GeoJSON
+      - name: Correct list anchor and regenerate
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          p=Path('scripts/build_approximate_municipality_stacks.py')
-          text=p.read_text(encoding='utf-8')
-          text=text.replace('import argparse, json\n', 'import argparse, json, sys\n', 1)
-          text=text.replace("ROOT = Path(__file__).resolve().parents[1]\n", "ROOT = Path(__file__).resolve().parents[1]\nsys.path.insert(0, str(ROOT))\n", 1)
-          p.write_text(text, encoding='utf-8')
+          path=Path('scripts/build_approximate_municipality_stacks.py')
+          text=path.read_text(encoding='utf-8')
+          old="'list_view_href': '#event-list'"
+          new="'list_view_href': '#eventList'"
+          if old not in text:
+              raise SystemExit('expected list anchor not found')
+          path.write_text(text.replace(old,new,1),encoding='utf-8')
           PY
           python3 scripts/build_approximate_municipality_stacks.py
           PYTHONPATH=. python3 -m unittest tests.test_build_approximate_municipality_stacks
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add scripts/build_approximate_municipality_stacks.py data/schema-v1-discovery/approximate/approximate-stacks.json
-          git commit -m "data(adr-0013): add approximate event GeoJSON"
+          git commit -m "fix(adr-0013): target the actual event list"
           git push origin HEAD:feat/adr-0013-approximate-markers
