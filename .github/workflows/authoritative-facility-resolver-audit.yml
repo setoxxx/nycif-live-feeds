@@ -1,16 +1,6 @@
 name: Authoritative Facility Resolver Audit
 
 on:
-  pull_request:
-    branches: [main]
-    paths:
-      - '.github/workflows/authoritative-facility-resolver-audit.yml'
-      - 'nycif/normalize/facility_lookup.py'
-      - 'nycif/normalize/facility_resolvers/**'
-      - 'scripts/build_*_lookup.py'
-      - 'scripts/audit_authoritative_facility_resolvers.py'
-      - 'scripts/project_events_schema_v1.py'
-      - 'tests/test_enigma_shadow2/test_authoritative_facility_resolvers.py'
   workflow_dispatch:
 
 permissions:
@@ -22,7 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.ref_name }}
+          ref: ${{ github.ref_name }}
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
