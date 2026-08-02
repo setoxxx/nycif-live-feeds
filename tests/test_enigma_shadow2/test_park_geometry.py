@@ -66,6 +66,28 @@ class ParkGeometryTests(unittest.TestCase):
         record["evidence_tier"] = "exact_address"
         self.assertIsNone(resolve_facility_anchor(record, lookup=self.lookup))
 
+    def test_multiple_distinct_parks_fail_closed(self):
+        second_geometry = {
+            "type": "Polygon",
+            "coordinates": [[
+                [-73.97, 40.73],
+                [-73.96, 40.73],
+                [-73.96, 40.74],
+                [-73.97, 40.74],
+                [-73.97, 40.73],
+            ]],
+        }
+        lookup = build_park_lookup([
+            {"gispropnum": "M033", "signname": "Hamilton Fish Park", "the_geom": self.geometry},
+            {"gispropnum": "M008", "signname": "Bryant Park", "the_geom": second_geometry},
+        ]).lookup
+        self.assertIsNone(
+            find_park_centroid(
+                "Pool in Hamilton Fish Park, class at Bryant Park",
+                lookup=lookup,
+            )
+        )
+
     def test_ambiguous_alias_is_omitted(self):
         rows = [
             {"gispropnum": "A1", "signname": "Unity Park", "the_geom": self.geometry},
