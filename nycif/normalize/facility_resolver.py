@@ -14,6 +14,30 @@ _FACILITY_RE = re.compile(
     r"visitor\s+center|nature\s+center|gymnasium|garden|greenway|beach)\b",
     re.IGNORECASE,
 )
+_BOROUGH_ALIASES = {
+    "m": "Manhattan",
+    "mn": "Manhattan",
+    "manhattan": "Manhattan",
+    "new york": "Manhattan",
+    "b": "Brooklyn",
+    "bk": "Brooklyn",
+    "brooklyn": "Brooklyn",
+    "q": "Queens",
+    "qn": "Queens",
+    "queens": "Queens",
+    "x": "Bronx",
+    "bx": "Bronx",
+    "bronx": "Bronx",
+    "the bronx": "Bronx",
+    "r": "Staten Island",
+    "si": "Staten Island",
+    "staten island": "Staten Island",
+}
+
+
+def canonical_borough(value: Any) -> str | None:
+    key = re.sub(r"\s+", " ", str(value or "").strip().casefold())
+    return _BOROUGH_ALIASES.get(key)
 
 
 def location_text(record: dict[str, Any]) -> str:
@@ -58,7 +82,7 @@ def resolve_facility_anchor(
         "coordinate_source": "dpr_parks_properties_centroid",
         "park_id": match["park_id"],
         "park_name": match.get("park_name"),
-        "park_borough": match.get("borough"),
+        "park_borough": canonical_borough(match.get("borough")),
         "park_match_type": match["match_type"],
         "park_query_name": match["query_name"],
         "promotion_allowed": False,
