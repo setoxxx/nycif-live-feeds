@@ -26,10 +26,18 @@ jobs:
           python-version: '3.11'
       - name: Generate and commit ADR-0013 GeoJSON
         run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/build_approximate_municipality_stacks.py')
+          text=p.read_text(encoding='utf-8')
+          text=text.replace('import argparse, json\n', 'import argparse, json, sys\n', 1)
+          text=text.replace("ROOT = Path(__file__).resolve().parents[1]\n", "ROOT = Path(__file__).resolve().parents[1]\nsys.path.insert(0, str(ROOT))\n", 1)
+          p.write_text(text, encoding='utf-8')
+          PY
           python3 scripts/build_approximate_municipality_stacks.py
-          python3 -m unittest tests.test_build_approximate_municipality_stacks
+          PYTHONPATH=. python3 -m unittest tests.test_build_approximate_municipality_stacks
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/schema-v1-discovery/approximate/approximate-stacks.json
+          git add scripts/build_approximate_municipality_stacks.py data/schema-v1-discovery/approximate/approximate-stacks.json
           git commit -m "data(adr-0013): add approximate event GeoJSON"
           git push origin HEAD:feat/adr-0013-approximate-markers
