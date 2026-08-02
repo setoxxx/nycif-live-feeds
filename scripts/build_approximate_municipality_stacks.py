@@ -88,7 +88,7 @@ def feature(row: dict[str, Any], *, lat: float, lng: float, approximation_class:
             'anchor_name': anchor_name,
             'anchor_id': anchor_id,
             'disclaimer': 'Approximate location',
-            'list_view_href': '#event-list',
+            'list_view_href': '#eventList',
         },
     }
 
