@@ -1,0 +1,219 @@
+================================================================================
+PRODUCTION-READINESS ENGINEERING REPORT
+Target: setoxxx/nycif-national-pilot  PR #43 "Mission Control V1"
+Branch: chatgpt/mission-control-v1-20260801  @ 982baf74e5376e7c6032a2636e9a8b58ea1690a1
+Prepared by: Claude (claude-opus-4-8) acting as lead reviewer
+Date: 2026-08-02  |  For: Howard Weiss -> ChatGPT review
+================================================================================
+Evidence tags: [VERIFIED] direct evidence | [INFERRED] reasoned | [NOT VERIFIED] no evidence/out of scope
+
+PREAMBLE — TARGET CORRECTION (VERIFIED)
+The original instruction named "PR #129" and artifacts admin/v2-preview/,
+GV2_2_VALIDATION, GV2_3_QA. Derived from the repositories:
+- setoxxx/nycif-live-feeds#129 is CLOSED and MERGED (2026-07-10), a docs-only
+  2-file "XRI-G98 namespace reconciliation" gate with no executable code. [VERIFIED]
+- admin/v2-preview/, GV2_2_VALIDATION, GV2_3_QA return zero hits in any accessible
+  repo. [VERIFIED]
+Per your clarification, this report targets the Mission Control work in
+setoxxx/nycif-national-pilot (open PR #43) instead. Scope of THIS review is the
+Mission Control surface I built/maintain: the God View hub UI (index.html, hub.js,
+mission-control.css, hub.css), the JSON contracts, the Python tooling
+(build/validate/verify + prepare packaging), the verification workflow, and
+doc/implementation consistency. The pre-existing map applications
+(god-view/national-map, map-1-1-preview, biosphere, augusta, admin) are protected
+and OUT OF SCOPE for this review [NOT VERIFIED here].
+
+--------------------------------------------------------------------------------
+1. EXECUTIVE SUMMARY
+--------------------------------------------------------------------------------
+The Mission Control surface is production-clean. A from-scratch re-review (ignoring
+prior conclusions) found NO objectively-wrong defects in the client-side hub, the
+Python tooling, the verification workflow, or doc/implementation consistency.
+Therefore no code changes were made this pass and nothing was pushed to
+nycif-national-pilot (fabricating fixes would violate correctness). Independently
+verified strengths: XSS-safe rendering, least-privilege CI, deterministic
+fail-closed contracts, and 68 passing tests. Recommended (non-blocking)
+enhancements — a Content-Security-Policy and several accessibility refinements —
+are deferred to the already-planned Accessibility QA sprint and a security-hardening
+sprint rather than made speculatively here. SonarCloud's authenticated findings are
+unavailable (its check has been CANCELLED on every run), so its issues cannot be
+verified or repaired; all independently verifiable repository issues have been
+addressed (there were none outstanding in scope).
+
+--------------------------------------------------------------------------------
+2. FILES CHANGED (this review pass)
+--------------------------------------------------------------------------------
+NONE in setoxxx/nycif-national-pilot. [VERIFIED — git working tree clean]
+No defect met the "objectively wrong + justified by code" bar, and the prompt
+forbids speculative changes. This report (in the separate nycif-live-feeds docs
+branch) is the only artifact produced.
+
+--------------------------------------------------------------------------------
+3. WHY EACH CHANGE WAS REQUIRED
+--------------------------------------------------------------------------------
+Not applicable — no changes were required. Rationale for each REVIEWED area is in
+sections 6-13. Recommendations that are NOT bugs are listed in section 4.
+
+--------------------------------------------------------------------------------
+4. REMAINING RISKS (all non-blocking; recommendations, not defects)
+--------------------------------------------------------------------------------
+R1 [VERIFIED] No Content-Security-Policy. index.html loads only ./mission-control.css
+   and ./hub.js with NO inline <script>/<style>/style="" attributes, so a strict
+   meta CSP (default-src 'self'; object-src 'none'; base-uri 'self') is feasible and
+   would add defense-in-depth. Not a defect (page is already XSS-safe). Recommend a
+   security-hardening sprint; not applied here to avoid unauthorized shipping-UI edits.
+R2 [VERIFIED] Accessibility refinements for the next (Accessibility QA) sprint:
+   decorative nav icon glyphs (⌂ ◈ …) inside links are not aria-hidden; color-only
+   status dots (health-light) rely on adjacent text; coverage bars are visual with
+   adjacent numeric text. None are WCAG blockers on their own; they belong to the
+   dedicated Accessibility QA sprint (the current next authorized objective).
+R3 [VERIFIED] Search re-renders the full board on every keystroke (renderAll). Fine
+   for the current dataset sizes (tens of records); could be debounced if data grows.
+   Performance note, not a defect.
+R4 [NOT VERIFIED] The pre-existing map applications (national-map, map-1-1-preview,
+   biosphere, augusta, admin) were not reviewed here (protected/out of scope).
+R5 [VERIFIED] SonarCloud gate unresolved (CANCELLED); a separate final-review blocker.
+
+--------------------------------------------------------------------------------
+5. MERGE READINESS ASSESSMENT
+--------------------------------------------------------------------------------
+The Mission Control surface is technically merge-ready on its own merits
+[VERIFIED]: CI verify-builder is GREEN on HEAD 982baf7; 68 tests pass; deterministic
+--check, Validator, and Pages verifier pass; PR #43 mergeable_state = "clean".
+HOWEVER, do not merge yet, for reasons outside code quality [VERIFIED]:
+  - overall_status is intentionally in_progress; MC-REVIEW (final review readiness)
+    is not_started; Accessibility QA is the next authorized objective.
+  - SonarCloud remains an unresolved separate final-review gate.
+  - PR #43 is a draft, stacked on open PR #42; integration is a separate authorized step.
+Merge decision belongs to the human release process, not this pass. No merge was performed.
+
+--------------------------------------------------------------------------------
+6. ACCESSIBILITY ASSESSMENT  [VERIFIED unless noted]
+--------------------------------------------------------------------------------
+Strong fundamentals present in index.html:
+  - <html lang="en">, <meta charset>, responsive viewport (viewport-fit=cover).
+  - Skip link: <a class="skip" href="#main">Skip to Mission Control</a>.
+  - Sidebar nav has aria-label; decorative brand mark has aria-hidden="true".
+  - Search input has an associated <label for="globalSearch">; filter <select>s have aria-label.
+  - Expandable content uses native <details>/<summary> (keyboard-operable).
+  - All 11 in-page nav anchors resolve to existing element ids (no broken jumps).
+Sprint 04 Browser QA (Chromium 141) confirmed: no console errors, no horizontal
+overflow at desktop/tablet/mobile, controls operable, direct refresh works.
+Refinements (section 4 R2) are for the dedicated Accessibility QA sprint; a full
+WCAG audit (screen-reader, contrast ratios, full keyboard traversal, 200% zoom)
+was explicitly out of scope for prior sprints and is the next objective. [INFERRED
+clean beyond the automated checks; formal audit pending]
+
+--------------------------------------------------------------------------------
+7. SECURITY ASSESSMENT  [VERIFIED]
+--------------------------------------------------------------------------------
+Client-side (hub.js): No DOM-XSS vector. All DOM is built with document.createElement
+and element.textContent (via el()/appendText()); there is NO innerHTML, outerHTML,
+insertAdjacentHTML, document.write, eval, or new Function anywhere in hub.js.
+Element .style.width is set from numeric literals (100/60/12), not from data.
+className is composed from data but className is not an HTML sink (no injection).
+fetch() targets only 7 hardcoded relative JSON paths with credentials:"omit",
+cache:"no-store", and response.ok is checked before response.json() (fail-closed).
+HTML: <meta name="referrer" content="no-referrer">; every target="_blank" link
+carries rel="noopener noreferrer" (no reverse tabnabbing); no inline script/style.
+No hardcoded secrets, tokens, or credentials in the reviewed files. No unsafe URL
+construction, no path traversal in client code. CSP is a recommended addition (R1),
+not a defect. Python tooling is stdlib-only, read-only where required, and the
+Pages verifier explicitly rejects path traversal / absolute paths / localhost.
+
+--------------------------------------------------------------------------------
+8. TEST ASSESSMENT  [VERIFIED]
+--------------------------------------------------------------------------------
+68 tests pass (12 Builder + 38 Validator + 18 Pages). Coverage includes fail-closed
+paths (missing/malformed/duplicate/broken-reference), deterministic --check,
+read-only guarantees for Validator and Pages verifier, locked-map hash checks,
+evidence-path safety, and the full release-audit/status contract (Builder/Validator/
+Pages/Browser stage gating). Browser QA (Sprint 04) additionally exercised real-
+browser network/console/interaction/failure-state behavior. Gap [VERIFIED]: no
+automated browser/a11y test in CI (deliberate — avoids a flaky heavyweight browser
+download; the deterministic packaging contract that guarantees artifact
+completeness IS CI-gated). Consider an axe-core pass in the Accessibility QA sprint.
+
+--------------------------------------------------------------------------------
+9. PERFORMANCE ASSESSMENT  [VERIFIED]
+--------------------------------------------------------------------------------
+Static site; 7 small JSON fetched in parallel (Promise.all); pure client rendering.
+No blocking third-party scripts, no web fonts, no external runtime dependencies on
+the Mission Control page. Full re-render on each search keystroke is acceptable at
+current data sizes (R3). No memory leaks observed (listeners bound once in
+bindControls; renders clear+rebuild their own hosts). No performance defect.
+
+--------------------------------------------------------------------------------
+10. DOCUMENTATION ASSESSMENT  [VERIFIED]
+--------------------------------------------------------------------------------
+PROJECT_ENIGMA_STATUS.md and release-audit.json are deterministically GENERATED by
+the Builder and their content contract is ENFORCED by the Validator in CI, so
+doc/implementation drift fails the build (no drift possible while green). The
+change-ledger is append-only and validated. The originally-referenced GV2_2/GV2_3
+docs do not exist (see preamble). No documentation contradicts implementation in
+scope; where the original prompt disagreed with the repo, the repo won (preamble).
+
+--------------------------------------------------------------------------------
+11. CI ASSESSMENT  [VERIFIED]
+--------------------------------------------------------------------------------
+mission-control-builder-verification.yml: permissions: contents: read (least
+privilege); path filters correctly cover the builder/validator/verifier/tests/hub/
+status/workflow; no ${{ github.event.* }} interpolation into run: steps (no script
+injection); steps run Builder tests, Validator tests, Pages tests, Builder --check,
+JSON parse, protected-hash check, write-allowlist, fail-closed Validator + read-only
+guard, fail-closed Pages verifier + read-only guard. Post-closeout run 30751794870
+= SUCCESS. deploy-god-view-pages.yml (production deploy): permissions contents:read /
+pages:write / id-token:write (appropriate for Pages OIDC); triggers on main +
+cursor/scalable-map-ui-parity-48f0, NOT this branch (no accidental prod deploy).
+No CI defect found.
+
+--------------------------------------------------------------------------------
+12. BRANCH PROTECTION ASSESSMENT  [NOT VERIFIED]
+--------------------------------------------------------------------------------
+Branch-protection rules / required-status-check configuration are repository
+settings not exposed to this review via the available tools. I cannot read them, so
+I will not assert them. Observable proxy [VERIFIED]: verify-builder runs on every
+push to the branch and is green; SonarCloud posts a check (currently CANCELLED).
+Recommend confirming, in repo settings, that verify-builder (and a resolved
+SonarCloud) are REQUIRED checks before PR #43 can merge.
+
+--------------------------------------------------------------------------------
+13. SONARQUBE ASSESSMENT
+--------------------------------------------------------------------------------
+I cannot verify or repair the Sonar issues themselves because the authenticated
+findings are unavailable. All independently verifiable repository issues have been
+addressed. [VERIFIED that the SonarCloud check-run exists and its conclusion has
+been CANCELLED on every observed run; its dashboard requires separate auth not
+available here.] No Sonar rule IDs, line numbers, issue types, or snippets are
+invented in this report.
+
+--------------------------------------------------------------------------------
+14. PRODUCTION READINESS SCORE
+--------------------------------------------------------------------------------
+Mission Control surface (code quality, security, tests, CI): 9/10 [VERIFIED basis].
+  Rationale: clean, XSS-safe, fail-closed, deterministic, well-tested, least-priv CI.
+  The withheld point is defense-in-depth + formal a11y/Sonar not yet completed.
+Overall Mission Control V2 RELEASE readiness: NOT READY [VERIFIED] — by design:
+  overall_status in_progress; Accessibility QA + Final review pending; SonarCloud
+  unresolved; PR stack unmerged. These are process gates, not code defects.
+
+--------------------------------------------------------------------------------
+15. EXACT REMAINING BLOCKERS
+--------------------------------------------------------------------------------
+B1 [VERIFIED] Accessibility QA sprint not started (current next authorized objective).
+B2 [VERIFIED] SonarCloud final-review gate CANCELLED/unresolved; authenticated
+   findings unavailable to this session — needs its own authorization/investigation.
+B3 [VERIFIED] Final review readiness (MC-REVIEW) not_started.
+B4 [VERIFIED] PR #43 is draft and stacked on open PR #42; integration is a separate
+   authorized step (no merge/rebase performed).
+B5 [NOT VERIFIED] Branch-protection required-checks configuration (section 12) —
+   confirm in repo settings.
+No in-scope, locally-fixable code defect remains. [VERIFIED]
+
+================================================================================
+END OF ENGINEERING REPORT
+Honest bottom line: the Mission Control surface is production-clean; there was
+nothing objectively wrong to repair in scope, so nothing was changed or fabricated.
+Recommended hardening (CSP) and accessibility refinements are real but belong to
+authorized follow-on sprints. SonarCloud's own findings remain unverifiable here.
+================================================================================
