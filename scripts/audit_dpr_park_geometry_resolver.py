@@ -20,17 +20,21 @@ from nycif.normalize.facility_resolver import resolve_facility_anchor  # noqa: E
 from nycif.normalize.park_geometry import DEFAULT_LOOKUP_PATH, load_park_lookup  # noqa: E402
 
 BOROUGH_ALIASES = {
+    "m": "Manhattan",
     "mn": "Manhattan",
     "manhattan": "Manhattan",
     "new york": "Manhattan",
+    "b": "Brooklyn",
     "bk": "Brooklyn",
     "brooklyn": "Brooklyn",
     "qn": "Queens",
     "q": "Queens",
     "queens": "Queens",
+    "x": "Bronx",
     "bx": "Bronx",
     "bronx": "Bronx",
     "the bronx": "Bronx",
+    "r": "Staten Island",
     "si": "Staten Island",
     "staten island": "Staten Island",
 }
@@ -59,7 +63,25 @@ def coordinate_status(record: dict[str, Any]) -> str:
     return str(nycif.get("coordinate_status") or record.get("coordinate_status") or "unknown")
 
 
+def raw_borough_index(snapshot: ReadOnlySnapshot) -> dict[tuple[str, str], str]:
+    candidates: dict[tuple[str, str], set[str]] = {}
+    for wrapped in snapshot.read_raw_snapshots():
+        record = wrapped.record
+        identity = source_identity(record)
+        if not all(identity):
+            continue
+        borough = None
+        for field in ("borough", "event_borough", "boroughs"):
+            borough = canonical_borough(record.get(field))
+            if borough:
+                break
+        if borough:
+            candidates.setdefault(identity, set()).add(borough)
+    return {identity: next(iter(values)) for identity, values in candidates.items() if len(values) == 1}
+
+
 def build_delta(snapshot: ReadOnlySnapshot, lookup: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    raw_boroughs = raw_borough_index(snapshot)
     baseline = 0
     candidates: list[dict[str, Any]] = []
     source_counts: Counter[str] = Counter()
@@ -83,7 +105,13 @@ def build_delta(snapshot: ReadOnlySnapshot, lookup: dict[str, dict[str, Any]]) -
         if not resolved:
             continue
 
+        dataset, source_event_id = source_identity(record)
+        identity = (dataset, source_event_id)
         event_borough = canonical_borough(record.get("borough") or record.get("event_borough"))
+        borough_evidence_source = "projected_record" if event_borough else None
+        if event_borough is None:
+            event_borough = raw_boroughs.get(identity)
+            borough_evidence_source = "raw_source" if event_borough else None
         park_borough = canonical_borough(resolved.get("park_borough"))
         warnings: list[str] = []
         if event_borough and park_borough and event_borough != park_borough:
@@ -96,7 +124,6 @@ def build_delta(snapshot: ReadOnlySnapshot, lookup: dict[str, dict[str, Any]]) -
             warnings.append("latitude_outside_nyc")
             mismatch_reasons["latitude_outside_nyc"] += 1
 
-        dataset, source_event_id = source_identity(record)
         source_counts[dataset or "unknown"] += 1
         park_counts[str(resolved.get("park_id") or "unknown")] += 1
         candidates.append(
@@ -105,6 +132,7 @@ def build_delta(snapshot: ReadOnlySnapshot, lookup: dict[str, dict[str, Any]]) -
                 "title": record.get("title"),
                 "location": record.get("location") or record.get("display_location"),
                 "borough": event_borough,
+                "borough_evidence_source": borough_evidence_source,
                 "source_dataset": dataset,
                 "source_event_id": source_event_id,
                 "coordinate_precision": "park_level_anchor",
@@ -145,6 +173,7 @@ def build_delta(snapshot: ReadOnlySnapshot, lookup: dict[str, dict[str, Any]]) -
         "park_level_anchor_candidates": len(candidates),
         "remain_truly_unresolvable": baseline - len(candidates),
         "potential_incorrect_match_count": potential_mismatch_count,
+        "raw_source_borough_identity_count": len(raw_boroughs),
         "potential_mismatch_reason_distribution": dict(sorted(mismatch_reasons.items())),
         "source_distribution": dict(sorted(source_counts.items(), key=lambda item: (-item[1], item[0]))),
         "matched_park_distribution": dict(sorted(park_counts.items(), key=lambda item: (-item[1], item[0]))),
