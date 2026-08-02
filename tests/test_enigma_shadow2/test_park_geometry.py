@@ -27,7 +27,7 @@ class ParkGeometryTests(unittest.TestCase):
                 "gispropnum": "M033",
                 "signname": "Hamilton Fish Park",
                 "name311": "Hamilton Fish Playground",
-                "borough": "Manhattan",
+                "borough": "M",
                 "the_geom": self.geometry,
             }
         ])
@@ -62,6 +62,7 @@ class ParkGeometryTests(unittest.TestCase):
         self.assertEqual(resolved["coordinate_precision"], "park_level_anchor")
         self.assertEqual(resolved["coordinate_source"], "dpr_parks_properties_centroid")
         self.assertFalse(resolved["promotion_allowed"])
+        self.assertEqual(resolved["park_borough"], "Manhattan")
         record["evidence_tier"] = "exact_address"
         self.assertIsNone(resolve_facility_anchor(record, lookup=self.lookup))
 
