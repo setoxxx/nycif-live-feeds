@@ -1,0 +1,235 @@
+================================================================================
+QA AUDIT HANDOFF — Mission Control Builder Verification (Sprint 01B)
+Prepared by: Claude Code (model claude-opus-4-8) — GitHub-connected agent
+Date: 2026-08-02
+For: Howard Weiss (setoxxx) — to relay to ChatGPT ("Chat") for next instructions
+================================================================================
+
+--------------------------------------------------------------------------------
+0. TL;DR (read this first)
+--------------------------------------------------------------------------------
+- I performed a READ-ONLY independent QA audit. I made ZERO changes to any
+  repository. No commits, no pushes, no branches, no PRs, no comments.
+- The "Mission Control Builder Verification" GitHub Actions workflow PASSED on
+  the target commit (run #3 = success), after 2 earlier failures on the same
+  branch.
+- The failures had ONE real cause; the fix that made it green is a LEGITIMATE
+  correctness change, NOT a weakened/disabled check. I verified this from logs.
+- BUT "Sprint 01B is complete" is NOT VERIFIED, for 3 concrete reasons:
+    1. SonarCloud Code Analysis = CANCELLED on the target commit (no passing
+       quality/security gate).
+    2. PR #43 is OPEN, not merged; its base is NOT main (it targets
+       cursor/operational-daily-abc-48f0, itself open PR #42 -> main).
+    3. The green run executed a workflow that was modified in the SAME commit
+       that made it pass (self-referential; the change is sound, but worth noting).
+- Recommendation: DO NOT mark Sprint 01B complete yet. Builder verification is
+  genuinely green; the RELEASE is not.
+
+--------------------------------------------------------------------------------
+1. EXACT TARGET AUDITED
+--------------------------------------------------------------------------------
+Repository : setoxxx/nycif-national-pilot   (PRIVATE)
+Branch     : chatgpt/mission-control-v1-20260801
+Commit     : 28f54589edac1aacc484b20b6caa5b07fc62d4e9
+Commit msg : "fix(mission-control): include untracked generated outputs in
+             builder QA"
+Author     : Howard Weiss <setoxxx@gmail.com>, 2026-08-02T01:35:50Z
+Diff size  : +4 / -2, ONE file changed:
+             .github/workflows/mission-control-builder-verification.yml
+
+NOTE ON REPO SCOPE: My session started scoped to setoxxx/nycif-live-feeds (a
+DIFFERENT repo). The audit target (nycif-national-pilot) was out of scope. I
+added it to the session (read access) to run the audit. Both repos are now in
+scope. My working directory is /home/user/nycif-live-feeds and THIS handoff
+file is saved there.
+
+--------------------------------------------------------------------------------
+2. WHAT I ACTUALLY DID (step by step, all read-only)
+--------------------------------------------------------------------------------
+1.  Confirmed my GitHub identity (get_me) -> setoxxx / Howard Weiss.
+2.  Discovered the target repo was out of scope; listed available repos and
+    added setoxxx/nycif-national-pilot to the session (read-only).
+3.  Pulled commit 28f54589 metadata + full patch (the workflow diff).
+4.  Listed all workflow runs of "Mission Control Builder Verification" on the
+    branch (found 3 runs).
+5.  Listed the jobs/steps of the successful run (#3).
+6.  Retrieved the raw workflow YAML at the target commit.
+7.  Retrieved the FAILED job logs for run #1 and run #2.
+8.  Retrieved the FULL success log for run #3 (job 91441348996).
+9.  Retrieved ALL check-runs and the combined commit status for PR #43
+    (this is how I found the cancelled SonarCloud check).
+10. Listed all open/closed PRs to establish integration state (PR #43 open,
+    base = cursor/operational-daily-abc-48f0; that base is open PR #42 -> main).
+
+--------------------------------------------------------------------------------
+3. CHANGES I MADE
+--------------------------------------------------------------------------------
+- To the repository: NONE. This was a pure audit.
+- To the local machine: created ONE file -> this handoff:
+      /home/user/nycif-live-feeds/QA_AUDIT_HANDOFF_sprint01B.txt
+  (Not committed. It lives in the nycif-live-feeds working dir, which is a
+  different repo from the audit target. If you want it committed anywhere,
+  tell me where.)
+
+--------------------------------------------------------------------------------
+4. VERIFIED FINDINGS (direct evidence only)
+--------------------------------------------------------------------------------
+F1. Branch HEAD == target commit exactly. (chatgpt/mission-control-v1-20260801
+    -> 28f54589...)
+
+F2. Three runs on the branch; only the target commit is green:
+      Run #1  sha 12880b0  01:27  FAILURE
+      Run #2  sha 400fccb  01:29  FAILURE
+      Run #3  sha 28f5458  01:35  SUCCESS  (this is the target commit)
+
+F3. Both failures had the SAME single root cause, in the step
+    "Verify Builder write allowlist":
+      AssertionError: Expected generated outputs not changed/created:
+      ['PROJECT_ENIGMA_STATUS.md',
+       'nycif-app/god-view/hub/analytics-contract.json',
+       'nycif-app/god-view/hub/release-audit.json']
+    Cause: the check used `git diff --name-only`, which lists ONLY tracked
+    file modifications. Those 3 required outputs were newly UNTRACKED files, so
+    they were invisible to the check and the "required outputs were produced"
+    assertion failed. (The 3 already-tracked outputs did show up.)
+    Every other step passed in all runs; the failure was isolated to this step.
+
+F4. THE FIX IS LEGITIMATE (not a bypass). The one-file change replaced:
+        git diff --name-only
+    with:
+        { git diff --name-only; git ls-files --others --exclude-standard; } \
+          | sort -u
+    This ADDS untracked files to the set. Effects:
+      - "No unexpected writes" assertion becomes STRICTER (untracked stray
+        files would now also be caught).
+      - "Required outputs produced" assertion now correctly sees newly created
+        files.
+    No assertion was deleted or relaxed. Confirmed against failing + passing
+    logs.
+
+F5. The green run genuinely exercised the builder (from run #3 logs):
+      - 10 unit tests: "Ran 10 tests ... OK" (incl. fail-closed cases:
+        duplicate IDs, malformed JSON, missing inputs, missing protected
+        registry, no-partial-outputs).
+      - Builder generated all 6 outputs.
+      - JSON parse + schema_version validation: passed.
+      - Determinism: second `--check` run -> "Mission Control outputs are
+        current."
+      - Protected files (change-ledger.json, decision-registry.json,
+        god-view/national-map/**, .github/workflows/**): before/after sha256
+        diff -> no differences.
+      - Write allowlist: all 6 changed paths within allowlist -> passed.
+
+--------------------------------------------------------------------------------
+5. NOT VERIFIED / NEGATIVE EVIDENCE
+--------------------------------------------------------------------------------
+NV1. SonarCloud / SonarQube -> NOT VERIFIED, evidence is NEGATIVE.
+     Check-run "SonarCloud Code Analysis" on the target commit:
+       conclusion = CANCELLED, completed 01:36:39Z.
+     There is NO passing quality/security gate on this commit. Why it cancelled
+     (missing token, concurrency cancel, PR-from-stack config, manual cancel)
+     is NOT observable from the GitHub API alone; the SonarCloud dashboard
+     needs separate auth I do not currently have.
+
+NV2. "Sprint 01B" == this workflow -> NOT VERIFIED.
+     I found no sprint definition / acceptance-criteria doc tying "Sprint 01B
+     complete" to this single builder workflow. The workflow attests to the
+     BUILDER only, not any broader sprint scope.
+
+NV3. Integration state -> NOT MERGED.
+     PR #43 "Mission Control V1: Executive Command Center and Project Memory"
+     is OPEN. Base = cursor/operational-daily-abc-48f0 (NOT main). That base is
+     itself open PR #42 -> main. Combined commit status = pending. So the work
+     is a 2-level stack away from main and not integrated.
+
+--------------------------------------------------------------------------------
+6. RISKS
+--------------------------------------------------------------------------------
+R1. False "done" signal: one green, narrowly-scoped run can be mistaken for
+    sprint completion. It verifies builder determinism/integrity only.
+R2. No quality/security gate: SonarCloud cancelled -> no static-analysis
+    assurance on this commit.
+R3. Self-referential green: the commit that turned CI green edited the CI
+    definition. The edit is sound, but changes to generated-output tracking
+    could later alter what the allowlist check "sees."
+R4. Stacked, unmerged PR: #43 -> #42 -> main; base can drift; merge order
+    matters.
+
+--------------------------------------------------------------------------------
+7. WHAT I (CLAUDE CODE, claude-opus-4-8) AM CAPABLE OF DOING NEXT
+--------------------------------------------------------------------------------
+CONTEXT FOR CHAT: I am "Claude Code," a coding agent running in a cloud
+container with live, authenticated GitHub access via a GitHub MCP server. I am
+NOT the same as the chat assistant that lacked a GitHub connector. Key powers:
+
+READ / INVESTIGATE (no side effects):
+  - Read any commit, diff, file, branch, tag, release in repos in my session
+    scope (currently: nycif-live-feeds, nycif-national-pilot; I can add more
+    repos the user owns on request).
+  - List/inspect GitHub Actions: workflows, runs, jobs, steps, and pull FULL
+    RAW LOG CONTENT of any job (success or failure).
+  - Read all check-runs and combined commit statuses (this is how I caught the
+    cancelled SonarCloud check).
+  - Read PRs, PR files, PR diffs, reviews, review comments, issue data.
+  - Clone the repo into the container and run code / tests / scripts locally
+    (Python, shell, etc.), including re-running the builder to reproduce CI.
+  - Search code across in-scope repos.
+
+WRITE / ACT (only if you explicitly tell me to):
+  - Create/checkout branches, commit, and push (I have push access to these
+    repos). My assigned working branch for this task is
+    claude/mission-control-qa-audit-4129u0 on nycif-live-feeds; I will not push
+    elsewhere without explicit permission.
+  - Edit the workflow YAML or builder code, open a PR, comment on PRs/issues,
+    re-trigger workflow runs (workflow_dispatch), enable auto-merge, merge PRs.
+  - Subscribe to a PR's activity and auto-respond to CI failures / review
+    comments.
+
+LIMITS / WHAT I CANNOT DO:
+  - I cannot see inside SonarCloud's own dashboard/logs (separate auth). I can
+    only see the GitHub-side check-run result (which said "cancelled").
+  - I cannot act on repos not in my session scope until they are added.
+  - I will not push to branches other than my assigned one without explicit
+    permission, and I will not open a PR unless you ask.
+  - Outbound network is via a controlled proxy; some external services may be
+    restricted.
+
+--------------------------------------------------------------------------------
+8. WHAT I RECOMMEND DOING NEXT (pick any; tell me which)
+--------------------------------------------------------------------------------
+OPTION A (diagnose the blocker): Investigate WHY "SonarCloud Code Analysis"
+  was cancelled on commit 28f5458. I'd read the Sonar workflow/config in the
+  repo, check for a required SONAR_TOKEN secret, look at concurrency settings
+  and whether stacked-PR events cancel it, and report the likely cause + fix.
+
+OPTION B (reproduce CI locally): Clone nycif-national-pilot, run
+  `python -m unittest tests.test_mission_control_builder -v` and the builder
+  with the fixed timestamp + `--check`, to independently reproduce the green
+  result outside GitHub's runners.
+
+OPTION C (define "done"): Locate/QA the Sprint 01B acceptance criteria in the
+  repo (docs/ADRs/status files) and produce a checklist mapping each criterion
+  to concrete evidence (pass / fail / not-verified).
+
+OPTION D (fix + drive to green): If Chat decides the Sonar cancellation is a
+  real defect, I can implement the fix on my assigned branch (or a new branch
+  you name), push, open a PR if you ask, and babysit CI to green.
+
+OPTION E (integration plan): Analyze the #43 -> #42 -> main stack and propose
+  a safe merge order, re-verifying after each rebase.
+
+I DID NOT DO ANY OF THESE YET — they are options awaiting your instruction.
+
+--------------------------------------------------------------------------------
+9. SUGGESTED PROMPT FOR CHAT TO GIVE BACK TO ME
+--------------------------------------------------------------------------------
+(You can paste something like this back to me after Chat reads the above.)
+
+  "Claude Code: proceed with OPTION ___ on setoxxx/nycif-national-pilot.
+   Target commit 28f54589. If code changes are needed, use branch ___ and
+   [do / do NOT] open a PR. Report evidence for every conclusion and mark
+   anything you cannot directly verify as NOT VERIFIED."
+
+================================================================================
+END OF HANDOFF
+================================================================================
