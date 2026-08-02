@@ -72,7 +72,7 @@ def inspect_dataset(label: str, dataset_id: str) -> dict[str, Any]:
     metadata_url = f"https://{DOMAIN}/api/views/{dataset_id}"
     try:
         metadata = fetch_json(metadata_url)
-    except Exception as exc:  # network/schema evidence, retained in report
+    except Exception as exc:
         return {
             "label": label,
             "requested_id": dataset_id,
