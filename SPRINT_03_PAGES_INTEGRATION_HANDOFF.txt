@@ -1,0 +1,368 @@
+================================================================================
+SPRINT 03 — MISSION CONTROL PAGES INTEGRATION VERIFICATION
+FINAL EVIDENCE HANDOFF (Living Authorization v4.0 executed)
+Prepared by: Claude Code (model claude-opus-4-8), GitHub-connected agent
+Date: 2026-08-02  |  For: Howard Weiss -> independent ChatGPT review
+================================================================================
+Evidence tags: [VERIFIED] direct evidence | [INFERRED] reasoned from evidence |
+[NOT VERIFIED] no access/evidence | [BLOCKED] cannot proceed
+
+--------------------------------------------------------------------------------
+1. EXECUTIVE SUMMARY
+--------------------------------------------------------------------------------
+Discovery found a directly-evidenced Pages packaging defect: the God View deploy
+tool packaged only index.html/hub.css/hub.js into the god-view artifact, omitting
+mission-control.css and the nine canonical hub JSON contracts that the Mission
+Control HTML links and hub.js fetches — so the deployed surface would fail closed.
+I applied the narrow authorized repair (package the CSS + all required JSON,
+byte-identical, fail-closed if any source is missing), added a fail-closed
+read-only Pages verifier + 18 focused tests, wired both into CI, then executed the
+Pages closeout (MC-PAGES=done; blocker/objective advanced to Browser QA). Two
+commits: implementation (run 30750561836 SUCCESS) and closeout (run 30750705682
+SUCCESS). 65 tests pass; the Validator and Pages verifier pass against the actual
+repo and are read-only; the locked national map, Map 1.1, decision-registry, and
+the production deploy workflow are unchanged. [VERIFIED]
+Recommendation (section 34): SPRINT 03 READY TO CLOSE. SonarCloud untouched
+(CANCELLED); no PRs merged; no production deploy triggered.
+
+--------------------------------------------------------------------------------
+2. STARTING COMMIT
+--------------------------------------------------------------------------------
+1b038d67daa34d3f56b27f8a771d35ae31223fab  [VERIFIED] (matches authorization)
+
+--------------------------------------------------------------------------------
+3. FINAL COMMIT
+--------------------------------------------------------------------------------
+ae8a0755b304722efd3f0c31fa70dd5150a23345  [VERIFIED]
+Two commits:
+  36ba132 feat(mission-control): verify + fix Pages integration packaging (implementation)
+  ae8a075 closeout(mission-control): record verified pages integration completion
+
+--------------------------------------------------------------------------------
+4. FILES ADDED (2)  [VERIFIED]
+--------------------------------------------------------------------------------
+- tools/nycif_app/verify_mission_control_pages.py   (353 lines)
+- tests/test_mission_control_pages.py                (175 lines)
+
+--------------------------------------------------------------------------------
+5. FILES MODIFIED (across the 2 commits)  [VERIFIED]
+--------------------------------------------------------------------------------
+- tools/nycif_app/prepare_god_view_pages.py          (packaging repair)
+- tools/nycif_app/build_mission_control.py           (closeout release-state)
+- tools/nycif_app/validate_mission_control.py        (closeout contract)
+- tests/test_mission_control_builder.py              (closeout assertions)
+- tests/test_mission_control_validator.py            (closeout tests)
+- .github/workflows/mission-control-builder-verification.yml (Pages CI steps)
+- nycif-app/god-view/hub/change-ledger.json          (two append-only entries)
+- nycif-app/god-view/hub/release-audit.json          (regenerated: MC-PAGES done)
+- nycif-app/god-view/hub/mission-control.json        (regenerated: pulse)
+- PROJECT_ENIGMA_STATUS.md                           (regenerated: Pages DONE / Browser QA)
+Diffstat 1b038d6..ae8a075: 12 files, +698 / -27. [VERIFIED]
+
+--------------------------------------------------------------------------------
+6. DEPLOYMENT WORKFLOW IDENTIFIED  [VERIFIED]
+--------------------------------------------------------------------------------
+.github/workflows/deploy-god-view-pages.yml (name: deploy-god-view-pages).
+Trigger: push to `main` and `cursor/scalable-map-ui-parity-48f0` (paths include
+god-view/**, nycif-app/god-view/**, tools/nycif_app/**), plus workflow_dispatch.
+Build job runs `python3 -m tools.nycif_app.prepare_god_view_pages --force` + gate
+tests, then uploads the artifact and deploys via actions/deploy-pages@v4.
+NOTE: it does NOT trigger on this feature branch, so no production deploy occurs
+from Sprint 03. [VERIFIED]
+
+--------------------------------------------------------------------------------
+7. STATIC SOURCE IDENTIFIED  [VERIFIED]
+--------------------------------------------------------------------------------
+Canonical Mission Control hub source: nycif-app/god-view/hub (HUB_SRC in
+prepare_god_view_pages.py). Files are COPIED (not served in place) into the
+artifact by prepare_god_view_pages.py.
+
+--------------------------------------------------------------------------------
+8. DEPLOYMENT DESTINATION IDENTIFIED  [VERIFIED]
+--------------------------------------------------------------------------------
+The top-level `god-view` directory is the Pages artifact root (OUT in the prepare
+tool; `path: god-view` in upload-pages-artifact). Mission Control is copied to the
+artifact root (god-view/index.html, hub.css, hub.js, mission-control.css, + 9 JSON).
+
+--------------------------------------------------------------------------------
+9. EXPECTED MISSION CONTROL ROUTE  [VERIFIED]
+--------------------------------------------------------------------------------
+"/" — the Pages site root (Mission Control is the artifact-root index.html).
+Map 1.1 is at /map-1-1-preview/, National Map at /national-map/ — distinct routes,
+no overwrite. [VERIFIED]
+
+--------------------------------------------------------------------------------
+10. REQUIRED FILES VERIFIED  [VERIFIED]
+--------------------------------------------------------------------------------
+Traced from actual HTML/JS:
+- index.html links ./mission-control.css and <script src="./hub.js">.
+- hub.js fetches 7 JSON: mission-control, roadmap, system-health, blockers,
+  decision-registry, change-ledger, capability-registry.
+- Full required surface (packaged + verified): mission-control.css + 9 JSON
+  (the 7 fetched plus analytics-contract.json and release-audit.json) + index.html
+  + hub.css + hub.js. Pages verifier reports "Required JSON verified: 9".
+
+--------------------------------------------------------------------------------
+11. ASSET REFERENCE RESULTS  [VERIFIED]
+--------------------------------------------------------------------------------
+All local CSS/JS/asset references in index.html resolve in the artifact
+(mission-control.css, hub.js). No image/font/manifest local refs beyond these.
+No localhost/absolute-filesystem references in deployed assets. Filename case
+matches on-disk (Linux case-sensitive). Verifier "static asset references
+verified: 2".
+
+--------------------------------------------------------------------------------
+12. CANONICAL/DEPLOYED CONSISTENCY RESULTS  [VERIFIED]
+--------------------------------------------------------------------------------
+All 9 deployed hub JSON copies are byte-identical (sha256) to their canonical
+nycif-app/god-view/hub sources (prepare uses shutil.copyfile). No stale copies; no
+conflicting duplicate copies. Each deployed JSON parses.
+
+--------------------------------------------------------------------------------
+13. PAGES VERIFIER ARCHITECTURE  [VERIFIED]
+--------------------------------------------------------------------------------
+tools/nycif_app/verify_mission_control_pages.py (stdlib only, read-only). It builds
+the artifact into a TEMPORARY directory via prepare_god_view_pages.prepare(output=tmp)
+— never touching the repo's own god-view/ or the locked map — then inspects it:
+entry point, referenced CSS/JS/assets, hub.js-fetched JSON, all-9-JSON presence +
+byte parity + parse, no conflicting duplicates, no localhost/absolute paths, Map 1.1
+preservation, locked-national-map hashes (vs system-health locked_map_contract).
+Also derives the deployment contract (source/destination/route) from the deploy
+workflow. CLI: --repo-root [--json]; exit 0 pass / 1 fail (stable ids, no traceback)
+/ 2 usage.
+
+--------------------------------------------------------------------------------
+14. ERROR IDENTIFIERS  [VERIFIED]
+--------------------------------------------------------------------------------
+MCPV-PREPARE-FAILED, MCPV-ENTRYPOINT-MISSING, MCPV-CSS-MISSING, MCPV-JS-MISSING,
+MCPV-JSON-MISSING, MCPV-JSON-STALE, MCPV-JSON-PARSE, MCPV-JSON-DUPLICATE,
+MCPV-ASSET-MISSING, MCPV-PATH-TRAVERSAL, MCPV-ABSOLUTE-PATH, MCPV-CASE-MISMATCH,
+MCPV-LOCALHOST, MCPV-MAP11-MISSING, MCPV-LOCKEDMAP-MISSING, MCPV-LOCKEDMAP-HASH,
+MCPV-SOURCE-MISSING, MCPV-DEST-MISSING.
+
+--------------------------------------------------------------------------------
+15. COMMANDS EXECUTED (local)  [VERIFIED]
+--------------------------------------------------------------------------------
+python -m unittest tests.test_mission_control_builder tests.test_mission_control_validator tests.test_mission_control_pages -v
+python tools/nycif_app/verify_mission_control_pages.py --repo-root .
+python tools/nycif_app/validate_mission_control.py --repo-root .
+python tools/nycif_app/build_mission_control.py --repo-root . --generated-at 2026-08-02T01:30:00Z
+python tools/nycif_app/build_mission_control.py --repo-root . --check --generated-at 2026-08-02T01:30:00Z
+(+ diff-scope and protected-hash before/after checks; temp-dir artifact build parity check.)
+
+--------------------------------------------------------------------------------
+16. BUILDER TEST RESULTS  [VERIFIED]
+--------------------------------------------------------------------------------
+12 Builder tests pass (closeout assertions updated; none weakened). CI step
+"Run hardened Builder tests" = success (both runs).
+
+--------------------------------------------------------------------------------
+17. VALIDATOR TEST RESULTS  [VERIFIED]
+--------------------------------------------------------------------------------
+35 Validator tests pass (32 prior + 3 Pages-closeout tests: accepts MC-PAGES done;
+rejects MC-PAGES missing / not_started; downstream regression now on MC-BROWSER).
+CI step "Run Mission Control Validator tests" = success.
+
+--------------------------------------------------------------------------------
+18. PAGES TEST RESULTS  [VERIFIED]
+--------------------------------------------------------------------------------
+18 Pages tests pass: actual integration passes; entry-point/CSS/JS/JSON missing;
+stale JSON; disagreeing duplicate; malformed asset ref; path traversal; case
+mismatch; localhost; absolute path; source-missing; destination-contract-missing;
+Map 1.1 missing; locked-map hash mismatch; verifier read-only. Combined suite: 65 OK.
+
+--------------------------------------------------------------------------------
+19. ACTUAL REPOSITORY PAGES VERIFICATION RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+python tools/nycif_app/verify_mission_control_pages.py --repo-root . -> exit 0:
+"PASSED. Entry point index.html; static source nycif-app/god-view/hub; destination
+god-view; route /; Required JSON verified 9; Map 1.1 preserved; Locked national map
+verified." CI step "Verify Mission Control Pages integration (fail-closed) and
+read-only" = success in both runs.
+
+--------------------------------------------------------------------------------
+20. READ-ONLY VERIFICATION RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+test_verifier_leaves_repository_unchanged passes (sha256 snapshot of hub/god-view/
+tools identical after two verify_repository runs). CI wraps the verifier in a
+git-status before/after guard (printed the tree was unchanged). The verifier builds
+only into a temp dir; the repo god-view/ and locked map are never written.
+
+--------------------------------------------------------------------------------
+21. DETERMINISTIC CHECK RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+Builder --check (fixed ts 2026-08-02T01:30:00Z): "Mission Control outputs are
+current." Local + CI step "Verify deterministic second run" = success (both runs).
+
+--------------------------------------------------------------------------------
+22. LOCKED-MAP RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+god-view/national-map/** byte-identical before/after Sprint 03 (protected-hash
+compare identical). The Pages verifier re-checks the built artifact's national-map
+against system-health locked_map_contract.expected_hashes (match). No locked asset
+written. CI "Verify protected files unchanged" = success.
+
+--------------------------------------------------------------------------------
+23. MAP 1.1 PRESERVATION RESULT  [VERIFIED]
+--------------------------------------------------------------------------------
+Map 1.1 preview (map-1-1-preview/index.html + assets) present in the built artifact
+and at a distinct route from Mission Control; Map 1.1 source assets unchanged this
+sprint. Verifier "Map 1.1 preserved: yes".
+
+--------------------------------------------------------------------------------
+24. WORKFLOW RUN (post-closeout)  [VERIFIED]
+--------------------------------------------------------------------------------
+Implementation baseline run:
+  run ID 30750561836; job 91503757715; commit 36ba132; conclusion SUCCESS.
+Post-closeout run:
+  run number : 9  [INFERRED from sequence; run ID authoritative]
+  run ID     : 30750705682
+  URL        : https://github.com/setoxxx/nycif-national-pilot/actions/runs/30750705682
+  job ID     : 91504136573 (verify-builder)
+  conclusion : success
+  head commit: ae8a0755b304722efd3f0c31fa70dd5150a23345
+  steps (all success):
+    1 Set up job · 2 Check out branch · 3 Set up Python ·
+    4 Record protected hashes before build · 5 Run hardened Builder tests ·
+    6 Run Mission Control Validator tests · 7 Run Mission Control Pages integration tests ·
+    8 Run Builder with fixed timestamp · 9 Validate generated JSON parses ·
+    10 Verify deterministic second run · 11 Verify protected files unchanged ·
+    12 Verify Builder write allowlist ·
+    13 Validate Mission Control contracts (fail-closed) and verify read-only ·
+    14 Verify Mission Control Pages integration (fail-closed) and read-only ·
+    15 Write verification summary  — all success; Complete job success.
+
+--------------------------------------------------------------------------------
+25. CHANGE LEDGER ENTRY  [VERIFIED]
+--------------------------------------------------------------------------------
+Two append-only entries (all prior entries preserved byte-for-byte):
+- MC-20260802-004 "Mission Control Pages integration verified" (implementation):
+  verifier path, tests, source/destination/route, 9 JSON, Map 1.1, locked-map,
+  known limitations, rollback.
+- MC-20260802-005 "Mission Control Pages integration closeout": MC-PAGES done,
+  status advanced to Browser QA, validator contract update, baseline run 30750561836.
+Post-push run IDs recorded in this handoff (section 24), not baked into the ledger,
+to avoid a commit/run cycle.
+
+--------------------------------------------------------------------------------
+26. RELEASE AUDIT STATE  [VERIFIED]
+--------------------------------------------------------------------------------
+release "Mission Control V2"; overall_status "in_progress".
+MC-UI done · MC-PULSE done · MC-GOVERNANCE done · MC-BUILDER done ·
+MC-BUILDER-VERIFICATION done · MC-VALIDATOR done · MC-PAGES done ·
+MC-BROWSER not_started · MC-ACCESSIBILITY not_started · MC-REVIEW not_started ·
+MC-SONARCLOUD blocked. No overall completion.
+
+--------------------------------------------------------------------------------
+27. PROJECT_ENIGMA_STATUS.md STATE  [VERIFIED]
+--------------------------------------------------------------------------------
+Current Sprint "Mission Control Pages Integration Verification"; Builder Status
+DONE; Validator Status DONE; Pages Status DONE; Current Release Blocker "Browser
+QA"; Verified Pages Evidence section (run 30750561836, job 91503757715, commit
+36ba132, source/destination/route, 9 JSON, Map 1.1, locked map, read-only); Next
+Authorized Objective "Browser QA"; SonarCloud separate blocker; PR #43 open &
+stacked on PR #42. No V2-complete claim.
+
+--------------------------------------------------------------------------------
+28. SONARCLOUD STATUS  [VERIFIED]
+--------------------------------------------------------------------------------
+CANCELLED on the implementation run (check-run 91503828461 on commit 36ba132,
+completed 2026-08-02T13:44:53Z). On the closeout head ae8a075 no SonarCloud
+check-run was present at check time (only verify-builder; PR #43 mergeable_state
+"clean"). It has NEVER PASSED and remains an unresolved separate final-review
+blocker. Not suppressed, removed, repaired, or inferred as passing.
+
+--------------------------------------------------------------------------------
+29. PR #43 STATUS AND BASE  [VERIFIED]
+--------------------------------------------------------------------------------
+#43 open, draft true, merged false, mergeable_state "clean", head ae8a075,
+base cursor/operational-daily-abc-48f0. commits 27, changed_files 24. Not merged;
+base unchanged; no auto-merge.
+
+--------------------------------------------------------------------------------
+30. PR #42 STATUS AND BASE  [VERIFIED]
+--------------------------------------------------------------------------------
+#42 open, draft true, merged false, base main, head cursor/operational-daily-abc-48f0
+(its head advanced to 347493e via activity outside this sprint; mergeable_state
+"unstable"). Untouched by Sprint 03. PR #43 remains stacked on PR #42.
+
+--------------------------------------------------------------------------------
+31. REMAINING BLOCKERS
+--------------------------------------------------------------------------------
+- Browser QA — next authorized objective / current release blocker. [VERIFIED]
+- Accessibility QA, Final review readiness — not_started. [VERIFIED]
+- SonarCloud final-review gate — unresolved (CANCELLED). [VERIFIED]
+- PR #43 open & stacked on open PR #42; integration is separate. [VERIFIED]
+
+--------------------------------------------------------------------------------
+32. ROLLBACK INSTRUCTIONS
+--------------------------------------------------------------------------------
+Undo Sprint 03 (both commits) on the branch:
+  git checkout chatgpt/mission-control-v1-20260801
+  git revert --no-edit ae8a0755b304722efd3f0c31fa70dd5150a23345 36ba1329f4e2d720d43d522082197db7ae165912
+  git push origin chatgpt/mission-control-v1-20260801
+(or: git reset --hard 1b038d67daa34d3f56b27f8a771d35ae31223fab && git push --force-with-lease
+ if the branch has no later commits to keep.)
+Effect: restores the prior prepare tool (no MC packaging), removes the Pages
+verifier/tests + CI steps, reverts MC-PAGES to not_started and the status doc, and
+removes the two ledger entries. No production systems affected.
+
+--------------------------------------------------------------------------------
+33. COMPLETE DIFF SUMMARY  [VERIFIED]
+--------------------------------------------------------------------------------
+ .github/workflows/mission-control-builder-verification.yml | 22 +-
+ PROJECT_ENIGMA_STATUS.md                                   | 24 +-
+ nycif-app/god-view/hub/change-ledger.json                  | 35 +
+ nycif-app/god-view/hub/mission-control.json                |  4 +-
+ nycif-app/god-view/hub/release-audit.json                  | 11 +-
+ tests/test_mission_control_builder.py                      | 10 +-
+ tests/test_mission_control_pages.py                        | 175 +
+ tests/test_mission_control_validator.py                    | 22 +-
+ tools/nycif_app/build_mission_control.py                   | 24 +-
+ tools/nycif_app/prepare_god_view_pages.py                  | 24 +-
+ tools/nycif_app/validate_mission_control.py                | 21 +-
+ tools/nycif_app/verify_mission_control_pages.py            | 353 +
+ 12 files changed, 698 insertions(+), 27 deletions(-)
+Production deploy workflow (deploy-god-view-pages.yml), decision-registry.json, and
+god-view/national-map/** are NOT in the diff.
+
+--------------------------------------------------------------------------------
+34. EXPLICIT RECOMMENDATION
+--------------------------------------------------------------------------------
+SPRINT 03 READY TO CLOSE.
+
+Every Authorization v4.0 Definition-of-Done item is satisfied [VERIFIED]:
+ [x] Deployment/static source identified        [x] No localhost references
+ [x] Deployment destination identified          [x] No absolute filesystem references
+ [x] Expected Mission Control route identified   [x] Map 1.1 remains packaged
+ [x] Mission Control HTML packaged               [x] Locked national map unchanged
+ [x] Mission Control CSS packaged                [x] Pages verification is read-only
+ [x] Mission Control JavaScript packaged         [x] Focused integration tests pass
+ [x] All required JSON packaged                  [x] Existing Builder tests pass
+ [x] All local asset references resolve          [x] Existing Validator tests pass
+ [x] Canonical and deployed JSON copies match    [x] Builder deterministic --check passes
+ [x] No stale conflicting copies                 [x] Validator passes actual repo state
+ [x] Relative paths deployment-safe              [x] CI verifies static integration
+ [x] Repository evidence committed               [x] Change Ledger facts-only appends
+ [x] MC-PAGES deterministically recorded done    [x] Project Status advances to Browser QA
+ [x] Post-closeout workflow passes (run 30750705682)
+
+CAVEATS:
+- This closes the Pages Integration sprint only; the overall Mission Control V2
+  release is NOT ready (overall_status in_progress; no V2-complete claim).
+- SonarCloud remains an unresolved separate blocker (section 28).
+- PR #43/#42 remain open, unmerged, stacked; integration is separate.
+- Verification is static/packaging only; no browser, responsive, or accessibility
+  QA was performed (out of scope). Next authorized objective: Browser QA.
+- The committed god-view/ snapshot is a prior build; the deploy workflow regenerates
+  the artifact via prepare_god_view_pages at deploy time, so the packaging fix takes
+  effect on deployment. No production deploy was triggered (workflow does not run on
+  this feature branch).
+
+No Browser QA, Accessibility QA, SonarCloud repair, or integration was begun.
+No PRs merged; no bases changed; no rebases; no auto-merge; locked national map,
+Map 1.1 assets, and the production deploy workflow unchanged. [VERIFIED]
+
+================================================================================
+END OF SPRINT 03 HANDOFF — return to Howard Weiss for independent ChatGPT review
+================================================================================
