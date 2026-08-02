@@ -6,6 +6,7 @@ from __future__ import annotations
 import inspect
 import json
 import pathlib
+import py_compile
 import sys
 import tempfile
 from datetime import date
@@ -254,6 +255,15 @@ def test_required_event_aug1_missing_fails_live() -> None:
         assert result["validation_mode"] == "live_occurrence"
 
 
+def test_required_event_aug1_real_approved_pages_pass() -> None:
+    result = required_event_status(current_date=date(2026, 8, 1))
+    assert result["validation_mode"] == "live_occurrence"
+    assert result["qa_pass"] is True, result["failures"]
+    assert result["match_count"] == 1
+    assert result["page"] == "page-0008.json"
+    assert result["evaluated_date"] == "2026-08-01"
+
+
 def test_required_event_aug2_real_certificate_passes() -> None:
     with tempfile.TemporaryDirectory(dir=ROOT) as directory:
         pages = pathlib.Path(directory)
@@ -373,6 +383,20 @@ def test_required_event_aug2_cross_surface_consistency() -> None:
     )
 
 
+def test_modified_python_files_compile() -> None:
+    with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+        output = pathlib.Path(directory)
+        for source in (
+            ROOT / "scripts" / "build_daily_data_health.py",
+            ROOT / "scripts" / "test_live_event_intake_refresh.py",
+        ):
+            py_compile.compile(
+                str(source),
+                cfile=str(output / f"{source.stem}.pyc"),
+                doraise=True,
+            )
+
+
 def test_required_event_signature_compatible() -> None:
     signature = inspect.signature(required_event_status)
     parameters = list(signature.parameters.values())
@@ -405,12 +429,14 @@ if __name__ == "__main__":
     test_cross_borough_geosearch_results_are_rejected()
     test_required_event_public_feed_gate()
     test_required_event_aug1_missing_fails_live()
+    test_required_event_aug1_real_approved_pages_pass()
     test_required_event_aug2_real_certificate_passes()
     test_required_event_aug2_missing_and_malformed_fail()
     test_required_event_aug2_top_level_contract_failures()
     test_required_event_aug2_nested_health_failure()
     test_required_event_aug2_page_and_list_checks_are_fail_closed()
     test_required_event_aug2_cross_surface_consistency()
+    test_modified_python_files_compile()
     test_required_event_signature_compatible()
     test_refresh_workflow_contract()
     print("live event intake refresh regression tests passed")
