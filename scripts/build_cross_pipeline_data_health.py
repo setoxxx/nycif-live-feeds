@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Build the NYC/NJ cross-pipeline location-accounting health contract.
 
-This companion command uses fixed repository artifact paths. It does not accept
-operator-controlled filesystem paths and does not replace the proven NYC daily
-health implementation. The NJ workflow must place its reviewed handoff at
-``data/external/nj_events.json`` before production integration is authorized.
+All production file access is bound to fixed repository constants. Reusable
+logic accepts parsed event objects, never filesystem paths. The NJ workflow must
+place its reviewed handoff at ``data/external/nj_events.json`` before production
+integration is authorized.
 """
 from __future__ import annotations
 
@@ -14,31 +14,74 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from cross_pipeline_health import account_pipeline, delta, load_events
+from cross_pipeline_health import account_pipeline, delta, event_rows
 
 ROOT = Path(__file__).resolve().parents[1]
-NYC_INPUTS = (
-    ROOT / "data" / "events_schema_v1_staged.json",
-    ROOT / "data" / "events_schema_v1_supplemental_review.json",
-)
+NYC_STAGED = ROOT / "data" / "events_schema_v1_staged.json"
+NYC_SUPPLEMENTAL = ROOT / "data" / "events_schema_v1_supplemental_review.json"
 NJ_INPUT = ROOT / "data" / "external" / "nj_events.json"
 DAILY_HEALTH = ROOT / "status" / "nycif-daily-data-health.json"
 OUTPUT = ROOT / "status" / "nycif-cross-pipeline-location-health.json"
 
+NYC_INPUT_LABELS = (
+    "data/events_schema_v1_staged.json",
+    "data/events_schema_v1_supplemental_review.json",
+)
+NJ_INPUT_LABEL = "data/external/nj_events.json"
+OUTPUT_LABEL = "status/nycif-cross-pipeline-location-health.json"
+DAILY_HEALTH_LABEL = "status/nycif-daily-data-health.json"
 
-def display_path(path: Path) -> str:
+
+def _parse_object(text: str) -> dict[str, Any]:
     try:
-        return str(path.resolve().relative_to(ROOT.resolve()))
-    except ValueError:
-        return path.name
-
-
-def load_object(path: Path) -> dict[str, Any]:
-    try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
+        payload = json.loads(text)
+    except json.JSONDecodeError:
         return {}
     return payload if isinstance(payload, dict) else {}
+
+
+def _read_nyc_staged() -> dict[str, Any]:
+    try:
+        return _parse_object(NYC_STAGED.read_text(encoding="utf-8"))
+    except OSError:
+        return {}
+
+
+def _read_nyc_supplemental() -> dict[str, Any]:
+    try:
+        return _parse_object(NYC_SUPPLEMENTAL.read_text(encoding="utf-8"))
+    except OSError:
+        return {}
+
+
+def _read_nj_handoff() -> dict[str, Any]:
+    try:
+        return _parse_object(NJ_INPUT.read_text(encoding="utf-8"))
+    except OSError:
+        return {}
+
+
+def _read_previous_output() -> dict[str, Any]:
+    try:
+        return _parse_object(OUTPUT.read_text(encoding="utf-8"))
+    except OSError:
+        return {}
+
+
+def _read_daily_health() -> dict[str, Any]:
+    try:
+        return _parse_object(DAILY_HEALTH.read_text(encoding="utf-8"))
+    except OSError:
+        return {}
+
+
+def _write_output(report: dict[str, Any]) -> None:
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+
+def _write_daily_health(report: dict[str, Any]) -> None:
+    DAILY_HEALTH.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def blocker(code: str, message: str, artifact: str) -> dict[str, str]:
@@ -52,12 +95,13 @@ def blocker(code: str, message: str, artifact: str) -> dict[str, str]:
 
 def build_report(
     *,
-    nyc_paths: list[Path],
-    nj_paths: list[Path],
+    nyc_events: list[dict[str, Any]],
+    nj_events: list[dict[str, Any]],
+    missing_nyc_inputs: list[str] | None = None,
+    missing_nj_input: bool = False,
     previous: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    nyc_events, nyc_missing = load_events(nyc_paths)
-    nj_events, nj_missing = load_events(nj_paths)
+    """Build the invariant report from parsed event records only."""
     nyc = account_pipeline("nyc", nyc_events)
     nj = account_pipeline("nj", nj_events)
 
@@ -72,20 +116,20 @@ def build_report(
     )
 
     blockers: list[dict[str, str]] = []
-    for missing in nyc_missing:
+    for label in missing_nyc_inputs or []:
         blockers.append(
             blocker(
                 "NYC_LOCATION_INPUT_MISSING",
                 "NYC location-accounting input is missing or unreadable.",
-                Path(missing).name,
+                label,
             )
         )
-    for missing in nj_missing:
+    if missing_nj_input:
         blockers.append(
             blocker(
                 "NJ_LOCATION_INPUT_MISSING",
                 "NJ cross-repository artifact handoff is missing or unreadable.",
-                Path(missing).name,
+                NJ_INPUT_LABEL,
             )
         )
     if nyc["unaccounted_count"]:
@@ -93,7 +137,7 @@ def build_report(
             blocker(
                 "NYC_UNACCOUNTED_LOCATION_RECORDS",
                 f"NYC has {nyc['unaccounted_count']} records without a recognized disposition.",
-                ",".join(display_path(path) for path in nyc_paths),
+                ",".join(NYC_INPUT_LABELS),
             )
         )
     if nj["unaccounted_count"]:
@@ -101,7 +145,7 @@ def build_report(
             blocker(
                 "NJ_UNACCOUNTED_LOCATION_RECORDS",
                 f"NJ has {nj['unaccounted_count']} records without a recognized disposition.",
-                ",".join(display_path(path) for path in nj_paths),
+                NJ_INPUT_LABEL,
             )
         )
 
@@ -115,10 +159,10 @@ def build_report(
             "map_safe_count + approximate_count + list_only_count = total_count"
         ),
         "inputs": {
-            "nyc": [display_path(path) for path in nyc_paths],
-            "nj": [display_path(path) for path in nj_paths],
-            "nyc_missing": [Path(path).name for path in nyc_missing],
-            "nj_missing": [Path(path).name for path in nj_missing],
+            "nyc": list(NYC_INPUT_LABELS),
+            "nj": [NJ_INPUT_LABEL],
+            "nyc_missing": list(missing_nyc_inputs or []),
+            "nj_missing": [NJ_INPUT_LABEL] if missing_nj_input else [],
         },
         "pipelines": {"nyc": nyc, "nj": nj},
         "blocker_count": len(blockers),
@@ -126,48 +170,64 @@ def build_report(
     }
 
 
-def augment_daily_health(path: Path, cross: dict[str, Any]) -> None:
-    """Add the cross-pipeline section only when explicitly requested."""
-    daily = load_object(path)
-    if not daily:
-        raise FileNotFoundError(f"daily health report is missing or unreadable: {path.name}")
-    daily["cross_pipeline_health"] = cross
+def apply_cross_to_daily(
+    daily: dict[str, Any], cross: dict[str, Any]
+) -> dict[str, Any]:
+    """Purely combine daily and cross-pipeline health objects."""
+    combined = dict(daily)
+    combined["cross_pipeline_health"] = cross
     if not cross.get("qa_pass"):
-        daily["status"] = "BLOCKED"
-        daily["release_ready"] = False
-        daily["publication_allowed"] = False
-        existing = daily.get("blockers")
-        blockers = existing if isinstance(existing, list) else []
+        combined["status"] = "BLOCKED"
+        combined["release_ready"] = False
+        combined["publication_allowed"] = False
+        existing = combined.get("blockers")
+        blockers = list(existing) if isinstance(existing, list) else []
         blockers.extend(cross.get("blockers") or [])
-        daily["blockers"] = blockers
-    path.write_text(json.dumps(daily, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        combined["blockers"] = blockers
+    return combined
+
+
+def build_fixed_report() -> dict[str, Any]:
+    staged = _read_nyc_staged()
+    supplemental = _read_nyc_supplemental()
+    nj_payload = _read_nj_handoff()
+    missing_nyc: list[str] = []
+    if not staged:
+        missing_nyc.append(NYC_INPUT_LABELS[0])
+    if not supplemental:
+        missing_nyc.append(NYC_INPUT_LABELS[1])
+    return build_report(
+        nyc_events=event_rows(staged) + event_rows(supplemental),
+        nj_events=event_rows(nj_payload),
+        missing_nyc_inputs=missing_nyc,
+        missing_nj_input=not bool(nj_payload),
+        previous=_read_previous_output(),
+    )
 
 
 def run_fixed_contract(*, augment: bool = False) -> dict[str, Any]:
-    previous = load_object(OUTPUT)
-    report = build_report(
-        nyc_paths=list(NYC_INPUTS),
-        nj_paths=[NJ_INPUT],
-        previous=previous,
-    )
-    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    report = build_fixed_report()
+    _write_output(report)
+    if not augment:
+        return report
 
-    if augment:
-        try:
-            augment_daily_health(DAILY_HEALTH, report)
-        except (OSError, ValueError) as exc:
-            report["status"] = "BLOCKED"
-            report["qa_pass"] = False
-            report["publication_allowed"] = False
-            report["blockers"].append(
-                blocker("DAILY_HEALTH_AUGMENT_FAILED", str(exc), display_path(DAILY_HEALTH))
+    daily = _read_daily_health()
+    if not daily:
+        report["status"] = "BLOCKED"
+        report["qa_pass"] = False
+        report["publication_allowed"] = False
+        report["blockers"].append(
+            blocker(
+                "DAILY_HEALTH_AUGMENT_FAILED",
+                "Daily health report is missing or unreadable.",
+                DAILY_HEALTH_LABEL,
             )
-            report["blocker_count"] = len(report["blockers"])
-            OUTPUT.write_text(
-                json.dumps(report, indent=2, sort_keys=True) + "\n",
-                encoding="utf-8",
-            )
+        )
+        report["blocker_count"] = len(report["blockers"])
+        _write_output(report)
+        return report
+
+    _write_daily_health(apply_cross_to_daily(daily, report))
     return report
 
 
@@ -183,7 +243,7 @@ def main(argv: list[str] | None = None) -> int:
                 "qa_pass": report["qa_pass"],
                 "nyc": report["pipelines"]["nyc"],
                 "nj": report["pipelines"]["nj"],
-                "output": display_path(OUTPUT),
+                "output": OUTPUT_LABEL,
                 "daily_health_augmented": bool(args.augment_daily_health),
             },
             indent=2,
