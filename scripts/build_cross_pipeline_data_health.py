@@ -26,6 +26,13 @@ DAILY_HEALTH = ROOT / "status" / "nycif-daily-data-health.json"
 OUTPUT = ROOT / "status" / "nycif-cross-pipeline-location-health.json"
 
 
+def display_path(path: Path) -> str:
+    try:
+        return str(path.resolve().relative_to(ROOT.resolve()))
+    except ValueError:
+        return path.name
+
+
 def load_object(path: Path) -> dict[str, Any]:
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
@@ -70,7 +77,7 @@ def build_report(
             blocker(
                 "NYC_LOCATION_INPUT_MISSING",
                 "NYC location-accounting input is missing or unreadable.",
-                missing,
+                Path(missing).name,
             )
         )
     for missing in nj_missing:
@@ -78,7 +85,7 @@ def build_report(
             blocker(
                 "NJ_LOCATION_INPUT_MISSING",
                 "NJ cross-repository artifact handoff is missing or unreadable.",
-                missing,
+                Path(missing).name,
             )
         )
     if nyc["unaccounted_count"]:
@@ -86,7 +93,7 @@ def build_report(
             blocker(
                 "NYC_UNACCOUNTED_LOCATION_RECORDS",
                 f"NYC has {nyc['unaccounted_count']} records without a recognized disposition.",
-                ",".join(str(path) for path in nyc_paths),
+                ",".join(display_path(path) for path in nyc_paths),
             )
         )
     if nj["unaccounted_count"]:
@@ -94,7 +101,7 @@ def build_report(
             blocker(
                 "NJ_UNACCOUNTED_LOCATION_RECORDS",
                 f"NJ has {nj['unaccounted_count']} records without a recognized disposition.",
-                ",".join(str(path) for path in nj_paths),
+                ",".join(display_path(path) for path in nj_paths),
             )
         )
 
@@ -108,10 +115,10 @@ def build_report(
             "map_safe_count + approximate_count + list_only_count = total_count"
         ),
         "inputs": {
-            "nyc": [str(path.relative_to(ROOT)) for path in nyc_paths],
-            "nj": [str(path.relative_to(ROOT)) for path in nj_paths],
-            "nyc_missing": nyc_missing,
-            "nj_missing": nj_missing,
+            "nyc": [display_path(path) for path in nyc_paths],
+            "nj": [display_path(path) for path in nj_paths],
+            "nyc_missing": [Path(path).name for path in nyc_missing],
+            "nj_missing": [Path(path).name for path in nj_missing],
         },
         "pipelines": {"nyc": nyc, "nj": nj},
         "blocker_count": len(blockers),
@@ -123,7 +130,7 @@ def augment_daily_health(path: Path, cross: dict[str, Any]) -> None:
     """Add the cross-pipeline section only when explicitly requested."""
     daily = load_object(path)
     if not daily:
-        raise FileNotFoundError(f"daily health report is missing or unreadable: {path}")
+        raise FileNotFoundError(f"daily health report is missing or unreadable: {path.name}")
     daily["cross_pipeline_health"] = cross
     if not cross.get("qa_pass"):
         daily["status"] = "BLOCKED"
@@ -154,7 +161,7 @@ def run_fixed_contract(*, augment: bool = False) -> dict[str, Any]:
             report["qa_pass"] = False
             report["publication_allowed"] = False
             report["blockers"].append(
-                blocker("DAILY_HEALTH_AUGMENT_FAILED", str(exc), str(DAILY_HEALTH.relative_to(ROOT)))
+                blocker("DAILY_HEALTH_AUGMENT_FAILED", str(exc), display_path(DAILY_HEALTH))
             )
             report["blocker_count"] = len(report["blockers"])
             OUTPUT.write_text(
@@ -176,7 +183,7 @@ def main(argv: list[str] | None = None) -> int:
                 "qa_pass": report["qa_pass"],
                 "nyc": report["pipelines"]["nyc"],
                 "nj": report["pipelines"]["nj"],
-                "output": str(OUTPUT.relative_to(ROOT)),
+                "output": display_path(OUTPUT),
                 "daily_health_augmented": bool(args.augment_daily_health),
             },
             indent=2,
