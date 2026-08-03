@@ -2,6 +2,11 @@ name: Enigma SHADOW-2 Audit
 
 on:
   workflow_dispatch:
+    inputs:
+      baseline_sha:
+        description: Immutable audit commit SHA
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -10,60 +15,130 @@ jobs:
   audit:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out requested ref
+      - name: Check out immutable audit commit
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}
+          ref: ${{ inputs.baseline_sha }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Verify deterministic DPR lookup
+      - name: Verify checked-out SHA
         run: |
-          python3 scripts/build_dpr_park_centroids.py
+          test "$(git rev-parse HEAD)" = "${{ inputs.baseline_sha }}"
+
+      - name: Verify pinned source snapshot manifest
+        run: |
+          test -f data/source_snapshots/dpr_parks_properties_enfh-gkve.json
+          test -f data/source_snapshots/snapshot_manifest.sha256
+          (
+            cd data/source_snapshots
+            sha256sum -c snapshot_manifest.sha256
+          )
+
+      - name: Build DPR parks from pinned snapshot
+        run: |
+          python3 scripts/build_dpr_park_centroids.py \
+            --source data/source_snapshots/dpr_parks_properties_enfh-gkve.json \
+            --output data/park_centroids.json \
+            --ambiguous-output data/park_centroids_ambiguous_aliases.json
           git diff --exit-code -- \
             data/park_centroids.json \
             data/park_centroids_ambiguous_aliases.json
 
-      - name: Run focused SHADOW-2 and DPR tests
+      - name: Verify pinned facility lookups exist
+        run: |
+          for file in \
+            park_centroids.json \
+            park_centroids_ambiguous_aliases.json \
+            dpr_structures_centroids.json \
+            library_branch_centroids.json \
+            doe_school_centroids.json \
+            dpr_pool_centroids.json \
+            dcp_facility_centroids.json \
+            park_ambiguous_candidates.json
+          do
+            test -s "data/$file" || { echo "Missing or empty: data/$file"; exit 1; }
+          done
+
+      - name: Run focused SHADOW-2 tests
         run: |
           python3 -m unittest discover -s tests/test_enigma_shadow2 -p 'test_*.py'
           python3 -m unittest discover -s tests -p 'test_refresh_official_supplemental_occurrences.py'
-          python3 -m unittest discover -s tests -p 'test_project_events_schema_v1.py'
 
       - name: Validate supplemental projection without writing feeds
         run: |
           python3 scripts/project_events_schema_v1.py --skip-write-feeds
 
-      - name: Run deterministic SHADOW-2 Step 2 audit
+      - name: Run standard read-only SHADOW-2 diagnostics
         run: |
           export PYTHONPATH="${PYTHONPATH}:$(pwd)"
           mkdir -p /tmp/shadow2-audit
           python3 -m enigma.shadow2.audit --output-dir /tmp/shadow2-audit
-          cat /tmp/shadow2-audit/shadow2-real-data-audit.md
 
-      - name: Run DPR park geometry delta audit
+      - name: Run authoritative facility audit
         run: |
-          python3 scripts/audit_dpr_park_geometry_resolver.py \
-            --lookup data/park_centroids.json \
-            --ambiguous-aliases data/park_centroids_ambiguous_aliases.json \
-            --output-dir /tmp/shadow2-audit
-          cp data/park_centroids.json /tmp/shadow2-audit/park_centroids.json
-          cp data/park_centroids_ambiguous_aliases.json \
-            /tmp/shadow2-audit/park_centroids_ambiguous_aliases.json
-          cp data/events_schema_v1_validation_report.json \
-            /tmp/shadow2-audit/events_schema_v1_validation_report.json
-          cat /tmp/shadow2-audit/shadow2-park-geometry-delta.md
+          python3 scripts/audit_authoritative_facility_resolvers.py
 
-      - name: Upload complete SHADOW-2 DPR audit
+      - name: Emit post-resolver unresolved artifact
+        run: |
+          jq -S '
+            [.remaining_records[] |
+              . + {
+                tier: "unresolved",
+                reason: (.final_failure_reason // .failure_reason),
+                raw_source_identity: (.raw_source_evidence // null)
+              }
+            ] | sort_by(.id)
+          ' data/shadow2-authoritative-facility-delta.json \
+            > /tmp/shadow2-audit/shadow2-post-resolver-unresolved.json
+          test "$(jq 'length' /tmp/shadow2-audit/shadow2-post-resolver-unresolved.json)" -eq 117
+
+      - name: Preserve complete post-resolver evidence
+        run: |
+          cp data/shadow2-authoritative-facility-delta.json /tmp/shadow2-audit/
+          cp data/shadow2-authoritative-facility-delta.md /tmp/shadow2-audit/
+          cp data/events_schema_v1_validation_report.json /tmp/shadow2-audit/
+
+      - name: Emit lookup hashes
+        run: |
+          sha256sum \
+            data/park_centroids.json \
+            data/park_centroids_ambiguous_aliases.json \
+            data/dpr_structures_centroids.json \
+            data/library_branch_centroids.json \
+            data/doe_school_centroids.json \
+            data/dpr_pool_centroids.json \
+            data/dcp_facility_centroids.json \
+            data/park_ambiguous_candidates.json \
+            > /tmp/shadow2-audit/lookup_hashes.txt
+
+      - name: Preserve and verify source snapshot evidence
+        run: |
+          mkdir -p /tmp/shadow2-audit/source_snapshots
+          cp data/source_snapshots/dpr_parks_properties_enfh-gkve.json \
+            /tmp/shadow2-audit/source_snapshots/
+          cp data/source_snapshots/snapshot_manifest.sha256 \
+            /tmp/shadow2-audit/source_snapshots/source_snapshot_hashes.txt
+          (
+            cd /tmp/shadow2-audit/source_snapshots
+            sha256sum -c source_snapshot_hashes.txt
+          )
+
+      - name: Emit immutable run identity
+        run: |
+          git rev-parse HEAD > /tmp/shadow2-audit/baseline_sha.txt
+          printf '%s\n' "$GITHUB_RUN_ID" > /tmp/shadow2-audit/workflow_run_id.txt
+
+      - name: Upload complete pinned-baseline audit
         uses: actions/upload-artifact@v4
         with:
           name: shadow2-step2-audit
           path: /tmp/shadow2-audit/
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 30
 
       - name: Upload legacy list-only artifact
         uses: actions/upload-artifact@v4
@@ -71,4 +146,4 @@ jobs:
           name: shadow2-audit-review-list-only
           path: /tmp/shadow2-audit/shadow2-audit-review-list-only.json
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 30
