@@ -40,10 +40,25 @@ jobs:
           JSON
       - name: Run isolated accounting gate
         run: |
-          python3 scripts/build_cross_pipeline_data_health.py \
-            --nyc-input /tmp/cross-pipeline/nyc.json \
-            --nj-input /tmp/cross-pipeline/nj.json \
-            --output /tmp/cross-pipeline/health.json
+          python3 - <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          sys.path.insert(0, "scripts")
+          from build_cross_pipeline_data_health import build_report
+
+          report = build_report(
+              nyc_paths=[Path("/tmp/cross-pipeline/nyc.json")],
+              nj_paths=[Path("/tmp/cross-pipeline/nj.json")],
+          )
+          Path("/tmp/cross-pipeline/health.json").write_text(
+              json.dumps(report, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          if not report["qa_pass"]:
+              raise SystemExit(1)
+          PY
       - name: Upload gate artifact
         uses: actions/upload-artifact@v4
         with:
