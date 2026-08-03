@@ -164,6 +164,168 @@ def _valid_nyc_point(lat: Any, lng: Any) -> bool:
     )
 
 
+# =============================================================================
+# PATCH 01 v4.1 — Raw Park-ID Bypass (independent test)
+# =============================================================================
+
+_BOROUGH_CODE_MAP = {
+    "manhattan": "M",
+    "mn": "M",
+    "new york": "M",
+    "bronx": "X",
+    "bx": "X",
+    "the bronx": "X",
+    "brooklyn": "B",
+    "bk": "B",
+    "kings": "B",
+    "queens": "Q",
+    "qn": "Q",
+    "staten island": "R",
+    "si": "R",
+    "richmond": "R",
+}
+
+
+def canonical_borough(borough_text: Any) -> str | None:
+    """Return the canonical DPR borough code, or ``None`` if unknown."""
+    text = _clean_text(borough_text)
+    if not text:
+        return None
+    code = _BOROUGH_CODE_MAP.get(text.casefold())
+    if code:
+        return code
+    uppercase = text.upper()
+    return uppercase if len(uppercase) == 1 and uppercase in "MBQXR" else None
+
+
+def valid_nyc_point(lat: Any, lng: Any) -> bool:
+    """Public fail-closed wrapper around the module's NYC bounds check."""
+    return _valid_nyc_point(lat, lng)
+
+
+def build_park_id_index(
+    park_lookup: dict[str, dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    """Build a deterministic authority-ID index from the alias lookup."""
+    index: dict[str, dict[str, Any]] = {}
+    for alias, entry in sorted(park_lookup.items()):
+        if not isinstance(entry, dict):
+            continue
+        park_id_value = entry.get("park_id") or entry.get("gispropnum")
+        if not park_id_value:
+            continue
+        park_id = str(park_id_value).strip().upper()
+        lat = _finite(entry.get("lat"))
+        lng = _finite(entry.get("lng"))
+        borough = canonical_borough(entry.get("borough"))
+        park_name = entry.get("park_name") or alias
+        if park_id not in index:
+            index[park_id] = {
+                "lat": lat,
+                "lng": lng,
+                "borough": borough,
+                "park_name": park_name,
+                "aliases": [alias],
+            }
+            continue
+        existing = index[park_id]
+        if existing["lat"] != lat or existing["lng"] != lng:
+            raise ValueError(
+                f"Park ID {park_id} coordinate inconsistency: "
+                f"{existing['lat']},{existing['lng']} vs {lat},{lng}"
+            )
+        if existing["borough"] != borough:
+            raise ValueError(
+                f"Park ID {park_id} borough inconsistency: "
+                f"{existing['borough']} vs {borough}"
+            )
+        existing["aliases"].append(alias)
+    return index
+
+
+_PARK_ID_INDEX_CACHE: tuple[
+    dict[str, dict[str, Any]], dict[str, dict[str, Any]]
+] | None = None
+
+
+def get_park_id_index(
+    park_lookup: dict[str, dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    """Return an authority-ID index cached for this immutable lookup object."""
+    global _PARK_ID_INDEX_CACHE
+    if _PARK_ID_INDEX_CACHE is None or _PARK_ID_INDEX_CACHE[0] is not park_lookup:
+        _PARK_ID_INDEX_CACHE = (park_lookup, build_park_id_index(park_lookup))
+    return _PARK_ID_INDEX_CACHE[1]
+
+
+def _raw_park_ids(raw_source_identity: dict[str, Any]) -> list[str]:
+    value = raw_source_identity.get("park_ids")
+    if value in (None, ""):
+        value = raw_source_identity.get("park_id")
+    values = value if isinstance(value, (list, tuple, set)) else [value]
+    normalized: list[str] = []
+    for item in values:
+        for part in re.split(r"[,;|]", str(item or "")):
+            park_id = part.strip().upper()
+            if park_id and park_id not in normalized:
+                normalized.append(park_id)
+    return normalized
+
+
+def resolve_by_raw_park_id(
+    raw_source_identity: dict[str, Any] | None,
+    park_lookup: dict[str, dict[str, Any]],
+    park_id_index: dict[str, dict[str, Any]] | None = None,
+    source_borough: Any = None,
+    source_dataset: str | None = None,
+) -> dict[str, Any] | None:
+    """Resolve exactly one authoritative raw DPR park ID, fail-closed."""
+    if not isinstance(raw_source_identity, dict):
+        return None
+    park_ids = _raw_park_ids(raw_source_identity)
+    if len(park_ids) != 1:
+        return None
+    park_id = park_ids[0]
+    index = park_id_index if park_id_index is not None else get_park_id_index(park_lookup)
+    entry = index.get(park_id)
+    if entry is None:
+        return None
+    lat = entry.get("lat")
+    lng = entry.get("lng")
+    if not valid_nyc_point(lat, lng):
+        return None
+    indexed_borough = entry.get("borough")
+    normalized_source = canonical_borough(source_borough)
+    if normalized_source and indexed_borough and normalized_source != indexed_borough:
+        return {
+            "rejected": True,
+            "rejection_reason": "borough_mismatch",
+            "source_borough": source_borough,
+            "normalized_source_borough": normalized_source,
+            "indexed_borough": indexed_borough,
+            "park_id": park_id,
+        }
+    return {
+        "latitude": float(lat),
+        "longitude": float(lng),
+        "park_id": park_id,
+        "park_name": entry.get("park_name"),
+        "park_borough": indexed_borough or normalized_source,
+        "borough": indexed_borough or normalized_source,
+        "resolution_method": "raw_park_id_bypass",
+        "park_match_type": "raw_park_id_bypass",
+        "park_query_name": park_id,
+        "anchor_method": "authoritative_park_id",
+        "coordinate_source": "dpr_parks_properties_centroid",
+        "authority_provenance": "DPR Parks Properties (enfh-gkve)",
+        "source_dataset": source_dataset,
+        "coordinate_status": "approximate",
+        "coordinate_precision": "park_level_anchor",
+        "display_disposition": "approximate_marker",
+        "promotion_allowed": False,
+    }
+
+
 def _ring_moment(ring: Any) -> PolygonMoment | None:
     if not isinstance(ring, list) or len(ring) < 3:
         return None

@@ -9,7 +9,7 @@ from enigma.shadow2.location_evidence import classify_location_evidence
 from nycif.normalize.facility_resolver import resolve_facility_anchor
 from nycif.normalize.facility_resolvers import resolve_authoritative_facility
 from nycif.normalize.facility_resolvers.park_ambiguity_resolver import resolve_borough_qualified_park
-from nycif.normalize.park_geometry import load_park_lookup
+from nycif.normalize.park_geometry import get_park_id_index,load_park_lookup,resolve_by_raw_park_id
 from schema_v1_common import SCHEMA_VERSION,envelope,extract_events,project_event,reset_stable_id_registry,write_repo_json,utc_now
 STAGED_PATH=ROOT/'data/nycif_staged_live_events.json'; SUPPLEMENTAL_PATH=ROOT/'data/supplemental_events_staging_feed.json'; OUT_REPORT=ROOT/'data/events_schema_v1_validation_report.json'
 REQUIRED_EVENT_FIELDS=['id','title','category','start_date_time','end_date_time','timezone','borough','location','latitude','longitude','significance','source']
@@ -44,7 +44,14 @@ def apply_supplemental_anchor(projected:dict[str,Any],source_row:dict[str,Any],*
     except Exception: return projected
     if tier!='unresolved': return projected
     probe=_probe(projected,source_row)
-    resolved=resolve_facility_anchor(probe,lookup=park_lookup)
+    raw=source_row.get('raw_source_identity') or source_row.get('raw_source_evidence')
+    if not isinstance(raw,dict): raw={}
+    if not raw.get('park_ids') and not raw.get('park_id'):
+        raw={**raw,'park_ids':source_row.get('park_ids') or source_row.get('park_id')}
+    source=source_row.get('source') if isinstance(source_row.get('source'),dict) else {}
+    resolved=resolve_by_raw_park_id(raw,park_lookup,park_id_index=get_park_id_index(park_lookup),source_borough=probe.get('borough') or raw.get('borough'),source_dataset=source_row.get('source_dataset') or source.get('dataset'))
+    if resolved and resolved.get('rejected'): resolved=None
+    if not resolved: resolved=resolve_facility_anchor(probe,lookup=park_lookup)
     if not resolved: resolved=resolve_borough_qualified_park(probe)
     if not resolved: resolved=resolve_authoritative_facility(probe)
     if not resolved: return projected

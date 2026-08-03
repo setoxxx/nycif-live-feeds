@@ -20,8 +20,10 @@ from nycif.normalize.facility_resolver import resolve_facility_anchor  # noqa: E
 from nycif.normalize.park_geometry import (  # noqa: E402
     DEFAULT_LOOKUP_PATH,
     extract_park_names,
+    get_park_id_index,
     load_park_lookup,
     normalize_park_name,
+    resolve_by_raw_park_id,
 )
 from scripts.project_events_schema_v1 import project_layer  # noqa: E402
 
@@ -227,6 +229,7 @@ def build_delta(
 ) -> dict[str, Any]:
     ambiguous_aliases = ambiguous_aliases or set()
     raw_evidence = raw_evidence_index(snapshot)
+    park_id_index = get_park_id_index(lookup)
     baseline = 0
     candidates: list[dict[str, Any]] = []
     unresolved_records: list[dict[str, Any]] = []
@@ -250,10 +253,20 @@ def build_delta(
         baseline += 1
         probe = dict(record)
         probe["evidence_tier"] = "unresolved"
-        resolved = resolve_facility_anchor(probe, lookup=lookup)
         dataset, source_event_id = source_identity(record)
         identity = (dataset, source_event_id)
         raw = raw_evidence.get(identity, {})
+        resolved = resolve_by_raw_park_id(
+            raw,
+            lookup,
+            park_id_index=park_id_index,
+            source_borough=record.get("borough") or record.get("event_borough") or raw.get("borough"),
+            source_dataset=dataset,
+        )
+        if resolved and resolved.get("rejected"):
+            resolved = None
+        if not resolved:
+            resolved = resolve_facility_anchor(probe, lookup=lookup)
         if not resolved:
             reason = unresolved_failure_reason(record, lookup, ambiguous_aliases)
             failure_counts[reason] += 1
