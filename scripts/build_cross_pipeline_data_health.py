@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """Build the NYC/NJ cross-pipeline location-accounting health contract.
 
-This is a companion to ``build_daily_data_health.py``. It does not replace or
-change the proven NYC production-health implementation. Production integration
-requires an explicit NJ artifact handoff and separate approval.
+This companion command uses fixed repository artifact paths. It does not accept
+operator-controlled filesystem paths and does not replace the proven NYC daily
+health implementation. The NJ workflow must place its reviewed handoff at
+``data/external/nj_events.json`` before production integration is authorized.
 """
 from __future__ import annotations
 
 import argparse
 import json
-import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -17,13 +17,13 @@ from typing import Any
 from cross_pipeline_health import account_pipeline, delta, load_events
 
 ROOT = Path(__file__).resolve().parents[1]
-DEFAULT_NYC_INPUTS = (
+NYC_INPUTS = (
     ROOT / "data" / "events_schema_v1_staged.json",
     ROOT / "data" / "events_schema_v1_supplemental_review.json",
 )
-DEFAULT_NJ_INPUT = ROOT / "data" / "external" / "nj_events.json"
-DEFAULT_DAILY_HEALTH = ROOT / "status" / "nycif-daily-data-health.json"
-DEFAULT_OUTPUT = ROOT / "status" / "nycif-cross-pipeline-location-health.json"
+NJ_INPUT = ROOT / "data" / "external" / "nj_events.json"
+DAILY_HEALTH = ROOT / "status" / "nycif-daily-data-health.json"
+OUTPUT = ROOT / "status" / "nycif-cross-pipeline-location-health.json"
 
 
 def load_object(path: Path) -> dict[str, Any]:
@@ -32,27 +32,6 @@ def load_object(path: Path) -> dict[str, Any]:
     except (OSError, json.JSONDecodeError):
         return {}
     return payload if isinstance(payload, dict) else {}
-
-
-def split_paths(value: str | None) -> list[Path]:
-    if not value:
-        return []
-    return [Path(part).expanduser() for part in value.split(os.pathsep) if part.strip()]
-
-
-def resolve_inputs(args: argparse.Namespace) -> tuple[list[Path], list[Path]]:
-    nyc = [Path(value) for value in (args.nyc_input or [])]
-    if not nyc:
-        nyc = split_paths(os.environ.get("NYCIF_NYC_HEALTH_INPUTS"))
-    if not nyc:
-        nyc = list(DEFAULT_NYC_INPUTS)
-
-    nj = [Path(value) for value in (args.nj_input or [])]
-    if not nj:
-        nj = split_paths(os.environ.get("NYCIF_NJ_HEALTH_INPUT"))
-    if not nj:
-        nj = [DEFAULT_NJ_INPUT]
-    return nyc, nj
 
 
 def blocker(code: str, message: str, artifact: str) -> dict[str, str]:
@@ -129,8 +108,8 @@ def build_report(
             "map_safe_count + approximate_count + list_only_count = total_count"
         ),
         "inputs": {
-            "nyc": [str(path) for path in nyc_paths],
-            "nj": [str(path) for path in nj_paths],
+            "nyc": [str(path.relative_to(ROOT)) for path in nyc_paths],
+            "nj": [str(path.relative_to(ROOT)) for path in nj_paths],
             "nyc_missing": nyc_missing,
             "nj_missing": nj_missing,
         },
@@ -157,41 +136,39 @@ def augment_daily_health(path: Path, cross: dict[str, Any]) -> None:
     path.write_text(json.dumps(daily, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--nyc-input", action="append")
-    parser.add_argument("--nj-input", action="append")
-    parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
-    parser.add_argument("--daily-health", type=Path, default=DEFAULT_DAILY_HEALTH)
-    parser.add_argument("--augment-daily-health", action="store_true")
-    args = parser.parse_args(argv)
-
-    previous = load_object(args.output)
-    nyc_paths, nj_paths = resolve_inputs(args)
+def run_fixed_contract(*, augment: bool = False) -> dict[str, Any]:
+    previous = load_object(OUTPUT)
     report = build_report(
-        nyc_paths=nyc_paths,
-        nj_paths=nj_paths,
+        nyc_paths=list(NYC_INPUTS),
+        nj_paths=[NJ_INPUT],
         previous=previous,
     )
-    args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    OUTPUT.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
-    if args.augment_daily_health:
+    if augment:
         try:
-            augment_daily_health(args.daily_health, report)
+            augment_daily_health(DAILY_HEALTH, report)
         except (OSError, ValueError) as exc:
             report["status"] = "BLOCKED"
             report["qa_pass"] = False
             report["publication_allowed"] = False
             report["blockers"].append(
-                blocker("DAILY_HEALTH_AUGMENT_FAILED", str(exc), str(args.daily_health))
+                blocker("DAILY_HEALTH_AUGMENT_FAILED", str(exc), str(DAILY_HEALTH.relative_to(ROOT)))
             )
             report["blocker_count"] = len(report["blockers"])
-            args.output.write_text(
+            OUTPUT.write_text(
                 json.dumps(report, indent=2, sort_keys=True) + "\n",
                 encoding="utf-8",
             )
+    return report
 
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--augment-daily-health", action="store_true")
+    args = parser.parse_args(argv)
+    report = run_fixed_contract(augment=bool(args.augment_daily_health))
     print(
         json.dumps(
             {
@@ -199,7 +176,7 @@ def main(argv: list[str] | None = None) -> int:
                 "qa_pass": report["qa_pass"],
                 "nyc": report["pipelines"]["nyc"],
                 "nj": report["pipelines"]["nj"],
-                "output": str(args.output),
+                "output": str(OUTPUT.relative_to(ROOT)),
                 "daily_health_augmented": bool(args.augment_daily_health),
             },
             indent=2,
