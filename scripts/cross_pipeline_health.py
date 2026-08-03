@@ -1,9 +1,7 @@
-"""Cross-pipeline location-disposition accounting for NYC and NJ feeds."""
+"""Pure cross-pipeline location-disposition accounting for NYC and NJ feeds."""
 from __future__ import annotations
 
-import json
 from collections import Counter
-from pathlib import Path
 from typing import Any, Iterable
 
 RECOGNIZED = {"map_safe", "approximate", "list_only"}
@@ -75,6 +73,7 @@ def account_pipeline(name: str, events: Iterable[dict[str, Any]]) -> dict[str, A
         if status in RECOGNIZED:
             counts[status] += 1
             continue
+        nycif = event.get("nycif") if isinstance(event.get("nycif"), dict) else {}
         unaccounted.append(
             {
                 "id": stable_event_id(event, index),
@@ -82,8 +81,8 @@ def account_pipeline(name: str, events: Iterable[dict[str, Any]]) -> dict[str, A
                 "latitude": event.get("latitude", event.get("lat")),
                 "longitude": event.get("longitude", event.get("lng")),
                 "map_status": event.get("map_status"),
-                "coordinate_status": event.get("coordinate_status") or (event.get("nycif") or {}).get("coordinate_status"),
-                "coordinate_precision": event.get("coordinate_precision") or (event.get("nycif") or {}).get("coordinate_precision"),
+                "coordinate_status": event.get("coordinate_status") or nycif.get("coordinate_status"),
+                "coordinate_precision": event.get("coordinate_precision") or nycif.get("coordinate_precision"),
             }
         )
     total = len(rows)
@@ -100,22 +99,6 @@ def account_pipeline(name: str, events: Iterable[dict[str, Any]]) -> dict[str, A
         "qa_pass": accounted == total,
         "unaccounted_sample": unaccounted[:50],
     }
-
-
-def load_events(paths: Iterable[Path]) -> tuple[list[dict[str, Any]], list[str]]:
-    events: list[dict[str, Any]] = []
-    missing: list[str] = []
-    for path in paths:
-        if not path.is_file():
-            missing.append(str(path))
-            continue
-        try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            missing.append(str(path))
-            continue
-        events.extend(event_rows(payload))
-    return events, missing
 
 
 def delta(current: dict[str, Any], previous: dict[str, Any] | None) -> dict[str, int | None]:
