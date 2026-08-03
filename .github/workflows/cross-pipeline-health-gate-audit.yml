@@ -20,8 +20,7 @@ jobs:
         run: |
           python3 -m py_compile \
             scripts/cross_pipeline_health.py \
-            scripts/build_daily_data_health.py \
-            scripts/build_daily_data_health_legacy.py
+            scripts/build_cross_pipeline_data_health.py
       - name: Build isolated NYC and NJ fixture handoff
         run: |
           mkdir -p /tmp/cross-pipeline
@@ -41,8 +40,7 @@ jobs:
           JSON
       - name: Run isolated accounting gate
         run: |
-          python3 scripts/build_daily_data_health.py \
-            --cross-only \
+          python3 scripts/build_cross_pipeline_data_health.py \
             --nyc-input /tmp/cross-pipeline/nyc.json \
             --nj-input /tmp/cross-pipeline/nj.json \
             --output /tmp/cross-pipeline/health.json
