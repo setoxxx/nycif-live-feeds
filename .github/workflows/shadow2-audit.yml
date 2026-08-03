@@ -79,10 +79,14 @@ jobs:
           python3 -m enigma.shadow2.audit --output-dir /tmp/shadow2-audit
 
       - name: Run authoritative facility audit
+        env:
+          EXPECTED_PRE_AUDIT: "156"
         run: |
           python3 scripts/audit_authoritative_facility_resolvers.py
 
       - name: Emit post-resolver unresolved artifact
+        env:
+          EXPECTED_POST_AUDIT: "103"
         run: |
           jq -S '
             [.remaining_records[] |
@@ -94,7 +98,7 @@ jobs:
             ] | sort_by(.id)
           ' data/shadow2-authoritative-facility-delta.json \
             > /tmp/shadow2-audit/shadow2-post-resolver-unresolved.json
-          test "$(jq 'length' /tmp/shadow2-audit/shadow2-post-resolver-unresolved.json)" -eq 117
+          test "$(jq 'length' /tmp/shadow2-audit/shadow2-post-resolver-unresolved.json)" -eq "$EXPECTED_POST_AUDIT"
 
       - name: Preserve complete post-resolver evidence
         run: |

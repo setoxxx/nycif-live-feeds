@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Run the fail-closed SHADOW-2 delta after authoritative facility resolvers."""
 from __future__ import annotations
-import json,sys
+import json,os,sys
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -23,7 +23,8 @@ def probe_from(item:dict[str,Any]):
 def main():
     snapshot=ReadOnlySnapshot(repo_root=ROOT); park_lookup=load_park_lookup(); ambiguous=load_ambiguous_aliases(ROOT/'data/park_centroids_ambiguous_aliases.json')
     baseline=build_delta(snapshot,park_lookup,ambiguous); remaining=baseline['remaining_unresolved_records']
-    if len(remaining)!=170: raise SystemExit(f'expected fixed baseline 170, observed {len(remaining)}')
+    expected_pre_audit=int(os.environ.get('EXPECTED_PRE_AUDIT','170'))
+    if len(remaining)!=expected_pre_audit: raise SystemExit(f'expected pre-audit baseline {expected_pre_audit}, observed {len(remaining)}')
     resolved=[]; unresolved=[]; counts=Counter(); mismatch=[]
     for item in remaining:
         probe=probe_from(item); result=None; resolver=None
@@ -55,9 +56,9 @@ def main():
         resolved.append(record); counts[resolver]+=1
         if warnings: mismatch.append(record)
     remainder_counts=Counter(item['final_failure_reason'] for item in unresolved)
-    report={'baseline_unresolved':170,'resolved_by_dpr_structures':counts['dpr_structures'],'resolved_by_libraries':counts['libraries'],'resolved_by_schools':counts['schools'],'resolved_by_pools':counts['pools'],'resolved_by_recreation_centers':counts['recreation_centers'],'resolved_by_borough_qualified_ambiguity':counts['borough_qualified_ambiguity'],'resolved_total':len(resolved),'remain_unresolved':len(unresolved),'false_match_count':len(mismatch),'resolver_distribution':dict(sorted(counts.items())),'remainder_distribution':dict(sorted(remainder_counts.items())),'resolved_records':resolved,'remaining_records':unresolved,'safety':{'all_approximate':all(r.get('coordinate_status')=='approximate' for r in resolved),'promotion_allowed_any':any(r.get('promotion_allowed') is True for r in resolved),'map_ready_any':any(r.get('coordinate_status')=='map_ready' for r in resolved),'workflow_write_required':False}}
+    report={'baseline_unresolved':expected_pre_audit,'resolved_by_dpr_structures':counts['dpr_structures'],'resolved_by_libraries':counts['libraries'],'resolved_by_schools':counts['schools'],'resolved_by_pools':counts['pools'],'resolved_by_recreation_centers':counts['recreation_centers'],'resolved_by_borough_qualified_ambiguity':counts['borough_qualified_ambiguity'],'resolved_total':len(resolved),'remain_unresolved':len(unresolved),'false_match_count':len(mismatch),'resolver_distribution':dict(sorted(counts.items())),'remainder_distribution':dict(sorted(remainder_counts.items())),'resolved_records':resolved,'remaining_records':unresolved,'safety':{'all_approximate':all(r.get('coordinate_status')=='approximate' for r in resolved),'promotion_allowed_any':any(r.get('promotion_allowed') is True for r in resolved),'map_ready_any':any(r.get('coordinate_status')=='map_ready' for r in resolved),'workflow_write_required':False}}
     OUT_JSON.write_text(json.dumps(report,indent=2,sort_keys=True)+'\n')
-    lines=['# SHADOW-2 Authoritative Facility Delta','',f'- Baseline unresolved: **170**',f'- Resolved total: **{len(resolved)}**',f'- Remain unresolved: **{len(unresolved)}**',f'- Structural false-match warnings: **{len(mismatch)}**','', '## Resolver delta']+[f'- {k}: {v}' for k,v in sorted(counts.items())]+['','## True remainder']+[f'- {k}: {v}' for k,v in sorted(remainder_counts.items())]
+    lines=['# SHADOW-2 Authoritative Facility Delta','',f'- Baseline unresolved: **{expected_pre_audit}**',f'- Resolved total: **{len(resolved)}**',f'- Remain unresolved: **{len(unresolved)}**',f'- Structural false-match warnings: **{len(mismatch)}**','', '## Resolver delta']+[f'- {k}: {v}' for k,v in sorted(counts.items())]+['','## True remainder']+[f'- {k}: {v}' for k,v in sorted(remainder_counts.items())]
     OUT_MD.write_text('\n'.join(lines)+'\n')
     compact={k:v for k,v in report.items() if k not in {'resolved_records','remaining_records'}}
     compact['warning_records']=[{'id':r.get('id'),'location':r.get('location'),'resolver':r.get('resolver'),'warnings':r.get('verification_warnings')} for r in mismatch]

@@ -251,6 +251,21 @@ def build_park_id_index(
     return index
 
 
+_PARK_ID_INDEX_CACHE: tuple[
+    dict[str, dict[str, Any]], dict[str, dict[str, Any]]
+] | None = None
+
+
+def get_park_id_index(
+    park_lookup: dict[str, dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    """Return an authority-ID index cached for this immutable lookup object."""
+    global _PARK_ID_INDEX_CACHE
+    if _PARK_ID_INDEX_CACHE is None or _PARK_ID_INDEX_CACHE[0] is not park_lookup:
+        _PARK_ID_INDEX_CACHE = (park_lookup, build_park_id_index(park_lookup))
+    return _PARK_ID_INDEX_CACHE[1]
+
+
 DPR_ABBREVIATION_MAP: dict[str, str] = {
     "plgd": "playground",
     "playgrd": "playground",
@@ -288,6 +303,27 @@ def _build_dpr_expanded_aliases(
             expanded_lookup[alias] = next(iter(entries_by_id.values()))
             added.add(alias)
     return expanded_lookup, added
+
+
+_DPR_EXPANDED_ALIASES_CACHE: tuple[
+    dict[str, dict[str, Any]], tuple[dict[str, dict[str, Any]], set[str]]
+] | None = None
+
+
+def _get_dpr_expanded_aliases(
+    park_lookup: dict[str, dict[str, Any]],
+) -> tuple[dict[str, dict[str, Any]], set[str]]:
+    """Return uniquely expanded aliases cached for this immutable lookup object."""
+    global _DPR_EXPANDED_ALIASES_CACHE
+    if (
+        _DPR_EXPANDED_ALIASES_CACHE is None
+        or _DPR_EXPANDED_ALIASES_CACHE[0] is not park_lookup
+    ):
+        _DPR_EXPANDED_ALIASES_CACHE = (
+            park_lookup,
+            _build_dpr_expanded_aliases(park_lookup),
+        )
+    return _DPR_EXPANDED_ALIASES_CACHE[1]
 
 DPR_INTERNAL_LANDMARK_MAP: dict[str, dict[str, Any]] = {
     "hippo playground": {
@@ -940,7 +976,7 @@ def find_park_centroid(
 
     # PATCH 02 v4.1 integration hook. Authority-ID lookup remains fail-closed;
     # rejected alias evidence falls through to the existing exact-match logic.
-    park_id_index = build_park_id_index(table)
+    park_id_index = get_park_id_index(table)
     alias_result = normalize_dpr_aliases(location_text, source_borough, park_id_index)
     if alias_result and alias_result.get("latitude") is not None:
         landmark = str(alias_result["landmark"])
@@ -964,7 +1000,7 @@ def find_park_centroid(
         if alias_result and alias_result.get("normalized_text")
         else location_text
     )
-    match_table, abbreviation_aliases = _build_dpr_expanded_aliases(table)
+    match_table, abbreviation_aliases = _get_dpr_expanded_aliases(table)
     candidates = extract_park_names(normalized_location)
     matched: list[tuple[str, str, dict[str, Any]]] = []
     for candidate in candidates:
