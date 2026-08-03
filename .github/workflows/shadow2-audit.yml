@@ -80,13 +80,13 @@ jobs:
 
       - name: Run authoritative facility audit
         env:
-          EXPECTED_PRE_AUDIT: "164"
+          EXPECTED_PRE_AUDIT: "150"
         run: |
           python3 scripts/audit_authoritative_facility_resolvers.py
 
       - name: Emit post-resolver unresolved artifact
         env:
-          EXPECTED_POST_AUDIT: "111"
+          EXPECTED_POST_AUDIT: "97"
         run: |
           jq -S '
             [.remaining_records[] |

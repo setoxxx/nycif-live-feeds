@@ -258,6 +258,252 @@ def get_park_id_index(
     return _PARK_ID_INDEX_CACHE[1]
 
 
+# =============================================================================
+# PATCH 02 v4.1 — DPR Alias Expansion
+# =============================================================================
+
+DPR_ABBREVIATION_MAP: dict[str, str] = {
+    "plgd": "playground",
+    "playgrd": "playground",
+    "rec ctr": "recreation center",
+    "rec center": "recreation center",
+}
+
+
+def _expand_dpr_abbreviations(text: str) -> str:
+    expanded = text
+    for abbreviation, replacement in DPR_ABBREVIATION_MAP.items():
+        pattern = r"\b" + re.escape(abbreviation) + r"\b"
+        expanded = re.sub(pattern, replacement, expanded, flags=re.IGNORECASE)
+    return expanded
+
+
+def _build_dpr_expanded_aliases(
+    park_lookup: dict[str, dict[str, Any]],
+) -> tuple[dict[str, dict[str, Any]], set[str]]:
+    """Add only uniquely identified aliases created by DPR abbreviation expansion."""
+    candidates: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
+    for alias, entry in sorted(park_lookup.items()):
+        if not isinstance(entry, dict) or not entry.get("park_id"):
+            continue
+        expanded = normalize_park_name(_expand_dpr_abbreviations(alias))
+        if len(expanded) < 3 or expanded == alias:
+            continue
+        park_id = str(entry["park_id"]).strip().upper()
+        candidates[expanded][park_id] = entry
+
+    expanded_lookup = dict(park_lookup)
+    added: set[str] = set()
+    for alias, entries_by_id in sorted(candidates.items()):
+        if alias not in expanded_lookup and len(entries_by_id) == 1:
+            expanded_lookup[alias] = next(iter(entries_by_id.values()))
+            added.add(alias)
+    return expanded_lookup, added
+
+
+_DPR_EXPANDED_ALIASES_CACHE: tuple[
+    dict[str, dict[str, Any]], tuple[dict[str, dict[str, Any]], set[str]]
+] | None = None
+
+
+def _get_dpr_expanded_aliases(
+    park_lookup: dict[str, dict[str, Any]],
+) -> tuple[dict[str, dict[str, Any]], set[str]]:
+    """Return uniquely expanded aliases cached for this immutable lookup object."""
+    global _DPR_EXPANDED_ALIASES_CACHE
+    if (
+        _DPR_EXPANDED_ALIASES_CACHE is None
+        or _DPR_EXPANDED_ALIASES_CACHE[0] is not park_lookup
+    ):
+        _DPR_EXPANDED_ALIASES_CACHE = (
+            park_lookup,
+            _build_dpr_expanded_aliases(park_lookup),
+        )
+    return _DPR_EXPANDED_ALIASES_CACHE[1]
+
+
+DPR_INTERNAL_LANDMARK_MAP: dict[str, dict[str, Any]] = {
+    "hippo playground": {
+        "target_park_name": "riverside park",
+        "target_authority_id": "M071",
+        "borough": "M",
+        "provenance": "DPR Parks Properties enfh-gkve 2026-01-15",
+    },
+    "parkour park": {
+        "target_park_name": "riverside park south",
+        "target_authority_id": "M353",
+        "borough": "M",
+        "provenance": "DPR Parks Properties enfh-gkve 2026-01-15",
+    },
+    "parachute jump": {
+        "target_park_name": "coney island beach and boardwalk",
+        "target_authority_id": "B169",
+        "borough": "B",
+        "provenance": "DPR Parks Properties enfh-gkve 2026-01-15",
+    },
+    "audubon center": {
+        "target_park_name": "prospect park",
+        "target_authority_id": "B073",
+        "borough": "B",
+        "provenance": "Prospect Park Alliance + DPR cross-reference",
+    },
+    "jackie robinson park bandshell": {
+        "target_park_name": "jackie robinson park",
+        "target_authority_id": "M014",
+        "borough": "M",
+        "provenance": "DPR Parks Properties enfh-gkve 2026-01-15",
+    },
+    "102nd street field house": {
+        "target_park_name": "riverside park",
+        "target_authority_id": "M071",
+        "borough": "M",
+        "provenance": "DPR Parks Properties enfh-gkve 2026-01-15",
+    },
+    "camel playground": {
+        "target_park_name": "riverside park",
+        "target_authority_id": "M071",
+        "borough": "M",
+        "provenance": "DPR Parks Properties enfh-gkve 2026-01-15",
+    },
+    "riverbank playground": {
+        "target_park_name": "riverside park",
+        "target_authority_id": "M071",
+        "borough": "M",
+        "provenance": "DPR Parks Properties enfh-gkve 2026-01-15",
+    },
+    "soldiers and sailors monument": {
+        "target_park_name": "riverside park",
+        "target_authority_id": "M071",
+        "borough": "M",
+        "provenance": "NPS + DPR cross-reference",
+    },
+    "soldiers' and sailors' monument": {
+        "target_park_name": "riverside park",
+        "target_authority_id": "M071",
+        "borough": "M",
+        "provenance": "NPS + DPR cross-reference",
+    },
+    "general grant national memorial": {
+        "target_park_name": "riverside park",
+        "target_authority_id": "M071",
+        "borough": "M",
+        "provenance": "NPS + DPR cross-reference",
+    },
+    "grant's tomb": {
+        "target_park_name": "riverside park",
+        "target_authority_id": "M071",
+        "borough": "M",
+        "provenance": "NPS + DPR cross-reference",
+    },
+}
+
+GENERIC_SUBFACILITIES = {
+    "playground south",
+    "play area",
+    "gymnasium",
+    "ballroom",
+    "multi-use room",
+    "open area",
+    "lawn",
+    "basketball courts",
+}
+
+
+def _exact_boundary_match(text: str, phrase: str) -> bool:
+    pattern = r"\b" + re.escape(phrase) + r"\b"
+    return bool(re.search(pattern, text, re.IGNORECASE))
+
+
+def normalize_dpr_aliases(
+    location_text: str | None,
+    source_borough: Any = None,
+    park_id_index: dict[str, dict[str, Any]] | None = None,
+) -> dict[str, Any] | None:
+    """Expand approved DPR aliases and resolve mapped internal landmarks."""
+    if not location_text:
+        return None
+
+    text = _expand_dpr_abbreviations(_clean_text(location_text).casefold())
+
+    for landmark, mapping in DPR_INTERNAL_LANDMARK_MAP.items():
+        if not _exact_boundary_match(text, landmark):
+            continue
+        if park_id_index is None:
+            return {
+                "rejected": True,
+                "rejection_reason": "park_id_index_unavailable",
+                "landmark": landmark,
+            }
+
+        target_id = mapping["target_authority_id"]
+        lookup_entry = park_id_index.get(target_id)
+        if lookup_entry is None:
+            return {
+                "rejected": True,
+                "rejection_reason": "authority_id_not_found_in_lookup",
+                "target_authority_id": target_id,
+            }
+
+        lookup_borough = lookup_entry.get("borough")
+        mapped_borough = canonical_borough(mapping.get("borough"))
+        normalized_source = canonical_borough(source_borough)
+        if mapped_borough != lookup_borough:
+            return {
+                "rejected": True,
+                "rejection_reason": "mapping_lookup_borough_mismatch",
+                "mapping_borough": mapped_borough,
+                "lookup_borough": lookup_borough,
+            }
+        if normalized_source and lookup_borough and normalized_source != lookup_borough:
+            return {
+                "rejected": True,
+                "rejection_reason": "borough_mismatch",
+                "source_borough": source_borough,
+                "lookup_borough": lookup_borough,
+            }
+
+        lat = lookup_entry.get("lat")
+        lng = lookup_entry.get("lng")
+        if not valid_nyc_point(lat, lng):
+            return {
+                "rejected": True,
+                "rejection_reason": "invalid_coordinates",
+                "latitude": lat,
+                "longitude": lng,
+            }
+
+        return {
+            "latitude": float(lat),
+            "longitude": float(lng),
+            "park_name": lookup_entry.get("park_name"),
+            "park_borough": lookup_borough or normalized_source,
+            "borough": lookup_borough or normalized_source,
+            "authority_id": target_id,
+            "landmark": landmark,
+            "resolution_method": "dpr_internal_landmark_alias",
+            "coordinate_source": "dpr_parks_properties_centroid",
+            "coordinate_status": "approximate",
+            "coordinate_precision": "park_level_anchor",
+            "display_disposition": "approximate_marker",
+            "promotion_allowed": False,
+            "provenance": mapping["provenance"],
+        }
+
+    in_match = re.search(
+        r"\bin\s+([\w\s'&.,-]+?)(?:\s*$|\s+at\s+|\s+near\s+|\s*[-:]\s*)",
+        text,
+        re.IGNORECASE,
+    )
+    if in_match:
+        container = re.sub(r"['&,]+$", "", in_match.group(1)).strip()
+        return {
+            "normalized_text": text,
+            "container_candidate": container,
+            "resolution_method": "container_extraction",
+        }
+    return {"normalized_text": text}
+
+
 def _raw_park_ids(raw_source_identity: dict[str, Any]) -> list[str]:
     value = raw_source_identity.get("park_ids")
     if value in (None, ""):
@@ -781,6 +1027,7 @@ def find_park_centroid(
     *,
     lookup: dict[str, dict[str, Any]] | None = None,
     lookup_path: Path = DEFAULT_LOOKUP_PATH,
+    source_borough: Any = None,
 ) -> dict[str, Any] | None:
     """Return a unique authoritative park centroid or ``None``.
 
@@ -791,13 +1038,41 @@ def find_park_centroid(
     table = lookup if lookup is not None else load_park_lookup(lookup_path)
     if not table:
         return None
-    candidates = extract_park_names(location_text)
+
+    # PATCH 02 v4.1 integration hook. Authority-ID lookup remains fail-closed;
+    # rejected alias evidence falls through to the existing exact-match logic.
+    park_id_index = get_park_id_index(table)
+    alias_result = normalize_dpr_aliases(location_text, source_borough, park_id_index)
+    if alias_result and alias_result.get("latitude") is not None:
+        landmark = str(alias_result["landmark"])
+        return {
+            "lat": alias_result["latitude"],
+            "lng": alias_result["longitude"],
+            "park_id": alias_result["authority_id"],
+            "park_name": alias_result.get("park_name"),
+            "borough": alias_result.get("borough"),
+            "source_dataset": DATASET_ID,
+            "query_name": landmark,
+            "query_names": [landmark],
+            "normalized_query": normalize_park_name(landmark),
+            "match_type": alias_result["resolution_method"],
+            "provenance": alias_result["provenance"],
+            "promotion_allowed": False,
+        }
+
+    normalized_location = (
+        str(alias_result.get("normalized_text"))
+        if alias_result and alias_result.get("normalized_text")
+        else location_text
+    )
+    match_table, abbreviation_aliases = _get_dpr_expanded_aliases(table)
+    candidates = extract_park_names(normalized_location)
     matched: list[tuple[str, str, dict[str, Any]]] = []
     for candidate in candidates:
         normalized = normalize_park_name(candidate)
         if len(normalized) < 3:
             continue
-        entry = table.get(normalized)
+        entry = match_table.get(normalized)
         if entry:
             matched.append((candidate, normalized, entry))
     unique_ids = {str(entry.get("park_id")) for _, _, entry in matched if entry.get("park_id")}
@@ -810,7 +1085,11 @@ def find_park_centroid(
             "query_name": candidate,
             "query_names": [item[0] for item in matched],
             "normalized_query": normalized,
-            "match_type": "unique_normalized_name",
+            "match_type": (
+                "dpr_abbreviation_alias"
+                if normalized in abbreviation_aliases
+                else "unique_normalized_name"
+            ),
         }
     )
     return result
