@@ -1,0 +1,71 @@
+name: Authoritative Facility Resolver Audit
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Query official source contracts
+        run: python3 scripts/discover_authoritative_facility_sources.py
+      - name: Build authoritative lookups
+        run: |
+          python3 scripts/build_dpr_structures_lookup.py
+          python3 scripts/build_citywide_library_lookup.py
+          python3 scripts/build_queens_library_lookup.py
+          python3 scripts/build_brooklyn_library_lookup.py
+          python3 scripts/build_library_branches_lookup.py
+          python3 scripts/build_doe_schools_lookup.py
+          python3 scripts/build_dpr_pools_lookup.py
+          python3 scripts/build_dcp_facilities_lookup.py
+          python3 scripts/build_dpr_ambiguous_lookup.py
+      - name: Snapshot deterministic lookup outputs
+        run: |
+          mkdir -p /tmp/facility-lookups
+          cp data/dpr_structures_centroids.json data/library_*_centroids.json data/doe_school_centroids.json data/dpr_pool_centroids.json data/dcp_facility_centroids.json data/park_ambiguous_candidates.json /tmp/facility-lookups/
+      - name: Rebuild lookups deterministically
+        run: |
+          python3 scripts/build_dpr_structures_lookup.py
+          python3 scripts/build_citywide_library_lookup.py
+          python3 scripts/build_queens_library_lookup.py
+          python3 scripts/build_brooklyn_library_lookup.py
+          python3 scripts/build_library_branches_lookup.py
+          python3 scripts/build_doe_schools_lookup.py
+          python3 scripts/build_dpr_pools_lookup.py
+          python3 scripts/build_dcp_facilities_lookup.py
+          python3 scripts/build_dpr_ambiguous_lookup.py
+          for file in /tmp/facility-lookups/*; do cmp "$file" "data/$(basename "$file")"; done
+      - name: Run focused and existing resolver tests
+        run: |
+          python3 -m unittest tests.test_enigma_shadow2.test_authoritative_facility_resolvers
+          python3 -m unittest discover -s tests/test_enigma_shadow2 -p 'test_*.py'
+      - name: Validate certified-facility projection
+        run: python3 scripts/project_events_schema_v1.py --skip-write-feeds
+      - name: Run fixed-baseline SHADOW-2 delta
+        run: python3 scripts/audit_authoritative_facility_resolvers.py
+      - name: Upload source contracts, lookups, and delta
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: authoritative-facility-resolver-audit
+          path: |
+            data/authoritative_facility_source_contracts.json
+            data/dpr_structures_centroids.json
+            data/library_*_centroids.json
+            data/doe_school_centroids.json
+            data/dpr_pool_centroids.json
+            data/dcp_facility_centroids.json
+            data/park_ambiguous_candidates.json
+            data/events_schema_v1_validation_report.json
+            data/shadow2-authoritative-facility-delta.json
+            data/shadow2-authoritative-facility-delta.md
