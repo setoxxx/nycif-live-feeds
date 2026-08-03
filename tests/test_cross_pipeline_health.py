@@ -1,14 +1,14 @@
 import json
-import subprocess
 import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
-from build_cross_pipeline_data_health import augment_daily_health, build_report  # noqa: E402
+import build_cross_pipeline_data_health as cross_builder  # noqa: E402
 from cross_pipeline_health import account_pipeline, delta, disposition, load_events  # noqa: E402
 
 
@@ -91,7 +91,7 @@ class CrossPipelineHealthTests(unittest.TestCase):
                 json.dumps({"events": [{"id": "nyc:1", "map_status": "map_safe"}]}),
                 encoding="utf-8",
             )
-            report = build_report(
+            report = cross_builder.build_report(
                 nyc_paths=[nyc],
                 nj_paths=[root / "missing-nj.json"],
             )
@@ -99,7 +99,7 @@ class CrossPipelineHealthTests(unittest.TestCase):
             self.assertFalse(report["qa_pass"])
             self.assertEqual(report["blockers"][0]["code"], "NJ_LOCATION_INPUT_MISSING")
 
-    def test_companion_command_passes_accounted_fixtures(self):
+    def test_fixed_contract_passes_accounted_fixtures(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             nyc = root / "nyc.json"
@@ -127,26 +127,15 @@ class CrossPipelineHealthTests(unittest.TestCase):
                 ),
                 encoding="utf-8",
             )
-            completed = subprocess.run(
-                [
-                    sys.executable,
-                    str(ROOT / "scripts" / "build_cross_pipeline_data_health.py"),
-                    "--nyc-input",
-                    str(nyc),
-                    "--nj-input",
-                    str(nj),
-                    "--output",
-                    str(output),
-                ],
-                cwd=ROOT,
-                check=False,
-                capture_output=True,
-                text=True,
-            )
-            self.assertEqual(completed.returncode, 0, completed.stderr + completed.stdout)
-            report = json.loads(output.read_text(encoding="utf-8"))
+            with (
+                patch.object(cross_builder, "NYC_INPUTS", (nyc,)),
+                patch.object(cross_builder, "NJ_INPUT", nj),
+                patch.object(cross_builder, "OUTPUT", output),
+            ):
+                report = cross_builder.run_fixed_contract()
             self.assertEqual(report["status"], "READY")
             self.assertTrue(report["qa_pass"])
+            self.assertTrue(output.is_file())
 
     def test_explicit_augment_blocks_daily_health(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -159,7 +148,7 @@ class CrossPipelineHealthTests(unittest.TestCase):
                 "qa_pass": False,
                 "blockers": [{"code": "NJ_UNACCOUNTED_LOCATION_RECORDS"}],
             }
-            augment_daily_health(path, cross)
+            cross_builder.augment_daily_health(path, cross)
             daily = json.loads(path.read_text(encoding="utf-8"))
             self.assertEqual(daily["status"], "BLOCKED")
             self.assertFalse(daily["release_ready"])
