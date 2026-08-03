@@ -1,0 +1,53 @@
+name: Cross-Pipeline Health Gate Audit
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run focused cross-pipeline tests
+        run: python3 -m unittest tests.test_cross_pipeline_health
+      - name: Compile health gate
+        run: |
+          python3 -m py_compile \
+            scripts/cross_pipeline_health.py \
+            scripts/build_daily_data_health.py \
+            scripts/build_daily_data_health_legacy.py
+      - name: Build isolated NYC and NJ fixture handoff
+        run: |
+          mkdir -p /tmp/cross-pipeline
+          cat > /tmp/cross-pipeline/nyc.json <<'JSON'
+          {"events":[
+            {"id":"nyc:exact","nycif":{"coordinate_status":"map_ready"}},
+            {"id":"nyc:approx","nycif":{"coordinate_status":"approximate"}},
+            {"id":"nyc:list","nycif":{"coordinate_status":"list_only"}}
+          ]}
+          JSON
+          cat > /tmp/cross-pipeline/nj.json <<'JSON'
+          {"events":[
+            {"id":"nj:exact","map_status":"map_safe","coordinate_source":"ical_feed"},
+            {"id":"nj:approx","map_status":"approximate","coordinate_source":"manual_config"},
+            {"id":"nj:list","map_status":"list_only","coordinate_source":"none"}
+          ]}
+          JSON
+      - name: Run isolated accounting gate
+        run: |
+          python3 scripts/build_daily_data_health.py \
+            --cross-only \
+            --nyc-input /tmp/cross-pipeline/nyc.json \
+            --nj-input /tmp/cross-pipeline/nj.json \
+            --output /tmp/cross-pipeline/health.json
+      - name: Upload gate artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: cross-pipeline-health-gate-audit
+          path: /tmp/cross-pipeline/health.json
