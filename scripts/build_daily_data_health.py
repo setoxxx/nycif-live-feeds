@@ -22,6 +22,13 @@ from typing import Any
 import build_daily_data_health_legacy as legacy
 from cross_pipeline_health import account_pipeline, delta, load_events
 
+# Preserve the complete import surface used by existing regression tests and
+# production helpers. The wrapper's definitions below intentionally replace
+# only its execution entrypoint and cross-pipeline support functions.
+for _legacy_name in dir(legacy):
+    if not _legacy_name.startswith("__"):
+        globals().setdefault(_legacy_name, getattr(legacy, _legacy_name))
+
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_NYC_INPUTS = (
     ROOT / "data" / "events_schema_v1_staged.json",
