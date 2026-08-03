@@ -1,6 +1,4 @@
-import json
 import sys
-import tempfile
 import unittest
 from pathlib import Path
 from unittest.mock import patch
@@ -9,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 import build_cross_pipeline_data_health as cross_builder  # noqa: E402
-from cross_pipeline_health import account_pipeline, delta, disposition, load_events  # noqa: E402
+from cross_pipeline_health import account_pipeline, delta, disposition, event_rows  # noqa: E402
 
 
 class CrossPipelineHealthTests(unittest.TestCase):
@@ -18,6 +16,12 @@ class CrossPipelineHealthTests(unittest.TestCase):
         self.assertEqual(disposition({"nycif": {"coordinate_status": "approximate"}}), "approximate")
         self.assertEqual(disposition({"map_status": "list_only"}), "list_only")
         self.assertIsNone(disposition({"latitude": 40.7, "longitude": -74.0}))
+
+    def test_event_rows_accepts_supported_envelopes(self):
+        row = {"id": "one", "map_status": "list_only"}
+        self.assertEqual(event_rows({"events": [row]}), [row])
+        self.assertEqual(event_rows([row]), [row])
+        self.assertEqual(event_rows({"unknown": [row]}), [])
 
     def test_accounting_requires_explicit_status(self):
         report = account_pipeline(
@@ -78,80 +82,65 @@ class CrossPipelineHealthTests(unittest.TestCase):
         self.assertEqual(delta(current, previous)["total_count"], 2)
         self.assertEqual(delta(current, previous)["approximate_count"], 1)
 
-    def test_missing_input_is_reported(self):
-        events, missing = load_events([Path("/definitely/missing.json")])
-        self.assertEqual(events, [])
-        self.assertEqual(len(missing), 1)
-
     def test_build_report_blocks_missing_nj_handoff(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            nyc = root / "nyc.json"
-            nyc.write_text(
-                json.dumps({"events": [{"id": "nyc:1", "map_status": "map_safe"}]}),
-                encoding="utf-8",
-            )
-            report = cross_builder.build_report(
-                nyc_paths=[nyc],
-                nj_paths=[root / "missing-nj.json"],
-            )
-            self.assertEqual(report["status"], "BLOCKED")
-            self.assertFalse(report["qa_pass"])
-            self.assertEqual(report["blockers"][0]["code"], "NJ_LOCATION_INPUT_MISSING")
+        report = cross_builder.build_report(
+            nyc_events=[{"id": "nyc:1", "map_status": "map_safe"}],
+            nj_events=[],
+            missing_nj_input=True,
+        )
+        self.assertEqual(report["status"], "BLOCKED")
+        self.assertFalse(report["qa_pass"])
+        self.assertEqual(report["blockers"][0]["code"], "NJ_LOCATION_INPUT_MISSING")
 
-    def test_fixed_contract_passes_accounted_fixtures(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            nyc = root / "nyc.json"
-            nj = root / "nj.json"
-            output = root / "health.json"
-            nyc.write_text(
-                json.dumps(
-                    {
-                        "events": [
-                            {"id": "nyc:1", "nycif": {"coordinate_status": "map_ready"}},
-                            {"id": "nyc:2", "nycif": {"coordinate_status": "approximate"}},
-                        ]
-                    }
-                ),
-                encoding="utf-8",
-            )
-            nj.write_text(
-                json.dumps(
-                    {
-                        "events": [
-                            {"id": "nj:1", "map_status": "map_safe"},
-                            {"id": "nj:2", "map_status": "list_only"},
-                        ]
-                    }
-                ),
-                encoding="utf-8",
-            )
-            with (
-                patch.object(cross_builder, "NYC_INPUTS", (nyc,)),
-                patch.object(cross_builder, "NJ_INPUT", nj),
-                patch.object(cross_builder, "OUTPUT", output),
-            ):
-                report = cross_builder.run_fixed_contract()
-            self.assertEqual(report["status"], "READY")
-            self.assertTrue(report["qa_pass"])
-            self.assertTrue(output.is_file())
+    def test_build_report_passes_accounted_events(self):
+        report = cross_builder.build_report(
+            nyc_events=[
+                {"id": "nyc:1", "nycif": {"coordinate_status": "map_ready"}},
+                {"id": "nyc:2", "nycif": {"coordinate_status": "approximate"}},
+            ],
+            nj_events=[
+                {"id": "nj:1", "map_status": "map_safe"},
+                {"id": "nj:2", "map_status": "list_only"},
+            ],
+        )
+        self.assertEqual(report["status"], "READY")
+        self.assertTrue(report["qa_pass"])
 
-    def test_explicit_augment_blocks_daily_health(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            path = Path(tmp) / "daily.json"
-            path.write_text(
-                json.dumps({"status": "READY", "release_ready": True, "blockers": []}),
-                encoding="utf-8",
-            )
-            cross = {
-                "qa_pass": False,
-                "blockers": [{"code": "NJ_UNACCOUNTED_LOCATION_RECORDS"}],
-            }
-            cross_builder.augment_daily_health(path, cross)
-            daily = json.loads(path.read_text(encoding="utf-8"))
-            self.assertEqual(daily["status"], "BLOCKED")
-            self.assertFalse(daily["release_ready"])
+    def test_fixed_contract_uses_parsed_fixed_artifacts(self):
+        written = []
+        with (
+            patch.object(
+                cross_builder,
+                "_read_nyc_staged",
+                return_value={"events": [{"id": "nyc:1", "map_status": "map_safe"}]},
+            ),
+            patch.object(
+                cross_builder,
+                "_read_nyc_supplemental",
+                return_value={"events": [{"id": "nyc:2", "map_status": "approximate"}]},
+            ),
+            patch.object(
+                cross_builder,
+                "_read_nj_handoff",
+                return_value={"events": [{"id": "nj:1", "map_status": "list_only"}]},
+            ),
+            patch.object(cross_builder, "_read_previous_output", return_value={}),
+            patch.object(cross_builder, "_write_output", side_effect=written.append),
+        ):
+            report = cross_builder.run_fixed_contract()
+        self.assertEqual(report["status"], "READY")
+        self.assertEqual(written, [report])
+
+    def test_apply_cross_to_daily_blocks_release(self):
+        daily = {"status": "READY", "release_ready": True, "blockers": []}
+        cross = {
+            "qa_pass": False,
+            "blockers": [{"code": "NJ_UNACCOUNTED_LOCATION_RECORDS"}],
+        }
+        combined = cross_builder.apply_cross_to_daily(daily, cross)
+        self.assertEqual(combined["status"], "BLOCKED")
+        self.assertFalse(combined["release_ready"])
+        self.assertEqual(daily["status"], "READY")
 
 
 if __name__ == "__main__":
