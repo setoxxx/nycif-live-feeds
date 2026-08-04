@@ -1,0 +1,341 @@
+================================================================================
+SPRINT 05 - MISSION CONTROL ACCESSIBILITY QA
+FINAL EVIDENCE HANDOFF (Living Authorization executed)
+Prepared by: Claude Code (GitHub-connected agent)
+Date: 2026-08-04  |  For: Howard Weiss -> independent ChatGPT review
+================================================================================
+Evidence tags: [VERIFIED] direct evidence | [INFERRED] reasoned from evidence |
+[NOT VERIFIED] evidence unavailable | [BLOCKED] could not proceed
+This document is English only. Every substantive claim carries a tag.
+
+--------------------------------------------------------------------------------
+1. EXECUTIVE SUMMARY
+--------------------------------------------------------------------------------
+Performed a real-browser accessibility audit of the production-equivalent Mission
+Control Pages artifact in Chromium 141.0.7390.37, served over HTTP (never
+file://), using axe-core plus manual keyboard, focus-visibility, contrast, 200%
+zoom, ~320px reflow, WCAG 1.4.12 text-spacing, reduced-motion, and landmark/
+heading checks, across desktop, tablet, mobile, and the search, filter, details-
+expanded, empty-result, and error states. Three directly-evidenced WCAG defects
+were found and repaired with native HTML/ARIA; deterministic regression tests
+were added and wired into CI. Post-repair, axe reports zero violations across all
+exercised states. I then executed the closeout: MC-ACCESSIBILITY=done, blocker
+and next objective advanced to Final Review Readiness, Validator contract tightened
+to require MC-ACCESSIBILITY done with MC-REVIEW remaining not_started. 79 tests
+pass; Validator and Pages verifier pass and remain read-only; the post-closeout CI
+run is GREEN. [VERIFIED]
+Recommendation (section 34): SPRINT 05 READY TO CLOSE. SonarCloud untouched and
+still a separate unresolved blocker; no PRs merged; no production deploy; Mission
+Control V2 remains in_progress.
+
+--------------------------------------------------------------------------------
+2. AUTHORIZATION AND STARTING POINT
+--------------------------------------------------------------------------------
+Authorized sprint: "SPRINT 05 - MISSION CONTROL ACCESSIBILITY QA" on
+setoxxx/nycif-national-pilot, PR #43, branch chatgpt/mission-control-v1-20260801.
+Authorized starting commit: 982baf74e5376e7c6032a2636e9a8b58ea1690a1 (the Sprint 04
+browser-QA closeout head). [VERIFIED] Local branch matched origin at start; no
+divergence.
+
+--------------------------------------------------------------------------------
+3. FINAL BRANCH AND COMMITS
+--------------------------------------------------------------------------------
+Branch chatgpt/mission-control-v1-20260801. Two Sprint 05 commits, in the preferred
+two-commit order: [VERIFIED]
+  (1) d36a2c0c2e1137f0ad72ad1acc022a25fe37d38a - a11y repairs + regression tests.
+  (2) 9b6566929ae5f8d69c2ed4e9cf5188bf05c7beff - closeout (this sprint's head).
+Local == origin after push. No rebase, no base change, no force-push.
+
+--------------------------------------------------------------------------------
+4. PROHIBITIONS HONORED
+--------------------------------------------------------------------------------
+[VERIFIED] No merge of PR #43 or PR #42; no rebase; no PR base change; no auto-merge;
+no "ready for review"; no production deployment. The production deploy workflow
+(.github/workflows/deploy-god-view-pages.yml), the locked national map
+(god-view/national-map/**), and Map 1.1 were not modified. SonarCloud was not worked
+on and is not represented as passing. Final Review Readiness work was not begun.
+Overall Mission Control V2 status stays in_progress; MC-REVIEW stays not_started;
+MC-SONARCLOUD stays blocked. No release-completion claim was made. The local browser
+a11y audit is NOT represented as a CI browser run; no browser-download CI platform
+was added. nycif-live-feeds#129 was not modified. A forbidden-path scan over the full
+diff since the authorized start confirmed only intended files changed (section 24).
+
+--------------------------------------------------------------------------------
+5. ARTIFACT UNDER TEST
+--------------------------------------------------------------------------------
+[VERIFIED] The production-equivalent Pages artifact was produced from the packaged
+hub source (nycif-app/god-view/hub) as packaged for the god-view Pages destination
+(entry index.html at route /), the same construction the read-only Pages verifier
+enforces. The audited surface is the same HTML/CSS/JS and the seven UI-consumed JSON
+contracts that the interface actually fetches. The audit was performed against this
+built artifact, not against the raw source tree.
+
+--------------------------------------------------------------------------------
+6. TEST ENVIRONMENT
+--------------------------------------------------------------------------------
+[VERIFIED] Browser: pre-installed Chromium 141.0.7390.37, driven via Playwright
+(Python sync API) using an explicit executable_path because the pip Playwright build
+did not match the bundled browser. The artifact was served over a local HTTP server
+(never file://). Viewports exercised: desktop 1440x900, tablet 1024x768,
+mobile 390x844, plus a 320px-wide reflow width.
+
+--------------------------------------------------------------------------------
+7. TOOLING AND METHOD
+--------------------------------------------------------------------------------
+[VERIFIED] Automated scanning: axe-core via axe-playwright-python. Manual checks were
+scripted deterministically in the same browser session: per-node keyboard traversal
+with unique element tagging, computed-style focus-indicator probing (with a settle
+delay to avoid transition-start frames), contrast sampling from computed colors,
+zoom/reflow/text-spacing via CSS and viewport manipulation, reduced-motion via the
+prefers-reduced-motion emulation, and DOM role/heading extraction for the landmark
+and heading structure. Raw axe output and a consolidated audit report were saved to
+the session scratchpad as working evidence. [INFERRED] The method is production-
+equivalent because it exercises the same served artifact a browser user would load.
+
+--------------------------------------------------------------------------------
+8. AUDIT PROCEDURE - axe-core AUTOMATED SCAN
+--------------------------------------------------------------------------------
+[VERIFIED] axe-core was run against the served page in each exercised state. Pre-
+repair, axe reported the scrollable-region-focusable, aria-prohibited-attr (on a
+role-less div carrying aria-label), and list-structure violations that drove the
+three repairs. Post-repair, axe reported zero violations in every state (section 26).
+
+--------------------------------------------------------------------------------
+9. AUDIT PROCEDURE - KEYBOARD AND FOCUS
+--------------------------------------------------------------------------------
+[VERIFIED] A full Tab traversal tagged each focusable node with a unique identifier
+to detect loops. Result: no focus trap; 57 focusable elements were reachable; every
+focusable element presented a visible focus indicator. An earlier apparent "no
+indicator" reading on nav links was traced to the CSS transition start frame; a
+settle probe showed the focused nav link at full foreground color with a visible
+focus-visible background, so it was adjudicated NOT a defect (section 21).
+
+--------------------------------------------------------------------------------
+10. AUDIT PROCEDURE - CONTRAST
+--------------------------------------------------------------------------------
+[VERIFIED] Text and status-tag foreground/background pairs were sampled from computed
+styles and checked against WCAG AA (4.5:1 normal text, 3:1 large text). All sampled
+pairs passed. The only residual axe contrast "incomplete" was on the decorative
+brand glyph, which is aria-hidden and not applicable (section 22).
+
+--------------------------------------------------------------------------------
+11. AUDIT PROCEDURE - 200% ZOOM
+--------------------------------------------------------------------------------
+[VERIFIED] At 200% zoom no content was lost and no horizontal page scroll was forced
+on the body; the horizontally scrollable data regions scroll within their own
+containers by design.
+
+--------------------------------------------------------------------------------
+12. AUDIT PROCEDURE - 320px REFLOW (WCAG 1.4.10)
+--------------------------------------------------------------------------------
+[VERIFIED] At ~320px width (and at 640px) the layout reflowed without loss of content
+or functionality and without body-level horizontal overflow.
+
+--------------------------------------------------------------------------------
+13. AUDIT PROCEDURE - TEXT SPACING (WCAG 1.4.12)
+--------------------------------------------------------------------------------
+[VERIFIED] With the WCAG text-spacing override applied (line-height, letter-,
+word-, and paragraph-spacing), no content was clipped and no overlap occurred.
+
+--------------------------------------------------------------------------------
+14. AUDIT PROCEDURE - REDUCED MOTION
+--------------------------------------------------------------------------------
+[VERIFIED] Under prefers-reduced-motion: reduce, the navigation transition resolved
+to 0s and no motion-driven content change occurred. The stylesheet retains a
+prefers-reduced-motion: reduce media block, locked by a regression test.
+
+--------------------------------------------------------------------------------
+15. AUDIT PROCEDURE - LANDMARKS, HEADINGS, ACCESSIBILITY TREE
+--------------------------------------------------------------------------------
+[VERIFIED] A skip link targets the #main landmark; the heading hierarchy is ordered
+with no skipped levels in the sampled structure. [NOT VERIFIED via platform API] The
+native accessibility-tree API was unavailable in this Playwright build, so landmarks
+and headings were extracted from the DOM role/heading structure rather than the
+platform AX tree; this is an environment limitation, not a defect, and the structural
+result was good.
+
+--------------------------------------------------------------------------------
+16. STATES EXERCISED
+--------------------------------------------------------------------------------
+[VERIFIED] Desktop, tablet, and mobile viewports; default load; active search;
+change-filter; decision-filter; details-expanded; empty search result; and the fatal
+error state (failure injection). axe reported zero violations post-repair in each.
+
+--------------------------------------------------------------------------------
+17. FINDINGS - ADJUDICATION SUMMARY
+--------------------------------------------------------------------------------
+[VERIFIED] Adjudication of every material observation:
+  - Confirmed defects (repaired): 3  (sections 18-20)
+  - Recommendations (non-defects, no change forced): see section 21
+  - False positives: 1 (nav-link focus transition-start frame) - section 21
+  - Not applicable: 1 (aria-hidden decorative brand glyph contrast) - section 22
+  - Not verified: platform accessibility-tree API (env limitation) - section 15
+  - Blocked: none for the audited artifact - section 23
+Only directly-evidenced defects were repaired, each narrowly, using native HTML/ARIA.
+
+--------------------------------------------------------------------------------
+18. CONFIRMED DEFECT 1 - SCROLLABLE REGIONS NOT KEYBOARD-FOCUSABLE
+--------------------------------------------------------------------------------
+[VERIFIED] The horizontally scrollable pipeline (#pipelineFlow) and delivery board
+(#kanbanBoard) were scrollable but not keyboard-focusable (axe scrollable-region-
+focusable), so keyboard-only users could not scroll them. Repair: added tabindex="0"
+and a role="group" with a descriptive aria-label to each, making them focusable and
+giving the group an accessible name without altering layout or visuals.
+
+--------------------------------------------------------------------------------
+19. CONFIRMED DEFECT 2 - DECORATIVE NAV ICONS POLLUTE LINK NAMES
+--------------------------------------------------------------------------------
+[VERIFIED] Each side-navigation link prefixed its text with a decorative glyph in a
+bare <span>, so the glyph leaked into the link's accessible name. Repair: marked the
+13 decorative glyph spans aria-hidden="true" so assistive technology announces only
+the human-readable link text. No visual change.
+
+--------------------------------------------------------------------------------
+20. CONFIRMED DEFECT 3 - ERROR PATH INJECTS A PARAGRAPH INTO A LIST
+--------------------------------------------------------------------------------
+[VERIFIED] The fatal-error renderer (showFatal in hub.js) appended a <p> into every
+host, including <ol>/<ul> hosts, producing invalid list structure (axe list rule)
+when the app failed closed. Repair: showFatal now detects a list host (tagName OL/UL)
+and appends a list item there and a paragraph elsewhere, so the honest error message
+is emitted with valid structure in every host.
+
+--------------------------------------------------------------------------------
+21. RECOMMENDATIONS AND FALSE POSITIVES (NO CHANGE FORCED)
+--------------------------------------------------------------------------------
+[VERIFIED] Nav-link focus "no indicator": FALSE POSITIVE - the grey reading was the
+0.18s transition start frame; a settle probe showed full foreground color plus a
+focus-visible background. No change made. [INFERRED] General recommendation for a
+later sprint: real assistive-technology (screen-reader) and cross-browser passes
+would strengthen coverage; these are out of this sprint's authorized scope.
+
+--------------------------------------------------------------------------------
+22. NOT APPLICABLE
+--------------------------------------------------------------------------------
+[VERIFIED] The residual axe contrast "incomplete" targeted the decorative brand glyph
+inside .brand-mark, which is aria-hidden. Contrast rules do not apply to content
+hidden from assistive technology and not conveying information; no change made.
+
+--------------------------------------------------------------------------------
+23. NOT VERIFIED / BLOCKED
+--------------------------------------------------------------------------------
+[NOT VERIFIED] Platform accessibility-tree snapshot (API unavailable in this
+Playwright build; DOM role/heading structure used instead - section 15).
+[NOT VERIFIED] Real screen-reader announcement and cross-browser (Firefox/WebKit)
+behavior were not exercised (out of scope; Chromium only). [BLOCKED] None for the
+audited Mission Control artifact.
+
+--------------------------------------------------------------------------------
+24. REPAIRS APPLIED AND DIFF SCOPE
+--------------------------------------------------------------------------------
+[VERIFIED] Commit 1 changed exactly: nycif-app/god-view/hub/index.html (focusable
+named scroll regions; 13 aria-hidden glyphs; skip link/#main preserved),
+nycif-app/god-view/hub/hub.js (list-aware showFatal),
+tests/test_mission_control_accessibility.py (new), and
+.github/workflows/mission-control-builder-verification.yml (run the new tests). A
+forbidden-path scan of the full diff since 982baf7 confirmed no changes to the deploy
+workflow, the locked national map, decision-registry.json, or the other daily
+workflows. The locked national-map and decision-registry SHA-256 hashes were unchanged.
+
+--------------------------------------------------------------------------------
+25. REGRESSION TESTS ADDED
+--------------------------------------------------------------------------------
+[VERIFIED] tests/test_mission_control_accessibility.py adds seven deterministic,
+non-browser guards that lock the specific source-level fixes: pipeline and kanban
+tabindex=0; both scroll regions carry role=group and an aria-label; no bare
+decorative span directly inside a nav-link and at least 13 aria-hidden glyph spans;
+showFatal branches on list hosts; skip link plus #main target present; and the
+reduced-motion media query remains in the stylesheet. The file header states plainly
+that the live-browser audit is a local evidence pass and is intentionally not run in
+CI; these static assertions are the CI-enforced regression surface.
+
+--------------------------------------------------------------------------------
+26. POST-REPAIR RETEST RESULTS
+--------------------------------------------------------------------------------
+[VERIFIED] After the repairs, axe-core reported zero violations across desktop,
+mobile, tablet, search, change-filter, decision-filter, details-expanded, empty-
+search, and error states. Keyboard traversal remained trap-free with visible focus on
+all 57 focusables; search retained focus and caret across live filtering; zoom,
+reflow, text-spacing, and reduced-motion checks all remained good.
+
+--------------------------------------------------------------------------------
+27. BUILDER CLOSEOUT CHANGES
+--------------------------------------------------------------------------------
+[VERIFIED] build_mission_control.py records MC-ACCESSIBILITY as done with repository
+evidence, and advances PROJECT_ENIGMA_STATUS.md: Current Sprint = Mission Control
+Accessibility QA; Accessibility Status = DONE; Current Release Blocker and Next
+Authorized Objective = Final Review Readiness; plus a Verified Accessibility Evidence
+block. MC-REVIEW stays not_started, MC-SONARCLOUD stays blocked, overall_status stays
+in_progress. The Builder remains deterministic for the fixed timestamp.
+
+--------------------------------------------------------------------------------
+28. VALIDATOR CONTRACT CHANGES
+--------------------------------------------------------------------------------
+[VERIFIED] validate_mission_control.py now requires MC-ACCESSIBILITY = done
+(MCV-RA-ACCESSIBILITY), narrows the downstream-must-stay-not_started guard to
+MC-REVIEW only, requires the project status to record "## Accessibility Status\nDONE"
+(MCV-PS-ACCESSIBILITY), and requires the current release blocker and next authorized
+objective to read "Final Review Readiness". The SonarCloud-stays-blocked and no-false-
+completion guards are unchanged. The Validator remains read-only.
+
+--------------------------------------------------------------------------------
+29. GENERATED OUTPUT STATE
+--------------------------------------------------------------------------------
+[VERIFIED] release-audit.json checklist: MC-UI, MC-PULSE, MC-GOVERNANCE, MC-BUILDER,
+MC-BUILDER-VERIFICATION, MC-VALIDATOR, MC-PAGES, MC-BROWSER, MC-ACCESSIBILITY = done;
+MC-REVIEW = not_started; MC-SONARCLOUD = blocked; overall_status = in_progress.
+PROJECT_ENIGMA_STATUS.md reflects the advanced blocker/objective and Accessibility
+Status DONE. Deterministic Builder --check reports outputs current.
+
+--------------------------------------------------------------------------------
+30. CHANGE LEDGER ENTRY
+--------------------------------------------------------------------------------
+[VERIFIED] Append-only, facts-only entry MC-20260802-007 was prepended, recording the
+accessibility QA, the three repairs, the regression tests and CI wiring, the closeout,
+the passing local commands, and honest known-limitations (Chromium only; platform AX
+API unavailable; the live audit is a local evidence pass, not a CI browser job). No
+existing ledger entry was modified or removed.
+
+--------------------------------------------------------------------------------
+31. LOCAL VERIFICATION RESULTS
+--------------------------------------------------------------------------------
+[VERIFIED] python -m unittest for builder, validator, pages, and accessibility test
+modules: 79 tests, OK. Validator against the actual repository: PASSED (10 files, 16
+contract categories), working tree unchanged (read-only). Pages verifier: PASSED,
+working tree unchanged (read-only). Deterministic Builder --check: outputs current.
+
+--------------------------------------------------------------------------------
+32. CONTINUOUS INTEGRATION STATUS
+--------------------------------------------------------------------------------
+[VERIFIED] Commit 1 (d36a2c0) - Mission Control Builder Verification run 30754971248:
+success. Commit 2 / closeout (9b65669) - run 30869962095, run_number 12: status
+completed, conclusion success (GREEN). This CI is the deterministic verification
+workflow; it does not, and is not represented to, run the live browser a11y audit.
+
+--------------------------------------------------------------------------------
+33. RESIDUAL RISKS AND LIMITATIONS
+--------------------------------------------------------------------------------
+[VERIFIED] SonarCloud remains a separate unresolved final-review blocker and was not
+touched. [NOT VERIFIED] No real screen-reader or cross-browser pass was performed
+(Chromium only); the platform accessibility-tree API was unavailable and the DOM
+structure was used instead. [INFERRED] These do not block Sprint 05 closeout because
+the authorized scope was an axe-core + manual Chromium audit with narrow repairs;
+they are recommended follow-ups for Final Review Readiness.
+
+--------------------------------------------------------------------------------
+34. FINAL RECOMMENDATION
+--------------------------------------------------------------------------------
+SPRINT 05 READY TO CLOSE. [VERIFIED]
+Three directly-evidenced WCAG defects were repaired narrowly with native HTML/ARIA;
+axe reports zero violations across all exercised states; regression tests were added
+and are CI-enforced; the closeout advanced MC-ACCESSIBILITY to done and the blocker/
+objective to Final Review Readiness; 79 tests pass; Validator and Pages verifier pass
+and stay read-only; the post-closeout CI run is GREEN. SonarCloud remains an honestly
+reported separate blocker. No PRs merged, no rebase, no base change, no production
+deploy; the deploy workflow, locked national map, and Map 1.1 were untouched; Mission
+Control V2 remains in_progress and MC-REVIEW remains not_started.
+
+Stop after this handoff. Do not begin Final Review Readiness without a new
+authorization.
+================================================================================
+END OF SPRINT 05 HANDOFF - return to Howard Weiss for independent ChatGPT review
+================================================================================
