@@ -1,258 +1,39 @@
 {
   "artifact_type": "nycif_daily_data_health",
-  "blockers": [],
+  "blockers": [
+    {
+      "artifact": ".github/workflows/discovery-feed-refresh.yml",
+      "code": "daily_refresh_stage_failed",
+      "exit_code": 1,
+      "line": "unknown",
+      "message": "Daily production refresh failed at stage 'unknown_stage' (exit 1, shell line unknown). Public feeds were not committed.",
+      "severity": "critical",
+      "stage": "unknown_stage"
+    }
+  ],
   "company_focus": "News Desk live-data completeness, freshness, and duplicate safety",
   "daily_refresh_required": true,
-  "derived_artifacts": [
-    {
-      "age_hours": 0.02,
-      "artifact": "data/staged_live_manifest.json",
-      "fresh": true,
-      "generated_at_utc": "2026-08-03T17:27:02.705292+00:00",
-      "name": "Map-ready staged feed",
-      "qa_pass": true,
-      "record_count": 30131
-    },
-    {
-      "age_hours": 0.02,
-      "artifact": "data/schema-v1-discovery/approved/manifest.json",
-      "fresh": true,
-      "generated_at_utc": "2026-08-03T17:27:06Z",
-      "name": "Approved public discovery feed",
-      "qa_pass": true,
-      "record_count": 33483
-    },
-    {
-      "age_hours": 0.02,
-      "artifact": "data/reports/discovery_approved_dedupe_report.json",
-      "fresh": true,
-      "generated_at_utc": "2026-08-03T17:27:06Z",
-      "name": "Cross-source dedupe evidence",
-      "qa_pass": true,
-      "record_count": 33765
-    },
-    {
-      "age_hours": 0.02,
-      "artifact": "data/schema-v1-discovery/shared-cems-occurrence-dedupe-summary.json",
-      "fresh": true,
-      "generated_at_utc": "2026-08-03T17:27:06Z",
-      "name": "Shared-CEMS dedupe evidence",
-      "qa_pass": true,
-      "record_count": 33483
-    },
-    {
-      "age_hours": 0.0,
-      "artifact": "data/runtime_fallback_feed_report.json",
-      "fresh": true,
-      "generated_at_utc": "2026-08-03T17:28:03.736048+00:00",
-      "name": "Emergency major fallback",
-      "qa_pass": true,
-      "record_count": 362
-    },
-    {
-      "age_hours": 0.01,
-      "artifact": "data/photographer_assignment_calendar_report.json",
-      "fresh": true,
-      "generated_at_utc": "2026-08-03T17:27:29Z",
-      "name": "News Desk money-day calendar",
-      "qa_pass": true,
-      "record_count": 218
-    },
-    {
-      "age_hours": 0.0,
-      "artifact": "data/photographer_viral_recurrence_report.json",
-      "fresh": true,
-      "generated_at_utc": "2026-08-03T17:28:02Z",
-      "name": "News Desk viral recurrence overlay",
-      "qa_pass": true,
-      "record_count": 235
-    }
-  ],
+  "derived_artifacts": [],
   "enigma": {
     "mode": "shadow_only",
-    "note": "V1 remains the production authority until a separately governed real-data Enigma phase is authorized.",
+    "note": "V1 remains the sole production authority.",
     "production_authority": false
   },
-  "field_desk_overlay_health": {
-    "artifact_type": "nycif_auxiliary_runtime_health",
-    "blockers": [],
-    "branch": "main",
-    "check_exit_code": 0,
-    "generated_at_utc": "2026-08-03T17:28:03Z",
-    "local_runtime_checks": {
-      "newly_added_sort": {
-        "age_hours": 0.01,
-        "artifact": "data/nycif_new_events.json",
-        "counts_valid": true,
-        "duplicate_ids": 0,
-        "event_count": 1001,
-        "fresh": true,
-        "generated_at_utc": "2026-08-03T17:27:26Z",
-        "max_age_hours": 36.0,
-        "missing_ids": 0,
-        "name": "Newly added event-list sort",
-        "new_this_run": 1001,
-        "qa_pass": true,
-        "total_tracked": 30149
-      }
-    },
-    "max_age_hours": 36.0,
-    "operating_rule": "All auxiliary map overlays and the Newly added sort feed must be fresh, count-aligned, schema-valid, and duplicate-clean before the News Desk runtime is READY.",
-    "overlay_count": 3,
-    "overlays": [
-      {
-        "age_hours": 4.09,
-        "count_aligned": true,
-        "data_artifact": "data/nycif_active_nightlife_feed.json",
-        "duplicate_ids": 0,
-        "duplicate_semantic_public_markers": 0,
-        "max_age_hours": 36.0,
-        "missing_ids": 0,
-        "name": "Active nightlife / 5PM",
-        "qa_pass": true,
-        "report_artifact": "data/reports/active_nightlife_feed_report.json",
-        "report_generated_at_utc": "2026-08-03T13:22:28.863Z",
-        "report_qa_pass": true,
-        "reported_count": 153,
-        "row_count": 153
-      },
-      {
-        "age_hours": 4.07,
-        "count_aligned": true,
-        "data_artifact": "data/nycif_legal_cannabis_dispensaries.json",
-        "duplicate_ids": 0,
-        "duplicate_semantic_public_markers": 0,
-        "max_age_hours": 36.0,
-        "missing_ids": 0,
-        "name": "Legal cannabis dispensaries",
-        "qa_pass": true,
-        "report_artifact": "data/reports/legal_cannabis_dispensaries_report.json",
-        "report_generated_at_utc": "2026-08-03T13:23:48.949Z",
-        "report_qa_pass": true,
-        "reported_count": 254,
-        "row_count": 254
-      },
-      {
-        "age_hours": 4.07,
-        "count_aligned": true,
-        "data_artifact": "data/nycif_smoke_vape_cannabis_correlation.json",
-        "duplicate_ids": 0,
-        "duplicate_semantic_public_markers": 0,
-        "max_age_hours": 36.0,
-        "missing_ids": 0,
-        "name": "Smoke/vape/cannabis correlation",
-        "qa_pass": true,
-        "report_artifact": "data/reports/smoke_vape_cannabis_correlation_report.json",
-        "report_generated_at_utc": "2026-08-03T13:23:49.225Z",
-        "report_qa_pass": true,
-        "reported_count": 174,
-        "row_count": 174
-      }
-    ],
-    "qa_pass": true,
-    "repository": "setoxxx/nycif-field-desk",
-    "schema_version": "1.1.0"
-  },
-  "generated_at_utc": "2026-08-03T17:28:03Z",
+  "generated_at_utc": "2026-08-04T12:29:21Z",
   "operating_rule": "Do not commit or publish a refreshed public feed unless status is READY.",
   "pipeline": {
-    "calendar_parks_unaccounted_gap": 0,
-    "canonical_identity_clean": true,
-    "cross_date_street_occurrences_suppressed": 0,
-    "cross_source_dedupe_clean": true,
-    "exact_occurrence_duplicates_suppressed": 0,
-    "field_desk_public_overlays_clean": true,
-    "photographer_money_day_clean": true,
-    "required_event_923896_public_and_correct": true,
-    "runtime_fallback_clean": true,
-    "shared_cems_dedupe_clean": true,
-    "strict_reconciliation": true,
-    "viral_recurrence_clean": true
+    "canonical_identity_clean": false,
+    "cross_source_dedupe_clean": false,
+    "shared_cems_dedupe_clean": false,
+    "strict_reconciliation": false
   },
-  "release_ready": true,
-  "required_event_checks": {
-    "event_923896": {
-      "approved_pages_scanned": 49,
-      "borough": "Brooklyn",
-      "certificate_artifact": "data/reports/event_923896_snapshot_recovery_certificate.json",
-      "certificate_schema_version": "1.0.0",
-      "coordinate_status": "map_ready",
-      "evaluated_date": "2026-08-03",
-      "event_id": "tvpp-9vvx:923896@2026-08-01",
-      "failures": [],
-      "latitude": 40.618,
-      "location": "EAST   74 STREET between AVENUE U and AVENUE T",
-      "longitude": -73.905,
-      "match_count": 1,
-      "name": "Required Brooklyn block party 923896",
-      "operating_rule": "Event 923896 must appear exactly once in the approved public feed on 2026-08-01 with the East 74 Street / Avenue U / Avenue T Brooklyn segment pin.",
-      "page": "page-0008.json",
-      "qa_pass": true,
-      "required_date": "2026-08-01",
-      "source_event_id": "923896",
-      "start": "2026-08-01T11:00:00.000",
-      "validation_mode": "archived_certification"
-    }
-  },
+  "release_ready": false,
   "rollback": {
-    "previous_public_feed_commit": "a3a92295dc792fad4a3af54c9e1a47e221581eed",
+    "previous_public_feed_commit": "58ea2e356a2006793f36c0a6230db9e0e4130396",
     "strategy": "Failed runs do not commit; revert the READY refresh commit to restore this prior commit."
   },
-  "rollback_rule": "A failed refresh leaves public feed JSON unchanged and publishes only a BLOCKED God View status.",
-  "runtime_feeds": {
-    "active_nightlife_overlay": "nycif-field-desk/data/nycif_active_nightlife_feed.json",
-    "approved_pages": "data/schema-v1-discovery/approved/",
-    "legal_cannabis_overlay": "nycif-field-desk/data/nycif_legal_cannabis_dispensaries.json",
-    "main_emergency": "nycif_major_radar_map_events.json",
-    "money_overlay": "data/photographer_assignment_calendar_2mo.json",
-    "newly_added_sort": "data/nycif_new_events.json",
-    "primary_major": "data/schema-v1-discovery/major/events.json",
-    "review_pages": "data/schema-v1-discovery/review/",
-    "same-ref_fallback": "data/events_discovery_v02_major.json",
-    "smoke_vape_correlation_overlay": "nycif-field-desk/data/nycif_smoke_vape_cannabis_correlation.json",
-    "viral_overlay": "data/photographer_viral_recurrence_matches.json"
-  },
-  "schema_version": "1.4.0",
-  "sources": [
-    {
-      "age_hours": 2.45,
-      "artifact": "data/live_sync_report.json",
-      "error": null,
-      "fetch_mode": "live",
-      "fresh": true,
-      "generated_at_utc": "2026-08-03T15:01:15.982139+00:00",
-      "live_fetch": true,
-      "max_age_hours": 36.0,
-      "name": "NYC permitted events",
-      "qa_pass": true,
-      "record_count": 31673
-    },
-    {
-      "age_hours": 2.44,
-      "artifact": "data/nyc_citywide_events_calendar_sync_report.json",
-      "error": null,
-      "fetch_mode": "live",
-      "fresh": true,
-      "generated_at_utc": "2026-08-03T15:01:23.964640+00:00",
-      "live_fetch": true,
-      "max_age_hours": 36.0,
-      "name": "NYC Citywide Calendar",
-      "qa_pass": true,
-      "record_count": 237
-    },
-    {
-      "age_hours": 2.44,
-      "artifact": "data/nyc_parks_bigapps_events_sync_report.json",
-      "error": null,
-      "fetch_mode": "live",
-      "fresh": true,
-      "generated_at_utc": "2026-08-03T15:01:23.972998+00:00",
-      "live_fetch": true,
-      "max_age_hours": 36.0,
-      "name": "NYC Parks BigApps",
-      "qa_pass": true,
-      "record_count": 1731
-    }
-  ],
-  "status": "READY"
+  "rollback_rule": "The failed transaction was discarded; the previous serving commit remains authoritative.",
+  "schema_version": "1.2.0",
+  "sources": [],
+  "status": "BLOCKED"
 }
