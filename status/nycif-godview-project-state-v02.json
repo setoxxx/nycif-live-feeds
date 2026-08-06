@@ -81,7 +81,7 @@
       "note": "V1 remains the sole production authority.",
       "production_authority": false
     },
-    "generated_at_utc": "2026-08-05T12:26:57Z",
+    "generated_at_utc": "2026-08-06T12:30:15Z",
     "operating_rule": "Do not commit or publish a refreshed public feed unless status is READY.",
     "pipeline": {
       "canonical_identity_clean": false,
@@ -91,7 +91,7 @@
     },
     "release_ready": false,
     "rollback": {
-      "previous_public_feed_commit": "71410d81c422d1dd9011c5117cdabf0005da6dcc",
+      "previous_public_feed_commit": "3e42933a03eaff186811a06321989d9f98089e26",
       "strategy": "Failed runs do not commit; revert the READY refresh commit to restore this prior commit."
     },
     "rollback_rule": "The failed transaction was discarded; the previous serving commit remains authoritative.",
@@ -184,11 +184,11 @@
       "viewer": 61
     }
   },
-  "generated_at_utc": "2026-08-05T12:26:57Z",
+  "generated_at_utc": "2026-08-06T12:30:15Z",
   "github_tracker": {
     "artifact_type": "nycif_github_tracker",
     "closed_issues_recent": [],
-    "generated_at_utc": "2026-08-05T12:26:57Z",
+    "generated_at_utc": "2026-08-06T12:30:15Z",
     "open_issues_field_desk": [],
     "open_issues_live_feeds": [],
     "open_prs": [],
@@ -202,7 +202,7 @@
     },
     "daily_data_health": {
       "artifact": "status/nycif-daily-data-health.json",
-      "generated_at_utc": "2026-08-05T12:26:57Z",
+      "generated_at_utc": "2026-08-06T12:30:15Z",
       "qa_pass": false,
       "status": "BLOCKED"
     },
@@ -233,7 +233,7 @@
       "text": "Field-desk deploy automation (issues #127/#128 closed)"
     },
     {
-      "resolved_at_utc": "2026-08-05T12:26:57Z",
+      "resolved_at_utc": "2026-08-06T12:30:15Z",
       "text": "M11 supplemental first-pass: 3543 rows approved in queue"
     }
   ],

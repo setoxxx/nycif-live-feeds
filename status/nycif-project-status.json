@@ -49,7 +49,7 @@
       "note": "V1 remains the sole production authority.",
       "production_authority": false
     },
-    "generated_at_utc": "2026-08-05T12:26:57Z",
+    "generated_at_utc": "2026-08-06T12:30:15Z",
     "operating_rule": "Do not commit or publish a refreshed public feed unless status is READY.",
     "pipeline": {
       "canonical_identity_clean": false,
@@ -59,7 +59,7 @@
     },
     "release_ready": false,
     "rollback": {
-      "previous_public_feed_commit": "71410d81c422d1dd9011c5117cdabf0005da6dcc",
+      "previous_public_feed_commit": "3e42933a03eaff186811a06321989d9f98089e26",
       "strategy": "Failed runs do not commit; revert the READY refresh commit to restore this prior commit."
     },
     "rollback_rule": "The failed transaction was discarded; the previous serving commit remains authoritative.",
@@ -68,7 +68,7 @@
     "status": "BLOCKED"
   },
   "data_freshness": {
-    "last_verified_at": "2026-08-05T12:26:57Z",
+    "last_verified_at": "2026-08-06T12:30:15Z",
     "source": "generate_godview_project_state.py"
   },
   "enigma_shadow_program": {
@@ -122,7 +122,7 @@
       "viewer": 61
     }
   },
-  "generated_at_utc": "2026-08-05T12:26:57Z",
+  "generated_at_utc": "2026-08-06T12:30:15Z",
   "health": "red",
   "map_v1": {
     "freeze_artifact": "status/nycif-map-v1-freeze.json",
