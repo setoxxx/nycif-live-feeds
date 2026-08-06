@@ -27,15 +27,20 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def sanitize_summary(value: str, *, limit: int = SUMMARY_LIMIT) -> str:
-    """Return a bounded, single-purpose error summary with common secrets redacted."""
+def sanitize_text(value: str) -> str:
+    """Redact common secret shapes while preserving log line structure."""
     cleaned = "".join(character for character in value if character in "\n\t" or ord(character) >= 32)
     for pattern in _SECRET_PATTERNS:
         if pattern.groups:
             cleaned = pattern.sub(r"\1[REDACTED]", cleaned)
         else:
             cleaned = pattern.sub("[REDACTED]", cleaned)
-    cleaned = cleaned.strip()
+    return cleaned
+
+
+def sanitize_summary(value: str, *, limit: int = SUMMARY_LIMIT) -> str:
+    """Return a bounded, single-purpose error summary with common secrets redacted."""
+    cleaned = sanitize_text(value).strip()
     if not cleaned:
         return "No stderr or exception text was captured. See the GitHub Actions job log."
     if len(cleaned) > limit:
@@ -106,8 +111,9 @@ def run_command(
         )
         assert process.stdout is not None
         for line in process.stdout:
-            print(line, end="", flush=True)
-            tail.append(line)
+            safe_line = sanitize_text(line)
+            print(safe_line, end="", flush=True)
+            tail.append(safe_line)
         return_code = process.wait()
     except Exception as exc:  # pragma: no cover - platform launch failures are environment-specific.
         payload = failure_payload(
