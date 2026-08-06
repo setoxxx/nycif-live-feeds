@@ -169,13 +169,21 @@ def test_refresh_workflow_has_structured_preflight_diagnostics() -> None:
     workflow = (ROOT / ".github" / "workflows" / "discovery-feed-refresh.yml").read_text(
         encoding="utf-8"
     )
-    assert "scripts/run_daily_refresh_stage.py" in workflow
-    assert "scripts/test_live_event_intake_refresh_current.py" in workflow
-    assert "platform_or_uninstrumented_failure" in workflow
+    transaction = (ROOT / "scripts" / "run_discovery_feed_refresh.sh").read_text(
+        encoding="utf-8"
+    )
+    publisher = (ROOT / "scripts" / "publish_blocked_daily_refresh.sh").read_text(
+        encoding="utf-8"
+    )
+    assert "bash scripts/run_discovery_feed_refresh.sh" in workflow
+    assert "bash scripts/publish_blocked_daily_refresh.sh" in workflow
+    assert "scripts/run_daily_refresh_stage.py" in transaction
+    assert "scripts/test_live_event_intake_refresh_current.py" in transaction
+    assert "--command-id" in transaction
+    assert "platform_or_uninstrumented_failure" in publisher
+    assert "--exception-class" in publisher
+    assert "--error-summary" in publisher
     assert 'stage="unknown_stage"' not in workflow
-    assert "--command-id" in workflow
-    assert "--exception-class" in workflow
-    assert "--error-summary" in workflow
 
 
 def test_modified_reliability_python_files_compile() -> None:
