@@ -12,6 +12,7 @@ import argparse
 import json
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import Any
 
 try:
     from scripts.run_daily_refresh_stage import sanitize_summary
@@ -31,6 +32,23 @@ def normalize_stage(value: str) -> str:
     if stage == "unknown_stage":
         return "platform_or_uninstrumented_failure"
     return stage
+
+
+def load_failure_context(path: Path | None) -> dict[str, Any]:
+    if path is None or not path.is_file():
+        return {}
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {
+            "stage": "platform_or_uninstrumented_failure",
+            "command_id": "malformed_failure_context",
+            "exit_code": 1,
+            "exception_class": "MalformedFailureContext",
+            "error_summary": "The structured failure context was missing or malformed. Review the workflow log.",
+            "public_feed_commit_occurred": False,
+        }
+    return payload if isinstance(payload, dict) else {}
 
 
 def build_payload(
@@ -110,9 +128,10 @@ def build_payload(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--stage", required=True)
+    parser.add_argument("--failure-json", type=Path)
+    parser.add_argument("--stage", default="platform_or_uninstrumented_failure")
     parser.add_argument("--command-id", default="workflow_platform_or_uninstrumented")
-    parser.add_argument("--exit-code", type=int, required=True)
+    parser.add_argument("--exit-code", type=int, default=1)
     parser.add_argument("--line", default="not_available")
     parser.add_argument("--exception-class", default="ProcessFailure")
     parser.add_argument("--error-summary", default="No safe error summary was captured. Review the workflow log.")
@@ -123,15 +142,18 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
+    context = load_failure_context(args.failure_json)
     payload = build_payload(
-        stage=args.stage,
-        command_id=args.command_id,
-        exit_code=args.exit_code,
-        shell_line=args.line,
-        exception_class=args.exception_class,
-        error_summary=args.error_summary,
+        stage=str(context.get("stage", args.stage)),
+        command_id=str(context.get("command_id", args.command_id)),
+        exit_code=int(context.get("exit_code", args.exit_code)),
+        shell_line=str(context.get("shell_line", context.get("line", args.line))),
+        exception_class=str(context.get("exception_class", args.exception_class)),
+        error_summary=str(context.get("error_summary", args.error_summary)),
         previous_commit=args.previous_commit,
-        public_feed_commit_occurred=args.public_feed_commit_occurred,
+        public_feed_commit_occurred=bool(
+            context.get("public_feed_commit_occurred", args.public_feed_commit_occurred)
+        ),
     )
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
