@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Deterministic regressions for the daily production hardening path.
-
-This comment-only revision is the authorized Stage 7 production-refresh trigger.
-"""
+"""Deterministic regressions for the daily production hardening path."""
 
 from __future__ import annotations
 
 import copy
+import json
+import py_compile
 import sys
+import tempfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,7 +15,9 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from scripts.build_staged_production_feed import apply_one_day_street_dedupe  # noqa: E402
+from scripts.record_blocked_daily_data_health import build_payload  # noqa: E402
 from scripts.refresh_official_supplemental_occurrences import occurrence_key  # noqa: E402
+from scripts.run_daily_refresh_stage import failure_payload, run_command, sanitize_summary  # noqa: E402
 from scripts.sync_nyc_citywide_events_calendar import bool_flag  # noqa: E402
 
 
@@ -90,6 +92,108 @@ def test_calendar_cancellation_flags_are_typed_safely() -> None:
     assert bool_flag(None) is False
 
 
+def test_failure_summary_redacts_common_secrets() -> None:
+    summary = sanitize_summary(
+        "request failed?access_token=abc123 token=secret-value Authorization=Bearer-secret"
+    )
+    assert "abc123" not in summary
+    assert "secret-value" not in summary
+    assert "Bearer-secret" not in summary
+    assert summary.count("[REDACTED]") >= 3
+
+
+def test_failure_payload_never_emits_unknown_stage() -> None:
+    payload = failure_payload(
+        stage="unknown_stage",
+        command_id="regression_fixture",
+        exit_code=9,
+        exception_class="ProcessExitError",
+        error_summary="fixture failure",
+    )
+    assert payload["stage"] == "platform_or_uninstrumented_failure"
+    assert payload["public_feed_commit_occurred"] is False
+
+
+def test_stage_runner_records_actionable_failure() -> None:
+    with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+        failure_file = Path(directory) / "failure.json"
+        exit_code = run_command(
+            [sys.executable, "-c", "import sys; print('token=top-secret'); sys.exit(7)"],
+            stage="preflight_regression_fixture",
+            command_id="intentional_failure_fixture",
+            failure_file=failure_file,
+        )
+        payload = json.loads(failure_file.read_text(encoding="utf-8"))
+        assert exit_code == 7
+        assert payload["stage"] == "preflight_regression_fixture"
+        assert payload["command_id"] == "intentional_failure_fixture"
+        assert payload["exit_code"] == 7
+        assert payload["exception_class"] == "ProcessExitError"
+        assert payload["public_feed_commit_occurred"] is False
+        assert "top-secret" not in payload["error_summary"]
+        assert "[REDACTED]" in payload["error_summary"]
+
+
+def test_blocked_health_payload_is_fail_closed_and_actionable() -> None:
+    payload = build_payload(
+        stage="unknown_stage",
+        command_id="preflight_fixture",
+        exit_code=3,
+        shell_line="44",
+        exception_class="AssertionError",
+        error_summary="api_key=hunter2",
+        previous_commit="abc123",
+        public_feed_commit_occurred=False,
+    )
+    blocker = payload["blockers"][0]
+    assert payload["status"] == "BLOCKED"
+    assert payload["release_ready"] is False
+    assert blocker["stage"] == "platform_or_uninstrumented_failure"
+    assert blocker["command_id"] == "preflight_fixture"
+    assert blocker["exception_class"] == "AssertionError"
+    assert blocker["public_feed_commit_occurred"] is False
+    assert "hunter2" not in blocker["error_summary"]
+    assert payload["rollback"]["previous_public_feed_commit"] == "abc123"
+
+
+def test_current_preflight_does_not_require_mutable_historical_pages() -> None:
+    runner = (ROOT / "scripts" / "test_live_event_intake_refresh_current.py").read_text(
+        encoding="utf-8"
+    )
+    assert "test_required_event_public_feed_gate" in runner
+    assert "test_required_event_aug2_real_certificate_passes" in runner
+    assert "test_required_event_aug1_real_approved_pages_pass" not in runner
+
+
+def test_refresh_workflow_has_structured_preflight_diagnostics() -> None:
+    workflow = (ROOT / ".github" / "workflows" / "discovery-feed-refresh.yml").read_text(
+        encoding="utf-8"
+    )
+    assert "scripts/run_daily_refresh_stage.py" in workflow
+    assert "scripts/test_live_event_intake_refresh_current.py" in workflow
+    assert "platform_or_uninstrumented_failure" in workflow
+    assert 'stage="unknown_stage"' not in workflow
+    assert "--command-id" in workflow
+    assert "--exception-class" in workflow
+    assert "--error-summary" in workflow
+
+
+def test_modified_reliability_python_files_compile() -> None:
+    with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+        output = Path(directory)
+        for source in (
+            ROOT / "scripts" / "run_daily_refresh_stage.py",
+            ROOT / "scripts" / "record_blocked_daily_data_health.py",
+            ROOT / "scripts" / "test_live_event_intake_refresh_current.py",
+            ROOT / "scripts" / "test_daily_production_hardening.py",
+        ):
+            py_compile.compile(
+                str(source),
+                cfile=str(output / f"{source.stem}.pyc"),
+                doraise=True,
+            )
+
+
 def main() -> int:
     tests = [
         test_recurring_dates_are_preserved,
@@ -97,6 +201,13 @@ def main() -> int:
         test_calendar_occurrence_identity_includes_date,
         test_calendar_occurrence_identity_includes_same_day_time,
         test_calendar_cancellation_flags_are_typed_safely,
+        test_failure_summary_redacts_common_secrets,
+        test_failure_payload_never_emits_unknown_stage,
+        test_stage_runner_records_actionable_failure,
+        test_blocked_health_payload_is_fail_closed_and_actionable,
+        test_current_preflight_does_not_require_mutable_historical_pages,
+        test_refresh_workflow_has_structured_preflight_diagnostics,
+        test_modified_reliability_python_files_compile,
     ]
     for test in tests:
         test()
