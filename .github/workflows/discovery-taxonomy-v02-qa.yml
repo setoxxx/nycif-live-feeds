@@ -22,12 +22,14 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Live event intake refresh regression
-        run: python scripts/test_live_event_intake_refresh.py
+      - name: Date-safe live event intake refresh regression
+        run: python scripts/test_live_event_intake_refresh_current.py
       - name: Daily production hardening regressions
         run: |
           python scripts/test_daily_production_hardening.py
           python -m py_compile \
+            scripts/run_daily_refresh_stage.py \
+            scripts/test_live_event_intake_refresh_current.py \
             scripts/live_event_intake_refresh.py \
             scripts/sync_nyc_citywide_events_calendar.py \
             scripts/build_staged_production_feed.py \
