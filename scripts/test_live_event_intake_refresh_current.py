@@ -9,7 +9,13 @@ past occurrences out of the serving feed.
 
 from __future__ import annotations
 
-import scripts.test_live_event_intake_refresh as regression
+import pathlib
+import sys
+
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+import scripts.test_live_event_intake_refresh as regression  # noqa: E402
 
 
 def main() -> int:
