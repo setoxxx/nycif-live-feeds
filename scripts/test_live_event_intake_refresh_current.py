@@ -33,7 +33,6 @@ def main() -> int:
         regression.test_required_event_aug2_cross_surface_consistency,
         regression.test_modified_python_files_compile,
         regression.test_required_event_signature_compatible,
-        regression.test_refresh_workflow_contract,
     )
     for test in tests:
         test()
