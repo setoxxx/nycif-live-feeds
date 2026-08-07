@@ -4,10 +4,14 @@
 from __future__ import annotations
 
 from occurrence_identity_contract import (
+    REJECTION_SCOPE_EXACT_START,
+    REJECTION_SCOPE_SOURCE_ALL,
     classify_open_data_occurrence,
     identity_precision,
     occurrence_key,
     occurrence_key_v2,
+    rejection_identity_sets,
+    rejection_matches,
     source_id_only_matching_allowed_for_recurring_event_feeds,
     source_key,
 )
@@ -75,6 +79,47 @@ def main() -> int:
     assert identity_precision(date_only) == "DAY"
     assert identity_precision(missing_time_and_date) == "AMBIGUOUS"
     assert source_id_only_matching_allowed_for_recurring_event_feeds() is False
+
+    # Exact-start rejection must not widen to a sibling occurrence on the same day.
+    exact_rejection = {
+        **same_date,
+        "manual_review_status": "rejected",
+        "rejection_scope": REJECTION_SCOPE_EXACT_START,
+    }
+    exact, days, sources = rejection_identity_sets([exact_rejection])
+    assert rejection_matches(
+        same_date,
+        rejected_exact=exact,
+        rejected_days=days,
+        rejected_sources=sources,
+    ) is True
+    assert rejection_matches(
+        same_day_different_time,
+        rejected_exact=exact,
+        rejected_days=days,
+        rejected_sources=sources,
+    ) is False
+
+    # Source-wide rejection is allowed only when explicitly declared.
+    source_wide_rejection = {
+        "dataset": "tvpp-9vvx",
+        "source_event_id": "abc123",
+        "manual_review_status": "rejected",
+        "rejection_scope": REJECTION_SCOPE_SOURCE_ALL,
+    }
+    exact, days, sources = rejection_identity_sets([source_wide_rejection])
+    assert rejection_matches(
+        same_date,
+        rejected_exact=exact,
+        rejected_days=days,
+        rejected_sources=sources,
+    ) is True
+    assert rejection_matches(
+        different_date,
+        rejected_exact=exact,
+        rejected_days=days,
+        rejected_sources=sources,
+    ) is True
 
     assert classify_open_data_occurrence(
         same_date,
