@@ -123,11 +123,7 @@ class PublicRuntimeArtifactTests(unittest.TestCase):
 
     def test_source_and_ranking_fields_are_removed_and_id_is_opaque(self):
         out = MOD.project_event(
-            self.base()
-            | {
-                "map_eligibility_state": "LIST_ONLY",
-                "certified_pin": False,
-            }
+            self.base() | {"map_eligibility_state": "LIST_ONLY", "certified_pin": False}
         )
         encoded = json.dumps(out)
         self.assertNotIn("internal-source", encoded)
@@ -136,6 +132,21 @@ class PublicRuntimeArtifactTests(unittest.TestCase):
         self.assertNotIn("source_dataset", encoded)
         self.assertTrue(out["id"].startswith("evt_"))
         self.assertNotEqual(out["id"], "evt-1")
+
+    def test_occurrence_public_id_contract(self):
+        base = self.base()
+        same = dict(base)
+        later_time = dict(base, start_date_time="2026-08-07T18:30:00-04:00")
+        other_day = dict(base, event_date="2026-08-08")
+        self.assertEqual(MOD.public_event_id(base), MOD.public_event_id(same))
+        self.assertNotEqual(MOD.public_event_id(base), MOD.public_event_id(later_time))
+        self.assertNotEqual(MOD.public_event_id(base), MOD.public_event_id(other_day))
+
+    def test_ambiguous_occurrence_identity_fails_closed(self):
+        row = self.base()
+        row.pop("event_date")
+        with self.assertRaises(MOD.PublicArtifactError):
+            MOD.public_event_id(row)
 
     def test_parent_nonpublic_and_missing_roles_are_suppressed(self):
         self.assertIsNone(MOD.project_event(self.base() | {"parent_event_id": "root"}))
@@ -164,15 +175,21 @@ class PublicRuntimeArtifactTests(unittest.TestCase):
             MOD.rows({"not_events": []})
 
     def test_duplicate_public_occurrence_ids_fail_closed(self):
-        row = self.base() | {
-            "map_eligibility_state": "LIST_ONLY",
-            "certified_pin": False,
-        }
+        row = self.base() | {"map_eligibility_state": "LIST_ONLY", "certified_pin": False}
         projected = [MOD.project_event(row), MOD.project_event(dict(row))]
         with self.assertRaises(MOD.PublicArtifactError):
             MOD.ensure_unique_public_ids(projected, scope="test")
 
-    def test_end_to_end_build(self):
+    def test_page_date_bounds_use_only_public_projected_rows(self):
+        events = [
+            {"event_date": "2026-08-09"},
+            {"start_date_time": "2026-08-07T12:00:00-04:00"},
+            {"when": {"event_date": "not-a-date"}},
+        ]
+        self.assertEqual(MOD.page_date_bounds(events), ("2026-08-07", "2026-08-09"))
+        self.assertEqual(MOD.page_date_bounds([]), (None, None))
+
+    def test_end_to_end_build_emits_reader_safe_manifest_contract(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
             approved = root / "approved"
@@ -188,9 +205,7 @@ class PublicRuntimeArtifactTests(unittest.TestCase):
                     "lng": -74.0,
                 }
             ]
-            (approved / "pages/page-0001.json").write_text(
-                json.dumps(source_rows), encoding="utf-8"
-            )
+            (approved / "pages/page-0001.json").write_text(json.dumps(source_rows), encoding="utf-8")
             (approved / "manifest.json").write_text(
                 json.dumps({"pages": [{"page": "page-0001.json"}]}), encoding="utf-8"
             )
@@ -203,8 +218,33 @@ class PublicRuntimeArtifactTests(unittest.TestCase):
             self.assertNotIn("internal-source", encoded)
             self.assertNotIn("latitude", encoded)
             self.assertNotIn("longitude", encoded)
+            manifest = json.loads((output / "events/manifest.json").read_text())
+            self.assertEqual(manifest["major_feed"], "major/events.json")
+            self.assertEqual(manifest["pages"][0]["earliest_date"], "2026-08-07")
+            self.assertEqual(manifest["pages"][0]["latest_date"], "2026-08-07")
             artifact_manifest = json.loads((output / "artifact-manifest.json").read_text())
             self.assertTrue(artifact_manifest["artifacts"])
+
+    def test_empty_public_page_emits_null_date_bounds(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            approved = root / "approved"
+            (approved / "pages").mkdir(parents=True)
+            major = root / "major/events.json"
+            major.parent.mkdir(parents=True)
+            (approved / "pages/page-0001.json").write_text(
+                json.dumps([{"id": "x", "title": "Hidden", "event_role": "media_event", "event_date": "2026-08-07"}]),
+                encoding="utf-8",
+            )
+            (approved / "manifest.json").write_text(
+                json.dumps({"pages": [{"page": "page-0001.json"}]}), encoding="utf-8"
+            )
+            major.write_text(json.dumps({"events": []}), encoding="utf-8")
+            output = root / "public-data"
+            MOD.build(approved / "manifest.json", major, output, "abc123")
+            manifest = json.loads((output / "events/manifest.json").read_text())
+            self.assertIsNone(manifest["pages"][0]["earliest_date"])
+            self.assertIsNone(manifest["pages"][0]["latest_date"])
 
     def test_failed_publish_restores_previous_output(self):
         with tempfile.TemporaryDirectory() as td:
