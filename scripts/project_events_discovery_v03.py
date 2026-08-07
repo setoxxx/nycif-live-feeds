@@ -53,8 +53,7 @@ class ScopedRejectedOccurrences:
         typed = (str(key[0]), str(key[1]), str(key[2]))
         if typed in self.exact:
             return True
-        start = typed[2]
-        match = re.match(r"^(\d{4}-\d{2}-\d{2})", start)
+        match = re.match(r"^(\d{4}-\d{2}-\d{2})", typed[2])
         return bool(match and (typed[0], typed[1], match.group(1)) in self.days)
 
 
@@ -77,7 +76,14 @@ def v3_build_base_event(row: dict[str, Any], **kwargs: Any) -> dict[str, Any] | 
     event["latitude"] = decision["latitude"] if exact else None
     event["longitude"] = decision["longitude"] if exact else None
     event["address"] = event.get("address") if exact else None
-    if not exact:
+
+    if exact:
+        if nycif.get("display_disposition") == "list_only":
+            if event.get("event_role") in {"supporting_permit", "street_closure", "transportation_operation"}:
+                nycif["display_disposition"] = "grouped_under_public_event"
+            elif event.get("event_role") == "public_event":
+                nycif["display_disposition"] = "standalone_public_event"
+    else:
         event["location"] = (
             decision.get("general_area_label")
             or row.get("neighborhood")
@@ -103,8 +109,7 @@ def v2_raw_accounting() -> dict[str, Any]:
     raw_rows = _load_rows(legacy.RAW)
     staged_rows = _load_rows(legacy.STAGED)
     dispositions = _load_rows(legacy.DISPOSITION) if legacy.DISPOSITION.exists() else []
-    rejected = [row for row in dispositions if legacy.rejected_open_data_identity_sets([row])[0] or row in dispositions]
-    contract = build_rejection_contract(rejected)
+    contract = build_rejection_contract(dispositions)
     represented = occurrence_identity_v2_set(staged_rows)
     counts: Counter[str] = Counter()
 
