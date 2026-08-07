@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -19,6 +20,7 @@ DEFAULT_MANIFEST = ROOT / "data/schema-v1-discovery/approved/manifest.json"
 DEFAULT_MAJOR = ROOT / "data/schema-v1-discovery/major/events.json"
 DEFAULT_OUTPUT = ROOT / "public-data"
 SCHEMA = "nycif-public-runtime-v1"
+PUBLIC_MAJOR_FEED = "major/events.json"
 
 EXACT_TIERS = {
     "exact_source_coordinate",
@@ -42,15 +44,19 @@ DENIED_FRAGMENTS = (
     "raw.githubusercontent.com/setoxxx/", "github.com/setoxxx/",
     "setoxxx.github.io/nycif-field-desk", "localhost", "127.0.0.1"
 )
+DATE_PREFIX = re.compile(r"^(\d{4}-\d{2}-\d{2})")
+
 
 class PublicArtifactError(RuntimeError):
     pass
+
 
 def load(path: Path) -> Any:
     try:
         return json.loads(path.read_text(encoding="utf-8"))
     except Exception as exc:
         raise PublicArtifactError(f"cannot read JSON {path}: {exc}") from exc
+
 
 def write(path: Path, value: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -59,12 +65,14 @@ def write(path: Path, value: Any) -> None:
         encoding="utf-8",
     )
 
+
 def b(value: Any) -> bool:
     if isinstance(value, bool):
         return value
     if isinstance(value, str):
         return value.strip().lower() in {"1", "true", "yes", "on"}
     return bool(value)
+
 
 def text(value: Any, limit: int = 2000) -> str | None:
     if value is None:
@@ -74,8 +82,10 @@ def text(value: Any, limit: int = 2000) -> str | None:
         return None
     return value[:limit]
 
+
 def nested_nycif(row: dict[str, Any]) -> dict[str, Any]:
     return row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
+
 
 def location_evidence(row: dict[str, Any]) -> dict[str, Any]:
     evidence = row.get("location_evidence")
@@ -83,6 +93,7 @@ def location_evidence(row: dict[str, Any]) -> dict[str, Any]:
         return evidence
     nested = nested_nycif(row).get("location_evidence")
     return nested if isinstance(nested, dict) else {}
+
 
 def semantic_state(row: dict[str, Any]) -> str:
     nested = nested_nycif(row)
@@ -94,6 +105,7 @@ def semantic_state(row: dict[str, Any]) -> str:
     )
     return str(value or "").strip().upper()
 
+
 def certified(row: dict[str, Any]) -> bool:
     nested = nested_nycif(row)
     evidence = location_evidence(row)
@@ -104,9 +116,11 @@ def certified(row: dict[str, Any]) -> bool:
         value = evidence.get("certified_pin")
     return b(value)
 
+
 def role(row: dict[str, Any]) -> str:
     nested = nested_nycif(row)
     return str(row.get("event_role") or nested.get("event_role") or "").strip().lower()
+
 
 def exact_evidence_authorized(row: dict[str, Any]) -> bool:
     """Re-check the semantic exact-pin evidence contract at the public boundary.
@@ -135,6 +149,7 @@ def exact_evidence_authorized(row: dict[str, Any]) -> bool:
         and bool(provenance)
     )
 
+
 def finite(row: dict[str, Any], *keys: str) -> float | None:
     for key in keys:
         try:
@@ -144,6 +159,7 @@ def finite(row: dict[str, Any], *keys: str) -> float | None:
         if value == value and abs(value) != float("inf"):
             return value
     return None
+
 
 def occurrence_start(row: dict[str, Any]) -> str:
     when = row.get("when") if isinstance(row.get("when"), dict) else {}
@@ -158,12 +174,15 @@ def occurrence_start(row: dict[str, Any]) -> str:
             return normalized
     return "identity_ambiguous"
 
+
 def public_event_id(row: dict[str, Any]) -> str:
     """Return an opaque, occurrence-sensitive public ID without source leakage."""
     source = row.get("source") if isinstance(row.get("source"), dict) else {}
     dataset = text(row.get("source_dataset") or source.get("dataset"), 300)
     source_event_id = text(row.get("source_event_id") or source.get("source_event_id"), 500)
     start = occurrence_start(row)
+    if start == "identity_ambiguous":
+        raise PublicArtifactError("public event occurrence identity is ambiguous")
     raw_id = text(row.get("id") or row.get("event_id"), 1000)
     if dataset and source_event_id:
         identity = f"v2|{dataset}|{source_event_id}|{start}"
@@ -172,6 +191,7 @@ def public_event_id(row: dict[str, Any]) -> str:
     else:
         raise PublicArtifactError("public event missing stable identity")
     return "evt_" + hashlib.sha256(identity.encode("utf-8")).hexdigest()[:24]
+
 
 def project_place(row: dict[str, Any], *, state: str, exact: bool) -> dict[str, Any]:
     source = row.get("place") if isinstance(row.get("place"), dict) else {}
@@ -196,6 +216,7 @@ def project_place(row: dict[str, Any], *, state: str, exact: bool) -> dict[str, 
         if address is not None:
             out["address"] = address
     return out
+
 
 def project_event(row: dict[str, Any]) -> dict[str, Any] | None:
     if not isinstance(row, dict) or row.get("parent_event_id") or role(row) != "public_event":
@@ -251,6 +272,7 @@ def project_event(row: dict[str, Any]) -> dict[str, Any] | None:
 
     return out
 
+
 def rows(payload: Any) -> list[dict[str, Any]]:
     if isinstance(payload, list):
         return [item for item in payload if isinstance(item, dict)]
@@ -258,8 +280,32 @@ def rows(payload: Any) -> list[dict[str, Any]]:
         return [item for item in payload["events"] if isinstance(item, dict)]
     raise PublicArtifactError("unsupported event payload")
 
+
 def project(payload: Any) -> list[dict[str, Any]]:
     return [value for value in (project_event(item) for item in rows(payload)) if value is not None]
+
+
+def public_day(event: dict[str, Any]) -> str | None:
+    when = event.get("when") if isinstance(event.get("when"), dict) else {}
+    for value in (
+        event.get("event_date"),
+        when.get("event_date"),
+        event.get("start_date_time"),
+        when.get("start_date_time"),
+    ):
+        candidate = text(value, 100)
+        if not candidate:
+            continue
+        match = DATE_PREFIX.match(candidate)
+        if match:
+            return match.group(1)
+    return None
+
+
+def page_date_bounds(events: list[dict[str, Any]]) -> tuple[str | None, str | None]:
+    days = [day for day in (public_day(event) for event in events) if day]
+    return (min(days), max(days)) if days else (None, None)
+
 
 def ensure_unique_public_ids(events: list[dict[str, Any]], *, scope: str) -> None:
     seen: set[str] = set()
@@ -271,6 +317,7 @@ def ensure_unique_public_ids(events: list[dict[str, Any]], *, scope: str) -> Non
         seen.add(event_id)
     if duplicates:
         raise PublicArtifactError(f"duplicate public event id in {scope}: {sorted(duplicates)[:3]}")
+
 
 def scan(value: Any) -> None:
     if isinstance(value, dict):
@@ -287,8 +334,10 @@ def scan(value: Any) -> None:
             if fragment.lower() in low:
                 raise PublicArtifactError(f"denied internal URL fragment: {fragment}")
 
+
 def sha(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
 
 def _publish_staged(staged: Path, output: Path) -> None:
     """Promote staged output with rollback restoration on a failed final rename."""
@@ -305,6 +354,7 @@ def _publish_staged(staged: Path, output: Path) -> None:
     else:
         if backup.exists():
             shutil.rmtree(backup)
+
 
 def build(manifest_path: Path, major_path: Path, output: Path, release_sha: str) -> dict[str, Any]:
     if not release_sha:
@@ -340,14 +390,23 @@ def build(manifest_path: Path, major_path: Path, output: Path, release_sha: str)
             }
             scan(payload)
             write(staged / "events/pages" / name, payload)
+            earliest_date, latest_date = page_date_bounds(public_rows)
             total += len(public_rows)
-            page_meta.append({"page": name, "count": len(public_rows)})
+            page_meta.append(
+                {
+                    "page": name,
+                    "count": len(public_rows),
+                    "earliest_date": earliest_date,
+                    "latest_date": latest_date,
+                }
+            )
 
         public_manifest = {
             "schema_version": SCHEMA,
             "layer": "public-reader-safe",
             "release_sha": release_sha,
             "generated_at": generated,
+            "major_feed": PUBLIC_MAJOR_FEED,
             "total": total,
             "page_count": len(page_meta),
             "pages": page_meta,
@@ -394,6 +453,7 @@ def build(manifest_path: Path, major_path: Path, output: Path, release_sha: str)
     finally:
         shutil.rmtree(temp_parent, ignore_errors=True)
 
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
@@ -407,6 +467,7 @@ def main() -> int:
     except PublicArtifactError as exc:
         print(json.dumps({"qa_pass": False, "error": str(exc)}), file=sys.stderr)
         return 1
+
 
 if __name__ == "__main__":
     raise SystemExit(main())
