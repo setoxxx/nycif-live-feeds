@@ -5,8 +5,10 @@ on:
     paths:
       - 'scripts/build_public_runtime_artifacts.py'
       - 'scripts/build_public_shadow_release.py'
+      - 'scripts/build_mission_control_summary.py'
       - 'tests/test_public_runtime_artifacts.py'
       - 'tests/test_public_shadow_release.py'
+      - 'tests/test_mission_control_summary.py'
       - '.github/workflows/public-data-shadow-release.yml'
   workflow_dispatch:
 
@@ -29,9 +31,13 @@ jobs:
         run: |
           python -m py_compile scripts/build_public_runtime_artifacts.py
           python -m py_compile scripts/build_public_shadow_release.py
+          python -m py_compile scripts/build_mission_control_summary.py
 
       - name: Public artifact integration tests
         run: python tests/test_public_runtime_artifacts.py
+
+      - name: Mission Control summary producer tests
+        run: python tests/test_mission_control_summary.py
 
       - name: Shadow release package tests
         run: python tests/test_public_shadow_release.py
