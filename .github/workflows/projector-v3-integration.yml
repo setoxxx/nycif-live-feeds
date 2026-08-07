@@ -1,0 +1,73 @@
+name: Projector V3 Integration QA
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/location_evidence_contract.py'
+      - 'scripts/build_semantic_live_intake.py'
+      - 'scripts/live_event_intake_refresh.py'
+      - 'scripts/projector_v2_authority.py'
+      - 'scripts/project_events_discovery_v03.py'
+      - 'scripts/build_news_desk_reader_safe.py'
+      - 'tests/test_semantic_live_intake.py'
+      - 'tests/test_projector_v3_authority.py'
+      - '.github/workflows/projector-v3-integration.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  projector-v3-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: python3 -m pip install -r requirements.txt
+      - name: Compile V3 path
+        run: |
+          python3 -m py_compile \
+            scripts/location_evidence_contract.py \
+            scripts/build_semantic_live_intake.py \
+            scripts/live_event_intake_refresh.py \
+            scripts/projector_v2_authority.py \
+            scripts/project_events_discovery_v03.py \
+            scripts/build_news_desk_reader_safe.py
+      - name: Run focused authority tests
+        run: |
+          python3 -m pytest -q \
+            tests/test_projector_v2_authority.py \
+            tests/test_semantic_live_intake.py \
+            tests/test_projector_v3_authority.py
+      - name: Build semantic intake from committed fixtures
+        env:
+          NYCIF_USE_RAW_SNAPSHOT: 'yes'
+          NYCIF_ALLOW_LIVE_GEOSEARCH: 'no'
+        run: python3 scripts/build_semantic_live_intake.py
+      - name: Run Projector V3 against committed fixtures
+        env:
+          NYCIF_USE_RAW_SNAPSHOT: 'yes'
+          NYCIF_ALLOW_LIVE_GEOSEARCH: 'no'
+        run: python3 scripts/project_events_discovery_v03.py
+      - name: Build reader-safe News Desk artifact
+        run: python3 scripts/build_news_desk_reader_safe.py
+      - name: Enforce zero pin/identity regressions
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path('data/events_discovery_v3_authority_report.json').read_text())
+          assert report['qa_pass'] is True, report
+          assert report['silent_identity_loss'] == 0, report
+          assert report['duplicate_exact_occurrences'] == 0, report
+          assert report['unsupported_exact_pin_count'] == 0, report
+          assert report['legacy_occurrence_authority_count'] == 0, report
+          assert report['legacy_coordinate_authority_count'] == 0, report
+          news = json.loads(Path('data/reader-safe/news-desk-status-v02.json').read_text())
+          assert news['unsupported_exact_pin_count'] == 0, news
+          assert news['browser_raw_repository_required'] is False, news
+          PY
