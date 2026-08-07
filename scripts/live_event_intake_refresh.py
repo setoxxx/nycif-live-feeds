@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Refresh all official NYC event sources and rebuild the map-ready intake.
+"""Refresh all official NYC event sources and rebuild the semantic live intake.
 
-This is the orchestration layer used by the scheduled discovery refresh. It
-pulls permitted events, the NYC Citywide Calendar, and NYC Parks BigApps in one
-transaction before enrichment and staging.
+This is the orchestration layer used by the discovery refresh. It pulls
+permitted events, the NYC Citywide Calendar, and NYC Parks BigApps in one
+transaction, then rebuilds the permitted-event intake through the shared
+location-evidence authority before projection.
 
-Street-segment resolution is owned by ``scripts.nyc_location_resolver``. This
-orchestrator must not monkey-patch resolver behavior; scheduled production and
-standalone tools must execute the same canonical fail-closed resolver contract.
+Street-segment resolution is owned by ``scripts.nyc_location_resolver``.
+Coordinates alone never grant exact public pin authority.
 """
 
 from __future__ import annotations
@@ -35,37 +35,30 @@ def resolve_street_segment_by_intersections(
     display: str,
     borough: str | None,
 ) -> ResolveResult | None:
-    """Compatibility wrapper around the canonical resolver implementation.
-
-    Older regression code imports this helper from the orchestration module.
-    Keep that import stable during migration, but delegate all segment logic to
-    ``NYCLocationResolver`` so there is only one implementation authority.
-    """
+    """Compatibility wrapper around the canonical resolver implementation."""
     if isinstance(resolver, NYCLocationResolver):
         return resolver._resolve_street_segment(display, borough)
 
-    # Lightweight compatibility adapter for test resolvers that only expose
-    # ``_resolve_geosearch``. Canonical segment code remains the implementation.
     adapter = object.__new__(NYCLocationResolver)
     adapter._resolve_geosearch = resolver._resolve_geosearch  # type: ignore[method-assign,attr-defined]
     return NYCLocationResolver._resolve_street_segment(adapter, display, borough)
 
 
 def main() -> int:
+    # Source fetchers write local snapshots first; downstream builders consume
+    # that exact transaction so all three source families share one refresh run.
     os.environ["NYCIF_USE_RAW_SNAPSHOT"] = "yes"
     os.environ["NYCIF_ALLOW_LIVE_GEOSEARCH"] = "yes"
 
     try:
         from scripts import (
-            build_staged_production_feed,
-            build_test_enriched_feed,
+            build_semantic_live_intake,
             sync_nyc_citywide_events_calendar,
             sync_nyc_open_data,
             sync_nyc_parks_bigapps_events,
         )
     except ModuleNotFoundError:  # pragma: no cover - direct script execution
-        import build_staged_production_feed  # type: ignore[no-redef]
-        import build_test_enriched_feed  # type: ignore[no-redef]
+        import build_semantic_live_intake  # type: ignore[no-redef]
         import sync_nyc_citywide_events_calendar  # type: ignore[no-redef]
         import sync_nyc_open_data  # type: ignore[no-redef]
         import sync_nyc_parks_bigapps_events  # type: ignore[no-redef]
@@ -74,8 +67,7 @@ def main() -> int:
         ("sync_nyc_open_data", sync_nyc_open_data.main),
         ("sync_nyc_citywide_events_calendar", sync_nyc_citywide_events_calendar.main),
         ("sync_nyc_parks_bigapps_events", sync_nyc_parks_bigapps_events.main),
-        ("build_test_enriched_feed", build_test_enriched_feed.main),
-        ("build_staged_production_feed", build_staged_production_feed.main),
+        ("build_semantic_live_intake", build_semantic_live_intake.main),
     ):
         result: Any = runner()
         if result not in (None, 0):
