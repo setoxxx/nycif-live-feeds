@@ -168,3 +168,43 @@ def test_shoot_day_magnet_rank_prefers_parade_over_greenmarket():
         "assignment_score": 400,
     }
     assert magnet_rank(parade) < magnet_rank(market)
+
+
+def test_shoot_day_legacy_map_ready_cannot_emit_exact_directions():
+    from build_photographer_shoot_day_certified import certified_row
+
+    legacy = {
+        "id": "legacy-pin",
+        "title": "Legacy in-bounds event",
+        "date": "2026-08-07",
+        "coordinate_status": "map_ready",
+        "latitude": 40.7128,
+        "longitude": -74.0060,
+        "source": {"dataset": "tvpp-9vvx", "source_event_id": "legacy-pin"},
+    }
+    assert certified_row(legacy) is None
+
+
+def test_shoot_day_validated_exact_pin_can_emit_directions():
+    from build_photographer_shoot_day_certified import certified_row
+
+    exact = {
+        "id": "exact-pin",
+        "title": "Validated event",
+        "date": "2026-08-07",
+        "coordinate_status": "map_ready",
+        "latitude": 40.7128,
+        "longitude": -74.0060,
+        "location_evidence": {
+            "tier": "exact_source_coordinate",
+            "validation_state": "validated",
+            "exact_pin_eligible": True,
+            "source_provenance": "source_provided",
+        },
+        "source": {"dataset": "tvpp-9vvx", "source_event_id": "exact-pin"},
+    }
+    row = certified_row(exact)
+    assert row is not None
+    assert row["certified_pin"] is True
+    assert row["map_eligibility_state"] == "MAP_READY"
+    assert row["map_link"] == "https://www.google.com/maps?q=40.7128,-74.006"
