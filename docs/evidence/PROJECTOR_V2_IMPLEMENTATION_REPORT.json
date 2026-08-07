@@ -1,10 +1,11 @@
 {
   "schema_version": "projector-v2-implementation-report-v1",
-  "generated_at": "2026-08-07T11:12:00-04:00",
+  "generated_at": "2026-08-07T11:33:00-04:00",
   "status": "IN_PROGRESS",
   "branch": "fix/projector-v2-semantic-cutover",
   "base_sha": "d39214fe3891d847fceb3aa45b3471bbba205ebc",
-  "head_sha": "29d8f7a14f7aa74e0331cd768c290ac6adbeaa3c",
+  "observed_head_before_report_commit": "b2b6422a43f80413c7ba699b1005c6f8b67ed0ad",
+  "last_fully_green_engineering_head": "a8da17df48312c126c99697360984fe7b8b69449",
   "pull_request": "setoxxx/nycif-live-feeds#384",
   "draft": true,
   "merged": false,
@@ -12,56 +13,71 @@
     "shared_authority_adapter": "scripts/projector_v2_authority.py",
     "focused_tests": "tests/test_projector_v2_authority.py",
     "ci_workflow": ".github/workflows/projector-v2-authority.yml",
-    "intake_accounting_classifier": "classify_occurrence_intake"
+    "intake_accounting_classifier": "classify_occurrence_intake",
+    "independent_appsec_review": "docs/evidence/PR384_APPSEC_INDEPENDENT_REVIEW.json",
+    "pytest_pin_matches_repository_policy": "pytest==9.0.2"
   },
   "shared_authorities": {
     "occurrence_identity": "scripts/occurrence_identity_contract.py",
     "map_eligibility": "scripts/pin_integrity.py"
   },
-  "authority_gate_last_proven_green_head": "68d026db47d16bcae55f05449381ebf52969bea6",
-  "authority_gate_last_proven_green": {
+  "verified_green_head": {
+    "head_sha": "a8da17df48312c126c99697360984fe7b8b69449",
     "Projector V2 Authority QA": "PASS",
     "Schema v1 PR QA": "PASS",
     "Discovery Taxonomy v02 QA": "PASS"
   },
-  "current_head_ci": {
-    "head_sha": "29d8f7a14f7aa74e0331cd768c290ac6adbeaa3c",
-    "status": "PENDING_WORKFLOW_REGISTRATION"
+  "security": {
+    "sonarqube_quality_gate_latest": "PASS",
+    "sonarqube_new_issues": 0,
+    "sonarqube_accepted_issues": 0,
+    "sonarqube_security_hotspots": 0,
+    "independent_appsec_review": "PASS_CHANGED_CODE_SCOPE",
+    "sonar_root_cause_attribution_to_pytest_pin": "NOT_CLAIMED"
   },
   "regression_contract": {
-    "same_day_different_exact_start_distinct": "TEST_ADDED",
-    "same_exact_start_deterministic": "TEST_ADDED",
-    "identity_ambiguous_preserved": "TEST_ADDED",
-    "exact_start_rejection_does_not_suppress_sibling": "TEST_ADDED",
-    "day_rejection_is_day_scoped": "TEST_ADDED",
-    "source_all_requires_explicit_scope": "TEST_ADDED",
-    "coordinates_without_evidence_not_exact": "TEST_ADDED",
-    "general_area_strips_exact_coordinates": "TEST_ADDED",
-    "validated_shared_exact_map_ready": "TEST_ADDED",
-    "intake_exact_duplicate_documented": "TEST_ADDED",
-    "intake_same_day_sibling_survives": "TEST_ADDED",
-    "intake_rejection_classes_explicit": "TEST_ADDED",
-    "intake_outside_window_explicit": "TEST_ADDED"
+    "same_day_different_exact_start_distinct": "TEST_ADDED_AND_GREEN",
+    "same_exact_start_deterministic": "TEST_ADDED_AND_GREEN",
+    "identity_ambiguous_preserved": "TEST_ADDED_AND_GREEN",
+    "exact_start_rejection_does_not_suppress_sibling": "TEST_ADDED_AND_GREEN",
+    "day_rejection_is_day_scoped": "TEST_ADDED_AND_GREEN",
+    "source_all_requires_explicit_scope": "TEST_ADDED_AND_GREEN",
+    "coordinates_without_evidence_not_exact": "TEST_ADDED_AND_GREEN",
+    "general_area_strips_exact_coordinates": "TEST_ADDED_AND_GREEN",
+    "validated_shared_exact_map_ready": "TEST_ADDED_AND_GREEN",
+    "intake_exact_duplicate_documented": "TEST_ADDED_AND_GREEN",
+    "intake_same_day_sibling_survives": "TEST_ADDED_AND_GREEN",
+    "intake_rejection_classes_explicit": "TEST_ADDED_AND_GREEN",
+    "intake_outside_window_explicit": "TEST_ADDED_AND_GREEN"
   },
   "remaining_projector_splice": [
-    "replace legacy occurrence_key / occurrence_key_set intake comparisons with V2 adapter",
-    "replace source-wide rejection widening with exact/day/explicit-source scopes",
-    "replace resolve_coords geometry authority with semantic map decision",
-    "persist MAP_READY/GENERAL_AREA/REVIEW_REQUIRED/LIST_ONLY states",
-    "ensure exact coordinates are emitted only for MAP_READY",
-    "add projector-level zero silent identity loss / zero unsupported exact pin assertions"
+    "surgically replace legacy occurrence_key / occurrence_key_set intake comparisons with V2 adapter",
+    "surgically replace source-wide rejection widening with exact/day/explicit-source scopes",
+    "surgically replace resolve_coords publication authority with semantic_map_decision",
+    "persist MAP_READY/GENERAL_AREA/REVIEW_REQUIRED/LIST_ONLY states in projected events",
+    "ensure exact coordinates are emitted only for MAP_READY + certified_pin",
+    "update marker eligibility audit to semantic authority",
+    "add projector-level exact zero-loss reconciliation and unsupported exact pin assertions"
   ],
   "remaining_p0_legacy_consumer": "scripts/project_events_discovery_v02.py",
+  "edit_path_gate": {
+    "status": "BLOCKED_NO_SURGICAL_EDITOR_IN_CURRENT_CONNECTOR",
+    "reason": "Current GitHub connector replaces complete existing files; authorized order explicitly prohibits blind whole-file reconstruction of the large projector.",
+    "required": "line-level or patch-level repository editing"
+  },
   "targets": {
     "silent_identity_loss": 0,
-    "duplicate_exact_occurrences": 0,
     "unsupported_exact_pins": 0,
     "implicit_SOURCE_ALL": 0,
     "legacy_occurrence_authority_count": 0,
     "legacy_coordinate_authority_count": 0
   },
+  "parallel_certifications": {
+    "PR383_shadow_release": "PASS_NON_HOSTED_RELEASE",
+    "national_pilot_PR66_shadow_runtime": "PASS_PREHOST"
+  },
   "production_mutation": false,
   "merge_authorized": false,
   "DoD_met": false,
-  "risk": "The authority layer and zero-loss intake classifier are isolated and tested on a proven-green parent head, but scripts/project_events_discovery_v02.py remains the P0 legacy consumer until the narrow splice is safely applied and its full reconciliation passes."
+  "risk": "Security and isolated authority gates are green. The remaining P0 risk is applying the semantic authority into scripts/project_events_discovery_v02.py without collateral changes and then proving exact zero-loss reconciliation."
 }
