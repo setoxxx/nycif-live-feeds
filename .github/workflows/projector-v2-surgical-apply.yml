@@ -1,0 +1,93 @@
+name: Projector V2 Surgical Apply
+
+on:
+  push:
+    branches:
+      - fix/projector-v2-semantic-cutover
+    paths:
+      - 'docs/evidence/PROJECTOR_V2_LIVE.patch'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: projector-v2-surgical-apply-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  apply-test-commit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out exact branch head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: fix/projector-v2-semantic-cutover
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Apply unified diff
+        run: |
+          git apply --check docs/evidence/PROJECTOR_V2_LIVE.patch
+          git apply docs/evidence/PROJECTOR_V2_LIVE.patch
+
+      - name: Enforce surgical target only
+        run: |
+          changed="$(git diff --name-only)"
+          test "$changed" = "scripts/project_events_discovery_v02.py"
+          git diff --check
+
+      - name: Compile semantic pipeline
+        run: |
+          python3 -m py_compile \
+            scripts/location_evidence_contract.py \
+            scripts/build_semantic_live_intake.py \
+            scripts/projector_v2_authority.py \
+            scripts/project_events_discovery_v02.py
+
+      - name: Run semantic authority tests
+        run: |
+          python3 -m pytest -q \
+            tests/test_projector_v2_authority.py \
+            tests/test_semantic_live_intake.py
+
+      - name: Run projector against repository fixtures
+        env:
+          NYCIF_USE_RAW_SNAPSHOT: 'yes'
+          NYCIF_ALLOW_LIVE_GEOSEARCH: 'no'
+        run: python3 scripts/project_events_discovery_v02.py
+
+      - name: Require zero authority regressions
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          recon = json.loads(Path('data/events_discovery_reconciliation_v02.json').read_text())
+          v2 = recon['v2_authority']
+          assert v2['silent_identity_loss'] == 0, v2
+          assert v2['implicit_source_all_count'] == 0, v2
+          assert v2['unsupported_exact_pin_count'] == 0, v2
+          assert v2['legacy_occurrence_authority_count'] == 0, v2
+          assert v2['legacy_coordinate_authority_count'] == 0, v2
+          assert v2['raw_accounting_pass'] is True, v2
+          PY
+
+      - name: Restore generated fixtures before commit
+        run: git restore --worktree --staged data || true
+
+      - name: Commit tested projector splice
+        run: |
+          git config user.name 'nycif-projector-bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add scripts/project_events_discovery_v02.py
+          git diff --cached --name-only | grep -qx 'scripts/project_events_discovery_v02.py'
+          git commit -m 'Splice Projector V2 semantic authority'
+          git push origin HEAD:fix/projector-v2-semantic-cutover
