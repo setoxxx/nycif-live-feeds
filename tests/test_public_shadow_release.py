@@ -47,6 +47,32 @@ class ShadowReleaseTests(unittest.TestCase):
         major.write_text(json.dumps({"events": rows}), encoding="utf-8")
         return manifest, major
 
+    def mission_control_evidence(self, root: Path, release_sha: str = "abcdef1") -> Path:
+        path = root / "mission-control-evidence.json"
+        path.write_text(json.dumps({
+            "certified": True,
+            "generated_at": "2026-08-07T16:45:00Z",
+            "release_id": f"release-{release_sha}",
+            "release_sha": release_sha,
+            "current_pointer": "current/release.json",
+            "data_health": "READY",
+            "sources": [
+                {"label": "Permitted Events", "health": "FRESH", "last_success_age_seconds": 60, "safe_event_count": 12, "last_release_id": f"release-{release_sha}"},
+                {"label": "Citywide Calendar", "health": "FRESH", "last_success_age_seconds": 120, "safe_event_count": 8, "last_release_id": f"release-{release_sha}"},
+                {"label": "Parks BigApps", "health": "UNAVAILABLE", "last_success_age_seconds": None, "safe_event_count": None, "last_release_id": f"release-{release_sha}"},
+            ],
+            "daily_event_count": 20,
+            "new_event_count": 3,
+            "projector_status": "PASS",
+            "reconciliation_status": "PASS",
+            "silent_identity_loss": 0,
+            "unsupported_exact_pins": 0,
+            "duplicate_exact_occurrences": 0,
+            "daily_health": "READY",
+            "anonymous_audit_status": "PENDING",
+        }), encoding="utf-8")
+        return path
+
     def test_release_is_versioned_and_current_is_pointer_directory(self):
         with tempfile.TemporaryDirectory() as td:
             root = Path(td)
@@ -64,6 +90,34 @@ class ShadowReleaseTests(unittest.TestCase):
             self.assertEqual(pointer["release_sha"], "abcdef1")
             self.assertEqual(pointer["rollback_release_sha"], "1234567")
             self.assertFalse(pointer["publication_authorized"])
+            self.assertFalse(out["mission_control_summary_present"])
+
+    def test_summary_is_in_same_release_and_manifest_hashes_it(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            manifest, major = self.fixture(root)
+            evidence = self.mission_control_evidence(root)
+            shadow = root / "shadow"
+            out = MOD.build_shadow_release(manifest, major, shadow, "abcdef1", "1234567", evidence)
+            self.assertTrue(out["mission_control_summary_present"])
+            release = shadow / "releases/abcdef1"
+            summary_path = release / "mission-control-summary.json"
+            self.assertTrue(summary_path.exists())
+            summary = json.loads(summary_path.read_text())
+            self.assertEqual(summary["release_sha"], "abcdef1")
+            self.assertEqual(summary["rollback_release"], "1234567")
+            release_manifest = json.loads((release / "PUBLIC_DATA_SHADOW_RELEASE_MANIFEST.json").read_text())
+            self.assertTrue(release_manifest["mission_control_summary_present"])
+            item = next(row for row in release_manifest["artifacts"] if row["path"] == "mission-control-summary.json")
+            self.assertEqual(item["sha256"], MOD.sha256(summary_path))
+
+    def test_summary_release_mismatch_fails_closed(self):
+        with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
+            manifest, major = self.fixture(root)
+            evidence = self.mission_control_evidence(root, "7654321")
+            with self.assertRaises(Exception):
+                MOD.build_shadow_release(manifest, major, root / "shadow", "abcdef1", None, evidence)
 
     def test_public_health_has_exact_allowlist_only(self):
         with tempfile.TemporaryDirectory() as td:
