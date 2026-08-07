@@ -1,0 +1,54 @@
+{
+  "schema_version": "projector-v2-implementation-report-v1",
+  "generated_at": "2026-08-07T10:45:00-04:00",
+  "status": "IN_PROGRESS",
+  "branch": "fix/projector-v2-semantic-cutover",
+  "base_sha": "d39214fe3891d847fceb3aa45b3471bbba205ebc",
+  "head_sha": "90786b47d3244a1e6477ca1d6139aa2ceabbefd5",
+  "pull_request": "setoxxx/nycif-live-feeds#384",
+  "draft": true,
+  "merged": false,
+  "implemented": {
+    "shared_authority_adapter": "scripts/projector_v2_authority.py",
+    "focused_tests": "tests/test_projector_v2_authority.py",
+    "ci_workflow": ".github/workflows/projector-v2-authority.yml"
+  },
+  "shared_authorities": {
+    "occurrence_identity": "scripts/occurrence_identity_contract.py",
+    "map_eligibility": "scripts/pin_integrity.py"
+  },
+  "regression_contract": {
+    "same_day_different_exact_start_distinct": "TEST_ADDED",
+    "same_exact_start_deterministic": "TEST_ADDED",
+    "identity_ambiguous_preserved": "TEST_ADDED",
+    "exact_start_rejection_does_not_suppress_sibling": "TEST_ADDED",
+    "day_rejection_is_day_scoped": "TEST_ADDED",
+    "source_all_requires_explicit_scope": "TEST_ADDED",
+    "coordinates_without_evidence_not_exact": "TEST_ADDED",
+    "general_area_strips_exact_coordinates": "TEST_ADDED",
+    "validated_shared_exact_map_ready": "TEST_ADDED"
+  },
+  "ci": {
+    "workflow_runs_observed_at_checkpoint": 0,
+    "status": "PENDING_FIRST_PR_WORKFLOW_OBSERVATION"
+  },
+  "remaining_projector_splice": [
+    "replace legacy occurrence_key / occurrence_key_set intake comparisons with V2 adapter",
+    "replace source-wide rejection widening with exact/day/explicit-source scopes",
+    "replace resolve_coords geometry authority with semantic map decision",
+    "persist MAP_READY/GENERAL_AREA/REVIEW_REQUIRED/LIST_ONLY states",
+    "ensure exact coordinates are emitted only for MAP_READY",
+    "add projector-level zero silent identity loss / zero unsupported exact pin assertions"
+  ],
+  "remaining_p0_legacy_consumer": "scripts/project_events_discovery_v02.py",
+  "targets": {
+    "silent_identity_loss": 0,
+    "duplicate_exact_occurrences": 0,
+    "unsupported_exact_pins": 0,
+    "implicit_SOURCE_ALL": 0
+  },
+  "production_mutation": false,
+  "merge_authorized": false,
+  "DoD_met": false,
+  "risk": "The shared authority surface is isolated, but the production projector still uses legacy occurrence/date matching and geometry-based coordinate readiness until the narrow splice is completed and tested."
+}
