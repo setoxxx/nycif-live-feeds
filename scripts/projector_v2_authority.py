@@ -9,27 +9,23 @@ narrow integration surface.
 
 from __future__ import annotations
 
+import sys
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Iterable
 
-try:  # package import under pytest / module execution
-    from scripts.occurrence_identity_contract import (
-        identity_precision,
-        occurrence_key_v2,
-        occurrence_key_v2_set,
-        rejection_identity_sets,
-        rejection_matches,
-    )
-    from scripts.pin_integrity import evaluate_map_eligibility
-except ModuleNotFoundError:  # direct script-style import when scripts/ is on sys.path
-    from occurrence_identity_contract import (
-        identity_precision,
-        occurrence_key_v2,
-        occurrence_key_v2_set,
-        rejection_identity_sets,
-        rejection_matches,
-    )
-    from pin_integrity import evaluate_map_eligibility
+SCRIPTS_DIR = Path(__file__).resolve().parent
+if str(SCRIPTS_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS_DIR))
+
+from occurrence_identity_contract import (  # noqa: E402
+    identity_precision,
+    occurrence_key_v2,
+    occurrence_key_v2_set,
+    rejection_identity_sets,
+    rejection_matches,
+)
+from pin_integrity import evaluate_map_eligibility  # noqa: E402
 
 
 @dataclass(frozen=True)
