@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Package the reader-safe public artifact into a versioned shadow release.
+"""Package reader-safe artifacts into a versioned shadow release.
 
 This script is intentionally deployment-neutral: it writes only to a caller-supplied
 filesystem root. It does not publish, configure hosting, DNS, credentials, or the
@@ -18,6 +18,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from build_mission_control_summary import build_summary as build_mission_control_summary
 from build_public_runtime_artifacts import PublicArtifactError, build as build_public_artifact
 
 SCHEMA = "nycif-public-shadow-release-v1"
@@ -115,6 +116,7 @@ def build_shadow_release(
     shadow_root: Path,
     release_sha: str,
     rollback_release_sha: str | None = None,
+    mission_control_evidence: Path | None = None,
 ) -> dict[str, Any]:
     release_sha = validate_release_sha(release_sha)
     rollback = validate_release_sha(rollback_release_sha) if rollback_release_sha else None
@@ -142,6 +144,13 @@ def build_shadow_release(
         validate_health(health)
         write_json(release_stage / "health/public-summary.json", health)
 
+        mission_control_summary_present = False
+        if mission_control_evidence is not None:
+            evidence = read_json(mission_control_evidence)
+            summary = build_mission_control_summary(evidence, release_sha, rollback)
+            write_json(release_stage / "mission-control-summary.json", summary)
+            mission_control_summary_present = True
+
         inventory = relative_artifact_inventory(release_stage)
         release_manifest = {
             "schema_version": SCHEMA,
@@ -151,6 +160,7 @@ def build_shadow_release(
             "file_count": len(inventory),
             "total_size_bytes": sum(item["size_bytes"] for item in inventory),
             "artifacts": inventory,
+            "mission_control_summary_present": mission_control_summary_present,
             "publication_authorized": False,
         }
         write_json(release_stage / "PUBLIC_DATA_SHADOW_RELEASE_MANIFEST.json", release_manifest)
@@ -184,6 +194,7 @@ def build_shadow_release(
             "event_count": health["event_count"],
             "page_count": health["page_count"],
             "major_event_count": health["major_event_count"],
+            "mission_control_summary_present": mission_control_summary_present,
             "publication_authorized": False,
         }
     finally:
@@ -197,6 +208,7 @@ def main() -> int:
     parser.add_argument("--shadow-root", type=Path, required=True)
     parser.add_argument("--release-sha", required=True)
     parser.add_argument("--rollback-release-sha")
+    parser.add_argument("--mission-control-evidence", type=Path)
     args = parser.parse_args()
     try:
         result = build_shadow_release(
@@ -205,6 +217,7 @@ def main() -> int:
             args.shadow_root,
             args.release_sha,
             args.rollback_release_sha,
+            args.mission_control_evidence,
         )
         print(json.dumps(result, indent=2, sort_keys=True))
         return 0
