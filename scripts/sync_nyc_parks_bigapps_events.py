@@ -1,20 +1,25 @@
 #!/usr/bin/env python3
-"""Fetch NYC Parks BigApps public events feed (staging only).
+"""Fetch current NYC Parks events from official NYC Open Data tables.
 
-Source: https://www.nycgovparks.org/xml/events_300_rss.json
-Does NOT modify protected feeds or publish to the public map.
+The legacy Parks website JSON endpoint now returns HTTP 405 in unattended
+clients. NYC Open Data publishes the same Parks Events database as related
+first-party tables. This collector uses the Event Listing table as the event
+authority, joins Event Locations by ``event_id`` for first-party coordinates,
+and joins Event Categories by ``event_id`` for classification input.
 
-When Parks supplies a valid coordinate pair, the normalized row preserves that
-first-party evidence explicitly. The coordinate is not re-geocoded or inferred;
-downstream semantic authority still decides whether the event is publishable.
+Coordinates are never inferred here. Valid coordinates from the official Parks
+location table receive explicit ``exact_source_coordinate`` evidence; events
+without a valid official coordinate remain non-exact for downstream semantic
+review/list-only handling.
 """
 
 from __future__ import annotations
 
 import json
 import sys
-import urllib.error
+import urllib.parse
 import urllib.request
+from collections import defaultdict
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -24,48 +29,140 @@ DATA_DIR = ROOT / "data"
 SNAPSHOT_PATH = DATA_DIR / "nyc_parks_bigapps_events_snapshot.json"
 REPORT_PATH = DATA_DIR / "nyc_parks_bigapps_events_sync_report.json"
 
-EVENTS_URL = "https://www.nycgovparks.org/xml/events_300_rss.json"
+OPEN_DATA_BASE = "https://data.cityofnewyork.us/resource"
+EVENT_LISTING_DATASET = "fudw-fgrp"
+EVENT_LOCATIONS_DATASET = "cpcm-i88g"
+EVENT_CATEGORIES_DATASET = "xtsw-fqvh"
+EVENTS_URL = f"{OPEN_DATA_BASE}/{EVENT_LISTING_DATASET}.json"
+LOCATIONS_URL = f"{OPEN_DATA_BASE}/{EVENT_LOCATIONS_DATASET}.json"
+CATEGORIES_URL = f"{OPEN_DATA_BASE}/{EVENT_CATEGORIES_DATASET}.json"
+SOURCE_PAGE = "https://data.cityofnewyork.us/d/fudw-fgrp"
+PAGE_LIMIT = 50000
 DEFAULT_HEADERS = {
-    "Accept": "application/json,text/plain,*/*",
-    "User-Agent": (
-        "Mozilla/5.0 (compatible; NYCIF-live-feeds/1.0; "
-        "+https://github.com/setoxxx/nycif-live-feeds)"
-    ),
+    "Accept": "application/json",
+    "User-Agent": "NYCIF-live-feeds/2.0 (+https://nycinfocus.com/)",
 }
 
-
-def load_json_file(path: Path, default: Any) -> Any:
-    if not path.exists() or path.stat().st_size == 0:
-        return default
-    try:
-        with path.open("r", encoding="utf-8") as handle:
-            return json.load(handle)
-    except Exception:
-        return default
+BOROUGH_CODES = {
+    "M": "Manhattan",
+    "MN": "Manhattan",
+    "MANHATTAN": "Manhattan",
+    "B": "Brooklyn",
+    "BK": "Brooklyn",
+    "BROOKLYN": "Brooklyn",
+    "X": "Bronx",
+    "BX": "Bronx",
+    "BRONX": "Bronx",
+    "Q": "Queens",
+    "QN": "Queens",
+    "QUEENS": "Queens",
+    "R": "Staten Island",
+    "SI": "Staten Island",
+    "STATEN ISLAND": "Staten Island",
+}
 
 
 def save_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as handle:
-        json.dump(payload, handle, indent=2, ensure_ascii=False, sort_keys=True)
-        handle.write("\n")
+    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
 
 
-def parse_coordinates(value: Any) -> tuple[float | None, float | None]:
-    text = str(value or "").strip()
-    if not text or "," not in text:
-        return None, None
-    parts = [part.strip() for part in text.split(",", 1)]
-    if len(parts) != 2:
-        return None, None
+def text(value: Any) -> str:
+    return str(value or "").strip()
+
+
+def first(row: dict[str, Any], *keys: str) -> Any:
+    for key in keys:
+        value = row.get(key)
+        if value not in (None, ""):
+            return value
+    return None
+
+
+def fetch_json(url: str, params: dict[str, str] | None = None) -> list[dict[str, Any]]:
+    query = urllib.parse.urlencode(params or {}, safe="(),'* >=<:")
+    request_url = f"{url}?{query}" if query else url
+    request = urllib.request.Request(request_url, headers=DEFAULT_HEADERS)
+    with urllib.request.urlopen(request, timeout=120) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+    if not isinstance(payload, list):
+        raise RuntimeError(f"unexpected NYC Open Data response from {url}")
+    return [row for row in payload if isinstance(row, dict)]
+
+
+def fetch_all(url: str, *, where: str | None = None) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    offset = 0
+    while True:
+        params = {"$limit": str(PAGE_LIMIT), "$offset": str(offset)}
+        if where:
+            params["$where"] = where
+        page = fetch_json(url, params)
+        rows.extend(page)
+        if len(page) < PAGE_LIMIT:
+            break
+        offset += len(page)
+    return rows
+
+
+def parse_float(value: Any) -> float | None:
     try:
-        lat = float(parts[0])
-        lng = float(parts[1])
-    except Exception:
+        parsed = float(value)
+    except (TypeError, ValueError):
+        return None
+    return parsed
+
+
+def valid_coordinate_pair(lat: Any, lng: Any) -> tuple[float | None, float | None]:
+    lat_f = parse_float(lat)
+    lng_f = parse_float(lng)
+    if lat_f is None or lng_f is None:
         return None, None
-    if not (40.0 <= lat <= 41.0 and -75.0 <= lng <= -73.0):
+    if not (40.0 <= lat_f <= 41.0 and -75.0 <= lng_f <= -73.0):
         return None, None
-    return lat, lng
+    return lat_f, lng_f
+
+
+def canonical_borough(value: Any) -> str | None:
+    key = text(value).upper()
+    return BOROUGH_CODES.get(key) or (text(value) or None)
+
+
+def normalize_date(value: Any) -> str:
+    raw = text(value)
+    if not raw:
+        return ""
+    # Socrata floating timestamps are normally YYYY-MM-DDT00:00:00.000.
+    if len(raw) >= 10 and raw[4:5] == "-" and raw[7:8] == "-":
+        return raw[:10]
+    # Defensive mm/dd/yyyy support for older exports.
+    for fmt in ("%m/%d/%Y", "%m/%d/%Y %I:%M:%S %p"):
+        try:
+            return datetime.strptime(raw, fmt).date().isoformat()
+        except ValueError:
+            pass
+    return ""
+
+
+def normalize_time(value: Any) -> str:
+    raw = text(value)
+    if not raw:
+        return ""
+    if "T" in raw:
+        raw = raw.split("T", 1)[1]
+    raw = raw.rstrip("Z")
+    for fmt in ("%H:%M:%S", "%H:%M", "%I:%M %p", "%I:%M:%S %p"):
+        try:
+            return datetime.strptime(raw, fmt).strftime("%H:%M:%S")
+        except ValueError:
+            pass
+    return raw
+
+
+def combine_datetime(day: str, clock: str) -> str | None:
+    if not day:
+        return None
+    return f"{day}T{clock or '00:00:00'}"
 
 
 def official_coordinate_evidence(lat: float | None, lng: float | None) -> dict[str, Any] | None:
@@ -75,64 +172,93 @@ def official_coordinate_evidence(lat: float | None, lng: float | None) -> dict[s
         "tier": "exact_source_coordinate",
         "validation_state": "validated",
         "exact_pin_eligible": True,
-        "source_provenance": EVENTS_URL,
-        "provider": "NYC Parks BigApps",
+        "source_provenance": LOCATIONS_URL,
+        "provider": "NYC Parks / NYC Open Data",
         "reason_code": "OFFICIAL_SOURCE_COORDINATE",
-        "reason_detail": "Coordinate pair supplied directly by the NYC Parks BigApps event feed.",
+        "reason_detail": "Coordinate pair supplied by the official NYC Parks Events Listing location table.",
     }
 
 
-def normalize_event_item(item: dict[str, Any]) -> dict[str, Any]:
-    lat, lng = parse_coordinates(item.get("coordinates"))
-    start_date = str(item.get("startdate") or item.get("start_date") or "").strip()
-    start_time = str(item.get("starttime") or item.get("start_time") or "").strip()
-    end_date = str(item.get("enddate") or item.get("end_date") or "").strip()
-    end_time = str(item.get("endtime") or item.get("end_time") or "").strip()
-    start_date_time = start_date
-    if start_date and start_time:
-        start_date_time = f"{start_date}T{start_time}"
-    end_date_time = end_date
-    if end_date and end_time:
-        end_date_time = f"{end_date}T{end_time}"
+def index_related(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    indexed: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        event_id = text(first(row, "event_id", "eventid", "id"))
+        if event_id:
+            indexed[event_id].append(row)
+    return dict(indexed)
 
-    park_names = item.get("parknames")
-    if isinstance(park_names, list):
-        park_name_list = [str(p).strip() for p in park_names if str(p).strip()]
-    elif park_names:
-        park_name_list = [str(park_names).strip()]
-    else:
-        park_name_list = []
 
-    categories = item.get("categories")
-    if isinstance(categories, list):
-        category_list = [str(c).strip() for c in categories if str(c).strip()]
-    elif categories:
-        category_list = [str(categories).strip()]
-    else:
-        category_list = []
+def choose_location(rows: list[dict[str, Any]]) -> dict[str, Any]:
+    if not rows:
+        return {}
+    # Prefer a location with valid official coordinates; otherwise retain the
+    # first official location as display/list-only context.
+    for row in rows:
+        lat, lng = valid_coordinate_pair(first(row, "lat", "latitude"), first(row, "long", "lng", "longitude"))
+        if lat is not None and lng is not None:
+            return row
+    return rows[0]
+
+
+def categories_for(rows: list[dict[str, Any]]) -> list[str]:
+    values: list[str] = []
+    for row in rows:
+        value = text(first(row, "category", "name", "category_name", "event_category"))
+        if value and value not in values:
+            values.append(value)
+    return values
+
+
+def normalize_event_item(
+    item: dict[str, Any],
+    locations: list[dict[str, Any]],
+    category_rows: list[dict[str, Any]],
+) -> dict[str, Any]:
+    event_id = text(first(item, "event_id", "eventid", "id"))
+    location = choose_location(locations)
+    lat, lng = valid_coordinate_pair(
+        first(location, "lat", "latitude"),
+        first(location, "long", "lng", "longitude"),
+    )
+
+    event_day = normalize_date(first(item, "date", "event_date", "start_date", "startdate"))
+    end_day = normalize_date(first(item, "end_date", "enddate")) or event_day
+    start_time = normalize_time(first(item, "start_time", "starttime"))
+    end_time = normalize_time(first(item, "end_time", "endtime"))
+
+    park_name = text(first(item, "park_name", "parkname")) or text(first(location, "name", "location", "park_name"))
+    location_name = text(first(location, "name", "location", "address")) or park_name
+    borough = canonical_borough(first(item, "borough", "boro")) or canonical_borough(first(location, "borough", "boro"))
+    category_values = categories_for(category_rows)
+    event_type = text(first(item, "event_type", "type"))
+    if event_type and event_type not in category_values:
+        category_values.append(event_type)
 
     return {
         "source_dataset": "nyc-parks-bigapps-events",
-        "source_event_id": str(item.get("guid") or item.get("id") or "").strip(),
-        "title": item.get("title"),
-        "start_date_time": start_date_time or None,
-        "end_date_time": end_date_time or None,
-        "start_date": start_date or None,
+        "source_event_id": event_id,
+        "title": first(item, "title", "name", "event_name"),
+        "start_date_time": combine_datetime(event_day, start_time),
+        "end_date_time": combine_datetime(end_day, end_time),
+        "start_date": event_day or None,
         "start_time": start_time or None,
-        "end_date": end_date or None,
+        "end_date": end_day or None,
         "end_time": end_time or None,
-        "location": item.get("location"),
-        "display_location": item.get("location"),
-        "park_names": park_name_list,
-        "park_ids": item.get("parkids"),
-        "categories": category_list,
-        "description": item.get("description"),
-        "link": item.get("link"),
-        "registration_url": item.get("registration_url"),
-        "registration_description": item.get("registration_description"),
-        "contact_phone": item.get("contact_phone"),
-        "instructor": item.get("instructor"),
-        "image": item.get("image"),
+        "location": location_name or None,
+        "display_location": location_name or None,
+        "address": first(location, "address"),
+        "borough": borough,
+        "park_names": [park_name] if park_name else [],
+        "park_ids": first(location, "park_id", "parkid"),
+        "categories": category_values,
+        "event_type": event_type or None,
+        "description": first(item, "description", "desc", "short_description"),
+        "link": first(item, "link", "url", "permalink"),
+        "registration_url": first(item, "registration_url"),
+        "registration_description": first(item, "registration_description"),
+        "contact_phone": first(item, "contact_phone", "phone"),
+        "instructor": first(item, "instructor"),
+        "image": first(item, "image", "image_url"),
         "lat": lat,
         "lng": lng,
         "location_evidence": official_coordinate_evidence(lat, lng),
@@ -144,75 +270,69 @@ def normalize_event_item(item: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def fetch_events() -> list[dict[str, Any]]:
-    request = urllib.request.Request(EVENTS_URL, headers=DEFAULT_HEADERS)
-    with urllib.request.urlopen(request, timeout=120) as response:
-        payload = json.loads(response.read().decode("utf-8"))
-    if isinstance(payload, list):
-        rows = payload
-    elif isinstance(payload, dict):
-        rows = payload.get("channel", {}).get("item") or payload.get("items") or []
-        if isinstance(rows, dict):
-            rows = [rows]
-    else:
-        rows = []
-    return [row for row in rows if isinstance(row, dict)]
+def fetch_events() -> tuple[list[dict[str, Any]], dict[str, int]]:
+    today = date.today().isoformat()
+    # The primary Parks listing exposes a floating timestamp field named date.
+    # Filtering at the source keeps the daily launch transaction bounded.
+    listing = fetch_all(EVENTS_URL, where=f"date >= '{today}T00:00:00.000'")
+    if not listing:
+        raise RuntimeError("NYC Parks Open Data event listing returned no current/future rows")
 
+    locations = fetch_all(LOCATIONS_URL)
+    categories = fetch_all(CATEGORIES_URL)
+    location_index = index_related(locations)
+    category_index = index_related(categories)
 
-def load_committed_snapshot_events() -> list[dict[str, Any]]:
-    payload = load_json_file(SNAPSHOT_PATH, {})
-    events = payload.get("events") if isinstance(payload, dict) else []
-    if not isinstance(events, list):
-        return []
-    return [row for row in events if isinstance(row, dict)]
+    normalized: list[dict[str, Any]] = []
+    invalid_identity = 0
+    for item in listing:
+        event_id = text(first(item, "event_id", "eventid", "id"))
+        if not event_id:
+            invalid_identity += 1
+            continue
+        row = normalize_event_item(item, location_index.get(event_id, []), category_index.get(event_id, []))
+        if row.get("title") and row.get("start_date_time"):
+            normalized.append(row)
+        else:
+            invalid_identity += 1
+
+    return normalized, {
+        "listing_rows": len(listing),
+        "location_rows": len(locations),
+        "category_rows": len(categories),
+        "invalid_missing_identity_or_date": invalid_identity,
+    }
 
 
 def main() -> int:
     generated_at = datetime.now(timezone.utc).isoformat()
-    today = date.today().isoformat()
-    fetch_mode = "live"
-    live_fetch_error = None
-    normalized: list[dict[str, Any]] = []
-
+    error: str | None = None
+    source_counts: dict[str, int] = {}
     try:
-        raw_items = fetch_events()
-        normalized = [normalize_event_item(item) for item in raw_items]
+        normalized, source_counts = fetch_events()
+        fetch_mode = "live_open_data"
     except Exception as exc:
-        live_fetch_error = str(exc)
-        committed_rows = load_committed_snapshot_events()
-        if committed_rows:
-            normalized = committed_rows
-            fetch_mode = "committed_snapshot_fallback"
-        else:
-            fetch_mode = "live_fetch_failed"
-
-    try:
-        current_future = [
-            row
-            for row in normalized
-            if str(row.get("start_date_time") or row.get("start_date") or "")[:10] >= today
-        ]
-        with_coords = sum(1 for row in normalized if row.get("lat") is not None)
-        with_exact_source_evidence = sum(
-            1
-            for row in normalized
-            if isinstance(row.get("location_evidence"), dict)
-            and row["location_evidence"].get("exact_pin_eligible") is True
-        )
-        qa_pass = bool(normalized)
-        error = live_fetch_error if fetch_mode != "live" else None
-    except Exception as exc:
-        current_future = []
-        with_coords = 0
-        with_exact_source_evidence = 0
-        qa_pass = False
+        normalized = []
+        fetch_mode = "live_fetch_failed"
         error = str(exc)
-        fetch_mode = "processing_failed"
+
+    today = date.today().isoformat()
+    current_future = [row for row in normalized if text(row.get("start_date_time"))[:10] >= today]
+    with_coords = sum(1 for row in normalized if row.get("lat") is not None and row.get("lng") is not None)
+    with_exact_source_evidence = sum(
+        1
+        for row in normalized
+        if isinstance(row.get("location_evidence"), dict)
+        and row["location_evidence"].get("exact_pin_eligible") is True
+    )
+    qa_pass = bool(normalized) and with_exact_source_evidence == with_coords and not error
 
     snapshot = {
         "generated_at_utc": generated_at,
         "source_url": EVENTS_URL,
-        "source_page": "https://www.nycgovparks.org/bigapps",
+        "source_page": SOURCE_PAGE,
+        "source_locations_url": LOCATIONS_URL,
+        "source_categories_url": CATEGORIES_URL,
         "fetch_mode": fetch_mode,
         "events": normalized,
     }
@@ -221,13 +341,15 @@ def main() -> int:
         "qa_pass": qa_pass,
         "fetch_mode": fetch_mode,
         "source_url": EVENTS_URL,
+        "source_page": SOURCE_PAGE,
         "snapshot_rows": len(normalized),
         "current_future_rows": len(current_future),
         "rows_with_coordinates": with_coords,
         "rows_with_exact_source_coordinate_evidence": with_exact_source_evidence,
         "coordinate_evidence_parity": with_exact_source_evidence == with_coords,
+        **source_counts,
         "error": error,
-        "live_fetch_error": live_fetch_error,
+        "live_fetch_error": error,
         "production_feeds_modified": False,
         "public_map_modified": False,
         "location_cache_modified": False,
@@ -238,8 +360,8 @@ def main() -> int:
 
     save_json(SNAPSHOT_PATH, snapshot)
     save_json(REPORT_PATH, report)
-    print(json.dumps(report, indent=2, ensure_ascii=False))
-    return 0 if qa_pass and report["coordinate_evidence_parity"] else 1
+    print(json.dumps(report, indent=2, ensure_ascii=False, sort_keys=True))
+    return 0 if qa_pass else 1
 
 
 if __name__ == "__main__":
