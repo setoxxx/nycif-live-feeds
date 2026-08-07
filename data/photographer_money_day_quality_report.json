@@ -1,26 +1,26 @@
 {
   "after_v2": {
     "coordinate_status_counts": {
-      "list_only": 14,
-      "map_ready": 204
+      "list_only": 18,
+      "map_ready": 211
     },
     "days_with_coverage": 40,
     "lane_counts": {
-      "approved_major": 218
+      "approved_major": 229
     },
     "month_counts": [
       {
-        "days_with_events": 25,
-        "event_count": 164,
+        "days_with_events": 23,
+        "event_count": 158,
         "label": "August 2026"
       },
       {
-        "days_with_events": 15,
-        "event_count": 54,
+        "days_with_events": 17,
+        "event_count": 71,
         "label": "September 2026"
       }
     ],
-    "total_events": 218
+    "total_events": 229
   },
   "baseline_v1_pr173": {
     "days_with_coverage": 43,
@@ -39,36 +39,36 @@
     "reference_today_nyc": "2026-07-14",
     "total_events": 842
   },
-  "considered_in_window": 1287,
+  "considered_in_window": 917,
   "delta_vs_baseline": {
     "days_coverage_after": 40,
     "days_coverage_before": 43,
-    "events_kept": 218,
-    "events_removed": 624
+    "events_kept": 229,
+    "events_removed": 613
   },
-  "excluded": 1069,
+  "excluded": 688,
   "filter_rules": [
     "Require money-day keyword signal on title/category (not location).",
     "Exclude routine sports/fitness even when major_score is high.",
     "Cap carried major_score contribution; significance alone is not enough."
   ],
-  "generated_at_utc": "2026-08-03T17:27:29Z",
-  "kept": 218,
+  "generated_at_utc": "2026-08-07T15:01:10Z",
+  "kept": 229,
   "location_cache_modified": false,
   "promotion_allowed": false,
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-08-03",
+  "reference_today_nyc": "2026-08-07",
   "schema_version": "photographer-money-day-quality-v1",
   "top_exclude_reasons": [
     [
       "no_money_day_keyword_signal",
-      885
+      577
     ],
     [
       "routine_activity_excluded",
-      160
+      89
     ],
     [
       "duplicate_id",
@@ -80,7 +80,7 @@
     ],
     [
       "below_score_threshold",
-      5
+      3
     ]
   ]
 }

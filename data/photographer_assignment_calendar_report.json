@@ -1,88 +1,88 @@
 {
   "coordinate_status_counts": {
-    "list_only": 14,
-    "map_ready": 204
+    "list_only": 18,
+    "map_ready": 211
   },
   "days_with_coverage": 40,
-  "generated_at_utc": "2026-08-03T17:27:29Z",
+  "generated_at_utc": "2026-08-07T15:01:10Z",
   "go_shoot_sample": [
     {
       "borough": "Manhattan",
-      "date": "2026-08-04",
-      "score": 490,
-      "title": "CDP Democratic Marathon Protests"
-    },
-    {
-      "borough": "Brooklyn",
-      "date": "2026-08-04",
-      "score": 340,
-      "title": "NYP Youth Market - Brooklyn"
+      "date": "2026-08-07",
+      "score": 380,
+      "title": "Giglio Feast of Sant Antonio"
     },
     {
       "borough": "Manhattan",
-      "date": "2026-08-04",
+      "date": "2026-08-07",
+      "score": 380,
+      "title": "NOMAD Jazz Festival"
+    },
+    {
+      "borough": "Manhattan",
+      "date": "2026-08-07",
+      "score": 380,
+      "title": "SummerStage Festival - August"
+    },
+    {
+      "borough": "Manhattan",
+      "date": "2026-08-07",
+      "score": 340,
+      "title": "HHFM Harlem Hospital Market"
+    },
+    {
+      "borough": "Bronx",
+      "date": "2026-08-07",
+      "score": 340,
+      "title": "HHFM Jacobi Hospital Market"
+    },
+    {
+      "borough": "Manhattan",
+      "date": "2026-08-07",
+      "score": 340,
+      "title": "HHFM Metropolitan Market"
+    },
+    {
+      "borough": "Manhattan",
+      "date": "2026-08-07",
       "score": 310,
       "title": "TSQ LIVE: 45/46 Plaza Programming"
     },
     {
-      "borough": "Manhattan",
-      "date": "2026-08-05",
-      "score": 400,
-      "title": "Rasuli Lewis Annual Childrens March for Peace"
-    },
-    {
-      "borough": "Manhattan",
-      "date": "2026-08-05",
-      "score": 400,
-      "title": "Rasuli Lewis Annual Childrens March for Peace"
-    },
-    {
-      "borough": "Manhattan",
-      "date": "2026-08-05",
-      "score": 400,
-      "title": "School Parade"
-    },
-    {
-      "borough": "Manhattan",
-      "date": "2026-08-05",
-      "score": 380,
-      "title": "Sunset Film Festival"
-    },
-    {
-      "borough": "Manhattan",
-      "date": "2026-08-05",
-      "score": 340,
-      "title": "East 125th Street Farmstand"
-    },
-    {
-      "borough": "Bronx",
-      "date": "2026-08-05",
-      "score": 340,
-      "title": "HHFM Hunts Point Market"
+      "borough": "Brooklyn",
+      "date": "2026-08-08",
+      "score": 490,
+      "title": "African Popup Festival"
     },
     {
       "borough": "Brooklyn",
-      "date": "2026-08-05",
-      "score": 340,
-      "title": "HHFM Kings County Hospital Market"
+      "date": "2026-08-08",
+      "score": 400,
+      "title": "Access Benefits at Jamaica Rising Day Parade"
+    },
+    {
+      "borough": "Brooklyn",
+      "date": "2026-08-08",
+      "score": 400,
+      "title": "Jamaica Rising Day Parade"
     }
   ],
   "lane_counts": {
-    "approved_major": 218
+    "approved_major": 229
   },
   "location_cache_modified": false,
   "money_day_quality": {
-    "events_removed_vs_baseline": 624,
+    "events_removed_vs_baseline": 613,
     "qa_pass": true,
     "report": "data/photographer_money_day_quality_report.json",
     "top_exclude_reasons": [
       [
         "no_money_day_keyword_signal",
-        885
+        577
       ],
       [
         "routine_activity_excluded",
-        160
+        89
       ],
       [
         "duplicate_id",
@@ -94,29 +94,29 @@
       ],
       [
         "below_score_threshold",
-        5
+        3
       ]
     ]
   },
   "month_counts": [
     {
-      "days_with_events": 25,
-      "event_count": 164,
+      "days_with_events": 23,
+      "event_count": 158,
       "label": "August 2026"
     },
     {
-      "days_with_events": 15,
-      "event_count": 54,
+      "days_with_events": 17,
+      "event_count": 71,
       "label": "September 2026"
     }
   ],
-  "pin_integrity_map_ready_after": 204,
+  "pin_integrity_map_ready_after": 211,
   "promotion_allowed": false,
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-08-03",
+  "reference_today_nyc": "2026-08-07",
   "schema_version": "photographer-assignment-calendar-v2-money-day",
-  "total_events": 218,
+  "total_events": 229,
   "window_end": "2026-09-30"
 }

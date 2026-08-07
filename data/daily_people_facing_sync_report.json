@@ -1,70 +1,112 @@
 {
   "civic": {
-    "accepted": 4830,
+    "accepted": 4754,
     "date_time_location_qa_pass": true,
-    "list_only": 1292,
+    "list_only": 1291,
     "map_coverage_qa_pass": true,
-    "map_ready": 3538
+    "map_ready": 3463
   },
   "failed_steps": [],
-  "generated_at_utc": "2026-08-03T17:27:26Z",
+  "generated_at_utc": "2026-08-07T15:01:07Z",
   "location_cache_modified": false,
   "notes": "Safe daily desk sync. Does not run build_staged_production_feed / build_location_cache / public WordPress publish. Pin integrity gate fail-closed: qa_pass requires ZERO bad map_ready pins. Full permit→staged refresh remains live-sync-qa (manual dispatch).",
   "photographer_calendar": {
     "days_with_coverage": 40,
-    "events_removed_vs_baseline": 624,
+    "events_removed_vs_baseline": 613,
     "month_counts": [
       {
-        "days_with_events": 25,
-        "event_count": 164,
+        "days_with_events": 23,
+        "event_count": 158,
         "label": "August 2026"
       },
       {
-        "days_with_events": 15,
-        "event_count": 54,
+        "days_with_events": 17,
+        "event_count": 71,
         "label": "September 2026"
       }
     ],
     "packs": {
       "qa_pass": true,
       "today": {
-        "borough_cluster_count": 0,
-        "date": "2026-08-03",
-        "map_ready_count": 0,
-        "total_events": 0
+        "borough_cluster_count": 2,
+        "date": "2026-08-07",
+        "map_ready_count": 7,
+        "total_events": 7
       },
       "tomorrow": {
-        "borough_cluster_count": 2,
-        "date": "2026-08-04",
-        "map_ready_count": 3,
+        "borough_cluster_count": 5,
+        "date": "2026-08-08",
+        "map_ready_count": 18,
         "top_go_shoot": [
           {
-            "borough": "Manhattan",
+            "borough": "Brooklyn",
             "score": 490,
-            "time": "2026-08-04T13:30:00.000",
-            "title": "CDP Democratic Marathon Protests"
+            "time": "2026-08-08T12:00:00.000",
+            "title": "African Popup Festival"
           },
           {
             "borough": "Brooklyn",
-            "score": 340,
-            "time": "2026-08-04T09:00:00.000",
-            "title": "NYP Youth Market - Brooklyn"
+            "score": 400,
+            "time": "2026-08-08T10:15:00.000-04:00",
+            "title": "Access Benefits at Jamaica Rising Day Parade"
+          },
+          {
+            "borough": "Brooklyn",
+            "score": 400,
+            "time": "2026-08-08T11:00:00.000",
+            "title": "Jamaica Rising Day Parade"
+          },
+          {
+            "borough": "Queens",
+            "score": 400,
+            "time": "2026-08-08T16:30:00.000",
+            "title": "Prayer Vigil - Religious event - August 8 - August 15 - August 22"
+          },
+          {
+            "borough": null,
+            "score": 380,
+            "time": "2026-08-08T1:00 pm",
+            "title": "18th Annual Stan Michels Jazz Festival"
+          },
+          {
+            "borough": "Brooklyn",
+            "score": 380,
+            "time": "2026-08-08T12:00:00",
+            "title": "African Heritage Festival (Brownsville)"
+          },
+          {
+            "borough": "Brooklyn",
+            "score": 380,
+            "time": "2026-08-08T12:00:00",
+            "title": "Church Annual Festival (Mermaid Avenue, Coney Island)"
+          },
+          {
+            "borough": "Queens",
+            "score": 380,
+            "time": "2026-08-08T15:00:00.000",
+            "title": "Dominican Festival - AM Dilan"
+          },
+          {
+            "borough": "Bronx",
+            "score": 380,
+            "time": "2026-08-08T12:00:00",
+            "title": "Festival Mt Carmel Family Fellowship (Bronx)"
           },
           {
             "borough": "Manhattan",
-            "score": 310,
-            "time": "2026-08-04T12:00:00.000",
-            "title": "TSQ LIVE: 45/46 Plaza Programming"
+            "score": 380,
+            "time": "2026-08-08T18:00:00.000",
+            "title": "Giglio Feast of Sant Antonio"
           }
         ],
-        "total_events": 3
+        "total_events": 20
       }
     },
     "pin_integrity": {
       "demotion_count": 0,
       "demotion_reason_counts": {},
-      "map_ready_after_total": 3783,
-      "map_ready_before_total": 3783,
+      "map_ready_after_total": 3738,
+      "map_ready_before_total": 3738,
       "qa_pass": true,
       "report": "data/pin_integrity_gate_report.json"
     },
@@ -73,19 +115,19 @@
     "shoot_day_certified": {
       "pack": "data/photographer_shoot_day_certified_pack.json",
       "qa_pass": true,
-      "today_certified_pins": 0,
-      "tomorrow_certified_pins": 3
+      "today_certified_pins": 7,
+      "tomorrow_certified_pins": 18
     },
-    "total_events": 218,
+    "total_events": 229,
     "viral_recurrence": {
       "historical_rows": 2450,
       "label_counts": {
-        "possible": 61,
-        "returning_likely": 120,
-        "weak": 54
+        "possible": 64,
+        "returning_likely": 129,
+        "weak": 56
       },
-      "match_count": 235,
-      "next_14d_crowd_magnets": 38,
+      "match_count": 249,
+      "next_14d_crowd_magnets": 39,
       "qa_pass": true
     }
   },
