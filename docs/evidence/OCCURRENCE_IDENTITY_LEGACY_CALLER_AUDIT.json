@@ -1,0 +1,55 @@
+{
+  "artifact_type": "nycif_occurrence_identity_legacy_caller_audit_v1",
+  "branch": "fix/step2a-location-identity",
+  "rule": "Do not globally redefine occurrence_key/occurrence_key_set until every caller's precision assumptions are proven.",
+  "callers": [
+    {
+      "path": "scripts/project_events_discovery_v02.py",
+      "classification": "MIGRATE_TO_V2",
+      "reason": "Production discovery representation and projected-reference checks currently use date-key identity and can collapse same-source same-day different-time occurrences."
+    },
+    {
+      "path": "scripts/audit_occurrence_identity_enforcement.py",
+      "classification": "KEEP_LEGACY_AUDIT_TEMPORARILY",
+      "reason": "Audit intentionally measures legacy/source/date matching behavior and is useful during migration; update only after V2 projector cutover has equivalent enforcement evidence."
+    },
+    {
+      "path": "scripts/audit_dpr_park_geometry_resolver.py",
+      "classification": "NEEDS_REVIEW",
+      "reason": "Search shows legacy identity usage in a geometry/resolver audit. It is not yet proven whether date-level grouping is diagnostic-only or affects a release disposition."
+    },
+    {
+      "path": "scripts/audit_incoming_data_residuals.py",
+      "classification": "KEEP_LEGACY_AUDIT_TEMPORARILY",
+      "reason": "Residual audit is currently a release regression surface. Preserve its existing comparison semantics until the V2 projector migration adds an explicit V2 residual invariant and both can be compared."
+    },
+    {
+      "path": "scripts/refresh_official_supplemental_occurrences.py",
+      "classification": "NEEDS_REVIEW",
+      "reason": "This lane already has stronger exact-start occurrence behavior elsewhere in the pipeline. Verify whether the legacy helper reference is compatibility/audit-only before changing it."
+    },
+    {
+      "path": "scripts/build_staged_production_feed.py",
+      "classification": "NEEDS_REVIEW",
+      "reason": "The staged builder has lane-specific exact occurrence dedupe behavior. Do not replace any local identity semantics until its legacy-helper call is located and compared against that stronger key."
+    },
+    {
+      "path": "scripts/test_occurrence_identity_contract.py",
+      "classification": "KEEP_LEGACY_AUDIT_TEMPORARILY",
+      "reason": "Tests intentionally cover both legacy and V2 behavior during controlled migration. Remove legacy assertions only after no production/reconciliation caller depends on legacy keys."
+    },
+    {
+      "path": "scripts/test_daily_production_hardening.py",
+      "classification": "KEEP_LEGACY_AUDIT_TEMPORARILY",
+      "reason": "Production-hardening checks protect fail-closed transaction behavior. Preserve legacy contract assertions until the replacement V2 hard gate is proven on the same release path."
+    }
+  ],
+  "global_redefinition_allowed": false,
+  "next_required_evidence": [
+    "inspect each NEEDS_REVIEW caller at exact call site",
+    "migrate projector surgically",
+    "add V2 residual/reconciliation invariants",
+    "rerun Occurrence Identity Enforcement Audit and Incoming Data Residual Audit on one exact head",
+    "only then consider deprecating legacy helpers"
+  ]
+}
