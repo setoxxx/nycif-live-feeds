@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
-"""Build Shoot Day Certified pack — today/tomorrow map pins only (NYC certified).
+"""Build Shoot Day Certified pack — today/tomorrow exact pins only.
 
 Ranks crowd magnets (parade/festival/fair/activation/returning_likely) above
-routine weekly greenmarkets. Never invents HH:MM or coordinates.
+routine weekly greenmarkets. Never invents HH:MM or coordinates. Exact map
+links are emitted only after the canonical semantic location-evidence gate
+returns MAP_READY; geometry inside the NYC envelope is not certification.
 """
 
 from __future__ import annotations
@@ -19,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from civic_people_facing_common import DATA_DIR, load_json, save_json, today_nyc, utc_now  # noqa: E402
-from pin_integrity import certify_nyc_pin  # noqa: E402
+from pin_integrity import certify_event_pin  # noqa: E402
 
 GREENMARKET_RE = re.compile(r"greenmarket|farmers market|farmstand|green market", re.I)
 CROWD_RE = re.compile(
@@ -81,14 +83,31 @@ def _viral_enrich(row: dict[str, Any], viral: dict[str, Any] | None) -> None:
     row["prior_year_date"] = (prior or {}).get("date") or viral.get("prior_year_date")
 
 
+def _semantic_candidate(e: dict[str, Any]) -> dict[str, Any]:
+    """Return an isolated candidate so certification does not mutate source rows."""
+    candidate = dict(e)
+    if isinstance(e.get("nycif"), dict):
+        candidate["nycif"] = dict(e["nycif"])
+    if isinstance(e.get("location_evidence"), dict):
+        candidate["location_evidence"] = dict(e["location_evidence"])
+    return candidate
+
+
 def certified_row(e: dict[str, Any], *, recurrence_label: str | None = None) -> dict[str, Any] | None:
+    """Expose an exact pin only after canonical semantic certification."""
     if e.get("coordinate_status") != "map_ready":
         return None
-    lat_f, lng_f, ok, reason = certify_nyc_pin(
-        e.get("latitude"), e.get("longitude"), allow_swap_correct=True
-    )
-    if not ok or lat_f is None or lng_f is None:
+
+    candidate = _semantic_candidate(e)
+    certify_event_pin(candidate)
+    if candidate.get("map_eligibility_state") != "MAP_READY" or candidate.get("certified_pin") is not True:
         return None
+
+    lat_f = candidate.get("latitude")
+    lng_f = candidate.get("longitude")
+    if lat_f is None or lng_f is None:
+        return None
+
     src = e.get("source") if isinstance(e.get("source"), dict) else {}
     return {
         "id": e.get("id"),
@@ -101,10 +120,11 @@ def certified_row(e: dict[str, Any], *, recurrence_label: str | None = None) -> 
         "borough": e.get("borough"),
         "display_location": e.get("display_location"),
         "coordinate_status": "map_ready",
+        "map_eligibility_state": "MAP_READY",
         "latitude": lat_f,
         "longitude": lng_f,
         "certified_pin": True,
-        "pin_integrity_reason": reason,
+        "pin_integrity_reason": candidate.get("pin_integrity_reason"),
         "source": src or e.get("source"),
         "assignment_score": e.get("assignment_score"),
         "match_score": e.get("match_score"),
@@ -120,6 +140,8 @@ def certified_row(e: dict[str, Any], *, recurrence_label: str | None = None) -> 
 
 
 def _needs_location_row(e: dict[str, Any]) -> dict[str, Any]:
+    candidate = _semantic_candidate(e)
+    certify_event_pin(candidate)
     return {
         "id": e.get("id"),
         "title": e.get("title"),
@@ -127,7 +149,10 @@ def _needs_location_row(e: dict[str, Any]) -> dict[str, Any]:
         "borough": e.get("borough"),
         "display_location": e.get("display_location"),
         "coordinate_status": "list_only",
+        "map_eligibility_state": candidate.get("map_eligibility_state") or "REVIEW_REQUIRED",
+        "pin_integrity_reason": candidate.get("pin_integrity_reason"),
         "certified_pin": False,
+        "map_link": None,
         "assignment_score": e.get("assignment_score"),
     }
 
@@ -264,7 +289,7 @@ def main() -> int:
             "parade/festival/fair/activation next",
             "other non-greenmarket returning",
             "greenmarkets secondary",
-            "only certified map_ready pins exposed for map clusters",
+            "only semantic MAP_READY + certified_pin exact coordinates appear in map clusters",
         ],
         "promotion_allowed": False,
         "public_map_modified": False,
