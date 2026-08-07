@@ -1,0 +1,167 @@
+{
+  "artifact_type": "nycif_map_eligibility_consumer_matrix_v1",
+  "branch": "fix/step2a-location-identity",
+  "rule": "coordinate_status=map_ready or an in-bounds coordinate is never sufficient by itself for a certified exact public pin",
+  "classification_values": [
+    "USES_SEMANTIC_AUTHORITY",
+    "USES_LEGACY_MAP_READY",
+    "IGNORES_CERTIFICATION",
+    "LIST_ONLY_SAFE",
+    "P0_REVIEW_REQUIRED"
+  ],
+  "summary": {
+    "confirmed_semantic_authority": 2,
+    "confirmed_legacy_bypass": 3,
+    "additional_consumers_requiring_targeted_review": 15,
+    "complete": false,
+    "reason_incomplete": "Repository search surfaced additional map_ready/certified_pin consumers; uninspected consumers remain P0_REVIEW_REQUIRED rather than being guessed safe."
+  },
+  "consumers": [
+    {
+      "path": "scripts/pin_integrity.py",
+      "classification": "USES_SEMANTIC_AUTHORITY",
+      "risk": "LOW",
+      "evidence": "evaluate_map_eligibility separates geometry validity from exact-pin eligibility and requires validated evidence/provenance."
+    },
+    {
+      "path": "scripts/build_comprehensive_event_feed.py",
+      "classification": "USES_SEMANTIC_AUTHORITY",
+      "risk": "LOW_ON_BRANCH",
+      "evidence": "Branch implementation calls evaluate_map_eligibility and exposes exact coordinates only for MAP_READY; V2 seen-index migration uses dual-read compatibility."
+    },
+    {
+      "path": "scripts/project_events_discovery_v02.py",
+      "classification": "USES_LEGACY_MAP_READY",
+      "risk": "P0",
+      "evidence": "build_base_event still derives coordinate_status from resolve_coords map_ready and marker eligibility checks coordinate_status without semantic evidence certification.",
+      "required_action": "Migrate projector output and marker eligibility to semantic map eligibility authority."
+    },
+    {
+      "path": "scripts/build_photographer_shoot_day_certified.py",
+      "classification": "USES_LEGACY_MAP_READY",
+      "risk": "P0",
+      "evidence": "certified_row accepts coordinate_status=map_ready, calls certify_nyc_pin geometry guard, sets certified_pin=true and emits a Google Maps exact-coordinate link.",
+      "required_action": "Use evaluate_map_eligibility/certify_event_pin with evidence; no exact directions link unless MAP_READY semantic certification passes."
+    },
+    {
+      "path": "scripts/build_pin_integrity_gate.py",
+      "classification": "USES_LEGACY_MAP_READY",
+      "risk": "P0",
+      "evidence": "Core scan calls semantic certify_event_pin, but _verify_zero_bad_map_ready uses geometry-only certify_nyc_pin and _mark_certified_flags can set certified_pin=true from coordinate_status/map coordinate presence.",
+      "required_action": "Make all verification/flagging helpers consume map_eligibility_state/exact semantic certification."
+    },
+    {
+      "path": "scripts/project_events_schema_v1.py",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "HIGH",
+      "evidence": "Repository search shows map_ready consumption; targeted semantic-authority review still required."
+    },
+    {
+      "path": "scripts/schema_v1_common.py",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "HIGH",
+      "evidence": "Shared coordinate/status helpers surfaced in map_ready search; contract compatibility requires review."
+    },
+    {
+      "path": "scripts/certify_event_923896_outputs.py",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "MEDIUM",
+      "evidence": "Certification-specific output path surfaced in map_ready search; preserve immutable regression while aligning semantics."
+    },
+    {
+      "path": "scripts/build_photographer_money_day_packs.py",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "HIGH",
+      "evidence": "Photographer map/directions surface surfaced in certified_pin/map_ready search."
+    },
+    {
+      "path": "scripts/run_daily_people_facing_desk_sync.py",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "HIGH",
+      "evidence": "Daily desk synchronization consumes map-ready artifacts and may propagate legacy state."
+    },
+    {
+      "path": "scripts/build_full_season_pin_coverage_audit.py",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "MEDIUM",
+      "evidence": "Pin coverage audit surfaced in map_ready search; must distinguish geometry coverage from semantically certified coverage."
+    },
+    {
+      "path": "scripts/build_street_festivals_feed.py",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "HIGH",
+      "evidence": "Street-festival feed is folded into comprehensive/event surfaces and surfaced in map_ready search."
+    },
+    {
+      "path": "scripts/audit_authoritative_facility_resolvers.py",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "MEDIUM",
+      "evidence": "Facility resolver audit surfaced in map_ready search; authoritative facility ID/containment semantics must be preserved."
+    },
+    {
+      "path": "scripts/build_civic_people_facing_map_coverage.py",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "HIGH",
+      "evidence": "People-facing map coverage consumes map-ready state."
+    },
+    {
+      "path": "scripts/build_photographer_viral_recurrence.py",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "MEDIUM",
+      "evidence": "Photographer recurrence pack surfaces certified/map-ready fields."
+    },
+    {
+      "path": "scripts/build_daily_data_health.py",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "HIGH",
+      "evidence": "Daily health gate consumes map_ready state; release READY must eventually assert semantic certification, not only coordinate presence."
+    },
+    {
+      "path": "scripts/build_civic_people_facing_godview_digest.py",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "MEDIUM",
+      "evidence": "Administrative/God View digest consumes map-ready information and must migrate with Mission Control."
+    },
+    {
+      "path": "scripts/build_photographer_assignment_calendar.py",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "HIGH",
+      "evidence": "Assignment calendar surfaced in map_ready/certified_pin search and feeds field/directions workflows."
+    },
+    {
+      "path": "scripts/discovery_approved_dedupe.py",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "MEDIUM",
+      "evidence": "Approved discovery dedupe consumes location/status fields; verify dedupe does not promote or preserve unsupported exact pins."
+    },
+    {
+      "path": "scripts/certify_stage8_supported_coordinate_resolution.py",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "HIGH",
+      "evidence": "Legacy certification path surfaced in map_ready search; must be reconciled with Location Evidence Contract."
+    },
+    {
+      "path": "scripts/civic_people_facing_common.py",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "HIGH",
+      "evidence": "Shared people-facing helpers surfaced in map_ready search and can affect multiple downstream products."
+    },
+    {
+      "path": "docs/field-desk-admin-deploy/admin/photographer-calendar-panel-v01.js",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "HIGH",
+      "evidence": "UI surfaced in certified_pin search; exact directions/map actions must require semantically certified pins."
+    },
+    {
+      "path": "docs/field-desk-admin-deploy/admin/civic-godview-panel-v01.js",
+      "classification": "P0_REVIEW_REQUIRED",
+      "risk": "MEDIUM",
+      "evidence": "Administrative UI surfaced in certified_pin search; migrate as part of God View to Mission Control trust-boundary work."
+    }
+  ],
+  "release_gate": {
+    "unsupported_exact_pin_promotions": 0,
+    "legacy_consumer_bypass_allowed": false,
+    "unknown_consumers_default": "P0_REVIEW_REQUIRED"
+  }
+}
