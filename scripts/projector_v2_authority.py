@@ -12,14 +12,24 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Iterable
 
-from occurrence_identity_contract import (
-    identity_precision,
-    occurrence_key_v2,
-    occurrence_key_v2_set,
-    rejection_identity_sets,
-    rejection_matches,
-)
-from pin_integrity import evaluate_map_eligibility
+try:  # package import under pytest / module execution
+    from scripts.occurrence_identity_contract import (
+        identity_precision,
+        occurrence_key_v2,
+        occurrence_key_v2_set,
+        rejection_identity_sets,
+        rejection_matches,
+    )
+    from scripts.pin_integrity import evaluate_map_eligibility
+except ModuleNotFoundError:  # direct script-style import when scripts/ is on sys.path
+    from occurrence_identity_contract import (
+        identity_precision,
+        occurrence_key_v2,
+        occurrence_key_v2_set,
+        rejection_identity_sets,
+        rejection_matches,
+    )
+    from pin_integrity import evaluate_map_eligibility
 
 
 @dataclass(frozen=True)
