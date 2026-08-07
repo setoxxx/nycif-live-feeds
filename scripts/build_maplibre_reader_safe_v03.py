@@ -28,6 +28,7 @@ ROOT = Path(__file__).resolve().parents[1]
 CANONICAL = ROOT / "data" / "events_discovery_accepted_canonical_v02.json"
 OUT_GEOJSON = "data/reader-safe/national-map-events-v03.geojson"
 OUT_STATUS = "data/reader-safe/national-map-events-v03-status.json"
+KNOWN_BOROUGHS = {"manhattan", "brooklyn", "bronx", "queens", "staten island"}
 
 
 def load(path: Path) -> Any:
@@ -124,6 +125,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
     features: list[dict[str, Any]] = []
     occurrence_ids: list[tuple[str, str, str]] = []
     borough_contradictions = 0
+    borough_unverified = 0
     wrong_authority = 0
     evidence_failures = 0
     unsupported_markers = 0
@@ -148,10 +150,13 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
 
         lat = float(event["latitude"])
         lng = float(event["longitude"])
-        borough = event.get("borough")
-        if not coordinate_matches_borough(lat, lng, str(borough or "")):
-            borough_contradictions += 1
-            continue
+        borough = str(event.get("borough") or "").strip().lower()
+        if borough in KNOWN_BOROUGHS:
+            if not coordinate_matches_borough(lat, lng, borough):
+                borough_contradictions += 1
+                continue
+        else:
+            borough_unverified += 1
 
         occurrence_ids.append(occurrence_key_v2(event))
         features.append(feature(event))
@@ -172,6 +177,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         "wrong_authority_marker_count": wrong_authority,
         "location_evidence_failure_count": evidence_failures,
         "borough_contradiction_count": borough_contradictions,
+        "borough_unverified_count": borough_unverified,
         "duplicate_exact_occurrence_count": duplicate_exact,
         "general_area_exact_geometry_count": 0,
         "qa_pass": (
