@@ -1,0 +1,65 @@
+{
+  "schema_version": "nycif-mission-control-summary-certification-v1",
+  "generated_at": "2026-08-07T12:52:00-04:00",
+  "repository": "setoxxx/nycif-live-feeds",
+  "pull_request": 383,
+  "branch": "feat/public-data-shadow-release",
+  "certified_head_sha": "d49ad98a28b1bf838a0285a245ce0f8e453db828",
+  "status": "PASS_NON_HOSTED_SUMMARY_READY",
+  "verified_workflows": {
+    "Public Data Shadow Release": "PASS",
+    "Schema v1 PR QA": "PASS",
+    "Discovery Taxonomy v02 QA": "PASS"
+  },
+  "verified_job_steps": {
+    "compile_release_builders": "PASS",
+    "public_artifact_integration_tests": "PASS",
+    "mission_control_summary_producer_tests": "PASS",
+    "shadow_release_package_tests": "PASS"
+  },
+  "release_contract": {
+    "single_reader_safe_release_package": true,
+    "summary_artifact": "mission-control-summary.json",
+    "summary_hash_in_release_inventory": true,
+    "summary_release_sha_must_match_package": true,
+    "versioned_release_directory": "releases/<release_sha>/",
+    "current_pointer_directory": "current/release.json",
+    "publication_authorized": false,
+    "rollback_metadata_preserved": true,
+    "deployment_neutral": true
+  },
+  "summary_authority": {
+    "projection_only": true,
+    "recalculates_event_identity": false,
+    "recalculates_location_authority": false,
+    "geocodes": false,
+    "promotes_pin_precision": false,
+    "changes_publication_eligibility": false,
+    "changes_ranking": false,
+    "changes_verification": false,
+    "changes_occurrence_grouping": false
+  },
+  "fail_closed": {
+    "missing_source_becomes_unavailable": true,
+    "missing_count_becomes_null": true,
+    "missing_reconciliation_becomes_unavailable": true,
+    "missing_rollback_is_omitted": true,
+    "release_mismatch_rejected": true,
+    "unexpected_field_rejected": true,
+    "raw_github_rejected": true,
+    "private_path_rejected": true,
+    "credential_like_text_rejected": true,
+    "negative_or_noninteger_count_rejected": true,
+    "duplicate_or_unknown_source_rejected": true
+  },
+  "hosted_runtime_proof": "NOT_RUN_NO_READER_SAFE_ENDPOINT",
+  "anonymous_browser_proof": "BLOCKED_NO_READER_SAFE_ENDPOINT",
+  "production_mutation": false,
+  "publication_authorized": false,
+  "merge_authorized": false,
+  "hosting_or_dns_change": false,
+  "wordpress_change": false,
+  "map_repoint": false,
+  "DoD_met": false,
+  "risk": "The summary producer and release-package integration are certified only for non-hosted shadow use. Hosted CORS/cache/network/confidentiality behavior remains blocked on the reader-safe endpoint and anonymous browser proof."
+}
