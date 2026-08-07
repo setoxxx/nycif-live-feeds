@@ -208,3 +208,45 @@ def test_shoot_day_validated_exact_pin_can_emit_directions():
     assert row["certified_pin"] is True
     assert row["map_eligibility_state"] == "MAP_READY"
     assert row["map_link"] == "https://www.google.com/maps?q=40.7128,-74.006"
+
+
+def test_pin_gate_legacy_map_ready_is_not_semantically_ready_or_recertified():
+    from build_pin_integrity_gate import _mark_certified_flags, _semantic_exact_ready
+
+    legacy = {
+        "id": "legacy-gate",
+        "coordinate_status": "map_ready",
+        "latitude": 40.7128,
+        "longitude": -74.0060,
+        "certified_pin": True,
+        "map_link": "https://www.google.com/maps?q=40.7128,-74.006",
+    }
+    certify_event_pin(legacy)
+    assert legacy["map_eligibility_state"] == "REVIEW_REQUIRED"
+    assert legacy["certified_pin"] is False
+    assert _semantic_exact_ready(legacy) is False
+    _mark_certified_flags([legacy])
+    assert legacy["certified_pin"] is False
+    assert legacy["map_link"] is None
+
+
+def test_pin_gate_validated_exact_evidence_remains_semantically_ready():
+    from build_pin_integrity_gate import _mark_certified_flags, _semantic_exact_ready
+
+    exact = {
+        "id": "exact-gate",
+        "coordinate_status": "map_ready",
+        "latitude": 40.7128,
+        "longitude": -74.0060,
+        "location_evidence": {
+            "tier": "exact_source_coordinate",
+            "validation_state": "validated",
+            "exact_pin_eligible": True,
+            "source_provenance": "source_provided",
+        },
+    }
+    certify_event_pin(exact)
+    assert _semantic_exact_ready(exact) is True
+    _mark_certified_flags([exact])
+    assert exact["certified_pin"] is True
+    assert exact["map_link"] == "https://www.google.com/maps?q=40.7128,-74.006"
