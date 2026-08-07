@@ -1,0 +1,52 @@
+{
+  "schema_version": "nycif-pr-appsec-independent-review-v1",
+  "generated_at": "2026-08-07T11:20:00-04:00",
+  "repository": "setoxxx/nycif-live-feeds",
+  "pull_request": 384,
+  "reviewed_head": "ed42b3bb82a3aafc85ba190a70a91479151a1d39",
+  "review_scope": [
+    ".github/workflows/projector-v2-authority.yml",
+    "docs/evidence/PROJECTOR_V2_IMPLEMENTATION_REPORT.json",
+    "scripts/projector_v2_authority.py",
+    "tests/test_projector_v2_authority.py"
+  ],
+  "sonar": {
+    "quality_gate": "FAILED",
+    "security_rating_new_code": "C",
+    "required_security_rating": "A",
+    "finding_level_rule_id": "UNAVAILABLE_IN_CURRENT_ACCESS",
+    "finding_level_file": "UNAVAILABLE_IN_CURRENT_ACCESS",
+    "finding_level_line": "UNAVAILABLE_IN_CURRENT_ACCESS",
+    "finding_level_message": "UNAVAILABLE_IN_CURRENT_ACCESS",
+    "relationship_to_independent_findings": "NOT_INFERRED"
+  },
+  "independent_review": {
+    "unsafe_subprocess_execution": "NOT_FOUND",
+    "shell_interpolation": "NOT_FOUND",
+    "path_traversal": "NOT_FOUND_IN_CHANGED_CODE",
+    "unsafe_url_handling": "NOT_FOUND",
+    "unsafe_temporary_file_use": "NOT_FOUND",
+    "credential_exposure": "NOT_FOUND",
+    "sensitive_logging": "NOT_FOUND",
+    "unsafe_deserialization": "NOT_FOUND",
+    "overly_broad_exception_handling": "NOT_FOUND",
+    "untrusted_filesystem_write": "NOT_FOUND",
+    "dynamic_import_path": {
+      "status": "REVIEWED_NOT_USER_CONTROLLED",
+      "detail": "scripts/projector_v2_authority.py prepends Path(__file__).resolve().parent to sys.path. The inserted path is derived from the checked-out module location, not event/user input. This review does not identify it as an exploitable path injection in the changed code."
+    },
+    "ci_dependency_pinning": {
+      "status": "INDEPENDENT_HARDENING_FINDING",
+      "severity": "LOW_TO_MODERATE",
+      "detail": "Projector V2 Authority QA installs pytest without an explicit version or hash. This weakens CI reproducibility and adds avoidable package-supply-chain variability.",
+      "recommended_action": "Pin the test-runner version using the repository's established dependency policy or a reviewed requirements/lock file. Do not claim this remediates Sonar unless Sonar finding-level evidence confirms the same issue."
+    }
+  },
+  "security_gate": {
+    "pass": false,
+    "reason": "Sonar Security Rating on New Code remains C; required A. Finding-level Sonar detail is unavailable through current access, so root-cause remediation cannot be truthfully attributed yet."
+  },
+  "production_mutation": false,
+  "merge_authorized": false,
+  "DoD_met": false
+}
