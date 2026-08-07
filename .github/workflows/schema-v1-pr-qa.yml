@@ -26,6 +26,11 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Public artifact shared-authority integration proof
+        run: |
+          python -m py_compile scripts/build_public_runtime_artifacts.py
+          python tests/test_public_runtime_artifacts.py
+
       - name: Project schema-v1 feeds
         run: python scripts/project_events_schema_v1.py
 
