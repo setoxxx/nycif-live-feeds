@@ -1,36 +1,24 @@
 #!/usr/bin/env python3
 """Compute the "What's New" diff + category coverage over the full city feed.
 
-The frontend already loads 100% of the permitted events via the discovery
-"approved" pages, so this builder deliberately does NOT emit a second copy of
-every event. It scans the full already-coordinated staged snapshot (every NYC
-permitted event, all 31 event types) to produce two small, non-redundant
-artifacts the map/admin need on top of the events they already have:
+The frontend already loads the permitted-event discovery pages, so this builder
+emits only non-redundant Mission Control artifacts:
 
-  1. What's New (data/nycif_new_events.json) — the permits that arrived since
-     the last refresh, so the admin panel can separate already-tracked events
-     from newly-arrived ones. "New" = an event_id (keyed per day-instance,
-     permit-id@start-day, since the staged feed files one row per event-day)
-     not tracked before this run, via a persisted seen-index. The first build
-     is a clean baseline (0 new); real deltas surface from the second run.
+1. ``data/nycif_new_events.json`` — occurrence-level arrivals since the prior
+   refresh, using OccurrenceIdentityV2 with backward-compatible reads of the old
+   day-instance seen index.
+2. ``data/comprehensive_feed_report.json`` — category/type and map-eligibility
+   coverage over the coordinated staged snapshot.
 
-  2. Category coverage (data/comprehensive_feed_report.json) — how NYC's 31
-     permit types fold into our category taxonomy and which lanes have data, so
-     the frontend can gray out the empty ones. Adds one "media" lane for the
-     production/film/press family, which has no home in the base taxonomy.
-     Nothing is orphaned: unknown types fall back to the row category, then
-     "general".
+Map eligibility is semantic. A coordinate merely falling inside the NYC
+bounding box is geometry-valid, not an exact public pin. Exact coordinates are
+exposed by this artifact only when ``evaluate_map_eligibility`` returns
+``MAP_READY``. Legacy rows without evidence remain counted as review/list-only
+and keep their evidence-migration state without fabricated provenance.
 
-Coordinate certification (NYC box, no invented pins) still runs so the report's
-map_ready / list_only counts are honest.
-
-Safety: reads only the staged feed + its own seen-index. Does NOT touch
-location_cache.json, GPS/approval artifacts, or raw source datasets.
-
-Outputs:
-  data/nycif_new_events.json            admin "What's New" diff
-  data/comprehensive_feed_report.json   per-category / per-type coverage counts
-  data/_event_seen_index.json           persisted first-seen index
+Safety: reads only staged/derived feeds + its own seen-index. Does not mutate
+location_cache.json, GPS/approval artifacts, raw source datasets, or public
+publication state.
 """
 from __future__ import annotations
 
@@ -38,6 +26,9 @@ import json
 from collections import Counter
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
+
+from occurrence_identity_contract import occurrence_key_v2
+from pin_integrity import evaluate_map_eligibility
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
@@ -47,25 +38,14 @@ OUT_NEW = DATA / "nycif_new_events.json"
 OUT_REPORT = DATA / "comprehensive_feed_report.json"
 SEEN_INDEX = DATA / "_event_seen_index.json"
 
-# Keep recent past (grayed) + everything forward. Bounds the diff/coverage scan;
-# older-than-PAST_WINDOW permits drop off.
 PAST_WINDOW_DAYS = 14
 
-NYC = {"min_lat": 40.4774, "max_lat": 40.9176, "min_lng": -74.2591, "max_lng": -73.7004}
-
-# The full category set the frontend can render, so coverage lists the empty
-# lanes (count 0) the map should gray out. Mirrors the runtime CATEGORY_META.
 TARGET_CATEGORIES = {
     "sports", "fitness", "parks", "arts", "market", "civic", "government",
     "education", "family", "services", "environment", "volunteer", "jobs",
     "housing", "media", "general",
 }
 
-# Complete map of NYC's published permit types -> our existing category slugs.
-# "media" is the one added lane: the production / film / press family is a
-# distinct, operator-valuable group ("money shots") with no home in the base
-# taxonomy. Everything here maps to a category so no permit type is orphaned;
-# the frontend grays any category chip whose count is 0.
 NYC_TYPE_CATEGORY: dict[str, str] = {
     "open culture": "arts",
     "public program/exhibitions": "arts",
@@ -116,23 +96,11 @@ def load_json(path: Path, default):
 
 def save_json(path: Path, payload) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=1) + "\n",
-                    encoding="utf-8")
+    path.write_text(json.dumps(payload, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 
 
 def day_of(value) -> str:
     return str(value or "")[:10]
-
-
-def valid_coord(lat, lng) -> bool:
-    try:
-        lat, lng = float(lat), float(lng)
-    except (TypeError, ValueError):
-        return False
-    if abs(lat) < 1e-9 and abs(lng) < 1e-9:  # null island
-        return False
-    return (NYC["min_lat"] <= lat <= NYC["max_lat"]
-            and NYC["min_lng"] <= lng <= NYC["max_lng"])
 
 
 def category_for(row: dict) -> str:
@@ -143,161 +111,263 @@ def category_for(row: dict) -> str:
     return existing or "general"
 
 
+def evidence_for(row: dict) -> dict | None:
+    evidence = row.get("location_evidence")
+    if isinstance(evidence, dict):
+        return evidence
+    nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
+    nested = nycif.get("location_evidence")
+    if isinstance(nested, dict):
+        return nested
+    return None
+
+
+def semantic_location(row: dict, *, lat_key: str, lng_key: str) -> tuple[dict, float | None, float | None]:
+    probe = {
+        "latitude": row.get(lat_key),
+        "longitude": row.get(lng_key),
+    }
+    evidence = evidence_for(row)
+    if evidence is not None:
+        probe["location_evidence"] = evidence
+    decision = evaluate_map_eligibility(probe)
+    if decision["map_eligibility"] != "MAP_READY":
+        return decision, None, None
+    return (
+        decision,
+        float(decision.get("normalized_lat", row.get(lat_key))),
+        float(decision.get("normalized_lng", row.get(lng_key))),
+    )
+
+
+def occurrence_tracking_keys(row: dict, *, legacy_permit_id: str, start_day: str) -> tuple[str, str]:
+    """Return V2 tracking key plus legacy day-instance key for migration reads."""
+    dataset, source_event_id, source_start = occurrence_key_v2(row)
+    v2_key = f"v2:{dataset}:{source_event_id}@{source_start}"
+    legacy_key = f"{legacy_permit_id}@{start_day}"
+    return v2_key, legacy_key
+
+
+def seen_state(
+    seen: dict,
+    *,
+    v2_key: str,
+    legacy_key: str,
+    generated: str,
+    baseline_run: bool,
+) -> tuple[bool, str]:
+    """Dual-read old/new seen IDs so identity migration cannot flood NEW."""
+    previously_seen = v2_key in seen or legacy_key in seen
+    first_seen = seen.get(v2_key) or seen.get(legacy_key) or generated
+    seen[v2_key] = first_seen
+    return (not baseline_run and not previously_seen), first_seen
+
+
+def event_shell(
+    row: dict,
+    *,
+    event_id: str,
+    category: str,
+    event_type: str,
+    start: str,
+    end: str,
+    first_seen: str,
+    is_new: bool,
+    decision: dict,
+    latitude: float | None,
+    longitude: float | None,
+    source_dataset: str,
+    source_event_id: str,
+) -> dict:
+    map_ready = decision["map_eligibility"] == "MAP_READY"
+    return {
+        "schema_version": "1.1",
+        "id": event_id,
+        "title": row.get("title") or "NYC event",
+        "category": category,
+        "event_type": event_type,
+        "start_date_time": row.get("start_date_time"),
+        "end_date_time": row.get("end_date_time"),
+        "start_date": start,
+        "end_date": end,
+        "multi_day": end > start,
+        "is_past": end < date.today().isoformat(),
+        "first_seen_utc": first_seen,
+        "is_new": is_new,
+        "timezone": row.get("timezone") or "America/New_York",
+        "borough": row.get("borough"),
+        "location": row.get("display_location") or row.get("location"),
+        "street_closure_type": row.get("street_closure_type"),
+        "latitude": latitude if map_ready else None,
+        "longitude": longitude if map_ready else None,
+        "source": {
+            "dataset": source_dataset,
+            "source_event_id": source_event_id,
+        },
+        "nycif": {
+            "coordinate_status": "map_ready" if map_ready else "list_only",
+            "map_eligibility_state": decision["map_eligibility"],
+            "certified_pin": bool(decision["exact_pin_eligible"]),
+            "geometry_valid": bool(decision.get("geometry_valid")),
+            "location_reason_code": decision.get("reason_code"),
+        },
+    }
+
+
 def main() -> int:
     generated = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
     today = date.today()
     floor_day = (today - timedelta(days=PAST_WINDOW_DAYS)).isoformat()
-    today_iso = today.isoformat()
 
     staged = load_json(STAGED, {})
     rows = staged.get("events") if isinstance(staged, dict) else (staged or [])
 
     seen = load_json(SEEN_INDEX, {})
-    # "New" means an event_id we had never tracked before THIS run — a permit
-    # that arrived since the last refresh. `known` is the id set as of run start;
-    # anything outside it is new. A first-ever build (empty index) is a baseline:
-    # stamp every id but flag nothing new, so the admin panel isn't flooded with
-    # 30k false positives. Real deltas surface from the second run onward.
-    known = set(seen.keys())
     baseline_run = not seen
-    events, list_only = [], []
-    by_cat, by_type, new_events = Counter(), Counter(), []
+    events: list[dict] = []
+    list_only: list[dict] = []
+    by_cat: Counter = Counter()
+    by_type: Counter = Counter()
+    eligibility_counts: Counter = Counter()
+    reason_counts: Counter = Counter()
+    new_events: list[dict] = []
     dropped_old = 0
+    ambiguous_identity_count = 0
 
     for r in rows:
         start = day_of(r.get("start_date_time"))
         end = day_of(r.get("end_date_time")) or start
         if not start:
             continue
-        if end < floor_day:  # older than the rolling past window
+        if end < floor_day:
             dropped_old += 1
             continue
 
-        # Each staged row is a single-DAY instance of a permit (a 30-day permit
-        # appears as 30 rows sharing one permit id). Key per-instance by
-        # permit-id@start-day so ids are unique and the seen-index tracks each
-        # day-instance, matching the discovery feed's @date convention.
         permit_id = str(r.get("id") or f"{r.get('source_dataset')}:{r.get('source_event_id')}")
-        eid = f"{permit_id}@{start}"
-        is_new = (not baseline_run) and (eid not in known)
-        first_seen = seen.get(eid) or generated
-        seen[eid] = first_seen
+        v2_key, legacy_key = occurrence_tracking_keys(r, legacy_permit_id=permit_id, start_day=start)
+        if v2_key.endswith("@identity_ambiguous"):
+            ambiguous_identity_count += 1
+        is_new, first_seen = seen_state(
+            seen,
+            v2_key=v2_key,
+            legacy_key=legacy_key,
+            generated=generated,
+            baseline_run=baseline_run,
+        )
 
         etype = r.get("event_type") or "Special Event"
         category = category_for(r)
-        lat, lng = r.get("lat"), r.get("lng")
-        mapped = valid_coord(lat, lng)
+        decision, latitude, longitude = semantic_location(r, lat_key="lat", lng_key="lng")
+        eligibility_counts[decision["map_eligibility"]] += 1
+        reason_counts[str(decision.get("reason_code") or "UNKNOWN")] += 1
 
-        event = {
-            "schema_version": "1.0",
-            "id": eid,
-            "title": r.get("title") or "NYC event",
-            "category": category,
-            "event_type": etype,
-            "start_date_time": r.get("start_date_time"),
-            "end_date_time": r.get("end_date_time"),
-            "start_date": start,
-            "end_date": end,
-            "multi_day": end > start,
-            "is_past": end < today_iso,
-            "first_seen_utc": first_seen,
-            "is_new": is_new,
-            "timezone": "America/New_York",
-            "borough": r.get("borough"),
-            "location": r.get("display_location") or r.get("location"),
-            "street_closure_type": r.get("street_closure_type"),
-            "latitude": float(lat) if mapped else None,
-            "longitude": float(lng) if mapped else None,
-            "source": {
-                "dataset": r.get("source_dataset") or "tvpp-9vvx",
-                "source_event_id": str(r.get("source_event_id") or ""),
-            },
-            "nycif": {
-                "coordinate_status": "map_ready" if mapped else "list_only",
-                "certified_pin": bool(mapped),
-            },
-        }
+        event = event_shell(
+            r,
+            event_id=v2_key,
+            category=category,
+            event_type=etype,
+            start=start,
+            end=end,
+            first_seen=first_seen,
+            is_new=is_new,
+            decision=decision,
+            latitude=latitude,
+            longitude=longitude,
+            source_dataset=str(r.get("source_dataset") or "tvpp-9vvx"),
+            source_event_id=str(r.get("source_event_id") or ""),
+        )
         by_type[etype] += 1
         by_cat[category] += 1
-        (events if mapped else list_only).append(event)
+        (events if decision["map_eligibility"] == "MAP_READY" else list_only).append(event)
         if is_new:
-            new_events.append({k: event[k] for k in
-                               ("id", "title", "category", "event_type",
-                                "start_date", "end_date", "borough",
-                                "first_seen_utc")})
+            new_events.append({k: event[k] for k in (
+                "id", "title", "category", "event_type", "start_date", "end_date", "borough", "first_seen_utc"
+            )})
 
-    # Fold in the street-festivals feed when present. The staged snapshot is
-    # sports-heavy and drops the multi-day Street Festival / feast / marquee
-    # permits (Giglio feast, FIFA House) that live in build_street_festivals_feed
-    # output. Union by source_event_id so nothing double-counts; those rows are
-    # already geocoded + NYC-certified by that builder.
-    have_ids = {e["source"]["source_event_id"] for e in events + list_only
-                if e["source"]["source_event_id"]}
+    # Fold the street-festivals projection only when its evidence independently
+    # passes the same semantic eligibility authority. Union is still source-ID
+    # scoped because this projection represents the same permit family; V2 IDs
+    # are used for the seen/new tracker.
+    have_ids = {
+        e["source"]["source_event_id"]
+        for e in events + list_only
+        if e["source"]["source_event_id"]
+    }
     fest = load_json(DATA / "nycif_street_festivals_feed.json", {})
     for r in (fest.get("events") if isinstance(fest, dict) else []) or []:
-        sid = str((r.get("source") or {}).get("source_event_id")
-                  or r.get("event_id") or "")
+        sid = str((r.get("source") or {}).get("source_event_id") or r.get("event_id") or "")
         if not sid or sid in have_ids:
             continue
-        start = day_of(r.get("start_date_time")) or r.get("start_date")
-        end = day_of(r.get("end_date_time")) or r.get("end_date") or start
+        start = day_of(r.get("start_date_time")) or str(r.get("start_date") or "")
+        end = day_of(r.get("end_date_time")) or str(r.get("end_date") or start)
         if not start or end < floor_day:
             continue
-        eid = r.get("id") or f"sapo:{sid}"
-        fold_is_new = (not baseline_run) and (eid not in known)
-        first_seen = seen.get(eid) or generated
-        seen[eid] = first_seen
-        mapped = r.get("coordinate_status") == "map_ready" and valid_coord(
-            r.get("latitude"), r.get("longitude"))
+
+        source_dataset = str((r.get("source") or {}).get("dataset") or "tvpp-9vvx")
+        identity_row = dict(r)
+        identity_row["source_dataset"] = source_dataset
+        identity_row["source_event_id"] = sid
+        permit_id = str(r.get("id") or f"{source_dataset}:{sid}")
+        v2_key, legacy_key = occurrence_tracking_keys(identity_row, legacy_permit_id=permit_id, start_day=start)
+        if v2_key.endswith("@identity_ambiguous"):
+            ambiguous_identity_count += 1
+        fold_is_new, first_seen = seen_state(
+            seen,
+            v2_key=v2_key,
+            legacy_key=legacy_key,
+            generated=generated,
+            baseline_run=baseline_run,
+        )
+
+        decision, latitude, longitude = semantic_location(r, lat_key="latitude", lng_key="longitude")
+        eligibility_counts[decision["map_eligibility"]] += 1
+        reason_counts[str(decision.get("reason_code") or "UNKNOWN")] += 1
         category = category_for(r)
-        event = {
-            "schema_version": "1.0", "id": eid,
-            "title": r.get("title") or "NYC event", "category": category,
-            "event_type": r.get("event_type") or "Street Festival",
-            "start_date_time": r.get("start_date_time"),
-            "end_date_time": r.get("end_date_time"),
-            "start_date": start, "end_date": end, "multi_day": end > start,
-            "is_past": end < today_iso, "first_seen_utc": first_seen,
-            "is_new": fold_is_new,
-            "timezone": "America/New_York", "borough": r.get("borough"),
-            "location": r.get("display_location") or r.get("location"),
-            "street_closure_type": r.get("street_closure_type"),
-            "latitude": r.get("latitude") if mapped else None,
-            "longitude": r.get("longitude") if mapped else None,
-            "source": {"dataset": "tvpp-9vvx", "source_event_id": sid},
-            "nycif": {"coordinate_status": "map_ready" if mapped else "list_only",
-                      "certified_pin": bool(mapped)},
-        }
-        by_type[event["event_type"]] += 1
+        etype = r.get("event_type") or "Street Festival"
+        event = event_shell(
+            r,
+            event_id=v2_key,
+            category=category,
+            event_type=etype,
+            start=start,
+            end=end,
+            first_seen=first_seen,
+            is_new=fold_is_new,
+            decision=decision,
+            latitude=latitude,
+            longitude=longitude,
+            source_dataset=source_dataset,
+            source_event_id=sid,
+        )
+        by_type[etype] += 1
         by_cat[category] += 1
         have_ids.add(sid)
-        (events if mapped else list_only).append(event)
+        (events if decision["map_eligibility"] == "MAP_READY" else list_only).append(event)
         if fold_is_new:
-            new_events.append({k: event[k] for k in
-                               ("id", "title", "category", "event_type",
-                                "start_date", "end_date", "borough",
-                                "first_seen_utc")})
+            new_events.append({k: event[k] for k in (
+                "id", "title", "category", "event_type", "start_date", "end_date", "borough", "first_seen_utc"
+            )})
 
     all_events = events + list_only
     save_json(SEEN_INDEX, seen)
 
-    # Category coverage: which lanes have data (so the frontend can gray out the
-    # empty ones) and which NYC permit type feeds each. The frontend already
-    # loads the full event set via the discovery "approved" pages, so we do NOT
-    # emit a second copy of every event here — only the diff + coverage.
     coverage = {
-        cat: {"count": by_cat.get(cat, 0),
-              "event_types": sorted(t for t in by_type
-                                    if category_for({"event_type": t}) == cat)}
+        cat: {
+            "count": by_cat.get(cat, 0),
+            "event_types": sorted(t for t in by_type if category_for({"event_type": t}) == cat),
+        }
         for cat in sorted(set(by_cat) | set(TARGET_CATEGORIES))
     }
     save_json(OUT_NEW, {
         "generated_at_utc": generated,
-        "new_definition": "event_id not tracked before this refresh run",
+        "identity_contract": "OccurrenceIdentityV2",
+        "new_definition": "canonical v2 occurrence identity absent from previous tracked index",
+        "legacy_seen_index_dual_read": True,
         "baseline_run": baseline_run,
-        "window": {"past_floor": floor_day, "today": today_iso},
+        "window": {"past_floor": floor_day, "today": today.isoformat()},
         "total_tracked": len(all_events),
         "new_this_run": len(new_events),
+        "identity_ambiguous": ambiguous_identity_count,
         "events": sorted(new_events, key=lambda e: e["start_date"]),
     })
     save_json(OUT_REPORT, {
@@ -306,26 +376,36 @@ def main() -> int:
         "kept": len(all_events),
         "dropped_older_than_window": dropped_old,
         "map_ready": len(events),
-        "list_only": len(list_only),
+        "list_only_or_review": len(list_only),
+        "map_eligibility_counts": dict(eligibility_counts),
+        "map_eligibility_reason_counts": dict(reason_counts),
+        "identity_ambiguous": ambiguous_identity_count,
+        "unsupported_exact_pin_promotions": sum(
+            1 for event in all_events
+            if event["nycif"].get("certified_pin") and event["nycif"].get("map_eligibility_state") != "MAP_READY"
+        ),
         "multi_day": sum(1 for e in all_events if e["multi_day"]),
         "past_in_window": sum(1 for e in all_events if e["is_past"]),
         "new_this_run": len(new_events),
         "category_counts": dict(by_cat),
         "event_type_counts": dict(by_type),
         "category_coverage": coverage,
-        "qa_pass": len(all_events) > 0,
+        "qa_pass": len(all_events) > 0 and all(
+            not e["nycif"].get("certified_pin") or e["nycif"].get("map_eligibility_state") == "MAP_READY"
+            for e in all_events
+        ),
     })
     print(json.dumps({
-        "source_rows": len(rows), "kept": len(all_events),
-        "map_ready": len(events), "list_only": len(list_only),
-        "multi_day": payload_multi(all_events), "new_this_run": len(new_events),
-        "categories_with_data": len(by_cat), "event_types": len(by_type),
+        "source_rows": len(rows),
+        "kept": len(all_events),
+        "map_ready": len(events),
+        "list_only_or_review": len(list_only),
+        "identity_ambiguous": ambiguous_identity_count,
+        "new_this_run": len(new_events),
+        "categories_with_data": len(by_cat),
+        "event_types": len(by_type),
     }, indent=1))
     return 0
-
-
-def payload_multi(events) -> int:
-    return sum(1 for e in events if e["multi_day"])
 
 
 if __name__ == "__main__":
