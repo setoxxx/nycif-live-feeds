@@ -5,6 +5,11 @@ Source identity and occurrence identity are separate. V2 occurrence identity
 uses the exact source occurrence start whenever the source provides it. The
 legacy date-key helpers remain temporarily for migration compatibility; new
 cross-lane work must use occurrence_key_v2().
+
+Rejection decisions are also occurrence-aware. A legacy rejection is never
+silently widened to all recurring occurrences: exact-start evidence defaults to
+EXACT_START scope, date-only evidence defaults to DAY scope, and source-wide
+suppression requires an explicit SOURCE_ALL_OCCURRENCES scope.
 """
 
 from __future__ import annotations
@@ -15,6 +20,16 @@ from typing import Any
 SourceKey = tuple[str, str]
 OccurrenceKey = tuple[str, str, str]
 OccurrenceKeyV2 = tuple[str, str, str]
+OccurrenceDayKey = tuple[str, str, str]
+
+REJECTION_SCOPE_EXACT_START = "EXACT_START"
+REJECTION_SCOPE_DAY = "DAY"
+REJECTION_SCOPE_SOURCE_ALL = "SOURCE_ALL_OCCURRENCES"
+VALID_REJECTION_SCOPES = {
+    REJECTION_SCOPE_EXACT_START,
+    REJECTION_SCOPE_DAY,
+    REJECTION_SCOPE_SOURCE_ALL,
+}
 
 
 def normalize_date(value: Any) -> str | None:
@@ -25,10 +40,11 @@ def normalize_date(value: Any) -> str | None:
 
 
 def normalize_occurrence_start(value: Any) -> str | None:
-    """Normalize an exact source start without inventing a time.
+    """Normalize source occurrence start without inventing source precision.
 
-    ISO-like timestamps retain date/time precision. Date-only values remain
-    date-only and are explicitly classified as DAY precision by identity_precision().
+    ISO-like timestamps retain exact start precision. Hour/minute timestamps are
+    normalized to ``:00`` seconds so equivalent source encodings compare equal.
+    Date-only values remain date-only and are explicitly classified as DAY.
     """
     if value is None:
         return None
@@ -44,12 +60,10 @@ def normalize_occurrence_start(value: Any) -> str | None:
     day, hour, minute, second, zone = iso.groups()
     if hour is None or minute is None:
         return day
-    normalized = f"{day}T{hour}:{minute}"
-    if second is not None:
-        normalized += f":{second}"
-    if zone:
-        normalized += zone
-    return normalized
+    second = second or "00"
+    if zone and zone != "Z" and re.fullmatch(r"[+-]\d{4}", zone):
+        zone = f"{zone[:3]}:{zone[3:]}"
+    return f"{day}T{hour}:{minute}:{second}{zone or ''}"
 
 
 def source_key(row: dict[str, Any]) -> SourceKey:
@@ -105,12 +119,24 @@ def occurrence_key_v2(row: dict[str, Any]) -> OccurrenceKeyV2:
 
 
 def occurrence_key_v2_set(rows: list[dict[str, Any]]) -> set[OccurrenceKeyV2]:
-    return {occurrence_key_v2(row) for row in rows}
+    return {occurrence_key_v2(row) for row in rows if identity_precision(row) != "AMBIGUOUS"}
+
+
+def occurrence_key_v2_is_ambiguous(row: dict[str, Any]) -> bool:
+    return identity_precision(row) == "AMBIGUOUS"
 
 
 def occurrence_date(row: dict[str, Any]) -> str | None:
     start = occurrence_start(row)
     return normalize_date(start)
+
+
+def occurrence_day_key(row: dict[str, Any]) -> OccurrenceDayKey | None:
+    dataset, source_event_id = source_key(row)
+    day = occurrence_date(row)
+    if not day:
+        return None
+    return dataset, source_event_id, day
 
 
 def occurrence_key(row: dict[str, Any]) -> OccurrenceKey:
@@ -125,6 +151,68 @@ def source_key_set(rows: list[dict[str, Any]]) -> set[SourceKey]:
 
 def occurrence_key_set(rows: list[dict[str, Any]]) -> set[OccurrenceKey]:
     return {occurrence_key(row) for row in rows}
+
+
+def rejection_scope(row: dict[str, Any]) -> str | None:
+    """Return explicit/narrow rejection scope without widening legacy intent."""
+    for field in ("rejection_scope", "decision_scope", "review_scope"):
+        explicit = str(row.get(field) or "").strip().upper()
+        if explicit in VALID_REJECTION_SCOPES:
+            return explicit
+
+    precision = identity_precision(row)
+    if precision == "EXACT_START":
+        return REJECTION_SCOPE_EXACT_START
+    if precision == "DAY":
+        return REJECTION_SCOPE_DAY
+    return None
+
+
+def is_rejected_decision(row: dict[str, Any]) -> bool:
+    disposition = str(row.get("disposition") or "").lower()
+    reason = str(row.get("reason") or row.get("approval_decision_reason") or "").lower()
+    manual = str(row.get("manual_review_status") or "").lower()
+    return disposition in {"rejected", "drop", "invalid"} or "reject" in reason or manual == "rejected"
+
+
+def rejection_identity_sets(
+    rows: list[dict[str, Any]],
+) -> tuple[set[OccurrenceKeyV2], set[OccurrenceDayKey], set[SourceKey]]:
+    """Build exact/day/source rejection sets with narrow-by-default semantics."""
+    exact: set[OccurrenceKeyV2] = set()
+    days: set[OccurrenceDayKey] = set()
+    sources: set[SourceKey] = set()
+    for row in rows:
+        if not is_rejected_decision(row):
+            continue
+        scope = rejection_scope(row)
+        if scope == REJECTION_SCOPE_SOURCE_ALL:
+            sources.add(source_key(row))
+            continue
+        if scope == REJECTION_SCOPE_EXACT_START and identity_precision(row) == "EXACT_START":
+            exact.add(occurrence_key_v2(row))
+            continue
+        if scope == REJECTION_SCOPE_DAY:
+            day_key = occurrence_day_key(row)
+            if day_key is not None:
+                days.add(day_key)
+    return exact, days, sources
+
+
+def rejection_matches(
+    row: dict[str, Any],
+    *,
+    rejected_exact: set[OccurrenceKeyV2],
+    rejected_days: set[OccurrenceDayKey],
+    rejected_sources: set[SourceKey],
+) -> bool:
+    """Apply rejection precedence: exact start, day, explicit source-wide."""
+    if identity_precision(row) != "AMBIGUOUS" and occurrence_key_v2(row) in rejected_exact:
+        return True
+    day_key = occurrence_day_key(row)
+    if day_key is not None and day_key in rejected_days:
+        return True
+    return source_key(row) in rejected_sources
 
 
 def overlaps_date_window(row: dict[str, Any], start: str, end: str) -> bool:
