@@ -10,6 +10,7 @@ on:
       - 'scripts/build_semantic_live_intake.py'
       - 'scripts/project_events_discovery_v03.py'
       - 'scripts/build_news_desk_reader_safe.py'
+      - 'scripts/build_maplibre_reader_safe_v03.py'
       - '.github/workflows/live-source-v3-smoke.yml'
   workflow_dispatch:
 
@@ -47,6 +48,9 @@ jobs:
           python3 scripts/run_daily_people_facing_desk_sync.py --skip-network-sync
           python3 scripts/build_news_desk_reader_safe.py
 
+      - name: Build canonical MapLibre reader-safe source
+        run: python3 scripts/build_maplibre_reader_safe_v03.py
+
       - name: Verify live acquisition and zero pin regressions
         run: |
           python3 - <<'PY'
@@ -61,6 +65,7 @@ jobs:
           parks_report = json.loads(Path('data/nyc_parks_bigapps_events_sync_report.json').read_text())
           v3 = json.loads(Path('data/events_discovery_v3_authority_report.json').read_text())
           news = json.loads(Path('data/reader-safe/news-desk-status-v02.json').read_text())
+          map_status = json.loads(Path('data/reader-safe/national-map-events-v03-status.json').read_text())
           staged = json.loads(Path('data/staged_live_manifest.json').read_text())
 
           cal_rows = cal if isinstance(cal, list) else cal.get('events', [])
@@ -75,15 +80,31 @@ jobs:
           assert staged.get('coordinates_without_exact_evidence_promoted') == 0, staged
           assert staged.get('all_staged_rows_certified') is True, staged
           assert v3.get('qa_pass') is True, v3
+          assert v3.get('raw_accounting_pass') is True, v3
           assert v3.get('silent_identity_loss') == 0, v3
           assert v3.get('duplicate_exact_occurrences') == 0, v3
           assert v3.get('unsupported_exact_pin_count') == 0, v3
+          assert v3.get('implicit_source_all_count') == 0, v3
           assert v3.get('legacy_occurrence_authority_count') == 0, v3
           assert v3.get('legacy_coordinate_authority_count') == 0, v3
           assert news.get('unsupported_exact_pin_count') == 0, news
           assert news.get('browser_raw_repository_required') is False, news
+          assert map_status.get('qa_pass') is True, map_status
+          assert map_status.get('unsupported_marker_count') == 0, map_status
+          assert map_status.get('wrong_authority_marker_count') == 0, map_status
+          assert map_status.get('location_evidence_failure_count') == 0, map_status
+          assert map_status.get('borough_contradiction_count') == 0, map_status
+          assert map_status.get('duplicate_exact_occurrence_count') == 0, map_status
+          assert map_status.get('general_area_exact_geometry_count') == 0, map_status
 
           print(json.dumps({
+              'generated_at_utc': {
+                  'permitted_events': permit_report.get('generated_at_utc'),
+                  'citywide_calendar': cal_report.get('generated_at_utc'),
+                  'parks_bigapps': parks_report.get('generated_at_utc'),
+                  'news_desk': news.get('generated_at_utc'),
+                  'maplibre': map_status.get('generated_at_utc'),
+              },
               'permitted_events': len(raw),
               'citywide_calendar': len(cal_rows),
               'parks_bigapps': len(parks_rows),
@@ -91,5 +112,10 @@ jobs:
               'canonical_records': v3.get('accepted_records'),
               'news_desk_money': news.get('money_emitted_rows'),
               'news_desk_viral': news.get('viral_emitted_rows'),
+              'map_ready': map_status.get('map_state_counts', {}).get('MAP_READY'),
+              'general_area': map_status.get('map_state_counts', {}).get('GENERAL_AREA'),
+              'review_required': map_status.get('map_state_counts', {}).get('REVIEW_REQUIRED'),
+              'list_only': map_status.get('map_state_counts', {}).get('LIST_ONLY'),
+              'exact_markers': map_status.get('exact_marker_count'),
           }, sort_keys=True))
           PY
