@@ -1,9 +1,15 @@
 from scripts.projector_v2_authority import (
     build_rejection_contract,
+    classify_occurrence_intake,
     occurrence_identity_v2,
+    occurrence_identity_v2_set,
     rejection_applies,
     semantic_map_decision,
 )
+
+
+SEASON_START = "2026-07-14"
+SEASON_END = "2026-12-27"
 
 
 def exact_row(start="2026-08-07T10:00:00-04:00"):
@@ -20,6 +26,16 @@ def exact_row(start="2026-08-07T10:00:00-04:00"):
             "source_provenance": "fixture",
         },
     }
+
+
+def classify(row, represented=(), rejected=()):
+    return classify_occurrence_intake(
+        row,
+        represented_occurrences=set(represented),
+        rejection_contract=build_rejection_contract(list(rejected)),
+        season_start=SEASON_START,
+        season_end=SEASON_END,
+    )
 
 
 def test_same_day_different_exact_start_are_distinct():
@@ -113,3 +129,63 @@ def test_valid_shared_exact_is_map_ready():
     assert result["certified_pin"] is True
     assert result["latitude"] == 40.7128
     assert result["longitude"] == -74.0060
+
+
+def test_intake_exact_duplicate_is_documented_duplicate():
+    row = exact_row()
+    represented = occurrence_identity_v2_set([row])
+    assert classify(row, represented=represented) == "documented_duplicate"
+
+
+def test_intake_same_day_sibling_is_not_duplicate():
+    represented = occurrence_identity_v2_set([exact_row("2026-08-07T10:00:00-04:00")])
+    sibling = exact_row("2026-08-07T11:00:00-04:00")
+    assert classify(sibling, represented=represented) == "accepted_review_supplemental"
+
+
+def test_intake_exact_rejection_class_is_explicit():
+    row = exact_row("2026-08-07T10:00:00-04:00")
+    rejected = row | {"disposition": "rejected", "rejection_scope": "EXACT_START"}
+    assert classify(row, rejected=[rejected]) == "rejected_exact"
+
+
+def test_intake_day_rejection_class_is_explicit():
+    row = exact_row("2026-08-07T10:00:00-04:00")
+    rejected = {
+        "source_dataset": "test",
+        "source_event_id": "evt-1",
+        "date": "2026-08-07",
+        "disposition": "rejected",
+        "rejection_scope": "DAY",
+    }
+    assert classify(row, rejected=[rejected]) == "rejected_day"
+    assert classify(exact_row("2026-08-08T10:00:00-04:00"), rejected=[rejected]) == "accepted_review_supplemental"
+
+
+def test_intake_source_all_class_requires_explicit_scope():
+    rejected = {
+        "source_dataset": "test",
+        "source_event_id": "evt-1",
+        "disposition": "rejected",
+        "rejection_scope": "SOURCE_ALL_OCCURRENCES",
+    }
+    assert classify(exact_row(), rejected=[rejected]) == "rejected_source_all"
+
+
+def test_intake_ambiguous_row_is_preserved_for_review():
+    row = {"source_dataset": "test", "source_event_id": "evt-2"}
+    assert classify(row) == "outside_window"
+
+
+def test_intake_ambiguous_in_window_row_is_review_not_source_wide():
+    row = {
+        "source_dataset": "test",
+        "source_event_id": "evt-2",
+        "start_date_time": "2026-08-07",
+    }
+    assert occurrence_identity_v2(row)["precision"] == "DAY"
+    assert classify(row) == "accepted_review_supplemental"
+
+
+def test_intake_outside_window_is_explicit():
+    assert classify(exact_row("2027-01-10T10:00:00-05:00")) == "outside_window"
