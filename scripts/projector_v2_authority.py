@@ -20,10 +20,12 @@ if str(SCRIPTS_DIR) not in sys.path:
 
 from occurrence_identity_contract import (  # noqa: E402
     identity_precision,
+    occurrence_day_key,
     occurrence_key_v2,
     occurrence_key_v2_set,
+    overlaps_date_window,
     rejection_identity_sets,
-    rejection_matches,
+    source_key,
 )
 from pin_integrity import evaluate_map_eligibility  # noqa: E402
 
@@ -59,13 +61,53 @@ def build_rejection_contract(rows: Iterable[dict[str, Any]]) -> RejectionContrac
     )
 
 
+def rejection_scope_applied(row: dict[str, Any], contract: RejectionContract) -> str | None:
+    """Return the narrow canonical rejection scope that actually matched."""
+    identity = occurrence_identity_v2(row)
+    if not identity["identity_ambiguous"] and identity["key"] in contract.exact:
+        return "EXACT_START"
+    day_key = occurrence_day_key(row)
+    if day_key is not None and day_key in contract.days:
+        return "DAY"
+    if source_key(row) in contract.sources:
+        return "SOURCE_ALL_OCCURRENCES"
+    return None
+
+
 def rejection_applies(row: dict[str, Any], contract: RejectionContract) -> bool:
-    return rejection_matches(
-        row,
-        rejected_exact=set(contract.exact),
-        rejected_days=set(contract.days),
-        rejected_sources=set(contract.sources),
-    )
+    return rejection_scope_applied(row, contract) is not None
+
+
+def classify_occurrence_intake(
+    row: dict[str, Any],
+    *,
+    represented_occurrences: set[tuple[str, str, str]],
+    rejection_contract: RejectionContract,
+    season_start: str,
+    season_end: str,
+) -> str:
+    """Assign exactly one pre-build accounting class to an intake row.
+
+    Ambiguous identities are never deduped by source/day. Explicit source-wide
+    rejection still applies, but otherwise ambiguity is preserved for review.
+    """
+    identity = occurrence_identity_v2(row)
+    if not identity["identity_ambiguous"] and identity["key"] in represented_occurrences:
+        return "documented_duplicate"
+
+    rejection_scope = rejection_scope_applied(row, rejection_contract)
+    if rejection_scope == "EXACT_START":
+        return "rejected_exact"
+    if rejection_scope == "DAY":
+        return "rejected_day"
+    if rejection_scope == "SOURCE_ALL_OCCURRENCES":
+        return "rejected_source_all"
+
+    if not overlaps_date_window(row, season_start, season_end):
+        return "outside_window"
+    if identity["identity_ambiguous"]:
+        return "identity_ambiguous_review"
+    return "accepted_review_supplemental"
 
 
 def general_area_label(row: dict[str, Any]) -> str | None:
