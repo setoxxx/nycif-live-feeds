@@ -1,0 +1,95 @@
+{
+  "schema_version": "nycif-projector-v2-patch-execution-handoff-v1",
+  "repository": "setoxxx/nycif-live-feeds",
+  "pull_request": 384,
+  "branch": "fix/projector-v2-semantic-cutover",
+  "verified_pre_patch_head": "f21fef1aeaf2a0ce02d5686bc7fafa74d3943d4f",
+  "target_file": "scripts/project_events_discovery_v02.py",
+  "target_file_mutated_by_this_handoff": false,
+  "editor_requirement": "true patch-level repository editor or Codex repository workspace",
+  "forbidden_edit_methods": [
+    "whole-file replacement",
+    "partial-file reconstruction",
+    "copy-paste reconstruction",
+    "unrelated reformatting"
+  ],
+  "pre_patch_required_green_checks": {
+    "Projector V2 Authority QA": "PASS",
+    "Schema v1 PR QA": "PASS",
+    "Discovery Taxonomy v02 QA": "PASS"
+  },
+  "shared_authority": {
+    "occurrence_identity": "OccurrenceIdentityV2",
+    "rejection_scopes": ["EXACT_START", "DAY", "SOURCE_ALL_OCCURRENCES"],
+    "ambiguous_identity_rule": "must never widen implicitly",
+    "map_decision": "semantic_map_decision"
+  },
+  "required_target_seams": [
+    "import shared V2 semantic/occurrence authority using established import convention",
+    "replace legacy occurrence identity authority with OccurrenceIdentityV2",
+    "enforce EXACT_START rejection scope",
+    "enforce DAY rejection scope",
+    "permit SOURCE_ALL_OCCURRENCES only when explicit",
+    "classify every raw row into exactly one approved intake bucket",
+    "carry V2 occurrence reference/precision into projected records",
+    "route public location publication through semantic_map_decision",
+    "strip exact public coordinates/address/venue/directions target for GENERAL_AREA",
+    "prevent exact public location for REVIEW_REQUIRED and LIST_ONLY",
+    "emit markers only for MAP_READY plus certified exact/public standalone eligibility",
+    "update find_samples and accessibility consumers to use semantic disposition",
+    "add strict zero-loss counters and assertion"
+  ],
+  "raw_intake_buckets": [
+    "documented_duplicate",
+    "rejected_exact",
+    "rejected_day",
+    "rejected_source_all",
+    "outside_window",
+    "identity_ambiguous_review",
+    "accepted_review_supplemental",
+    "invalid"
+  ],
+  "reconciliation_equation": "raw_rows = documented_duplicate + rejected_exact + rejected_day + rejected_source_all + outside_window + identity_ambiguous_review + accepted_review_supplemental + invalid",
+  "required_zero_counters": {
+    "silent_identity_loss": 0,
+    "implicit_source_all_count": 0,
+    "unsupported_exact_pin_count": 0,
+    "legacy_occurrence_authority_count": 0,
+    "legacy_coordinate_authority_count": 0
+  },
+  "required_integration_tests": [
+    "same source/day different exact starts remain distinct",
+    "same exact start deterministic",
+    "EXACT_START rejection preserves sibling occurrence",
+    "DAY rejection affects only source/day",
+    "SOURCE_ALL requires explicit source-wide scope",
+    "AMBIGUOUS does not widen",
+    "GENERAL_AREA strips exact public location",
+    "REVIEW_REQUIRED exposes no exact public location",
+    "LIST_ONLY exposes no exact public location",
+    "MAP_READY requires certified exact authority for marker emission",
+    "all eight intake buckets reconcile exactly",
+    "all five zero counters equal zero"
+  ],
+  "post_patch_required_checks": [
+    "Projector V2 Authority QA",
+    "Projector integration QA",
+    "Schema v1 PR QA",
+    "Discovery Taxonomy v02 QA",
+    "Occurrence Identity Enforcement when triggered",
+    "Incoming Data Residual when triggered",
+    "Daily Refresh Reliability when triggered",
+    "Sonar Quality Gate"
+  ],
+  "post_patch_security_requirements": {
+    "sonar_quality_gate": "PASS",
+    "new_security_hotspots": 0
+  },
+  "completion_rule": "Do not call the splice complete until the target file itself is patched by a safe patch mechanism, strict reconciliation passes, all five zero counters are zero, and all required exact-head checks are green.",
+  "merge_authorized": false,
+  "production_refresh_authorized": false,
+  "wordpress_change_authorized": false,
+  "hosting_change_authorized": false,
+  "repository_visibility_change_authorized": false,
+  "destructive_cleanup_authorized": false
+}
