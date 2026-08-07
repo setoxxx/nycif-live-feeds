@@ -172,7 +172,7 @@ def main() -> int:
     try:
         source_rows = fetch_events()
         normalized = [normalize_event_item(row) for row in source_rows]
-        fetch_mode = "live_open_data"
+        fetch_mode = "live"
     except Exception as exc:
         source_rows = []
         normalized = []
@@ -202,6 +202,7 @@ def main() -> int:
         "generated_at_utc": generated_at,
         "source_url": EVENTS_URL,
         "source_page": SOURCE_PAGE,
+        "source_transport": "nyc_open_data_current_14_day",
         "fetch_mode": fetch_mode,
         "events": normalized,
     }
@@ -209,6 +210,7 @@ def main() -> int:
         "generated_at_utc": generated_at,
         "qa_pass": qa_pass,
         "fetch_mode": fetch_mode,
+        "source_transport": "nyc_open_data_current_14_day",
         "source_url": EVENTS_URL,
         "source_page": SOURCE_PAGE,
         "source_rows_received": len(source_rows),
