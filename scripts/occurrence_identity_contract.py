@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Occurrence-identity helpers for Enigma discovery intake.
 
-These helpers keep source-level identity separate from dated occurrence identity.
-Recurring event feeds must use occurrence keys for representation checks so a
-single source ID cannot suppress another valid date.
+Source identity and occurrence identity are separate. V2 occurrence identity
+uses the exact source occurrence start whenever the source provides it. The
+legacy date-key helpers remain temporarily for migration compatibility; new
+cross-lane work must use occurrence_key_v2().
 """
 
 from __future__ import annotations
@@ -13,6 +14,7 @@ from typing import Any
 
 SourceKey = tuple[str, str]
 OccurrenceKey = tuple[str, str, str]
+OccurrenceKeyV2 = tuple[str, str, str]
 
 
 def normalize_date(value: Any) -> str | None:
@@ -22,40 +24,97 @@ def normalize_date(value: Any) -> str | None:
     return match.group(1) if match else None
 
 
+def normalize_occurrence_start(value: Any) -> str | None:
+    """Normalize an exact source start without inventing a time.
+
+    ISO-like timestamps retain date/time precision. Date-only values remain
+    date-only and are explicitly classified as DAY precision by identity_precision().
+    """
+    if value is None:
+        return None
+    text = str(value).strip()
+    if not text:
+        return None
+    iso = re.match(
+        r"^(\d{4}-\d{2}-\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2})(?:\.\d+)?)?(Z|[+-]\d{2}:?\d{2})?)?",
+        text,
+    )
+    if not iso:
+        return None
+    day, hour, minute, second, zone = iso.groups()
+    if hour is None or minute is None:
+        return day
+    normalized = f"{day}T{hour}:{minute}"
+    if second is not None:
+        normalized += f":{second}"
+    if zone:
+        normalized += zone
+    return normalized
+
+
 def source_key(row: dict[str, Any]) -> SourceKey:
+    source = row.get("source") if isinstance(row.get("source"), dict) else {}
     dataset = str(
         row.get("source_dataset")
         or row.get("dataset")
-        or (row.get("source") or {}).get("dataset")
+        or source.get("dataset")
         or "nyc-open-data"
     ).strip()
     source_event_id = str(
         row.get("source_event_id")
         or row.get("event_id")
         or row.get("id")
-        or (row.get("source") or {}).get("source_event_id")
+        or source.get("source_event_id")
         or "missing"
     ).strip()
     return dataset, source_event_id
 
 
-def occurrence_date(row: dict[str, Any]) -> str | None:
+def occurrence_start(row: dict[str, Any]) -> str | None:
     for key in (
-        "event_date",
-        "date",
-        "start_date",
         "start_date_time",
+        "startDate",
         "start",
         "event_start_date",
+        "start_date",
+        "event_date",
+        "date",
     ):
-        day = normalize_date(row.get(key))
-        if day:
-            return day
+        value = normalize_occurrence_start(row.get(key))
+        if value:
+            return value
     nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
-    return normalize_date(nycif.get("event_date"))
+    for key in ("event_start", "start_date_time", "event_date"):
+        value = normalize_occurrence_start(nycif.get(key))
+        if value:
+            return value
+    return None
+
+
+def identity_precision(row: dict[str, Any]) -> str:
+    start = occurrence_start(row)
+    if start is None:
+        return "AMBIGUOUS"
+    return "EXACT_START" if "T" in start else "DAY"
+
+
+def occurrence_key_v2(row: dict[str, Any]) -> OccurrenceKeyV2:
+    dataset, source_event_id = source_key(row)
+    start = occurrence_start(row)
+    return dataset, source_event_id, start or "identity_ambiguous"
+
+
+def occurrence_key_v2_set(rows: list[dict[str, Any]]) -> set[OccurrenceKeyV2]:
+    return {occurrence_key_v2(row) for row in rows}
+
+
+def occurrence_date(row: dict[str, Any]) -> str | None:
+    start = occurrence_start(row)
+    return normalize_date(start)
 
 
 def occurrence_key(row: dict[str, Any]) -> OccurrenceKey:
+    """Legacy date-key identity retained only for controlled migration."""
     dataset, source_event_id = source_key(row)
     return dataset, source_event_id, occurrence_date(row) or "undated"
 
@@ -87,7 +146,7 @@ def classify_open_data_occurrence(
     season_end: str,
     matching_mode: str,
 ) -> str:
-    """Classify a raw Open Data row under source-level or occurrence-level matching."""
+    """Legacy migration classifier for source-level or date-level matching."""
     source = source_key(row)
     occurrence = occurrence_key(row)
 
