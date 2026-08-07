@@ -1,0 +1,95 @@
+name: Live Source V3 Smoke
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/sync_nyc_open_data.py'
+      - 'scripts/sync_nyc_citywide_events_calendar.py'
+      - 'scripts/sync_nyc_parks_bigapps_events.py'
+      - 'scripts/live_event_intake_refresh.py'
+      - 'scripts/build_semantic_live_intake.py'
+      - 'scripts/project_events_discovery_v03.py'
+      - 'scripts/build_news_desk_reader_safe.py'
+      - '.github/workflows/live-source-v3-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-source-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Fetch all official source families and build semantic permitted intake
+        env:
+          NYCIF_ALLOW_LIVE_GEOSEARCH: 'yes'
+        run: python3 scripts/live_event_intake_refresh.py
+
+      - name: Rebuild Calendar/Parks supplemental occurrences
+        run: python3 scripts/refresh_official_supplemental_occurrences.py
+
+      - name: Rebuild major classification inputs
+        run: python3 scripts/build_events_schema_v1_major.py
+
+      - name: Project canonical discovery with V3 authority
+        run: python3 scripts/project_events_discovery_v03.py
+
+      - name: Build News Desk operator and reader-safe data
+        run: |
+          python3 scripts/run_daily_people_facing_desk_sync.py --skip-network-sync
+          python3 scripts/build_news_desk_reader_safe.py
+
+      - name: Verify live acquisition and zero pin regressions
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          raw = json.loads(Path('data/raw_nyc_open_data_snapshot.json').read_text())
+          permit_report = json.loads(Path('data/live_sync_report.json').read_text())
+          cal = json.loads(Path('data/nyc_citywide_events_calendar_snapshot.json').read_text())
+          cal_report = json.loads(Path('data/nyc_citywide_events_calendar_sync_report.json').read_text())
+          parks = json.loads(Path('data/nyc_parks_bigapps_events_snapshot.json').read_text())
+          parks_report = json.loads(Path('data/nyc_parks_bigapps_events_sync_report.json').read_text())
+          v3 = json.loads(Path('data/events_discovery_v3_authority_report.json').read_text())
+          news = json.loads(Path('data/reader-safe/news-desk-status-v02.json').read_text())
+          staged = json.loads(Path('data/staged_live_manifest.json').read_text())
+
+          cal_rows = cal if isinstance(cal, list) else cal.get('events', [])
+          parks_rows = parks.get('events', []) if isinstance(parks, dict) else parks
+
+          assert isinstance(raw, list) and len(raw) > 0, 'Permitted Events live fetch empty'
+          assert permit_report.get('raw_rows_loaded') == len(raw), permit_report
+          assert cal_report.get('qa_pass') is True and len(cal_rows) > 0, cal_report
+          assert parks_report.get('qa_pass') is True and len(parks_rows) > 0, parks_report
+          assert parks_report.get('fetch_mode') == 'live', parks_report
+          assert staged.get('semantic_location_authority') is True, staged
+          assert staged.get('coordinates_without_exact_evidence_promoted') == 0, staged
+          assert staged.get('all_staged_rows_certified') is True, staged
+          assert v3.get('qa_pass') is True, v3
+          assert v3.get('silent_identity_loss') == 0, v3
+          assert v3.get('duplicate_exact_occurrences') == 0, v3
+          assert v3.get('unsupported_exact_pin_count') == 0, v3
+          assert v3.get('legacy_occurrence_authority_count') == 0, v3
+          assert v3.get('legacy_coordinate_authority_count') == 0, v3
+          assert news.get('unsupported_exact_pin_count') == 0, news
+          assert news.get('browser_raw_repository_required') is False, news
+
+          print(json.dumps({
+              'permitted_events': len(raw),
+              'citywide_calendar': len(cal_rows),
+              'parks_bigapps': len(parks_rows),
+              'staged_exact': staged.get('staged_feed_events'),
+              'canonical_records': v3.get('accepted_records'),
+              'news_desk_money': news.get('money_emitted_rows'),
+              'news_desk_viral': news.get('viral_emitted_rows'),
+          }, sort_keys=True))
+          PY
