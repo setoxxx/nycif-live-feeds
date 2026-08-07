@@ -3,6 +3,10 @@
 
 Source: https://www.nycgovparks.org/xml/events_300_rss.json
 Does NOT modify protected feeds or publish to the public map.
+
+When Parks supplies a valid coordinate pair, the normalized row preserves that
+first-party evidence explicitly. The coordinate is not re-geocoded or inferred;
+downstream semantic authority still decides whether the event is publishable.
 """
 
 from __future__ import annotations
@@ -64,6 +68,20 @@ def parse_coordinates(value: Any) -> tuple[float | None, float | None]:
     return lat, lng
 
 
+def official_coordinate_evidence(lat: float | None, lng: float | None) -> dict[str, Any] | None:
+    if lat is None or lng is None:
+        return None
+    return {
+        "tier": "exact_source_coordinate",
+        "validation_state": "validated",
+        "exact_pin_eligible": True,
+        "source_provenance": EVENTS_URL,
+        "provider": "NYC Parks BigApps",
+        "reason_code": "OFFICIAL_SOURCE_COORDINATE",
+        "reason_detail": "Coordinate pair supplied directly by the NYC Parks BigApps event feed.",
+    }
+
+
 def normalize_event_item(item: dict[str, Any]) -> dict[str, Any]:
     lat, lng = parse_coordinates(item.get("coordinates"))
     start_date = str(item.get("startdate") or item.get("start_date") or "").strip()
@@ -117,6 +135,7 @@ def normalize_event_item(item: dict[str, Any]) -> dict[str, Any]:
         "image": item.get("image"),
         "lat": lat,
         "lng": lng,
+        "location_evidence": official_coordinate_evidence(lat, lng),
         "manual_review_status": "pending",
         "promotion_allowed": False,
         "public_map_modified": False,
@@ -174,11 +193,18 @@ def main() -> int:
             if str(row.get("start_date_time") or row.get("start_date") or "")[:10] >= today
         ]
         with_coords = sum(1 for row in normalized if row.get("lat") is not None)
+        with_exact_source_evidence = sum(
+            1
+            for row in normalized
+            if isinstance(row.get("location_evidence"), dict)
+            and row["location_evidence"].get("exact_pin_eligible") is True
+        )
         qa_pass = bool(normalized)
         error = live_fetch_error if fetch_mode != "live" else None
     except Exception as exc:
         current_future = []
         with_coords = 0
+        with_exact_source_evidence = 0
         qa_pass = False
         error = str(exc)
         fetch_mode = "processing_failed"
@@ -198,6 +224,8 @@ def main() -> int:
         "snapshot_rows": len(normalized),
         "current_future_rows": len(current_future),
         "rows_with_coordinates": with_coords,
+        "rows_with_exact_source_coordinate_evidence": with_exact_source_evidence,
+        "coordinate_evidence_parity": with_exact_source_evidence == with_coords,
         "error": error,
         "live_fetch_error": live_fetch_error,
         "production_feeds_modified": False,
@@ -211,7 +239,7 @@ def main() -> int:
     save_json(SNAPSHOT_PATH, snapshot)
     save_json(REPORT_PATH, report)
     print(json.dumps(report, indent=2, ensure_ascii=False))
-    return 0 if qa_pass else 1
+    return 0 if qa_pass and report["coordinate_evidence_parity"] else 1
 
 
 if __name__ == "__main__":
