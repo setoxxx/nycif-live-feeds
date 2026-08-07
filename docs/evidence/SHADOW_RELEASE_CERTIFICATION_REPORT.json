@@ -1,0 +1,38 @@
+{
+  "schema_version": "nycif-shadow-release-certification-v1",
+  "generated_at": "2026-08-07T11:27:00-04:00",
+  "repository": "setoxxx/nycif-live-feeds",
+  "pull_request": 383,
+  "branch": "feat/public-data-shadow-release",
+  "head_sha": "68bbc8253a80b469f20aba1852fd76448cf3ee86",
+  "base_sha": "c5c113464f12c5193d8444dcfb9f5d192dd318fb",
+  "status": "PASS_NON_HOSTED_RELEASE",
+  "verified_workflows": {
+    "Public Data Shadow Release": "PASS",
+    "Schema v1 PR QA": "PASS",
+    "Discovery Taxonomy v02 QA": "PASS"
+  },
+  "verified_job_steps": {
+    "compile_release_builders": "PASS",
+    "public_artifact_integration_tests": "PASS",
+    "shadow_release_package_tests": "PASS"
+  },
+  "release_contract": {
+    "versioned_release_directory": "releases/<release_sha>/",
+    "current_pointer_directory": "current/release.json",
+    "publication_authorized": false,
+    "public_health_allowlist_only": true,
+    "hash_manifest_required": true,
+    "rollback_pointer_recorded": true,
+    "deployment_neutral": true
+  },
+  "hosted_runtime_proof": "NOT_RUN_NO_READER_SAFE_ENDPOINT",
+  "anonymous_browser_proof": "BLOCKED_NO_READER_SAFE_ENDPOINT",
+  "production_mutation": false,
+  "merge_authorized": false,
+  "hosting_or_dns_change": false,
+  "wordpress_change": false,
+  "map_repoint": false,
+  "DoD_met": false,
+  "risk": "The release package is certified for non-hosted shadow use only. Hosted CORS/cache/network/confidentiality behavior still requires the CTO-approved reader-safe endpoint and anonymous browser execution."
+}
