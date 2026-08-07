@@ -9,6 +9,10 @@ Rewrites certified artifacts in place (staging only; never protected production
 files). Geometry validity remains a low-level guard. A row is an exact public
 pin only when the canonical semantic location-evidence authority returns
 MAP_READY and certified_pin is true.
+
+Backward-compatible migration rule: legacy in-bounds ``map_ready`` coordinates
+may remain present while their evidence is rebuilt, but they must not carry an
+exact-pin claim, exact map link, or semantic MAP_READY state until validated.
 """
 
 from __future__ import annotations
@@ -59,6 +63,15 @@ def _semantic_exact_ready(row: dict[str, Any]) -> bool:
     )
 
 
+def _claims_exact_pin(row: dict[str, Any]) -> bool:
+    """Return whether a row currently exposes or asserts exact-pin authority."""
+    return (
+        row.get("certified_pin") is True
+        or row.get("map_eligibility_state") == "MAP_READY"
+        or bool(row.get("map_link"))
+    )
+
+
 def _scan_flat_events(rows: list[dict[str, Any]], *, surface: str) -> tuple[int, int, list[dict[str, Any]], Counter]:
     before = sum(1 for r in rows if r.get("coordinate_status") == "map_ready")
     demotions: list[dict[str, Any]] = []
@@ -74,10 +87,15 @@ def _scan_flat_events(rows: list[dict[str, Any]], *, surface: str) -> tuple[int,
 
 
 def _verify_zero_bad_map_ready(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    """Return every map_ready claim that lacks semantic exact-pin authority."""
+    """Return unsupported exact-pin claims; legacy review state is allowed.
+
+    ``coordinate_status=map_ready`` by itself is treated as a legacy transport
+    state during migration. It is not an exact-pin claim unless the row also
+    asserts semantic MAP_READY, certified_pin=true, or an exact map link.
+    """
     bad: list[dict[str, Any]] = []
     for row in rows:
-        if row.get("coordinate_status") != "map_ready":
+        if not _claims_exact_pin(row):
             continue
         candidate = dict(row)
         if isinstance(row.get("location_evidence"), dict):
@@ -92,6 +110,7 @@ def _verify_zero_bad_map_ready(rows: list[dict[str, Any]]) -> list[dict[str, Any
                     "lng": row.get("longitude"),
                     "map_eligibility_state": candidate.get("map_eligibility_state"),
                     "certified_pin": candidate.get("certified_pin"),
+                    "map_link": row.get("map_link"),
                 }
             )
     return bad
@@ -357,15 +376,15 @@ def field_desk_feed_scan() -> dict[str, Any]:
                 result = certify_event_pin(candidate)
                 semantic_ready = _semantic_exact_ready(candidate)
                 reason = result.get("reason") or candidate.get("pin_integrity_reason")
-            if not semantic_ready:
+            if not semantic_ready and _claims_exact_pin(row):
                 would_demote.append({"id": _id_of(row), "title": row.get("title"), "reason": reason})
         return {
             "surface": "field_desk_feed",
             "artifact": str(path.relative_to(ROOT)),
             "map_ready_scanned": before,
-            "semantic_failure_count": len(would_demote),
-            "semantic_failure_examples": would_demote[:20],
-            "note": "Report-only scan; geometry-only map_ready is not exact-pin certification.",
+            "unsupported_exact_claim_count": len(would_demote),
+            "unsupported_exact_claim_examples": would_demote[:20],
+            "note": "Report-only scan; legacy map_ready without exact authority is migration state, not certification.",
         }
     return {"surface": "field_desk_feed", "skipped": True}
 
@@ -390,6 +409,7 @@ def _flatten_civic_for_verify(civic: dict[str, Any]) -> list[dict[str, Any]]:
                     "location_evidence": nycif.get("location_evidence") or row.get("location_evidence"),
                     "map_eligibility_state": nycif.get("map_eligibility_state") or row.get("map_eligibility_state"),
                     "certified_pin": nycif.get("certified_pin") if "certified_pin" in nycif else row.get("certified_pin"),
+                    "map_link": row.get("map_link"),
                 }
             )
     return bags
@@ -449,7 +469,7 @@ def main() -> int:
         "generated_at_utc": utc_now(),
         "qa_pass": qa_pass,
         "bounds": NYC_BOUNDS_DOC,
-        "rule": "ZERO map_ready rows may lack semantic MAP_READY + certified_pin authority after gate",
+        "rule": "ZERO unsupported exact-pin claims; legacy coordinates may remain review-required during evidence migration",
         "surfaces": [{k: v for k, v in s.items() if k != "demotions"} for s in surfaces],
         "demotion_count": len(all_demotions),
         "demotion_reason_counts": dict(reason_totals),
@@ -465,7 +485,7 @@ def main() -> int:
         "staged_feed_modified": False,
         "notes": (
             "Geometry validation never creates certification. Legacy in-bounds map_ready rows without validated "
-            "location evidence remain review/list-only for exact-pin publication and cannot receive exact map links."
+            "location evidence may remain as migration state, but certified_pin, semantic MAP_READY and exact map links are cleared."
         ),
     }
     save_json(DATA_DIR / "pin_integrity_gate_report.json", report)
