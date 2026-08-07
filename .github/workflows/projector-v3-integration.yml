@@ -6,11 +6,13 @@ on:
       - 'scripts/location_evidence_contract.py'
       - 'scripts/build_semantic_live_intake.py'
       - 'scripts/live_event_intake_refresh.py'
+      - 'scripts/sync_nyc_parks_bigapps_events.py'
       - 'scripts/projector_v2_authority.py'
       - 'scripts/project_events_discovery_v03.py'
       - 'scripts/build_news_desk_reader_safe.py'
       - 'scripts/build_maplibre_reader_safe_v03.py'
       - 'tests/test_semantic_live_intake.py'
+      - 'tests/test_parks_source_coordinate_evidence.py'
       - 'tests/test_projector_v3_authority.py'
       - '.github/workflows/projector-v3-integration.yml'
   workflow_dispatch:
@@ -35,6 +37,7 @@ jobs:
             scripts/location_evidence_contract.py \
             scripts/build_semantic_live_intake.py \
             scripts/live_event_intake_refresh.py \
+            scripts/sync_nyc_parks_bigapps_events.py \
             scripts/projector_v2_authority.py \
             scripts/project_events_discovery_v03.py \
             scripts/build_news_desk_reader_safe.py \
@@ -44,6 +47,7 @@ jobs:
           python3 -m pytest -q \
             tests/test_projector_v2_authority.py \
             tests/test_semantic_live_intake.py \
+            tests/test_parks_source_coordinate_evidence.py \
             tests/test_projector_v3_authority.py
       - name: Build semantic intake from committed fixtures
         env:
