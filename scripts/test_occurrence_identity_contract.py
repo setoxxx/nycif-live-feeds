@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Focused tests for dated-occurrence identity enforcement."""
+"""Focused tests for occurrence identity enforcement."""
 
 from __future__ import annotations
 
 from occurrence_identity_contract import (
     classify_open_data_occurrence,
+    identity_precision,
     occurrence_key,
+    occurrence_key_v2,
     source_id_only_matching_allowed_for_recurring_event_feeds,
     source_key,
 )
@@ -18,17 +20,31 @@ def main() -> int:
     staged = {
         "dataset": "tvpp-9vvx",
         "source_event_id": "abc123",
-        "date": "2026-07-20",
+        "start_date_time": "2026-07-20T09:00:00",
     }
     same_date = {
         "dataset": "tvpp-9vvx",
         "source_event_id": "abc123",
-        "date": "2026-07-20",
+        "start_date_time": "2026-07-20T09:00:00",
+    }
+    same_day_different_time = {
+        "dataset": "tvpp-9vvx",
+        "source_event_id": "abc123",
+        "start_date_time": "2026-07-20T14:00:00",
     }
     different_date = {
         "dataset": "tvpp-9vvx",
         "source_event_id": "abc123",
-        "date": "2026-07-21",
+        "start_date_time": "2026-07-21T09:00:00",
+    }
+    date_only = {
+        "dataset": "tvpp-9vvx",
+        "source_event_id": "day-only",
+        "date": "2026-07-22",
+    }
+    missing_time_and_date = {
+        "dataset": "tvpp-9vvx",
+        "source_event_id": "ambiguous",
     }
     outside_window = {
         "dataset": "tvpp-9vvx",
@@ -48,6 +64,16 @@ def main() -> int:
 
     assert source_key(staged) == ("tvpp-9vvx", "abc123")
     assert occurrence_key(staged) == ("tvpp-9vvx", "abc123", "2026-07-20")
+    assert occurrence_key_v2(staged) == ("tvpp-9vvx", "abc123", "2026-07-20T09:00:00")
+    assert occurrence_key_v2(same_day_different_time) == (
+        "tvpp-9vvx",
+        "abc123",
+        "2026-07-20T14:00:00",
+    )
+    assert occurrence_key_v2(staged) != occurrence_key_v2(same_day_different_time)
+    assert identity_precision(staged) == "EXACT_START"
+    assert identity_precision(date_only) == "DAY"
+    assert identity_precision(missing_time_and_date) == "AMBIGUOUS"
     assert source_id_only_matching_allowed_for_recurring_event_feeds() is False
 
     assert classify_open_data_occurrence(
