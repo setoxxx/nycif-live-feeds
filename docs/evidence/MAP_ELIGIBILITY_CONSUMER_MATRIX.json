@@ -1,5 +1,5 @@
 {
-  "artifact_type": "nycif_map_eligibility_consumer_matrix_v1",
+  "artifact_type": "nycif_map_eligibility_consumer_matrix_v2",
   "branch": "fix/step2a-location-identity",
   "rule": "coordinate_status=map_ready or an in-bounds coordinate is never sufficient by itself for a certified exact public pin",
   "classification_values": [
@@ -10,11 +10,11 @@
     "P0_REVIEW_REQUIRED"
   ],
   "summary": {
-    "confirmed_semantic_authority": 2,
-    "confirmed_legacy_bypass": 3,
+    "confirmed_semantic_authority": 4,
+    "confirmed_legacy_bypass": 1,
     "additional_consumers_requiring_targeted_review": 15,
     "complete": false,
-    "reason_incomplete": "Repository search surfaced additional map_ready/certified_pin consumers; uninspected consumers remain P0_REVIEW_REQUIRED rather than being guessed safe."
+    "reason_incomplete": "The two confirmed downstream re-certification bypasses were migrated on this branch. The discovery projector remains a confirmed legacy consumer and uninspected consumers remain P0_REVIEW_REQUIRED rather than being guessed safe."
   },
   "consumers": [
     {
@@ -34,21 +34,19 @@
       "classification": "USES_LEGACY_MAP_READY",
       "risk": "P0",
       "evidence": "build_base_event still derives coordinate_status from resolve_coords map_ready and marker eligibility checks coordinate_status without semantic evidence certification.",
-      "required_action": "Migrate projector output and marker eligibility to semantic map eligibility authority."
+      "required_action": "Migrate projector output and marker eligibility to semantic map eligibility authority using a safe surgical edit path."
     },
     {
       "path": "scripts/build_photographer_shoot_day_certified.py",
-      "classification": "USES_LEGACY_MAP_READY",
-      "risk": "P0",
-      "evidence": "certified_row accepts coordinate_status=map_ready, calls certify_nyc_pin geometry guard, sets certified_pin=true and emits a Google Maps exact-coordinate link.",
-      "required_action": "Use evaluate_map_eligibility/certify_event_pin with evidence; no exact directions link unless MAP_READY semantic certification passes."
+      "classification": "USES_SEMANTIC_AUTHORITY",
+      "risk": "LOW_ON_BRANCH",
+      "evidence": "certified_row now runs certify_event_pin on an isolated candidate and emits certified_pin/map_link only when map_eligibility_state=MAP_READY and certified_pin=true. Legacy in-bounds map_ready rows route to needs-location with no exact link."
     },
     {
       "path": "scripts/build_pin_integrity_gate.py",
-      "classification": "USES_LEGACY_MAP_READY",
-      "risk": "P0",
-      "evidence": "Core scan calls semantic certify_event_pin, but _verify_zero_bad_map_ready uses geometry-only certify_nyc_pin and _mark_certified_flags can set certified_pin=true from coordinate_status/map coordinate presence.",
-      "required_action": "Make all verification/flagging helpers consume map_eligibility_state/exact semantic certification."
+      "classification": "USES_SEMANTIC_AUTHORITY",
+      "risk": "LOW_ON_BRANCH",
+      "evidence": "Geometry-only re-certification paths were removed. Verification, flagging, pack filtering and Field Desk report-only scanning now require semantic MAP_READY plus certified_pin before treating a row as an exact pin."
     },
     {
       "path": "scripts/project_events_schema_v1.py",
