@@ -31,6 +31,62 @@ jobs:
           python -m py_compile scripts/build_public_runtime_artifacts.py
           python tests/test_public_runtime_artifacts.py
 
+      - name: Occurrence identity same-head proof
+        run: |
+          python scripts/test_occurrence_identity_contract.py
+          python scripts/audit_occurrence_identity_enforcement.py
+          python scripts/audit_source_lineage_contract.py --out-dir /tmp/source-lineage-contract-check
+          python - <<'PY'
+          from pathlib import Path
+          import shutil
+          source = Path.cwd().resolve()
+          destination = Path('/tmp/discovery-work').resolve()
+          if destination.exists():
+              shutil.rmtree(destination)
+          def ignore_unneeded(path, names):
+              ignored = {'.git', '__pycache__', '.pytest_cache', '.mypy_cache'}
+              return ignored.intersection(names)
+          shutil.copytree(source, destination, ignore=ignore_unneeded, symlinks=False)
+          PY
+          cd /tmp/discovery-work
+          python scripts/project_events_discovery_v02.py
+          python scripts/test_events_discovery_v02.py
+          cd "$GITHUB_WORKSPACE"
+          test -z "$(git status --porcelain)"
+
+      - name: Incoming residual same-head proof
+        run: |
+          python scripts/audit_incoming_data_residuals.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          base = Path('/tmp/incoming-data-residual-audit')
+          summary = json.loads((base / 'incoming_data_residual_summary.json').read_text())
+          resolution = json.loads((base / 'incoming_data_intake_resolution_packet.json').read_text())
+          blockers = json.loads((base / 'incoming_data_unresolved_blockers.json').read_text())
+          assert summary['qa_pass'] is True, summary
+          assert summary['public_production_untouched'] is True, summary
+          assert resolution['qa_pass'] is True, resolution
+          assert resolution['resolution_counts']['unresolved_blockers'] == 0, resolution
+          assert blockers['count'] == 0, blockers
+          assert resolution['safety']['production_promotion_allowed'] is False, resolution
+          assert resolution['safety']['schedule_enabled'] is False, resolution
+          assert resolution['safety']['public_launch_authorized'] is False, resolution
+          PY
+          test -z "$(git status --porcelain)"
+
+      - name: Daily refresh reliability same-head proof
+        run: |
+          bash -n scripts/run_discovery_feed_refresh.sh
+          bash -n scripts/publish_blocked_daily_refresh.sh
+          python -m py_compile \
+            scripts/run_daily_refresh_stage.py \
+            scripts/record_blocked_daily_data_health.py \
+            scripts/test_live_event_intake_refresh_current.py \
+            scripts/test_daily_production_hardening.py
+          python scripts/test_live_event_intake_refresh_current.py
+          python scripts/test_daily_production_hardening.py
+
       - name: Project schema-v1 feeds
         run: python scripts/project_events_schema_v1.py
 
