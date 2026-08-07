@@ -8,6 +8,11 @@ location-evidence authority before projection.
 
 Street-segment resolution is owned by ``scripts.nyc_location_resolver``.
 Coordinates alone never grant exact public pin authority.
+
+The release-critical path defaults to cache/source-backed location evidence and
+does not require live GeoSearch. Set ``NYCIF_ALLOW_LIVE_GEOSEARCH=yes`` only for
+an explicit enrichment run. Unresolved rows remain review/list-only instead of
+blocking publication or being promoted from weak coordinates.
 """
 
 from __future__ import annotations
@@ -48,7 +53,7 @@ def main() -> int:
     # Source fetchers write local snapshots first; downstream builders consume
     # that exact transaction so all three source families share one refresh run.
     os.environ["NYCIF_USE_RAW_SNAPSHOT"] = "yes"
-    os.environ["NYCIF_ALLOW_LIVE_GEOSEARCH"] = "yes"
+    os.environ.setdefault("NYCIF_ALLOW_LIVE_GEOSEARCH", "no")
 
     try:
         from scripts import (
