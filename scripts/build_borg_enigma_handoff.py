@@ -34,8 +34,11 @@ SOURCE_SPECS = (
     {
         "source_id": "nyc_citywide_events_calendar",
         "dataset_id": "api.nyc.gov/calendar/search",
-        "path": ROOT / "data" / "nyc_citywide_events_calendar_snapshot.json",
-        "row_keys": ("events", "items", "results"),
+        # This is deliberately the raw pre-filter observation file, not the
+        # active/deduplicated semantic snapshot. Every retrieved row belongs
+        # in the intake ledger even if semantic projection later collapses it.
+        "path": ROOT / "data" / "nyc_citywide_events_calendar_raw_observations.json",
+        "row_keys": (),
         "native_id_candidates": ("id", "event_id", "eventId", "guid"),
     },
     {
