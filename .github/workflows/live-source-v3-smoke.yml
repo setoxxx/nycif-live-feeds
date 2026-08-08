@@ -82,9 +82,18 @@ jobs:
           parks_rows = parks.get('events', []) if isinstance(parks, dict) else parks
           valid_categories = set(contract['categories'])
           category_counts = Counter()
+          safe_public_url_count = 0
           for feature in map_feed.get('features', []):
-              category = (feature.get('properties') or {}).get('category')
+              props = feature.get('properties') or {}
+              category = props.get('category')
               assert category in valid_categories, category
+              # Current release contract from #391: the reader schema always exposes
+              # one nullable public_url key. Any populated value must remain HTTP(S).
+              assert 'public_url' in props, props
+              public_url = props.get('public_url')
+              if public_url is not None:
+                  assert isinstance(public_url, str) and public_url.lower().startswith(('http://', 'https://')), public_url
+                  safe_public_url_count += 1
               category_counts[category] += 1
 
           assert isinstance(raw, list) and len(raw) > 0, 'Permitted Events live fetch empty'
@@ -181,6 +190,7 @@ jobs:
                   'citywide_raw_observations': len(cal_raw),
                   'citywide_semantic_snapshot': len(cal_rows),
               },
+              'safe_public_url_count': safe_public_url_count,
               'permitted_events': len(raw),
               'citywide_calendar': len(cal_rows),
               'parks_bigapps': len(parks_rows),
