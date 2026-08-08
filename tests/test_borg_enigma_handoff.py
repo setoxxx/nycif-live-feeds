@@ -27,22 +27,25 @@ class BorgEnigmaHandoffTest(unittest.TestCase):
 
     def test_source_receipt_registers_every_row_without_semantic_filtering(self) -> None:
         with tempfile.TemporaryDirectory() as td:
-            path = Path(td) / "snapshot.json"
+            root = Path(td)
+            path = root / "snapshot.json"
             rows = [
                 {"event_id": "1", "latitude": "40.7", "longitude": "-73.9"},
                 {"title": "No native id and no coordinates"},
                 {"event_id": "3", "latitude": None, "longitude": None},
             ]
             path.write_text(json.dumps(rows), encoding="utf-8")
-            receipt = handoff.build_source_receipt(
-                {
-                    "source_id": "test",
-                    "dataset_id": "test-dataset",
-                    "path": path,
-                    "row_keys": (),
-                    "native_id_candidates": ("event_id",),
-                }
-            )
+            with patch.object(handoff, "ROOT", root):
+                receipt = handoff.build_source_receipt(
+                    {
+                        "source_id": "test",
+                        "dataset_id": "test-dataset",
+                        "path": path,
+                        "row_keys": (),
+                        "native_id_candidates": ("event_id",),
+                    }
+                )
+            self.assertEqual(receipt["snapshot_path"], "snapshot.json")
             self.assertEqual(receipt["observed_row_count"], 3)
             self.assertEqual(receipt["registered_observation_count"], 3)
             self.assertEqual(receipt["rows_without_native_id"], 1)
@@ -51,18 +54,20 @@ class BorgEnigmaHandoffTest(unittest.TestCase):
 
     def test_exact_duplicate_observations_are_registered_before_dedupe(self) -> None:
         with tempfile.TemporaryDirectory() as td:
-            path = Path(td) / "raw.json"
+            root = Path(td)
+            path = root / "raw.json"
             duplicate = {"id": "same", "name": "same observation"}
             path.write_text(json.dumps([duplicate, duplicate]), encoding="utf-8")
-            receipt = handoff.build_source_receipt(
-                {
-                    "source_id": "calendar",
-                    "dataset_id": "calendar",
-                    "path": path,
-                    "row_keys": (),
-                    "native_id_candidates": ("id",),
-                }
-            )
+            with patch.object(handoff, "ROOT", root):
+                receipt = handoff.build_source_receipt(
+                    {
+                        "source_id": "calendar",
+                        "dataset_id": "calendar",
+                        "path": path,
+                        "row_keys": (),
+                        "native_id_candidates": ("id",),
+                    }
+                )
             self.assertEqual(receipt["observed_row_count"], 2)
             self.assertEqual(receipt["registered_observation_count"], 2)
             self.assertEqual(len(receipt["observations"]), 2)
@@ -77,9 +82,10 @@ class BorgEnigmaHandoffTest(unittest.TestCase):
 
     def test_build_handoff_declares_no_coordinate_authority(self) -> None:
         with tempfile.TemporaryDirectory() as td:
+            root = Path(td)
             specs = []
             for index in range(3):
-                path = Path(td) / f"source-{index}.json"
+                path = root / f"source-{index}.json"
                 path.write_text(
                     json.dumps([{"id": str(index), "latitude": 40.7, "longitude": -73.9}]),
                     encoding="utf-8",
@@ -93,7 +99,10 @@ class BorgEnigmaHandoffTest(unittest.TestCase):
                         "native_id_candidates": ("id",),
                     }
                 )
-            with patch.object(handoff, "SOURCE_SPECS", tuple(specs)):
+            with (
+                patch.object(handoff, "ROOT", root),
+                patch.object(handoff, "SOURCE_SPECS", tuple(specs)),
+            ):
                 result = handoff.build_handoff()
             self.assertTrue(result["qa_pass"])
             self.assertEqual(result["observed_row_count"], 3)
