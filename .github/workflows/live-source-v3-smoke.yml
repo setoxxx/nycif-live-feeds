@@ -7,6 +7,8 @@ on:
       - 'scripts/sync_nyc_citywide_events_calendar.py'
       - 'scripts/sync_nyc_parks_bigapps_events.py'
       - 'scripts/live_event_intake_refresh.py'
+      - 'scripts/build_borg_enigma_handoff.py'
+      - 'tests/test_borg_enigma_handoff.py'
       - 'scripts/build_semantic_live_intake.py'
       - 'scripts/project_events_discovery_v03.py'
       - 'scripts/build_news_desk_reader_safe.py'
@@ -28,6 +30,9 @@ jobs:
           python-version: '3.11'
       - name: Install dependencies
         run: python3 -m pip install -r requirements.txt
+
+      - name: Prove BORG to Enigma handoff contract
+        run: python3 -m unittest tests.test_borg_enigma_handoff -v
 
       - name: Fetch all official source families and build semantic permitted intake
         env:
@@ -51,7 +56,7 @@ jobs:
       - name: Build canonical MapLibre reader-safe source
         run: python3 scripts/build_maplibre_reader_safe_v03.py
 
-      - name: Verify live acquisition, P0 reader proof, categories, and zero pin regressions
+      - name: Verify live acquisition, store-first accounting, P0 reader proof, and zero pin regressions
         run: |
           python3 - <<'PY'
           import json
@@ -61,9 +66,11 @@ jobs:
           raw = json.loads(Path('data/raw_nyc_open_data_snapshot.json').read_text())
           permit_report = json.loads(Path('data/live_sync_report.json').read_text())
           cal = json.loads(Path('data/nyc_citywide_events_calendar_snapshot.json').read_text())
+          cal_raw = json.loads(Path('data/nyc_citywide_events_calendar_raw_observations.json').read_text())
           cal_report = json.loads(Path('data/nyc_citywide_events_calendar_sync_report.json').read_text())
           parks = json.loads(Path('data/nyc_parks_bigapps_events_snapshot.json').read_text())
           parks_report = json.loads(Path('data/nyc_parks_bigapps_events_sync_report.json').read_text())
+          handoff = json.loads(Path('data/borg_enigma_handoff_v1.json').read_text())
           v3 = json.loads(Path('data/events_discovery_v3_authority_report.json').read_text())
           news = json.loads(Path('data/reader-safe/news-desk-status-v02.json').read_text())
           map_status = json.loads(Path('data/reader-safe/national-map-events-v03-status.json').read_text())
@@ -83,8 +90,28 @@ jobs:
           assert isinstance(raw, list) and len(raw) > 0, 'Permitted Events live fetch empty'
           assert permit_report.get('raw_rows_loaded') == len(raw), permit_report
           assert cal_report.get('qa_pass') is True and len(cal_rows) > 0, cal_report
+          assert isinstance(cal_raw, list) and len(cal_raw) > 0, 'Citywide raw observations empty'
+          assert cal_report.get('source_rows_received') == len(cal_raw), cal_report
+          assert cal_report.get('raw_observations_preserved') == len(cal_raw), cal_report
+          assert cal_report.get('window', {}).get('items_returned') == len(cal_raw), cal_report
           assert parks_report.get('qa_pass') is True and len(parks_rows) > 0, parks_report
           assert parks_report.get('fetch_mode') == 'live', parks_report
+
+          # BORG/Enigma store-first gate: every acquired observation is registered
+          # before semantic filtering. Exact duplicate observations remain accounted.
+          assert handoff.get('schema_id') == 'nycif-borg-enigma-handoff-v1', handoff
+          assert handoff.get('stage') == 'post_acquisition_pre_semantic_filter', handoff
+          assert handoff.get('qa_pass') is True, handoff
+          assert handoff.get('observed_row_count') == handoff.get('registered_observation_count'), handoff
+          assert handoff.get('unregistered_row_count') == 0, handoff
+          assert handoff.get('coordinates_are_authority') is False, handoff
+          assert handoff.get('identity_authority') == 'OccurrenceIdentityV2', handoff
+          assert handoff.get('exact_location_authority') == 'Projector V3', handoff
+          source_receipts = {row['source_id']: row for row in handoff.get('sources', [])}
+          assert source_receipts['nyc_open_data_permitted_events']['observed_row_count'] == len(raw)
+          assert source_receipts['nyc_citywide_events_calendar']['observed_row_count'] == len(cal_raw)
+          assert source_receipts['nyc_parks_bigapps_events']['observed_row_count'] == len(parks_rows)
+
           assert staged.get('semantic_location_authority') is True, staged
           assert staged.get('coordinates_without_exact_evidence_promoted') == 0, staged
           assert staged.get('all_staged_rows_certified') is True, staged
@@ -107,9 +134,6 @@ jobs:
           assert map_status.get('duplicate_reader_occurrence_count') == 0, map_status
           assert map_status.get('general_area_exact_geometry_count') == 0, map_status
 
-          # P0 event-level proof: this must come from the freshly rebuilt reader artifact,
-          # not from a unit-test fixture. Exact geometry remains withheld until Projector V3
-          # has authoritative location evidence.
           jamaica_matches = []
           for feature in map_feed.get('features', []):
               props = feature.get('properties') or {}
@@ -149,6 +173,13 @@ jobs:
                   'parks_bigapps': parks_report.get('generated_at_utc'),
                   'news_desk': news.get('generated_at_utc'),
                   'maplibre': map_status.get('generated_at_utc'),
+              },
+              'borg_enigma': {
+                  'observed': handoff.get('observed_row_count'),
+                  'registered': handoff.get('registered_observation_count'),
+                  'unregistered': handoff.get('unregistered_row_count'),
+                  'citywide_raw_observations': len(cal_raw),
+                  'citywide_semantic_snapshot': len(cal_rows),
               },
               'permitted_events': len(raw),
               'citywide_calendar': len(cal_rows),
