@@ -8,6 +8,8 @@ The reader-safe artifact serves two reader needs from one authority:
   a pin.
 
 This module is projection-only. It does not geocode, repair, move, or infer pins.
+Reader links are pass-through only: an already-public HTTP(S) event URL may be
+projected as ``public_url``; backend/source-gathering URLs are never constructed.
 """
 from __future__ import annotations
 
@@ -37,6 +39,7 @@ KNOWN_BOROUGHS = {"manhattan", "brooklyn", "bronx", "queens", "staten island"}
 NYC_TZ = ZoneInfo("America/New_York")
 READER_WINDOW_DAYS = 7
 READER_VISIBLE_DISPOSITIONS = {"standalone_public_event", "list_only"}
+PUBLIC_URL_FIELDS = ("public_url", "permalink", "link", "website", "url")
 
 
 def load(path: Path) -> Any:
@@ -49,6 +52,18 @@ def finite(value: Any) -> float | None:
     except (TypeError, ValueError):
         return None
     return result if math.isfinite(result) else None
+
+
+def safe_public_url(event: dict[str, Any]) -> str | None:
+    """Return an already-public HTTP(S) event URL, without constructing one."""
+    for field in PUBLIC_URL_FIELDS:
+        value = event.get(field)
+        if not isinstance(value, str):
+            continue
+        value = value.strip()
+        if re.match(r"^https?://", value, flags=re.IGNORECASE):
+            return value
+    return None
 
 
 def evidence_validated(event: dict[str, Any]) -> bool:
@@ -154,6 +169,7 @@ def feature(event: dict[str, Any], *, exact_marker: bool) -> dict[str, Any]:
             "end_date_time": event.get("end_date_time"),
             "timezone": event.get("timezone"),
             "significance": event.get("significance"),
+            "public_url": safe_public_url(event),
             "source_dataset": source_dataset,
             "source_event_id": source_event_id,
             "map_eligibility_state": nycif.get("map_eligibility_state") or "REVIEW_REQUIRED",
@@ -218,8 +234,6 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             if reason == "location_evidence_not_validated":
                 evidence_failures += 1
 
-        # P0 reader-visibility rule: exact-pin uncertainty may suppress geometry,
-        # never the accepted standalone public event itself during the active rail.
         if reader_visible_event(event) and event_in_reader_window(event, window_start, window_end):
             occurrence = occurrence_key_v2(event)
             reader_occurrence_ids.append(occurrence)
