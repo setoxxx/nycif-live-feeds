@@ -1,7 +1,14 @@
 from __future__ import annotations
 
 from datetime import date
+from pathlib import Path
+import sys
 import unittest
+
+ROOT = Path(__file__).resolve().parents[1]
+SCRIPTS = ROOT / "scripts"
+if str(SCRIPTS) not in sys.path:
+    sys.path.insert(0, str(SCRIPTS))
 
 from scripts import build_maplibre_reader_safe_v03 as reader_safe
 
