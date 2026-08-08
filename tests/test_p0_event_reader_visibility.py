@@ -81,6 +81,31 @@ class P0EventReaderVisibilityTests(unittest.TestCase):
         self.assertFalse(feature["properties"]["certified_pin"])
         self.assertEqual(feature["properties"]["map_eligibility_state"], "REVIEW_REQUIRED")
 
+    def test_reader_preserves_existing_public_https_link(self) -> None:
+        event = self.jamaica_event()
+        event["permalink"] = "https://www.nyc.gov/events/example"
+        feature = reader_safe.feature(event, exact_marker=False)
+        self.assertEqual(
+            feature["properties"]["public_url"],
+            "https://www.nyc.gov/events/example",
+        )
+
+    def test_reader_drops_non_http_public_link(self) -> None:
+        event = self.jamaica_event()
+        event["public_url"] = "javascript:alert(1)"
+        event["permalink"] = "data:text/plain,unsafe"
+        self.assertIsNone(reader_safe.feature(event, exact_marker=False)["properties"]["public_url"])
+
+    def test_public_url_precedence_is_deterministic(self) -> None:
+        event = self.jamaica_event()
+        event["public_url"] = "https://example.org/canonical"
+        event["permalink"] = "https://example.org/permalink"
+        event["link"] = "https://example.org/link"
+        self.assertEqual(
+            reader_safe.safe_public_url(event),
+            "https://example.org/canonical",
+        )
+
     def test_exact_marker_stays_a_point_only_when_explicitly_requested(self) -> None:
         event = self.synthetic_exact_event()
         feature = reader_safe.feature(event, exact_marker=True)
