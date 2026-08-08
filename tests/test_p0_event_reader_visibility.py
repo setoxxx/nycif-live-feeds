@@ -35,6 +35,35 @@ class P0EventReaderVisibilityTests(unittest.TestCase):
             },
         }
 
+    def synthetic_exact_event(self) -> dict:
+        return {
+            "id": "synthetic:exact-marker@2026-08-09",
+            "title": "Synthetic Exact Marker Fixture",
+            "category": "test",
+            "borough": "Manhattan",
+            "location": "Synthetic certified location",
+            "start_date_time": "2026-08-09T12:00:00.000",
+            "end_date_time": "2026-08-09T13:00:00.000",
+            "timezone": "America/New_York",
+            "event_role": "public_event",
+            "parent_event_id": None,
+            "source": {"dataset": "synthetic-test", "source_event_id": "exact-1"},
+            "latitude": 40.7500,
+            "longitude": -73.9900,
+            "location_evidence": {
+                "tier": "certified_street_segment",
+                "validation_state": "validated",
+                "exact_pin_eligible": True,
+                "source_provenance": "synthetic_regression_fixture",
+            },
+            "nycif": {
+                "map_eligibility_state": "MAP_READY",
+                "certified_pin": True,
+                "location_authority": "projector_v3_semantic_map_decision",
+                "display_disposition": "standalone_public_event",
+            },
+        }
+
     def test_jamaica_rising_remains_reader_visible_without_exact_pin(self) -> None:
         event = self.jamaica_event()
         self.assertTrue(reader_safe.reader_visible_event(event))
@@ -53,25 +82,43 @@ class P0EventReaderVisibilityTests(unittest.TestCase):
         self.assertEqual(feature["properties"]["map_eligibility_state"], "REVIEW_REQUIRED")
 
     def test_exact_marker_stays_a_point_only_when_explicitly_requested(self) -> None:
-        event = self.jamaica_event()
-        event["latitude"] = 40.626075
-        event["longitude"] = -73.93506
-        event["location_evidence"] = {
-            "tier": "certified_street_segment",
-            "validation_state": "validated",
-            "exact_pin_eligible": True,
-            "source_provenance": "regression_fixture",
-        }
-        event["nycif"].update(
-            {
-                "map_eligibility_state": "MAP_READY",
-                "certified_pin": True,
-            }
-        )
+        event = self.synthetic_exact_event()
         feature = reader_safe.feature(event, exact_marker=True)
         self.assertEqual(feature["geometry"]["type"], "Point")
-        self.assertEqual(feature["geometry"]["coordinates"], [-73.93506, 40.626075])
+        self.assertEqual(feature["geometry"]["coordinates"], [-73.99, 40.75])
         self.assertTrue(feature["properties"]["certified_pin"])
+
+    def test_late_same_day_event_remains_in_today_window(self) -> None:
+        event = {
+            "id": "synthetic:late-same-day@2026-08-08",
+            "title": "Synthetic Late Same-Day Permit",
+            "category": "test",
+            "borough": "Queens",
+            "location": "Reader-visible text-only fixture",
+            "start_date_time": "2026-08-08T23:30:00.000",
+            "end_date_time": "2026-08-08T23:59:00.000",
+            "timezone": "America/New_York",
+            "event_role": "public_event",
+            "parent_event_id": None,
+            "source": {"dataset": "synthetic-test", "source_event_id": "late-1"},
+            "nycif": {
+                "map_eligibility_state": "LIST_ONLY",
+                "certified_pin": False,
+                "location_authority": "projector_v3_semantic_map_decision",
+                "display_disposition": "standalone_public_event",
+            },
+        }
+        self.assertTrue(reader_safe.reader_visible_event(event))
+        self.assertTrue(
+            reader_safe.event_in_reader_window(
+                event,
+                date(2026, 8, 8),
+                date(2026, 8, 15),
+            )
+        )
+        feature = reader_safe.feature(event, exact_marker=False)
+        self.assertIsNone(feature["geometry"])
+        self.assertEqual(feature["properties"]["source_event_id"], "late-1")
 
     def test_supporting_records_do_not_become_reader_events(self) -> None:
         event = self.jamaica_event()
