@@ -2,8 +2,9 @@
 """Fetch NYC Citywide Events Calendar API snapshot (staging only).
 
 This script does NOT modify protected feeds or publish to the public map.
-It writes an active-listing snapshot plus a sync report for multi-source
-coverage QA. Source-canceled listings are explicitly counted and excluded.
+It preserves every retrieved source observation before cancellation filtering or
+exact-occurrence collapse, then writes the active-listing snapshot used by
+semantic processing plus a sync report for multi-source coverage QA.
 
 Source: https://api.nyc.gov/calendar/* (same API as nyc.gov/main/events)
 """
@@ -22,6 +23,7 @@ from urllib.parse import urlencode
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
+RAW_OBSERVATIONS_PATH = DATA_DIR / "nyc_citywide_events_calendar_raw_observations.json"
 SNAPSHOT_PATH = DATA_DIR / "nyc_citywide_events_calendar_snapshot.json"
 REPORT_PATH = DATA_DIR / "nyc_citywide_events_calendar_sync_report.json"
 
@@ -213,6 +215,10 @@ def main() -> int:
         print(json.dumps(report, indent=2, ensure_ascii=False))
         return 1
 
+    # BORG store-first boundary: preserve every retrieved row before any
+    # cancellation filtering, normalization or exact-occurrence collapse.
+    save_json(RAW_OBSERVATIONS_PATH, raw_items)
+
     normalized_all = [normalize_calendar_item(item) for item in raw_items]
     canceled_rows = [row for row in normalized_all if row.get("canceled")]
     normalized = [row for row in normalized_all if not row.get("canceled")]
@@ -239,7 +245,7 @@ def main() -> int:
 
     report = {
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "qa_pass": bool(rows),
+        "qa_pass": bool(rows) and len(raw_items) == int(window_meta.get("items_returned") or 0),
         "fetch_mode": "live",
         "api_gateway": API_GATEWAY,
         "api_key_source": key_source,
@@ -247,7 +253,9 @@ def main() -> int:
         "window_days": DEFAULT_WINDOW_DAYS,
         "window": window_meta,
         "categories_available": categories,
-        "source_rows_received": len(normalized_all),
+        "source_rows_received": len(raw_items),
+        "raw_observations_preserved": len(raw_items),
+        "raw_observations_path": str(RAW_OBSERVATIONS_PATH.relative_to(ROOT)),
         "canceled_excluded": len(canceled_rows),
         "duplicate_exact_occurrences_collapsed": len(normalized) - len(rows),
         "snapshot_rows": len(rows),
