@@ -4,8 +4,12 @@ from __future__ import annotations
 import argparse
 import json
 from collections import Counter
-from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.borg_cli_paths import resolve_workspace_file
+except ModuleNotFoundError:  # direct execution from scripts/
+    from borg_cli_paths import resolve_workspace_file
 
 FORBIDDEN_FIELDS = {
     "raw_audio",
@@ -185,12 +189,16 @@ def main() -> int:
     parser.add_argument("--terminology", required=True)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
-    observations_payload = json.loads(Path(args.observations).read_text())
-    terminology_payload = json.loads(Path(args.terminology).read_text())
+
+    observations_path = resolve_workspace_file(args.observations, must_exist=True)
+    terminology_path = resolve_workspace_file(args.terminology, must_exist=True)
+    output_path = resolve_workspace_file(args.output, must_exist=False)
+    observations_payload = json.loads(observations_path.read_text())
+    terminology_payload = json.loads(terminology_path.read_text())
     observations = observations_payload.get("records", observations_payload)
     terminology_records = terminology_payload.get("records", terminology_payload)
     result = project_call_coverage(observations=observations, terminology_records=terminology_records)
-    Path(args.output).write_text(json.dumps(result, indent=2) + "\n")
+    output_path.write_text(json.dumps(result, indent=2) + "\n")
     return 0
 
 
