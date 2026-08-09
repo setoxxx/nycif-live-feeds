@@ -1,0 +1,135 @@
+{
+  "contract": "nycif.borg-freq-call-coverage.v1",
+  "status": "DRAFT_PROTECTED_FUTURE_CONSUMER",
+  "purpose": "Account for every eligible public FREQ call observation, classify it from FREQ terminology evidence, preserve FREQ location authority, and produce reader-safe list/map records without category-based suppression or guessed meaning/location.",
+  "mission_policy": {
+    "news_first_public_interest": true,
+    "eligible_public_calls_are_coverage_records": true,
+    "category_based_call_suppression_allowed": false,
+    "unknown_call_type_may_be_silently_dropped": false,
+    "unresolved_location_may_be_silently_dropped": false,
+    "ranking_may_change_display_order_but_not_coverage_accounting": true,
+    "press_mission_does_not_override_source_rights_or_location_authority": true
+  },
+  "upstream_authorities": {
+    "call_observation": "FREQ",
+    "terminology": "FREQ canonical terminology registry",
+    "location": "FREQ resolver / approved canonical location path",
+    "public_alert_status": "FREQ",
+    "borg_role": "classification-preserving coverage projection and public-source discovery"
+  },
+  "required_observation_fields": [
+    "freq_observation_id",
+    "observed_at",
+    "jurisdiction_id",
+    "service_class",
+    "rights_state",
+    "sensitivity_state",
+    "location_state",
+    "location_evidence_ref",
+    "terminology_refs",
+    "provenance_ref"
+  ],
+  "optional_observation_fields": [
+    "public_area_label",
+    "public_location_id",
+    "public_geometry_state",
+    "public_geometry",
+    "public_summary_terms",
+    "official_source_refs"
+  ],
+  "forbidden_input_fields": [
+    "raw_audio",
+    "raw_iq",
+    "private_transcript",
+    "receiver_exact_location",
+    "private_responder_identity",
+    "tactical_detail",
+    "encryption_key_material",
+    "unpublished_exact_incident_coordinates"
+  ],
+  "terminology_projection": {
+    "canonical_fields": [
+      "id",
+      "agency",
+      "domain",
+      "canonical_text",
+      "canonical_meaning",
+      "public_summary",
+      "code",
+      "source_ids",
+      "confidence",
+      "sensitivity",
+      "publication_action",
+      "review_status"
+    ],
+    "approved_term_required_for_confirmed_classification": true,
+    "unknown_or_unapproved_code_state": "CLASSIFICATION_PENDING",
+    "unknown_code_guessing_allowed": false,
+    "multiple_supported_terms_may_be_preserved": true,
+    "primary_classification_is_highest_confidence_approved_term": true
+  },
+  "location_projection": {
+    "states": ["resolved", "ambiguous", "unresolved", "review_required"],
+    "resolved_exact_public_requires_public_location_id": true,
+    "resolved_exact_public_geometry_requires_public_geometry_authorization": true,
+    "ambiguous_or_unresolved_may_use_public_area_label": true,
+    "ambiguous_or_unresolved_may_create_exact_pin": false,
+    "coordinate_presence_alone_creates_authority": false,
+    "receiver_location_may_be_used_as_incident_location": false,
+    "transmitter_or_caller_triangulation_allowed": false
+  },
+  "coverage_dispositions": [
+    "CLASSIFIED_PUBLIC",
+    "CLASSIFIED_PUBLIC_LOCATION_PENDING",
+    "CLASSIFICATION_PENDING_PUBLIC",
+    "RIGHTS_REVIEW_REQUIRED",
+    "SENSITIVITY_REVIEW_REQUIRED",
+    "QUARANTINE_SENSITIVE_INPUT"
+  ],
+  "public_record": {
+    "required_fields": [
+      "call_id",
+      "observed_at",
+      "jurisdiction_id",
+      "service_class",
+      "classification_state",
+      "call_type",
+      "call_label",
+      "call_meaning",
+      "public_summary",
+      "location_state",
+      "public_area_label",
+      "public_location_id",
+      "public_geometry_state",
+      "public_geometry",
+      "coverage_disposition",
+      "provenance_ref"
+    ],
+    "unknown_classification_label": "Public call — classification pending",
+    "unresolved_location_label": "Location not yet resolved",
+    "category_is_information_not_an_exclusion_gate": true
+  },
+  "accounting": {
+    "input_observation_count_equals_terminal_record_count": true,
+    "every_observation_has_exactly_one_terminal_disposition": true,
+    "nature_filtered_count_must_equal": 0,
+    "silent_loss_must_equal": 0,
+    "duplicate_or_conflicting_upstream_ids_fail_closed": true
+  },
+  "privacy_and_safety": {
+    "no_private_person_identity": true,
+    "no_private_responder_identity": true,
+    "no_raw_audio_or_iq_public_projection": true,
+    "no_private_transcript_public_projection": true,
+    "no_tactical_detail_public_projection": true,
+    "no_encryption_bypass_or_key_material": true,
+    "public_detail_may_be_generalized_without_removing_the_coverage_record": true
+  },
+  "current_dependency_state": {
+    "freq_repo": "setoxxx/freqmap",
+    "freq_integration_freeze": true,
+    "freq_gate": "Gate 48 HOLD / Issue #69 integration housekeeping",
+    "implementation_rule": "Build and test BORG projection with synthetic/public-safe fixtures only until FREQ's governing gate authorizes runtime integration."
+  }
+}
