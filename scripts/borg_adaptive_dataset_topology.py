@@ -4,8 +4,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.borg_cli_paths import resolve_workspace_file, workspace_relative
+except ModuleNotFoundError:  # direct execution from scripts/
+    from borg_cli_paths import resolve_workspace_file, workspace_relative
 
 TOPOLOGY_CONTRACT = "nycif.borg-topology-projection.v1"
 LEARNING_CONTRACT = "nycif.borg-learning-observation.v1"
@@ -141,8 +145,12 @@ def main() -> int:
     parser.add_argument("--sensitivity-class", required=True)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
-    payload = json.loads(Path(args.dataset).read_text())
-    registry = json.loads(Path(args.registry).read_text())
+
+    dataset_path = resolve_workspace_file(args.dataset, must_exist=True)
+    registry_path = resolve_workspace_file(args.registry, must_exist=True)
+    output_path = resolve_workspace_file(args.output, must_exist=False)
+    payload = json.loads(dataset_path.read_text())
+    registry = json.loads(registry_path.read_text())
     result = interpret_dataset(
         payload=payload,
         registry=registry,
@@ -150,9 +158,9 @@ def main() -> int:
         snapshot_id=args.snapshot_id,
         authority_class=args.authority_class,
         sensitivity_class=args.sensitivity_class,
-        provenance={"dataset_path": args.dataset},
+        provenance={"dataset_path": workspace_relative(dataset_path)},
     )
-    Path(args.output).write_text(json.dumps(result, indent=2) + "\n")
+    output_path.write_text(json.dumps(result, indent=2) + "\n")
     return 0
 
 
