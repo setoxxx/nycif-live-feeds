@@ -5,7 +5,9 @@ on:
     paths:
       - 'docs/contracts/BORG_CULTURE_DISCOVERY_HANDOFF_V1.json'
       - 'scripts/validate_borg_culture_discovery.py'
+      - 'scripts/build_borg_culture_discovery_handoff.py'
       - 'tests/test_borg_culture_discovery.py'
+      - 'tests/test_build_borg_culture_discovery_handoff.py'
       - '.github/workflows/borg-culture-discovery-qa.yml'
   workflow_dispatch:
 
@@ -25,15 +27,20 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Compile Culture discovery validator and tests
+      - name: Compile Culture discovery validator, adapter and tests
         run: |
           python3 -m py_compile \
             scripts/validate_borg_culture_discovery.py \
-            tests/test_borg_culture_discovery.py
+            scripts/build_borg_culture_discovery_handoff.py \
+            tests/test_borg_culture_discovery.py \
+            tests/test_build_borg_culture_discovery_handoff.py
 
-      - name: Run Culture discovery golden flows
+      - name: Run Culture discovery golden flows and source handoff tests
         run: |
-          python3 -m unittest tests.test_borg_culture_discovery -v
+          python3 -m unittest \
+            tests.test_borg_culture_discovery \
+            tests.test_build_borg_culture_discovery_handoff \
+            -v
 
       - name: Verify contract invariants are present
         run: |
