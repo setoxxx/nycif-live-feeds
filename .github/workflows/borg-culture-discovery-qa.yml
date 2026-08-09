@@ -1,0 +1,53 @@
+name: BORG Culture Discovery QA
+
+on:
+  pull_request:
+    paths:
+      - 'docs/contracts/BORG_CULTURE_DISCOVERY_HANDOFF_V1.json'
+      - 'scripts/validate_borg_culture_discovery.py'
+      - 'tests/test_borg_culture_discovery.py'
+      - '.github/workflows/borg-culture-discovery-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  culture-discovery-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile Culture discovery validator and tests
+        run: |
+          python3 -m py_compile \
+            scripts/validate_borg_culture_discovery.py \
+            tests/test_borg_culture_discovery.py
+
+      - name: Run Culture discovery golden flows
+        run: |
+          python3 -m unittest tests.test_borg_culture_discovery -v
+
+      - name: Verify contract invariants are present
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          contract = json.loads(Path('docs/contracts/BORG_CULTURE_DISCOVERY_HANDOFF_V1.json').read_text())
+          assert contract['contract'] == 'nycif.borg-culture-discovery-handoff.v1'
+          assert contract['expected_base_geography_count'] == 262
+          assert contract['community_profile']['required_for_every_residential_nta'] is True
+          assert contract['community_profile']['culture_claim_power'] == 'NONE'
+          assert contract['cultural_area']['census_only_area_creation_allowed'] is False
+          assert contract['verified_place']['public_disposition'] == 'ACCEPTED'
+          assert contract['authority']['national_map_public_runtime'] is True
+          assert contract['authority']['second_geocoder_allowed'] is False
+          PY
