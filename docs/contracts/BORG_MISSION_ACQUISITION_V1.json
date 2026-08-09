@@ -1,0 +1,129 @@
+{
+  "contract": "nycif.borg-mission-acquisition.v1",
+  "status": "DRAFT_PROTECTED",
+  "mission": "Convert fragmented public information into ordered, reproducible, provenance-preserving knowledge that helps NYC In Focus discover what people need to know without fabricating authority, bypassing access controls, or collecting prohibited sensitive material.",
+  "operating_loop": [
+    "IDENTIFY_INFORMATION_GAP",
+    "EXPAND_SOURCE_FRONTIER",
+    "QUALIFY_SOURCE",
+    "ACQUIRE_ALLOWED_PUBLIC_DATA",
+    "PRESERVE_RAW_PROVENANCE",
+    "FINGERPRINT_AND_INTERPRET",
+    "PROJECT_TYPED_FACTS",
+    "BUILD_OR_UPDATE_TOPOLOGY",
+    "MEASURE_COVERAGE_AND_FRESHNESS",
+    "LEARN_SOURCE_BEHAVIOR",
+    "REPEAT"
+  ],
+  "aggressive_acquisition_definition": {
+    "means": [
+      "broad source discovery",
+      "high freshness",
+      "persistent retry with bounded backoff",
+      "gap-driven expansion",
+      "official-source-first corroboration",
+      "deterministic pagination to exhaustion where permitted",
+      "schema drift detection",
+      "source-health monitoring",
+      "zero-silent-loss accounting"
+    ],
+    "does_not_mean": [
+      "bypassing authentication",
+      "bypassing paywalls or CAPTCHAs",
+      "ignoring explicit automated-access prohibitions",
+      "evading rate limits",
+      "probing private networks or hidden administrative endpoints",
+      "collecting tactical or private responder information",
+      "harvesting personal data unrelated to a public-interest reporting purpose",
+      "publishing discovery-only claims as verified facts"
+    ]
+  },
+  "source_tiers": {
+    "A": "Authoritative government or public-institution source",
+    "B": "Official organizer, venue, institution or first-party source",
+    "C": "Approved partner or structured public feed with documented rights and stability",
+    "D": "Discovery-only source requiring corroboration before verified use"
+  },
+  "preferred_source_types": [
+    "API",
+    "DATASET",
+    "RSS",
+    "ICS",
+    "JSON_FEED",
+    "PUBLIC_DOWNLOAD",
+    "HTML_PAGE"
+  ],
+  "rights_dimensions": [
+    "RETRIEVAL_ALLOWED",
+    "RETENTION_ALLOWED",
+    "TRANSFORMATION_ALLOWED",
+    "PUBLIC_PROJECTION_ALLOWED",
+    "ATTRIBUTION_REQUIRED"
+  ],
+  "automated_retrieval_policy": {
+    "allowed_methods": ["GET", "HEAD"],
+    "https_preferred": true,
+    "respect_robots_for_html_crawling": true,
+    "robots_disallow_blocks_automated_html_fetch": true,
+    "unknown_rights_routes_to_review": true,
+    "unknown_authentication_routes_to_review": true,
+    "private_or_loopback_network_targets_allowed": false,
+    "credential_discovery_or_extraction_allowed": false,
+    "bounded_concurrency_required": true,
+    "bounded_per_host_rate_required": true,
+    "retry_backoff_required": true,
+    "partial_response_detection_required": true,
+    "deterministic_pagination_required_when_available": true,
+    "source_specific_user_agent_required": true
+  },
+  "raw_observation_requirements": [
+    "source_id",
+    "canonical_url",
+    "retrieved_at",
+    "http_status_or_source_status",
+    "content_type",
+    "payload_sha256",
+    "source_native_id_when_available",
+    "source_updated_at_when_available",
+    "parser_version",
+    "rights_state",
+    "provenance_ref"
+  ],
+  "frontier_priority": [
+    "PUBLIC_SAFETY_OR_CIVIC_TIME_SENSITIVITY",
+    "KNOWN_COVERAGE_GAP",
+    "REQUIRED_TIER_A_SOURCE_STALE_OR_FAILED",
+    "HIGH_PUBLIC_INTEREST",
+    "OFFICIAL_CORROBORATION_NEEDED",
+    "NEW_SCHEMA_OR_SOURCE_DISCOVERED",
+    "LONG_HORIZON_ENRICHMENT"
+  ],
+  "publication_rule": "Acquisition creates observations, not truth. Public facts require the existing identity, evidence, rights, location, privacy and projection authorities for that record type.",
+  "learning": {
+    "remember_source_reliability": true,
+    "remember_schema_fingerprints": true,
+    "remember_pagination_behavior": true,
+    "remember_freshness_patterns": true,
+    "remember_failure_signatures": true,
+    "may_recommend_new_source_or_recipe": true,
+    "may_self_authorize_new_rights_or_publication": false
+  },
+  "public_interest_limits": {
+    "raw_audio_collection_requires_separate_authority": true,
+    "tactical_sensitive_collection_prohibited_by_default": true,
+    "private_responder_data_prohibited": true,
+    "caller_identity_inference_prohibited": true,
+    "religion_ethnicity_or_culture_inference_about_people_prohibited": true,
+    "minimum_necessary_data": true
+  },
+  "authority": {
+    "source_acquisition": "BORG",
+    "adaptive_interpretation": "BORG approved recipe registry",
+    "geospatial_truth": "ENIGMA / canonical location authority",
+    "event_identity": "OccurrenceIdentityV2 / canonical event path",
+    "business_identity": "Universal Business Registry",
+    "freq_public_safety_truth": "FREQ",
+    "public_runtime": "National Map",
+    "no_second_authority": true
+  }
+}
