@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import ipaddress
 import json
 from collections import Counter
 from typing import Any
@@ -59,6 +60,33 @@ def _fail(message: str) -> None:
     raise ValueError(message)
 
 
+def _validate_active_public_url(source_id: str, parsed: Any) -> None:
+    """Reject URL forms that can target non-public or credential-bearing hosts.
+
+    DNS resolution is intentionally deferred to the acquisition runtime, where
+    every connection must re-check the resolved address before use. This static
+    gate rejects unsafe literal/localhost forms before a source may become ACTIVE.
+    """
+
+    if parsed.username is not None or parsed.password is not None:
+        _fail(f"{source_id}: active source URL cannot embed credentials")
+
+    hostname = str(parsed.hostname or "").rstrip(".").lower()
+    if not hostname:
+        _fail(f"{source_id}: active source URL requires hostname")
+    if hostname == "localhost" or hostname.endswith(".localhost") or hostname.endswith(".local"):
+        _fail(f"{source_id}: active source URL cannot target local hostnames")
+    if hostname.isdigit():
+        _fail(f"{source_id}: active source URL cannot use numeric hostname shorthand")
+
+    try:
+        address = ipaddress.ip_address(hostname)
+    except ValueError:
+        return
+    if not address.is_global:
+        _fail(f"{source_id}: active source URL IP must be globally routable")
+
+
 def validate_registry(payload: dict[str, Any]) -> dict[str, Any]:
     if payload.get("contract") != CONTRACT:
         _fail("Unsupported source registry contract")
@@ -105,6 +133,7 @@ def validate_registry(payload: dict[str, Any]) -> dict[str, Any]:
         if is_active:
             if parsed.scheme != "https":
                 _fail(f"{source_id}: active automated source must use HTTPS")
+            _validate_active_public_url(source_id, parsed)
             if row["network_scope"] != "PUBLIC":
                 _fail(f"{source_id}: active source must have PUBLIC network scope")
             if row["authentication_mode"] == "UNKNOWN":
