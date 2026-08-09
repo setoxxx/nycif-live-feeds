@@ -3,8 +3,9 @@
 
 Fail-closed rules:
 - exactly 262 BASE_GEOGRAPHY records;
-- every base NTA has exactly one COMMUNITY_PROFILE terminal state unless explicitly nonresidential;
-- Cultural areas require independent non-Census source evidence;
+- every base NTA has exactly one COMMUNITY_PROFILE terminal state;
+- special/nonresidential geographies use NOT_APPLICABLE rather than disappearing;
+- cultural areas require independent non-Census source evidence;
 - public places must be ACCEPTED only;
 - absence of a cultural area is valid and never backfilled from demographics.
 """
@@ -24,7 +25,10 @@ CENSUS_SOURCE_MARKERS = {"acs", "census", "american community survey"}
 
 
 def _is_census_source(source: dict[str, Any]) -> bool:
-    haystack = " ".join(str(source.get(k, "")) for k in ("source_family", "authority", "source_ref", "source_url")).lower()
+    haystack = " ".join(
+        str(source.get(k, ""))
+        for k in ("source_family", "authority", "source_ref", "source_url")
+    ).lower()
     return any(marker in haystack for marker in CENSUS_SOURCE_MARKERS)
 
 
@@ -44,7 +48,9 @@ def validate(payload: dict[str, Any]) -> dict[str, Any]:
 
     base = by_type["BASE_GEOGRAPHY"]
     if len(base) != EXPECTED_NTAS:
-        raise ValueError(f"Expected {EXPECTED_NTAS} BASE_GEOGRAPHY records, found {len(base)}")
+        raise ValueError(
+            f"Expected {EXPECTED_NTAS} BASE_GEOGRAPHY records, found {len(base)}"
+        )
 
     nta_codes = [str(row.get("nta2020", "")) for row in base]
     if any(not code for code in nta_codes):
@@ -56,46 +62,78 @@ def validate(payload: dict[str, Any]) -> dict[str, Any]:
     profile_by_nta = Counter(str(row.get("nta2020", "")) for row in profile_rows)
     unknown_profile_ntas = sorted(set(profile_by_nta) - set(nta_codes))
     if unknown_profile_ntas:
-        raise ValueError(f"COMMUNITY_PROFILE references unknown NTAs: {unknown_profile_ntas[:10]}")
-    duplicate_profiles = sorted(code for code, count in profile_by_nta.items() if count != 1)
+        raise ValueError(
+            f"COMMUNITY_PROFILE references unknown NTAs: {unknown_profile_ntas[:10]}"
+        )
+
+    missing_profiles = sorted(code for code in nta_codes if profile_by_nta.get(code, 0) == 0)
+    duplicate_profiles = sorted(
+        code for code, count in profile_by_nta.items() if count != 1
+    )
+    if missing_profiles:
+        raise ValueError(
+            f"BASE_GEOGRAPHY NTAs missing COMMUNITY_PROFILE terminal state: {missing_profiles[:10]}"
+        )
     if duplicate_profiles:
-        raise ValueError(f"Expected exactly one COMMUNITY_PROFILE per represented NTA: {duplicate_profiles[:10]}")
+        raise ValueError(
+            f"Expected exactly one COMMUNITY_PROFILE per NTA: {duplicate_profiles[:10]}"
+        )
+    if len(profile_rows) != EXPECTED_NTAS:
+        raise ValueError(
+            f"Expected {EXPECTED_NTAS} COMMUNITY_PROFILE records, found {len(profile_rows)}"
+        )
 
     base_by_nta = {str(row["nta2020"]): row for row in base}
-    missing_profiles: list[str] = []
-    for code, base_row in base_by_nta.items():
-        residential = bool(base_row.get("residential", True))
-        if residential and profile_by_nta.get(code, 0) != 1:
-            missing_profiles.append(code)
-    if missing_profiles:
-        raise ValueError(f"Residential NTAs missing COMMUNITY_PROFILE: {missing_profiles[:10]}")
-
     for row in profile_rows:
+        code = str(row.get("nta2020", ""))
         state = str(row.get("profile_state", ""))
         if state not in PROFILE_STATES:
             raise ValueError(f"Invalid COMMUNITY_PROFILE state: {state!r}")
         if row.get("culture_label") or row.get("cultural_area_name"):
-            raise ValueError("COMMUNITY_PROFILE cannot carry a cultural-area classification")
+            raise ValueError(
+                "COMMUNITY_PROFILE cannot carry a cultural-area classification"
+            )
+        residential = bool(base_by_nta[code].get("residential", True))
+        if residential and state == "NOT_APPLICABLE":
+            raise ValueError(
+                f"Residential NTA {code} cannot use COMMUNITY_PROFILE NOT_APPLICABLE"
+            )
+        if not residential and state != "NOT_APPLICABLE":
+            raise ValueError(
+                f"Nonresidential/special NTA {code} must use COMMUNITY_PROFILE NOT_APPLICABLE"
+            )
 
     for area in by_type["CULTURAL_AREA"]:
         sources = area.get("sources")
         if not isinstance(sources, list) or not sources:
-            raise ValueError(f"CULTURAL_AREA {area.get('area_id')} lacks source evidence")
-        if all(_is_census_source(src) for src in sources if isinstance(src, dict)):
+            raise ValueError(
+                f"CULTURAL_AREA {area.get('area_id')} lacks source evidence"
+            )
+        source_objects = [src for src in sources if isinstance(src, dict)]
+        if not source_objects:
+            raise ValueError(
+                f"CULTURAL_AREA {area.get('area_id')} lacks usable source evidence"
+            )
+        if all(_is_census_source(src) for src in source_objects):
             raise ValueError(f"CULTURAL_AREA {area.get('area_id')} is Census-only")
 
     for place in by_type["VERIFIED_PLACE"]:
         disposition = str(place.get("disposition", ""))
         if disposition not in PUBLIC_PLACE_DISPOSITIONS:
-            raise ValueError(f"Public VERIFIED_PLACE must be ACCEPTED, found {disposition!r}")
+            raise ValueError(
+                f"Public VERIFIED_PLACE must be ACCEPTED, found {disposition!r}"
+            )
         if not place.get("business_id") or not place.get("location_id"):
-            raise ValueError("VERIFIED_PLACE missing canonical business/location identity")
+            raise ValueError(
+                "VERIFIED_PLACE missing canonical business/location identity"
+            )
         if not place.get("why_included"):
             raise ValueError("VERIFIED_PLACE missing why_included")
 
     return {
         "base_count": len(base),
         "profile_count": len(profile_rows),
+        "profile_terminal_accounting_complete": len(profile_rows) == EXPECTED_NTAS,
         "cultural_area_count": len(by_type["CULTURAL_AREA"]),
         "verified_place_count": len(by_type["VERIFIED_PLACE"]),
         "silent_loss": 0,
