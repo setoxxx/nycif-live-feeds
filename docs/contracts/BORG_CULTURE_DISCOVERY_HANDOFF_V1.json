@@ -19,7 +19,8 @@
       "required_fields": ["nta2020", "acs_vintage", "profile_state", "metrics"],
       "terminal_states": ["READY", "STALE", "UNAVAILABLE", "NOT_APPLICABLE"],
       "culture_claim_power": "NONE",
-      "boundary_creation_power": "NONE"
+      "boundary_creation_power": "NONE",
+      "accounting_rule": "Exactly one terminal COMMUNITY_PROFILE record is required for every BASE_GEOGRAPHY NTA. Use NOT_APPLICABLE for special/nonresidential geographies rather than omitting the NTA."
     },
     {
       "type": "CULTURAL_AREA",
@@ -37,7 +38,9 @@
   "citywide_accounting": {
     "expected_base_nta_count": 262,
     "expected_base_terminal_accounting": 262,
-    "community_profile_terminal_state_required_for_each_residential_nta": true,
+    "expected_community_profile_terminal_count": 262,
+    "community_profile_terminal_state_required_for_every_base_nta": true,
+    "not_applicable_used_for_special_or_nonresidential_geography": true,
     "missing_cultural_area_is_valid_state": true,
     "zero_verified_places_is_valid_state": true,
     "silent_loss_allowed": false
