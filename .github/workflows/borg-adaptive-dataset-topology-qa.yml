@@ -6,12 +6,15 @@ on:
       - 'docs/contracts/BORG_ADAPTIVE_DATASET_TOPOLOGY_V1.json'
       - 'docs/contracts/BORG_DATASET_RECIPE_REGISTRY_V1.json'
       - 'docs/contracts/BORG_MISSION_ACQUISITION_V1.json'
+      - 'docs/contracts/BORG_SOURCE_REGISTRY_V1.json'
       - 'docs/contracts/BORG_FREQ_DISCOVERY_BRIDGE_V1.json'
       - 'scripts/borg_adaptive_dataset_topology.py'
       - 'scripts/borg_source_frontier.py'
+      - 'scripts/borg_freq_search_plan.py'
       - 'tests/test_borg_adaptive_dataset_topology.py'
       - 'tests/test_borg_mission_and_freq_bridge.py'
       - 'tests/test_borg_source_frontier.py'
+      - 'tests/test_borg_freq_search_plan.py'
       - '.github/workflows/borg-adaptive-dataset-topology-qa.yml'
   workflow_dispatch:
 
@@ -27,20 +30,23 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Compile interpreter, planner and tests
+      - name: Compile interpreter, planners and tests
         run: |
           python3 -m py_compile \
             scripts/borg_adaptive_dataset_topology.py \
             scripts/borg_source_frontier.py \
+            scripts/borg_freq_search_plan.py \
             tests/test_borg_adaptive_dataset_topology.py \
             tests/test_borg_mission_and_freq_bridge.py \
-            tests/test_borg_source_frontier.py
+            tests/test_borg_source_frontier.py \
+            tests/test_borg_freq_search_plan.py
       - name: Run adaptive topology, acquisition, frontier and FREQ bridge regressions
         run: |
           python3 -m unittest \
             tests.test_borg_adaptive_dataset_topology \
             tests.test_borg_mission_and_freq_bridge \
-            tests.test_borg_source_frontier -v
+            tests.test_borg_source_frontier \
+            tests.test_borg_freq_search_plan -v
       - name: Verify adaptive contract invariants
         run: |
           python3 - <<'PY'
@@ -49,6 +55,7 @@ jobs:
           c = json.loads(Path('docs/contracts/BORG_ADAPTIVE_DATASET_TOPOLOGY_V1.json').read_text())
           r = json.loads(Path('docs/contracts/BORG_DATASET_RECIPE_REGISTRY_V1.json').read_text())
           m = json.loads(Path('docs/contracts/BORG_MISSION_ACQUISITION_V1.json').read_text())
+          s = json.loads(Path('docs/contracts/BORG_SOURCE_REGISTRY_V1.json').read_text())
           f = json.loads(Path('docs/contracts/BORG_FREQ_DISCOVERY_BRIDGE_V1.json').read_text())
           assert c['contract'] == 'nycif.borg-adaptive-dataset-topology.v1'
           assert c['recipe_policy']['unknown_schema_public_projection_allowed'] is False
@@ -62,6 +69,9 @@ jobs:
           assert m['contract'] == 'nycif.borg-mission-acquisition.v1'
           assert m['automated_retrieval_policy']['private_or_loopback_network_targets_allowed'] is False
           assert m['learning']['may_self_authorize_new_rights_or_publication'] is False
+          assert s['contract'] == 'nycif.borg-source-registry.v1'
+          assert 'rights' in s['required_fields']
+          assert 'schema_fingerprint' in s['required_fields']
           assert f['contract'] == 'nycif.borg-freq-discovery-bridge.v1'
           assert f['location_rules']['borg_may_infer_incident_location_from_receiver_location'] is False
           assert f['location_rules']['borg_may_triangulate_transmitter_or_caller_location'] is False
