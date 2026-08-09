@@ -5,7 +5,7 @@
       "artifact": ".github/workflows/discovery-feed-refresh.yml",
       "code": "daily_refresh_stage_failed",
       "command_id": "build_daily_data_health",
-      "error_summary": "[truncated] ta/reports/event_923896_snapshot_recovery_certificate.json\",\n      \"certificate_schema_version\": \"1.0.0\",\n      \"operating_rule\": \"Event 923896 must appear exactly once in the approved public feed on 2026-08-01 with the East 74 Street / Avenue U / Avenue T Brooklyn segment pin.\",\n      \"qa_pass\": true,\n      \"failures\": [],\n      \"evaluated_date\": \"2026-08-08\"\n    }\n  },\n  \"pipeline\": {\n    \"strict_reconciliation\": true,\n    \"calendar_parks_unaccounted_gap\": 0,\n    \"canonical_identity_clean\": true,\n    \"cross_source_dedupe_clean\": true,\n    \"shared_cems_dedupe_clean\": true,\n    \"runtime_fallback_clean\": true,\n    \"photographer_money_day_clean\": true,\n    \"viral_recurrence_clean\": true,\n    \"field_desk_public_overlays_clean\": true,\n    \"required_event_923896_public_and_correct\": true,\n    \"exact_occurrence_duplicates_suppressed\": 0,\n    \"cross_date_street_occurrences_suppressed\": 0\n  },\n  \"blockers\": [\n    {\n      \"code\": \"source_not_live_and_fresh\",\n      \"severity\": \"critical\",\n      \"message\": \"NYC Parks BigApps is not a successful live fetch within 36 hours (HTTP Error 405: Not Allowed).\",\n      \"artifact\": \"data/nyc_parks_bigapps_events_sync_report.json\"\n    }\n  ],\n  \"operating_rule\": \"Do not commit or publish a refreshed public feed unless status is READY.\",\n  \"rollback_rule\": \"A failed refresh leaves public feed JSON unchanged and publishes only a BLOCKED God View status.\",\n  \"enigma\": {\n    \"production_authority\": false,\n    \"mode\": \"shadow_only\",\n    \"note\": \"V1 remains the production authority until a separately governed real-data Enigma phase is authorized.\"\n  }\n}",
+      "error_summary": "[truncated] ta/reports/event_923896_snapshot_recovery_certificate.json\",\n      \"certificate_schema_version\": \"1.0.0\",\n      \"operating_rule\": \"Event 923896 must appear exactly once in the approved public feed on 2026-08-01 with the East 74 Street / Avenue U / Avenue T Brooklyn segment pin.\",\n      \"qa_pass\": true,\n      \"failures\": [],\n      \"evaluated_date\": \"2026-08-09\"\n    }\n  },\n  \"pipeline\": {\n    \"strict_reconciliation\": true,\n    \"calendar_parks_unaccounted_gap\": 0,\n    \"canonical_identity_clean\": true,\n    \"cross_source_dedupe_clean\": true,\n    \"shared_cems_dedupe_clean\": true,\n    \"runtime_fallback_clean\": true,\n    \"photographer_money_day_clean\": true,\n    \"viral_recurrence_clean\": true,\n    \"field_desk_public_overlays_clean\": true,\n    \"required_event_923896_public_and_correct\": true,\n    \"exact_occurrence_duplicates_suppressed\": 0,\n    \"cross_date_street_occurrences_suppressed\": 0\n  },\n  \"blockers\": [\n    {\n      \"code\": \"source_not_live_and_fresh\",\n      \"severity\": \"critical\",\n      \"message\": \"NYC Parks BigApps is not a successful live fetch within 36 hours (HTTP Error 405: Not Allowed).\",\n      \"artifact\": \"data/nyc_parks_bigapps_events_sync_report.json\"\n    }\n  ],\n  \"operating_rule\": \"Do not commit or publish a refreshed public feed unless status is READY.\",\n  \"rollback_rule\": \"A failed refresh leaves public feed JSON unchanged and publishes only a BLOCKED God View status.\",\n  \"enigma\": {\n    \"production_authority\": false,\n    \"mode\": \"shadow_only\",\n    \"note\": \"V1 remains the production authority until a separately governed real-data Enigma phase is authorized.\"\n  }\n}",
       "exception_class": "ProcessExitError",
       "exit_code": 1,
       "message": "Daily production refresh failed at stage 'daily_data_health_gate' (command 'build_daily_data_health', exit 1).",
@@ -23,7 +23,7 @@
     "note": "V1 remains the sole production authority.",
     "production_authority": false
   },
-  "generated_at_utc": "2026-08-08T12:34:25Z",
+  "generated_at_utc": "2026-08-09T13:39:36Z",
   "operating_rule": "Do not commit or publish a refreshed public feed unless status is READY.",
   "pipeline": {
     "canonical_identity_clean": false,
@@ -33,7 +33,7 @@
   },
   "release_ready": false,
   "rollback": {
-    "previous_public_feed_commit": "3276cc50d8544425891f06765a3ab5c12fa46343",
+    "previous_public_feed_commit": "b8040d37bc5e832ca4720e03285a7e1f4d2c223e",
     "strategy": "Failed runs do not commit; revert the READY refresh commit to restore this prior commit."
   },
   "rollback_rule": "The previous serving commit remains authoritative until a later refresh is READY.",
