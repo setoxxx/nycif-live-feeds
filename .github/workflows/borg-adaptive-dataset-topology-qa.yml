@@ -9,11 +9,13 @@ on:
       - 'docs/contracts/BORG_SOURCE_REGISTRY_V1.json'
       - 'docs/contracts/BORG_FREQ_DISCOVERY_BRIDGE_V1.json'
       - 'docs/contracts/BORG_FREQ_CALL_COVERAGE_V1.json'
+      - 'scripts/borg_cli_paths.py'
       - 'scripts/borg_adaptive_dataset_topology.py'
       - 'scripts/borg_source_frontier.py'
       - 'scripts/borg_freq_search_plan.py'
       - 'scripts/borg_freq_call_coverage.py'
       - 'scripts/validate_borg_source_registry.py'
+      - 'tests/test_borg_cli_paths.py'
       - 'tests/test_borg_adaptive_dataset_topology.py'
       - 'tests/test_borg_mission_and_freq_bridge.py'
       - 'tests/test_borg_source_frontier.py'
@@ -38,11 +40,13 @@ jobs:
       - name: Compile interpreter, planners, validator and tests
         run: |
           python3 -m py_compile \
+            scripts/borg_cli_paths.py \
             scripts/borg_adaptive_dataset_topology.py \
             scripts/borg_source_frontier.py \
             scripts/borg_freq_search_plan.py \
             scripts/borg_freq_call_coverage.py \
             scripts/validate_borg_source_registry.py \
+            tests/test_borg_cli_paths.py \
             tests/test_borg_adaptive_dataset_topology.py \
             tests/test_borg_mission_and_freq_bridge.py \
             tests/test_borg_source_frontier.py \
@@ -52,6 +56,7 @@ jobs:
       - name: Run adaptive topology, acquisition, registry, frontier and FREQ regressions
         run: |
           python3 -m unittest \
+            tests.test_borg_cli_paths \
             tests.test_borg_adaptive_dataset_topology \
             tests.test_borg_mission_and_freq_bridge \
             tests.test_borg_source_frontier \
