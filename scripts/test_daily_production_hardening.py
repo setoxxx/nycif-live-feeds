@@ -250,6 +250,22 @@ def test_refresh_workflow_has_structured_preflight_diagnostics() -> None:
     assert 'stage="unknown_stage"' not in workflow
 
 
+def test_refresh_transaction_live_fetches_supplemental_sources_before_reconciliation() -> None:
+    transaction = (ROOT / "scripts" / "run_discovery_feed_refresh.sh").read_text(
+        encoding="utf-8"
+    )
+    calendar = "python scripts/sync_nyc_citywide_events_calendar.py"
+    parks = "python scripts/sync_nyc_parks_bigapps_events.py"
+    reconcile = "python scripts/refresh_official_supplemental_occurrences.py"
+    assert calendar in transaction
+    assert parks in transaction
+    assert reconcile in transaction
+    assert transaction.index(calendar) < transaction.index(reconcile)
+    assert transaction.index(parks) < transaction.index(reconcile)
+    assert '"official_citywide_calendar_live_fetch"' in transaction
+    assert '"official_parks_live_fetch"' in transaction
+
+
 def test_modified_reliability_python_files_compile() -> None:
     with tempfile.TemporaryDirectory(dir=ROOT) as directory:
         output = Path(directory)
@@ -285,6 +301,7 @@ def main() -> int:
         test_blocked_health_payload_is_fail_closed_and_actionable,
         test_current_preflight_does_not_require_mutable_historical_pages,
         test_refresh_workflow_has_structured_preflight_diagnostics,
+        test_refresh_transaction_live_fetches_supplemental_sources_before_reconciliation,
         test_modified_reliability_python_files_compile,
     ]
     for test in tests:
