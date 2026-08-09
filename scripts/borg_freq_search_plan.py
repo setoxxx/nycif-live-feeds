@@ -12,8 +12,12 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.borg_cli_paths import resolve_workspace_file
+except ModuleNotFoundError:  # direct execution from scripts/
+    from borg_cli_paths import resolve_workspace_file
 
 CONTRACT = "nycif.borg-freq-public-search-plan.v1"
 FORBIDDEN_KEYS = {
@@ -147,11 +151,15 @@ def main() -> int:
     parser.add_argument("--sources", required=True)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
+
+    observation_path = resolve_workspace_file(args.observation, must_exist=True)
+    sources_path = resolve_workspace_file(args.sources, must_exist=True)
+    output_path = resolve_workspace_file(args.output, must_exist=False)
     result = build_search_plan(
-        observation=json.loads(Path(args.observation).read_text()),
-        sources=json.loads(Path(args.sources).read_text()),
+        observation=json.loads(observation_path.read_text()),
+        sources=json.loads(sources_path.read_text()),
     )
-    Path(args.output).write_text(json.dumps(result, indent=2) + "\n")
+    output_path.write_text(json.dumps(result, indent=2) + "\n")
     return 0
 
 
