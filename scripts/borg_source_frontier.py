@@ -12,8 +12,12 @@ import argparse
 import hashlib
 import json
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.borg_cli_paths import resolve_workspace_file
+except ModuleNotFoundError:  # direct execution from scripts/
+    from borg_cli_paths import resolve_workspace_file
 
 CONTRACT = "nycif.borg-source-frontier.v1"
 ALLOWED_ACTIONS = {"FETCH", "RETRY", "REVIEW", "NO_ACTION"}
@@ -115,12 +119,16 @@ def main() -> int:
     parser.add_argument("--sources", required=True)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
+
+    gaps_path = resolve_workspace_file(args.gaps, must_exist=True)
+    sources_path = resolve_workspace_file(args.sources, must_exist=True)
+    output_path = resolve_workspace_file(args.output, must_exist=False)
     result = build_frontier(
-        gaps=json.loads(Path(args.gaps).read_text()),
-        sources=json.loads(Path(args.sources).read_text()),
+        gaps=json.loads(gaps_path.read_text()),
+        sources=json.loads(sources_path.read_text()),
         now=datetime.now(timezone.utc),
     )
-    Path(args.output).write_text(json.dumps(result, indent=2) + "\n")
+    output_path.write_text(json.dumps(result, indent=2) + "\n")
     return 0
 
 
