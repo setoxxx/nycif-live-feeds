@@ -1,0 +1,86 @@
+{
+  "contract": "nycif.borg-culture-discovery-handoff.v1",
+  "status": "DRAFT_PROTECTED",
+  "authority": {
+    "producer": "BORG",
+    "geospatial_consumer": "ENIGMA",
+    "public_runtime": "National Map",
+    "culture_source_package": "nycif-data-pipeline protected Culture branch",
+    "no_second_authority": true
+  },
+  "record_types": [
+    {
+      "type": "BASE_GEOGRAPHY",
+      "required_fields": ["nta2020", "nta_name", "geometry", "source_dataset_id", "source_release"],
+      "culture_claim_power": "NONE"
+    },
+    {
+      "type": "COMMUNITY_PROFILE",
+      "required_fields": ["nta2020", "acs_vintage", "profile_state", "metrics"],
+      "terminal_states": ["READY", "STALE", "UNAVAILABLE", "NOT_APPLICABLE"],
+      "culture_claim_power": "NONE",
+      "boundary_creation_power": "NONE"
+    },
+    {
+      "type": "CULTURAL_AREA",
+      "required_fields": ["area_id", "public_name", "boundary_type", "boundary_status", "boundary_confidence", "sources"],
+      "allowed_geometry_states": ["EXACT", "CORRIDOR", "FUZZY", "LABEL_ONLY", "WITHHELD"],
+      "requires_independent_non_census_source": true
+    },
+    {
+      "type": "VERIFIED_PLACE",
+      "required_fields": ["business_id", "location_id", "disposition", "why_included"],
+      "public_dispositions": ["ACCEPTED"],
+      "location_authority": "ENIGMA/canonical location path"
+    }
+  ],
+  "citywide_accounting": {
+    "expected_base_nta_count": 262,
+    "expected_base_terminal_accounting": 262,
+    "community_profile_terminal_state_required_for_each_residential_nta": true,
+    "missing_cultural_area_is_valid_state": true,
+    "zero_verified_places_is_valid_state": true,
+    "silent_loss_allowed": false
+  },
+  "discovery_flow": [
+    "PLACE",
+    "COMMUNITY_PROFILE",
+    "DOCUMENTED_CULTURAL_AREAS_OPTIONAL",
+    "EXPERIENCE_CATEGORY",
+    "VERIFIED_PLACES"
+  ],
+  "golden_flows": [
+    {
+      "id": "marine-park-base-only",
+      "start": "Marine Park-Mill Basin-Bergen Beach",
+      "expected": [
+        "BASE_GEOGRAPHY_PRESENT",
+        "COMMUNITY_PROFILE_TERMINAL_STATE_PRESENT",
+        "NO_DOCUMENTED_CULTURAL_AREA_IS_VALID",
+        "NO_CENSUS_DERIVED_CULTURE_LABEL",
+        "INDEPENDENTLY_VERIFIED_PLACES_MAY_STILL_RENDER"
+      ]
+    },
+    {
+      "id": "little-haiti-named-area",
+      "start": "Little Haiti, Brooklyn",
+      "expected": [
+        "BASE_GEOGRAPHY_PRESENT",
+        "COMMUNITY_PROFILE_TERMINAL_STATE_PRESENT",
+        "CULTURAL_AREA_SEPARATELY_SOURCED",
+        "CULTURAL_GEOMETRY_REQUIRES_CERTIFIED_ENCODING",
+        "OVERLAPS_PRESERVED",
+        "VERIFIED_PLACES_ACCEPTED_ONLY"
+      ]
+    }
+  ],
+  "forbidden": [
+    "Census or ACS creating a cultural-area name",
+    "Census or ACS drawing a cultural boundary",
+    "Neighborhood demographics classifying a business/person",
+    "Area centroid or label anchor becoming a storefront pin",
+    "Review-required Culture records reaching public output",
+    "Missing Culture overlay being rendered as no culture",
+    "Creating duplicate event, business, or geocoder authority"
+  ]
+}
