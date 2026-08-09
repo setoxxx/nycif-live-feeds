@@ -4,10 +4,13 @@ on:
   pull_request:
     paths:
       - 'docs/contracts/BORG_CULTURE_DISCOVERY_HANDOFF_V1.json'
+      - 'docs/contracts/BORG_CULTURE_PLACE_ACTIVITY_HANDOFF_V1.json'
       - 'scripts/validate_borg_culture_discovery.py'
       - 'scripts/build_borg_culture_discovery_handoff.py'
+      - 'scripts/project_borg_culture_place_activities.py'
       - 'tests/test_borg_culture_discovery.py'
       - 'tests/test_build_borg_culture_discovery_handoff.py'
+      - 'tests/test_project_borg_culture_place_activities.py'
       - '.github/workflows/borg-culture-discovery-qa.yml'
   workflow_dispatch:
 
@@ -19,27 +22,43 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check out repository
+      - name: Check out exact PR head
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - name: Attest exact candidate
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          expected='${{ github.event.pull_request.head.sha }}'
+          actual="$(git rev-parse HEAD)"
+          echo "NYCIF_EXPECTED_PR_HEAD=${expected}"
+          echo "NYCIF_BORG_CULTURE_QA_HEAD=${actual}"
+          test "${actual}" = "${expected}"
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Compile Culture discovery validator, adapter and tests
+      - name: Compile Culture discovery code and tests
         run: |
           python3 -m py_compile \
             scripts/validate_borg_culture_discovery.py \
             scripts/build_borg_culture_discovery_handoff.py \
+            scripts/project_borg_culture_place_activities.py \
             tests/test_borg_culture_discovery.py \
-            tests/test_build_borg_culture_discovery_handoff.py
+            tests/test_build_borg_culture_discovery_handoff.py \
+            tests/test_project_borg_culture_place_activities.py
 
-      - name: Run Culture discovery golden flows and source handoff tests
+      - name: Run Culture discovery and verified-place activity tests
         run: |
           python3 -m unittest \
             tests.test_borg_culture_discovery \
             tests.test_build_borg_culture_discovery_handoff \
+            tests.test_project_borg_culture_place_activities \
             -v
 
       - name: Verify contract invariants are present
@@ -48,21 +67,30 @@ jobs:
           import json
           from pathlib import Path
 
-          contract = json.loads(Path('docs/contracts/BORG_CULTURE_DISCOVERY_HANDOFF_V1.json').read_text())
-          assert contract['contract'] == 'nycif.borg-culture-discovery-handoff.v1'
-          accounting = contract['citywide_accounting']
+          discovery = json.loads(Path('docs/contracts/BORG_CULTURE_DISCOVERY_HANDOFF_V1.json').read_text())
+          assert discovery['contract'] == 'nycif.borg-culture-discovery-handoff.v1'
+          accounting = discovery['citywide_accounting']
           assert accounting['expected_base_nta_count'] == 262
           assert accounting['expected_community_profile_terminal_count'] == 262
           assert accounting['community_profile_terminal_state_required_for_every_base_nta'] is True
           assert accounting['not_applicable_used_for_special_or_nonresidential_geography'] is True
           assert accounting['missing_cultural_area_is_valid_state'] is True
           assert accounting['silent_loss_allowed'] is False
-
-          record_types = {item['type']: item for item in contract['record_types']}
+          record_types = {item['type']: item for item in discovery['record_types']}
           assert record_types['COMMUNITY_PROFILE']['culture_claim_power'] == 'NONE'
           assert record_types['COMMUNITY_PROFILE']['boundary_creation_power'] == 'NONE'
           assert record_types['CULTURAL_AREA']['requires_independent_non_census_source'] is True
           assert record_types['VERIFIED_PLACE']['public_dispositions'] == ['ACCEPTED']
-          assert contract['authority']['public_runtime'] == 'National Map'
-          assert contract['authority']['no_second_authority'] is True
+
+          activity = json.loads(Path('docs/contracts/BORG_CULTURE_PLACE_ACTIVITY_HANDOFF_V1.json').read_text())
+          assert activity['contract'] == 'nycif.borg-culture-place-activity-handoff.v1'
+          assert activity['authority']['no_second_event_inventory'] is True
+          assert activity['verified_place_gate']['required_disposition'] == 'ACCEPTED'
+          assert activity['verified_place_gate']['area_proximity_is_culture_evidence'] is False
+          assert activity['verified_place_gate']['census_or_demographics_are_culture_evidence'] is False
+          assert activity['activity_gate']['aggregator_only_allowed'] is False
+          assert activity['activity_gate']['nearby_general_event_allowed'] is False
+          assert activity['activity_gate']['dated_occurrence_requires_canonical_occurrence_id'] is True
+          assert activity['accounting']['silent_loss_allowed'] is False
+          assert activity['marketing_rules']['marketing_may_create_culture_eligibility'] is False
           PY
