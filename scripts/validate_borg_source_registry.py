@@ -93,11 +93,12 @@ def validate_registry(payload: dict[str, Any]) -> dict[str, Any]:
         if row["registration_state"] not in REGISTRATION_STATES:
             _fail(f"{source_id}: invalid registration_state")
         states[row["registration_state"]] += 1
+        is_active = row["registration_state"] == "ACTIVE"
 
         parsed = urlparse(str(row["canonical_url"]))
         if parsed.scheme not in {"https", "http"} or not parsed.hostname:
             _fail(f"{source_id}: canonical_url must be absolute HTTP(S)")
-        if row["registration_state"] == "ACTIVE":
+        if is_active:
             if parsed.scheme != "https":
                 _fail(f"{source_id}: active automated source must use HTTPS")
             if row["network_scope"] != "PUBLIC":
@@ -119,7 +120,7 @@ def validate_registry(payload: dict[str, Any]) -> dict[str, Any]:
                 _fail(f"{source_id}: rights missing {field}")
         if rights["review_state"] not in REVIEW_STATES:
             _fail(f"{source_id}: invalid rights review_state")
-        if row["registration_state"] == "ACTIVE":
+        if is_active:
             if rights["review_state"] != "APPROVED" or rights["retrieval_allowed"] is not True:
                 _fail(f"{source_id}: active source requires approved retrieval rights")
             if row["source_tier"] == "D" and rights["public_projection_allowed"] is True:
@@ -133,12 +134,13 @@ def validate_registry(payload: dict[str, Any]) -> dict[str, Any]:
                 _fail(f"{source_id}: pagination missing {field}")
         if pagination["mode"] not in PAGINATION_MODES:
             _fail(f"{source_id}: invalid pagination mode")
-        if row["registration_state"] == "ACTIVE" and pagination["mode"] == "UNKNOWN":
-            _fail(f"{source_id}: active source cannot have UNKNOWN pagination")
-        if pagination["mode"] != "NONE" and pagination["deterministic_ordering"] is not True:
-            _fail(f"{source_id}: paginated source requires deterministic ordering")
-        if pagination["mode"] != "NONE" and pagination["exhaustion_or_total_parity_required"] is not True:
-            _fail(f"{source_id}: paginated source requires exhaustion/total parity")
+        if is_active:
+            if pagination["mode"] == "UNKNOWN":
+                _fail(f"{source_id}: active source cannot have UNKNOWN pagination")
+            if pagination["mode"] != "NONE" and pagination["deterministic_ordering"] is not True:
+                _fail(f"{source_id}: paginated source requires deterministic ordering")
+            if pagination["mode"] != "NONE" and pagination["exhaustion_or_total_parity_required"] is not True:
+                _fail(f"{source_id}: paginated source requires exhaustion/total parity")
 
         retry = row["retry_policy"]
         if not isinstance(retry, dict):
