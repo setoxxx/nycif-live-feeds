@@ -1,0 +1,72 @@
+name: Postmerge Fresh Source Production Trigger
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/postmerge-fresh-source-production-trigger.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: postmerge-fresh-source-production-trigger
+  cancel-in-progress: false
+
+jobs:
+  run-production-transaction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out exact trigger PR head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Attest exact trigger head
+        shell: bash
+        run: |
+          expected="${{ github.event.pull_request.head.sha }}"
+          actual="$(git rev-parse HEAD)"
+          echo "NYCIF_EXPECTED_TRIGGER_HEAD=${expected}"
+          echo "NYCIF_CHECKED_OUT_TRIGGER_HEAD=${actual}"
+          test "${actual}" = "${expected}"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run atomic production refresh from current main
+        shell: bash
+        run: bash scripts/run_discovery_feed_refresh.sh
+
+      - name: Report committed production evidence
+        if: success()
+        shell: bash
+        run: |
+          echo "NYCIF_PRODUCTION_HEAD=$(git rev-parse HEAD)"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          health = json.loads(Path('status/nycif-daily-data-health.json').read_text())
+          parks = json.loads(Path('data/nyc_parks_bigapps_events_sync_report.json').read_text())
+          reconciliation = json.loads(Path('data/events_discovery_reconciliation_v02.json').read_text())
+          new_events = json.loads(Path('data/nycif_new_events.json').read_text())
+
+          assert health.get('status') == 'READY' and health.get('release_ready') is True, health
+          assert parks.get('qa_pass') is True and parks.get('fetch_mode') == 'live', parks
+          assert reconciliation.get('reconciles_strict') is True, reconciliation
+          assert 'new_this_run' in new_events, new_events
+
+          print(json.dumps({
+              'status': 'POSTMERGE_FRESH_SOURCE_PRODUCTION_PASS',
+              'health_status': health.get('status'),
+              'parks_fetch_mode': parks.get('fetch_mode'),
+              'parks_generated_at_utc': parks.get('generated_at_utc'),
+              'parks_source_contract_version': parks.get('source_contract_version'),
+              'reconciles_strict': reconciliation.get('reconciles_strict'),
+              'new_this_run': new_events.get('new_this_run'),
+              'total_tracked': new_events.get('total_tracked'),
+          }, sort_keys=True))
+          PY
