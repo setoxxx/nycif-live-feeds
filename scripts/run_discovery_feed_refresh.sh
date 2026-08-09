@@ -93,6 +93,20 @@ for attempt in 1 2 3; do
     "live_event_intake_refresh" \
     python scripts/live_event_intake_refresh.py
 
+  # Calendar and Parks are independent official source families. Refresh their
+  # snapshots inside the same atomic transaction before supplemental occurrence
+  # reconciliation. A committed fallback may support diagnostics, but the
+  # downstream health gate requires Parks fetch_mode=live and therefore remains
+  # fail-closed if either live source cannot be refreshed.
+  run_stage \
+    "official_citywide_calendar_live_fetch" \
+    "sync_nyc_citywide_events_calendar" \
+    python scripts/sync_nyc_citywide_events_calendar.py
+  run_stage \
+    "official_parks_live_fetch" \
+    "sync_nyc_parks_bigapps_events" \
+    python scripts/sync_nyc_parks_bigapps_events.py
+
   run_stage \
     "calendar_parks_exact_occurrence_intake" \
     "refresh_official_supplemental_occurrences" \
@@ -186,7 +200,7 @@ if live.get("raw_rows_loaded") != len(raw):
 if not calendar_report.get("qa_pass") or not calendar_rows:
     sys.exit("Citywide Calendar live sync failed or returned no active events")
 if not parks_report.get("qa_pass") or parks_report.get("fetch_mode") != "live" or not parks_rows:
-    sys.exit("Parks BigApps was not a successful live fetch")
+    sys.exit("Parks source was not a successful live fetch")
 if len(supplemental_rows) < len(calendar_rows) + len(parks_rows) - int(calendar_report.get("canceled_excluded", 0) or 0):
     print("Supplemental occurrence total is lower than raw source total; strict reconciliation remains authoritative.")
 if test_manifest.get("raw_rows_loaded") != len(raw):
