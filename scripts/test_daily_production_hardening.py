@@ -9,11 +9,13 @@ import py_compile
 import sys
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from scripts import sync_nyc_parks_bigapps_events as parks_sync  # noqa: E402
 from scripts.build_staged_production_feed import apply_one_day_street_dedupe  # noqa: E402
 from scripts.record_blocked_daily_data_health import build_payload  # noqa: E402
 from scripts.refresh_official_supplemental_occurrences import occurrence_key  # noqa: E402
@@ -90,6 +92,68 @@ def test_calendar_cancellation_flags_are_typed_safely() -> None:
     assert bool_flag("false") is False
     assert bool_flag("0") is False
     assert bool_flag(None) is False
+
+
+def test_parks_source_contract_uses_official_open_data_tables() -> None:
+    assert parks_sync.EVENTS_DATASET_ID == "fudw-fgrp"
+    assert parks_sync.LOCATIONS_DATASET_ID == "cpcm-i88g"
+    assert parks_sync.CATEGORIES_DATASET_ID == "xtsw-fqvh"
+    assert parks_sync.SOURCE_CONTRACT_VERSION == "NYCIF_PARKS_EVENTS_OPEN_DATA_V2"
+
+
+def test_parks_exact_event_id_join_and_single_point_behavior() -> None:
+    locations = parks_sync.related_index(
+        [
+            {"event_id": "42", "name": "Demo Park", "lat": "40.7001", "long": "-73.9001"},
+            {"event_id": "99", "name": "Other Park", "lat": "40.7101", "long": "-73.9101"},
+        ]
+    )
+    assert [row["name"] for row in locations["42"]] == ["Demo Park"]
+    result = parks_sync.normalize_event_item(
+        {"event_id": "42", "title": "Park event", "date": "2026-08-10", "start_time": "10:00 AM"},
+        locations["42"],
+        [],
+    )
+    assert result["lat"] == 40.7001
+    assert result["lng"] == -73.9001
+    assert result["source_coordinate_state"] == "single_source_location_point"
+    assert result["source_dataset"] == "nyc-parks-bigapps-events"
+    assert result["source_authority_dataset"] == "fudw-fgrp"
+    assert result["promotion_allowed"] is False
+    assert result["public_map_modified"] is False
+
+
+def test_parks_multiple_source_points_abstain_from_guessing() -> None:
+    result = parks_sync.normalize_event_item(
+        {"event_id": "42", "title": "Multi-location event", "date": "2026-08-10"},
+        [
+            {"event_id": "42", "name": "A", "lat": "40.7001", "long": "-73.9001"},
+            {"event_id": "42", "name": "B", "lat": "40.7101", "long": "-73.9101"},
+        ],
+        [],
+    )
+    assert result["lat"] is None
+    assert result["lng"] is None
+    assert result["source_coordinate_count"] == 2
+    assert result["source_coordinate_state"] == "multiple_source_location_points"
+
+
+def test_parks_live_failure_stays_non_live() -> None:
+    committed = [
+        {
+            "source_event_id": "saved",
+            "start_date": "2099-01-01",
+            "end_date": "2099-01-01",
+        }
+    ]
+    with patch.object(parks_sync, "fetch_official_tables", side_effect=RuntimeError("boom")), patch.object(
+        parks_sync, "load_committed_snapshot_events", return_value=committed
+    ), patch.object(parks_sync, "save_json"), patch("builtins.print") as mocked_print:
+        code = parks_sync.main()
+    assert code == 0
+    report_text = mocked_print.call_args.args[0]
+    assert '"fetch_mode": "committed_snapshot_fallback"' in report_text
+    assert '"fetch_mode": "live"' not in report_text
 
 
 def test_failure_summary_redacts_common_secrets() -> None:
@@ -192,6 +256,8 @@ def test_modified_reliability_python_files_compile() -> None:
         for source in (
             ROOT / "scripts" / "run_daily_refresh_stage.py",
             ROOT / "scripts" / "record_blocked_daily_data_health.py",
+            ROOT / "scripts" / "sync_nyc_parks_bigapps_events.py",
+            ROOT / "scripts" / "test_nyc_parks_open_data_sync.py",
             ROOT / "scripts" / "test_live_event_intake_refresh_current.py",
             ROOT / "scripts" / "test_daily_production_hardening.py",
         ):
@@ -209,6 +275,10 @@ def main() -> int:
         test_calendar_occurrence_identity_includes_date,
         test_calendar_occurrence_identity_includes_same_day_time,
         test_calendar_cancellation_flags_are_typed_safely,
+        test_parks_source_contract_uses_official_open_data_tables,
+        test_parks_exact_event_id_join_and_single_point_behavior,
+        test_parks_multiple_source_points_abstain_from_guessing,
+        test_parks_live_failure_stays_non_live,
         test_failure_summary_redacts_common_secrets,
         test_failure_payload_never_emits_unknown_stage,
         test_stage_runner_records_actionable_failure,
