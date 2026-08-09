@@ -68,6 +68,40 @@ class BorgSourceRegistryValidatorTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             validate_registry({"contract": "nycif.borg-source-registry.v1", "records": [source]})
 
+    def test_active_url_cannot_claim_public_scope_for_non_public_ip(self):
+        for url in (
+            "https://127.0.0.1/private",
+            "https://10.0.0.7/private",
+            "https://169.254.10.20/private",
+            "https://[::1]/private",
+            "https://[fc00::1]/private",
+        ):
+            with self.subTest(url=url):
+                source = active_source()
+                source["canonical_url"] = url
+                with self.assertRaises(ValueError):
+                    validate_registry({"contract": "nycif.borg-source-registry.v1", "records": [source]})
+
+    def test_active_url_rejects_local_hostname_numeric_shorthand_and_credentials(self):
+        for url in (
+            "https://localhost/private",
+            "https://api.localhost/private",
+            "https://printer.local/private",
+            "https://2130706433/private",
+            "https://user:secret@example.nyc.gov/api",
+        ):
+            with self.subTest(url=url):
+                source = active_source()
+                source["canonical_url"] = url
+                with self.assertRaises(ValueError):
+                    validate_registry({"contract": "nycif.borg-source-registry.v1", "records": [source]})
+
+    def test_active_global_ip_literal_is_not_mislabeled_private(self):
+        source = active_source()
+        source["canonical_url"] = "https://8.8.8.8/api"
+        result = validate_registry({"contract": "nycif.borg-source-registry.v1", "records": [source]})
+        self.assertEqual(result["active_count"], 1)
+
     def test_active_paginated_source_requires_deterministic_exhaustion(self):
         source = active_source()
         source["pagination"]["deterministic_ordering"] = False
@@ -99,6 +133,7 @@ class BorgSourceRegistryValidatorTests(unittest.TestCase):
         source["pagination"]["exhaustion_or_total_parity_required"] = False
         source["rights"]["retrieval_allowed"] = False
         source["rights"]["review_state"] = "REVIEW_REQUIRED"
+        source["canonical_url"] = "http://127.0.0.1/review-only"
         result = validate_registry({"contract": "nycif.borg-source-registry.v1", "records": [source]})
         self.assertEqual(result["registration_state_accounting"]["REVIEW_REQUIRED"], 1)
 
