@@ -5,8 +5,11 @@ on:
     paths:
       - 'docs/contracts/BORG_ADAPTIVE_DATASET_TOPOLOGY_V1.json'
       - 'docs/contracts/BORG_DATASET_RECIPE_REGISTRY_V1.json'
+      - 'docs/contracts/BORG_MISSION_ACQUISITION_V1.json'
+      - 'docs/contracts/BORG_FREQ_DISCOVERY_BRIDGE_V1.json'
       - 'scripts/borg_adaptive_dataset_topology.py'
       - 'tests/test_borg_adaptive_dataset_topology.py'
+      - 'tests/test_borg_mission_and_freq_bridge.py'
       - '.github/workflows/borg-adaptive-dataset-topology-qa.yml'
   workflow_dispatch:
 
@@ -23,9 +26,16 @@ jobs:
         with:
           python-version: '3.11'
       - name: Compile interpreter and tests
-        run: python3 -m py_compile scripts/borg_adaptive_dataset_topology.py tests/test_borg_adaptive_dataset_topology.py
-      - name: Run adaptive topology regression suite
-        run: python3 -m unittest tests.test_borg_adaptive_dataset_topology -v
+        run: |
+          python3 -m py_compile \
+            scripts/borg_adaptive_dataset_topology.py \
+            tests/test_borg_adaptive_dataset_topology.py \
+            tests/test_borg_mission_and_freq_bridge.py
+      - name: Run adaptive topology, acquisition and FREQ bridge regressions
+        run: |
+          python3 -m unittest \
+            tests.test_borg_adaptive_dataset_topology \
+            tests.test_borg_mission_and_freq_bridge -v
       - name: Verify adaptive contract invariants
         run: |
           python3 - <<'PY'
@@ -33,6 +43,8 @@ jobs:
           from pathlib import Path
           c = json.loads(Path('docs/contracts/BORG_ADAPTIVE_DATASET_TOPOLOGY_V1.json').read_text())
           r = json.loads(Path('docs/contracts/BORG_DATASET_RECIPE_REGISTRY_V1.json').read_text())
+          m = json.loads(Path('docs/contracts/BORG_MISSION_ACQUISITION_V1.json').read_text())
+          f = json.loads(Path('docs/contracts/BORG_FREQ_DISCOVERY_BRIDGE_V1.json').read_text())
           assert c['contract'] == 'nycif.borg-adaptive-dataset-topology.v1'
           assert c['recipe_policy']['unknown_schema_public_projection_allowed'] is False
           assert c['recipe_policy']['structural_match_can_self_promote_recipe'] is False
@@ -42,4 +54,12 @@ jobs:
           assert c['authority']['no_second_authority'] is True
           assert r['contract'] == 'nycif.borg-dataset-recipe-registry.v1'
           assert all(x['culture_claim_power'] == 'NONE' for x in r['recipes'])
+          assert m['contract'] == 'nycif.borg-mission-acquisition.v1'
+          assert m['automated_retrieval_policy']['private_or_loopback_network_targets_allowed'] is False
+          assert m['learning']['may_self_authorize_new_rights_or_publication'] is False
+          assert f['contract'] == 'nycif.borg-freq-discovery-bridge.v1'
+          assert f['location_rules']['borg_may_infer_incident_location_from_receiver_location'] is False
+          assert f['location_rules']['borg_may_triangulate_transmitter_or_caller_location'] is False
+          assert f['public_projection']['freq_public_alert_truth_remains_in_freq'] is True
+          assert f['current_dependency_state']['freq_integration_freeze'] is True
           PY
