@@ -6,9 +6,13 @@ from __future__ import annotations
 import argparse
 import json
 from collections import Counter
-from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
+
+try:
+    from scripts.borg_cli_paths import resolve_workspace_file
+except ModuleNotFoundError:  # direct execution from scripts/
+    from borg_cli_paths import resolve_workspace_file
 
 CONTRACT = "nycif.borg-source-registry.v1"
 SOURCE_TIERS = {"A", "B", "C", "D"}
@@ -170,7 +174,8 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("registry")
     args = parser.parse_args()
-    summary = validate_registry(json.loads(Path(args.registry).read_text()))
+    registry_path = resolve_workspace_file(args.registry, must_exist=True)
+    summary = validate_registry(json.loads(registry_path.read_text()))
     print(json.dumps(summary, indent=2))
     return 0
 
