@@ -1,0 +1,108 @@
+{
+  "contract": "nycif.borg-culture-place-activity-handoff.v1",
+  "status": "DRAFT_PROTECTED",
+  "purpose": "Project independently accepted Culture places and only their separately confirmed host activities to downstream reader consumers without creating a second event inventory or inferring Culture from proximity, demographics, names, or category labels.",
+  "authority": {
+    "culture_place_producer": "BORG Culture discovery handoff",
+    "business_identity": "Universal Business Registry / canonical business path",
+    "location_authority": "ENIGMA / approved canonical location path",
+    "dated_activity_identity": "OccurrenceIdentityV2 / current canonical event path",
+    "public_runtime": "National Map",
+    "marketing_eligibility_authority": false,
+    "no_second_event_inventory": true,
+    "no_second_business_registry": true,
+    "no_second_geocoder": true
+  },
+  "verified_place_gate": {
+    "required_disposition": "ACCEPTED",
+    "canonical_business_id_required": true,
+    "canonical_location_id_required": true,
+    "why_included_required": true,
+    "independent_culture_evidence_required": true,
+    "area_proximity_is_culture_evidence": false,
+    "census_or_demographics_are_culture_evidence": false,
+    "business_name_is_culture_evidence": false
+  },
+  "activity_candidate_required_fields": [
+    "candidate_id",
+    "host_business_id",
+    "host_location_id",
+    "activity_kind",
+    "activity_state",
+    "host_relation_evidence_state",
+    "source_class",
+    "title",
+    "location_state"
+  ],
+  "activity_gate": {
+    "host_relation_evidence_required": "CONFIRMED",
+    "approved_source_classes": [
+      "HOST_FIRST_PARTY",
+      "OFFICIAL_ORGANIZER",
+      "OFFICIAL_VENUE",
+      "VERIFIED_PARTNER_WITH_HOST_CONFIRMATION"
+    ],
+    "aggregator_only_allowed": false,
+    "social_repost_without_host_confirmation_allowed": false,
+    "nearby_general_event_allowed": false,
+    "category_match_allowed_as_evidence": false,
+    "dated_occurrence_requires_canonical_occurrence_id": true,
+    "ongoing_program_requires_stable_program_id": true,
+    "cancelled_activity_public": false,
+    "expired_activity_public": false,
+    "unknown_activity_state_public": false
+  },
+  "activity_kinds": [
+    "DATED_OCCURRENCE",
+    "ONGOING_PROGRAM"
+  ],
+  "public_activity_states": [
+    "CURRENT",
+    "FUTURE",
+    "ONGOING"
+  ],
+  "location_rules": {
+    "host_location_must_match_accepted_place_for_hosted_activity": true,
+    "explicit_offsite_activity_requires_approved_canonical_location": true,
+    "ambiguous_or_review_location_is_list_only": true,
+    "area_centroid_may_be_activity_pin": false,
+    "browser_geocoding_allowed": false
+  },
+  "terminal_dispositions": [
+    "CULTURE_ACTIVITY_PUBLIC",
+    "CULTURE_ACTIVITY_LIST_ONLY_LOCATION_PENDING",
+    "CULTURE_ACTIVITY_REVIEW_REQUIRED",
+    "CULTURE_ACTIVITY_EXPIRED",
+    "CULTURE_ACTIVITY_CANCELLED",
+    "NOT_CULTURE_ACTIVITY"
+  ],
+  "accounting": {
+    "exactly_one_terminal_disposition_per_candidate": true,
+    "duplicate_candidate_id_fails_closed": true,
+    "silent_loss_allowed": false,
+    "ranking_may_remove_eligible_record": false
+  },
+  "reader_section": "Happening at verified places",
+  "reader_categories": [
+    "EAT_AND_DRINK",
+    "SHOP",
+    "BEAUTY_AND_GROOMING",
+    "ARTS_AND_MUSIC",
+    "COMMUNITY",
+    "EXPLORE_THE_AREA"
+  ],
+  "marketing_rules": {
+    "eligibility_precedes_merchandising": true,
+    "marketing_may_rank_after_eligibility": true,
+    "marketing_may_create_culture_eligibility": false,
+    "paid_placement_may_create_culture_eligibility": false,
+    "paid_placement_requires_label": true
+  },
+  "privacy_and_integrity": {
+    "protected_trait_inference_allowed": false,
+    "private_person_identity_inference_allowed": false,
+    "private_outreach_state_public": false,
+    "protected_evidence_public": false,
+    "unsupported_claims_fail_closed": true
+  }
+}
