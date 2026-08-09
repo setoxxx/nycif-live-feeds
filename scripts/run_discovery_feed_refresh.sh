@@ -88,24 +88,15 @@ for attempt in 1 2 3; do
   export PREVIOUS_PUBLIC_FEED_SHA
   printf '%s\n' "$PREVIOUS_PUBLIC_FEED_SHA" > "$PREVIOUS_POINTER"
 
+  # One authoritative acquisition pass. live_event_intake_refresh refreshes
+  # permitted events, Citywide Calendar and Parks, then builds the staged permit
+  # intake from those exact snapshots. Do not call Calendar/Parks a second time
+  # inside the same transaction: a second fetch can create a mixed-time source
+  # transaction and needlessly doubles provider requests.
   run_stage \
     "official_source_live_fetch_and_permit_staging" \
     "live_event_intake_refresh" \
     python scripts/live_event_intake_refresh.py
-
-  # Calendar and Parks are independent official source families. Refresh their
-  # snapshots inside the same atomic transaction before supplemental occurrence
-  # reconciliation. A committed fallback may support diagnostics, but the
-  # downstream health gate requires Parks fetch_mode=live and therefore remains
-  # fail-closed if either live source cannot be refreshed.
-  run_stage \
-    "official_citywide_calendar_live_fetch" \
-    "sync_nyc_citywide_events_calendar" \
-    python scripts/sync_nyc_citywide_events_calendar.py
-  run_stage \
-    "official_parks_live_fetch" \
-    "sync_nyc_parks_bigapps_events" \
-    python scripts/sync_nyc_parks_bigapps_events.py
 
   run_stage \
     "calendar_parks_exact_occurrence_intake" \
