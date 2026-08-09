@@ -43,11 +43,19 @@ jobs:
 
           contract = json.loads(Path('docs/contracts/BORG_CULTURE_DISCOVERY_HANDOFF_V1.json').read_text())
           assert contract['contract'] == 'nycif.borg-culture-discovery-handoff.v1'
-          assert contract['expected_base_geography_count'] == 262
-          assert contract['community_profile']['required_for_every_residential_nta'] is True
-          assert contract['community_profile']['culture_claim_power'] == 'NONE'
-          assert contract['cultural_area']['census_only_area_creation_allowed'] is False
-          assert contract['verified_place']['public_disposition'] == 'ACCEPTED'
-          assert contract['authority']['national_map_public_runtime'] is True
-          assert contract['authority']['second_geocoder_allowed'] is False
+          accounting = contract['citywide_accounting']
+          assert accounting['expected_base_nta_count'] == 262
+          assert accounting['expected_community_profile_terminal_count'] == 262
+          assert accounting['community_profile_terminal_state_required_for_every_base_nta'] is True
+          assert accounting['not_applicable_used_for_special_or_nonresidential_geography'] is True
+          assert accounting['missing_cultural_area_is_valid_state'] is True
+          assert accounting['silent_loss_allowed'] is False
+
+          record_types = {item['type']: item for item in contract['record_types']}
+          assert record_types['COMMUNITY_PROFILE']['culture_claim_power'] == 'NONE'
+          assert record_types['COMMUNITY_PROFILE']['boundary_creation_power'] == 'NONE'
+          assert record_types['CULTURAL_AREA']['requires_independent_non_census_source'] is True
+          assert record_types['VERIFIED_PLACE']['public_dispositions'] == ['ACCEPTED']
+          assert contract['authority']['public_runtime'] == 'National Map'
+          assert contract['authority']['no_second_authority'] is True
           PY
