@@ -5,7 +5,7 @@ import unittest
 from scripts.validate_borg_culture_discovery import validate
 
 
-def _base(code: str, name: str) -> dict:
+def _base(code: str, name: str, residential: bool = True) -> dict:
     return {
         "type": "BASE_GEOGRAPHY",
         "nta2020": code,
@@ -13,7 +13,7 @@ def _base(code: str, name: str) -> dict:
         "geometry": {"type": "Polygon", "coordinates": []},
         "source_dataset_id": "9nt8-h7nd",
         "source_release": "26B",
-        "residential": True,
+        "residential": residential,
     }
 
 
@@ -47,6 +47,7 @@ class BorgCultureDiscoveryTests(unittest.TestCase):
         summary = validate(payload)
         self.assertEqual(summary["base_count"], 262)
         self.assertEqual(summary["profile_count"], 262)
+        self.assertTrue(summary["profile_terminal_accounting_complete"])
         self.assertEqual(summary["cultural_area_count"], 0)
         self.assertEqual(summary["verified_place_count"], 0)
         self.assertEqual(summary["silent_loss"], 0)
@@ -108,6 +109,37 @@ class BorgCultureDiscoveryTests(unittest.TestCase):
             "disposition": "REVIEW_REQUIRED",
             "why_included": "pending",
         })
+        with self.assertRaises(ValueError):
+            validate(payload)
+
+    def test_missing_profile_fails_even_for_special_nta(self):
+        payload = _payload()
+        for row in payload["records"]:
+            if row.get("type") == "BASE_GEOGRAPHY" and row.get("nta2020") == "NTA261":
+                row["residential"] = False
+        payload["records"] = [
+            row for row in payload["records"]
+            if not (row.get("type") == "COMMUNITY_PROFILE" and row.get("nta2020") == "NTA261")
+        ]
+        with self.assertRaises(ValueError):
+            validate(payload)
+
+    def test_nonresidential_nta_uses_not_applicable(self):
+        payload = _payload()
+        for row in payload["records"]:
+            if row.get("type") == "BASE_GEOGRAPHY" and row.get("nta2020") == "NTA261":
+                row["residential"] = False
+            if row.get("type") == "COMMUNITY_PROFILE" and row.get("nta2020") == "NTA261":
+                row["profile_state"] = "NOT_APPLICABLE"
+        summary = validate(payload)
+        self.assertEqual(summary["profile_count"], 262)
+
+    def test_residential_nta_cannot_use_not_applicable(self):
+        payload = _payload()
+        for row in payload["records"]:
+            if row.get("type") == "COMMUNITY_PROFILE" and row.get("nta2020") == "NTA000":
+                row["profile_state"] = "NOT_APPLICABLE"
+                break
         with self.assertRaises(ValueError):
             validate(payload)
 
