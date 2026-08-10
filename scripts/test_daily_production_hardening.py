@@ -94,66 +94,73 @@ def test_calendar_cancellation_flags_are_typed_safely() -> None:
     assert bool_flag(None) is False
 
 
-def test_parks_source_contract_uses_official_open_data_tables() -> None:
-    assert parks_sync.EVENTS_DATASET_ID == "fudw-fgrp"
-    assert parks_sync.LOCATIONS_DATASET_ID == "cpcm-i88g"
-    assert parks_sync.CATEGORIES_DATASET_ID == "xtsw-fqvh"
-    assert parks_sync.SOURCE_CONTRACT_VERSION == "NYCIF_PARKS_EVENTS_OPEN_DATA_V2"
+def test_parks_source_contract_uses_current_upcoming_open_data() -> None:
+    assert parks_sync.DATASET_ID == "w3wp-dpdi"
+    assert parks_sync.SOURCE_CONTRACT_VERSION == "NYCIF_PARKS_UPCOMING_OPEN_DATA_V3"
+    assert parks_sync.EVENTS_URL.endswith("/w3wp-dpdi.json")
+    assert parks_sync.LEGACY_BIGAPPS_URL not in parks_sync.EVENTS_URL
 
 
-def test_parks_exact_event_id_join_and_single_point_behavior() -> None:
-    locations = parks_sync.related_index(
-        [
-            {"event_id": "42", "name": "Demo Park", "lat": "40.7001", "long": "-73.9001"},
-            {"event_id": "99", "name": "Other Park", "lat": "40.7101", "long": "-73.9101"},
-        ]
-    )
-    assert [row["name"] for row in locations["42"]] == ["Demo Park"]
+def test_parks_official_coordinate_is_explicit_exact_evidence() -> None:
     result = parks_sync.normalize_event_item(
-        {"event_id": "42", "title": "Park event", "date": "2026-08-10", "start_time": "10:00 AM"},
-        locations["42"],
-        [],
+        {
+            "guid": "parks-42",
+            "title": "Park event",
+            "startdate": "2026-08-10",
+            "starttime": "10:00:00",
+            "enddate": "2026-08-10",
+            "endtime": "11:00:00",
+            "coordinates": "40.7001,-73.9001",
+            "location": "Demo Park",
+        }
     )
     assert result["lat"] == 40.7001
     assert result["lng"] == -73.9001
-    assert result["source_coordinate_state"] == "single_source_location_point"
     assert result["source_dataset"] == "nyc-parks-bigapps-events"
-    assert result["source_authority_dataset"] == "fudw-fgrp"
+    assert result["source_event_id"] == "parks-42"
+    assert result["source_authority_dataset"] == "w3wp-dpdi"
+    evidence = result["location_evidence"]
+    assert evidence["tier"] == "exact_source_coordinate"
+    assert evidence["validation_state"] == "validated"
+    assert evidence["exact_pin_eligible"] is True
+    assert evidence["source_dataset_id"] == "w3wp-dpdi"
     assert result["promotion_allowed"] is False
     assert result["public_map_modified"] is False
 
 
-def test_parks_multiple_source_points_abstain_from_guessing() -> None:
-    result = parks_sync.normalize_event_item(
-        {"event_id": "42", "title": "Multi-location event", "date": "2026-08-10"},
-        [
-            {"event_id": "42", "name": "A", "lat": "40.7001", "long": "-73.9001"},
-            {"event_id": "42", "name": "B", "lat": "40.7101", "long": "-73.9101"},
-        ],
-        [],
-    )
-    assert result["lat"] is None
-    assert result["lng"] is None
-    assert result["source_coordinate_count"] == 2
-    assert result["source_coordinate_state"] == "multiple_source_location_points"
+def test_parks_missing_or_bad_coordinate_never_invents_exact_evidence() -> None:
+    for coordinate in (None, "", "not-a-coordinate", "0,0", "91,181"):
+        result = parks_sync.normalize_event_item(
+            {
+                "guid": "parks-unmapped",
+                "title": "Unmapped park event",
+                "startdate": "2026-08-10",
+                "coordinates": coordinate,
+                "location": "A park",
+            }
+        )
+        assert result["lat"] is None
+        assert result["lng"] is None
+        assert result["location_evidence"] is None
+        assert result["promotion_allowed"] is False
 
 
-def test_parks_live_failure_stays_non_live() -> None:
-    committed = [
-        {
-            "source_event_id": "saved",
-            "start_date": "2099-01-01",
-            "end_date": "2099-01-01",
-        }
-    ]
-    with patch.object(parks_sync, "fetch_official_tables", side_effect=RuntimeError("boom")), patch.object(
-        parks_sync, "load_committed_snapshot_events", return_value=committed
-    ), patch.object(parks_sync, "save_json"), patch("builtins.print") as mocked_print:
+def test_parks_live_failure_stays_non_live_and_fails_closed() -> None:
+    with patch.object(parks_sync, "fetch_events", side_effect=RuntimeError("boom")), patch.object(
+        parks_sync, "save_json"
+    ), patch("builtins.print") as mocked_print:
         code = parks_sync.main()
-    assert code == 0
+    assert code == 1
     report_text = mocked_print.call_args.args[0]
-    assert '"fetch_mode": "committed_snapshot_fallback"' in report_text
+    assert '"fetch_mode": "live_fetch_failed"' in report_text
+    assert '"qa_pass": false' in report_text
     assert '"fetch_mode": "live"' not in report_text
+
+
+def test_parks_uses_new_york_date_boundary() -> None:
+    source = (ROOT / "scripts" / "sync_nyc_parks_bigapps_events.py").read_text(encoding="utf-8")
+    assert 'ZoneInfo("America/New_York")' in source
+    assert '"date_boundary_timezone": "America/New_York"' in source
 
 
 def test_failure_summary_redacts_common_secrets() -> None:
@@ -304,10 +311,11 @@ def main() -> int:
         test_calendar_occurrence_identity_includes_date,
         test_calendar_occurrence_identity_includes_same_day_time,
         test_calendar_cancellation_flags_are_typed_safely,
-        test_parks_source_contract_uses_official_open_data_tables,
-        test_parks_exact_event_id_join_and_single_point_behavior,
-        test_parks_multiple_source_points_abstain_from_guessing,
-        test_parks_live_failure_stays_non_live,
+        test_parks_source_contract_uses_current_upcoming_open_data,
+        test_parks_official_coordinate_is_explicit_exact_evidence,
+        test_parks_missing_or_bad_coordinate_never_invents_exact_evidence,
+        test_parks_live_failure_stays_non_live_and_fails_closed,
+        test_parks_uses_new_york_date_boundary,
         test_failure_summary_redacts_common_secrets,
         test_failure_payload_never_emits_unknown_stage,
         test_stage_runner_records_actionable_failure,
