@@ -1,34 +1,34 @@
 {
   "borough_counts": {
-    "Bronx": 3747,
-    "Brooklyn": 6575,
-    "Manhattan": 10450,
-    "Queens": 6157,
-    "Staten Island": 1121,
+    "Bronx": 3559,
+    "Brooklyn": 6235,
+    "Manhattan": 10079,
+    "Queens": 5830,
+    "Staten Island": 1062,
     "Unknown": 1
   },
   "category_counts": {
-    "arts": 176,
-    "fitness": 178,
-    "general": 25,
-    "market": 991,
-    "parks": 3821,
-    "sports": 22860
+    "arts": 166,
+    "fitness": 172,
+    "general": 19,
+    "market": 947,
+    "parks": 3675,
+    "sports": 21787
   },
   "cross_date_street_occurrences_suppressed": 0,
   "duplicate_policy": {
     "production_feeds_modified": false,
     "street_events": "dedupe only exact title + borough + location + coordinate + date + start/end + CEMS occurrence; recurring dates remain distinct"
   },
-  "eligible_rows_before_one_day_street_dedupe": 28051,
+  "eligible_rows_before_one_day_street_dedupe": 26766,
   "exact_occurrence_duplicates_suppressed": 0,
-  "generated_at_utc": "2026-08-10T05:05:55.807413+00:00",
+  "generated_at_utc": "2026-08-10T12:03:42.719677+00:00",
   "match_counts": {
-    "event_id": 537,
-    "location_cache": 26238,
-    "tier_1_gazetteer_display": 543,
-    "tier_2_geosearch_cache": 724,
-    "tier_2_geosearch_midpoint": 9
+    "event_id": 517,
+    "location_cache": 25012,
+    "tier_1_gazetteer_display": 531,
+    "tier_2_geosearch_cache": 699,
+    "tier_2_geosearch_midpoint": 7
   },
   "one_day_street_duplicates_suppressed": 0,
   "production_feed": false,
@@ -36,152 +36,68 @@
   "sample_exact_occurrence_rejected_rows": [],
   "sample_skipped_rows": [
     {
+      "borough": "Bronx",
+      "display_location": "NELSON AVENUE between WEST  167 STREET and WEST  168 STREET",
+      "display_time": "6:30 AM",
+      "source_cemsid": [],
+      "source_event_id": "962460",
+      "title": "Project Street Beat - Keith Haring Foundation Mobile Health Center Community Event"
+    },
+    {
       "borough": "Manhattan",
-      "display_location": "WEST   33 STREET between 11 AVENUE and HUDSON BLVD EAST",
-      "display_time": "12:00 AM",
+      "display_location": "GREENE STREET between GRAND STREET and CANAL STREET",
+      "display_time": "7:00 AM",
       "source_cemsid": [],
-      "source_event_id": "964590",
-      "title": "Hudson Yards"
-    },
-    {
-      "borough": "Bronx",
-      "display_location": "CAULDWELL AVENUE between EAST  163 STREET and EAST  164 STREET",
-      "display_time": "9:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "955243",
-      "title": "Annual Harvest"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "HERKIMER STREET between RALPH AVENUE and HOWARD AVENUE",
-      "display_time": "9:30 AM",
-      "source_cemsid": [],
-      "source_event_id": "933069",
-      "title": "Friendship Community Block Party"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "EASTERN PARKWAY between BEDFORD AVENUE and ROGERS AVENUE",
-      "display_time": "10:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "959945",
-      "title": "Community Health  and Wellness Expo"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "EAST   35 STREET between CLARENDON ROAD and CORTELYOU ROAD",
-      "display_time": "10:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "951988",
-      "title": "East 35 Street Block Party"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "EAST   38 STREET between GLENWOOD ROAD and AVENUE H",
-      "display_time": "10:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "926284",
-      "title": "East 38th Street Block Association"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "EAST   55 STREET between CLARKSON AVENUE and REMSEN AVENUE",
-      "display_time": "10:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "953890",
-      "title": "Mix-up"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "THOMAS S BOYLAND STREET between LOTT AVENUE and NEWPORT STREET",
-      "display_time": "10:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "949319",
-      "title": "New Life SDA Church -Street Event"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "70 STREET between 13 AVENUE and 14 AVENUE",
-      "display_time": "10:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "952862",
-      "title": "Summer Fun"
+      "source_event_id": "964965",
+      "title": "MKG - Pop-up event"
     },
     {
       "borough": "Queens",
-      "display_location": "BABBAGE ST between JAMAICA AVE and HILLSIDE AVE",
+      "display_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
+      "display_time": "12:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "964160",
+      "title": "Boombox in Jamaica"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "STUYVESANT AVENUE between MCDONOUGH STREET and DECATUR STREET",
+      "display_time": "4:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "957790",
+      "title": "Hype Hair Event"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "GREENE STREET between GRAND STREET and CANAL STREET",
+      "display_time": "7:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "964965",
+      "title": "MKG - Pop-up event"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "BROADWAY between WALKER STREET and WHITE STREET",
       "display_time": "10:00 AM",
-      "source_cemsid": [
-        "0"
-      ],
-      "source_event_id": "946740",
-      "title": "Community Recycling Event"
-    },
-    {
-      "borough": "Queens",
-      "display_location": "STEINWAY STREET between 28 AVENUE and 34 AVENUE",
-      "display_time": "10:00 AM",
       "source_cemsid": [],
-      "source_event_id": "903211",
-      "title": "Steinway Street Festival"
+      "source_event_id": "965657",
+      "title": "Production truck Staging"
     },
     {
-      "borough": "Brooklyn",
-      "display_location": "HERKIMER STREET between NOSTRAND AVENUE and NEW YORK AVENUE",
+      "borough": "Staten Island",
+      "display_location": "CANAL STREET between WRIGHT STREET and BAY STREET",
       "display_time": "11:00 AM",
       "source_cemsid": [],
-      "source_event_id": "922322",
-      "title": "2026  Block Party"
+      "source_event_id": "963608",
+      "title": "Black Business Outreach: Staten Island"
     },
     {
       "borough": "Brooklyn",
-      "display_location": "HEGEMAN AVENUE between POWELL STREET and CHRISTOPHER AVENUE",
-      "display_time": "11:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "953247",
-      "title": "BROWNSVILLE COMMUNITY EXPO 2026"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "EAST   17 STREET between QUENTIN ROAD and AVENUE R",
-      "display_time": "11:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "953387",
-      "title": "East 17th street block party"
-    },
-    {
-      "borough": "Bronx",
-      "display_location": "Pelham Bay Park and Orchard Beach: Orchard Beach - Main Stage",
-      "display_time": "12:00 PM",
-      "source_cemsid": [
-        "7518"
-      ],
-      "source_event_id": "899396",
-      "title": "2026 Bronx Summer Concert Series"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "JEFFERSON AVENUE between LEWIS AVENUE and STUYVESANT AVENUE",
+      "display_location": "BOERUM PLACE between JORALEMON STREET and LIVINGSTON STREET",
       "display_time": "12:00 PM",
       "source_cemsid": [],
-      "source_event_id": "922953",
-      "title": "2025 L/S Jefferson Avenue Block Association"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "TOMPKINS AVENUE between PUTNAM AVENUE and JEFFERSON AVENUE",
-      "display_time": "12:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "923786",
-      "title": "Block Beautification Celebration"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "CONEY ISLAND AVENUE between 18 AVENUE and NEWKIRK AVENUE",
-      "display_time": "12:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "940982",
-      "title": "PAKISTAN INDEPENDENCE DAY"
+      "source_event_id": "966438",
+      "title": "Workforce 1 Community street Event"
     },
     {
       "borough": "Queens",
@@ -193,16 +109,98 @@
     },
     {
       "borough": "Staten Island",
-      "display_location": "ELY AVENUE between DOWNES AVENUE and TENAFLY PLACE",
+      "display_location": "BROAD STREET between CEDAR STREET and GORDON STREET",
+      "display_time": "3:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "942799",
+      "title": "Stapleton Local NeighborhoodSTAT 2026"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "JOHN STREET between SOUTH STREET and FRONT STREET",
+      "display_time": "12:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "966065",
+      "title": "Seaport"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "SOUTH STREET between JOHN STREET and FULTON STREET",
+      "display_time": "12:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "966071",
+      "title": "Seaport2"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "GREENE STREET between GRAND STREET and CANAL STREET",
+      "display_time": "7:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "964965",
+      "title": "MKG - Pop-up event"
+    },
+    {
+      "borough": "Queens",
+      "display_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
       "display_time": "12:00 PM",
       "source_cemsid": [],
-      "source_event_id": "935919",
-      "title": "Ely Avenue Block Party"
+      "source_event_id": "964160",
+      "title": "Boombox in Jamaica"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "SUFFOLK STREET between DELANCEY STREET and RIVINGTON STREET",
+      "display_time": "5:30 PM",
+      "source_cemsid": [],
+      "source_event_id": "958187",
+      "title": "International Puppet Fringe Festival Inaguration"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "EAST  124 STREET between MADISON AVENUE and PARK AVENUE",
+      "display_time": "9:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "952837",
+      "title": "Annual Back To School Rally"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "BREVOORT PLACE between FRANKLIN AVENUE and BEDFORD AVENUE",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "961880",
+      "title": "NYC ACS Annual Keisha J. Baxter Back to School Community and Resource Fair"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "SACKETT STREET between VAN BRUNT STREET and DEAD END",
+      "display_time": "12:00 PM",
+      "source_cemsid": [
+        "0"
+      ],
+      "source_event_id": "964434",
+      "title": "Sackett St Open Streets Event"
+    },
+    {
+      "borough": "Queens",
+      "display_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
+      "display_time": "12:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "964160",
+      "title": "Boombox in Jamaica"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "EAST   86 STREET between 3 AVENUE and LEXINGTON AVENUE",
+      "display_time": "2:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "963524",
+      "title": "Peach Lily Zombie Cream Sampling Cart"
     }
   ],
-  "skipped_needs_review_or_bad_gps": 254,
+  "skipped_needs_review_or_bad_gps": 233,
   "source": "nycif_live_test_enriched_events.json",
   "staged_feed": true,
-  "staged_feed_events": 28051,
-  "test_feed_rows_loaded": 28305
+  "staged_feed_events": 26766,
+  "test_feed_rows_loaded": 26999
 }

@@ -1,430 +1,24 @@
 {
-  "current_future_rows": 28305,
-  "current_future_rows_with_cemsid": 27736,
+  "current_future_rows": 26999,
+  "current_future_rows_with_cemsid": 26473,
   "date_boundary_timezone": "America/New_York",
   "enriched_rows_loaded": 33084,
-  "generated_at_utc": "2026-08-10T03:26:49.847091+00:00",
+  "generated_at_utc": "2026-08-10T11:48:16.187166+00:00",
   "location_cache_entries_loaded": 40151,
   "location_cache_modified": false,
-  "location_resolver_live_geosearch_calls": 4302,
+  "location_resolver_live_geosearch_calls": 0,
   "match_counts": {
-    "event_id": 19342,
-    "location_cache": 7228,
-    "none": 254,
-    "text_date_location": 205,
-    "tier_1_gazetteer_display": 543,
-    "tier_2_geosearch_cache": 659,
-    "tier_2_geosearch_midpoint": 9,
-    "tier_3_nyc_geosearch_live": 65
+    "event_id": 18229,
+    "location_cache": 7116,
+    "none": 233,
+    "text_date_location": 184,
+    "tier_1_gazetteer_display": 531,
+    "tier_2_geosearch_cache": 699,
+    "tier_2_geosearch_midpoint": 7
   },
-  "matched_with_gps": 28051,
+  "matched_with_gps": 26766,
   "matched_without_gps_sample": [],
   "needs_enrichment_sample": [
-    {
-      "community_board": [
-        "4"
-      ],
-      "end_date_time": "2026-08-09T23:30:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "WEST   33 STREET between 11 AVENUE and HUDSON BLVD EAST",
-      "event_name": "Hudson Yards",
-      "event_type": "Production Event",
-      "police_precinct": [
-        "10"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "964590",
-      "start_date_time": "2026-08-09T00:00:00.000",
-      "street_closure_type": "Curb Lane Only"
-    },
-    {
-      "community_board": [
-        "3"
-      ],
-      "end_date_time": "2026-08-09T15:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Bronx",
-      "event_location": "CAULDWELL AVENUE between EAST  163 STREET and EAST  164 STREET",
-      "event_name": "Annual Harvest",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "42"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "955243",
-      "start_date_time": "2026-08-09T09:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "3"
-      ],
-      "end_date_time": "2026-08-09T17:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "HERKIMER STREET between RALPH AVENUE and HOWARD AVENUE",
-      "event_name": "Friendship Community Block Party",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "81"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "933069",
-      "start_date_time": "2026-08-09T09:30:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "1"
-      ],
-      "end_date_time": "2026-08-09T18:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Queens",
-      "event_location": "STEINWAY STREET between 28 AVENUE and 34 AVENUE",
-      "event_name": "Steinway Street Festival",
-      "event_type": "Street Festival",
-      "police_precinct": [
-        "114"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "903211",
-      "start_date_time": "2026-08-09T10:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "17"
-      ],
-      "end_date_time": "2026-08-09T18:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "EAST   38 STREET between GLENWOOD ROAD and AVENUE H",
-      "event_name": "East 38th Street Block Association",
-      "event_type": "Block Party",
-      "police_precinct": [
-        "67"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "926284",
-      "start_date_time": "2026-08-09T10:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "9"
-      ],
-      "end_date_time": "2026-08-09T14:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Queens",
-      "event_location": "BABBAGE ST between JAMAICA AVE and HILLSIDE AVE",
-      "event_name": "Community Recycling Event",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "102"
-      ],
-      "source_cemsid": [
-        "0"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "946740",
-      "start_date_time": "2026-08-09T10:00:00.000",
-      "street_closure_type": "Curb Lane Only"
-    },
-    {
-      "community_board": [
-        "16"
-      ],
-      "end_date_time": "2026-08-09T17:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "THOMAS S BOYLAND STREET between LOTT AVENUE and NEWPORT STREET",
-      "event_name": "New Life SDA Church -Street Event",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "73"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "949319",
-      "start_date_time": "2026-08-09T10:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "17"
-      ],
-      "end_date_time": "2026-08-09T18:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "EAST   35 STREET between CLARENDON ROAD and CORTELYOU ROAD",
-      "event_name": "East 35 Street Block Party",
-      "event_type": "Block Party",
-      "police_precinct": [
-        "67"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "951988",
-      "start_date_time": "2026-08-09T10:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "10"
-      ],
-      "end_date_time": "2026-08-09T19:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "70 STREET between 13 AVENUE and 14 AVENUE",
-      "event_name": "Summer Fun",
-      "event_type": "Block Party",
-      "police_precinct": [
-        "68"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "952862",
-      "start_date_time": "2026-08-09T10:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "17"
-      ],
-      "end_date_time": "2026-08-09T18:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "EAST   55 STREET between CLARKSON AVENUE and REMSEN AVENUE",
-      "event_name": "Mix-up",
-      "event_type": "Block Party",
-      "police_precinct": [
-        "67"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "953890",
-      "start_date_time": "2026-08-09T10:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "8",
-        "9"
-      ],
-      "end_date_time": "2026-08-09T16:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "EASTERN PARKWAY between BEDFORD AVENUE and ROGERS AVENUE",
-      "event_name": "Community Health  and Wellness Expo",
-      "event_type": "Health Fair",
-      "police_precinct": [
-        "71",
-        "77"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "959945",
-      "start_date_time": "2026-08-09T10:00:00.000",
-      "street_closure_type": "Full Sidewalk Closure"
-    },
-    {
-      "community_board": [
-        "3"
-      ],
-      "end_date_time": "2026-08-09T19:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "HERKIMER STREET between NOSTRAND AVENUE and NEW YORK AVENUE",
-      "event_name": "2026  Block Party",
-      "event_type": "Block Party",
-      "police_precinct": [
-        "79"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "922322",
-      "start_date_time": "2026-08-09T11:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "16"
-      ],
-      "end_date_time": "2026-08-09T16:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "HEGEMAN AVENUE between POWELL STREET and CHRISTOPHER AVENUE",
-      "event_name": "BROWNSVILLE COMMUNITY EXPO 2026",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "73"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "953247",
-      "start_date_time": "2026-08-09T11:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "15"
-      ],
-      "end_date_time": "2026-08-09T19:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "EAST   17 STREET between QUENTIN ROAD and AVENUE R",
-      "event_name": "East 17th street block party",
-      "event_type": "Block Party",
-      "police_precinct": [
-        "61"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "953387",
-      "start_date_time": "2026-08-09T11:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "28"
-      ],
-      "end_date_time": "2026-08-09T17:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Bronx",
-      "event_location": "Pelham Bay Park and Orchard Beach: Orchard Beach - Main Stage",
-      "event_name": "2026 Bronx Summer Concert Series",
-      "event_type": "Special Event",
-      "police_precinct": [
-        "45"
-      ],
-      "source_cemsid": [
-        "7518"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "899396",
-      "start_date_time": "2026-08-09T12:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "3"
-      ],
-      "end_date_time": "2026-08-09T20:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "JEFFERSON AVENUE between LEWIS AVENUE and STUYVESANT AVENUE",
-      "event_name": "2025 L/S Jefferson Avenue Block Association",
-      "event_type": "Block Party",
-      "police_precinct": [
-        "81"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "922953",
-      "start_date_time": "2026-08-09T12:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "3"
-      ],
-      "end_date_time": "2026-08-09T18:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "TOMPKINS AVENUE between PUTNAM AVENUE and JEFFERSON AVENUE",
-      "event_name": "Block Beautification Celebration",
-      "event_type": "Block Party",
-      "police_precinct": [
-        "79"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "923786",
-      "start_date_time": "2026-08-09T12:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "3"
-      ],
-      "end_date_time": "2026-08-09T20:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Staten Island",
-      "event_location": "ELY AVENUE between DOWNES AVENUE and TENAFLY PLACE",
-      "event_name": "Ely Avenue Block Party",
-      "event_type": "Block Party",
-      "police_precinct": [
-        "123"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "935919",
-      "start_date_time": "2026-08-09T12:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "14"
-      ],
-      "end_date_time": "2026-08-09T18:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "CONEY ISLAND AVENUE between 18 AVENUE and NEWKIRK AVENUE",
-      "event_name": "PAKISTAN INDEPENDENCE DAY",
-      "event_type": "Single Block Festival",
-      "police_precinct": [
-        "70"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "940982",
-      "start_date_time": "2026-08-09T12:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "12"
-      ],
-      "end_date_time": "2026-08-09T12:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Queens",
-      "event_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
-      "event_name": "Boombox in Jamaica",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "103"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "964160",
-      "start_date_time": "2026-08-09T12:00:00.000",
-      "street_closure_type": "Partial Sidewalk Closure"
-    },
-    {
-      "community_board": [
-        "9"
-      ],
-      "end_date_time": "2026-08-09T17:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Queens",
-      "event_location": "101 AVENUE between 114 STREET and 113 STREET",
-      "event_name": "Guru Ladoo Re Divas",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "102"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "957959",
-      "start_date_time": "2026-08-09T12:15:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
     {
       "community_board": [
         "4"
@@ -500,6 +94,408 @@
       "source_event_id": "957790",
       "start_date_time": "2026-08-10T16:00:00.000",
       "street_closure_type": "Sidewalk and Curb Lane Closure"
+    },
+    {
+      "community_board": [
+        "2"
+      ],
+      "end_date_time": "2026-08-11T23:30:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "GREENE STREET between GRAND STREET and CANAL STREET",
+      "event_name": "MKG - Pop-up event",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "1"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "964965",
+      "start_date_time": "2026-08-11T07:00:00.000",
+      "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "1"
+      ],
+      "end_date_time": "2026-08-11T18:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "BROADWAY between WALKER STREET and WHITE STREET",
+      "event_name": "Production truck Staging",
+      "event_type": "Production Event",
+      "police_precinct": [
+        "1",
+        "5"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "965657",
+      "start_date_time": "2026-08-11T10:00:00.000",
+      "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "1"
+      ],
+      "end_date_time": "2026-08-11T15:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Staten Island",
+      "event_location": "CANAL STREET between WRIGHT STREET and BAY STREET",
+      "event_name": "Black Business Outreach: Staten Island",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "120"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "963608",
+      "start_date_time": "2026-08-11T11:00:00.000",
+      "street_closure_type": "Sidewalk and Curb Lane Closure"
+    },
+    {
+      "community_board": [
+        "12"
+      ],
+      "end_date_time": "2026-08-11T12:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Queens",
+      "event_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
+      "event_name": "Boombox in Jamaica",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "103"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "964160",
+      "start_date_time": "2026-08-11T12:00:00.000",
+      "street_closure_type": "Partial Sidewalk Closure"
+    },
+    {
+      "community_board": [
+        "2"
+      ],
+      "end_date_time": "2026-08-11T14:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "BOERUM PLACE between JORALEMON STREET and LIVINGSTON STREET",
+      "event_name": "Workforce 1 Community street Event",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "84"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "966438",
+      "start_date_time": "2026-08-11T12:00:00.000",
+      "street_closure_type": "Sidewalk and Curb Lane Closure"
+    },
+    {
+      "community_board": [
+        "1"
+      ],
+      "end_date_time": "2026-08-11T18:30:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Staten Island",
+      "event_location": "BROAD STREET between CEDAR STREET and GORDON STREET",
+      "event_name": "Stapleton Local NeighborhoodSTAT 2026",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "120"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "942799",
+      "start_date_time": "2026-08-11T15:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "1"
+      ],
+      "end_date_time": "2026-08-12T23:30:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "JOHN STREET between SOUTH STREET and FRONT STREET",
+      "event_name": "Seaport",
+      "event_type": "Production Event",
+      "police_precinct": [
+        "1"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "966065",
+      "start_date_time": "2026-08-12T00:00:00.000",
+      "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "1"
+      ],
+      "end_date_time": "2026-08-12T23:30:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "SOUTH STREET between JOHN STREET and FULTON STREET",
+      "event_name": "Seaport2",
+      "event_type": "Production Event",
+      "police_precinct": [
+        "1"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "966071",
+      "start_date_time": "2026-08-12T00:00:00.000",
+      "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "2"
+      ],
+      "end_date_time": "2026-08-12T23:30:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "GREENE STREET between GRAND STREET and CANAL STREET",
+      "event_name": "MKG - Pop-up event",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "1"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "964965",
+      "start_date_time": "2026-08-12T07:00:00.000",
+      "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "12"
+      ],
+      "end_date_time": "2026-08-12T12:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Queens",
+      "event_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
+      "event_name": "Boombox in Jamaica",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "103"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "964160",
+      "start_date_time": "2026-08-12T12:00:00.000",
+      "street_closure_type": "Partial Sidewalk Closure"
+    },
+    {
+      "community_board": [
+        "3"
+      ],
+      "end_date_time": "2026-08-12T19:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "SUFFOLK STREET between DELANCEY STREET and RIVINGTON STREET",
+      "event_name": "International Puppet Fringe Festival Inaguration",
+      "event_type": "Open Culture",
+      "police_precinct": [
+        "7"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "958187",
+      "start_date_time": "2026-08-12T17:30:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "11"
+      ],
+      "end_date_time": "2026-08-13T16:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "EAST  124 STREET between MADISON AVENUE and PARK AVENUE",
+      "event_name": "Annual Back To School Rally",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "25"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "952837",
+      "start_date_time": "2026-08-13T09:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "3"
+      ],
+      "end_date_time": "2026-08-13T13:30:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "BREVOORT PLACE between FRANKLIN AVENUE and BEDFORD AVENUE",
+      "event_name": "NYC ACS Annual Keisha J. Baxter Back to School Community and Resource Fair",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "79"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "961880",
+      "start_date_time": "2026-08-13T10:00:00.000",
+      "street_closure_type": "Sidewalk and Street Closure"
+    },
+    {
+      "community_board": [
+        "12"
+      ],
+      "end_date_time": "2026-08-13T12:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Queens",
+      "event_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
+      "event_name": "Boombox in Jamaica",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "103"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "964160",
+      "start_date_time": "2026-08-13T12:00:00.000",
+      "street_closure_type": "Partial Sidewalk Closure"
+    },
+    {
+      "community_board": [
+        "6"
+      ],
+      "end_date_time": "2026-08-13T19:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "SACKETT STREET between VAN BRUNT STREET and DEAD END",
+      "event_name": "Sackett St Open Streets Event",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "76"
+      ],
+      "source_cemsid": [
+        "0"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "964434",
+      "start_date_time": "2026-08-13T12:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "8"
+      ],
+      "end_date_time": "2026-08-13T16:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "EAST   86 STREET between 3 AVENUE and LEXINGTON AVENUE",
+      "event_name": "Peach Lily Zombie Cream Sampling Cart",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "19"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "963524",
+      "start_date_time": "2026-08-13T14:00:00.000",
+      "street_closure_type": "Partial Sidewalk Closure"
+    },
+    {
+      "community_board": [
+        "6"
+      ],
+      "end_date_time": "2026-08-13T20:30:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "LINCOLN PLACE between 7 AVENUE and 6 AVENUE",
+      "event_name": "Midsummer Night Concert",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "78"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "955550",
+      "start_date_time": "2026-08-13T18:30:00.000",
+      "street_closure_type": "Sidewalk and Curb Lane Closure"
+    },
+    {
+      "community_board": [
+        "5"
+      ],
+      "end_date_time": "2026-08-13T20:30:00.000",
+      "event_agency": "Police Department",
+      "event_borough": "Queens",
+      "event_location": "56 ROAD between 61 STREET and 64 STREET,  61 STREET between 56 ROAD and 56 AVENUE,  56 AVENUE between 61 STREET and 64 STREET,  64 STREET between 56 ROAD and 56 AVENUE,  56 ROAD between 61 STREET and 64 STREET",
+      "event_name": "Fatima Devotion Procession",
+      "event_type": "Religious Event",
+      "police_precinct": [
+        "104"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "962202",
+      "start_date_time": "2026-08-13T19:30:00.000",
+      "street_closure_type": "Partial Sidewalk Closure"
+    },
+    {
+      "community_board": [
+        "1"
+      ],
+      "end_date_time": "2026-08-28T23:59:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "DESBROSSES STREET between HUDSON STREET and GREENWICH STREET",
+      "event_name": "Tribeca Rooftop - 8/14 - 8/28",
+      "event_type": "Production Event",
+      "police_precinct": [
+        "1"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "965134",
+      "start_date_time": "2026-08-14T00:01:00.000",
+      "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "16"
+      ],
+      "end_date_time": "2026-08-14T18:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "CHAUNCEY STREET between SARATOGA AVENUE and THOMAS BOYLAND STREET",
+      "event_name": "Love Thy neighbor",
+      "event_type": "Block Party",
+      "police_precinct": [
+        "73"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "948153",
+      "start_date_time": "2026-08-14T10:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "12"
+      ],
+      "end_date_time": "2026-08-14T12:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Queens",
+      "event_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
+      "event_name": "Boombox in Jamaica",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "103"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "964160",
+      "start_date_time": "2026-08-14T12:00:00.000",
+      "street_closure_type": "Partial Sidewalk Closure"
     }
   ],
   "production_feeds_modified": false,
@@ -508,6 +504,6 @@
   "raw_rows_loaded": 28325,
   "raw_rows_with_cemsid": 27745,
   "raw_url": "https://data.cityofnewyork.us/resource/tvpp-9vvx.json",
-  "today_nyc": "2026-08-09",
+  "today_nyc": "2026-08-10",
   "today_utc": "2026-08-10"
 }
