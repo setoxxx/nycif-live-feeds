@@ -1,163 +1,296 @@
 #!/usr/bin/env python3
-"""Fetch current NYC Parks public events from NYC Open Data.
+"""Fetch the official NYC Parks Events Open Data tables (staging only).
 
-The Parks website JSON URL now rejects unattended GETs with HTTP 405. NYC Open
-Data dataset ``w3wp-dpdi`` mirrors the current upcoming-14-days Parks feed and
-exposes the same event schema, including first-party coordinate pairs.
+This keeps the historical NYCIF Parks artifact paths stable while replacing the
+legacy BigApps JSON endpoint as freshness authority. NYC Open Data documents
+`fudw-fgrp` as the primary event table and the related tables as exact
+`event_id` joins. No fuzzy joins, geocoding, promotion, or public-map writes are
+performed here.
 
-This collector never geocodes. A valid coordinate from the official dataset is
-carried as validated ``exact_source_coordinate`` evidence. Missing/invalid
-coordinates remain non-exact for downstream review/list-only handling.
+For Projector V3, one unique valid coordinate carried by the official Locations
+table is represented as explicit ``exact_source_coordinate`` evidence. Multiple
+distinct source points abstain rather than selecting a point arbitrarily.
+
+Outputs:
+- data/nyc_parks_bigapps_events_snapshot.json
+- data/nyc_parks_bigapps_events_sync_report.json
 """
 
 from __future__ import annotations
 
 import json
+import re
 import sys
-import urllib.parse
 import urllib.request
+from collections import defaultdict
 from datetime import date, datetime, timezone
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlencode
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
 SNAPSHOT_PATH = DATA_DIR / "nyc_parks_bigapps_events_snapshot.json"
 REPORT_PATH = DATA_DIR / "nyc_parks_bigapps_events_sync_report.json"
 
-DATASET_ID = "w3wp-dpdi"
-EVENTS_URL = f"https://data.cityofnewyork.us/resource/{DATASET_ID}.json"
-SOURCE_PAGE = f"https://data.cityofnewyork.us/d/{DATASET_ID}"
+SOURCE_CONTRACT_VERSION = "NYCIF_PARKS_EVENTS_OPEN_DATA_V2"
+EVENTS_DATASET_ID = "fudw-fgrp"
+LOCATIONS_DATASET_ID = "cpcm-i88g"
+CATEGORIES_DATASET_ID = "xtsw-fqvh"
+SOCRATA_ROOT = "https://data.cityofnewyork.us/resource"
+EVENTS_URL = f"{SOCRATA_ROOT}/{EVENTS_DATASET_ID}.json"
+LOCATIONS_URL = f"{SOCRATA_ROOT}/{LOCATIONS_DATASET_ID}.json"
+CATEGORIES_URL = f"{SOCRATA_ROOT}/{CATEGORIES_DATASET_ID}.json"
+LEGACY_BIGAPPS_URL = "https://www.nycgovparks.org/xml/events_300_rss.json"
 PAGE_LIMIT = 50000
+MAX_ROWS_PER_TABLE = 500000
 DEFAULT_HEADERS = {
     "Accept": "application/json",
-    "User-Agent": "NYCIF-live-feeds/2.0 (+https://nycinfocus.com/)",
+    "User-Agent": "NYCIF-live-feeds/2.0 (+https://github.com/setoxxx/nycif-live-feeds)",
 }
+
+
+def load_json_file(path: Path, default: Any) -> Any:
+    if not path.exists() or path.stat().st_size == 0:
+        return default
+    try:
+        with path.open("r", encoding="utf-8") as handle:
+            return json.load(handle)
+    except Exception:
+        return default
 
 
 def save_json(path: Path, payload: Any) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
+    with path.open("w", encoding="utf-8") as handle:
+        json.dump(payload, handle, indent=2, ensure_ascii=False, sort_keys=True)
+        handle.write("\n")
 
 
-def text(value: Any) -> str:
-    return str(value or "").strip()
+def first_value(row: dict[str, Any], *keys: str) -> Any:
+    for key in keys:
+        value = row.get(key)
+        if value not in (None, ""):
+            return value
+    return None
 
 
-def fetch_events() -> list[dict[str, Any]]:
-    query = urllib.parse.urlencode({"$limit": str(PAGE_LIMIT)})
-    request = urllib.request.Request(f"{EVENTS_URL}?{query}", headers=DEFAULT_HEADERS)
-    with urllib.request.urlopen(request, timeout=120) as response:
-        payload = json.loads(response.read().decode("utf-8"))
-    if not isinstance(payload, list):
-        raise RuntimeError("NYC Parks current-events dataset returned a non-list payload")
-    rows = [row for row in payload if isinstance(row, dict)]
-    if not rows:
-        raise RuntimeError("NYC Parks current-events dataset returned no rows")
+def fetch_socrata_rows(dataset_id: str, *, order_field: str = "event_id") -> list[dict[str, Any]]:
+    """Fetch a complete Socrata table with explicit pagination."""
+    rows: list[dict[str, Any]] = []
+    offset = 0
+    while True:
+        params = {"$limit": PAGE_LIMIT, "$offset": offset, "$order": order_field}
+        url = f"{SOCRATA_ROOT}/{dataset_id}.json?{urlencode(params)}"
+        request = urllib.request.Request(url, headers=DEFAULT_HEADERS, method="GET")
+        with urllib.request.urlopen(request, timeout=120) as response:
+            if response.status != 200:
+                raise RuntimeError(f"{dataset_id} returned HTTP {response.status}")
+            payload = json.loads(response.read().decode("utf-8"))
+        if not isinstance(payload, list):
+            raise RuntimeError(f"{dataset_id} response was not a JSON list")
+        page = [row for row in payload if isinstance(row, dict)]
+        rows.extend(page)
+        if len(page) < PAGE_LIMIT:
+            break
+        offset += PAGE_LIMIT
+        if offset >= MAX_ROWS_PER_TABLE:
+            raise RuntimeError(f"{dataset_id} pagination exceeded safety cap {MAX_ROWS_PER_TABLE}")
     return rows
 
 
-def parse_coordinates(value: Any) -> tuple[float | None, float | None]:
-    raw = text(value)
-    if not raw or "," not in raw:
-        return None, None
-    pieces = [piece.strip() for piece in raw.split(",", 1)]
-    try:
-        lat, lng = float(pieces[0]), float(pieces[1])
-    except (TypeError, ValueError):
-        return None, None
-    if not (40.0 <= lat <= 41.0 and -75.0 <= lng <= -73.0):
-        return None, None
-    return lat, lng
-
-
-def date_part(value: Any) -> str:
-    raw = text(value)
-    if len(raw) >= 10 and raw[4:5] == "-" and raw[7:8] == "-":
-        return raw[:10]
+def iso_date(value: Any) -> str:
+    raw = str(value or "").strip()
+    if not raw:
+        return ""
+    match = re.match(r"^(\d{4}-\d{2}-\d{2})", raw)
+    if match:
+        return match.group(1)
+    for fmt in ("%m/%d/%Y", "%m/%d/%y", "%Y/%m/%d"):
+        try:
+            return datetime.strptime(raw.split("T", 1)[0].split(" ", 1)[0], fmt).date().isoformat()
+        except ValueError:
+            continue
     return ""
 
 
-def time_part(value: Any) -> str:
-    raw = text(value)
+def iso_time(value: Any) -> str:
+    raw = str(value or "").strip()
     if not raw:
         return ""
-    # Current Open Data values are e.g. "2026-08-07 07:00:00".
-    if " " in raw:
-        raw = raw.rsplit(" ", 1)[-1]
     if "T" in raw:
-        raw = raw.rsplit("T", 1)[-1]
-    return raw[:8]
+        raw = raw.split("T", 1)[1]
+    raw = raw.rstrip("Z")
+    for fmt in ("%H:%M:%S", "%H:%M", "%I:%M:%S %p", "%I:%M %p"):
+        try:
+            return datetime.strptime(raw, fmt).strftime("%H:%M:%S")
+        except ValueError:
+            continue
+    match = re.match(r"^(\d{2}:\d{2})(?::(\d{2}))?", raw)
+    if match:
+        return match.group(1) + ":" + (match.group(2) or "00")
+    return ""
 
 
-def combine(day: str, clock: str) -> str | None:
-    return f"{day}T{clock or '00:00:00'}" if day else None
-
-
-def category_list(value: Any) -> list[str]:
-    if isinstance(value, list):
-        return [text(item) for item in value if text(item)]
-    raw = text(value)
-    if not raw:
-        return []
-    delimiter = "|" if "|" in raw else ","
-    return [piece.strip() for piece in raw.split(delimiter) if piece.strip()]
-
-
-def link_value(value: Any) -> str | None:
-    if isinstance(value, dict):
-        return text(value.get("url")) or None
-    return text(value) or None
-
-
-def official_coordinate_evidence(lat: float | None, lng: float | None) -> dict[str, Any] | None:
-    if lat is None or lng is None:
+def combine_date_time(day_value: Any, time_value: Any) -> str | None:
+    day = iso_date(day_value)
+    if not day:
         return None
+    clock = iso_time(time_value)
+    return f"{day}T{clock}" if clock else day
+
+
+def parse_point(row: dict[str, Any]) -> tuple[float, float] | None:
+    lat_value = first_value(row, "lat", "latitude")
+    lng_value = first_value(row, "long", "lng", "lon", "longitude")
+    try:
+        lat, lng = float(lat_value), float(lng_value)
+    except (TypeError, ValueError):
+        return None
+    if not (40.0 <= lat <= 41.0 and -75.0 <= lng <= -73.0):
+        return None
+    return round(lat, 7), round(lng, 7)
+
+
+def event_id(row: dict[str, Any]) -> str:
+    return str(first_value(row, "event_id", "eventid", "id") or "").strip()
+
+
+def related_index(rows: list[dict[str, Any]]) -> dict[str, list[dict[str, Any]]]:
+    out: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for row in rows:
+        key = event_id(row)
+        if key:
+            out[key].append(row)
+    return dict(out)
+
+
+def unique_text(values: list[Any]) -> list[str]:
+    seen: set[str] = set()
+    out: list[str] = []
+    for value in values:
+        raw = str(value or "").strip()
+        if raw and raw not in seen:
+            seen.add(raw)
+            out.append(raw)
+    return out
+
+
+def category_name(row: dict[str, Any]) -> str:
+    return str(first_value(row, "category", "name", "category_name", "title") or "").strip()
+
+
+def official_coordinate_evidence(source_event_id: str) -> dict[str, Any]:
+    """Describe one unique official Locations-table point for Projector V3."""
     return {
         "tier": "exact_source_coordinate",
         "validation_state": "validated",
         "exact_pin_eligible": True,
-        "source_provenance": EVENTS_URL,
+        "source_provenance": LOCATIONS_URL,
         "provider": "NYC Parks / NYC Open Data",
+        "source_dataset_id": LOCATIONS_DATASET_ID,
+        "source_event_id": source_event_id,
+        "join_key": "event_id",
         "reason_code": "OFFICIAL_SOURCE_COORDINATE",
-        "reason_detail": "Coordinate pair supplied directly by NYC Parks current-events Open Data.",
+        "reason_detail": "One unique valid coordinate pair supplied by the official NYC Parks Event Locations table.",
     }
 
 
-def normalize_event_item(item: dict[str, Any]) -> dict[str, Any]:
-    lat, lng = parse_coordinates(item.get("coordinates"))
-    start_day = date_part(item.get("startdate"))
-    end_day = date_part(item.get("enddate")) or start_day
-    start_clock = time_part(item.get("starttime"))
-    end_clock = time_part(item.get("endtime"))
-    park_name = text(item.get("parknames"))
-    location = text(item.get("location")) or park_name
+def normalize_event_item(
+    item: dict[str, Any],
+    locations: list[dict[str, Any]],
+    categories: list[dict[str, Any]],
+) -> dict[str, Any]:
+    sid = event_id(item)
+    raw_date = first_value(item, "date", "start_date", "startdate", "start_date_time")
+    raw_start_time = first_value(item, "start_time", "starttime")
+    raw_end_date = first_value(item, "end_date", "enddate", "end_date_time") or raw_date
+    raw_end_time = first_value(item, "end_time", "endtime")
+    start_date = iso_date(raw_date)
+    end_date = iso_date(raw_end_date) or start_date
+    start_date_time = combine_date_time(raw_date, raw_start_time)
+    end_date_time = combine_date_time(raw_end_date, raw_end_time)
+
+    points = sorted({point for row in locations if (point := parse_point(row)) is not None})
+    chosen_point = points[0] if len(points) == 1 else None
+    location_names = unique_text([first_value(row, "name", "location", "location_name") for row in locations])
+    addresses = unique_text([row.get("address") for row in locations])
+    park_ids = unique_text([first_value(row, "park_id", "parkid") for row in locations])
+    boroughs = unique_text([row.get("borough") for row in locations])
+    location_text = str(first_value(item, "location", "location_text", "park_name") or "").strip()
+    if not location_text:
+        location_text = "; ".join(location_names or addresses)
+
+    category_values = unique_text([category_name(row) for row in categories])
+    item_category = first_value(item, "category", "event_type")
+    if item_category:
+        category_values = unique_text(category_values + [item_category])
+
+    lat = chosen_point[0] if chosen_point else None
+    lng = chosen_point[1] if chosen_point else None
+    coordinate_state = (
+        "single_source_location_point"
+        if len(points) == 1
+        else "multiple_source_location_points"
+        if len(points) > 1
+        else "no_source_location_point"
+    )
+    location_evidence = official_coordinate_evidence(sid) if chosen_point else None
 
     return {
+        # Preserve the legacy logical source namespace so occurrence identity does
+        # not churn solely because the transport changed. Provenance below records
+        # the official replacement datasets precisely.
         "source_dataset": "nyc-parks-bigapps-events",
-        "source_event_id": text(item.get("guid")),
-        "title": item.get("title"),
-        "start_date_time": combine(start_day, start_clock),
-        "end_date_time": combine(end_day, end_clock),
-        "start_date": start_day or None,
-        "start_time": start_clock or None,
-        "end_date": end_day or None,
-        "end_time": end_clock or None,
-        "location": location or None,
-        "display_location": location or None,
-        "park_names": [park_name] if park_name else [],
-        "park_ids": item.get("parkids"),
-        "categories": category_list(item.get("categories")),
-        "description": item.get("description"),
-        "link": link_value(item.get("link")),
-        "registration_url": link_value(item.get("registration_url")),
-        "registration_description": item.get("registration_description"),
-        "contact_phone": item.get("contact_phone"),
-        "instructor": item.get("instructor"),
-        "image": link_value(item.get("image")),
+        "source_event_id": sid,
+        "source_authority_dataset": EVENTS_DATASET_ID,
+        "source_contract_version": SOURCE_CONTRACT_VERSION,
+        "title": first_value(item, "title", "name", "event_name"),
+        "event_type": first_value(item, "event_type", "type"),
+        "start_date_time": start_date_time,
+        "end_date_time": end_date_time,
+        "start_date": start_date or None,
+        "start_time": iso_time(raw_start_time) or None,
+        "end_date": end_date or None,
+        "end_time": iso_time(raw_end_time) or None,
+        "location": location_text or None,
+        "display_location": location_text or None,
+        "park_names": location_names,
+        "park_ids": park_ids,
+        "borough": first_value(item, "borough") or (boroughs[0] if len(boroughs) == 1 else None),
+        "categories": category_values,
+        "description": first_value(item, "description", "desc"),
+        "link": first_value(item, "link", "url", "source_url"),
+        "registration_url": first_value(item, "registration_url"),
+        "registration_description": first_value(item, "registration_description"),
+        "contact_phone": first_value(item, "contact_phone", "phone"),
+        "instructor": first_value(item, "instructor"),
+        "image": first_value(item, "image", "image_url"),
         "lat": lat,
         "lng": lng,
-        "location_evidence": official_coordinate_evidence(lat, lng),
+        "location_evidence": location_evidence,
+        "source_location_count": len(locations),
+        "source_coordinate_count": len(points),
+        "source_coordinate_state": coordinate_state,
+        "source_locations": [
+            {
+                "name": first_value(row, "name", "location", "location_name"),
+                "park_id": first_value(row, "park_id", "parkid"),
+                "lat": parse_point(row)[0] if parse_point(row) else None,
+                "lng": parse_point(row)[1] if parse_point(row) else None,
+                "address": row.get("address"),
+                "zip": row.get("zip"),
+                "borough": row.get("borough"),
+            }
+            for row in locations
+        ],
+        "provenance": {
+            "events_dataset_id": EVENTS_DATASET_ID,
+            "locations_dataset_id": LOCATIONS_DATASET_ID,
+            "categories_dataset_id": CATEGORIES_DATASET_ID,
+            "join_key": "event_id",
+            "legacy_endpoint_retired_from_freshness_authority": LEGACY_BIGAPPS_URL,
+        },
         "manual_review_status": "pending",
         "promotion_allowed": False,
         "public_map_modified": False,
@@ -166,43 +299,106 @@ def normalize_event_item(item: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def load_committed_snapshot_events() -> list[dict[str, Any]]:
+    payload = load_json_file(SNAPSHOT_PATH, {})
+    events = payload.get("events") if isinstance(payload, dict) else []
+    if not isinstance(events, list):
+        return []
+    return [row for row in events if isinstance(row, dict)]
+
+
+def fetch_official_tables() -> tuple[list[dict[str, Any]], list[dict[str, Any]], list[dict[str, Any]]]:
+    return (
+        fetch_socrata_rows(EVENTS_DATASET_ID),
+        fetch_socrata_rows(LOCATIONS_DATASET_ID),
+        fetch_socrata_rows(CATEGORIES_DATASET_ID),
+    )
+
+
 def main() -> int:
     generated_at = datetime.now(timezone.utc).isoformat()
-    error: str | None = None
-    try:
-        source_rows = fetch_events()
-        normalized = [normalize_event_item(row) for row in source_rows]
-        fetch_mode = "live"
-    except Exception as exc:
-        source_rows = []
-        normalized = []
-        fetch_mode = "live_fetch_failed"
-        error = str(exc)
-
     today = date.today().isoformat()
-    normalized = [
-        row for row in normalized
-        if row.get("source_event_id") and row.get("title") and row.get("start_date_time")
+    fetch_mode = "live"
+    live_fetch_error = None
+    source_event_rows = source_location_rows = source_category_rows = 0
+    duplicate_source_event_ids: list[str] = []
+    normalized: list[dict[str, Any]] = []
+
+    try:
+        event_rows, location_rows, category_rows = fetch_official_tables()
+        source_event_rows = len(event_rows)
+        source_location_rows = len(location_rows)
+        source_category_rows = len(category_rows)
+        if not event_rows:
+            raise RuntimeError("official Parks event listing returned zero rows")
+        if not location_rows:
+            raise RuntimeError("official Parks event locations returned zero rows")
+
+        locations_by_id = related_index(location_rows)
+        categories_by_id = related_index(category_rows)
+        counts: dict[str, int] = defaultdict(int)
+        for row in event_rows:
+            sid = event_id(row)
+            if sid:
+                counts[sid] += 1
+        duplicate_source_event_ids = sorted(key for key, count in counts.items() if count > 1)
+        if duplicate_source_event_ids:
+            raise RuntimeError(
+                f"official Parks primary table contains duplicate event_id values: {duplicate_source_event_ids[:10]}"
+            )
+
+        all_normalized = [
+            normalize_event_item(row, locations_by_id.get(event_id(row), []), categories_by_id.get(event_id(row), []))
+            for row in event_rows
+            if event_id(row)
+        ]
+        # The retired BigApps endpoint represented current/future discovery. Keep
+        # that contract and do not inject the complete 2013+ history downstream.
+        normalized = [
+            row
+            for row in all_normalized
+            if str(row.get("end_date") or row.get("start_date") or "") >= today
+        ]
+        if not normalized:
+            raise RuntimeError("official Parks tables produced zero current/future events")
+    except Exception as exc:
+        live_fetch_error = str(exc)
+        committed_rows = load_committed_snapshot_events()
+        if committed_rows:
+            normalized = committed_rows
+            fetch_mode = "committed_snapshot_fallback"
+        else:
+            fetch_mode = "live_fetch_failed"
+
+    current_future = [
+        row
+        for row in normalized
+        if str(row.get("end_date") or row.get("start_date") or row.get("start_date_time") or "")[:10] >= today
     ]
-    current_future = [row for row in normalized if text(row.get("start_date_time"))[:10] >= today]
     with_coords = sum(1 for row in normalized if row.get("lat") is not None and row.get("lng") is not None)
     with_exact_source_evidence = sum(
         1
         for row in normalized
         if isinstance(row.get("location_evidence"), dict)
+        and row["location_evidence"].get("tier") == "exact_source_coordinate"
+        and row["location_evidence"].get("validation_state") == "validated"
         and row["location_evidence"].get("exact_pin_eligible") is True
     )
-    qa_pass = (
-        bool(current_future)
-        and not error
-        and with_exact_source_evidence == with_coords
-    )
+    multiple_points = sum(1 for row in normalized if row.get("source_coordinate_state") == "multiple_source_location_points")
+    qa_pass = bool(normalized) and with_exact_source_evidence == with_coords
+    error = live_fetch_error if fetch_mode != "live" else None
 
     snapshot = {
         "generated_at_utc": generated_at,
         "source_url": EVENTS_URL,
-        "source_page": SOURCE_PAGE,
-        "source_transport": "nyc_open_data_current_14_day",
+        "source_contract_version": SOURCE_CONTRACT_VERSION,
+        "source_datasets": {
+            "events": EVENTS_DATASET_ID,
+            "locations": LOCATIONS_DATASET_ID,
+            "categories": CATEGORIES_DATASET_ID,
+        },
+        "legacy_source_url": LEGACY_BIGAPPS_URL,
+        "legacy_source_is_freshness_authority": False,
         "fetch_mode": fetch_mode,
         "events": normalized,
     }
@@ -210,17 +406,27 @@ def main() -> int:
         "generated_at_utc": generated_at,
         "qa_pass": qa_pass,
         "fetch_mode": fetch_mode,
-        "source_transport": "nyc_open_data_current_14_day",
         "source_url": EVENTS_URL,
-        "source_page": SOURCE_PAGE,
-        "source_rows_received": len(source_rows),
+        "source_contract_version": SOURCE_CONTRACT_VERSION,
+        "source_datasets": {
+            "events": EVENTS_DATASET_ID,
+            "locations": LOCATIONS_DATASET_ID,
+            "categories": CATEGORIES_DATASET_ID,
+        },
+        "source_event_rows_fetched": source_event_rows,
+        "source_location_rows_fetched": source_location_rows,
+        "source_category_rows_fetched": source_category_rows,
         "snapshot_rows": len(normalized),
         "current_future_rows": len(current_future),
         "rows_with_coordinates": with_coords,
         "rows_with_exact_source_coordinate_evidence": with_exact_source_evidence,
         "coordinate_evidence_parity": with_exact_source_evidence == with_coords,
+        "rows_with_multiple_authoritative_location_points": multiple_points,
+        "duplicate_source_event_id_count": len(duplicate_source_event_ids),
         "error": error,
-        "live_fetch_error": error,
+        "live_fetch_error": live_fetch_error,
+        "legacy_source_url": LEGACY_BIGAPPS_URL,
+        "legacy_source_is_freshness_authority": False,
         "production_feeds_modified": False,
         "public_map_modified": False,
         "location_cache_modified": False,
@@ -231,7 +437,7 @@ def main() -> int:
 
     save_json(SNAPSHOT_PATH, snapshot)
     save_json(REPORT_PATH, report)
-    print(json.dumps(report, indent=2, ensure_ascii=False, sort_keys=True))
+    print(json.dumps(report, indent=2, ensure_ascii=False))
     return 0 if qa_pass else 1
 
 
