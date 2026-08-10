@@ -1,112 +1,64 @@
 {
   "civic": {
-    "accepted": 4754,
+    "accepted": 4736,
     "date_time_location_qa_pass": true,
     "list_only": 1291,
     "map_coverage_qa_pass": true,
-    "map_ready": 3463
+    "map_ready": 3445
   },
   "failed_steps": [],
-  "generated_at_utc": "2026-08-07T15:01:07Z",
+  "generated_at_utc": "2026-08-10T05:06:20Z",
   "location_cache_modified": false,
   "notes": "Safe daily desk sync. Does not run build_staged_production_feed / build_location_cache / public WordPress publish. Pin integrity gate fail-closed: qa_pass requires ZERO bad map_ready pins. Full permit→staged refresh remains live-sync-qa (manual dispatch).",
   "photographer_calendar": {
-    "days_with_coverage": 40,
-    "events_removed_vs_baseline": 613,
+    "days_with_coverage": 39,
+    "events_removed_vs_baseline": 645,
     "month_counts": [
       {
-        "days_with_events": 23,
-        "event_count": 158,
+        "days_with_events": 20,
+        "event_count": 119,
         "label": "August 2026"
       },
       {
-        "days_with_events": 17,
-        "event_count": 71,
+        "days_with_events": 19,
+        "event_count": 78,
         "label": "September 2026"
       }
     ],
     "packs": {
       "qa_pass": true,
       "today": {
-        "borough_cluster_count": 2,
-        "date": "2026-08-07",
-        "map_ready_count": 7,
-        "total_events": 7
+        "borough_cluster_count": 0,
+        "date": "2026-08-10",
+        "map_ready_count": 0,
+        "total_events": 0
       },
       "tomorrow": {
-        "borough_cluster_count": 5,
-        "date": "2026-08-08",
-        "map_ready_count": 18,
+        "borough_cluster_count": 2,
+        "date": "2026-08-11",
+        "map_ready_count": 2,
         "top_go_shoot": [
           {
             "borough": "Brooklyn",
-            "score": 490,
-            "time": "2026-08-08T12:00:00.000",
-            "title": "African Popup Festival"
-          },
-          {
-            "borough": "Brooklyn",
-            "score": 400,
-            "time": "2026-08-08T10:15:00.000-04:00",
-            "title": "Access Benefits at Jamaica Rising Day Parade"
-          },
-          {
-            "borough": "Brooklyn",
-            "score": 400,
-            "time": "2026-08-08T11:00:00.000",
-            "title": "Jamaica Rising Day Parade"
-          },
-          {
-            "borough": "Queens",
-            "score": 400,
-            "time": "2026-08-08T16:30:00.000",
-            "title": "Prayer Vigil - Religious event - August 8 - August 15 - August 22"
-          },
-          {
-            "borough": null,
-            "score": 380,
-            "time": "2026-08-08T1:00 pm",
-            "title": "18th Annual Stan Michels Jazz Festival"
-          },
-          {
-            "borough": "Brooklyn",
-            "score": 380,
-            "time": "2026-08-08T12:00:00",
-            "title": "African Heritage Festival (Brownsville)"
-          },
-          {
-            "borough": "Brooklyn",
-            "score": 380,
-            "time": "2026-08-08T12:00:00",
-            "title": "Church Annual Festival (Mermaid Avenue, Coney Island)"
-          },
-          {
-            "borough": "Queens",
-            "score": 380,
-            "time": "2026-08-08T15:00:00.000",
-            "title": "Dominican Festival - AM Dilan"
-          },
-          {
-            "borough": "Bronx",
-            "score": 380,
-            "time": "2026-08-08T12:00:00",
-            "title": "Festival Mt Carmel Family Fellowship (Bronx)"
+            "score": 340,
+            "time": "2026-08-11T09:00:00.000",
+            "title": "NYP Youth Market - Brooklyn"
           },
           {
             "borough": "Manhattan",
-            "score": 380,
-            "time": "2026-08-08T18:00:00.000",
-            "title": "Giglio Feast of Sant Antonio"
+            "score": 310,
+            "time": "2026-08-11T12:00:00.000",
+            "title": "TSQ LIVE: 45/46 Plaza Programming"
           }
         ],
-        "total_events": 20
+        "total_events": 2
       }
     },
     "pin_integrity": {
       "demotion_count": 0,
       "demotion_reason_counts": {},
-      "map_ready_after_total": 3738,
-      "map_ready_before_total": 3738,
+      "map_ready_after_total": 3672,
+      "map_ready_before_total": 3672,
       "qa_pass": true,
       "report": "data/pin_integrity_gate_report.json"
     },
@@ -115,18 +67,18 @@
     "shoot_day_certified": {
       "pack": "data/photographer_shoot_day_certified_pack.json",
       "qa_pass": true,
-      "today_certified_pins": 7,
-      "tomorrow_certified_pins": 18
+      "today_certified_pins": 0,
+      "tomorrow_certified_pins": 2
     },
-    "total_events": 229,
+    "total_events": 197,
     "viral_recurrence": {
       "historical_rows": 2450,
       "label_counts": {
-        "possible": 64,
-        "returning_likely": 129,
-        "weak": 56
+        "possible": 51,
+        "returning_likely": 107,
+        "weak": 48
       },
-      "match_count": 249,
+      "match_count": 206,
       "next_14d_crowd_magnets": 39,
       "qa_pass": true
     }

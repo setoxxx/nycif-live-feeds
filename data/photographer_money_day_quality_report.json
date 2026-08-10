@@ -1,26 +1,26 @@
 {
   "after_v2": {
     "coordinate_status_counts": {
-      "list_only": 18,
-      "map_ready": 211
+      "list_only": 11,
+      "map_ready": 186
     },
-    "days_with_coverage": 40,
+    "days_with_coverage": 39,
     "lane_counts": {
-      "approved_major": 229
+      "approved_major": 197
     },
     "month_counts": [
       {
-        "days_with_events": 23,
-        "event_count": 158,
+        "days_with_events": 20,
+        "event_count": 119,
         "label": "August 2026"
       },
       {
-        "days_with_events": 17,
-        "event_count": 71,
+        "days_with_events": 19,
+        "event_count": 78,
         "label": "September 2026"
       }
     ],
-    "total_events": 229
+    "total_events": 197
   },
   "baseline_v1_pr173": {
     "days_with_coverage": 43,
@@ -39,36 +39,36 @@
     "reference_today_nyc": "2026-07-14",
     "total_events": 842
   },
-  "considered_in_window": 917,
+  "considered_in_window": 860,
   "delta_vs_baseline": {
-    "days_coverage_after": 40,
+    "days_coverage_after": 39,
     "days_coverage_before": 43,
-    "events_kept": 229,
-    "events_removed": 613
+    "events_kept": 197,
+    "events_removed": 645
   },
-  "excluded": 688,
+  "excluded": 663,
   "filter_rules": [
     "Require money-day keyword signal on title/category (not location).",
     "Exclude routine sports/fitness even when major_score is high.",
     "Cap carried major_score contribution; significance alone is not enough."
   ],
-  "generated_at_utc": "2026-08-07T15:01:10Z",
-  "kept": 229,
+  "generated_at_utc": "2026-08-10T05:06:23Z",
+  "kept": 197,
   "location_cache_modified": false,
   "promotion_allowed": false,
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-08-07",
+  "reference_today_nyc": "2026-08-10",
   "schema_version": "photographer-money-day-quality-v1",
   "top_exclude_reasons": [
     [
       "no_money_day_keyword_signal",
-      577
+      555
     ],
     [
       "routine_activity_excluded",
-      89
+      87
     ],
     [
       "duplicate_id",
@@ -76,7 +76,7 @@
     ],
     [
       "thin_or_non_money_title_excluded",
-      9
+      8
     ],
     [
       "below_score_threshold",

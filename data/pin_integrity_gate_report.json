@@ -9,10 +9,10 @@
   "demotion_count": 0,
   "demotion_reason_counts": {},
   "demotions_artifact": "data/pin_integrity_demotions.json",
-  "generated_at_utc": "2026-08-07T15:01:44Z",
+  "generated_at_utc": "2026-08-10T05:06:53Z",
   "location_cache_modified": false,
-  "map_ready_after_total": 3738,
-  "map_ready_before_total": 3738,
+  "map_ready_after_total": 3672,
+  "map_ready_before_total": 3672,
   "notes": "Demotes invalid map_ready to list_only and clears lat/lng on pin path. Swap auto-correct only when as-is OOB and swapped pair is inside NYC box.",
   "pre_fix_audit": {
     "note": "Before viral pack rebuild, crowd_magnets claimed map_ready without lat/lng (40). Gate demoted them; viral builder now attaches current Money-Day coords only.",
@@ -32,31 +32,31 @@
     {
       "artifact": "data/photographer_assignment_calendar_2mo.json",
       "demotion_count": 0,
-      "map_ready_after": 211,
-      "map_ready_before": 211,
+      "map_ready_after": 186,
+      "map_ready_before": 186,
       "reason_counts": {
-        "missing_coords": 18,
-        "ok_nyc_certified": 211
+        "missing_coords": 11,
+        "ok_nyc_certified": 186
       },
       "remaining_bad_map_ready": [],
       "surface": "money_day"
     },
     {
       "demotion_count": 0,
-      "map_ready_after": 25,
-      "map_ready_before": 25,
+      "map_ready_after": 2,
+      "map_ready_before": 2,
       "packs": [
         {
           "demotions": 0,
           "file": "photographer_money_day_pack_today.json",
-          "map_ready_after": 7,
-          "map_ready_before": 7
+          "map_ready_after": 0,
+          "map_ready_before": 0
         },
         {
           "demotions": 0,
           "file": "photographer_money_day_pack_tomorrow.json",
-          "map_ready_after": 18,
-          "map_ready_before": 18
+          "map_ready_after": 2,
+          "map_ready_before": 2
         }
       ],
       "surface": "money_day_packs"
@@ -71,17 +71,17 @@
     {
       "artifact": "data/civic_people_facing_staging_feed.json",
       "demotion_count": 0,
-      "map_ready_after": 3463,
-      "map_ready_before": 3463,
+      "map_ready_after": 3445,
+      "map_ready_before": 3445,
       "reason_counts": {
         "missing_coords": 1291,
-        "ok_nyc_certified": 3463
+        "ok_nyc_certified": 3445
       },
       "surface": "civic"
     },
     {
       "artifact": "data/schema-v1-discovery/major/events.json",
-      "map_ready_scanned": 348,
+      "map_ready_scanned": 342,
       "note": "Major feed scan is report-only here; Field Desk JS also refuses non-NYC pins at render.",
       "surface": "field_desk_feed",
       "would_demote_count": 0,

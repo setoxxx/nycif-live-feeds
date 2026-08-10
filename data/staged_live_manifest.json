@@ -1,35 +1,34 @@
 {
   "borough_counts": {
-    "Bronx": 3942,
-    "Brooklyn": 6690,
-    "Manhattan": 10286,
-    "Queens": 6249,
-    "Staten Island": 1144,
+    "Bronx": 3747,
+    "Brooklyn": 6575,
+    "Manhattan": 10450,
+    "Queens": 6157,
+    "Staten Island": 1121,
     "Unknown": 1
   },
   "category_counts": {
-    "arts": 181,
-    "fitness": 180,
-    "general": 21,
-    "market": 1007,
-    "parks": 3954,
-    "sports": 22969
+    "arts": 176,
+    "fitness": 178,
+    "general": 25,
+    "market": 991,
+    "parks": 3821,
+    "sports": 22860
   },
   "cross_date_street_occurrences_suppressed": 0,
   "duplicate_policy": {
     "production_feeds_modified": false,
     "street_events": "dedupe only exact title + borough + location + coordinate + date + start/end + CEMS occurrence; recurring dates remain distinct"
   },
-  "eligible_rows_before_one_day_street_dedupe": 28312,
+  "eligible_rows_before_one_day_street_dedupe": 28051,
   "exact_occurrence_duplicates_suppressed": 0,
-  "generated_at_utc": "2026-08-07T15:00:41.923404+00:00",
+  "generated_at_utc": "2026-08-10T05:05:55.807413+00:00",
   "match_counts": {
-    "event_id": 585,
-    "location_cache": 26655,
-    "tier_1_gazetteer_display": 504,
-    "tier_2_geosearch_cache": 561,
-    "tier_2_geosearch_midpoint": 6,
-    "tier_3_nyc_geosearch_live": 1
+    "event_id": 537,
+    "location_cache": 26238,
+    "tier_1_gazetteer_display": 543,
+    "tier_2_geosearch_cache": 724,
+    "tier_2_geosearch_midpoint": 9
   },
   "one_day_street_duplicates_suppressed": 0,
   "production_feed": false,
@@ -38,63 +37,151 @@
   "sample_skipped_rows": [
     {
       "borough": "Manhattan",
-      "display_location": "VARICK STREET between WATTS STREET and CANAL STREET",
+      "display_location": "WEST   33 STREET between 11 AVENUE and HUDSON BLVD EAST",
       "display_time": "12:00 AM",
       "source_cemsid": [],
-      "source_event_id": "963648",
-      "title": "CHILLHOUSE EVENT"
+      "source_event_id": "964590",
+      "title": "Hudson Yards"
+    },
+    {
+      "borough": "Bronx",
+      "display_location": "CAULDWELL AVENUE between EAST  163 STREET and EAST  164 STREET",
+      "display_time": "9:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "955243",
+      "title": "Annual Harvest"
     },
     {
       "borough": "Brooklyn",
-      "display_location": "455 WESTMINSTER ROAD between DORCHESTER ROAD and DITMAS AVENUE,  DORCHESTER ROAD between WESTMINSTER ROAD and ARGYLE ROAD",
-      "display_time": "7:00 AM",
+      "display_location": "HERKIMER STREET between RALPH AVENUE and HOWARD AVENUE",
+      "display_time": "9:30 AM",
+      "source_cemsid": [],
+      "source_event_id": "933069",
+      "title": "Friendship Community Block Party"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "EASTERN PARKWAY between BEDFORD AVENUE and ROGERS AVENUE",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "959945",
+      "title": "Community Health  and Wellness Expo"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "EAST   35 STREET between CLARENDON ROAD and CORTELYOU ROAD",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "951988",
+      "title": "East 35 Street Block Party"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "EAST   38 STREET between GLENWOOD ROAD and AVENUE H",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "926284",
+      "title": "East 38th Street Block Association"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "EAST   55 STREET between CLARKSON AVENUE and REMSEN AVENUE",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "953890",
+      "title": "Mix-up"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "THOMAS S BOYLAND STREET between LOTT AVENUE and NEWPORT STREET",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "949319",
+      "title": "New Life SDA Church -Street Event"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "70 STREET between 13 AVENUE and 14 AVENUE",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "952862",
+      "title": "Summer Fun"
+    },
+    {
+      "borough": "Queens",
+      "display_location": "BABBAGE ST between JAMAICA AVE and HILLSIDE AVE",
+      "display_time": "10:00 AM",
       "source_cemsid": [
         "0"
       ],
-      "source_event_id": "966035",
-      "title": "Permitted Film Event"
+      "source_event_id": "946740",
+      "title": "Community Recycling Event"
     },
     {
       "borough": "Queens",
-      "display_location": "234 STREET between MERRICK BOULEVARD and 133 AVENUE",
-      "display_time": "7:15 AM",
+      "display_location": "STEINWAY STREET between 28 AVENUE and 34 AVENUE",
+      "display_time": "10:00 AM",
       "source_cemsid": [],
-      "source_event_id": "963971",
-      "title": "GPS Summer Rising Celeration"
+      "source_event_id": "903211",
+      "title": "Steinway Street Festival"
     },
     {
       "borough": "Brooklyn",
-      "display_location": "EAST   59 STREET between GLENWOOD ROAD and PAERDEGAT AVENUE SOUTH",
-      "display_time": "9:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "920585",
-      "title": "Day Program Fest"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "BRISTOL STREET between SUTTER AVENUE and PITKIN AVENUE",
-      "display_time": "9:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "956317",
-      "title": "Summer School Culminating Celebration"
-    },
-    {
-      "borough": "Queens",
-      "display_location": "98 STREET between 40 ROAD and 41 AVENUE",
+      "display_location": "HERKIMER STREET between NOSTRAND AVENUE and NEW YORK AVENUE",
       "display_time": "11:00 AM",
       "source_cemsid": [],
-      "source_event_id": "958784",
-      "title": "Coloring Book Day"
+      "source_event_id": "922322",
+      "title": "2026  Block Party"
     },
     {
       "borough": "Brooklyn",
-      "display_location": "SACKETT STREET between VAN BRUNT STREET and DEAD END",
+      "display_location": "HEGEMAN AVENUE between POWELL STREET and CHRISTOPHER AVENUE",
+      "display_time": "11:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "953247",
+      "title": "BROWNSVILLE COMMUNITY EXPO 2026"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "EAST   17 STREET between QUENTIN ROAD and AVENUE R",
+      "display_time": "11:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "953387",
+      "title": "East 17th street block party"
+    },
+    {
+      "borough": "Bronx",
+      "display_location": "Pelham Bay Park and Orchard Beach: Orchard Beach - Main Stage",
       "display_time": "12:00 PM",
       "source_cemsid": [
-        "0"
+        "7518"
       ],
-      "source_event_id": "964434",
-      "title": "Sackett St Open Streets Event"
+      "source_event_id": "899396",
+      "title": "2026 Bronx Summer Concert Series"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "JEFFERSON AVENUE between LEWIS AVENUE and STUYVESANT AVENUE",
+      "display_time": "12:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "922953",
+      "title": "2025 L/S Jefferson Avenue Block Association"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "TOMPKINS AVENUE between PUTNAM AVENUE and JEFFERSON AVENUE",
+      "display_time": "12:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "923786",
+      "title": "Block Beautification Celebration"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "CONEY ISLAND AVENUE between 18 AVENUE and NEWKIRK AVENUE",
+      "display_time": "12:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "940982",
+      "title": "PAKISTAN INDEPENDENCE DAY"
     },
     {
       "borough": "Queens",
@@ -105,107 +192,17 @@
       "title": "Boombox in Jamaica"
     },
     {
-      "borough": "Brooklyn",
-      "display_location": "MONTAUK AVENUE between LINDEN BOULEVARD and STANLEY AVENUE",
-      "display_time": "8:00 AM",
+      "borough": "Staten Island",
+      "display_location": "ELY AVENUE between DOWNES AVENUE and TENAFLY PLACE",
+      "display_time": "12:00 PM",
       "source_cemsid": [],
-      "source_event_id": "959337",
-      "title": "National Health Center Week Sun River Linden Blvd"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "NOSTRAND AVENUE between FLATBUSH AVENUE and GLENWOOD ROAD",
-      "display_time": "8:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "960998",
-      "title": "Youth Led Farmers Market"
-    },
-    {
-      "borough": "Queens",
-      "display_location": "37 AVENUE between 82 STREET and 83 STREET",
-      "display_time": "8:30 AM",
-      "source_cemsid": [],
-      "source_event_id": "920197",
-      "title": "Apicha CHC Resource Fair and Health Screening for National Health Center Week"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "FRANKLIN AVENUE between DEAN STREET and EASTERN PARKWAY",
-      "display_time": "9:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "940428",
-      "title": "Franklin Avenue Open Streets"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "WILLIAMS AVENUE between LIVONIA AVENUE and RIVERDALE AVENUE",
-      "display_time": "9:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "902946",
-      "title": "Williams ave Block Party"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "SOUTH STREET between FULTON STREET and JOHN STREET",
-      "display_time": "9:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "949104",
-      "title": "Fulton Stall Market/Seaport Farmers Market"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "EAST   99 STREET between FOSTER AVENUE and FARRAGUT ROAD",
-      "display_time": "9:30 AM",
-      "source_cemsid": [],
-      "source_event_id": "959281",
-      "title": "Block Party"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "EAST   32 STREET between CLARENDON ROAD and AVENUE D",
-      "display_time": "9:30 AM",
-      "source_cemsid": [],
-      "source_event_id": "944621",
-      "title": "Block party"
-    },
-    {
-      "borough": "Queens",
-      "display_location": "178 STREET between 90 AV and JAMAICA AV",
-      "display_time": "9:30 AM",
-      "source_cemsid": [
-        "0"
-      ],
-      "source_event_id": "941245",
-      "title": "Community Block Party 178th Street"
-    },
-    {
-      "borough": "Bronx",
-      "display_location": "MURDOCK AVENUE between EAST  233 STREET and STRANG AVENUE",
-      "display_time": "10:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "934377",
-      "title": "Wake Fest"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "ARLINGTON AVENUE between CLEVELAND STREET and ELTON STREET",
-      "display_time": "10:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "954450",
-      "title": "Arlington Ave Community Celebration"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "32 STREET between 5 AVENUE and 4 AVENUE",
-      "display_time": "10:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "952264",
-      "title": "Block PArty"
+      "source_event_id": "935919",
+      "title": "Ely Avenue Block Party"
     }
   ],
-  "skipped_needs_review_or_bad_gps": 347,
+  "skipped_needs_review_or_bad_gps": 254,
   "source": "nycif_live_test_enriched_events.json",
   "staged_feed": true,
-  "staged_feed_events": 28312,
-  "test_feed_rows_loaded": 28659
+  "staged_feed_events": 28051,
+  "test_feed_rows_loaded": 28305
 }

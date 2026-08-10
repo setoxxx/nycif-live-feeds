@@ -1,54 +1,54 @@
 {
-  "accepted_canonical_records": 35088,
+  "accepted_canonical_records": 33145,
   "disposition_totals": {
-    "list_only_records": 4756,
-    "maintenance_or_closure_records": 80,
-    "private_or_reserved_records": 28,
+    "list_only_records": 3179,
+    "maintenance_or_closure_records": 81,
+    "private_or_reserved_records": 27,
     "records_grouped_under_public_events": 0,
-    "standalone_public_events": 30224
+    "standalone_public_events": 29858
   },
   "equations": {
     "accepted_equals_disposition_sum": true,
-    "accepted_sum": 35088,
-    "calendar_parks_accepted_or_unlinked": 5020,
-    "calendar_parks_documented_exclusions": 18,
-    "calendar_parks_documented_human_rejected": 18,
+    "accepted_sum": 33145,
+    "calendar_parks_accepted_or_unlinked": 4600,
+    "calendar_parks_documented_exclusions": 17,
+    "calendar_parks_documented_human_rejected": 17,
     "calendar_parks_documented_source_canceled": 0,
     "calendar_parks_exact_duplicate_rows_excluded": 0,
-    "calendar_parks_raw": 5038,
+    "calendar_parks_raw": 4617,
     "calendar_parks_unaccounted_gap": 0,
-    "calendar_parks_unaccounted_gap_raw": 18,
-    "disposition_sum": 35088,
+    "calendar_parks_unaccounted_gap_raw": 17,
+    "disposition_sum": 33145,
     "open_data_disposition_rejected": 0,
-    "open_data_rows": 29848,
-    "open_data_staged": 28312,
-    "open_data_unstaged_intake": 1536,
+    "open_data_rows": 28325,
+    "open_data_staged": 28051,
+    "open_data_unstaged_intake": 274,
     "projected_feast_reference_intake": 220
   },
-  "generated_at_utc": "2026-08-07T15:00:45Z",
+  "generated_at_utc": "2026-08-10T05:05:59Z",
   "generated_or_duplicative_excluded_from_source_count": true,
   "invalid_rejected_source_records": 0,
-  "list_only_coordinate_records": 4711,
-  "map_ready_records": 30377,
+  "list_only_coordinate_records": 3135,
+  "map_ready_records": 30010,
   "notes": [
     "Generated schema dumps and duplicative all-radar/enriched feeds excluded from raw intake.",
     "Open-data accounting uses staged dated occurrences + occurrence-keyed unstaged season intake + disposition rejects."
   ],
   "public_event_groups": 0,
   "raw_breakdown": {
-    "calendar": 3173,
-    "parks_bigapps": 1865,
-    "raw_nyc_open_data": 29848
+    "calendar": 2860,
+    "parks_bigapps": 1757,
+    "raw_nyc_open_data": 28325
   },
-  "raw_intake_source_rows": 34886,
+  "raw_intake_source_rows": 32942,
   "reconciles": true,
   "reconciles_disposition_layer": true,
   "reconciles_strict": true,
   "role_totals": {
-    "maintenance_or_closure": 80,
-    "private_or_reserved_activity": 28,
-    "public_event": 34897,
-    "street_closure": 83
+    "maintenance_or_closure": 81,
+    "private_or_reserved_activity": 27,
+    "public_event": 32950,
+    "street_closure": 87
   },
   "strict_gate_reason": "all source occurrences accepted or explicitly dispositioned; disposition equation balanced"
 }

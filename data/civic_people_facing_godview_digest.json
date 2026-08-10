@@ -74,10 +74,10 @@
       "quarantined": 0
     },
     "oac_activities": {
-      "accepted": 1501,
+      "accepted": 1483,
       "list_only": 11,
-      "map_ready": 1490,
-      "quarantined": 748
+      "map_ready": 1472,
+      "quarantined": 766
     },
     "ready_ny_events": {
       "accepted": 0,
@@ -130,32 +130,32 @@
     "promotion_allowed": false
   },
   "counts": {
-    "accepted": 4754,
-    "events": 1501,
+    "accepted": 4736,
+    "events": 1483,
     "help_places": 2109,
     "list_only": 1291,
-    "map_ready": 3463,
-    "money_day_today": 7,
-    "money_day_tomorrow": 20,
+    "map_ready": 3445,
+    "money_day_today": 0,
+    "money_day_tomorrow": 2,
     "opportunities": 1144,
-    "photographer_calendar_events": 229,
-    "photographer_days_with_coverage": 40,
+    "photographer_calendar_events": 197,
+    "photographer_days_with_coverage": 39,
     "pin_demotions": 0,
-    "pin_map_ready_certified": 3738,
+    "pin_map_ready_certified": 3672,
     "proposed": 489,
-    "quarantined": 6716,
-    "shoot_day_today_certified": 7,
-    "shoot_day_tomorrow_certified": 18,
-    "upcoming_next_30_days": 351,
-    "upcoming_next_7_days": 102,
+    "quarantined": 6734,
+    "shoot_day_today_certified": 0,
+    "shoot_day_tomorrow_certified": 2,
+    "upcoming_next_30_days": 380,
+    "upcoming_next_7_days": 101,
     "viral_next_14d_magnets": 39,
-    "viral_recurrence_matches": 249,
-    "viral_returning_likely": 129
+    "viral_recurrence_matches": 206,
+    "viral_returning_likely": 107
   },
   "daily_pull": {
-    "last_run_utc": "2026-08-07T15:01:07Z",
-    "photographer_calendar_events": 229,
-    "photographer_days_with_coverage": 40,
+    "last_run_utc": "2026-08-10T05:06:20Z",
+    "photographer_calendar_events": 197,
+    "photographer_days_with_coverage": 39,
     "qa_pass": true,
     "report": "data/daily_people_facing_sync_report.json"
   },
@@ -172,7 +172,7 @@
     "honesty": "NYC Open Data does not currently provide a high-quality live citywide soup-kitchen or food-pantry pin feed suitable for map publication.",
     "status": "known_gap_human_follow_up"
   },
-  "generated_at_utc": "2026-08-07T15:01:45Z",
+  "generated_at_utc": "2026-08-10T05:06:54Z",
   "lanes": {
     "Approved": "schema-v1-discovery approved permits (unchanged)",
     "Help Places": "schema-v1-civic-review/help (markets + benefits/SNAP/drop-in/Homebase/aging/NYCHA)",
@@ -189,10 +189,10 @@
   "photographer_assignment_calendar": {
     "artifact": "data/photographer_assignment_calendar_2mo.json",
     "coordinate_status_counts": {
-      "list_only": 18,
-      "map_ready": 211
+      "list_only": 11,
+      "map_ready": 186
     },
-    "days_with_coverage": 40,
+    "days_with_coverage": 39,
     "go_shoot_these": [
       {
         "assignment_score": 550,
@@ -238,7 +238,7 @@
         "coordinate_status": "map_ready",
         "date": "2026-08-14",
         "display_location": "Bryant Park Lawn (in Bryant Park)",
-        "end_date_time": "2026-08-14T9:30 pm",
+        "end_date_time": "2026-08-14T21:30:00",
         "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-14&assignment=1",
         "id": "review_supplemental:nyc-parks-bigapps-events:2172933@2026-08-14",
         "lane": "approved_major",
@@ -256,7 +256,7 @@
           "dataset": "nyc-parks-bigapps-events",
           "source_event_id": "2172933"
         },
-        "start_date_time": "2026-08-14T7:00 pm",
+        "start_date_time": "2026-08-14T19:00:00",
         "timezone": "America/New_York",
         "title": "Bryant Park Picnic Performance: New York Guitar Festival",
         "why_selected": [
@@ -274,7 +274,7 @@
         "coordinate_status": "map_ready",
         "date": "2026-08-15",
         "display_location": "Bryant Park Lawn (in Bryant Park)",
-        "end_date_time": "2026-08-15T9:15 pm",
+        "end_date_time": "2026-08-15T21:15:00",
         "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-15&assignment=1",
         "id": "review_supplemental:nyc-parks-bigapps-events:2172935@2026-08-15",
         "lane": "approved_major",
@@ -292,7 +292,7 @@
           "dataset": "nyc-parks-bigapps-events",
           "source_event_id": "2172935"
         },
-        "start_date_time": "2026-08-15T7:00 pm",
+        "start_date_time": "2026-08-15T19:00:00",
         "timezone": "America/New_York",
         "title": "Bryant Park Picnic Performance: New York Guitar Festival",
         "why_selected": [
@@ -300,42 +300,6 @@
           "carried_major_score_capped:120",
           "keyword_street_fair_festival",
           "keyword_spectacle"
-        ]
-      },
-      {
-        "assignment_score": 490,
-        "borough": "Brooklyn",
-        "category": "parks",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-08-08",
-        "display_location": "Hillel Plaza: Hillel Plaza Hillel pl between kenilworth pl and Flatbush ave",
-        "end_date_time": "2026-08-08T19:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-        "id": "tvpp-9vvx:916058@2026-08-08",
-        "lane": "approved_major",
-        "latitude": 40.634145,
-        "location_cache_modified": false,
-        "longitude": -73.95054,
-        "map_link": "https://www.google.com/maps?q=40.634145,-73.95054",
-        "money_day": true,
-        "photo_pick": false,
-        "pin_integrity_reason": "ok_nyc_certified",
-        "premium_label": "Photographer Assignment Calendar (premium/operator)",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "916058"
-        },
-        "start_date_time": "2026-08-08T12:00:00.000",
-        "timezone": "America/New_York",
-        "title": "African Popup Festival",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_street_fair_festival",
-          "keyword_plaza_programming"
         ]
       },
       {
@@ -375,56 +339,21 @@
         ]
       },
       {
-        "assignment_score": 400,
-        "borough": "Brooklyn",
-        "category": "civic",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-08-08",
-        "display_location": "FLATBUSH AVENUE between CHURCH AVENUE and MARTENSE STREET,  FLATBUSH AVENUE between MARTENSE STREET and EMPIRE BOULEVARD,  EMPIRE BOULEVARD between FLATBUSH AVENUE and WASHINGTON AVENUE,  WASHINGTON AVENUE between EMPIRE BOULEVARD and MONTGOMERY STREET,  WASHINGTON AVENUE between MONTGOMERY STREET and PRESIDENT STREET,  MONTGOMERY STREET between WASHINGTON AVENUE and FRANKLIN AVENUE",
-        "end_date_time": "2026-08-08T17:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-        "id": "tvpp-9vvx:906790@2026-08-08",
-        "lane": "approved_major",
-        "latitude": 40.626075,
-        "location_cache_modified": false,
-        "longitude": -73.93506,
-        "map_link": "https://www.google.com/maps?q=40.626075,-73.93506",
-        "money_day": true,
-        "photo_pick": false,
-        "pin_integrity_reason": "ok_nyc_certified",
-        "premium_label": "Photographer Assignment Calendar (premium/operator)",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "906790"
-        },
-        "start_date_time": "2026-08-08T11:00:00.000",
-        "timezone": "America/New_York",
-        "title": "Jamaica Rising Day Parade",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_civic_gathering"
-        ]
-      },
-      {
-        "assignment_score": 400,
-        "borough": "Queens",
+        "assignment_score": 440,
+        "borough": "Manhattan",
         "category": "parks",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-08-08",
-        "display_location": "Flushing Meadows Corona Park: Vatican Pavillion",
-        "end_date_time": "2026-08-08T23:30:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-        "id": "tvpp-9vvx:906194@2026-08-08",
+        "date": "2026-08-13",
+        "display_location": "Times Square: 46/47 Broadway Pedestrian Plaza (Times Sq) BROADWAY between WEST   46 STREET and WEST   47 STREET",
+        "end_date_time": "2026-08-13T23:59:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-13&assignment=1",
+        "id": "tvpp-9vvx:939842@2026-08-13",
         "lane": "approved_major",
-        "latitude": 40.74726,
+        "latitude": 40.7562,
         "location_cache_modified": false,
-        "longitude": -73.84333,
-        "map_link": "https://www.google.com/maps?q=40.74726,-73.84333",
+        "longitude": -73.98653,
+        "map_link": "https://www.google.com/maps?q=40.7562,-73.98653",
         "money_day": true,
         "photo_pick": false,
         "pin_integrity_reason": "ok_nyc_certified",
@@ -433,33 +362,34 @@
         "public_map_modified": false,
         "source": {
           "dataset": "tvpp-9vvx",
-          "source_event_id": "906194"
+          "source_event_id": "939842"
         },
-        "start_date_time": "2026-08-08T16:30:00.000",
+        "start_date_time": "2026-08-13T10:00:00.000",
         "timezone": "America/New_York",
-        "title": "Prayer Vigil - Religious event - August 8 - August 15 - August 22",
+        "title": "Times Square Arts Artist-in-Residence Performance",
         "why_selected": [
           "significance_major_floor",
           "carried_major_score_capped:120",
-          "keyword_civic_gathering"
+          "keyword_spectacle",
+          "keyword_plaza_programming"
         ]
       },
       {
-        "assignment_score": 400,
+        "assignment_score": 440,
         "borough": "Manhattan",
-        "category": "civic",
+        "category": "parks",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-08-09",
-        "display_location": "SIXTH AVENUE between WEST   37 STREET and WEST   38 STREET,  WEST   36 STREET between 5 AVENUE and BROADWAY,  WEST   37 STREET between 7 AVENUE and 5 AVENUE,  WEST   38 STREET between 7 AVENUE and 5 AVENUE,  SIXTH AVENUE between WEST   36 STREET and WEST   55 STREET,  WEST   55 STREET between SIXTH AVENUE and FIFTH AVENUE,  WEST   55 STREET between 7 AVENUE and 6 AVENUE",
-        "end_date_time": "2026-08-09T16:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-09&assignment=1",
-        "id": "tvpp-9vvx:957653@2026-08-09",
+        "date": "2026-08-14",
+        "display_location": "Times Square: 46/47 Broadway Pedestrian Plaza (Times Sq) BROADWAY between WEST   46 STREET and WEST   47 STREET",
+        "end_date_time": "2026-08-14T23:59:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-14&assignment=1",
+        "id": "tvpp-9vvx:939842@2026-08-14",
         "lane": "approved_major",
-        "latitude": 40.751899,
+        "latitude": 40.7562,
         "location_cache_modified": false,
-        "longitude": -73.984425,
-        "map_link": "https://www.google.com/maps?q=40.751899,-73.984425",
+        "longitude": -73.98653,
+        "map_link": "https://www.google.com/maps?q=40.7562,-73.98653",
         "money_day": true,
         "photo_pick": false,
         "pin_integrity_reason": "ok_nyc_certified",
@@ -468,33 +398,34 @@
         "public_map_modified": false,
         "source": {
           "dataset": "tvpp-9vvx",
-          "source_event_id": "957653"
+          "source_event_id": "939842"
         },
-        "start_date_time": "2026-08-09T11:00:00.000",
+        "start_date_time": "2026-08-14T10:00:00.000",
         "timezone": "America/New_York",
-        "title": "Dominican Day Parade, Inc.",
+        "title": "Times Square Arts Artist-in-Residence Performance",
         "why_selected": [
           "significance_major_floor",
           "carried_major_score_capped:120",
-          "keyword_civic_gathering"
+          "keyword_spectacle",
+          "keyword_plaza_programming"
         ]
       },
       {
-        "assignment_score": 400,
+        "assignment_score": 440,
         "borough": "Manhattan",
-        "category": "civic",
+        "category": "parks",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-08-09",
-        "display_location": "FREDERICK DOUGLASS BOULEVARD between WEST  123 STREET and WEST  126 STREET,  WEST  125 STREET between FREDERICK DOUGLASS BOULEVARD and MALCOLM X BOULEVARD,  MALCOLM X BOULEVARD between WEST  125 STREET and CENTRAL PARK NORTH,  CENTRAL PARK NORTH between MALCOLM X BOULEVARD and ADAM CLAYTON POWELL BOULEVARD,  ADAM CLAYTON POWELL JR BOULEVARD between CENTRAL PARK NORTH and WEST  116 STREET,  ST NICHOLAS AVENUE between WEST  116 STREET and FREDERICK DOUGLASS BOULEVARD,  FREDERICK DOUGLASS BOULEVARD between WEST  121 STREET and WEST  124 STREET, 2320 FREDERICK DOUGLASS BOULEVARD,2320 FREDERICK DOUGLASS BOULEVARD",
-        "end_date_time": "2026-08-09T18:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-09&assignment=1",
-        "id": "tvpp-9vvx:878952@2026-08-09",
+        "date": "2026-08-16",
+        "display_location": "Times Square: 46/47 Broadway Pedestrian Plaza (Times Sq) BROADWAY between WEST   46 STREET and WEST   47 STREET",
+        "end_date_time": "2026-08-16T23:59:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-16&assignment=1",
+        "id": "tvpp-9vvx:939842@2026-08-16",
         "lane": "approved_major",
-        "latitude": 40.803806,
+        "latitude": 40.7562,
         "location_cache_modified": false,
-        "longitude": -73.9514265,
-        "map_link": "https://www.google.com/maps?q=40.803806,-73.9514265",
+        "longitude": -73.98653,
+        "map_link": "https://www.google.com/maps?q=40.7562,-73.98653",
         "money_day": true,
         "photo_pick": false,
         "pin_integrity_reason": "ok_nyc_certified",
@@ -503,50 +434,16 @@
         "public_map_modified": false,
         "source": {
           "dataset": "tvpp-9vvx",
-          "source_event_id": "878952"
+          "source_event_id": "939842"
         },
-        "start_date_time": "2026-08-09T14:00:00.000",
+        "start_date_time": "2026-08-16T10:00:00.000",
         "timezone": "America/New_York",
-        "title": "Grace American Peace Parade",
+        "title": "Times Square Arts Artist-in-Residence Performance",
         "why_selected": [
           "significance_major_floor",
           "carried_major_score_capped:120",
-          "keyword_civic_gathering"
-        ]
-      },
-      {
-        "assignment_score": 400,
-        "borough": "Queens",
-        "category": "civic",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-08-09",
-        "display_location": "69TH ST between 37 AVE and 35 AVE,  37 AVENUE between 69 STREET and 87 STREET,  87 STREET  between 37 AVE and 35 AVE,  37 AVENUE between 86 STREET and 87 STREET",
-        "end_date_time": "2026-08-09T13:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-09&assignment=1",
-        "id": "tvpp-9vvx:931406@2026-08-09",
-        "lane": "approved_major",
-        "latitude": 40.6959175,
-        "location_cache_modified": false,
-        "longitude": -73.980704,
-        "map_link": "https://www.google.com/maps?q=40.6959175,-73.980704",
-        "money_day": true,
-        "photo_pick": false,
-        "pin_integrity_reason": "ok_nyc_certified",
-        "premium_label": "Photographer Assignment Calendar (premium/operator)",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "931406"
-        },
-        "start_date_time": "2026-08-09T11:00:00.000",
-        "timezone": "America/New_York",
-        "title": "SOUTH ASIAN UNITY PARADE",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_civic_gathering"
+          "keyword_spectacle",
+          "keyword_plaza_programming"
         ]
       },
       {
@@ -761,6 +658,41 @@
       },
       {
         "assignment_score": 400,
+        "borough": "Brooklyn",
+        "category": "civic",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-15",
+        "display_location": "Dr. Green Playground: Dr. Green Playground , SUTTER AVENUE between MOTHER GASTON BOULEVARD and WATKINS STREET,  SUTTER AVENUE between MOTHER GASTON BOULEVARD and ROCKAWAY AVENUE,  ROCKAWAY AVENUE between SUTTER AVENUE and HEGEMAN AVENUE,  HEGEMAN AVENUE between ROCKAWAY AVENUE and POWELL STREET,  HEGEMAN AVENUE between POWELL STREET and SACKMAN STREET",
+        "end_date_time": "2026-08-15T18:00:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-15&assignment=1",
+        "id": "tvpp-9vvx:959849@2026-08-15",
+        "lane": "approved_major",
+        "latitude": 40.6672,
+        "location_cache_modified": false,
+        "longitude": -73.90706,
+        "map_link": "https://www.google.com/maps?q=40.6672,-73.90706",
+        "money_day": true,
+        "photo_pick": false,
+        "pin_integrity_reason": "ok_nyc_certified",
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "959849"
+        },
+        "start_date_time": "2026-08-15T12:00:00.000",
+        "timezone": "America/New_York",
+        "title": "SHU-SHU VICTORY PARADE",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 400,
         "borough": "Queens",
         "category": "civic",
         "certified_pin": true,
@@ -866,6 +798,41 @@
       },
       {
         "assignment_score": 400,
+        "borough": null,
+        "category": "volunteer",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-22",
+        "display_location": "Parade Ground",
+        "end_date_time": "2026-08-22T13:00:00",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-22&assignment=1",
+        "id": "review_supplemental:nyc-parks-bigapps-events:2211167@2026-08-22",
+        "lane": "approved_major",
+        "latitude": 40.650901794433594,
+        "location_cache_modified": false,
+        "longitude": -73.96829986572266,
+        "map_link": "https://www.google.com/maps?q=40.650901794433594,-73.96829986572266",
+        "money_day": true,
+        "photo_pick": false,
+        "pin_integrity_reason": "ok_nyc_certified",
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "nyc-parks-bigapps-events",
+          "source_event_id": "2211167"
+        },
+        "start_date_time": "2026-08-22T10:00:00",
+        "timezone": "America/New_York",
+        "title": "It's My Park at Parade Ground",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 400,
         "borough": "Queens",
         "category": "parks",
         "certified_pin": true,
@@ -898,17 +865,52 @@
           "carried_major_score_capped:120",
           "keyword_civic_gathering"
         ]
+      },
+      {
+        "assignment_score": 400,
+        "borough": "Manhattan",
+        "category": "market",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-27",
+        "display_location": "Washington Square Park: Arch Plaza",
+        "end_date_time": "2026-08-27T12:00:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-27&assignment=1",
+        "id": "tvpp-9vvx:960030@2026-08-27",
+        "lane": "approved_major",
+        "latitude": 40.730311274589,
+        "location_cache_modified": false,
+        "longitude": -73.997564613819,
+        "map_link": "https://www.google.com/maps?q=40.730311274589,-73.997564613819",
+        "money_day": true,
+        "photo_pick": false,
+        "pin_integrity_reason": "ok_nyc_certified",
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "960030"
+        },
+        "start_date_time": "2026-08-27T11:00:00.000",
+        "timezone": "America/New_York",
+        "title": "Clemency Rally",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_civic_gathering"
+        ]
       }
     ],
     "month_counts": [
       {
-        "days_with_events": 23,
-        "event_count": 158,
+        "days_with_events": 20,
+        "event_count": 119,
         "label": "August 2026"
       },
       {
-        "days_with_events": 17,
-        "event_count": 71,
+        "days_with_events": 19,
+        "event_count": 78,
         "label": "September 2026"
       }
     ],
@@ -917,17 +919,17 @@
     "premium_label": "Photographer Assignment Calendar (premium/operator) — Money-Day Desk v2",
     "qa_pass": true,
     "quality": {
-      "events_removed_vs_baseline": 613,
+      "events_removed_vs_baseline": 645,
       "qa_pass": true,
       "report": "data/photographer_money_day_quality_report.json",
       "top_exclude_reasons": [
         [
           "no_money_day_keyword_signal",
-          577
+          555
         ],
         [
           "routine_activity_excluded",
-          89
+          87
         ],
         [
           "duplicate_id",
@@ -935,7 +937,7 @@
         ],
         [
           "thin_or_non_money_title_excluded",
-          9
+          8
         ],
         [
           "below_score_threshold",
@@ -945,507 +947,106 @@
     },
     "report": "data/photographer_assignment_calendar_report.json",
     "today_pack": {
-      "borough_cluster_count": 2,
-      "date": "2026-08-07",
-      "map_ready_count": 7,
-      "total_events": 7
+      "borough_cluster_count": 0,
+      "date": "2026-08-10",
+      "map_ready_count": 0,
+      "total_events": 0
     },
     "tomorrow_pack": {
-      "borough_cluster_count": 5,
-      "date": "2026-08-08",
-      "map_ready_count": 18,
+      "borough_cluster_count": 2,
+      "date": "2026-08-11",
+      "map_ready_count": 2,
       "top_go_shoot": [
         {
           "borough": "Brooklyn",
-          "score": 490,
-          "time": "2026-08-08T12:00:00.000",
-          "title": "African Popup Festival"
-        },
-        {
-          "borough": "Brooklyn",
-          "score": 400,
-          "time": "2026-08-08T10:15:00.000-04:00",
-          "title": "Access Benefits at Jamaica Rising Day Parade"
-        },
-        {
-          "borough": "Brooklyn",
-          "score": 400,
-          "time": "2026-08-08T11:00:00.000",
-          "title": "Jamaica Rising Day Parade"
-        },
-        {
-          "borough": "Queens",
-          "score": 400,
-          "time": "2026-08-08T16:30:00.000",
-          "title": "Prayer Vigil - Religious event - August 8 - August 15 - August 22"
-        },
-        {
-          "borough": null,
-          "score": 380,
-          "time": "2026-08-08T1:00 pm",
-          "title": "18th Annual Stan Michels Jazz Festival"
-        },
-        {
-          "borough": "Brooklyn",
-          "score": 380,
-          "time": "2026-08-08T12:00:00",
-          "title": "African Heritage Festival (Brownsville)"
-        },
-        {
-          "borough": "Brooklyn",
-          "score": 380,
-          "time": "2026-08-08T12:00:00",
-          "title": "Church Annual Festival (Mermaid Avenue, Coney Island)"
-        },
-        {
-          "borough": "Queens",
-          "score": 380,
-          "time": "2026-08-08T15:00:00.000",
-          "title": "Dominican Festival - AM Dilan"
-        },
-        {
-          "borough": "Bronx",
-          "score": 380,
-          "time": "2026-08-08T12:00:00",
-          "title": "Festival Mt Carmel Family Fellowship (Bronx)"
+          "score": 340,
+          "time": "2026-08-11T09:00:00.000",
+          "title": "NYP Youth Market - Brooklyn"
         },
         {
           "borough": "Manhattan",
-          "score": 380,
-          "time": "2026-08-08T18:00:00.000",
-          "title": "Giglio Feast of Sant Antonio"
+          "score": 310,
+          "time": "2026-08-11T12:00:00.000",
+          "title": "TSQ LIVE: 45/46 Plaza Programming"
         }
       ],
-      "total_events": 20
+      "total_events": 2
     },
     "tomorrow_top_go_shoot": [
       {
-        "assignment_score": 490,
+        "assignment_score": 340,
         "borough": "Brooklyn",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-08-08",
-        "display_location": "Hillel Plaza: Hillel Plaza Hillel pl between kenilworth pl and Flatbush ave",
-        "end_date_time": "2026-08-08T19:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-        "id": "tvpp-9vvx:916058@2026-08-08",
+        "date": "2026-08-11",
+        "display_location": "BEDFORD AVENUE between UNION STREET and PRESIDENT STREET",
+        "end_date_time": "2026-08-11T14:00:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-11&assignment=1",
+        "id": "tvpp-9vvx:941640@2026-08-11",
         "lane": "approved_major",
-        "latitude": 40.634145,
+        "latitude": 40.6885845,
         "location_cache_modified": false,
-        "longitude": -73.95054,
-        "map_link": "https://www.google.com/maps?q=40.634145,-73.95054",
+        "longitude": -73.9817835,
+        "map_link": "https://www.google.com/maps?q=40.6885845,-73.9817835",
         "pin_integrity_reason": "ok_nyc_certified",
         "promotion_allowed": false,
         "public_map_modified": false,
         "source": {
           "dataset": "tvpp-9vvx",
-          "source_event_id": "916058"
+          "source_event_id": "941640"
         },
-        "start_date_time": "2026-08-08T12:00:00.000",
-        "title": "African Popup Festival",
+        "start_date_time": "2026-08-11T09:00:00.000",
+        "title": "NYP Youth Market - Brooklyn",
         "why_selected": [
           "significance_major_floor",
           "carried_major_score_capped:120",
-          "keyword_street_fair_festival",
+          "keyword_market"
+        ]
+      },
+      {
+        "assignment_score": 310,
+        "borough": "Manhattan",
+        "certified_pin": true,
+        "coordinate_status": "map_ready",
+        "date": "2026-08-11",
+        "display_location": "Times Square: 45/46 Broadway Pedestrian Plaza (Times Sq) BROADWAY between WEST   45 STREET and WEST   46 STREET,  WEST   46 STREET between 7 AVENUE and 8 AVENUE",
+        "end_date_time": "2026-08-11T21:00:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-11&assignment=1",
+        "id": "tvpp-9vvx:898494@2026-08-11",
+        "lane": "approved_major",
+        "latitude": 40.7562,
+        "location_cache_modified": false,
+        "longitude": -73.98653,
+        "map_link": "https://www.google.com/maps?q=40.7562,-73.98653",
+        "pin_integrity_reason": "ok_nyc_certified",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "tvpp-9vvx",
+          "source_event_id": "898494"
+        },
+        "start_date_time": "2026-08-11T12:00:00.000",
+        "title": "TSQ LIVE: 45/46 Plaza Programming",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
           "keyword_plaza_programming"
-        ]
-      },
-      {
-        "assignment_score": 400,
-        "borough": "Brooklyn",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-08-08",
-        "display_location": "FLATBUSH AVENUE between CHURCH AVENUE and MARTENSE STREET,  FLATBUSH AVENUE between MARTENSE STREET and EMPIRE BOULEVARD,  EMPIRE BOULEVARD between FLATBUSH AVENUE and WASHINGTON AVENUE,  WASHINGTON AVENUE between EMPIRE BOULEVARD and MONTGOMERY STREET,  WASHINGTON AVENUE between MONTGOMERY STREET and PRESIDENT STREET,  MONTGOMERY STREET between WASHINGTON AVENUE and FRANKLIN AVENUE",
-        "end_date_time": "2026-08-08T17:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-        "id": "tvpp-9vvx:906790@2026-08-08",
-        "lane": "approved_major",
-        "latitude": 40.626075,
-        "location_cache_modified": false,
-        "longitude": -73.93506,
-        "map_link": "https://www.google.com/maps?q=40.626075,-73.93506",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "906790"
-        },
-        "start_date_time": "2026-08-08T11:00:00.000",
-        "title": "Jamaica Rising Day Parade",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_civic_gathering"
-        ]
-      },
-      {
-        "assignment_score": 400,
-        "borough": "Queens",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-08-08",
-        "display_location": "Flushing Meadows Corona Park: Vatican Pavillion",
-        "end_date_time": "2026-08-08T23:30:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-        "id": "tvpp-9vvx:906194@2026-08-08",
-        "lane": "approved_major",
-        "latitude": 40.74726,
-        "location_cache_modified": false,
-        "longitude": -73.84333,
-        "map_link": "https://www.google.com/maps?q=40.74726,-73.84333",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "906194"
-        },
-        "start_date_time": "2026-08-08T16:30:00.000",
-        "title": "Prayer Vigil - Religious event - August 8 - August 15 - August 22",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_civic_gathering"
-        ]
-      },
-      {
-        "assignment_score": 380,
-        "borough": null,
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-08-08",
-        "display_location": "Stan Michels Promenade (in Fort Tryon Park)",
-        "end_date_time": "2026-08-08T4:00 pm",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-        "id": "review_supplemental:nyc-parks-bigapps-events:2217976@2026-08-08",
-        "lane": "approved_major",
-        "latitude": 40.860115788369,
-        "location_cache_modified": false,
-        "longitude": -73.933797121048,
-        "map_link": "https://www.google.com/maps?q=40.860115788369,-73.933797121048",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "nyc-parks-bigapps-events",
-          "source_event_id": "2217976"
-        },
-        "start_date_time": "2026-08-08T1:00 pm",
-        "title": "18th Annual Stan Michels Jazz Festival",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_street_fair_festival"
-        ]
-      },
-      {
-        "assignment_score": 380,
-        "borough": "Brooklyn",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-08-08",
-        "display_location": "Betsy Head Park, Brooklyn, NY",
-        "end_date_time": "2026-08-08T22:00:00",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-        "id": "review_supplemental:nyc-projected-feast-reference:african-heritage-festival-brownsville@2026-08-08",
-        "lane": "approved_major",
-        "latitude": 40.6652,
-        "location_cache_modified": false,
-        "longitude": -73.9115,
-        "map_link": "https://www.google.com/maps?q=40.6652,-73.9115",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "nyc-projected-feast-reference",
-          "source_event_id": "african-heritage-festival-brownsville"
-        },
-        "start_date_time": "2026-08-08T12:00:00",
-        "title": "African Heritage Festival (Brownsville)",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_street_fair_festival"
-        ]
-      },
-      {
-        "assignment_score": 380,
-        "borough": "Brooklyn",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-08-08",
-        "display_location": "MERMAID AVENUE between WEST 21 STREET and WEST 22 STREET, Brooklyn, NY",
-        "end_date_time": "2026-08-08T22:00:00",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-        "id": "review_supplemental:nyc-projected-feast-reference:church-annual-festival-mermaid-avenue@2026-08-08",
-        "lane": "approved_major",
-        "latitude": 40.774173,
-        "location_cache_modified": false,
-        "longitude": -73.92223,
-        "map_link": "https://www.google.com/maps?q=40.774173,-73.92223",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "nyc-projected-feast-reference",
-          "source_event_id": "church-annual-festival-mermaid-avenue"
-        },
-        "start_date_time": "2026-08-08T12:00:00",
-        "title": "Church Annual Festival (Mermaid Avenue, Coney Island)",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_street_fair_festival"
-        ]
-      },
-      {
-        "assignment_score": 380,
-        "borough": "Queens",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-08-08",
-        "display_location": "Highland Park: Amphitheatre/Spray Shower",
-        "end_date_time": "2026-08-08T19:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-        "id": "tvpp-9vvx:946580@2026-08-08",
-        "lane": "approved_major",
-        "latitude": 40.68873,
-        "location_cache_modified": false,
-        "longitude": -73.88685,
-        "map_link": "https://www.google.com/maps?q=40.68873,-73.88685",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "946580"
-        },
-        "start_date_time": "2026-08-08T15:00:00.000",
-        "title": "Dominican Festival - AM Dilan",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_street_fair_festival"
-        ]
-      },
-      {
-        "assignment_score": 380,
-        "borough": "Bronx",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-08-08",
-        "display_location": "RITTER PLACE between PROSPECT AVENUE and UNION AVENUE, Bronx, NY",
-        "end_date_time": "2026-08-08T22:00:00",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-        "id": "review_supplemental:nyc-projected-feast-reference:festival-mt-carmel-family-fellowship-bronx@2026-08-08",
-        "lane": "approved_major",
-        "latitude": 40.735631,
-        "location_cache_modified": false,
-        "longitude": -73.992976,
-        "map_link": "https://www.google.com/maps?q=40.735631,-73.992976",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "nyc-projected-feast-reference",
-          "source_event_id": "festival-mt-carmel-family-fellowship-bronx"
-        },
-        "start_date_time": "2026-08-08T12:00:00",
-        "title": "Festival Mt Carmel Family Fellowship (Bronx)",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_street_fair_festival"
-        ]
-      },
-      {
-        "assignment_score": 380,
-        "borough": "Manhattan",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-08-08",
-        "display_location": "PLEASANT AVENUE between EAST  114 STREET and EAST  116 STREET",
-        "end_date_time": "2026-08-08T22:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-        "id": "tvpp-9vvx:904732@2026-08-08",
-        "lane": "approved_major",
-        "latitude": 40.798746,
-        "location_cache_modified": false,
-        "longitude": -73.942592,
-        "map_link": "https://www.google.com/maps?q=40.798746,-73.942592",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "904732"
-        },
-        "start_date_time": "2026-08-08T18:00:00.000",
-        "title": "Giglio Feast of Sant Antonio",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_street_fair_festival"
-        ]
-      },
-      {
-        "assignment_score": 380,
-        "borough": "Manhattan",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-08-08",
-        "display_location": "PLEASANT AVENUE between EAST  114 STREET and EAST  115 STREET,  EAST  115 STREET between PLEASANT AVENUE and 1 AVENUE,  1 AVENUE between EAST  115 STREET and EAST  116 STREET,  EAST  116 STREET between 1 AVENUE and 2 AVENUE,  2 AVENUE between EAST  116 STREET and EAST  106 STREET,  EAST  106 STREET between 2 AVENUE and 1 AVENUE,  1 AVENUE between EAST  106 STREET and EAST  109 STREET,  EAST  109 STREET between 2 AVENUE and 1 AVENUE,  2 AVENUE between EAST  109 STREET and EAST  108 STREET,  EAST  108 STREET between 2 AVENUE and 1 AVENUE,  1 AVENUE between EAST  108 STREET and EAST  114 STREET,  EAST  114 STREET between 1 AVENUE and PLEASANT AVENUE,  PLEASANT AVENUE between EAST  114 STREET and EAST  115 STREET",
-        "end_date_time": "2026-08-08T15:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-        "id": "tvpp-9vvx:960184@2026-08-08",
-        "lane": "approved_major",
-        "latitude": 40.767489,
-        "location_cache_modified": false,
-        "longitude": -73.980526,
-        "map_link": "https://www.google.com/maps?q=40.767489,-73.980526",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "960184"
-        },
-        "start_date_time": "2026-08-08T12:00:00.000",
-        "title": "Giglio Feast of Sant Antonio",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_street_fair_festival"
         ]
       }
     ],
-    "total_events": 229,
+    "total_events": 197,
     "viral_recurrence": {
       "artifact": "data/photographer_viral_recurrence_matches.json",
       "foil_index": "data/sapo_foil_operator_index.json",
       "foil_operator_joins": 0,
       "label_counts": {
-        "possible": 64,
-        "returning_likely": 129,
-        "weak": 56
+        "possible": 51,
+        "returning_likely": 107,
+        "weak": 48
       },
-      "match_count": 249,
+      "match_count": 206,
       "next_14d_crowd_magnets": 39,
       "next_14d_top": [
-        {
-          "borough": "Manhattan",
-          "cemsid": null,
-          "certified_pin": true,
-          "coordinate_status": "map_ready",
-          "date": "2026-08-08",
-          "display_location": "WEST   23 STREET between 8 AVENUE and 9 AVENUE",
-          "event_id": "893707",
-          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-          "foil_operator": null,
-          "latitude": 40.745901,
-          "longitude": -73.999919,
-          "map_link": "https://www.google.com/maps?q=40.745901,-73.999919",
-          "match_reasons": [
-            "name_exactish:1.00",
-            "place_strong:0.97",
-            "season_delta_days:1",
-            "event_type_compatible",
-            "historical_street_closure_present"
-          ],
-          "match_score": 103,
-          "pin_integrity_reason": "ok_nyc_certified",
-          "prior_event_id": "817677",
-          "prior_year_date": "2025-08-09",
-          "prior_year_title": "Down to Earth Chelsea Farmers Market",
-          "recurrence_label": "returning_likely",
-          "title": "Down to Earth Chelsea Farmers Market"
-        },
-        {
-          "borough": "Brooklyn",
-          "cemsid": null,
-          "certified_pin": true,
-          "coordinate_status": "map_ready",
-          "date": "2026-08-08",
-          "display_location": "SCHENCK AVENUE between NEW LOTS AVENUE and LIVONIA AVENUE",
-          "event_id": "930759",
-          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-          "foil_operator": null,
-          "latitude": 40.665672,
-          "longitude": -73.8888,
-          "map_link": "https://www.google.com/maps?q=40.665672,-73.8888",
-          "match_reasons": [
-            "name_exactish:1.00",
-            "place_strong:0.98",
-            "season_delta_days:1",
-            "event_type_compatible",
-            "historical_street_closure_present"
-          ],
-          "match_score": 103,
-          "pin_integrity_reason": "ok_nyc_certified",
-          "prior_event_id": "836361",
-          "prior_year_date": "2025-08-09",
-          "prior_year_title": "East New York Farmers Market",
-          "recurrence_label": "returning_likely",
-          "title": "East New York Farmers Market"
-        },
-        {
-          "borough": "Brooklyn",
-          "cemsid": null,
-          "certified_pin": true,
-          "coordinate_status": "map_ready",
-          "date": "2026-08-08",
-          "display_location": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET",
-          "event_id": "923923",
-          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-          "foil_operator": null,
-          "latitude": 40.693166,
-          "longitude": -73.90784,
-          "map_link": "https://www.google.com/maps?q=40.693166,-73.90784",
-          "match_reasons": [
-            "name_exactish:1.00",
-            "place_strong:0.98",
-            "season_delta_days:1",
-            "event_type_compatible",
-            "historical_street_closure_present"
-          ],
-          "match_score": 103,
-          "pin_integrity_reason": "ok_nyc_certified",
-          "prior_event_id": "843404",
-          "prior_year_date": "2025-08-09",
-          "prior_year_title": "RiseBoro Farmers Markets at Maria Hernandez",
-          "recurrence_label": "returning_likely",
-          "title": "RiseBoro Farmers Markets at Maria Hernandez Park"
-        },
-        {
-          "borough": "Manhattan",
-          "cemsid": null,
-          "certified_pin": true,
-          "coordinate_status": "map_ready",
-          "date": "2026-08-09",
-          "display_location": "2 AVENUE between EAST   32 STREET and EAST   33 STREET",
-          "event_id": "899826",
-          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-09&assignment=1",
-          "foil_operator": null,
-          "latitude": 40.746663,
-          "longitude": -73.982954,
-          "map_link": "https://www.google.com/maps?q=40.746663,-73.982954",
-          "match_reasons": [
-            "name_exactish:1.00",
-            "place_strong:0.98",
-            "season_delta_days:1",
-            "event_type_compatible",
-            "historical_street_closure_present"
-          ],
-          "match_score": 103,
-          "pin_integrity_reason": "ok_nyc_certified",
-          "prior_event_id": "823016",
-          "prior_year_date": "2025-08-10",
-          "prior_year_title": "Murray Hill Farmers Market",
-          "recurrence_label": "returning_likely",
-          "title": "Murray Hill Farmers Market"
-        },
         {
           "borough": "Manhattan",
           "cemsid": null,
@@ -1563,95 +1164,171 @@
           "cemsid": null,
           "certified_pin": true,
           "coordinate_status": "map_ready",
-          "date": "2026-08-07",
-          "display_location": "PLEASANT AVENUE between EAST  114 STREET and EAST  116 STREET",
-          "event_id": "904654",
-          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-07&assignment=1",
+          "date": "2026-08-22",
+          "display_location": "WEST   23 STREET between 8 AVENUE and 9 AVENUE",
+          "event_id": "893707",
+          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-22&assignment=1",
           "foil_operator": null,
-          "latitude": 40.798746,
-          "longitude": -73.942592,
-          "map_link": "https://www.google.com/maps?q=40.798746,-73.942592",
+          "latitude": 40.745901,
+          "longitude": -73.999919,
+          "map_link": "https://www.google.com/maps?q=40.745901,-73.999919",
           "match_reasons": [
             "name_exactish:1.00",
-            "place_strong:0.98",
-            "season_delta_days:0",
+            "place_strong:0.97",
+            "season_delta_days:1",
+            "event_type_compatible",
             "historical_street_closure_present"
           ],
-          "match_score": 97,
+          "match_score": 103,
           "pin_integrity_reason": "ok_nyc_certified",
-          "prior_event_id": "863874",
-          "prior_year_date": "2025-08-07",
-          "prior_year_title": "Giglio Feast of Sant Antonio",
+          "prior_event_id": "817677",
+          "prior_year_date": "2025-08-23",
+          "prior_year_title": "Down to Earth Chelsea Farmers Market",
           "recurrence_label": "returning_likely",
-          "title": "Giglio Feast of Sant Antonio"
+          "title": "Down to Earth Chelsea Farmers Market"
         },
         {
-          "borough": "Bronx",
+          "borough": "Brooklyn",
           "cemsid": null,
           "certified_pin": true,
           "coordinate_status": "map_ready",
-          "date": "2026-08-08",
-          "display_location": "RITTER PLACE between PROSPECT AVENUE and UNION AVENUE, Bronx, NY",
-          "event_id": "festival-mt-carmel-family-fellowship-bronx",
-          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
+          "date": "2026-08-22",
+          "display_location": "SCHENCK AVENUE between NEW LOTS AVENUE and LIVONIA AVENUE",
+          "event_id": "930759",
+          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-22&assignment=1",
           "foil_operator": null,
-          "latitude": 40.735631,
-          "longitude": -73.992976,
-          "map_link": "https://www.google.com/maps?q=40.735631,-73.992976",
+          "latitude": 40.665672,
+          "longitude": -73.8888,
+          "map_link": "https://www.google.com/maps?q=40.665672,-73.8888",
           "match_reasons": [
-            "name_exactish:0.92",
-            "place_strong:0.92",
+            "name_exactish:1.00",
+            "place_strong:0.98",
+            "season_delta_days:1",
+            "event_type_compatible",
+            "historical_street_closure_present"
+          ],
+          "match_score": 103,
+          "pin_integrity_reason": "ok_nyc_certified",
+          "prior_event_id": "836361",
+          "prior_year_date": "2025-08-23",
+          "prior_year_title": "East New York Farmers Market",
+          "recurrence_label": "returning_likely",
+          "title": "East New York Farmers Market"
+        },
+        {
+          "borough": "Brooklyn",
+          "cemsid": null,
+          "certified_pin": true,
+          "coordinate_status": "map_ready",
+          "date": "2026-08-22",
+          "display_location": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET",
+          "event_id": "923923",
+          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-22&assignment=1",
+          "foil_operator": null,
+          "latitude": 40.693166,
+          "longitude": -73.90784,
+          "map_link": "https://www.google.com/maps?q=40.693166,-73.90784",
+          "match_reasons": [
+            "name_exactish:1.00",
+            "place_strong:0.98",
+            "season_delta_days:1",
+            "event_type_compatible",
+            "historical_street_closure_present"
+          ],
+          "match_score": 103,
+          "pin_integrity_reason": "ok_nyc_certified",
+          "prior_event_id": "843404",
+          "prior_year_date": "2025-08-23",
+          "prior_year_title": "RiseBoro Farmers Markets at Maria Hernandez",
+          "recurrence_label": "returning_likely",
+          "title": "RiseBoro Farmers Markets at Maria Hernandez Park"
+        },
+        {
+          "borough": "Manhattan",
+          "cemsid": null,
+          "certified_pin": true,
+          "coordinate_status": "map_ready",
+          "date": "2026-08-23",
+          "display_location": "2 AVENUE between EAST   32 STREET and EAST   33 STREET",
+          "event_id": "899826",
+          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-23&assignment=1",
+          "foil_operator": null,
+          "latitude": 40.746663,
+          "longitude": -73.982954,
+          "map_link": "https://www.google.com/maps?q=40.746663,-73.982954",
+          "match_reasons": [
+            "name_exactish:1.00",
+            "place_strong:0.98",
+            "season_delta_days:1",
+            "event_type_compatible",
+            "historical_street_closure_present"
+          ],
+          "match_score": 103,
+          "pin_integrity_reason": "ok_nyc_certified",
+          "prior_event_id": "823016",
+          "prior_year_date": "2025-08-24",
+          "prior_year_title": "Murray Hill Farmers Market",
+          "recurrence_label": "returning_likely",
+          "title": "Murray Hill Farmers Market"
+        },
+        {
+          "borough": "Queens",
+          "cemsid": null,
+          "certified_pin": true,
+          "coordinate_status": "map_ready",
+          "date": "2026-08-15",
+          "display_location": "LIBERTY AVENUE between LEFFERTS BOULEVARD and 126 STREET,  126 STREET between LIBERTY AVENUE and 95 AVENUE, Phil \"Scooter\" Rizzuto Park / Smokey Oval: Phil \"Scooter\" Rizzuto Park",
+          "event_id": "936844",
+          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-15&assignment=1",
+          "foil_operator": null,
+          "latitude": 40.69479,
+          "longitude": -73.82159,
+          "map_link": "https://www.google.com/maps?q=40.69479,-73.82159",
+          "match_reasons": [
+            "name_exactish:1.00",
+            "place_strong:0.79",
             "season_delta_days:1",
             "historical_street_closure_present"
           ],
           "match_score": 97,
           "pin_integrity_reason": "ok_nyc_certified",
-          "prior_event_id": "866208",
-          "prior_year_date": "2025-08-09",
-          "prior_year_title": "Festival Mt Carmel Family Fellowship",
+          "prior_event_id": "876736",
+          "prior_year_date": "2025-08-16",
+          "prior_year_title": "MARCH FOR JESUS",
           "recurrence_label": "returning_likely",
-          "title": "Festival Mt Carmel Family Fellowship (Bronx)"
+          "title": "MARCH FOR JESUS"
+        },
+        {
+          "borough": "Manhattan",
+          "cemsid": null,
+          "certified_pin": true,
+          "coordinate_status": "map_ready",
+          "date": "2026-08-16",
+          "display_location": "EAST   37 STREET between PARK AVENUE and 5 AVENUE,  EAST   38 STREET between PARK AVENUE and 5 AVENUE,  MADISON AVENUE between EAST   38 STREET and EAST   27 STREET,  EAST   27 STREET between PARK AVENUE SOUTH and 5 AVENUE,  MADISON AVENUE between EAST   29 STREET and EAST   30 STREET",
+          "event_id": "918947",
+          "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-16&assignment=1",
+          "foil_operator": null,
+          "latitude": 40.700058,
+          "longitude": -73.938179,
+          "map_link": "https://www.google.com/maps?q=40.700058,-73.938179",
+          "match_reasons": [
+            "name_exactish:1.00",
+            "place_strong:0.98",
+            "season_delta_days:1",
+            "historical_street_closure_present"
+          ],
+          "match_score": 97,
+          "pin_integrity_reason": "ok_nyc_certified",
+          "prior_event_id": "849500",
+          "prior_year_date": "2025-08-17",
+          "prior_year_title": "India Day Parade",
+          "recurrence_label": "returning_likely",
+          "title": "India Day Parade"
         }
       ],
       "pack": "data/photographer_viral_recurrence_pack_next_14d.json",
       "qa_pass": true,
       "top_returning_examples": [
-        {
-          "borough": "Manhattan",
-          "date": "2026-08-08",
-          "label": "returning_likely",
-          "prior": "Down to Earth Chelsea Farmers Market",
-          "prior_date": "2025-08-09",
-          "score": 103,
-          "title": "Down to Earth Chelsea Farmers Market"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-08-08",
-          "label": "returning_likely",
-          "prior": "East New York Farmers Market",
-          "prior_date": "2025-08-09",
-          "score": 103,
-          "title": "East New York Farmers Market"
-        },
-        {
-          "borough": "Brooklyn",
-          "date": "2026-08-08",
-          "label": "returning_likely",
-          "prior": "RiseBoro Farmers Markets at Maria Hernandez",
-          "prior_date": "2025-08-09",
-          "score": 103,
-          "title": "RiseBoro Farmers Markets at Maria Hernandez Park"
-        },
-        {
-          "borough": "Manhattan",
-          "date": "2026-08-09",
-          "label": "returning_likely",
-          "prior": "Murray Hill Farmers Market",
-          "prior_date": "2025-08-10",
-          "score": 103,
-          "title": "Murray Hill Farmers Market"
-        },
         {
           "borough": "Manhattan",
           "date": "2026-08-15",
@@ -1723,6 +1400,42 @@
           "prior_date": "2025-08-24",
           "score": 103,
           "title": "Murray Hill Farmers Market"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-08-29",
+          "label": "returning_likely",
+          "prior": "Down to Earth Chelsea Farmers Market",
+          "prior_date": "2025-08-30",
+          "score": 103,
+          "title": "Down to Earth Chelsea Farmers Market"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-08-29",
+          "label": "returning_likely",
+          "prior": "East New York Farmers Market",
+          "prior_date": "2025-08-30",
+          "score": 103,
+          "title": "East New York Farmers Market"
+        },
+        {
+          "borough": "Brooklyn",
+          "date": "2026-08-29",
+          "label": "returning_likely",
+          "prior": "RiseBoro Farmers Markets at Maria Hernandez",
+          "prior_date": "2025-08-30",
+          "score": 103,
+          "title": "RiseBoro Farmers Markets at Maria Hernandez Park"
+        },
+        {
+          "borough": "Manhattan",
+          "date": "2026-08-30",
+          "label": "returning_likely",
+          "prior": "Murray Hill Farmers Market",
+          "prior_date": "2025-08-31",
+          "score": 103,
+          "title": "Murray Hill Farmers Market"
         }
       ]
     }
@@ -1738,8 +1451,8 @@
     "demotion_count": 0,
     "demotion_reason_counts": {},
     "demotions": "data/pin_integrity_demotions.json",
-    "map_ready_after_total": 3738,
-    "map_ready_before_total": 3738,
+    "map_ready_after_total": 3672,
+    "map_ready_before_total": 3672,
     "qa_pass": true,
     "report": "data/pin_integrity_gate_report.json",
     "rule": "ZERO map_ready rows may fail NYC certification"
@@ -1778,89 +1491,23 @@
     "premium_label": "Shoot Day Certified Pack (premium/operator)",
     "qa_pass": true,
     "report": "data/photographer_shoot_day_certified_report.json",
-    "today_certified_pins": 7,
-    "today_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-07&assignment=1",
+    "today_certified_pins": 0,
+    "today_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-10&assignment=1",
     "today_needs_location": 0,
-    "today_top": [
-      {
-        "borough": "Manhattan",
-        "recurrence_label": "returning_likely",
-        "title": "Giglio Feast of Sant Antonio"
-      },
-      {
-        "borough": "Manhattan",
-        "recurrence_label": "returning_likely",
-        "title": "SummerStage Festival - August"
-      },
+    "today_top": [],
+    "tomorrow_certified_pins": 2,
+    "tomorrow_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-11&assignment=1",
+    "tomorrow_needs_location": 0,
+    "tomorrow_top": [
       {
         "borough": "Manhattan",
         "recurrence_label": "returning_likely",
         "title": "TSQ LIVE: 45/46 Plaza Programming"
       },
       {
-        "borough": "Manhattan",
-        "recurrence_label": "possible",
-        "title": "NOMAD Jazz Festival"
-      },
-      {
-        "borough": "Manhattan",
+        "borough": "Brooklyn",
         "recurrence_label": "weak",
-        "title": "HHFM Harlem Hospital Market"
-      },
-      {
-        "borough": "Bronx",
-        "recurrence_label": null,
-        "title": "HHFM Jacobi Hospital Market"
-      },
-      {
-        "borough": "Manhattan",
-        "recurrence_label": "weak",
-        "title": "HHFM Metropolitan Market"
-      }
-    ],
-    "tomorrow_certified_pins": 18,
-    "tomorrow_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-08&assignment=1",
-    "tomorrow_needs_location": 2,
-    "tomorrow_top": [
-      {
-        "borough": "Bronx",
-        "recurrence_label": "returning_likely",
-        "title": "Festival Mt Carmel Family Fellowship (Bronx)"
-      },
-      {
-        "borough": "Manhattan",
-        "recurrence_label": "returning_likely",
-        "title": "Giglio Feast of Sant Antonio"
-      },
-      {
-        "borough": "Manhattan",
-        "recurrence_label": "returning_likely",
-        "title": "Giglio Feast of Sant Antonio"
-      },
-      {
-        "borough": "Manhattan",
-        "recurrence_label": "returning_likely",
-        "title": "SummerStage Festival - August"
-      },
-      {
-        "borough": "Brooklyn",
-        "recurrence_label": "possible",
-        "title": "African Popup Festival"
-      },
-      {
-        "borough": "Brooklyn",
-        "recurrence_label": null,
-        "title": "Jamaica Rising Day Parade"
-      },
-      {
-        "borough": null,
-        "recurrence_label": null,
-        "title": "18th Annual Stan Michels Jazz Festival"
-      },
-      {
-        "borough": "Brooklyn",
-        "recurrence_label": "possible",
-        "title": "African Heritage Festival (Brownsville)"
+        "title": "NYP Youth Market - Brooklyn"
       }
     ]
   }
