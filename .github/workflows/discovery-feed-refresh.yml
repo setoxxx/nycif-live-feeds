@@ -1,4 +1,5 @@
 name: Discovery Feed Refresh
+run-name: Discovery Feed Refresh @ ${{ github.sha }}
 
 # Atomic daily production transaction for the NYC In Focus News Desk.
 # The repository-owned transaction script records an actionable stage and safe
