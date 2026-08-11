@@ -1,10 +1,10 @@
 {
   "coordinate_status_counts": {
-    "list_only": 11,
-    "map_ready": 186
+    "list_only": 28,
+    "map_ready": 200
   },
-  "days_with_coverage": 39,
-  "generated_at_utc": "2026-08-10T12:04:06Z",
+  "days_with_coverage": 41,
+  "generated_at_utc": "2026-08-11T13:12:45Z",
   "go_shoot_sample": [
     {
       "borough": "Brooklyn",
@@ -68,25 +68,22 @@
     }
   ],
   "lane_counts": {
-    "approved_major": 197
+    "approved_major": 218,
+    "review_high_signal": 10
   },
   "location_cache_modified": false,
   "money_day_quality": {
-    "events_removed_vs_baseline": 645,
+    "events_removed_vs_baseline": 614,
     "qa_pass": true,
     "report": "data/photographer_money_day_quality_report.json",
     "top_exclude_reasons": [
       [
         "no_money_day_keyword_signal",
-        555
+        539
       ],
       [
         "routine_activity_excluded",
-        87
-      ],
-      [
-        "duplicate_id",
-        10
+        86
       ],
       [
         "thin_or_non_money_title_excluded",
@@ -101,22 +98,22 @@
   "month_counts": [
     {
       "days_with_events": 20,
-      "event_count": 119,
+      "event_count": 127,
       "label": "August 2026"
     },
     {
-      "days_with_events": 19,
-      "event_count": 78,
+      "days_with_events": 21,
+      "event_count": 101,
       "label": "September 2026"
     }
   ],
-  "pin_integrity_map_ready_after": 186,
+  "pin_integrity_map_ready_after": 200,
   "promotion_allowed": false,
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-08-10",
+  "reference_today_nyc": "2026-08-11",
   "schema_version": "photographer-assignment-calendar-v2-money-day",
-  "total_events": 197,
+  "total_events": 228,
   "window_end": "2026-09-30"
 }

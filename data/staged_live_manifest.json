@@ -1,33 +1,32 @@
 {
   "borough_counts": {
-    "Bronx": 3559,
-    "Brooklyn": 6235,
-    "Manhattan": 10079,
-    "Queens": 5830,
-    "Staten Island": 1062,
-    "Unknown": 1
+    "Bronx": 3477,
+    "Brooklyn": 6101,
+    "Manhattan": 10053,
+    "Queens": 5728,
+    "Staten Island": 1034
   },
   "category_counts": {
     "arts": 166,
-    "fitness": 172,
-    "general": 19,
-    "market": 947,
-    "parks": 3675,
-    "sports": 21787
+    "fitness": 173,
+    "general": 17,
+    "market": 950,
+    "parks": 3624,
+    "sports": 21463
   },
   "cross_date_street_occurrences_suppressed": 0,
   "duplicate_policy": {
     "production_feeds_modified": false,
     "street_events": "dedupe only exact title + borough + location + coordinate + date + start/end + CEMS occurrence; recurring dates remain distinct"
   },
-  "eligible_rows_before_one_day_street_dedupe": 26766,
+  "eligible_rows_before_one_day_street_dedupe": 26393,
   "exact_occurrence_duplicates_suppressed": 0,
-  "generated_at_utc": "2026-08-10T12:03:42.719677+00:00",
+  "generated_at_utc": "2026-08-11T13:12:15.892703+00:00",
   "match_counts": {
-    "event_id": 517,
-    "location_cache": 25012,
-    "tier_1_gazetteer_display": 531,
-    "tier_2_geosearch_cache": 699,
+    "event_id": 510,
+    "location_cache": 24603,
+    "tier_1_gazetteer_display": 562,
+    "tier_2_geosearch_cache": 711,
     "tier_2_geosearch_midpoint": 7
   },
   "one_day_street_duplicates_suppressed": 0,
@@ -35,38 +34,6 @@
   "production_ready": true,
   "sample_exact_occurrence_rejected_rows": [],
   "sample_skipped_rows": [
-    {
-      "borough": "Bronx",
-      "display_location": "NELSON AVENUE between WEST  167 STREET and WEST  168 STREET",
-      "display_time": "6:30 AM",
-      "source_cemsid": [],
-      "source_event_id": "962460",
-      "title": "Project Street Beat - Keith Haring Foundation Mobile Health Center Community Event"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "GREENE STREET between GRAND STREET and CANAL STREET",
-      "display_time": "7:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "964965",
-      "title": "MKG - Pop-up event"
-    },
-    {
-      "borough": "Queens",
-      "display_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
-      "display_time": "12:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "964160",
-      "title": "Boombox in Jamaica"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "STUYVESANT AVENUE between MCDONOUGH STREET and DECATUR STREET",
-      "display_time": "4:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "957790",
-      "title": "Hype Hair Event"
-    },
     {
       "borough": "Manhattan",
       "display_location": "GREENE STREET between GRAND STREET and CANAL STREET",
@@ -196,11 +163,43 @@
       "source_cemsid": [],
       "source_event_id": "963524",
       "title": "Peach Lily Zombie Cream Sampling Cart"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "LINCOLN PLACE between 7 AVENUE and 6 AVENUE",
+      "display_time": "6:30 PM",
+      "source_cemsid": [],
+      "source_event_id": "955550",
+      "title": "Midsummer Night Concert"
+    },
+    {
+      "borough": "Queens",
+      "display_location": "56 ROAD between 61 STREET and 64 STREET,  61 STREET between 56 ROAD and 56 AVENUE,  56 AVENUE between 61 STREET and 64 STREET,  64 STREET between 56 ROAD and 56 AVENUE,  56 ROAD between 61 STREET and 64 STREET",
+      "display_time": "7:30 PM",
+      "source_cemsid": [],
+      "source_event_id": "962202",
+      "title": "Fatima Devotion Procession"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "DESBROSSES STREET between HUDSON STREET and GREENWICH STREET",
+      "display_time": "12:01 AM",
+      "source_cemsid": [],
+      "source_event_id": "965134",
+      "title": "Tribeca Rooftop - 8/14 - 8/28"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "CHAUNCEY STREET between SARATOGA AVENUE and THOMAS BOYLAND STREET",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "948153",
+      "title": "Love Thy neighbor"
     }
   ],
-  "skipped_needs_review_or_bad_gps": 233,
+  "skipped_needs_review_or_bad_gps": 230,
   "source": "nycif_live_test_enriched_events.json",
   "staged_feed": true,
-  "staged_feed_events": 26766,
-  "test_feed_rows_loaded": 26999
+  "staged_feed_events": 26393,
+  "test_feed_rows_loaded": 26623
 }

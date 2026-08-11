@@ -4,38 +4,68 @@
     "today": "data/photographer_money_day_pack_today.json",
     "tomorrow": "data/photographer_money_day_pack_tomorrow.json"
   },
-  "generated_at_utc": "2026-08-10T12:04:06Z",
+  "generated_at_utc": "2026-08-11T13:12:45Z",
   "location_cache_modified": false,
   "promotion_allowed": false,
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-08-10",
+  "reference_today_nyc": "2026-08-11",
   "schema_version": "photographer-money-day-pack-v1",
   "today": {
-    "borough_cluster_count": 0,
-    "date": "2026-08-10",
-    "map_ready_count": 0,
-    "total_events": 0
-  },
-  "tomorrow": {
     "borough_cluster_count": 2,
     "date": "2026-08-11",
     "map_ready_count": 2,
+    "total_events": 2
+  },
+  "tomorrow": {
+    "borough_cluster_count": 3,
+    "date": "2026-08-12",
+    "map_ready_count": 7,
     "top_go_shoot": [
+      {
+        "borough": "Manhattan",
+        "score": 380,
+        "time": "2026-08-12T15:00:00.000",
+        "title": "Music Speaks Festival, Inc."
+      },
+      {
+        "borough": "Manhattan",
+        "score": 380,
+        "time": "2026-08-12T20:30:00.000",
+        "title": "Sunset Film Festival"
+      },
+      {
+        "borough": "Manhattan",
+        "score": 340,
+        "time": "2026-08-12T12:00:00.000",
+        "title": "East 125th Street Farmstand"
+      },
+      {
+        "borough": "Bronx",
+        "score": 340,
+        "time": "2026-08-12T08:00:00.000",
+        "title": "HHFM Hunts Point Market"
+      },
       {
         "borough": "Brooklyn",
         "score": 340,
-        "time": "2026-08-11T09:00:00.000",
-        "title": "NYP Youth Market - Brooklyn"
+        "time": "2026-08-12T08:00:00.000",
+        "title": "HHFM Kings County Hospital Market"
+      },
+      {
+        "borough": "Manhattan",
+        "score": 340,
+        "time": "2026-08-12T09:00:00.000",
+        "title": "NYP Youth Market - Broadway"
       },
       {
         "borough": "Manhattan",
         "score": 310,
-        "time": "2026-08-11T12:00:00.000",
+        "time": "2026-08-12T12:00:00.000",
         "title": "TSQ LIVE: 45/46 Plaza Programming"
       }
     ],
-    "total_events": 2
+    "total_events": 7
   }
 }

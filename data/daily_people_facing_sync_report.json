@@ -1,64 +1,94 @@
 {
   "civic": {
-    "accepted": 4736,
+    "accepted": 4719,
     "date_time_location_qa_pass": true,
     "list_only": 1291,
     "map_coverage_qa_pass": true,
-    "map_ready": 3445
+    "map_ready": 3428
   },
   "failed_steps": [],
-  "generated_at_utc": "2026-08-10T12:04:03Z",
+  "generated_at_utc": "2026-08-11T13:12:42Z",
   "location_cache_modified": false,
   "notes": "Safe daily desk sync. Does not run build_staged_production_feed / build_location_cache / public WordPress publish. Pin integrity gate fail-closed: qa_pass requires ZERO bad map_ready pins. Full permit→staged refresh remains live-sync-qa (manual dispatch).",
   "photographer_calendar": {
-    "days_with_coverage": 39,
-    "events_removed_vs_baseline": 645,
+    "days_with_coverage": 41,
+    "events_removed_vs_baseline": 614,
     "month_counts": [
       {
         "days_with_events": 20,
-        "event_count": 119,
+        "event_count": 127,
         "label": "August 2026"
       },
       {
-        "days_with_events": 19,
-        "event_count": 78,
+        "days_with_events": 21,
+        "event_count": 101,
         "label": "September 2026"
       }
     ],
     "packs": {
       "qa_pass": true,
       "today": {
-        "borough_cluster_count": 0,
-        "date": "2026-08-10",
-        "map_ready_count": 0,
-        "total_events": 0
-      },
-      "tomorrow": {
         "borough_cluster_count": 2,
         "date": "2026-08-11",
         "map_ready_count": 2,
+        "total_events": 2
+      },
+      "tomorrow": {
+        "borough_cluster_count": 3,
+        "date": "2026-08-12",
+        "map_ready_count": 7,
         "top_go_shoot": [
+          {
+            "borough": "Manhattan",
+            "score": 380,
+            "time": "2026-08-12T15:00:00.000",
+            "title": "Music Speaks Festival, Inc."
+          },
+          {
+            "borough": "Manhattan",
+            "score": 380,
+            "time": "2026-08-12T20:30:00.000",
+            "title": "Sunset Film Festival"
+          },
+          {
+            "borough": "Manhattan",
+            "score": 340,
+            "time": "2026-08-12T12:00:00.000",
+            "title": "East 125th Street Farmstand"
+          },
+          {
+            "borough": "Bronx",
+            "score": 340,
+            "time": "2026-08-12T08:00:00.000",
+            "title": "HHFM Hunts Point Market"
+          },
           {
             "borough": "Brooklyn",
             "score": 340,
-            "time": "2026-08-11T09:00:00.000",
-            "title": "NYP Youth Market - Brooklyn"
+            "time": "2026-08-12T08:00:00.000",
+            "title": "HHFM Kings County Hospital Market"
+          },
+          {
+            "borough": "Manhattan",
+            "score": 340,
+            "time": "2026-08-12T09:00:00.000",
+            "title": "NYP Youth Market - Broadway"
           },
           {
             "borough": "Manhattan",
             "score": 310,
-            "time": "2026-08-11T12:00:00.000",
+            "time": "2026-08-12T12:00:00.000",
             "title": "TSQ LIVE: 45/46 Plaza Programming"
           }
         ],
-        "total_events": 2
+        "total_events": 7
       }
     },
     "pin_integrity": {
       "demotion_count": 0,
       "demotion_reason_counts": {},
-      "map_ready_after_total": 3672,
-      "map_ready_before_total": 3672,
+      "map_ready_after_total": 3674,
+      "map_ready_before_total": 3674,
       "qa_pass": true,
       "report": "data/pin_integrity_gate_report.json"
     },
@@ -67,19 +97,19 @@
     "shoot_day_certified": {
       "pack": "data/photographer_shoot_day_certified_pack.json",
       "qa_pass": true,
-      "today_certified_pins": 0,
-      "tomorrow_certified_pins": 2
+      "today_certified_pins": 2,
+      "tomorrow_certified_pins": 7
     },
-    "total_events": 197,
+    "total_events": 228,
     "viral_recurrence": {
       "historical_rows": 2450,
       "label_counts": {
-        "possible": 51,
-        "returning_likely": 107,
+        "possible": 64,
+        "returning_likely": 116,
         "weak": 48
       },
-      "match_count": 206,
-      "next_14d_crowd_magnets": 39,
+      "match_count": 228,
+      "next_14d_crowd_magnets": 37,
       "qa_pass": true
     }
   },

@@ -1,100 +1,25 @@
 {
-  "current_future_rows": 26999,
-  "current_future_rows_with_cemsid": 26473,
+  "current_future_rows": 26623,
+  "current_future_rows_with_cemsid": 26102,
   "date_boundary_timezone": "America/New_York",
   "enriched_rows_loaded": 33084,
-  "generated_at_utc": "2026-08-10T11:48:16.187166+00:00",
+  "generated_at_utc": "2026-08-11T12:26:41.362481+00:00",
   "location_cache_entries_loaded": 40151,
   "location_cache_modified": false,
-  "location_resolver_live_geosearch_calls": 0,
+  "location_resolver_live_geosearch_calls": 3806,
   "match_counts": {
-    "event_id": 18229,
-    "location_cache": 7116,
-    "none": 233,
-    "text_date_location": 184,
-    "tier_1_gazetteer_display": 531,
-    "tier_2_geosearch_cache": 699,
-    "tier_2_geosearch_midpoint": 7
+    "event_id": 17441,
+    "location_cache": 7500,
+    "none": 230,
+    "text_date_location": 172,
+    "tier_1_gazetteer_display": 562,
+    "tier_2_geosearch_cache": 710,
+    "tier_2_geosearch_midpoint": 7,
+    "tier_3_nyc_geosearch_live": 1
   },
-  "matched_with_gps": 26766,
+  "matched_with_gps": 26393,
   "matched_without_gps_sample": [],
   "needs_enrichment_sample": [
-    {
-      "community_board": [
-        "4"
-      ],
-      "end_date_time": "2026-08-10T18:30:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Bronx",
-      "event_location": "NELSON AVENUE between WEST  167 STREET and WEST  168 STREET",
-      "event_name": "Project Street Beat - Keith Haring Foundation Mobile Health Center Community Event",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "44"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "962460",
-      "start_date_time": "2026-08-10T06:30:00.000",
-      "street_closure_type": "Sidewalk and Curb Lane Closure"
-    },
-    {
-      "community_board": [
-        "2"
-      ],
-      "end_date_time": "2026-08-10T23:30:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "GREENE STREET between GRAND STREET and CANAL STREET",
-      "event_name": "MKG - Pop-up event",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "1"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "964965",
-      "start_date_time": "2026-08-10T07:00:00.000",
-      "street_closure_type": "Curb Lane Only"
-    },
-    {
-      "community_board": [
-        "12"
-      ],
-      "end_date_time": "2026-08-10T12:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Queens",
-      "event_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
-      "event_name": "Boombox in Jamaica",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "103"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "964160",
-      "start_date_time": "2026-08-10T12:00:00.000",
-      "street_closure_type": "Partial Sidewalk Closure"
-    },
-    {
-      "community_board": [
-        "3"
-      ],
-      "end_date_time": "2026-08-10T19:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "STUYVESANT AVENUE between MCDONOUGH STREET and DECATUR STREET",
-      "event_name": "Hype Hair Event",
-      "event_type": "Health Fair",
-      "police_precinct": [
-        "81"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "957790",
-      "start_date_time": "2026-08-10T16:00:00.000",
-      "street_closure_type": "Sidewalk and Curb Lane Closure"
-    },
     {
       "community_board": [
         "2"
@@ -496,14 +421,92 @@
       "source_event_id": "964160",
       "start_date_time": "2026-08-14T12:00:00.000",
       "street_closure_type": "Partial Sidewalk Closure"
+    },
+    {
+      "community_board": [
+        "6"
+      ],
+      "end_date_time": "2026-08-14T19:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "SACKETT STREET between VAN BRUNT STREET and DEAD END",
+      "event_name": "Sackett St Open Streets Event",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "76"
+      ],
+      "source_cemsid": [
+        "0"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "964434",
+      "start_date_time": "2026-08-14T12:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "5"
+      ],
+      "end_date_time": "2026-08-15T23:59:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "EAST   42 STREET between LEXINGTON AVENUE and PARK AVENUE",
+      "event_name": "Pickwick Vintage Show",
+      "event_type": "Production Event",
+      "police_precinct": [
+        "14"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "962842",
+      "start_date_time": "2026-08-15T00:01:00.000",
+      "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "14"
+      ],
+      "end_date_time": "2026-08-15T16:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "NOSTRAND AVENUE between FLATBUSH AVENUE and GLENWOOD ROAD",
+      "event_name": "Youth Led Farmers Market",
+      "event_type": "Farmers Market",
+      "police_precinct": [
+        "70"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "960998",
+      "start_date_time": "2026-08-15T08:00:00.000",
+      "street_closure_type": "Partial Sidewalk Closure"
+    },
+    {
+      "community_board": [
+        "16"
+      ],
+      "end_date_time": "2026-08-15T17:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "BLAKE AVENUE between AMBOY STREET and THOMAS BOYLAND STREET",
+      "event_name": "CHURCH FAMILY DAY EVENT",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "73"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "919200",
+      "start_date_time": "2026-08-15T09:00:00.000",
+      "street_closure_type": "Full Street Closure"
     }
   ],
   "production_feeds_modified": false,
   "public_map_modified": false,
   "raw_page_limit": 50000,
-  "raw_rows_loaded": 28325,
-  "raw_rows_with_cemsid": 27745,
+  "raw_rows_loaded": 27562,
+  "raw_rows_with_cemsid": 27018,
   "raw_url": "https://data.cityofnewyork.us/resource/tvpp-9vvx.json",
-  "today_nyc": "2026-08-10",
-  "today_utc": "2026-08-10"
+  "today_nyc": "2026-08-11",
+  "today_utc": "2026-08-11"
 }
