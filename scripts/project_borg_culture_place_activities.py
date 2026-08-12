@@ -8,9 +8,9 @@ disposition for every candidate.
 from __future__ import annotations
 
 import argparse
-import json
-from pathlib import Path
 from typing import Any
+
+from scripts.borg_cli_paths import read_workspace_json, write_workspace_json
 
 SCHEMA = "nycif.borg-culture-place-activity-projection.v1"
 APPROVED_SOURCES = {
@@ -20,6 +20,8 @@ APPROVED_SOURCES = {
     "VERIFIED_PARTNER_WITH_HOST_CONFIRMATION",
 }
 PUBLIC_STATES = {"CURRENT", "FUTURE", "ONGOING"}
+PENDING_LOCATION_STATES = {"AMBIGUOUS", "REVIEW_REQUIRED", "UNRESOLVED"}
+APPROVED_LOCATION_STATES = {"EXACT_STOREFRONT", "APPROVED_GEOCODE", "RESOLVED"}
 
 
 def _index_places(places: list[dict[str, Any]]) -> dict[tuple[str, str], dict[str, Any]]:
@@ -39,81 +41,83 @@ def _index_places(places: list[dict[str, Any]]) -> dict[tuple[str, str], dict[st
     return out
 
 
+def _candidate_identity(candidate: dict[str, Any], seen: set[str]) -> str:
+    cid = str(candidate.get("candidate_id") or "")
+    if not cid:
+        raise ValueError("candidate_id required")
+    if cid in seen:
+        raise ValueError(f"duplicate candidate_id: {cid}")
+    seen.add(cid)
+    return cid
+
+
+def _evaluate_candidate(
+    candidate: dict[str, Any],
+    accepted: dict[tuple[str, str], dict[str, Any]],
+) -> tuple[str, bool, bool, str]:
+    bid = str(candidate.get("host_business_id") or "")
+    lid = str(candidate.get("host_location_id") or "")
+    state = str(candidate.get("activity_state") or "UNKNOWN")
+    kind = str(candidate.get("activity_kind") or "")
+    source_class = str(candidate.get("source_class") or "")
+    relation = str(candidate.get("host_relation_evidence_state") or "")
+    location_state = str(candidate.get("location_state") or "")
+
+    if (bid, lid) not in accepted:
+        return "NOT_CULTURE_ACTIVITY", False, False, "host_not_accepted_culture_place"
+    if state == "CANCELLED":
+        return "CULTURE_ACTIVITY_CANCELLED", False, False, "cancelled"
+    if state == "EXPIRED":
+        return "CULTURE_ACTIVITY_EXPIRED", False, False, "expired"
+    if relation != "CONFIRMED":
+        return "CULTURE_ACTIVITY_REVIEW_REQUIRED", False, False, "host_relation_unconfirmed"
+    if source_class not in APPROVED_SOURCES:
+        return "CULTURE_ACTIVITY_REVIEW_REQUIRED", False, False, "source_not_approved"
+    if state not in PUBLIC_STATES:
+        return "CULTURE_ACTIVITY_REVIEW_REQUIRED", False, False, "activity_state_not_public"
+    if kind == "DATED_OCCURRENCE" and not candidate.get("occurrence_id"):
+        return "CULTURE_ACTIVITY_REVIEW_REQUIRED", False, False, "canonical_occurrence_id_required"
+    if kind == "ONGOING_PROGRAM" and not candidate.get("program_id"):
+        return "CULTURE_ACTIVITY_REVIEW_REQUIRED", False, False, "stable_program_id_required"
+    if kind not in {"DATED_OCCURRENCE", "ONGOING_PROGRAM"}:
+        return "CULTURE_ACTIVITY_REVIEW_REQUIRED", False, False, "unsupported_activity_kind"
+    if location_state in PENDING_LOCATION_STATES:
+        return "CULTURE_ACTIVITY_LIST_ONLY_LOCATION_PENDING", True, False, "location_pending"
+    if location_state in APPROVED_LOCATION_STATES:
+        return "CULTURE_ACTIVITY_PUBLIC", True, True, "eligible"
+    return "CULTURE_ACTIVITY_REVIEW_REQUIRED", False, False, "location_state_not_approved"
+
+
+def _project_record(
+    candidate: dict[str, Any],
+    cid: str,
+    accepted: dict[tuple[str, str], dict[str, Any]],
+) -> dict[str, Any]:
+    disposition, public, map_eligible, reason = _evaluate_candidate(candidate, accepted)
+    return {
+        "candidate_id": cid,
+        "host_business_id": str(candidate.get("host_business_id") or ""),
+        "host_location_id": str(candidate.get("host_location_id") or ""),
+        "title": candidate.get("title"),
+        "activity_kind": str(candidate.get("activity_kind") or ""),
+        "activity_state": str(candidate.get("activity_state") or "UNKNOWN"),
+        "occurrence_id": candidate.get("occurrence_id"),
+        "program_id": candidate.get("program_id"),
+        "source_class": str(candidate.get("source_class") or ""),
+        "terminal_disposition": disposition,
+        "public": public,
+        "map_eligible": map_eligible,
+        "reason": reason,
+    }
+
+
 def project(*, places: list[dict[str, Any]], candidates: list[dict[str, Any]]) -> dict[str, Any]:
     accepted = _index_places(places)
     seen: set[str] = set()
-    records: list[dict[str, Any]] = []
-
-    for candidate in candidates:
-        cid = str(candidate.get("candidate_id") or "")
-        if not cid:
-            raise ValueError("candidate_id required")
-        if cid in seen:
-            raise ValueError(f"duplicate candidate_id: {cid}")
-        seen.add(cid)
-
-        bid = str(candidate.get("host_business_id") or "")
-        lid = str(candidate.get("host_location_id") or "")
-        state = str(candidate.get("activity_state") or "UNKNOWN")
-        kind = str(candidate.get("activity_kind") or "")
-        source_class = str(candidate.get("source_class") or "")
-        relation = str(candidate.get("host_relation_evidence_state") or "")
-        location_state = str(candidate.get("location_state") or "")
-
-        disposition = "CULTURE_ACTIVITY_REVIEW_REQUIRED"
-        public = False
-        map_eligible = False
-        reason = "evidence_gate_incomplete"
-
-        if (bid, lid) not in accepted:
-            disposition = "NOT_CULTURE_ACTIVITY"
-            reason = "host_not_accepted_culture_place"
-        elif state == "CANCELLED":
-            disposition = "CULTURE_ACTIVITY_CANCELLED"
-            reason = "cancelled"
-        elif state == "EXPIRED":
-            disposition = "CULTURE_ACTIVITY_EXPIRED"
-            reason = "expired"
-        elif relation != "CONFIRMED":
-            reason = "host_relation_unconfirmed"
-        elif source_class not in APPROVED_SOURCES:
-            reason = "source_not_approved"
-        elif state not in PUBLIC_STATES:
-            reason = "activity_state_not_public"
-        elif kind == "DATED_OCCURRENCE" and not candidate.get("occurrence_id"):
-            reason = "canonical_occurrence_id_required"
-        elif kind == "ONGOING_PROGRAM" and not candidate.get("program_id"):
-            reason = "stable_program_id_required"
-        elif kind not in {"DATED_OCCURRENCE", "ONGOING_PROGRAM"}:
-            reason = "unsupported_activity_kind"
-        elif location_state in {"AMBIGUOUS", "REVIEW_REQUIRED", "UNRESOLVED"}:
-            disposition = "CULTURE_ACTIVITY_LIST_ONLY_LOCATION_PENDING"
-            public = True
-            reason = "location_pending"
-        elif location_state in {"EXACT_STOREFRONT", "APPROVED_GEOCODE", "RESOLVED"}:
-            disposition = "CULTURE_ACTIVITY_PUBLIC"
-            public = True
-            map_eligible = True
-            reason = "eligible"
-        else:
-            reason = "location_state_not_approved"
-
-        records.append({
-            "candidate_id": cid,
-            "host_business_id": bid,
-            "host_location_id": lid,
-            "title": candidate.get("title"),
-            "activity_kind": kind,
-            "activity_state": state,
-            "occurrence_id": candidate.get("occurrence_id"),
-            "program_id": candidate.get("program_id"),
-            "source_class": source_class,
-            "terminal_disposition": disposition,
-            "public": public,
-            "map_eligible": map_eligible,
-            "reason": reason,
-        })
-
+    records = [
+        _project_record(candidate, _candidate_identity(candidate, seen), accepted)
+        for candidate in candidates
+    ]
     terminal = len(records)
     if terminal != len(candidates):
         raise AssertionError("silent loss")
@@ -137,13 +141,13 @@ def main() -> int:
     parser.add_argument("--candidates", required=True)
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
-    places_payload = json.loads(Path(args.places).read_text())
-    candidates_payload = json.loads(Path(args.candidates).read_text())
+    places_payload = read_workspace_json(args.places)
+    candidates_payload = read_workspace_json(args.candidates)
     result = project(
         places=places_payload.get("places") or places_payload.get("records") or [],
         candidates=candidates_payload.get("candidates") or candidates_payload.get("records") or [],
     )
-    Path(args.output).write_text(json.dumps(result, indent=2) + "\n")
+    write_workspace_json(args.output, result)
     return 0
 
 
