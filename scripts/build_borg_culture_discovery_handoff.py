@@ -9,49 +9,53 @@ pipelines; review-required cultural-area candidates are intentionally excluded.
 from __future__ import annotations
 
 import argparse
-import json
-from pathlib import Path
 from typing import Any
+
+from scripts.borg_cli_paths import read_workspace_json, write_workspace_json
 
 CONTRACT = "nycif.borg-culture-discovery-handoff.v1"
 EXPECTED_NTAS = 262
 LANGUAGE_CONTRACT = "nycif.community-language-profile.v1"
 
 
-def build_handoff(*, base_registry: dict[str, Any], profiles: dict[str, Any], language_profiles: dict[str, Any]) -> dict[str, Any]:
-    if base_registry.get("contract") != "nycif.culture-base-geography.v1":
-        raise ValueError("Unsupported base geography contract")
-    if profiles.get("contract") != "nycif.community-demographic-profile.v1":
-        raise ValueError("Unsupported Community Profile contract")
-    if language_profiles.get("contract") != LANGUAGE_CONTRACT:
-        raise ValueError("Unsupported language profile contract")
+def _validate_source_contracts(
+    base_registry: dict[str, Any],
+    profiles: dict[str, Any],
+    language_profiles: dict[str, Any],
+) -> None:
+    expected = (
+        (base_registry, "nycif.culture-base-geography.v1", "base geography"),
+        (profiles, "nycif.community-demographic-profile.v1", "Community Profile"),
+        (language_profiles, LANGUAGE_CONTRACT, "language profile"),
+    )
+    for payload, contract, label in expected:
+        if payload.get("contract") != contract:
+            raise ValueError(f"Unsupported {label} contract")
 
-    base_rows = base_registry.get("records") or []
-    profile_rows = profiles.get("records") or []
-    language_rows = language_profiles.get("records") or []
-    if len(base_rows) != EXPECTED_NTAS or len(profile_rows) != EXPECTED_NTAS or len(language_rows) != EXPECTED_NTAS:
-        raise ValueError("BORG Culture handoff requires 262 base, core-profile, and language-profile records")
 
-    profile_by_nta = {str(row["nta2020"]): row for row in profile_rows}
-    language_by_nta = {str(row["nta2020"]): row for row in language_rows}
-    if len(profile_by_nta) != EXPECTED_NTAS or len(language_by_nta) != EXPECTED_NTAS:
-        raise ValueError("Duplicate NTA ids in source profiles")
+def _index_profile_rows(rows: list[dict[str, Any]], *, label: str) -> dict[str, dict[str, Any]]:
+    if len(rows) != EXPECTED_NTAS:
+        raise ValueError(f"BORG Culture handoff requires 262 {label} records")
+    indexed = {str(row["nta2020"]): row for row in rows}
+    if len(indexed) != EXPECTED_NTAS:
+        raise ValueError(f"Duplicate NTA ids in {label}")
+    return indexed
 
-    records: list[dict[str, Any]] = []
-    for base in sorted(base_rows, key=lambda row: str(row["nta2020"])):
-        code = str(base["nta2020"])
-        core = profile_by_nta.get(code)
-        language = language_by_nta.get(code)
-        if core is None or language is None:
-            raise ValueError(f"NTA {code} missing core or language profile")
-        if core.get("culture_classification_power") != "NONE" or language.get("culture_classification_power") != "NONE":
-            raise ValueError(f"NTA {code} demographic source has Culture classification power")
-        if core.get("boundary_creation_power") != "NONE" or language.get("boundary_creation_power") != "NONE":
-            raise ValueError(f"NTA {code} demographic source has boundary creation power")
-        if core.get("profile_state") != language.get("profile_state"):
-            raise ValueError(f"NTA {code} core/language terminal-state mismatch")
 
-        records.append({
+def _validate_demographic_authority(code: str, core: dict[str, Any], language: dict[str, Any]) -> None:
+    if core.get("culture_classification_power") != "NONE" or language.get("culture_classification_power") != "NONE":
+        raise ValueError(f"NTA {code} demographic source has Culture classification power")
+    if core.get("boundary_creation_power") != "NONE" or language.get("boundary_creation_power") != "NONE":
+        raise ValueError(f"NTA {code} demographic source has boundary creation power")
+    if core.get("profile_state") != language.get("profile_state"):
+        raise ValueError(f"NTA {code} core/language terminal-state mismatch")
+
+
+def _records_for_nta(base: dict[str, Any], core: dict[str, Any], language: dict[str, Any]) -> list[dict[str, Any]]:
+    code = str(base["nta2020"])
+    _validate_demographic_authority(code, core, language)
+    return [
+        {
             "type": "BASE_GEOGRAPHY",
             "nta2020": code,
             "nta_name": base.get("nta_name"),
@@ -59,8 +63,8 @@ def build_handoff(*, base_registry: dict[str, Any], profiles: dict[str, Any], la
             "source_dataset_id": base.get("source_dataset_id"),
             "source_release": base.get("source_release"),
             "residential": core.get("profile_state") != "NOT_APPLICABLE",
-        })
-        records.append({
+        },
+        {
             "type": "COMMUNITY_PROFILE",
             "nta2020": code,
             "acs_vintage": core.get("acs_vintage"),
@@ -84,7 +88,26 @@ def build_handoff(*, base_registry: dict[str, Any], profiles: dict[str, Any], la
             },
             "culture_classification_power": "NONE",
             "boundary_creation_power": "NONE",
-        })
+        },
+    ]
+
+
+def build_handoff(*, base_registry: dict[str, Any], profiles: dict[str, Any], language_profiles: dict[str, Any]) -> dict[str, Any]:
+    _validate_source_contracts(base_registry, profiles, language_profiles)
+    base_rows = base_registry.get("records") or []
+    if len(base_rows) != EXPECTED_NTAS:
+        raise ValueError("BORG Culture handoff requires 262 base records")
+    profile_by_nta = _index_profile_rows(profiles.get("records") or [], label="core-profile")
+    language_by_nta = _index_profile_rows(language_profiles.get("records") or [], label="language-profile")
+
+    records: list[dict[str, Any]] = []
+    for base in sorted(base_rows, key=lambda row: str(row["nta2020"])):
+        code = str(base["nta2020"])
+        core = profile_by_nta.get(code)
+        language = language_by_nta.get(code)
+        if core is None or language is None:
+            raise ValueError(f"NTA {code} missing core or language profile")
+        records.extend(_records_for_nta(base, core, language))
 
     return {
         "contract": CONTRACT,
@@ -103,13 +126,11 @@ def main() -> int:
     args = parser.parse_args()
 
     result = build_handoff(
-        base_registry=json.loads(Path(args.base_registry).read_text(encoding="utf-8")),
-        profiles=json.loads(Path(args.profiles).read_text(encoding="utf-8")),
-        language_profiles=json.loads(Path(args.language_profiles).read_text(encoding="utf-8")),
+        base_registry=read_workspace_json(args.base_registry),
+        profiles=read_workspace_json(args.profiles),
+        language_profiles=read_workspace_json(args.language_profiles),
     )
-    output = Path(args.output)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
+    write_workspace_json(args.output, result)
     print(f"Built BORG Culture discovery handoff with {result['record_count']} records")
     return 0
 
