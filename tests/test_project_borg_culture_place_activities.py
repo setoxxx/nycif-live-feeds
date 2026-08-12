@@ -96,8 +96,10 @@ class CulturePlaceActivityProjectorTests(unittest.TestCase):
                 self.assertFalse(record["public"])
 
     def test_duplicate_candidate_id_fails_closed(self):
+        places = [accepted_place()]
+        duplicates = [candidate(), candidate()]
         with self.assertRaises(ValueError):
-            project(places=[accepted_place()], candidates=[candidate(), candidate()])
+            project(places=places, candidates=duplicates)
 
 
 if __name__ == "__main__":
