@@ -9,11 +9,13 @@ import py_compile
 import sys
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from scripts import sync_nyc_parks_bigapps_events as parks_sync  # noqa: E402
 from scripts.build_staged_production_feed import apply_one_day_street_dedupe  # noqa: E402
 from scripts.record_blocked_daily_data_health import build_payload  # noqa: E402
 from scripts.refresh_official_supplemental_occurrences import occurrence_key  # noqa: E402
@@ -90,6 +92,75 @@ def test_calendar_cancellation_flags_are_typed_safely() -> None:
     assert bool_flag("false") is False
     assert bool_flag("0") is False
     assert bool_flag(None) is False
+
+
+def test_parks_source_contract_uses_current_upcoming_open_data() -> None:
+    assert parks_sync.DATASET_ID == "w3wp-dpdi"
+    assert parks_sync.SOURCE_CONTRACT_VERSION == "NYCIF_PARKS_UPCOMING_OPEN_DATA_V3"
+    assert parks_sync.EVENTS_URL.endswith("/w3wp-dpdi.json")
+    assert parks_sync.LEGACY_BIGAPPS_URL not in parks_sync.EVENTS_URL
+
+
+def test_parks_official_coordinate_is_explicit_exact_evidence() -> None:
+    result = parks_sync.normalize_event_item(
+        {
+            "guid": "parks-42",
+            "title": "Park event",
+            "startdate": "2026-08-10",
+            "starttime": "10:00:00",
+            "enddate": "2026-08-10",
+            "endtime": "11:00:00",
+            "coordinates": "40.7001,-73.9001",
+            "location": "Demo Park",
+        }
+    )
+    assert result["lat"] == 40.7001
+    assert result["lng"] == -73.9001
+    assert result["source_dataset"] == "nyc-parks-bigapps-events"
+    assert result["source_event_id"] == "parks-42"
+    assert result["source_authority_dataset"] == "w3wp-dpdi"
+    evidence = result["location_evidence"]
+    assert evidence["tier"] == "exact_source_coordinate"
+    assert evidence["validation_state"] == "validated"
+    assert evidence["exact_pin_eligible"] is True
+    assert evidence["source_dataset_id"] == "w3wp-dpdi"
+    assert result["promotion_allowed"] is False
+    assert result["public_map_modified"] is False
+
+
+def test_parks_missing_or_bad_coordinate_never_invents_exact_evidence() -> None:
+    for coordinate in (None, "", "not-a-coordinate", "0,0", "91,181"):
+        result = parks_sync.normalize_event_item(
+            {
+                "guid": "parks-unmapped",
+                "title": "Unmapped park event",
+                "startdate": "2026-08-10",
+                "coordinates": coordinate,
+                "location": "A park",
+            }
+        )
+        assert result["lat"] is None
+        assert result["lng"] is None
+        assert result["location_evidence"] is None
+        assert result["promotion_allowed"] is False
+
+
+def test_parks_live_failure_stays_non_live_and_fails_closed() -> None:
+    with patch.object(parks_sync, "fetch_events", side_effect=RuntimeError("boom")), patch.object(
+        parks_sync, "save_json"
+    ), patch("builtins.print") as mocked_print:
+        code = parks_sync.main()
+    assert code == 1
+    report_text = mocked_print.call_args.args[0]
+    assert '"fetch_mode": "live_fetch_failed"' in report_text
+    assert '"qa_pass": false' in report_text
+    assert '"fetch_mode": "live"' not in report_text
+
+
+def test_parks_uses_new_york_date_boundary() -> None:
+    source = (ROOT / "scripts" / "sync_nyc_parks_bigapps_events.py").read_text(encoding="utf-8")
+    assert 'ZoneInfo("America/New_York")' in source
+    assert '"date_boundary_timezone": "America/New_York"' in source
 
 
 def test_failure_summary_redacts_common_secrets() -> None:
@@ -192,6 +263,8 @@ def test_modified_reliability_python_files_compile() -> None:
         for source in (
             ROOT / "scripts" / "run_daily_refresh_stage.py",
             ROOT / "scripts" / "record_blocked_daily_data_health.py",
+            ROOT / "scripts" / "sync_nyc_parks_bigapps_events.py",
+            ROOT / "scripts" / "test_nyc_parks_open_data_sync.py",
             ROOT / "scripts" / "test_live_event_intake_refresh_current.py",
             ROOT / "scripts" / "test_daily_production_hardening.py",
         ):
@@ -209,6 +282,11 @@ def main() -> int:
         test_calendar_occurrence_identity_includes_date,
         test_calendar_occurrence_identity_includes_same_day_time,
         test_calendar_cancellation_flags_are_typed_safely,
+        test_parks_source_contract_uses_current_upcoming_open_data,
+        test_parks_official_coordinate_is_explicit_exact_evidence,
+        test_parks_missing_or_bad_coordinate_never_invents_exact_evidence,
+        test_parks_live_failure_stays_non_live_and_fails_closed,
+        test_parks_uses_new_york_date_boundary,
         test_failure_summary_redacts_common_secrets,
         test_failure_payload_never_emits_unknown_stage,
         test_stage_runner_records_actionable_failure,
