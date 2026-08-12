@@ -3,13 +3,17 @@
 
 CLI file arguments are treated as untrusted input. Every path is syntax-checked,
 resolved against the current workspace, and required to remain inside that
-workspace after canonicalization, including symlink resolution.
+workspace after canonicalization, including symlink resolution. Filesystem I/O
+is kept behind this module so CLI callers never use user-controlled path values
+at filesystem sinks.
 """
 
 from __future__ import annotations
 
+import json
 import re
 from pathlib import Path
+from typing import Any
 
 _SAFE_RELATIVE_PATH = re.compile(r"^[A-Za-z0-9._/-]+$")
 
@@ -69,3 +73,24 @@ def workspace_relative(path: Path) -> str:
 
     root = _workspace_root()
     return path.resolve().relative_to(root).as_posix()
+
+
+def read_workspace_json(raw: str) -> Any:
+    """Read JSON only after the requested CLI path passes workspace confinement."""
+
+    path = resolve_workspace_file(raw, must_exist=True)
+    return json.loads(path.read_text())
+
+
+def read_workspace_json_with_relative(raw: str) -> tuple[Any, str]:
+    """Read confined JSON and return its stable workspace-relative provenance name."""
+
+    path = resolve_workspace_file(raw, must_exist=True)
+    return json.loads(path.read_text()), workspace_relative(path)
+
+
+def write_workspace_json(raw: str, payload: Any) -> None:
+    """Write formatted JSON only after the requested CLI path passes confinement."""
+
+    path = resolve_workspace_file(raw, must_exist=False)
+    path.write_text(json.dumps(payload, indent=2) + "\n")
