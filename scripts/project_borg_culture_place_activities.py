@@ -22,6 +22,7 @@ APPROVED_SOURCES = {
 PUBLIC_STATES = {"CURRENT", "FUTURE", "ONGOING"}
 PENDING_LOCATION_STATES = {"AMBIGUOUS", "REVIEW_REQUIRED", "UNRESOLVED"}
 APPROVED_LOCATION_STATES = {"EXACT_STOREFRONT", "APPROVED_GEOCODE", "RESOLVED"}
+REVIEW = "CULTURE_ACTIVITY_REVIEW_REQUIRED"
 
 
 def _index_places(places: list[dict[str, Any]]) -> dict[tuple[str, str], dict[str, Any]]:
@@ -51,17 +52,15 @@ def _candidate_identity(candidate: dict[str, Any], seen: set[str]) -> str:
     return cid
 
 
-def _evaluate_candidate(
+def _authority_state_gate(
     candidate: dict[str, Any],
     accepted: dict[tuple[str, str], dict[str, Any]],
-) -> tuple[str, bool, bool, str]:
+) -> tuple[str, bool, bool, str] | None:
     bid = str(candidate.get("host_business_id") or "")
     lid = str(candidate.get("host_location_id") or "")
     state = str(candidate.get("activity_state") or "UNKNOWN")
-    kind = str(candidate.get("activity_kind") or "")
-    source_class = str(candidate.get("source_class") or "")
     relation = str(candidate.get("host_relation_evidence_state") or "")
-    location_state = str(candidate.get("location_state") or "")
+    source_class = str(candidate.get("source_class") or "")
 
     if (bid, lid) not in accepted:
         return "NOT_CULTURE_ACTIVITY", False, False, "host_not_accepted_culture_place"
@@ -70,22 +69,47 @@ def _evaluate_candidate(
     if state == "EXPIRED":
         return "CULTURE_ACTIVITY_EXPIRED", False, False, "expired"
     if relation != "CONFIRMED":
-        return "CULTURE_ACTIVITY_REVIEW_REQUIRED", False, False, "host_relation_unconfirmed"
+        return REVIEW, False, False, "host_relation_unconfirmed"
     if source_class not in APPROVED_SOURCES:
-        return "CULTURE_ACTIVITY_REVIEW_REQUIRED", False, False, "source_not_approved"
+        return REVIEW, False, False, "source_not_approved"
     if state not in PUBLIC_STATES:
-        return "CULTURE_ACTIVITY_REVIEW_REQUIRED", False, False, "activity_state_not_public"
-    if kind == "DATED_OCCURRENCE" and not candidate.get("occurrence_id"):
-        return "CULTURE_ACTIVITY_REVIEW_REQUIRED", False, False, "canonical_occurrence_id_required"
-    if kind == "ONGOING_PROGRAM" and not candidate.get("program_id"):
-        return "CULTURE_ACTIVITY_REVIEW_REQUIRED", False, False, "stable_program_id_required"
-    if kind not in {"DATED_OCCURRENCE", "ONGOING_PROGRAM"}:
-        return "CULTURE_ACTIVITY_REVIEW_REQUIRED", False, False, "unsupported_activity_kind"
+        return REVIEW, False, False, "activity_state_not_public"
+    return None
+
+
+def _identity_gate(candidate: dict[str, Any]) -> tuple[str, bool, bool, str] | None:
+    kind = str(candidate.get("activity_kind") or "")
+    if kind == "DATED_OCCURRENCE":
+        if not candidate.get("occurrence_id"):
+            return REVIEW, False, False, "canonical_occurrence_id_required"
+        return None
+    if kind == "ONGOING_PROGRAM":
+        if not candidate.get("program_id"):
+            return REVIEW, False, False, "stable_program_id_required"
+        return None
+    return REVIEW, False, False, "unsupported_activity_kind"
+
+
+def _location_gate(candidate: dict[str, Any]) -> tuple[str, bool, bool, str]:
+    location_state = str(candidate.get("location_state") or "")
     if location_state in PENDING_LOCATION_STATES:
         return "CULTURE_ACTIVITY_LIST_ONLY_LOCATION_PENDING", True, False, "location_pending"
     if location_state in APPROVED_LOCATION_STATES:
         return "CULTURE_ACTIVITY_PUBLIC", True, True, "eligible"
-    return "CULTURE_ACTIVITY_REVIEW_REQUIRED", False, False, "location_state_not_approved"
+    return REVIEW, False, False, "location_state_not_approved"
+
+
+def _evaluate_candidate(
+    candidate: dict[str, Any],
+    accepted: dict[tuple[str, str], dict[str, Any]],
+) -> tuple[str, bool, bool, str]:
+    gate_result = _authority_state_gate(candidate, accepted)
+    if gate_result is not None:
+        return gate_result
+    gate_result = _identity_gate(candidate)
+    if gate_result is not None:
+        return gate_result
+    return _location_gate(candidate)
 
 
 def _project_record(
