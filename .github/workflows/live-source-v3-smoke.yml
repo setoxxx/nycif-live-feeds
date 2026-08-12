@@ -143,6 +143,17 @@ jobs:
           assert map_status.get('duplicate_reader_occurrence_count') == 0, map_status
           assert map_status.get('general_area_exact_geometry_count') == 0, map_status
 
+          # Historical P0 regression fixture. It is mandatory only while its occurrence
+          # date is inside the live reader window. Outside that window, the live gate
+          # proves the opposite safety property: no stale Jamaica occurrence is carried.
+          jamaica_occurrence_date = '2026-08-08'
+          reader_window_start = str(map_status.get('reader_window_start') or '')
+          reader_window_end = str(map_status.get('reader_window_end') or '')
+          assert reader_window_start and reader_window_end, map_status
+          jamaica_in_live_reader_window = (
+              reader_window_start <= jamaica_occurrence_date <= reader_window_end
+          )
+
           jamaica_matches = []
           for feature in map_feed.get('features', []):
               props = feature.get('properties') or {}
@@ -151,29 +162,55 @@ jobs:
                   and str(props.get('source_event_id') or '') == '906790'
               ):
                   jamaica_matches.append(feature)
-          assert len(jamaica_matches) == 1, {
-              'reason': 'P0 Jamaica permit missing or duplicated in fresh reader-safe artifact',
-              'match_count': len(jamaica_matches),
-          }
-          jamaica = jamaica_matches[0]
-          jamaica_props = jamaica.get('properties') or {}
-          assert jamaica_props.get('title') == 'Jamaica Rising Day Parade', jamaica_props
-          assert jamaica.get('geometry') is None, jamaica
-          assert jamaica_props.get('certified_pin') is False, jamaica_props
-          assert jamaica_props.get('map_eligibility_state') != 'MAP_READY', jamaica_props
-          assert jamaica_props.get('event_role') == 'public_event', jamaica_props
 
-          p0_jamaica_reader_evidence = {
-              'source_dataset': jamaica_props.get('source_dataset'),
-              'source_event_id': jamaica_props.get('source_event_id'),
-              'occurrence_id': jamaica_props.get('occurrence_id'),
-              'title': jamaica_props.get('title'),
-              'geometry': jamaica.get('geometry'),
-              'certified_pin': jamaica_props.get('certified_pin'),
-              'map_eligibility_state': jamaica_props.get('map_eligibility_state'),
-              'reader_build_generated_at_utc': map_status.get('generated_at_utc'),
-              'reader_safe_event_count': map_status.get('reader_safe_event_count'),
-          }
+          if jamaica_in_live_reader_window:
+              assert len(jamaica_matches) == 1, {
+                  'reason': 'P0 Jamaica permit missing or duplicated while fixture occurrence is in live reader window',
+                  'match_count': len(jamaica_matches),
+                  'reader_window_start': reader_window_start,
+                  'reader_window_end': reader_window_end,
+              }
+              jamaica = jamaica_matches[0]
+              jamaica_props = jamaica.get('properties') or {}
+              assert jamaica_props.get('title') == 'Jamaica Rising Day Parade', jamaica_props
+              assert jamaica.get('geometry') is None, jamaica
+              assert jamaica_props.get('certified_pin') is False, jamaica_props
+              assert jamaica_props.get('map_eligibility_state') != 'MAP_READY', jamaica_props
+              assert jamaica_props.get('event_role') == 'public_event', jamaica_props
+              p0_jamaica_reader_evidence = {
+                  'live_assertion_applicable': True,
+                  'source_dataset': jamaica_props.get('source_dataset'),
+                  'source_event_id': jamaica_props.get('source_event_id'),
+                  'occurrence_id': jamaica_props.get('occurrence_id'),
+                  'occurrence_date': jamaica_occurrence_date,
+                  'title': jamaica_props.get('title'),
+                  'geometry': jamaica.get('geometry'),
+                  'certified_pin': jamaica_props.get('certified_pin'),
+                  'map_eligibility_state': jamaica_props.get('map_eligibility_state'),
+                  'reader_window_start': reader_window_start,
+                  'reader_window_end': reader_window_end,
+                  'reader_build_generated_at_utc': map_status.get('generated_at_utc'),
+                  'reader_safe_event_count': map_status.get('reader_safe_event_count'),
+              }
+          else:
+              assert len(jamaica_matches) == 0, {
+                  'reason': 'Historical P0 Jamaica occurrence leaked outside the live reader window',
+                  'match_count': len(jamaica_matches),
+                  'occurrence_date': jamaica_occurrence_date,
+                  'reader_window_start': reader_window_start,
+                  'reader_window_end': reader_window_end,
+              }
+              p0_jamaica_reader_evidence = {
+                  'live_assertion_applicable': False,
+                  'source_dataset': 'tvpp-9vvx',
+                  'source_event_id': '906790',
+                  'occurrence_date': jamaica_occurrence_date,
+                  'match_count': 0,
+                  'reader_window_start': reader_window_start,
+                  'reader_window_end': reader_window_end,
+                  'reason': 'historical_fixture_outside_live_reader_window',
+                  'deterministic_fixture_regression_preserved': True,
+              }
 
           print(json.dumps({
               'generated_at_utc': {
