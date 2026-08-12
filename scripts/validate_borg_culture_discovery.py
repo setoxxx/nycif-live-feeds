@@ -15,8 +15,9 @@ from __future__ import annotations
 import argparse
 import json
 from collections import Counter, defaultdict
-from pathlib import Path
 from typing import Any
+
+from scripts.borg_cli_paths import read_workspace_json
 
 EXPECTED_NTAS = 262
 PROFILE_STATES = {"READY", "STALE", "UNAVAILABLE", "NOT_APPLICABLE"}
@@ -32,103 +33,97 @@ def _is_census_source(source: dict[str, Any]) -> bool:
     return any(marker in haystack for marker in CENSUS_SOURCE_MARKERS)
 
 
-def validate(payload: dict[str, Any]) -> dict[str, Any]:
-    if payload.get("contract") != "nycif.borg-culture-discovery-handoff.v1":
-        raise ValueError("Unsupported BORG Culture discovery contract")
-
-    records = payload.get("records")
-    if not isinstance(records, list):
-        raise ValueError("records must be a list")
-
+def _group_records(records: list[Any]) -> dict[str, list[dict[str, Any]]]:
     by_type: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for row in records:
         if not isinstance(row, dict):
             raise ValueError("Every record must be an object")
         by_type[str(row.get("type"))].append(row)
+    return by_type
 
-    base = by_type["BASE_GEOGRAPHY"]
+
+def _validate_base_rows(base: list[dict[str, Any]]) -> list[str]:
     if len(base) != EXPECTED_NTAS:
-        raise ValueError(
-            f"Expected {EXPECTED_NTAS} BASE_GEOGRAPHY records, found {len(base)}"
-        )
-
+        raise ValueError(f"Expected {EXPECTED_NTAS} BASE_GEOGRAPHY records, found {len(base)}")
     nta_codes = [str(row.get("nta2020", "")) for row in base]
     if any(not code for code in nta_codes):
         raise ValueError("BASE_GEOGRAPHY missing nta2020")
     if len(set(nta_codes)) != EXPECTED_NTAS:
         raise ValueError("Duplicate BASE_GEOGRAPHY nta2020 values")
+    return nta_codes
 
-    profile_rows = by_type["COMMUNITY_PROFILE"]
+
+def _validate_profile_accounting(profile_rows: list[dict[str, Any]], nta_codes: list[str]) -> None:
     profile_by_nta = Counter(str(row.get("nta2020", "")) for row in profile_rows)
     unknown_profile_ntas = sorted(set(profile_by_nta) - set(nta_codes))
     if unknown_profile_ntas:
-        raise ValueError(
-            f"COMMUNITY_PROFILE references unknown NTAs: {unknown_profile_ntas[:10]}"
-        )
-
+        raise ValueError(f"COMMUNITY_PROFILE references unknown NTAs: {unknown_profile_ntas[:10]}")
     missing_profiles = sorted(code for code in nta_codes if profile_by_nta.get(code, 0) == 0)
-    duplicate_profiles = sorted(
-        code for code, count in profile_by_nta.items() if count != 1
-    )
     if missing_profiles:
         raise ValueError(
             f"BASE_GEOGRAPHY NTAs missing COMMUNITY_PROFILE terminal state: {missing_profiles[:10]}"
         )
+    duplicate_profiles = sorted(code for code, count in profile_by_nta.items() if count != 1)
     if duplicate_profiles:
-        raise ValueError(
-            f"Expected exactly one COMMUNITY_PROFILE per NTA: {duplicate_profiles[:10]}"
-        )
+        raise ValueError(f"Expected exactly one COMMUNITY_PROFILE per NTA: {duplicate_profiles[:10]}")
     if len(profile_rows) != EXPECTED_NTAS:
-        raise ValueError(
-            f"Expected {EXPECTED_NTAS} COMMUNITY_PROFILE records, found {len(profile_rows)}"
-        )
+        raise ValueError(f"Expected {EXPECTED_NTAS} COMMUNITY_PROFILE records, found {len(profile_rows)}")
 
-    base_by_nta = {str(row["nta2020"]): row for row in base}
+
+def _validate_profile_rows(profile_rows: list[dict[str, Any]], base_by_nta: dict[str, dict[str, Any]]) -> None:
     for row in profile_rows:
         code = str(row.get("nta2020", ""))
         state = str(row.get("profile_state", ""))
         if state not in PROFILE_STATES:
             raise ValueError(f"Invalid COMMUNITY_PROFILE state: {state!r}")
         if row.get("culture_label") or row.get("cultural_area_name"):
-            raise ValueError(
-                "COMMUNITY_PROFILE cannot carry a cultural-area classification"
-            )
+            raise ValueError("COMMUNITY_PROFILE cannot carry a cultural-area classification")
         residential = bool(base_by_nta[code].get("residential", True))
         if residential and state == "NOT_APPLICABLE":
-            raise ValueError(
-                f"Residential NTA {code} cannot use COMMUNITY_PROFILE NOT_APPLICABLE"
-            )
+            raise ValueError(f"Residential NTA {code} cannot use COMMUNITY_PROFILE NOT_APPLICABLE")
         if not residential and state != "NOT_APPLICABLE":
-            raise ValueError(
-                f"Nonresidential/special NTA {code} must use COMMUNITY_PROFILE NOT_APPLICABLE"
-            )
+            raise ValueError(f"Nonresidential/special NTA {code} must use COMMUNITY_PROFILE NOT_APPLICABLE")
 
-    for area in by_type["CULTURAL_AREA"]:
+
+def _validate_cultural_areas(areas: list[dict[str, Any]]) -> None:
+    for area in areas:
         sources = area.get("sources")
         if not isinstance(sources, list) or not sources:
-            raise ValueError(
-                f"CULTURAL_AREA {area.get('area_id')} lacks source evidence"
-            )
+            raise ValueError(f"CULTURAL_AREA {area.get('area_id')} lacks source evidence")
         source_objects = [src for src in sources if isinstance(src, dict)]
         if not source_objects:
-            raise ValueError(
-                f"CULTURAL_AREA {area.get('area_id')} lacks usable source evidence"
-            )
+            raise ValueError(f"CULTURAL_AREA {area.get('area_id')} lacks usable source evidence")
         if all(_is_census_source(src) for src in source_objects):
             raise ValueError(f"CULTURAL_AREA {area.get('area_id')} is Census-only")
 
-    for place in by_type["VERIFIED_PLACE"]:
+
+def _validate_verified_places(places: list[dict[str, Any]]) -> None:
+    for place in places:
         disposition = str(place.get("disposition", ""))
         if disposition not in PUBLIC_PLACE_DISPOSITIONS:
-            raise ValueError(
-                f"Public VERIFIED_PLACE must be ACCEPTED, found {disposition!r}"
-            )
+            raise ValueError(f"Public VERIFIED_PLACE must be ACCEPTED, found {disposition!r}")
         if not place.get("business_id") or not place.get("location_id"):
-            raise ValueError(
-                "VERIFIED_PLACE missing canonical business/location identity"
-            )
+            raise ValueError("VERIFIED_PLACE missing canonical business/location identity")
         if not place.get("why_included"):
             raise ValueError("VERIFIED_PLACE missing why_included")
+
+
+def validate(payload: dict[str, Any]) -> dict[str, Any]:
+    if payload.get("contract") != "nycif.borg-culture-discovery-handoff.v1":
+        raise ValueError("Unsupported BORG Culture discovery contract")
+    records = payload.get("records")
+    if not isinstance(records, list):
+        raise ValueError("records must be a list")
+
+    by_type = _group_records(records)
+    base = by_type["BASE_GEOGRAPHY"]
+    nta_codes = _validate_base_rows(base)
+    profile_rows = by_type["COMMUNITY_PROFILE"]
+    _validate_profile_accounting(profile_rows, nta_codes)
+    base_by_nta = {str(row["nta2020"]): row for row in base}
+    _validate_profile_rows(profile_rows, base_by_nta)
+    _validate_cultural_areas(by_type["CULTURAL_AREA"])
+    _validate_verified_places(by_type["VERIFIED_PLACE"])
 
     return {
         "base_count": len(base),
@@ -144,7 +139,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", required=True)
     args = parser.parse_args()
-    payload = json.loads(Path(args.input).read_text(encoding="utf-8"))
+    payload = read_workspace_json(args.input)
     summary = validate(payload)
     print(json.dumps(summary, sort_keys=True))
     return 0
