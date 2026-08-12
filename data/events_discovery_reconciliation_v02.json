@@ -1,54 +1,55 @@
 {
-  "accepted_canonical_records": 32353,
+  "accepted_canonical_records": 31989,
   "disposition_totals": {
-    "list_only_records": 4017,
+    "list_only_records": 4052,
     "maintenance_or_closure_records": 81,
-    "private_or_reserved_records": 26,
+    "private_or_reserved_records": 25,
     "records_grouped_under_public_events": 0,
-    "standalone_public_events": 28229
+    "standalone_public_events": 27831
   },
   "equations": {
     "accepted_equals_disposition_sum": true,
-    "accepted_sum": 32353,
-    "calendar_parks_accepted_or_unlinked": 4571,
+    "accepted_sum": 31989,
+    "calendar_parks_accepted_or_unlinked": 4505,
     "calendar_parks_documented_exclusions": 17,
     "calendar_parks_documented_human_rejected": 17,
     "calendar_parks_documented_source_canceled": 0,
     "calendar_parks_exact_duplicate_rows_excluded": 0,
-    "calendar_parks_raw": 4588,
+    "calendar_parks_raw": 4522,
     "calendar_parks_unaccounted_gap": 0,
     "calendar_parks_unaccounted_gap_raw": 17,
-    "disposition_sum": 32353,
+    "disposition_sum": 31989,
     "open_data_disposition_rejected": 0,
-    "open_data_rows": 27562,
-    "open_data_staged": 26393,
-    "open_data_unstaged_intake": 1169,
+    "open_data_rows": 27264,
+    "open_data_staged": 25918,
+    "open_data_unstaged_intake": 1346,
     "projected_feast_reference_intake": 220
   },
-  "generated_at_utc": "2026-08-11T13:12:20Z",
+  "generated_at_utc": "2026-08-12T12:12:55Z",
   "generated_or_duplicative_excluded_from_source_count": true,
   "invalid_rejected_source_records": 0,
-  "list_only_coordinate_records": 3981,
-  "map_ready_records": 28372,
+  "list_only_coordinate_records": 4019,
+  "map_ready_records": 27970,
   "notes": [
     "Generated schema dumps and duplicative all-radar/enriched feeds excluded from raw intake.",
     "Open-data accounting uses staged dated occurrences + occurrence-keyed unstaged season intake + disposition rejects."
   ],
   "public_event_groups": 0,
   "raw_breakdown": {
-    "calendar": 2813,
-    "parks_bigapps": 1775,
-    "raw_nyc_open_data": 27562
+    "calendar": 2672,
+    "parks_bigapps": 1850,
+    "raw_nyc_open_data": 27264
   },
-  "raw_intake_source_rows": 32150,
+  "raw_intake_source_rows": 31786,
   "reconciles": true,
   "reconciles_disposition_layer": true,
   "reconciles_strict": true,
   "role_totals": {
     "maintenance_or_closure": 81,
-    "private_or_reserved_activity": 26,
-    "public_event": 32165,
-    "street_closure": 81
+    "private_or_reserved_activity": 25,
+    "public_event": 31795,
+    "street_closure": 87,
+    "transportation_operation": 1
   },
   "strict_gate_reason": "all source occurrences accepted or explicitly dispositioned; disposition equation balanced"
 }

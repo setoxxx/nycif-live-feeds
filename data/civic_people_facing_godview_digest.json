@@ -74,10 +74,10 @@
       "quarantined": 0
     },
     "oac_activities": {
-      "accepted": 1466,
+      "accepted": 1453,
       "list_only": 11,
-      "map_ready": 1455,
-      "quarantined": 783
+      "map_ready": 1442,
+      "quarantined": 796
     },
     "ready_ny_events": {
       "accepted": 0,
@@ -130,32 +130,32 @@
     "promotion_allowed": false
   },
   "counts": {
-    "accepted": 4719,
-    "events": 1466,
+    "accepted": 4706,
+    "events": 1453,
     "help_places": 2109,
     "list_only": 1291,
-    "map_ready": 3428,
-    "money_day_today": 2,
-    "money_day_tomorrow": 7,
+    "map_ready": 3415,
+    "money_day_today": 7,
+    "money_day_tomorrow": 5,
     "opportunities": 1144,
-    "photographer_calendar_events": 228,
-    "photographer_days_with_coverage": 41,
+    "photographer_calendar_events": 229,
+    "photographer_days_with_coverage": 40,
     "pin_demotions": 0,
-    "pin_map_ready_certified": 3674,
+    "pin_map_ready_certified": 3665,
     "proposed": 489,
-    "quarantined": 6751,
-    "shoot_day_today_certified": 2,
-    "shoot_day_tomorrow_certified": 7,
-    "upcoming_next_30_days": 379,
-    "upcoming_next_7_days": 96,
+    "quarantined": 6764,
+    "shoot_day_today_certified": 7,
+    "shoot_day_tomorrow_certified": 5,
+    "upcoming_next_30_days": 384,
+    "upcoming_next_7_days": 102,
     "viral_next_14d_magnets": 37,
-    "viral_recurrence_matches": 228,
+    "viral_recurrence_matches": 229,
     "viral_returning_likely": 116
   },
   "daily_pull": {
-    "last_run_utc": "2026-08-11T13:12:42Z",
-    "photographer_calendar_events": 228,
-    "photographer_days_with_coverage": 41,
+    "last_run_utc": "2026-08-12T12:13:14Z",
+    "photographer_calendar_events": 229,
+    "photographer_days_with_coverage": 40,
     "qa_pass": true,
     "report": "data/daily_people_facing_sync_report.json"
   },
@@ -172,7 +172,7 @@
     "honesty": "NYC Open Data does not currently provide a high-quality live citywide soup-kitchen or food-pantry pin feed suitable for map publication.",
     "status": "known_gap_human_follow_up"
   },
-  "generated_at_utc": "2026-08-11T13:13:17Z",
+  "generated_at_utc": "2026-08-12T12:13:49Z",
   "lanes": {
     "Approved": "schema-v1-discovery approved permits (unchanged)",
     "Help Places": "schema-v1-civic-review/help (markets + benefits/SNAP/drop-in/Homebase/aging/NYCHA)",
@@ -190,9 +190,9 @@
     "artifact": "data/photographer_assignment_calendar_2mo.json",
     "coordinate_status_counts": {
       "list_only": 28,
-      "map_ready": 200
+      "map_ready": 201
     },
-    "days_with_coverage": 41,
+    "days_with_coverage": 40,
     "go_shoot_these": [
       {
         "assignment_score": 580,
@@ -907,13 +907,13 @@
     ],
     "month_counts": [
       {
-        "days_with_events": 20,
-        "event_count": 127,
+        "days_with_events": 19,
+        "event_count": 126,
         "label": "August 2026"
       },
       {
         "days_with_events": 21,
-        "event_count": 101,
+        "event_count": 103,
         "label": "September 2026"
       }
     ],
@@ -922,21 +922,21 @@
     "premium_label": "Photographer Assignment Calendar (premium/operator) — Money-Day Desk v2",
     "qa_pass": true,
     "quality": {
-      "events_removed_vs_baseline": 614,
+      "events_removed_vs_baseline": 613,
       "qa_pass": true,
       "report": "data/photographer_money_day_quality_report.json",
       "top_exclude_reasons": [
         [
           "no_money_day_keyword_signal",
-          539
+          528
         ],
         [
           "routine_activity_excluded",
-          86
+          85
         ],
         [
           "thin_or_non_money_title_excluded",
-          8
+          7
         ],
         [
           "below_score_threshold",
@@ -946,120 +946,109 @@
     },
     "report": "data/photographer_assignment_calendar_report.json",
     "today_pack": {
-      "borough_cluster_count": 2,
-      "date": "2026-08-11",
-      "map_ready_count": 2,
-      "total_events": 2
-    },
-    "tomorrow_pack": {
       "borough_cluster_count": 3,
       "date": "2026-08-12",
       "map_ready_count": 7,
+      "total_events": 7
+    },
+    "tomorrow_pack": {
+      "borough_cluster_count": 2,
+      "date": "2026-08-13",
+      "map_ready_count": 5,
       "top_go_shoot": [
         {
           "borough": "Manhattan",
-          "score": 380,
-          "time": "2026-08-12T15:00:00.000",
-          "title": "Music Speaks Festival, Inc."
+          "score": 440,
+          "time": "2026-08-13T10:00:00.000",
+          "title": "Times Square Arts Artist-in-Residence Performance"
         },
         {
-          "borough": "Manhattan",
-          "score": 380,
-          "time": "2026-08-12T20:30:00.000",
-          "title": "Sunset Film Festival"
-        },
-        {
-          "borough": "Manhattan",
-          "score": 340,
-          "time": "2026-08-12T12:00:00.000",
-          "title": "East 125th Street Farmstand"
-        },
-        {
-          "borough": "Bronx",
-          "score": 340,
-          "time": "2026-08-12T08:00:00.000",
-          "title": "HHFM Hunts Point Market"
-        },
-        {
-          "borough": "Brooklyn",
-          "score": 340,
-          "time": "2026-08-12T08:00:00.000",
-          "title": "HHFM Kings County Hospital Market"
+          "borough": "Queens",
+          "score": 400,
+          "time": "2026-08-13T18:00:00.000",
+          "title": "Rally for Flushing Meadows Corona Park"
         },
         {
           "borough": "Manhattan",
           "score": 340,
-          "time": "2026-08-12T09:00:00.000",
-          "title": "NYP Youth Market - Broadway"
+          "time": "2026-08-13T08:00:00.000",
+          "title": "HHFM East Harlem Market"
+        },
+        {
+          "borough": "Manhattan",
+          "score": 340,
+          "time": "2026-08-13T09:00:00.000",
+          "title": "NYP Youth Market - Audubon"
         },
         {
           "borough": "Manhattan",
           "score": 310,
-          "time": "2026-08-12T12:00:00.000",
+          "time": "2026-08-13T12:00:00.000",
           "title": "TSQ LIVE: 45/46 Plaza Programming"
         }
       ],
-      "total_events": 7
+      "total_events": 5
     },
     "tomorrow_top_go_shoot": [
       {
-        "assignment_score": 380,
+        "assignment_score": 440,
         "borough": "Manhattan",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-08-12",
-        "display_location": "White Playground: Playground   ,White Playground: Basketball-01 ,White Playground: Basketball-02",
-        "end_date_time": "2026-08-12T20:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-12&assignment=1",
-        "id": "tvpp-9vvx:915393@2026-08-12",
+        "date": "2026-08-13",
+        "display_location": "Times Square: 46/47 Broadway Pedestrian Plaza (Times Sq) BROADWAY between WEST   46 STREET and WEST   47 STREET",
+        "end_date_time": "2026-08-13T23:59:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-13&assignment=1",
+        "id": "tvpp-9vvx:939842@2026-08-13",
         "lane": "approved_major",
-        "latitude": 40.79164,
+        "latitude": 40.7562,
         "location_cache_modified": false,
-        "longitude": -73.94591,
-        "map_link": "https://www.google.com/maps?q=40.79164,-73.94591",
+        "longitude": -73.98653,
+        "map_link": "https://www.google.com/maps?q=40.7562,-73.98653",
         "pin_integrity_reason": "ok_nyc_certified",
         "promotion_allowed": false,
         "public_map_modified": false,
         "source": {
           "dataset": "tvpp-9vvx",
-          "source_event_id": "915393"
+          "source_event_id": "939842"
         },
-        "start_date_time": "2026-08-12T15:00:00.000",
-        "title": "Music Speaks Festival, Inc.",
+        "start_date_time": "2026-08-13T10:00:00.000",
+        "title": "Times Square Arts Artist-in-Residence Performance",
         "why_selected": [
           "significance_major_floor",
           "carried_major_score_capped:120",
-          "keyword_street_fair_festival"
+          "keyword_spectacle",
+          "keyword_plaza_programming"
         ]
       },
       {
-        "assignment_score": 380,
-        "borough": "Manhattan",
+        "assignment_score": 400,
+        "borough": "Queens",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-08-12",
-        "display_location": "Carl Schurz Park: Basketball-01   ,Carl Schurz Park: Basketball-02   ,Carl Schurz Park: Hockey-01",
-        "end_date_time": "2026-08-12T22:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-12&assignment=1",
-        "id": "tvpp-9vvx:891325@2026-08-12",
+        "date": "2026-08-13",
+        "display_location": "Flushing Meadows Corona Park: Flushing Meadows Corona Park",
+        "end_date_time": "2026-08-13T19:30:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-13&assignment=1",
+        "id": "tvpp-9vvx:957017@2026-08-13",
         "lane": "approved_major",
-        "latitude": 40.77514,
+        "latitude": 40.74726,
         "location_cache_modified": false,
-        "longitude": -73.94354,
-        "map_link": "https://www.google.com/maps?q=40.77514,-73.94354",
+        "longitude": -73.84333,
+        "map_link": "https://www.google.com/maps?q=40.74726,-73.84333",
         "pin_integrity_reason": "ok_nyc_certified",
         "promotion_allowed": false,
         "public_map_modified": false,
         "source": {
           "dataset": "tvpp-9vvx",
-          "source_event_id": "891325"
+          "source_event_id": "957017"
         },
-        "start_date_time": "2026-08-12T20:30:00.000",
-        "title": "Sunset Film Festival",
+        "start_date_time": "2026-08-13T18:00:00.000",
+        "title": "Rally for Flushing Meadows Corona Park",
         "why_selected": [
           "significance_major_floor",
           "carried_major_score_capped:120",
-          "keyword_street_fair_festival"
+          "keyword_civic_gathering"
         ]
       },
       {
@@ -1067,85 +1056,25 @@
         "borough": "Manhattan",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-08-12",
-        "display_location": "EAST  125 STREET between PARK AVENUE and LEXINGTON AVENUE",
-        "end_date_time": "2026-08-12T19:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-12&assignment=1",
-        "id": "tvpp-9vvx:929976@2026-08-12",
+        "date": "2026-08-13",
+        "display_location": "EAST  104 STREET between THIRD AVENUE and SECOND AVENUE",
+        "end_date_time": "2026-08-13T15:00:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-13&assignment=1",
+        "id": "tvpp-9vvx:914367@2026-08-13",
         "lane": "approved_major",
-        "latitude": 40.772504,
+        "latitude": 40.735735,
         "location_cache_modified": false,
-        "longitude": -73.96352,
-        "map_link": "https://www.google.com/maps?q=40.772504,-73.96352",
+        "longitude": -73.906958,
+        "map_link": "https://www.google.com/maps?q=40.735735,-73.906958",
         "pin_integrity_reason": "ok_nyc_certified",
         "promotion_allowed": false,
         "public_map_modified": false,
         "source": {
           "dataset": "tvpp-9vvx",
-          "source_event_id": "929976"
+          "source_event_id": "914367"
         },
-        "start_date_time": "2026-08-12T12:00:00.000",
-        "title": "East 125th Street Farmstand",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_market"
-        ]
-      },
-      {
-        "assignment_score": 340,
-        "borough": "Bronx",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-08-12",
-        "display_location": "SOUTHERN BOULEVARD between BARRETTO STREET and TIFFANY STREET",
-        "end_date_time": "2026-08-12T15:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-12&assignment=1",
-        "id": "tvpp-9vvx:914346@2026-08-12",
-        "lane": "approved_major",
-        "latitude": 40.768565,
-        "location_cache_modified": false,
-        "longitude": -73.939383,
-        "map_link": "https://www.google.com/maps?q=40.768565,-73.939383",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "914346"
-        },
-        "start_date_time": "2026-08-12T08:00:00.000",
-        "title": "HHFM Hunts Point Market",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_market"
-        ]
-      },
-      {
-        "assignment_score": 340,
-        "borough": "Brooklyn",
-        "certified_pin": true,
-        "coordinate_status": "map_ready",
-        "date": "2026-08-12",
-        "display_location": "CLARKSON AVENUE between EAST   37 STREET and EAST   38 STREET",
-        "end_date_time": "2026-08-12T15:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-12&assignment=1",
-        "id": "tvpp-9vvx:930126@2026-08-12",
-        "lane": "approved_major",
-        "latitude": 40.7040295,
-        "location_cache_modified": false,
-        "longitude": -73.9580695,
-        "map_link": "https://www.google.com/maps?q=40.7040295,-73.9580695",
-        "pin_integrity_reason": "ok_nyc_certified",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "tvpp-9vvx",
-          "source_event_id": "930126"
-        },
-        "start_date_time": "2026-08-12T08:00:00.000",
-        "title": "HHFM Kings County Hospital Market",
+        "start_date_time": "2026-08-13T08:00:00.000",
+        "title": "HHFM East Harlem Market",
         "why_selected": [
           "significance_major_floor",
           "carried_major_score_capped:120",
@@ -1157,25 +1086,25 @@
         "borough": "Manhattan",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-08-12",
-        "display_location": "BROADWAY between DYCKMAN STREET and CUMMING STREET",
-        "end_date_time": "2026-08-12T14:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-12&assignment=1",
-        "id": "tvpp-9vvx:941639@2026-08-12",
+        "date": "2026-08-13",
+        "display_location": "AUDUBON AVENUE between WEST  166 STREET and WEST  167 STREET",
+        "end_date_time": "2026-08-13T14:00:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-13&assignment=1",
+        "id": "tvpp-9vvx:941637@2026-08-13",
         "lane": "approved_major",
-        "latitude": 40.7872345,
+        "latitude": 40.8400155,
         "location_cache_modified": false,
-        "longitude": -73.96847,
-        "map_link": "https://www.google.com/maps?q=40.7872345,-73.96847",
+        "longitude": -73.9374135,
+        "map_link": "https://www.google.com/maps?q=40.8400155,-73.9374135",
         "pin_integrity_reason": "ok_nyc_certified",
         "promotion_allowed": false,
         "public_map_modified": false,
         "source": {
           "dataset": "tvpp-9vvx",
-          "source_event_id": "941639"
+          "source_event_id": "941637"
         },
-        "start_date_time": "2026-08-12T09:00:00.000",
-        "title": "NYP Youth Market - Broadway",
+        "start_date_time": "2026-08-13T09:00:00.000",
+        "title": "NYP Youth Market - Audubon",
         "why_selected": [
           "significance_major_floor",
           "carried_major_score_capped:120",
@@ -1187,11 +1116,11 @@
         "borough": "Manhattan",
         "certified_pin": true,
         "coordinate_status": "map_ready",
-        "date": "2026-08-12",
+        "date": "2026-08-13",
         "display_location": "Times Square: 45/46 Broadway Pedestrian Plaza (Times Sq) BROADWAY between WEST   45 STREET and WEST   46 STREET,  WEST   46 STREET between 7 AVENUE and 8 AVENUE",
-        "end_date_time": "2026-08-12T21:00:00.000",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-12&assignment=1",
-        "id": "tvpp-9vvx:898494@2026-08-12",
+        "end_date_time": "2026-08-13T21:00:00.000",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-13&assignment=1",
+        "id": "tvpp-9vvx:898494@2026-08-13",
         "lane": "approved_major",
         "latitude": 40.7562,
         "location_cache_modified": false,
@@ -1204,7 +1133,7 @@
           "dataset": "tvpp-9vvx",
           "source_event_id": "898494"
         },
-        "start_date_time": "2026-08-12T12:00:00.000",
+        "start_date_time": "2026-08-13T12:00:00.000",
         "title": "TSQ LIVE: 45/46 Plaza Programming",
         "why_selected": [
           "significance_major_floor",
@@ -1213,7 +1142,7 @@
         ]
       }
     ],
-    "total_events": 228,
+    "total_events": 229,
     "viral_recurrence": {
       "artifact": "data/photographer_viral_recurrence_matches.json",
       "foil_index": "data/sapo_foil_operator_index.json",
@@ -1221,9 +1150,9 @@
       "label_counts": {
         "possible": 64,
         "returning_likely": 116,
-        "weak": 48
+        "weak": 49
       },
-      "match_count": 228,
+      "match_count": 229,
       "next_14d_crowd_magnets": 37,
       "next_14d_top": [
         {
@@ -1630,8 +1559,8 @@
     "demotion_count": 0,
     "demotion_reason_counts": {},
     "demotions": "data/pin_integrity_demotions.json",
-    "map_ready_after_total": 3674,
-    "map_ready_before_total": 3674,
+    "map_ready_after_total": 3665,
+    "map_ready_before_total": 3665,
     "qa_pass": true,
     "report": "data/pin_integrity_gate_report.json",
     "rule": "ZERO map_ready rows may fail NYC certification"
@@ -1670,25 +1599,10 @@
     "premium_label": "Shoot Day Certified Pack (premium/operator)",
     "qa_pass": true,
     "report": "data/photographer_shoot_day_certified_report.json",
-    "today_certified_pins": 2,
-    "today_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-11&assignment=1",
+    "today_certified_pins": 7,
+    "today_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-12&assignment=1",
     "today_needs_location": 0,
     "today_top": [
-      {
-        "borough": "Manhattan",
-        "recurrence_label": "returning_likely",
-        "title": "TSQ LIVE: 45/46 Plaza Programming"
-      },
-      {
-        "borough": "Brooklyn",
-        "recurrence_label": "weak",
-        "title": "NYP Youth Market - Brooklyn"
-      }
-    ],
-    "tomorrow_certified_pins": 7,
-    "tomorrow_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-12&assignment=1",
-    "tomorrow_needs_location": 0,
-    "tomorrow_top": [
       {
         "borough": "Manhattan",
         "recurrence_label": "returning_likely",
@@ -1723,6 +1637,36 @@
         "borough": "Manhattan",
         "recurrence_label": "possible",
         "title": "East 125th Street Farmstand"
+      }
+    ],
+    "tomorrow_certified_pins": 5,
+    "tomorrow_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-13&assignment=1",
+    "tomorrow_needs_location": 0,
+    "tomorrow_top": [
+      {
+        "borough": "Manhattan",
+        "recurrence_label": "returning_likely",
+        "title": "TSQ LIVE: 45/46 Plaza Programming"
+      },
+      {
+        "borough": "Queens",
+        "recurrence_label": null,
+        "title": "Rally for Flushing Meadows Corona Park"
+      },
+      {
+        "borough": "Manhattan",
+        "recurrence_label": null,
+        "title": "Times Square Arts Artist-in-Residence Performance"
+      },
+      {
+        "borough": "Manhattan",
+        "recurrence_label": "weak",
+        "title": "HHFM East Harlem Market"
+      },
+      {
+        "borough": "Manhattan",
+        "recurrence_label": "weak",
+        "title": "NYP Youth Market - Audubon"
       }
     ]
   }

@@ -1,32 +1,32 @@
 {
   "borough_counts": {
-    "Bronx": 3477,
-    "Brooklyn": 6101,
-    "Manhattan": 10053,
-    "Queens": 5728,
-    "Staten Island": 1034
+    "Bronx": 3375,
+    "Brooklyn": 6021,
+    "Manhattan": 9913,
+    "Queens": 5605,
+    "Staten Island": 1004
   },
   "category_counts": {
-    "arts": 166,
-    "fitness": 173,
+    "arts": 163,
+    "fitness": 166,
     "general": 17,
-    "market": 950,
-    "parks": 3624,
-    "sports": 21463
+    "market": 951,
+    "parks": 3612,
+    "sports": 21009
   },
   "cross_date_street_occurrences_suppressed": 0,
   "duplicate_policy": {
     "production_feeds_modified": false,
     "street_events": "dedupe only exact title + borough + location + coordinate + date + start/end + CEMS occurrence; recurring dates remain distinct"
   },
-  "eligible_rows_before_one_day_street_dedupe": 26393,
+  "eligible_rows_before_one_day_street_dedupe": 25918,
   "exact_occurrence_duplicates_suppressed": 0,
-  "generated_at_utc": "2026-08-11T13:12:15.892703+00:00",
+  "generated_at_utc": "2026-08-12T12:12:51.090255+00:00",
   "match_counts": {
-    "event_id": 510,
-    "location_cache": 24603,
-    "tier_1_gazetteer_display": 562,
-    "tier_2_geosearch_cache": 711,
+    "event_id": 494,
+    "location_cache": 24109,
+    "tier_1_gazetteer_display": 577,
+    "tier_2_geosearch_cache": 731,
     "tier_2_geosearch_midpoint": 7
   },
   "one_day_street_duplicates_suppressed": 0,
@@ -34,54 +34,6 @@
   "production_ready": true,
   "sample_exact_occurrence_rejected_rows": [],
   "sample_skipped_rows": [
-    {
-      "borough": "Manhattan",
-      "display_location": "GREENE STREET between GRAND STREET and CANAL STREET",
-      "display_time": "7:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "964965",
-      "title": "MKG - Pop-up event"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "BROADWAY between WALKER STREET and WHITE STREET",
-      "display_time": "10:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "965657",
-      "title": "Production truck Staging"
-    },
-    {
-      "borough": "Staten Island",
-      "display_location": "CANAL STREET between WRIGHT STREET and BAY STREET",
-      "display_time": "11:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "963608",
-      "title": "Black Business Outreach: Staten Island"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "BOERUM PLACE between JORALEMON STREET and LIVINGSTON STREET",
-      "display_time": "12:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "966438",
-      "title": "Workforce 1 Community street Event"
-    },
-    {
-      "borough": "Queens",
-      "display_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
-      "display_time": "12:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "964160",
-      "title": "Boombox in Jamaica"
-    },
-    {
-      "borough": "Staten Island",
-      "display_location": "BROAD STREET between CEDAR STREET and GORDON STREET",
-      "display_time": "3:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "942799",
-      "title": "Stapleton Local NeighborhoodSTAT 2026"
-    },
     {
       "borough": "Manhattan",
       "display_location": "JOHN STREET between SOUTH STREET and FRONT STREET",
@@ -100,6 +52,14 @@
     },
     {
       "borough": "Manhattan",
+      "display_location": "WEST   50 STREET between ROCKEFELLER PLAZA and 5 AVENUE",
+      "display_time": "7:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "964619",
+      "title": "1-Council on the Environment-Greenmarket at Rockefeller Center"
+    },
+    {
+      "borough": "Manhattan",
       "display_location": "GREENE STREET between GRAND STREET and CANAL STREET",
       "display_time": "7:00 AM",
       "source_cemsid": [],
@@ -113,6 +73,14 @@
       "source_cemsid": [],
       "source_event_id": "964160",
       "title": "Boombox in Jamaica"
+    },
+    {
+      "borough": "Bronx",
+      "display_location": "TOWNSEND AVENUE between EAST  170 STREET and EAST  171 STREET",
+      "display_time": "2:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "954514",
+      "title": "170 Farm Stand"
     },
     {
       "borough": "Manhattan",
@@ -137,6 +105,14 @@
       "source_cemsid": [],
       "source_event_id": "961880",
       "title": "NYC ACS Annual Keisha J. Baxter Back to School Community and Resource Fair"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "WEST  120 STREET between MORNINGSIDE DRIVE and AMSTERDAM AVENUE,  EDGECOMBE AVENUE between WEST  142 STREET and WEST  141 STREET",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "164757",
+      "title": "TEST EVENT- Pedestrian Plaza asfsda fdsf."
     },
     {
       "borough": "Brooklyn",
@@ -195,11 +171,37 @@
       "source_cemsid": [],
       "source_event_id": "948153",
       "title": "Love Thy neighbor"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "WEST  120 STREET between MORNINGSIDE DRIVE and AMSTERDAM AVENUE,  EDGECOMBE AVENUE between WEST  142 STREET and WEST  141 STREET",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "164757",
+      "title": "TEST EVENT- Pedestrian Plaza asfsda fdsf."
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "SACKETT STREET between VAN BRUNT STREET and DEAD END",
+      "display_time": "12:00 PM",
+      "source_cemsid": [
+        "0"
+      ],
+      "source_event_id": "964434",
+      "title": "Sackett St Open Streets Event"
+    },
+    {
+      "borough": "Queens",
+      "display_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
+      "display_time": "12:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "964160",
+      "title": "Boombox in Jamaica"
     }
   ],
-  "skipped_needs_review_or_bad_gps": 230,
+  "skipped_needs_review_or_bad_gps": 280,
   "source": "nycif_live_test_enriched_events.json",
   "staged_feed": true,
-  "staged_feed_events": 26393,
-  "test_feed_rows_loaded": 26623
+  "staged_feed_events": 25918,
+  "test_feed_rows_loaded": 26198
 }
