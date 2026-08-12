@@ -2,14 +2,13 @@
 from __future__ import annotations
 
 import argparse
-import json
 from collections import Counter
 from typing import Any
 
 try:
-    from scripts.borg_cli_paths import resolve_workspace_file
+    from scripts.borg_cli_paths import read_workspace_json, write_workspace_json
 except ModuleNotFoundError:  # direct execution from scripts/
-    from borg_cli_paths import resolve_workspace_file
+    from borg_cli_paths import read_workspace_json, write_workspace_json
 
 FORBIDDEN_FIELDS = {
     "raw_audio",
@@ -25,18 +24,12 @@ LOCATION_STATES = {"resolved", "ambiguous", "unresolved", "review_required"}
 
 
 def _approved_terms(observation: dict[str, Any], terminology: dict[str, dict[str, Any]]) -> list[dict[str, Any]]:
-    terms: list[dict[str, Any]] = []
-    for ref in observation.get("terminology_refs") or []:
-        term = terminology.get(str(ref))
-        if not term:
-            continue
-        if str(term.get("review_status", "")).lower() != "approved":
-            continue
-        terms.append(term)
-    return sorted(
-        terms,
-        key=lambda t: (-float(t.get("confidence", 0)), str(t.get("id", ""))),
-    )
+    terms = [
+        terminology[str(ref)]
+        for ref in observation.get("terminology_refs") or []
+        if str(ref) in terminology and str(terminology[str(ref)].get("review_status", "")).lower() == "approved"
+    ]
+    return sorted(terms, key=lambda t: (-float(t.get("confidence", 0)), str(t.get("id", ""))))
 
 
 def _classification(observation: dict[str, Any], terminology: dict[str, dict[str, Any]]) -> dict[str, Any]:
@@ -73,10 +66,8 @@ def _location(observation: dict[str, Any]) -> dict[str, Any]:
     if state != "resolved":
         public_location_id = None
         geometry = None
-        if not area:
-            area = "Location not yet resolved"
-        if geometry_state == "exact_public":
-            geometry_state = "none"
+        area = area or "Location not yet resolved"
+        geometry_state = "none" if geometry_state == "exact_public" else geometry_state
     elif geometry_state == "exact_public" and not public_location_id:
         raise ValueError("resolved exact_public geometry requires public_location_id")
 
@@ -89,11 +80,77 @@ def _location(observation: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def project_call_coverage(
-    *,
-    observations: list[dict[str, Any]],
-    terminology_records: list[dict[str, Any]],
-) -> dict[str, Any]:
+def _require_unique_call_id(observation: dict[str, Any], seen_ids: set[str], *, sensitive: bool = False) -> str:
+    call_id = str(observation.get("freq_observation_id") or "")
+    if not call_id or call_id in seen_ids:
+        if sensitive:
+            raise ValueError("Sensitive observation still requires a unique freq_observation_id")
+        if not call_id:
+            raise ValueError("freq_observation_id is required")
+        raise ValueError(f"Duplicate freq_observation_id: {call_id}")
+    seen_ids.add(call_id)
+    return call_id
+
+
+def _quarantine_record(observation: dict[str, Any], call_id: str) -> dict[str, Any]:
+    return {
+        "call_id": call_id,
+        "observed_at": observation.get("observed_at"),
+        "jurisdiction_id": observation.get("jurisdiction_id"),
+        "service_class": observation.get("service_class"),
+        "classification_state": "WITHHELD",
+        "call_type": "WITHHELD",
+        "call_label": "Public call record withheld pending sensitive-input review",
+        "call_meaning": None,
+        "public_summary": "Coverage record retained; sensitive input requires review before public projection.",
+        "location_state": "review_required",
+        "public_area_label": "Location withheld pending review",
+        "public_location_id": None,
+        "public_geometry_state": "none",
+        "public_geometry": None,
+        "coverage_disposition": "QUARANTINE_SENSITIVE_INPUT",
+        "provenance_ref": observation.get("provenance_ref"),
+        "terminology_refs": [],
+    }
+
+
+def _disposition(rights_state: str, sensitivity_state: str, classification: dict[str, Any], location: dict[str, Any]) -> str:
+    if rights_state not in {"PUBLIC", "APPROVED", "CLEARED"}:
+        return "RIGHTS_REVIEW_REQUIRED"
+    if sensitivity_state not in {"PUBLIC", "NORMAL", "CLEARED", "NON_TACTICAL"}:
+        return "SENSITIVITY_REVIEW_REQUIRED"
+    if classification["classification_state"] == "PENDING":
+        return "CLASSIFICATION_PENDING_PUBLIC"
+    if location["location_state"] != "resolved":
+        return "CLASSIFIED_PUBLIC_LOCATION_PENDING"
+    return "CLASSIFIED_PUBLIC"
+
+
+def _public_record(observation: dict[str, Any], call_id: str, terminology: dict[str, dict[str, Any]]) -> dict[str, Any]:
+    classification = _classification(observation, terminology)
+    location = _location(observation)
+    disposition = _disposition(
+        str(observation.get("rights_state", "REVIEW_REQUIRED")).upper(),
+        str(observation.get("sensitivity_state", "REVIEW_REQUIRED")).upper(),
+        classification,
+        location,
+    )
+    record = {
+        "call_id": call_id,
+        "observed_at": observation.get("observed_at"),
+        "jurisdiction_id": observation.get("jurisdiction_id"),
+        "service_class": observation.get("service_class"),
+        **classification,
+        **location,
+        "coverage_disposition": disposition,
+        "provenance_ref": observation.get("provenance_ref"),
+        "terminology_refs": classification["term_ids"],
+    }
+    record.pop("term_ids", None)
+    return record
+
+
+def project_call_coverage(*, observations: list[dict[str, Any]], terminology_records: list[dict[str, Any]]) -> dict[str, Any]:
     terminology = {str(row.get("id")): row for row in terminology_records if row.get("id") is not None}
     seen_ids: set[str] = set()
     records: list[dict[str, Any]] = []
@@ -102,72 +159,11 @@ def project_call_coverage(
     for observation in observations:
         if not isinstance(observation, dict):
             raise ValueError("Every FREQ observation must be an object")
-        forbidden = sorted(FORBIDDEN_FIELDS.intersection(observation.keys()))
-        if forbidden:
-            disposition = "QUARANTINE_SENSITIVE_INPUT"
-            call_id = str(observation.get("freq_observation_id") or "")
-            if not call_id or call_id in seen_ids:
-                raise ValueError("Sensitive observation still requires a unique freq_observation_id")
-            seen_ids.add(call_id)
-            records.append({
-                "call_id": call_id,
-                "observed_at": observation.get("observed_at"),
-                "jurisdiction_id": observation.get("jurisdiction_id"),
-                "service_class": observation.get("service_class"),
-                "classification_state": "WITHHELD",
-                "call_type": "WITHHELD",
-                "call_label": "Public call record withheld pending sensitive-input review",
-                "call_meaning": None,
-                "public_summary": "Coverage record retained; sensitive input requires review before public projection.",
-                "location_state": "review_required",
-                "public_area_label": "Location withheld pending review",
-                "public_location_id": None,
-                "public_geometry_state": "none",
-                "public_geometry": None,
-                "coverage_disposition": disposition,
-                "provenance_ref": observation.get("provenance_ref"),
-                "terminology_refs": [],
-            })
-            dispositions[disposition] += 1
-            continue
-
-        call_id = str(observation.get("freq_observation_id") or "")
-        if not call_id:
-            raise ValueError("freq_observation_id is required")
-        if call_id in seen_ids:
-            raise ValueError(f"Duplicate freq_observation_id: {call_id}")
-        seen_ids.add(call_id)
-
-        rights_state = str(observation.get("rights_state", "REVIEW_REQUIRED")).upper()
-        sensitivity_state = str(observation.get("sensitivity_state", "REVIEW_REQUIRED")).upper()
-        classification = _classification(observation, terminology)
-        location = _location(observation)
-
-        if rights_state not in {"PUBLIC", "APPROVED", "CLEARED"}:
-            disposition = "RIGHTS_REVIEW_REQUIRED"
-        elif sensitivity_state not in {"PUBLIC", "NORMAL", "CLEARED", "NON_TACTICAL"}:
-            disposition = "SENSITIVITY_REVIEW_REQUIRED"
-        elif classification["classification_state"] == "PENDING":
-            disposition = "CLASSIFICATION_PENDING_PUBLIC"
-        elif location["location_state"] != "resolved":
-            disposition = "CLASSIFIED_PUBLIC_LOCATION_PENDING"
-        else:
-            disposition = "CLASSIFIED_PUBLIC"
-
-        record = {
-            "call_id": call_id,
-            "observed_at": observation.get("observed_at"),
-            "jurisdiction_id": observation.get("jurisdiction_id"),
-            "service_class": observation.get("service_class"),
-            **classification,
-            **location,
-            "coverage_disposition": disposition,
-            "provenance_ref": observation.get("provenance_ref"),
-            "terminology_refs": classification["term_ids"],
-        }
-        record.pop("term_ids", None)
+        sensitive = bool(FORBIDDEN_FIELDS.intersection(observation.keys()))
+        call_id = _require_unique_call_id(observation, seen_ids, sensitive=sensitive)
+        record = _quarantine_record(observation, call_id) if sensitive else _public_record(observation, call_id, terminology)
         records.append(record)
-        dispositions[disposition] += 1
+        dispositions[record["coverage_disposition"]] += 1
 
     records.sort(key=lambda r: (str(r.get("observed_at") or ""), r["call_id"]))
     return {
@@ -190,15 +186,12 @@ def main() -> int:
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
 
-    observations_path = resolve_workspace_file(args.observations, must_exist=True)
-    terminology_path = resolve_workspace_file(args.terminology, must_exist=True)
-    output_path = resolve_workspace_file(args.output, must_exist=False)
-    observations_payload = json.loads(observations_path.read_text())
-    terminology_payload = json.loads(terminology_path.read_text())
+    observations_payload = read_workspace_json(args.observations)
+    terminology_payload = read_workspace_json(args.terminology)
     observations = observations_payload.get("records", observations_payload)
     terminology_records = terminology_payload.get("records", terminology_payload)
     result = project_call_coverage(observations=observations, terminology_records=terminology_records)
-    output_path.write_text(json.dumps(result, indent=2) + "\n")
+    write_workspace_json(args.output, result)
     return 0
 
 
