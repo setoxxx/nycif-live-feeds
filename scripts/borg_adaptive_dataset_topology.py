@@ -3,13 +3,12 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import json
 from typing import Any
 
 try:
-    from scripts.borg_cli_paths import resolve_workspace_file, workspace_relative
+    from scripts.borg_cli_paths import read_workspace_json, read_workspace_json_with_relative, write_workspace_json
 except ModuleNotFoundError:  # direct execution from scripts/
-    from borg_cli_paths import resolve_workspace_file, workspace_relative
+    from borg_cli_paths import read_workspace_json, read_workspace_json_with_relative, write_workspace_json
 
 TOPOLOGY_CONTRACT = "nycif.borg-topology-projection.v1"
 LEARNING_CONTRACT = "nycif.borg-learning-observation.v1"
@@ -18,7 +17,7 @@ LEARNING_CONTRACT = "nycif.borg-learning-observation.v1"
 def fingerprint_dataset(payload: dict[str, Any]) -> dict[str, Any]:
     records = payload.get("records") or []
     fields = sorted({key for row in records if isinstance(row, dict) for key in row.keys()})
-    material = json.dumps({"contract": payload.get("contract"), "fields": fields}, sort_keys=True).encode()
+    material = __import__("json").dumps({"contract": payload.get("contract"), "fields": fields}, sort_keys=True).encode()
     return {
         "contract_hint": payload.get("contract"),
         "field_signature": fields,
@@ -146,21 +145,17 @@ def main() -> int:
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
 
-    dataset_path = resolve_workspace_file(args.dataset, must_exist=True)
-    registry_path = resolve_workspace_file(args.registry, must_exist=True)
-    output_path = resolve_workspace_file(args.output, must_exist=False)
-    payload = json.loads(dataset_path.read_text())
-    registry = json.loads(registry_path.read_text())
+    payload, dataset_relative = read_workspace_json_with_relative(args.dataset)
     result = interpret_dataset(
         payload=payload,
-        registry=registry,
+        registry=read_workspace_json(args.registry),
         source_id=args.source_id,
         snapshot_id=args.snapshot_id,
         authority_class=args.authority_class,
         sensitivity_class=args.sensitivity_class,
-        provenance={"dataset_path": workspace_relative(dataset_path)},
+        provenance={"dataset_path": dataset_relative},
     )
-    output_path.write_text(json.dumps(result, indent=2) + "\n")
+    write_workspace_json(args.output, result)
     return 0
 
 
