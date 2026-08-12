@@ -10,14 +10,13 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import json
 from datetime import datetime, timezone
 from typing import Any
 
 try:
-    from scripts.borg_cli_paths import resolve_workspace_file
+    from scripts.borg_cli_paths import read_workspace_json, write_workspace_json
 except ModuleNotFoundError:  # direct execution from scripts/
-    from borg_cli_paths import resolve_workspace_file
+    from borg_cli_paths import read_workspace_json, write_workspace_json
 
 CONTRACT = "nycif.borg-source-frontier.v1"
 ALLOWED_ACTIONS = {"FETCH", "RETRY", "REVIEW", "NO_ACTION"}
@@ -45,7 +44,6 @@ def _parse_time(value: str | None) -> datetime | None:
 
 
 def _action(source: dict[str, Any], now: datetime) -> tuple[str, list[str]]:
-    reasons: list[str] = []
     rights = source.get("rights") or {}
     if not rights.get("retrieval_allowed"):
         return "REVIEW", ["RETRIEVAL_NOT_APPROVED"]
@@ -59,12 +57,10 @@ def _action(source: dict[str, Any], now: datetime) -> tuple[str, list[str]]:
     last_success = _parse_time(source.get("last_success_at"))
     freshness_hours = float(source.get("freshness_sla_hours", 24))
     if last_success is None:
-        reasons.append("NEVER_FETCHED")
-        return "FETCH", reasons
+        return "FETCH", ["NEVER_FETCHED"]
     age_hours = max(0.0, (now - last_success).total_seconds() / 3600.0)
     if age_hours > freshness_hours:
-        reasons.append("STALE")
-        return "FETCH", reasons
+        return "FETCH", ["STALE"]
     return "NO_ACTION", ["FRESH"]
 
 
@@ -120,15 +116,12 @@ def main() -> int:
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
 
-    gaps_path = resolve_workspace_file(args.gaps, must_exist=True)
-    sources_path = resolve_workspace_file(args.sources, must_exist=True)
-    output_path = resolve_workspace_file(args.output, must_exist=False)
     result = build_frontier(
-        gaps=json.loads(gaps_path.read_text()),
-        sources=json.loads(sources_path.read_text()),
+        gaps=read_workspace_json(args.gaps),
+        sources=read_workspace_json(args.sources),
         now=datetime.now(timezone.utc),
     )
-    output_path.write_text(json.dumps(result, indent=2) + "\n")
+    write_workspace_json(args.output, result)
     return 0
 
 
