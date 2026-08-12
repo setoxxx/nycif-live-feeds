@@ -1,0 +1,69 @@
+{
+  "contract": "nycif.borg-adaptive-dataset-topology.v1",
+  "status": "DRAFT_PROTECTED",
+  "purpose": "Let BORG isolate an incoming dataset, understand its structure and authority, select an approved interpretation recipe, and project only supported facts into a versioned spatial/topological graph.",
+  "operating_model": [
+    "ISOLATE_DATASET",
+    "FINGERPRINT_SCHEMA",
+    "CLASSIFY_AUTHORITY_AND_SENSITIVITY",
+    "SELECT_APPROVED_RECIPE",
+    "PROJECT_TYPED_FACTS",
+    "BUILD_TOPOLOGY",
+    "RECORD_LEARNING_OBSERVATION",
+    "REVIEW_BEFORE_RECIPE_CHANGE"
+  ],
+  "dataset_envelope": {
+    "required_fields": ["source_id","snapshot_id","schema_fingerprint","row_count","contract_hint","field_signature","authority_class","sensitivity_class","provenance"],
+    "authority_classes": ["AUTHORITATIVE_GEOGRAPHY","AUTHORITATIVE_AGGREGATE_STATISTICS","OFFICIAL_OBSERVATION","SUPPORTING_ASSERTION","UNKNOWN"],
+    "sensitivity_classes": ["PUBLIC_AGGREGATE","PUBLIC_RECORD","PROTECTED_INTERNAL","RESTRICTED","UNKNOWN"]
+  },
+  "interpretation_states": ["RECOGNIZED","RECOGNIZED_WITH_WARNINGS","REVIEW_REQUIRED","QUARANTINE"],
+  "recipe_policy": {
+    "registry_contract": "nycif.borg-dataset-recipe-registry.v1",
+    "approved_recipe_required_for_projection": true,
+    "exact_contract_match_preferred": true,
+    "structural_match_can_suggest_recipe": true,
+    "structural_match_can_self_promote_recipe": false,
+    "unknown_schema_public_projection_allowed": false,
+    "ambiguous_recipe_match_public_projection_allowed": false,
+    "recipe_mutation_requires_review": true,
+    "successful_run_may_generate_learning_observation": true,
+    "learning_observation_changes_authority": false
+  },
+  "topology": {
+    "projection_contract": "nycif.borg-topology-projection.v1",
+    "node_identity_must_be_stable": true,
+    "edge_identity_must_be_deterministic": true,
+    "geometry_and_relationships_remain_separate": true,
+    "allowed_node_types": ["BASE_GEOGRAPHY","COMMUNITY_PROFILE","COMMUNITY_LANGUAGE_PROFILE","CULTURAL_AREA","BUSINESS","LOCATION","EVENT","SOURCE_OBSERVATION"],
+    "allowed_edge_types": ["PROFILE_OF","LANGUAGE_PROFILE_OF","OVERLAPS","CONTAINS","LOCATED_IN","NEAR","ASSERTS_LOCATION","SUPPORTS","HAS_CATEGORY"],
+    "spatial_predicate_authority_required": true,
+    "provenance_required_on_every_node_and_edge": true,
+    "confidence_required_when_relationship_is_not_exact": true,
+    "contradictions_are_preserved_not_overwritten": true
+  },
+  "adaptation": {
+    "meaning": "BORG reuses approved recipes for recurring schema signatures and records evidence about successful, warning, review and quarantine outcomes. It may recommend a new or revised recipe but may not edit production authority or promote a recipe by itself.",
+    "memory_unit": "LEARNING_OBSERVATION",
+    "memory_fields": ["schema_fingerprint","recipe_id","interpretation_state","row_count","warnings","unknown_fields","candidate_recipe_action"],
+    "candidate_recipe_actions": ["NONE","REUSE_EXISTING","REVIEW_NEW_SCHEMA","REVIEW_RECIPE_UPDATE"]
+  },
+  "hard_invariants": [
+    "A dataset is never dropped because BORG does not understand it; it receives an explicit terminal interpretation state.",
+    "Unknown structure never becomes public topology by guesswork.",
+    "Aggregate demographics cannot create Culture identity, Culture labels, Culture boundaries, business identity or person identity.",
+    "Coordinates from a non-location-authority dataset remain assertions and cannot become exact publication pins.",
+    "A spatial overlap or containment edge may be created only from approved geometry authority or an approved downstream ENIGMA computation.",
+    "Competing source assertions are preserved; no silent source-wins overwrite.",
+    "Recipe learning never mutates production rules without review.",
+    "Zero-silent-loss accounting is required from dataset rows through interpretation disposition."
+  ],
+  "authority": {
+    "producer": "BORG",
+    "geospatial_authority": "ENIGMA / approved canonical geography path",
+    "event_identity_authority": "OccurrenceIdentityV2 / current canonical event path",
+    "business_identity_authority": "Universal Business Registry / canonical business path",
+    "public_runtime": "National Map",
+    "no_second_authority": true
+  }
+}

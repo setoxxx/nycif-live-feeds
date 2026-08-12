@@ -1,0 +1,115 @@
+{
+  "contract": "nycif.borg-freq-discovery-bridge.v1",
+  "status": "DRAFT_PROTECTED_FUTURE_CONSUMER",
+  "purpose": "Define a narrow future interface where FREQ may supply a rights-cleared, non-tactical public-safety observation that BORG can use to discover corroborating public data and build reader-safe spatial context. This contract does not activate FREQ or alter its current integration freeze.",
+  "upstream_authority": "FREQ",
+  "downstream_consumer": "BORG",
+  "jurisdiction_scope": "NYC initially",
+  "observation_input": {
+    "required_fields": [
+      "freq_observation_id",
+      "observed_at",
+      "jurisdiction_id",
+      "service_class",
+      "rights_state",
+      "sensitivity_state",
+      "location_state",
+      "location_evidence_ref",
+      "terminology_refs",
+      "provenance_ref"
+    ],
+    "optional_fields": [
+      "public_area_label",
+      "public_location_id",
+      "public_geometry_state",
+      "public_geometry",
+      "public_summary_terms",
+      "official_source_refs"
+    ],
+    "forbidden_fields": [
+      "raw_audio",
+      "raw_iq",
+      "private_transcript",
+      "receiver_exact_location",
+      "private_responder_identity",
+      "tactical_detail",
+      "encryption_key_material",
+      "unpublished_exact_incident_coordinates"
+    ]
+  },
+  "location_rules": {
+    "states": ["resolved", "ambiguous", "unresolved", "review_required"],
+    "freq_location_evidence_is_preserved": true,
+    "borg_may_infer_incident_location_from_receiver_location": false,
+    "borg_may_triangulate_transmitter_or_caller_location": false,
+    "coordinate_presence_alone_creates_exact_authority": false,
+    "exact_public_geometry_requires_upstream_public_authorization_and_canonical_location_acceptance": true,
+    "ambiguous_or_unresolved_observation_may_trigger_area_level_search": true,
+    "ambiguous_or_unresolved_observation_may_create_exact_public_pin": false
+  },
+  "borg_actions": [
+    "REGISTER_SOURCE_OBSERVATION",
+    "ATTACH_TOPOLOGY_CONTEXT",
+    "GENERATE_PUBLIC_SOURCE_SEARCH_PLAN",
+    "SEARCH_OFFICIAL_CITY_AND_AGENCY_SOURCES",
+    "SEARCH_RELEVANT_PUBLIC_DATASETS",
+    "SEARCH_OFFICIAL_PUBLIC_NOTICES_AND_ADVISORIES",
+    "CORROBORATE_OR_RECORD_EVIDENCE_GAP",
+    "HAND_OFF_LOCATION_ASSERTIONS_TO_ENIGMA",
+    "HAND_OFF_EVENT_CANDIDATES_TO_CANONICAL_EVENT_PATH"
+  ],
+  "search_plan": {
+    "allowed_inputs": [
+      "jurisdiction_id",
+      "service_class",
+      "public_area_label",
+      "public_location_id",
+      "public_summary_terms",
+      "terminology_refs",
+      "observed_at"
+    ],
+    "must_not_include": [
+      "raw_audio_content",
+      "private transcript text",
+      "private identities",
+      "secret/token material",
+      "receiver exact coordinates"
+    ],
+    "priority_sources": [
+      "official agency APIs and datasets",
+      "official city public-safety and service advisories",
+      "official traffic/closure/public-space notices",
+      "official agency press/public information pages",
+      "other first-party public sources",
+      "discovery-only web sources for leads requiring corroboration"
+    ]
+  },
+  "topology_projection": {
+    "observation_node_type": "SOURCE_OBSERVATION",
+    "allowed_edges": ["SUPPORTS", "ASSERTS_LOCATION", "LOCATED_IN", "NEAR"],
+    "location_assertion_edge_does_not_create_location_truth": true,
+    "near_edge_requires_approved_spatial_computation": true,
+    "source_provenance_required": true,
+    "contradictions_preserved": true
+  },
+  "public_projection": {
+    "freq_public_alert_truth_remains_in_freq": true,
+    "borg_cannot_activate_or_deactivate_freq_alert": true,
+    "borg_corroboration_may_enrich_context_but_cannot_manufacture_alert": true,
+    "national_map_consumes_only_reader_safe_public_projection": true
+  },
+  "learning": {
+    "borg_may_learn_which_public_sources_typically_correlate_with_a_service_class_or_area": true,
+    "borg_may_learn_source_latency_and_failure_patterns": true,
+    "borg_may_rank_future_search_plans": true,
+    "borg_may_not_learn_private_person_profiles": true,
+    "borg_may_not_convert_correlation_into_incident_truth_without_evidence": true,
+    "recipe_or_rights_changes_require_review": true
+  },
+  "current_dependency_state": {
+    "freq_repo": "setoxxx/freqmap",
+    "freq_integration_freeze": true,
+    "freq_gate": "Gate 48 HOLD / Issue #69 integration housekeeping",
+    "implementation_rule": "BORG side may be built and tested with synthetic/public-safe fixtures now. Do not modify or activate FREQ runtime until FREQ's own governing gate authorizes the integration."
+  }
+}

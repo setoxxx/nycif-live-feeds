@@ -1,0 +1,47 @@
+{
+  "contract": "nycif.borg-dataset-recipe-registry.v1",
+  "status": "DRAFT_PROTECTED",
+  "recipes": [
+    {
+      "recipe_id": "culture-base-geography-v1",
+      "source_contract": "nycif.culture-base-geography.v1",
+      "authority_class": "AUTHORITATIVE_GEOGRAPHY",
+      "node_type": "BASE_GEOGRAPHY",
+      "identity_field": "nta2020",
+      "label_field": "nta_name",
+      "geometry_field": "geometry",
+      "relationship": null,
+      "culture_claim_power": "NONE",
+      "public_projection_allowed": true
+    },
+    {
+      "recipe_id": "community-profile-v1",
+      "source_contract": "nycif.community-demographic-profile.v1",
+      "authority_class": "AUTHORITATIVE_AGGREGATE_STATISTICS",
+      "node_type": "COMMUNITY_PROFILE",
+      "identity_field": "nta2020",
+      "label_field": null,
+      "geometry_field": null,
+      "relationship": {"edge_type": "PROFILE_OF", "target_node_type": "BASE_GEOGRAPHY", "target_field": "nta2020"},
+      "culture_claim_power": "NONE",
+      "public_projection_allowed": true
+    },
+    {
+      "recipe_id": "community-language-profile-v1",
+      "source_contract": "nycif.community-language-profile.v1",
+      "authority_class": "AUTHORITATIVE_AGGREGATE_STATISTICS",
+      "node_type": "COMMUNITY_LANGUAGE_PROFILE",
+      "identity_field": "nta2020",
+      "label_field": null,
+      "geometry_field": null,
+      "relationship": {"edge_type": "LANGUAGE_PROFILE_OF", "target_node_type": "BASE_GEOGRAPHY", "target_field": "nta2020"},
+      "culture_claim_power": "NONE",
+      "public_projection_allowed": true
+    }
+  ],
+  "default_unknown_policy": {
+    "interpretation_state": "REVIEW_REQUIRED",
+    "public_projection_allowed": false,
+    "candidate_recipe_action": "REVIEW_NEW_SCHEMA"
+  }
+}

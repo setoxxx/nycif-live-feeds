@@ -1,0 +1,86 @@
+{
+  "contract": "nycif.borg-source-registry.v1",
+  "status": "DRAFT_PROTECTED",
+  "purpose": "Canonical BORG registry envelope for public-source discovery, retrieval eligibility, freshness, parser ownership and adaptive interpretation. It reconciles the source-catalog requirements in issue #389 without creating a second acquisition authority.",
+  "required_fields": [
+    "source_id",
+    "provider",
+    "source_tier",
+    "authority_class",
+    "jurisdiction",
+    "source_type",
+    "canonical_url",
+    "authentication_mode",
+    "cadence",
+    "freshness_sla_hours",
+    "native_id_strategy",
+    "schema_fingerprint",
+    "parser_version",
+    "rights",
+    "network_scope",
+    "pagination",
+    "retry_policy",
+    "health",
+    "provenance"
+  ],
+  "source_tiers": ["A", "B", "C", "D"],
+  "source_types": ["API", "DATASET", "RSS", "ICS", "JSON_FEED", "PUBLIC_DOWNLOAD", "HTML_PAGE", "MANUAL_VERIFIED"],
+  "authority_classes": [
+    "AUTHORITATIVE_GEOGRAPHY",
+    "AUTHORITATIVE_AGGREGATE_STATISTICS",
+    "OFFICIAL_OBSERVATION",
+    "SUPPORTING_ASSERTION",
+    "DISCOVERY_ONLY"
+  ],
+  "authentication_modes": ["NONE", "PUBLIC_API_KEY", "APP_TOKEN", "OAUTH", "MANUAL", "UNKNOWN"],
+  "network_scopes": ["PUBLIC", "PRIVATE", "LOOPBACK", "LINK_LOCAL", "UNKNOWN"],
+  "health_states": ["HEALTHY", "DEGRADED", "FAILED", "UNKNOWN"],
+  "rights": {
+    "required": [
+      "retrieval_allowed",
+      "retention_allowed",
+      "transformation_allowed",
+      "public_projection_allowed",
+      "attribution_required",
+      "review_state"
+    ],
+    "review_states": ["APPROVED", "REVIEW_REQUIRED", "PROHIBITED"]
+  },
+  "pagination": {
+    "required": ["mode", "deterministic_ordering", "exhaustion_or_total_parity_required"],
+    "modes": ["NONE", "OFFSET_LIMIT", "CURSOR", "PAGE", "LINK_HEADER", "SOURCE_SPECIFIC", "UNKNOWN"]
+  },
+  "retry_policy": {
+    "required": ["max_attempts", "backoff", "retryable_status_classes"],
+    "backoff": ["BOUNDED_EXPONENTIAL", "BOUNDED_LINEAR", "NONE"]
+  },
+  "adaptive_fields": [
+    "schema_fingerprint",
+    "last_schema_change_at",
+    "last_success_at",
+    "last_failure_at",
+    "last_observed_record_count",
+    "max_observed_source_timestamp",
+    "known_failure_signatures",
+    "approved_recipe_id"
+  ],
+  "terminal_registration_states": ["ACTIVE", "PAUSED", "REVIEW_REQUIRED", "PROHIBITED", "RETIRED"],
+  "hard_rules": [
+    "Every activated source has an explicit rights state before retrieval.",
+    "Tier D discovery-only sources cannot independently create verified public facts.",
+    "Unknown authentication, rights, network scope or pagination semantics route to review before automated acquisition.",
+    "Every retrieved page or object is registered as an observation before semantic filtering.",
+    "Source-native IDs and payload provenance survive normalization.",
+    "Schema fingerprint changes cannot silently reuse a parser without compatibility review.",
+    "Failed refresh cannot silently erase previously certified records.",
+    "Source registry records do not create event, location, business, Culture or public-safety truth by themselves."
+  ],
+  "authority": {
+    "registry_owner": "BORG",
+    "adaptive_recipe_owner": "BORG approved recipe registry",
+    "geospatial_truth": "ENIGMA / canonical location path",
+    "event_identity": "OccurrenceIdentityV2 / canonical event path",
+    "freq_alert_truth": "FREQ",
+    "public_runtime": "National Map"
+  }
+}
