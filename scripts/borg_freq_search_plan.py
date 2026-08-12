@@ -11,13 +11,12 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import json
 from typing import Any
 
 try:
-    from scripts.borg_cli_paths import resolve_workspace_file
+    from scripts.borg_cli_paths import read_workspace_json, write_workspace_json
 except ModuleNotFoundError:  # direct execution from scripts/
-    from borg_cli_paths import resolve_workspace_file
+    from borg_cli_paths import read_workspace_json, write_workspace_json
 
 CONTRACT = "nycif.borg-freq-public-search-plan.v1"
 FORBIDDEN_KEYS = {
@@ -29,6 +28,18 @@ FORBIDDEN_KEYS = {
     "tactical_detail",
     "encryption_key_material",
     "unpublished_exact_incident_coordinates",
+}
+REQUIRED_KEYS = {
+    "freq_observation_id",
+    "observed_at",
+    "jurisdiction_id",
+    "service_class",
+    "rights_state",
+    "sensitivity_state",
+    "location_state",
+    "location_evidence_ref",
+    "terminology_refs",
+    "provenance_ref",
 }
 
 
@@ -70,23 +81,11 @@ def _eligible_source(source: dict[str, Any], jurisdiction_id: str) -> tuple[bool
     return True, None
 
 
-def build_search_plan(*, observation: dict[str, Any], sources: list[dict[str, Any]]) -> dict[str, Any]:
+def _validate_observation(observation: dict[str, Any]) -> None:
     present_forbidden = sorted(FORBIDDEN_KEYS.intersection(observation.keys()))
     if present_forbidden:
         raise ValueError(f"FREQ observation contains forbidden bridge fields: {present_forbidden}")
-    required = {
-        "freq_observation_id",
-        "observed_at",
-        "jurisdiction_id",
-        "service_class",
-        "rights_state",
-        "sensitivity_state",
-        "location_state",
-        "location_evidence_ref",
-        "terminology_refs",
-        "provenance_ref",
-    }
-    missing = sorted(required - observation.keys())
+    missing = sorted(REQUIRED_KEYS - observation.keys())
     if missing:
         raise ValueError(f"FREQ observation missing required fields: {missing}")
     if observation["rights_state"] != "PUBLIC_SEARCH_ALLOWED":
@@ -96,6 +95,31 @@ def build_search_plan(*, observation: dict[str, Any], sources: list[dict[str, An
     if observation["location_state"] not in {"resolved", "ambiguous", "unresolved", "review_required"}:
         raise ValueError("Unsupported FREQ location state")
 
+
+def _build_intent(observation: dict[str, Any], source: dict[str, Any], terms: list[str]) -> dict[str, Any]:
+    source_id = str(source["source_id"])
+    tier = source.get("source_tier")
+    purpose = "CORROBORATE_OFFICIAL_PUBLIC_RECORD" if tier in {"A", "B"} else "DISCOVER_CORROBORATING_LEAD"
+    exact_location = observation["location_state"] == "resolved" and observation.get("public_location_id")
+    location_scope = "EXACT_AUTHORIZED_LOCATION" if exact_location else "AREA_OR_JURISDICTION_ONLY"
+    return {
+        "intent_id": _stable_id([str(observation["freq_observation_id"]), source_id, purpose, " ".join(terms)]),
+        "source_id": source_id,
+        "source_tier": tier,
+        "canonical_url": source.get("canonical_url"),
+        "purpose": purpose,
+        "query_terms": terms,
+        "time_anchor": observation["observed_at"],
+        "location_scope": location_scope,
+        "public_area_label": observation.get("public_area_label"),
+        "public_location_id": observation.get("public_location_id") if exact_location else None,
+        "result_authority": "OBSERVATION_OR_LEAD_ONLY",
+        "requires_canonical_followup": True,
+    }
+
+
+def build_search_plan(*, observation: dict[str, Any], sources: list[dict[str, Any]]) -> dict[str, Any]:
+    _validate_observation(observation)
     terms = _terms(observation)
     if not terms:
         raise ValueError("Search plan requires at least one public-safe search term")
@@ -103,29 +127,14 @@ def build_search_plan(*, observation: dict[str, Any], sources: list[dict[str, An
     intents: list[dict[str, Any]] = []
     excluded: list[dict[str, str]] = []
     jurisdiction_id = str(observation["jurisdiction_id"])
-    for source in sorted(sources, key=lambda row: (str(row.get("source_tier", "Z")), str(row.get("source_id", "")))):
+    ordered_sources = sorted(sources, key=lambda row: (str(row.get("source_tier", "Z")), str(row.get("source_id", ""))))
+    for source in ordered_sources:
         source_id = str(source["source_id"])
         eligible, reason = _eligible_source(source, jurisdiction_id)
-        if not eligible:
+        if eligible:
+            intents.append(_build_intent(observation, source, terms))
+        else:
             excluded.append({"source_id": source_id, "reason": str(reason)})
-            continue
-        tier = source.get("source_tier")
-        purpose = "CORROBORATE_OFFICIAL_PUBLIC_RECORD" if tier in {"A", "B"} else "DISCOVER_CORROBORATING_LEAD"
-        location_scope = "EXACT_AUTHORIZED_LOCATION" if observation["location_state"] == "resolved" and observation.get("public_location_id") else "AREA_OR_JURISDICTION_ONLY"
-        intents.append({
-            "intent_id": _stable_id([str(observation["freq_observation_id"]), source_id, purpose, " ".join(terms)]),
-            "source_id": source_id,
-            "source_tier": tier,
-            "canonical_url": source.get("canonical_url"),
-            "purpose": purpose,
-            "query_terms": terms,
-            "time_anchor": observation["observed_at"],
-            "location_scope": location_scope,
-            "public_area_label": observation.get("public_area_label"),
-            "public_location_id": observation.get("public_location_id") if location_scope == "EXACT_AUTHORIZED_LOCATION" else None,
-            "result_authority": "OBSERVATION_OR_LEAD_ONLY",
-            "requires_canonical_followup": True,
-        })
 
     return {
         "contract": CONTRACT,
@@ -152,14 +161,11 @@ def main() -> int:
     parser.add_argument("--output", required=True)
     args = parser.parse_args()
 
-    observation_path = resolve_workspace_file(args.observation, must_exist=True)
-    sources_path = resolve_workspace_file(args.sources, must_exist=True)
-    output_path = resolve_workspace_file(args.output, must_exist=False)
     result = build_search_plan(
-        observation=json.loads(observation_path.read_text()),
-        sources=json.loads(sources_path.read_text()),
+        observation=read_workspace_json(args.observation),
+        sources=read_workspace_json(args.sources),
     )
-    output_path.write_text(json.dumps(result, indent=2) + "\n")
+    write_workspace_json(args.output, result)
     return 0
 
 
