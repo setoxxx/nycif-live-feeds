@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Fetch current NYC Parks public events from NYC Open Data.
 
-The Parks website JSON URL now rejects unattended GETs with HTTP 405. NYC Open
-Data dataset ``w3wp-dpdi`` mirrors the current upcoming-14-days Parks feed and
-exposes the same event schema, including first-party coordinate pairs.
+The retired Parks website JSON endpoint is not used as freshness authority.
+Dataset ``w3wp-dpdi`` is the current upcoming-events transport used by the V3
+line and exposes the event schema, including first-party coordinate pairs.
 
-This collector never geocodes. A valid coordinate from the official dataset is
-carried as validated ``exact_source_coordinate`` evidence. Missing/invalid
-coordinates remain non-exact for downstream review/list-only handling.
+This collector never geocodes. A valid coordinate supplied by the official
+source is carried as explicit ``exact_source_coordinate`` evidence. Missing or
+invalid coordinates remain non-exact for downstream Projector V3 handling.
 """
 
 from __future__ import annotations
@@ -16,9 +16,10 @@ import json
 import sys
 import urllib.parse
 import urllib.request
-from datetime import date, datetime, timezone
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA_DIR = ROOT / "data"
@@ -28,10 +29,12 @@ REPORT_PATH = DATA_DIR / "nyc_parks_bigapps_events_sync_report.json"
 DATASET_ID = "w3wp-dpdi"
 EVENTS_URL = f"https://data.cityofnewyork.us/resource/{DATASET_ID}.json"
 SOURCE_PAGE = f"https://data.cityofnewyork.us/d/{DATASET_ID}"
+LEGACY_BIGAPPS_URL = "https://www.nycgovparks.org/xml/events_300_rss.json"
+SOURCE_CONTRACT_VERSION = "NYCIF_PARKS_UPCOMING_OPEN_DATA_V3"
 PAGE_LIMIT = 50000
 DEFAULT_HEADERS = {
     "Accept": "application/json",
-    "User-Agent": "NYCIF-live-feeds/2.0 (+https://nycinfocus.com/)",
+    "User-Agent": "NYCIF-live-feeds/2.0 (+https://github.com/setoxxx/nycif-live-feeds)",
 }
 
 
@@ -82,7 +85,6 @@ def time_part(value: Any) -> str:
     raw = text(value)
     if not raw:
         return ""
-    # Current Open Data values are e.g. "2026-08-07 07:00:00".
     if " " in raw:
         raw = raw.rsplit(" ", 1)[-1]
     if "T" in raw:
@@ -119,8 +121,9 @@ def official_coordinate_evidence(lat: float | None, lng: float | None) -> dict[s
         "exact_pin_eligible": True,
         "source_provenance": EVENTS_URL,
         "provider": "NYC Parks / NYC Open Data",
+        "source_dataset_id": DATASET_ID,
         "reason_code": "OFFICIAL_SOURCE_COORDINATE",
-        "reason_detail": "Coordinate pair supplied directly by NYC Parks current-events Open Data.",
+        "reason_detail": "Coordinate pair supplied directly by the current NYC Parks Open Data event record.",
     }
 
 
@@ -136,6 +139,8 @@ def normalize_event_item(item: dict[str, Any]) -> dict[str, Any]:
     return {
         "source_dataset": "nyc-parks-bigapps-events",
         "source_event_id": text(item.get("guid")),
+        "source_authority_dataset": DATASET_ID,
+        "source_contract_version": SOURCE_CONTRACT_VERSION,
         "title": item.get("title"),
         "start_date_time": combine(start_day, start_clock),
         "end_date_time": combine(end_day, end_clock),
@@ -179,12 +184,15 @@ def main() -> int:
         fetch_mode = "live_fetch_failed"
         error = str(exc)
 
-    today = date.today().isoformat()
+    today_nyc = datetime.now(ZoneInfo("America/New_York")).date().isoformat()
     normalized = [
         row for row in normalized
         if row.get("source_event_id") and row.get("title") and row.get("start_date_time")
     ]
-    current_future = [row for row in normalized if text(row.get("start_date_time"))[:10] >= today]
+    current_future = [
+        row for row in normalized
+        if text(row.get("end_date") or row.get("start_date") or row.get("start_date_time"))[:10] >= today_nyc
+    ]
     with_coords = sum(1 for row in normalized if row.get("lat") is not None and row.get("lng") is not None)
     with_exact_source_evidence = sum(
         1
@@ -192,17 +200,16 @@ def main() -> int:
         if isinstance(row.get("location_evidence"), dict)
         and row["location_evidence"].get("exact_pin_eligible") is True
     )
-    qa_pass = (
-        bool(current_future)
-        and not error
-        and with_exact_source_evidence == with_coords
-    )
+    qa_pass = bool(current_future) and not error and with_exact_source_evidence == with_coords
 
     snapshot = {
         "generated_at_utc": generated_at,
         "source_url": EVENTS_URL,
         "source_page": SOURCE_PAGE,
-        "source_transport": "nyc_open_data_current_14_day",
+        "source_contract_version": SOURCE_CONTRACT_VERSION,
+        "source_transport": "nyc_open_data_current_upcoming",
+        "legacy_source_url": LEGACY_BIGAPPS_URL,
+        "legacy_source_is_freshness_authority": False,
         "fetch_mode": fetch_mode,
         "events": normalized,
     }
@@ -210,17 +217,22 @@ def main() -> int:
         "generated_at_utc": generated_at,
         "qa_pass": qa_pass,
         "fetch_mode": fetch_mode,
-        "source_transport": "nyc_open_data_current_14_day",
+        "source_contract_version": SOURCE_CONTRACT_VERSION,
+        "source_transport": "nyc_open_data_current_upcoming",
         "source_url": EVENTS_URL,
         "source_page": SOURCE_PAGE,
         "source_rows_received": len(source_rows),
         "snapshot_rows": len(normalized),
         "current_future_rows": len(current_future),
+        "today_nyc": today_nyc,
+        "date_boundary_timezone": "America/New_York",
         "rows_with_coordinates": with_coords,
         "rows_with_exact_source_coordinate_evidence": with_exact_source_evidence,
         "coordinate_evidence_parity": with_exact_source_evidence == with_coords,
         "error": error,
         "live_fetch_error": error,
+        "legacy_source_url": LEGACY_BIGAPPS_URL,
+        "legacy_source_is_freshness_authority": False,
         "production_feeds_modified": False,
         "public_map_modified": False,
         "location_cache_modified": False,
