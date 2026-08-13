@@ -1,32 +1,32 @@
 {
   "borough_counts": {
-    "Bronx": 3375,
-    "Brooklyn": 6021,
-    "Manhattan": 9913,
-    "Queens": 5605,
-    "Staten Island": 1004
+    "Bronx": 3307,
+    "Brooklyn": 5912,
+    "Manhattan": 9879,
+    "Queens": 5479,
+    "Staten Island": 982
   },
   "category_counts": {
-    "arts": 163,
-    "fitness": 166,
+    "arts": 160,
+    "fitness": 160,
     "general": 17,
-    "market": 951,
-    "parks": 3612,
-    "sports": 21009
+    "market": 971,
+    "parks": 3642,
+    "sports": 20609
   },
   "cross_date_street_occurrences_suppressed": 0,
   "duplicate_policy": {
     "production_feeds_modified": false,
     "street_events": "dedupe only exact title + borough + location + coordinate + date + start/end + CEMS occurrence; recurring dates remain distinct"
   },
-  "eligible_rows_before_one_day_street_dedupe": 25918,
+  "eligible_rows_before_one_day_street_dedupe": 25559,
   "exact_occurrence_duplicates_suppressed": 0,
-  "generated_at_utc": "2026-08-12T12:12:51.090255+00:00",
+  "generated_at_utc": "2026-08-13T12:40:42.092409+00:00",
   "match_counts": {
-    "event_id": 494,
-    "location_cache": 24109,
-    "tier_1_gazetteer_display": 577,
-    "tier_2_geosearch_cache": 731,
+    "event_id": 462,
+    "location_cache": 23719,
+    "tier_1_gazetteer_display": 609,
+    "tier_2_geosearch_cache": 762,
     "tier_2_geosearch_midpoint": 7
   },
   "one_day_street_duplicates_suppressed": 0,
@@ -34,62 +34,6 @@
   "production_ready": true,
   "sample_exact_occurrence_rejected_rows": [],
   "sample_skipped_rows": [
-    {
-      "borough": "Manhattan",
-      "display_location": "JOHN STREET between SOUTH STREET and FRONT STREET",
-      "display_time": "12:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "966065",
-      "title": "Seaport"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "SOUTH STREET between JOHN STREET and FULTON STREET",
-      "display_time": "12:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "966071",
-      "title": "Seaport2"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "WEST   50 STREET between ROCKEFELLER PLAZA and 5 AVENUE",
-      "display_time": "7:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "964619",
-      "title": "1-Council on the Environment-Greenmarket at Rockefeller Center"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "GREENE STREET between GRAND STREET and CANAL STREET",
-      "display_time": "7:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "964965",
-      "title": "MKG - Pop-up event"
-    },
-    {
-      "borough": "Queens",
-      "display_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
-      "display_time": "12:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "964160",
-      "title": "Boombox in Jamaica"
-    },
-    {
-      "borough": "Bronx",
-      "display_location": "TOWNSEND AVENUE between EAST  170 STREET and EAST  171 STREET",
-      "display_time": "2:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "954514",
-      "title": "170 Farm Stand"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "SUFFOLK STREET between DELANCEY STREET and RIVINGTON STREET",
-      "display_time": "5:30 PM",
-      "source_cemsid": [],
-      "source_event_id": "958187",
-      "title": "International Puppet Fringe Festival Inaguration"
-    },
     {
       "borough": "Manhattan",
       "display_location": "EAST  124 STREET between MADISON AVENUE and PARK AVENUE",
@@ -165,6 +109,14 @@
       "title": "Tribeca Rooftop - 8/14 - 8/28"
     },
     {
+      "borough": "Manhattan",
+      "display_location": "EAST  116 STREET between LEXINGTON AVENUE and 3 AVENUE",
+      "display_time": "9:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "932058",
+      "title": "Junglegym 2026"
+    },
+    {
       "borough": "Brooklyn",
       "display_location": "CHAUNCEY STREET between SARATOGA AVENUE and THOMAS BOYLAND STREET",
       "display_time": "10:00 AM",
@@ -197,11 +149,61 @@
       "source_cemsid": [],
       "source_event_id": "964160",
       "title": "Boombox in Jamaica"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "WEST    9 STREET between HENRY STREET and HICKS STREET",
+      "display_time": "1:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "923957",
+      "title": "Red Hook Initiative Block Party"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "EAST  125 STREET between PARK AVENUE and LEXINGTON AVENUE",
+      "display_time": "1:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "964005",
+      "title": "Zedd in the Park Shuttle - E. 125th St."
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "EAST   42 STREET between LEXINGTON AVENUE and PARK AVENUE",
+      "display_time": "12:01 AM",
+      "source_cemsid": [],
+      "source_event_id": "962842",
+      "title": "Pickwick Vintage Show"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "NOSTRAND AVENUE between FLATBUSH AVENUE and GLENWOOD ROAD",
+      "display_time": "8:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "960998",
+      "title": "Youth Led Farmers Market"
+    },
+    {
+      "borough": "Queens",
+      "display_location": "NORTHERN BOULEVARD between LEAVITT STREET and LINDEN PLACE",
+      "display_time": "8:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "966657",
+      "title": "1-ESPN US Tennis Open 2026 Shuttle - The Westin Flushing LaGuardia Airport"
+    },
+    {
+      "borough": "Bronx",
+      "display_location": "Pelham Bay Park and Orchard Beach: North Picnic Area Special",
+      "display_time": "9:00 AM",
+      "source_cemsid": [
+        "11437"
+      ],
+      "source_event_id": "962260",
+      "title": "Family Cookout"
     }
   ],
-  "skipped_needs_review_or_bad_gps": 280,
+  "skipped_needs_review_or_bad_gps": 311,
   "source": "nycif_live_test_enriched_events.json",
   "staged_feed": true,
-  "staged_feed_events": 25918,
-  "test_feed_rows_loaded": 26198
+  "staged_feed_events": 25559,
+  "test_feed_rows_loaded": 25870
 }

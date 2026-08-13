@@ -4,56 +4,74 @@
     "today": "data/photographer_money_day_pack_today.json",
     "tomorrow": "data/photographer_money_day_pack_tomorrow.json"
   },
-  "generated_at_utc": "2026-08-12T12:13:17Z",
+  "generated_at_utc": "2026-08-13T12:41:08Z",
   "location_cache_modified": false,
   "promotion_allowed": false,
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-08-12",
+  "reference_today_nyc": "2026-08-13",
   "schema_version": "photographer-money-day-pack-v1",
   "today": {
-    "borough_cluster_count": 3,
-    "date": "2026-08-12",
-    "map_ready_count": 7,
-    "total_events": 7
-  },
-  "tomorrow": {
     "borough_cluster_count": 2,
     "date": "2026-08-13",
     "map_ready_count": 5,
+    "total_events": 5
+  },
+  "tomorrow": {
+    "borough_cluster_count": 3,
+    "date": "2026-08-14",
+    "map_ready_count": 8,
     "top_go_shoot": [
+      {
+        "borough": null,
+        "score": 510,
+        "time": "2026-08-14T19:00:00",
+        "title": "Bryant Park Picnic Performance: New York Guitar Festival"
+      },
       {
         "borough": "Manhattan",
         "score": 440,
-        "time": "2026-08-13T10:00:00.000",
+        "time": "2026-08-14T10:00:00.000",
         "title": "Times Square Arts Artist-in-Residence Performance"
       },
       {
-        "borough": "Queens",
+        "borough": "Bronx",
         "score": 400,
-        "time": "2026-08-13T18:00:00.000",
-        "title": "Rally for Flushing Meadows Corona Park"
+        "time": "2026-08-14T13:00:00.000",
+        "title": "Zimmerman Playground Ribbon Cutting Ceremony"
+      },
+      {
+        "borough": "Manhattan",
+        "score": 380,
+        "time": "2026-08-14T00:00:00.000",
+        "title": "SummerStage Festival - Good Morning America"
       },
       {
         "borough": "Manhattan",
         "score": 340,
-        "time": "2026-08-13T08:00:00.000",
-        "title": "HHFM East Harlem Market"
+        "time": "2026-08-14T08:00:00.000",
+        "title": "HHFM Harlem Hospital Market"
+      },
+      {
+        "borough": "Bronx",
+        "score": 340,
+        "time": "2026-08-14T08:00:00.000",
+        "title": "HHFM Jacobi Hospital Market"
       },
       {
         "borough": "Manhattan",
         "score": 340,
-        "time": "2026-08-13T09:00:00.000",
-        "title": "NYP Youth Market - Audubon"
+        "time": "2026-08-14T08:00:00.000",
+        "title": "HHFM Metropolitan Market"
       },
       {
         "borough": "Manhattan",
         "score": 310,
-        "time": "2026-08-13T12:00:00.000",
+        "time": "2026-08-14T12:00:00.000",
         "title": "TSQ LIVE: 45/46 Plaza Programming"
       }
     ],
-    "total_events": 5
+    "total_events": 8
   }
 }
