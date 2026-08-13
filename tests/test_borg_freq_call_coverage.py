@@ -110,20 +110,21 @@ class BorgFreqCallCoverageTests(unittest.TestCase):
         self.assertEqual(result["accounting"]["silent_loss"], 0)
 
     def test_duplicate_upstream_id_fails_closed(self):
+        duplicate_observations = [obs("same"), obs("same")]
         with self.assertRaises(ValueError):
-            project_call_coverage(observations=[obs("same"), obs("same")], terminology_records=TERMS)
+            project_call_coverage(observations=duplicate_observations, terminology_records=TERMS)
 
     def test_exact_public_geometry_requires_public_location_id(self):
+        invalid_observation = obs(
+            "c6",
+            public_location_id=None,
+            public_geometry_state="exact_public",
+            public_geometry={"type": "Point", "coordinates": [-73.9, 40.7]},
+        )
+        invalid_observations = [invalid_observation]
         with self.assertRaises(ValueError):
             project_call_coverage(
-                observations=[
-                    obs(
-                        "c6",
-                        public_location_id=None,
-                        public_geometry_state="exact_public",
-                        public_geometry={"type": "Point", "coordinates": [-73.9, 40.7]},
-                    )
-                ],
+                observations=invalid_observations,
                 terminology_records=TERMS,
             )
 
