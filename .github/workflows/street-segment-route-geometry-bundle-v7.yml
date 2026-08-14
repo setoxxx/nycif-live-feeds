@@ -1,0 +1,190 @@
+name: Street Segment Route Geometry Bundle V7
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/audit_street_segment_route_geometry_bundle_v7.py'
+      - 'tests/test_street_segment_route_geometry_bundle_v7.py'
+      - '.github/workflows/street-segment-route-geometry-bundle-v7.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  route-geometry-bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      GEOSUPPORT_RUNTIME_IMAGE: 'nycplanning/docker-geosupport:26.2.0'
+      LION_DATASET_URL: 'https://data.cityofnewyork.us/download/2v4z-66xt/application/zip'
+      NYCIF_ALLOW_LIVE_GEOSEARCH: 'no'
+      NYCIF_ALLOW_LIVE_GEOCLIENT: 'no'
+    steps:
+      - name: Check out exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Attest exact source head
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="${{ github.event.pull_request.head.sha || github.sha }}"
+          actual="$(git rev-parse HEAD)"
+          echo "NYCIF_EXPECTED_HEAD=${expected}"
+          echo "NYCIF_CHECKED_OUT_HEAD=${actual}"
+          test "$actual" = "$expected"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies and test V7 bundle audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install -r requirements.txt
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends gdal-bin unzip
+          python3 -m py_compile scripts/audit_street_segment_route_geometry_bundle_v7.py
+          python3 -m unittest tests.test_street_segment_route_geometry_bundle_v7 -v
+
+      - name: Pull official GeoSupport runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker pull "$GEOSUPPORT_RUNTIME_IMAGE"
+          docker run --rm "$GEOSUPPORT_RUNTIME_IMAGE" python -c 'from geosupport import Geosupport; Geosupport(); print("NYCIF_GEOSUPPORT_IMPORT_OK=1")'
+
+      - name: Rebuild V2 strict identities
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/nycif-route-v7
+          docker run --rm \
+            -e PYTHONDONTWRITEBYTECODE=1 \
+            -e NYCIF_ALLOW_LIVE_GEOSEARCH=no \
+            -e NYCIF_ALLOW_LIVE_GEOCLIENT=no \
+            -v "$GITHUB_WORKSPACE:/workspace:ro" \
+            -v /tmp/nycif-route-v7:/evidence \
+            -w /workspace "$GEOSUPPORT_RUNTIME_IMAGE" \
+            python scripts/audit_street_segment_geosupport_recovery_v2.py \
+              --output /evidence/street_segment_geosupport_recovery_audit_v2.json
+
+      - name: Download and discover official LION layer
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 --output /tmp/nycif-route-v7/lion.zip "$LION_DATASET_URL"
+          unzip -q /tmp/nycif-route-v7/lion.zip -d /tmp/nycif-route-v7/lion-package
+          candidates=/tmp/nycif-route-v7/layer-candidates.tsv
+          : > "$candidates"
+          while IFS= read -r gdb; do
+            layer_list="$(ogrinfo -ro "$gdb" 2>/dev/null || true)"
+            while IFS= read -r layer; do
+              [ -n "$layer" ] || continue
+              info="$(ogrinfo -ro -so "$gdb" "$layer" 2>/dev/null || true)"
+              if printf '%s\n' "$info" | grep -qiE '^[[:space:]]*SegmentID:' && printf '%s\n' "$info" | grep -qiE '^[[:space:]]*Geometry: (Line String|Multi Line String)'; then
+                printf 'gdb\t%s\t%s\n' "$gdb" "$layer" >> "$candidates"
+              fi
+            done < <(printf '%s\n' "$layer_list" | sed -n -E -e 's/^Layer: (.*) \([^)]*\)$/\1/p' -e 's/^[[:space:]]*[0-9]+: (.*) \([^)]*\)$/\1/p' | sort -u)
+          done < <(find /tmp/nycif-route-v7/lion-package -type d -iname '*.gdb' | sort)
+          cat "$candidates"
+          test "$(wc -l < "$candidates" | tr -d ' ')" -eq 1
+          IFS=$'\t' read -r kind source layer < "$candidates"
+          echo "LION_SOURCE_PATH=$source" >> "$GITHUB_ENV"
+          echo "LION_SOURCE_LAYER=$layer" >> "$GITHUB_ENV"
+
+      - name: Rebuild V4 single-segment classification
+        shell: bash
+        run: |
+          set -euo pipefail
+          where_clause="$(python3 - <<'PY'
+          import json
+          report=json.load(open('/tmp/nycif-route-v7/street_segment_geosupport_recovery_audit_v2.json'))
+          ids=sorted({str(r.get('function_3_segment_identifier') or '').strip() for r in report.get('claims',[]) if r.get('strict_nonpublic_segment_evidence') is True}-{''})
+          print('SegmentID IN ('+','.join("'"+v.replace("'","''")+"'" for v in ids)+')')
+          PY
+          )"
+          ogr2ogr -f GeoJSON -t_srs EPSG:4326 -where "$where_clause" \
+            /tmp/nycif-route-v7/lion_strict_segments.geojson "$LION_SOURCE_PATH" "$LION_SOURCE_LAYER"
+          python3 scripts/audit_street_segment_lion_geometry_v4.py \
+            --identity-report /tmp/nycif-route-v7/street_segment_geosupport_recovery_audit_v2.json \
+            --lion-geojson /tmp/nycif-route-v7/lion_strict_segments.geojson \
+            --output /tmp/nycif-route-v7/street_segment_lion_geometry_audit_v4.json
+
+      - name: Rebuild V5 ordered route topology
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm \
+            -e PYTHONDONTWRITEBYTECODE=1 \
+            -e NYCIF_ALLOW_LIVE_GEOSEARCH=no \
+            -e NYCIF_ALLOW_LIVE_GEOCLIENT=no \
+            -v "$GITHUB_WORKSPACE:/workspace:ro" \
+            -v /tmp/nycif-route-v7:/evidence \
+            -w /workspace "$GEOSUPPORT_RUNTIME_IMAGE" \
+            python scripts/audit_street_segment_geosupport_3s_route_v5.py \
+              --identity-report /evidence/street_segment_geosupport_recovery_audit_v2.json \
+              --v4-report /evidence/street_segment_lion_geometry_audit_v4.json \
+              --output /evidence/street_segment_geosupport_3s_route_audit_v5.json
+
+      - name: Export full official LION line layer
+        shell: bash
+        run: |
+          set -euo pipefail
+          ogr2ogr -f GeoJSON -t_srs EPSG:4326 \
+            /tmp/nycif-route-v7/lion_full.geojson "$LION_SOURCE_PATH" "$LION_SOURCE_LAYER"
+
+      - name: Rebuild V6 route-edge classification
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/audit_street_segment_lion_route_edges_v6.py \
+            --v5-report /tmp/nycif-route-v7/street_segment_geosupport_3s_route_audit_v5.json \
+            --lion-geojson /tmp/nycif-route-v7/lion_full.geojson \
+            --output /tmp/nycif-route-v7/street_segment_lion_route_edge_audit_v6.json
+
+      - name: Certify ordered source geometry bundles
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/audit_street_segment_route_geometry_bundle_v7.py \
+            --v6-report /tmp/nycif-route-v7/street_segment_lion_route_edge_audit_v6.json \
+            --output /tmp/nycif-route-v7/street_segment_route_geometry_bundle_audit_v7.json
+
+      - name: Prove V7 preserves source geometry and remains non-public
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          v6=json.load(open('/tmp/nycif-route-v7/street_segment_lion_route_edge_audit_v6.json'))
+          v7=json.load(open('/tmp/nycif-route-v7/street_segment_route_geometry_bundle_audit_v7.json'))
+          assert v7['input_v6_route_count']==v6['certified_route_count']
+          assert v7['dissolved_geometry_created'] is False
+          assert v7['concatenated_geometry_created'] is False
+          assert v7['endpoint_snapping_used'] is False
+          assert v7['synthetic_coordinate_count']==0
+          assert v7['publication_authority_granted'] is False
+          assert v7['public_renderer_enabled'] is False
+          assert v7['projector_consumed'] is False
+          assert all(value==0 for value in v7['hard_zero_gates'].values())
+          PY
+          test -z "$(git status --porcelain)"
+
+      - name: Upload V7 non-public geometry bundle evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: street-segment-route-geometry-v7-${{ github.event.pull_request.head.sha || github.sha }}
+          path: |
+            /tmp/nycif-route-v7/street_segment_geosupport_recovery_audit_v2.json
+            /tmp/nycif-route-v7/street_segment_lion_geometry_audit_v4.json
+            /tmp/nycif-route-v7/street_segment_geosupport_3s_route_audit_v5.json
+            /tmp/nycif-route-v7/street_segment_lion_route_edge_audit_v6.json
+            /tmp/nycif-route-v7/street_segment_route_geometry_bundle_audit_v7.json
+            /tmp/nycif-route-v7/layer-candidates.tsv
+          retention-days: 14
