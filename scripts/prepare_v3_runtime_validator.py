@@ -32,23 +32,40 @@ if staged_manifest.get("staged_feed_events") != len(staged_events):
 # marker merely to satisfy a non-empty runtime invariant.
 staged_certified_before_dedupe = staged_manifest.get("certified_map_ready_before_dedupe")
 test_certified_map_ready = test_manifest.get("certified_map_ready_events")
-v3_map_ready = v3.get("map_ready_count")
-if v3_map_ready is None:
-    v3_map_ready = (v3.get("map_state_counts") or {}).get("MAP_READY")
+health_v3_runtime = health.get("v3_runtime") if isinstance(health.get("v3_runtime"), dict) else {}
+v3_runtime_map_ready = health_v3_runtime.get("map_ready_count")
+
+# The third count is computed by augment_daily_data_health_v03.py directly from
+# canonical semantic rows. Missing, boolean, negative, or otherwise malformed
+# values are not evidence and must fail closed.
+if (
+    isinstance(v3_runtime_map_ready, bool)
+    or not isinstance(v3_runtime_map_ready, int)
+    or v3_runtime_map_ready < 0
+):
+    sys.exit(
+        "daily V3 runtime MAP_READY count is missing or malformed: "
+        f"{v3_runtime_map_ready!r}"
+    )
 if not staged_events:
     zero_map_ready_evidence = {
         "staged_manifest.certified_map_ready_before_dedupe": staged_certified_before_dedupe,
         "test_manifest.certified_map_ready_events": test_certified_map_ready,
-        "v3.map_ready_count": v3_map_ready,
+        "health.v3_runtime.map_ready_count": v3_runtime_map_ready,
     }
     mismatches = {key: value for key, value in zero_map_ready_evidence.items() if value != 0}
     if mismatches:
         sys.exit(f"empty staged feed contradicts certified MAP_READY authority: {mismatches}")
-elif staged_certified_before_dedupe == 0 or test_certified_map_ready == 0 or v3_map_ready == 0:
+elif (
+    staged_certified_before_dedupe == 0
+    or test_certified_map_ready == 0
+    or v3_runtime_map_ready == 0
+):
     sys.exit(
         "non-empty staged feed contradicts zero certified MAP_READY authority: "
         f"staged_before_dedupe={staged_certified_before_dedupe}, "
-        f"test_certified={test_certified_map_ready}, v3_map_ready={v3_map_ready}"
+        f"test_certified={test_certified_map_ready}, "
+        f"v3_runtime_map_ready={v3_runtime_map_ready}"
     )
 '''
 
