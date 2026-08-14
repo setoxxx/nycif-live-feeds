@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import copy
 import unittest
 
 from scripts.audit_street_segment_lion_geometry_v4 import audit, geometry_sha256
@@ -26,7 +27,7 @@ IDENTITY = {
 }
 
 
-def feature(segment_id="1234567", geometry=None):
+def feature(segment_id="1234567", geometry=None, *, from_node="0000001", to_node="0000002", join_id="A"):
     if geometry is None:
         geometry = {
             "type": "LineString",
@@ -34,7 +35,12 @@ def feature(segment_id="1234567", geometry=None):
         }
     return {
         "type": "Feature",
-        "properties": {"SegmentID": segment_id},
+        "properties": {
+            "SegmentID": segment_id,
+            "NodeIDFrom": from_node,
+            "NodeIDTo": to_node,
+            "Join_ID": join_id,
+        },
         "geometry": geometry,
     }
 
@@ -44,7 +50,9 @@ class LionGeometryAuditTests(unittest.TestCase):
         source = {"type": "FeatureCollection", "features": [feature()]}
         result = audit(IDENTITY, source)
         self.assertEqual(result["joined_geometry_count"], 1)
+        self.assertEqual(result["joined_occurrence_coverage"], 2)
         self.assertEqual(result["unresolved_or_blocked_geometry_count"], 0)
+        self.assertEqual(result["unresolved_or_blocked_occurrence_count"], 0)
         entry = result["entries"][0]
         self.assertTrue(entry["geometry_joined"])
         self.assertEqual(entry["geometry_type"], "LineString")
@@ -61,11 +69,43 @@ class LionGeometryAuditTests(unittest.TestCase):
         self.assertEqual(result["joined_geometry_count"], 0)
         self.assertEqual(result["reason_counts"]["OFFICIAL_LION_SEGMENT_NOT_FOUND"], 1)
 
-    def test_duplicate_source_segment_blocks(self):
-        source = {"type": "FeatureCollection", "features": [feature(), feature()]}
+    def test_equivalent_duplicate_source_rows_collapse(self):
+        source = {
+            "type": "FeatureCollection",
+            "features": [feature(join_id="A"), feature(join_id="B")],
+        }
+        result = audit(IDENTITY, source)
+        self.assertEqual(result["joined_geometry_count"], 1)
+        self.assertEqual(result["equivalent_source_representation_group_count"], 1)
+        self.assertEqual(result["equivalent_source_representation_row_count"], 2)
+        entry = result["entries"][0]
+        self.assertTrue(entry["source_equivalence_collapsed"])
+        self.assertEqual(entry["source_feature_count"], 2)
+
+    def test_duplicate_source_geometry_conflict_blocks(self):
+        other = feature(
+            geometry={
+                "type": "LineString",
+                "coordinates": [[-73.9000, 40.6000], [-73.8980, 40.6020]],
+            },
+            join_id="B",
+        )
+        source = {"type": "FeatureCollection", "features": [feature(join_id="A"), other]}
         result = audit(IDENTITY, source)
         self.assertEqual(result["joined_geometry_count"], 0)
-        self.assertEqual(result["reason_counts"]["OFFICIAL_LION_SEGMENT_NOT_UNIQUE"], 1)
+        self.assertEqual(result["reason_counts"]["OFFICIAL_LION_SEGMENT_REPRESENTATIONS_CONFLICT"], 1)
+
+    def test_duplicate_source_node_pair_conflict_blocks(self):
+        source = {
+            "type": "FeatureCollection",
+            "features": [
+                feature(join_id="A"),
+                feature(from_node="0000009", to_node="0000002", join_id="B"),
+            ],
+        }
+        result = audit(IDENTITY, source)
+        self.assertEqual(result["joined_geometry_count"], 0)
+        self.assertEqual(result["reason_counts"]["OFFICIAL_LION_SEGMENT_REPRESENTATIONS_CONFLICT"], 1)
 
     def test_non_line_geometry_blocks(self):
         source = {
