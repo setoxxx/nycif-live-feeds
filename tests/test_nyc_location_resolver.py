@@ -17,6 +17,16 @@ from scripts.nyc_location_gazetteer import NYCLocationGazetteer, build_gazetteer
 from scripts.nyc_location_resolver import NYCLocationResolver, ResolveResult
 
 
+class FakeGeoclient:
+    def __init__(self, hits=None):
+        self.hits = hits or {}
+        self.calls = []
+
+    def resolve_intersection(self, street1, street2, borough):
+        self.calls.append((street1, street2, borough))
+        return self.hits.get((street1, street2, borough))
+
+
 class GazetteerTests(unittest.TestCase):
     def test_build_gazetteer_index_structure(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -74,13 +84,17 @@ class GazetteerTests(unittest.TestCase):
                 borough="Brooklyn",
             )
         }
-        resolver = NYCLocationResolver(NYCLocationGazetteer(index), {}, allow_live_geosearch=False)
+        resolver = NYCLocationResolver(
+            NYCLocationGazetteer(index), {}, allow_live_geosearch=False, geoclient=FakeGeoclient()
+        )
         result = resolver.resolve(display_location="Test Park: Lawn", borough="Brooklyn")
         self.assertTrue(result.resolved)
         self.assertEqual(result.tier, "tier_1_gazetteer_display")
 
     def test_uncertified_street_segment_abstains_without_generic_fallback(self) -> None:
-        resolver = NYCLocationResolver(NYCLocationGazetteer({}), {}, allow_live_geosearch=False)
+        resolver = NYCLocationResolver(
+            NYCLocationGazetteer({}), {}, allow_live_geosearch=False, geoclient=FakeGeoclient()
+        )
         queries: list[str] = []
 
         def fake_geosearch(self, query: str, borough: str | None = None):
@@ -96,10 +110,13 @@ class GazetteerTests(unittest.TestCase):
         self.assertFalse(result.resolved)
         self.assertFalse(result.exact_pin_eligible)
         self.assertEqual(result.reason_code, "SEGMENT_UNCERTIFIED")
-        self.assertTrue(all("Mystery Street, Brooklyn" not in query for query in queries))
+        self.assertEqual(queries, [])
 
     def test_event_923896_segment_uses_certified_brooklyn_reference(self) -> None:
-        resolver = NYCLocationResolver(NYCLocationGazetteer({}), {}, allow_live_geosearch=False)
+        geoclient = FakeGeoclient()
+        resolver = NYCLocationResolver(
+            NYCLocationGazetteer({}), {}, allow_live_geosearch=False, geoclient=geoclient
+        )
         result = resolver.resolve(
             display_location="East 74 Street between Avenue U and Avenue T",
             borough="Brooklyn",
@@ -112,36 +129,26 @@ class GazetteerTests(unittest.TestCase):
         self.assertAlmostEqual(result.lat or 0.0, 40.618, places=3)
         self.assertAlmostEqual(result.lng or 0.0, -73.905, places=3)
         self.assertEqual(result.reason_code, "SEGMENT_CERTIFIED_REFERENCE")
+        self.assertEqual(geoclient.calls, [])
 
-    def test_segment_midpoint_requires_two_borough_valid_endpoints(self) -> None:
-        resolver = NYCLocationResolver(NYCLocationGazetteer({}), {}, allow_live_geosearch=False)
-
-        def fake_geosearch(self, query: str, borough: str | None = None):
-            if "Main Street" in query and "First Avenue" in query:
-                return ResolveResult(
-                    True,
-                    "tier_2_geosearch_cache",
-                    40.6500,
-                    -73.9500,
-                    "test",
-                    "high",
-                    "test endpoint",
-                    label="Main Street and First Avenue, Brooklyn",
-                )
-            if "Main Street" in query and "Second Avenue" in query:
-                return ResolveResult(
-                    True,
-                    "tier_2_geosearch_cache",
-                    40.6520,
-                    -73.9480,
-                    "test",
-                    "high",
-                    "test endpoint",
-                    label="Main Street and Second Avenue, Brooklyn",
-                )
-            return None
-
-        resolver._resolve_geosearch = MethodType(fake_geosearch, resolver)
+    def test_segment_midpoint_requires_two_geoclient_endpoints(self) -> None:
+        hits = {
+            ("Main Street", "First Avenue", "Brooklyn"): {
+                "lat": 40.6500,
+                "lng": -73.9500,
+                "geocoder_source": "nyc_geoclient_intersection",
+                "geoclient_label": "Main Street and First Avenue",
+            },
+            ("Main Street", "Second Avenue", "Brooklyn"): {
+                "lat": 40.6520,
+                "lng": -73.9480,
+                "geocoder_source": "nyc_geoclient_intersection",
+                "geoclient_label": "Main Street and Second Avenue",
+            },
+        }
+        resolver = NYCLocationResolver(
+            NYCLocationGazetteer({}), {}, allow_live_geosearch=False, geoclient=FakeGeoclient(hits)
+        )
         result = resolver.resolve(
             display_location="Main Street between First Avenue and Second Avenue",
             borough="Brooklyn",
@@ -150,7 +157,80 @@ class GazetteerTests(unittest.TestCase):
         self.assertTrue(result.resolved)
         self.assertTrue(result.exact_pin_eligible)
         self.assertEqual(result.tier, "certified_street_segment")
-        self.assertEqual(result.reason_code, "SEGMENT_ENDPOINTS_VALIDATED")
+        self.assertEqual(result.source, "nyc_geoclient_segment_midpoint")
+        self.assertEqual(result.reason_code, "SEGMENT_GEOCLIENT_ENDPOINTS_VALIDATED")
+        self.assertEqual(result.validation_state, "validated")
+
+    def test_one_geoclient_endpoint_is_not_enough(self) -> None:
+        hits = {
+            ("Main Street", "First Avenue", "Brooklyn"): {
+                "lat": 40.6500,
+                "lng": -73.9500,
+                "geocoder_source": "nyc_geoclient_intersection",
+            }
+        }
+        resolver = NYCLocationResolver(
+            NYCLocationGazetteer({}), {}, allow_live_geosearch=False, geoclient=FakeGeoclient(hits)
+        )
+        result = resolver.resolve(
+            display_location="Main Street between First Avenue and Second Avenue",
+            borough="Brooklyn",
+        )
+        self.assertFalse(result.resolved)
+        self.assertFalse(result.exact_pin_eligible)
+        self.assertEqual(result.reason_code, "SEGMENT_UNCERTIFIED")
+
+    def test_geoclient_wrong_borough_endpoint_is_rejected(self) -> None:
+        hits = {
+            ("Main Street", "First Avenue", "Brooklyn"): {
+                "lat": 40.85,
+                "lng": -73.92,
+                "geocoder_source": "nyc_geoclient_intersection",
+            },
+            ("Main Street", "Second Avenue", "Brooklyn"): {
+                "lat": 40.6520,
+                "lng": -73.9480,
+                "geocoder_source": "nyc_geoclient_intersection",
+            },
+        }
+        resolver = NYCLocationResolver(
+            NYCLocationGazetteer({}), {}, allow_live_geosearch=False, geoclient=FakeGeoclient(hits)
+        )
+        result = resolver.resolve(
+            display_location="Main Street between First Avenue and Second Avenue",
+            borough="Brooklyn",
+        )
+        self.assertFalse(result.resolved)
+        self.assertEqual(result.reason_code, "SEGMENT_UNCERTIFIED")
+
+    def test_geosearch_endpoints_cannot_self_certify_segment(self) -> None:
+        resolver = NYCLocationResolver(
+            NYCLocationGazetteer({}), {}, allow_live_geosearch=False, geoclient=FakeGeoclient()
+        )
+        calls = []
+
+        def fake_geosearch(self, query: str, borough: str | None = None):
+            calls.append(query)
+            return ResolveResult(
+                True,
+                "tier_2_geosearch_cache",
+                40.65,
+                -73.95,
+                "nyc_geosearch_planninglabs",
+                "high",
+                "candidate only",
+                label=query,
+            )
+
+        resolver._resolve_geosearch = MethodType(fake_geosearch, resolver)
+        result = resolver.resolve(
+            display_location="Main Street between First Avenue and Second Avenue",
+            borough="Brooklyn",
+        )
+        self.assertFalse(result.resolved)
+        self.assertFalse(result.exact_pin_eligible)
+        self.assertEqual(result.reason_code, "SEGMENT_UNCERTIFIED")
+        self.assertEqual(calls, [])
 
 
 if __name__ == "__main__":
