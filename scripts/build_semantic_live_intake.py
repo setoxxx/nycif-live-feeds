@@ -28,7 +28,7 @@ except ModuleNotFoundError:  # pragma: no cover - direct script execution
 
 def enrich_with_location_authority(
     raw: dict[str, Any], match_type: str, match: dict[str, Any] | None
-) -> tuple[dict[str, Any], dict[str, Any]]:
+) -> dict[str, Any]:
     migrated_match, migration = migrate_match(raw, match_type, match)
     event = legacy_enrich.build_event(raw, match_type, migrated_match)
     evidence = normalize_location_evidence(match_type, migrated_match)
@@ -39,11 +39,13 @@ def enrich_with_location_authority(
     event["certified_pin"] = decision["certified_pin"]
     event["pin_integrity_reason"] = decision["reason_code"]
     event["needs_review"] = decision["map_eligibility_state"] != "MAP_READY"
+    event["location_evidence_migration_eligible"] = bool(migration.get("eligible"))
     event["location_evidence_migration_reason"] = migration.get("reason_code")
+    event["location_evidence_migration_tier"] = migration.get("tier")
     if decision["map_eligibility_state"] == "MAP_READY":
         event["lat"] = decision["latitude"]
         event["lng"] = decision["longitude"]
-    return event, migration
+    return event
 
 
 def build_semantic_enriched_feed() -> tuple[dict[str, Any], dict[str, Any]]:
@@ -65,14 +67,14 @@ def build_semantic_enriched_feed() -> tuple[dict[str, Any], dict[str, Any]]:
     for raw in raw_current:
         match_type, match = legacy_enrich.find_match(raw, indexes, cache, resolver)
         match_counts[match_type] = match_counts.get(match_type, 0) + 1
-        event, migration = enrich_with_location_authority(raw, match_type, match)
+        event = enrich_with_location_authority(raw, match_type, match)
         state = str(event.get("map_eligibility_state") or "REVIEW_REQUIRED")
         map_state_counts[state] = map_state_counts.get(state, 0) + 1
         certified += int(event.get("certified_pin") is True)
-        reason = str(migration.get("reason_code") or "UNSPECIFIED")
+        reason = str(event.get("location_evidence_migration_reason") or "UNSPECIFIED")
         migration_reason_counts[reason] = migration_reason_counts.get(reason, 0) + 1
-        if migration.get("eligible"):
-            tier = str(migration.get("tier") or "UNSPECIFIED")
+        if event.get("location_evidence_migration_eligible") is True:
+            tier = str(event.get("location_evidence_migration_tier") or "UNSPECIFIED")
             migration_tier_counts[tier] = migration_tier_counts.get(tier, 0) + 1
             migrated_certified += int(event.get("certified_pin") is True)
         events.append(event)
