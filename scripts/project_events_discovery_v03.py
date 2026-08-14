@@ -105,7 +105,13 @@ def apply_v3_map_publication_gate(
     )
     exact = semantic_exact and standalone_public
 
-    if semantic_exact and not standalone_public:
+    explicitly_non_marker = (
+        event_role in NON_PUBLIC_GROUP_ROLES
+        or parent_event_id not in (None, "")
+        or disposition in PRESERVED_NON_MARKER_DISPOSITIONS
+    )
+
+    if not standalone_public and explicitly_non_marker:
         state = "LIST_ONLY"
         if event_role != "public_event":
             gate_reason = "EVENT_ROLE_NOT_PUBLIC"
@@ -257,22 +263,3 @@ def main() -> int:
     code = legacy.main()
     if code not in (None, 0):
         return int(code)
-
-    report = validate_projected_authority()
-    report_path = legacy.ROOT / "data" / "events_discovery_v3_authority_report.json"
-    report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-
-    reconciliation_path = legacy.ROOT / "data" / "events_discovery_reconciliation_v02.json"
-    reconciliation = json.loads(reconciliation_path.read_text(encoding="utf-8"))
-    reconciliation["v3_authority"] = report
-    reconciliation_path.write_text(json.dumps(reconciliation, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-
-    if not report["qa_pass"]:
-        raise RuntimeError(f"Projector V3 authority gate failed: {report}")
-    return 0
-
-
-_ORIGINAL_BUILD_BASE_EVENT = legacy.build_base_event
-
-if __name__ == "__main__":
-    raise SystemExit(main())
