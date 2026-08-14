@@ -4,7 +4,9 @@ on:
   pull_request:
     paths:
       - 'scripts/probe_parks_cems_athletic_facilities.py'
+      - 'scripts/probe_parks_cems_athletic_facilities_v2.py'
       - 'tests/test_parks_cems_athletic_facility_probe.py'
+      - 'tests/test_parks_cems_athletic_facility_probe_v2.py'
       - '.github/workflows/parks-cems-athletic-facility-recovery-probe.yml'
   workflow_dispatch:
 
@@ -38,10 +40,12 @@ jobs:
       - name: Install dependencies
         run: python3 -m pip install -r requirements.txt
 
-      - name: Compile and test probe
+      - name: Compile and test probes
         run: |
           python3 -m py_compile scripts/probe_parks_cems_athletic_facilities.py
+          python3 -m py_compile scripts/probe_parks_cems_athletic_facilities_v2.py
           python3 -m unittest tests.test_parks_cems_athletic_facility_probe -v
+          python3 -m unittest tests.test_parks_cems_athletic_facility_probe_v2 -v
 
       - name: Probe official CEMS athletic facilities
         env:
@@ -50,8 +54,10 @@ jobs:
           mkdir -p /tmp/nycif-cems-facility-probe
           python3 scripts/probe_parks_cems_athletic_facilities.py \
             --output /tmp/nycif-cems-facility-probe/parks_cems_athletic_facility_recovery_probe_v1.json
+          python3 scripts/probe_parks_cems_athletic_facilities_v2.py \
+            --output /tmp/nycif-cems-facility-probe/parks_cems_athletic_facility_recovery_probe_v2.json
 
-      - name: Prove probe stayed non-mutating
+      - name: Prove probes stayed non-mutating
         run: test -z "$(git status --porcelain)"
 
       - name: Upload facility evidence
