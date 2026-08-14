@@ -3,8 +3,12 @@
 
 This script deliberately does not promote, geocode, mutate caches, or write any
 production feed. It classifies the current match selected by the existing
-matching stack and separately reports which rows would pass the deterministic
-Wave 1 migration gate.
+matching stack and separately reports:
+
+* recovery candidates that deserve authoritative re-resolution; and
+* rows already carrying publication-ready explicit evidence.
+
+A recovery candidate is not a recovered pin.
 """
 from __future__ import annotations
 
@@ -73,11 +77,14 @@ def audit_rows(
     indexes = enrich.build_indexes(enriched)
     buckets: Counter[str] = Counter()
     match_counts: Counter[str] = Counter()
-    migration_reasons: Counter[str] = Counter()
-    migration_tiers: Counter[str] = Counter()
+    recovery_reasons: Counter[str] = Counter()
+    candidate_tiers: Counter[str] = Counter()
+    eligible_tiers: Counter[str] = Counter()
+    candidate_agencies: Counter[str] = Counter()
     by_match: dict[str, Counter[str]] = defaultdict(Counter)
     samples: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    wave1_eligible = 0
+    recovery_candidate_count = 0
+    publication_eligible_count = 0
 
     for raw in raw_rows:
         match_type, match = enrich.find_match(raw, indexes, cache, resolver)
@@ -87,15 +94,26 @@ def audit_rows(
         buckets[bucket] += 1
         by_match[match_type][bucket] += 1
         reason = str(migration.get("reason_code") or "UNSPECIFIED")
-        migration_reasons[reason] += 1
-        if migration.get("eligible"):
-            wave1_eligible += 1
-            migration_tiers[str(migration.get("tier") or "UNSPECIFIED")] += 1
+        recovery_reasons[reason] += 1
+
+        if migration.get("candidate") is True:
+            recovery_candidate_count += 1
+            tier = str(migration.get("candidate_tier") or "UNSPECIFIED")
+            candidate_tiers[tier] += 1
+            agency = str(raw.get("event_agency") or "UNSPECIFIED").strip() or "UNSPECIFIED"
+            candidate_agencies[agency] += 1
+
+        if migration.get("eligible") is True:
+            publication_eligible_count += 1
+            eligible_tiers[str(migration.get("tier") or "UNSPECIFIED")] += 1
+
         if len(samples[bucket]) < 5:
             evidence = normalize_location_evidence(match_type, match)
             samples[bucket].append({
                 "source_event_id": raw.get("event_id") or raw.get("source_event_id") or raw.get("id"),
                 "title": raw.get("event_name") or raw.get("title") or raw.get("name"),
+                "event_agency": raw.get("event_agency"),
+                "event_location": raw.get("event_location") or raw.get("location"),
                 "start_date_time": raw.get("start_date_time"),
                 "match_type": match_type,
                 "coordinate_pair_present": coordinate_pair(match) is not None,
@@ -104,9 +122,10 @@ def audit_rows(
                 "exact_pin_eligible": evidence.get("exact_pin_eligible") is True,
                 "source_provenance": evidence.get("source_provenance"),
                 "reason_code": evidence.get("reason_code"),
-                "wave1_migration_eligible": bool(migration.get("eligible")),
-                "wave1_migration_reason": migration.get("reason_code"),
-                "wave1_migration_tier": migration.get("tier"),
+                "recovery_candidate": migration.get("candidate") is True,
+                "recovery_candidate_tier": migration.get("candidate_tier"),
+                "recovery_reason": migration.get("reason_code"),
+                "publication_eligible": migration.get("eligible") is True,
             })
 
     total = len(raw_rows)
@@ -115,7 +134,7 @@ def audit_rows(
         count for key, count in buckets.items() if key.startswith("MIGRATION_DEBT_")
     )
     return {
-        "schema_version": "NYCIF_LOCATION_EVIDENCE_MIGRATION_AUDIT_V2",
+        "schema_version": "NYCIF_LOCATION_EVIDENCE_MIGRATION_AUDIT_V3",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "source_dataset": "tvpp-9vvx",
         "read_only": True,
@@ -124,9 +143,16 @@ def audit_rows(
         "accounted_rows": accounted,
         "silent_loss_count": total - accounted,
         "migration_debt_count": migration_debt,
-        "wave1_migration_eligible_count": wave1_eligible,
-        "wave1_migration_reason_counts": dict(sorted(migration_reasons.items())),
-        "wave1_migration_tier_counts": dict(sorted(migration_tiers.items())),
+        "recovery_candidate_count": recovery_candidate_count,
+        "recovery_candidate_tier_counts": dict(sorted(candidate_tiers.items())),
+        "recovery_candidate_agency_counts": dict(sorted(candidate_agencies.items())),
+        "publication_eligible_count": publication_eligible_count,
+        "publication_eligible_tier_counts": dict(sorted(eligible_tiers.items())),
+        # Compatibility field retained so older dashboards fail safely instead
+        # of interpreting candidates as recovered pins.
+        "wave1_migration_eligible_count": publication_eligible_count,
+        "wave1_migration_reason_counts": dict(sorted(recovery_reasons.items())),
+        "wave1_migration_tier_counts": dict(sorted(eligible_tiers.items())),
         "bucket_counts": dict(sorted(buckets.items())),
         "match_counts": dict(sorted(match_counts.items())),
         "match_bucket_matrix": {
