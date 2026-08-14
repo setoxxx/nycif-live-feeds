@@ -90,13 +90,23 @@ class RouteOccurrenceRegistryV9Tests(unittest.TestCase):
         self.assertFalse(result["registry_conformance_pass"])
         self.assertEqual(result["hard_zero_gates"]["duplicate_occurrence_key_count"], 1)
 
-    def test_ambiguous_occurrence_start_blocks_and_counts_identity_loss(self):
+    def test_unparseable_start_fails_at_same_current_future_filter_as_v2(self):
         v2, v5, v7, v8 = reports()
         rows = [raw("2026-09-01T10:00:00"), raw("not-a-date")]
         result = audit(v2=v2, v5=v5, v7=v7, v8=v8, raw_rows=rows)
         self.assertFalse(result["registry_conformance_pass"])
-        self.assertGreater(result["hard_zero_gates"]["ambiguous_occurrence_identity_count"], 0)
+        self.assertEqual(result["hard_zero_gates"]["raw_claim_occurrence_count_mismatch_count"], 1)
+        self.assertEqual(result["hard_zero_gates"]["ambiguous_occurrence_identity_count"], 0)
         self.assertEqual(result["hard_zero_gates"]["silent_occurrence_identity_loss_count"], 2)
+
+    def test_date_only_occurrences_retain_day_precision_without_invention(self):
+        v2, v5, v7, v8 = reports()
+        rows = [raw("2026-09-01"), raw("2026-09-08")]
+        result = audit(v2=v2, v5=v5, v7=v7, v8=v8, raw_rows=rows)
+        self.assertTrue(result["registry_conformance_pass"])
+        self.assertEqual(result["exact_start_occurrence_count"], 0)
+        self.assertEqual(result["day_precision_occurrence_count"], 2)
+        self.assertEqual(result["unique_occurrence_key_v2_count"], 2)
 
     def test_raw_source_id_multiset_drift_blocks(self):
         v2, v5, v7, v8 = reports()
