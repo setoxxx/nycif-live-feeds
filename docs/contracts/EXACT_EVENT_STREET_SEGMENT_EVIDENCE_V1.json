@@ -1,0 +1,109 @@
+{
+  "artifact_type": "nycif_exact_event_street_segment_evidence_contract_v1",
+  "status": "recovery_evidence_only",
+  "parent_contract": "docs/contracts/EXACT_EVENT_SITE_PUBLICATION_V1.json",
+  "purpose": "Define fail-closed evidence requirements for retaining an exact claimed NYC street-blockface identity without fabricating a point or granting publication authority.",
+  "scope": {
+    "geometry_role": "event_street_segment_identity_evidence",
+    "current_lane": "TVPP MAIN between CROSS1 and CROSS2 recovery",
+    "public_renderer_enabled": false,
+    "projector_consumption_enabled": false,
+    "publication_authority_granted": false,
+    "official_centerline_geometry_join_completed": false
+  },
+  "core_rules": {
+    "street_segment_identity_requires_official_geosupport_agreement": true,
+    "function_2_endpoints_must_resolve_independently": true,
+    "function_2w_endpoint_coordinates_must_be_nyc_and_borough_valid": true,
+    "function_3_node_pair_must_equal_resolved_endpoint_nodes": true,
+    "function_3_segment_identifier_is_required": true,
+    "strict_claim_to_segment_identifier_must_be_one_to_one": true,
+    "strict_claim_to_endpoint_node_pair_must_be_one_to_one": true,
+    "audit_midpoint_is_not_event_site_geometry": true,
+    "midpoint_must_never_be_used_as_public_exact_point": true,
+    "missing_or_ambiguous_evidence_must_remain_unresolved": true,
+    "contract_conformance_is_not_publication_authority": true
+  },
+  "required_strict_entry_fields": [
+    "claim_key",
+    "borough",
+    "event_location",
+    "occurrence_count",
+    "source_event_ids",
+    "strict_nonpublic_segment_evidence",
+    "reason_code",
+    "evidence_class",
+    "publication_state",
+    "publication_allowed",
+    "exact_pin_eligible",
+    "projector_consumed",
+    "endpoint_1",
+    "endpoint_2",
+    "function_3_from_node",
+    "function_3_to_node",
+    "function_3_segment_identifier",
+    "distance_m",
+    "candidate_midpoint"
+  ],
+  "required_endpoint_fields": [
+    "node",
+    "latitude",
+    "longitude",
+    "main_street",
+    "cross_street"
+  ],
+  "required_strict_values": {
+    "strict_nonpublic_segment_evidence": true,
+    "reason_code": "GEOSUPPORT_ENDPOINTS_SEGMENT_IDENTITY_AGREE",
+    "evidence_class": "NYC_PLANNING_GEOSUPPORT_STREET_SEGMENT_NONPUBLIC",
+    "publication_state": "NONPUBLIC_EVIDENCE_ONLY",
+    "publication_allowed": false,
+    "exact_pin_eligible": false,
+    "projector_consumed": false
+  },
+  "prohibited_transformations": [
+    "endpoint midpoint published as exact event point",
+    "generic street midpoint published as exact event point",
+    "Planning Labs GeoSearch midpoint used as exact authority",
+    "borough neighborhood ZIP or parent-area centroid substituted for the segment",
+    "Function 3 Segment Identifier treated as geometry before an official centerline join",
+    "distinct claims merged solely because text looks similar",
+    "unresolved or ambiguous claim dropped from the reader corpus"
+  ],
+  "official_geometry_handoff": {
+    "required_before_any_exact_segment_geometry": true,
+    "source_family": "NYC Citywide Street Centerline / LION-compatible centerline",
+    "join_key": "function_3_segment_identifier -> centerline.segmentid",
+    "required_geometry_field": "geom",
+    "required_join_cardinality": "one strict claim to one official segment geometry",
+    "geometry_type_expectation": "LineString or source-faithful centerline geometry",
+    "geometry_hash_required": true,
+    "endpoint_consistency_required": true,
+    "note": "NYC Planning's public CSCL staging model indexes centerline rows by segmentid and retains geom. A later reviewed geometry lane must join and validate those bytes; this contract does not perform or authorize that join."
+  },
+  "contract_audit_gates": {
+    "invalid_strict_entry_count_required": 0,
+    "duplicate_segment_identifier_count_required": 0,
+    "duplicate_endpoint_node_pair_count_required": 0,
+    "strict_entry_without_segment_identifier_count_required": 0,
+    "midpoint_publication_count_required": 0,
+    "publication_eligible_count_required": 0,
+    "exact_pin_candidate_count_required": 0,
+    "public_map_write_count_required": 0,
+    "location_cache_write_count_required": 0,
+    "projector_consumed_count_required": 0
+  },
+  "publication_boundary": {
+    "contract_conformant_entry_meaning": "The entry is suitable for retention as non-public exact street-segment identity evidence only.",
+    "not_authorized": [
+      "MAP_READY promotion",
+      "exact-point publication",
+      "public line rendering",
+      "production feed mutation",
+      "location-cache mutation",
+      "projector consumption"
+    ],
+    "future_requirement": "Public street-segment rendering requires a separately reviewed official centerline geometry join, geometry integrity audit, Projector schema support for non-point exact geography, corpus QA, renderer QA, and release decision."
+  },
+  "release_status": "NONPUBLIC_EVIDENCE_ONLY"
+}
