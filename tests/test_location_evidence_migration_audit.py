@@ -29,7 +29,7 @@ class LocationEvidenceMigrationAuditTests(unittest.TestCase):
     def test_no_match_is_unresolved(self):
         self.assertEqual(classification("none", None), "UNRESOLVED_NO_MATCH")
 
-    def test_audit_separates_candidate_from_publication_eligible(self):
+    def test_audit_keeps_ready_candidate_and_new_eligibility_disjoint(self):
         rows = [
             {
                 "id": "one",
@@ -84,10 +84,14 @@ class LocationEvidenceMigrationAuditTests(unittest.TestCase):
             self.assertEqual(report["migration_debt_count"], 1)
             self.assertEqual(report["bucket_counts"]["READY_EXPLICIT_EVIDENCE"], 1)
             self.assertEqual(report["bucket_counts"]["MIGRATION_DEBT_LEGACY_COORDINATES"], 1)
+            self.assertEqual(report["already_ready_explicit_evidence_count"], 1)
             self.assertEqual(report["recovery_candidate_count"], 1)
             self.assertEqual(report["recovery_candidate_tier_counts"], {"exact_address": 1})
             self.assertEqual(report["recovery_candidate_agency_counts"], {"Test Agency": 1})
-            self.assertEqual(report["publication_eligible_count"], 0)
+            self.assertEqual(report["unique_recovery_claim_count"], 1)
+            self.assertEqual(report["unique_recovery_claim_tier_counts"], {"exact_address": 1})
+            self.assertEqual(report["migration_new_publication_eligible_count"], 0)
+            self.assertEqual(report["publication_ready_total_count"], 1)
             self.assertEqual(report["wave1_migration_eligible_count"], 0)
             self.assertFalse(report["promotion_allowed"])
             self.assertEqual(repr(rows), before)

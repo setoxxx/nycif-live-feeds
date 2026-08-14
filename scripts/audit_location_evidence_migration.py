@@ -1,17 +1,14 @@
 #!/usr/bin/env python3
 """Read-only audit of location-evidence migration debt for official permit events.
 
-This script deliberately does not promote, geocode, mutate caches, or write any
-production feed. It classifies the current match selected by the existing
-matching stack and separately reports:
+The audit keeps three disjoint states:
+1. already publication-ready explicit evidence;
+2. recovery candidates that still need authoritative re-resolution; and
+3. any newly publication-eligible evidence produced by a migration validator.
 
-* recovery candidates that deserve authoritative re-resolution; and
-* rows already carrying publication-ready explicit evidence.
-
-A recovery candidate is not a recovered pin. Recurring occurrences sharing the
-same borough/location/tier are also collapsed into a unique resolution claim so
-network and human review work can be sized without repeatedly resolving the
-same physical place.
+Legacy/cache coordinates never become exact merely because they look plausible.
+Recurring occurrences sharing the same borough/location/tier are collapsed into
+one unique resolution claim for workload sizing.
 """
 from __future__ import annotations
 
@@ -26,7 +23,7 @@ try:
     from scripts.gps_identity import normalize_text_legacy
     from scripts.legacy_location_evidence_migration import migration_decision
     from scripts.location_evidence_contract import normalize_location_evidence
-except ModuleNotFoundError:  # pragma: no cover - direct script execution
+except ModuleNotFoundError:  # pragma: no cover
     import build_test_enriched_feed as enrich  # type: ignore[no-redef]
     from gps_identity import normalize_text_legacy
     from legacy_location_evidence_migration import migration_decision
@@ -57,7 +54,6 @@ def classification(match_type: str, match: dict[str, Any] | None) -> str:
     exact = evidence.get("exact_pin_eligible") is True
     validated = str(evidence.get("validation_state") or "").lower() == "validated"
     tier = str(evidence.get("tier") or "")
-
     if exact and validated and coords is not None:
         return "READY_EXPLICIT_EVIDENCE"
     if coords is not None and tier == "legacy_match":
@@ -79,12 +75,7 @@ def _candidate_claim_key(raw: dict[str, Any], tier: str) -> str:
     return f"{tier}|{borough}|{location}"
 
 
-def audit_rows(
-    raw_rows: list[dict[str, Any]],
-    enriched: list[dict[str, Any]],
-    cache: dict[str, Any],
-    resolver: Any,
-) -> dict[str, Any]:
+def audit_rows(raw_rows: list[dict[str, Any]], enriched: list[dict[str, Any]], cache: dict[str, Any], resolver: Any) -> dict[str, Any]:
     indexes = enrich.build_indexes(enriched)
     buckets: Counter[str] = Counter()
     match_counts: Counter[str] = Counter()
@@ -97,15 +88,26 @@ def audit_rows(
     by_match: dict[str, Counter[str]] = defaultdict(Counter)
     samples: dict[str, list[dict[str, Any]]] = defaultdict(list)
     recovery_candidate_count = 0
-    publication_eligible_count = 0
+    migration_new_publication_eligible_count = 0
+    already_ready_explicit_count = 0
 
     for raw in raw_rows:
         match_type, match = enrich.find_match(raw, indexes, cache, resolver)
         bucket = classification(match_type, match)
-        migration = migration_decision(raw, match_type, match)
         match_counts[match_type] += 1
         buckets[bucket] += 1
         by_match[match_type][bucket] += 1
+
+        if bucket == "READY_EXPLICIT_EVIDENCE":
+            already_ready_explicit_count += 1
+            migration = {
+                "candidate": False,
+                "eligible": False,
+                "reason_code": "ALREADY_READY_EXPLICIT_EVIDENCE",
+            }
+        else:
+            migration = migration_decision(raw, match_type, match)
+
         reason = str(migration.get("reason_code") or "UNSPECIFIED")
         recovery_reasons[reason] += 1
 
@@ -117,20 +119,17 @@ def audit_rows(
             candidate_agencies[agency] += 1
             claim_key = _candidate_claim_key(raw, tier)
             candidate_claims[claim_key] += 1
-            claim_examples.setdefault(
-                claim_key,
-                {
-                    "candidate_tier": tier,
-                    "borough": raw.get("event_borough") or raw.get("borough"),
-                    "event_location": raw.get("event_location") or raw.get("location"),
-                    "event_agency": raw.get("event_agency"),
-                    "reason_code": migration.get("reason_code"),
-                    "facility_ids": migration.get("facility_ids") or [],
-                },
-            )
+            claim_examples.setdefault(claim_key, {
+                "candidate_tier": tier,
+                "borough": raw.get("event_borough") or raw.get("borough"),
+                "event_location": raw.get("event_location") or raw.get("location"),
+                "event_agency": raw.get("event_agency"),
+                "reason_code": migration.get("reason_code"),
+                "facility_ids": migration.get("facility_ids") or [],
+            })
 
         if migration.get("eligible") is True:
-            publication_eligible_count += 1
+            migration_new_publication_eligible_count += 1
             eligible_tiers[str(migration.get("tier") or "UNSPECIFIED")] += 1
 
         if len(samples[bucket]) < 5:
@@ -148,17 +147,16 @@ def audit_rows(
                 "exact_pin_eligible": evidence.get("exact_pin_eligible") is True,
                 "source_provenance": evidence.get("source_provenance"),
                 "reason_code": evidence.get("reason_code"),
+                "already_ready_explicit": bucket == "READY_EXPLICIT_EVIDENCE",
                 "recovery_candidate": migration.get("candidate") is True,
                 "recovery_candidate_tier": migration.get("candidate_tier"),
                 "recovery_reason": migration.get("reason_code"),
-                "publication_eligible": migration.get("eligible") is True,
+                "new_publication_eligible_from_migration": migration.get("eligible") is True,
             })
 
     total = len(raw_rows)
     accounted = sum(buckets.values())
-    migration_debt = sum(
-        count for key, count in buckets.items() if key.startswith("MIGRATION_DEBT_")
-    )
+    migration_debt = sum(count for key, count in buckets.items() if key.startswith("MIGRATION_DEBT_"))
     unique_claims_by_tier = Counter(key.split("|", 1)[0] for key in candidate_claims)
     top_claims = []
     for claim_key, occurrence_count in candidate_claims.most_common(50):
@@ -166,6 +164,7 @@ def audit_rows(
         item["occurrence_count"] = occurrence_count
         top_claims.append(item)
 
+    publication_ready_total = already_ready_explicit_count + migration_new_publication_eligible_count
     return {
         "schema_version": "NYCIF_LOCATION_EVIDENCE_MIGRATION_AUDIT_V3",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -176,34 +175,30 @@ def audit_rows(
         "accounted_rows": accounted,
         "silent_loss_count": total - accounted,
         "migration_debt_count": migration_debt,
+        "already_ready_explicit_evidence_count": already_ready_explicit_count,
         "recovery_candidate_count": recovery_candidate_count,
         "recovery_candidate_tier_counts": dict(sorted(candidate_tiers.items())),
         "recovery_candidate_agency_counts": dict(sorted(candidate_agencies.items())),
         "unique_recovery_claim_count": len(candidate_claims),
         "unique_recovery_claim_tier_counts": dict(sorted(unique_claims_by_tier.items())),
         "top_recovery_claims": top_claims,
-        "publication_eligible_count": publication_eligible_count,
+        "migration_new_publication_eligible_count": migration_new_publication_eligible_count,
+        "publication_ready_total_count": publication_ready_total,
+        "publication_eligible_count": migration_new_publication_eligible_count,
         "publication_eligible_tier_counts": dict(sorted(eligible_tiers.items())),
-        # Compatibility field retained so older dashboards fail safely instead
-        # of interpreting candidates as recovered pins.
-        "wave1_migration_eligible_count": publication_eligible_count,
+        "wave1_migration_eligible_count": migration_new_publication_eligible_count,
         "wave1_migration_reason_counts": dict(sorted(recovery_reasons.items())),
         "wave1_migration_tier_counts": dict(sorted(eligible_tiers.items())),
         "bucket_counts": dict(sorted(buckets.items())),
         "match_counts": dict(sorted(match_counts.items())),
-        "match_bucket_matrix": {
-            key: dict(sorted(value.items())) for key, value in sorted(by_match.items())
-        },
+        "match_bucket_matrix": {key: dict(sorted(value.items())) for key, value in sorted(by_match.items())},
         "samples": dict(sorted(samples.items())),
     }
 
 
 def build_audit() -> dict[str, Any]:
     raw_rows = enrich.fetch_raw_rows()
-    raw_current = [
-        row for row in raw_rows
-        if enrich.date_key(row.get("start_date_time")) >= enrich.TODAY_NYC
-    ]
+    raw_current = [row for row in raw_rows if enrich.date_key(row.get("start_date_time")) >= enrich.TODAY_NYC]
     enriched = enrich.rows_from_payload(enrich.load_json_file(enrich.ENRICHED_PATH, []))
     cache = enrich.location_cache_entries()
     resolver = enrich.NYCLocationResolver.load_default()
