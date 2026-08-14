@@ -23,7 +23,7 @@
       "housing": 15,
       "market": 395,
       "media": 54,
-      "parks": 4257,
+      "parks": 4259,
       "services": 40,
       "sports": 21058,
       "tours": 16,
@@ -42,7 +42,7 @@
       "housing": 15,
       "market": 333,
       "media": 54,
-      "parks": 1733,
+      "parks": 1735,
       "services": 40,
       "sports": 21055,
       "tours": 16,
@@ -54,15 +54,15 @@
   "civic_people_facing_bookmark": {
     "accepted": 4670,
     "daily_pull": {
-      "last_run_utc": "2026-08-03T17:27:26Z",
-      "last_success_utc": "2026-08-03T17:27:26Z",
+      "last_run_utc": "2026-08-14T04:29:23Z",
+      "last_success_utc": "2026-08-14T04:29:23Z",
       "qa_pass": true,
       "report": "data/daily_people_facing_sync_report.json",
       "workflow": ".github/workflows/daily-people-facing-desk-sync.yml"
     },
     "digest": "data/civic_people_facing_godview_digest.json",
     "field_desk_preview": "?v=civic-people-facing-v01&resetFilters=1&feeds=main",
-    "generated_at_utc": "2026-08-14T04:29:29Z",
+    "generated_at_utc": "2026-08-14T11:28:31Z",
     "list_only": 1290,
     "map_ready": 3380,
     "merged_pr": 171,
@@ -91,7 +91,7 @@
     "removed_count": 0,
     "removed_sample": []
   },
-  "generated_at_utc": "2026-08-14T04:29:29Z",
+  "generated_at_utc": "2026-08-14T11:28:31Z",
   "howard_assist": {
     "instruction": "Reply with confirmed category/interests per pattern_bucket, or per title for needs_howard_label. Confirmed rules will become permanent overrides for daily pulls.",
     "low_confidence_rows": [
@@ -70976,7 +70976,7 @@
     }
   },
   "pipeline_snapshot": {
-    "accepted_canonical_records": 31317,
+    "accepted_canonical_records": 31319,
     "disposition_counts_phase1": {
       "staged_with_valid_gps": 33084
     },
@@ -70989,11 +70989,11 @@
   "purpose": "Press/operator God View digest: newly pulled vs review/rejected queues. Read-only.",
   "queue_totals": {
     "hard_invalid_rejected": 0,
-    "legacy_major_quarantined": 10,
+    "legacy_major_quarantined": 0,
     "low_confidence_general_fallback": 3816,
-    "missing_or_invalid_coordinates_list_only": 31317,
+    "missing_or_invalid_coordinates_list_only": 31319,
     "phase1_gps_review_queue": 3110,
-    "possible_duplicate_groups": 1946
+    "possible_duplicate_groups": 1948
   },
   "review_queues_preview": {
     "gps_review_sample": [
@@ -71319,128 +71319,7 @@
       }
     ],
     "invalid_rejected_sample": [],
-    "legacy_major_quarantine_sample": [
-      {
-        "borough": null,
-        "canonical_id": "review_supplemental:tvpp-9vvx:957017@2026-08-13",
-        "current_classification": "civic",
-        "date": "2026-08-13",
-        "location": "Queens",
-        "reason_for_review": "legacy_major_without_current_evidence",
-        "recommended_action": "keep_off_major_until_current_signal",
-        "source_dataset": null,
-        "source_event_id": null,
-        "title": "Rally for Flushing Meadows Corona Park"
-      },
-      {
-        "borough": null,
-        "canonical_id": "review_supplemental:tvpp-9vvx:964135@2026-08-14",
-        "current_classification": "civic",
-        "date": "2026-08-14",
-        "location": "Bronx",
-        "reason_for_review": "legacy_major_without_current_evidence",
-        "recommended_action": "keep_off_major_until_current_signal",
-        "source_dataset": null,
-        "source_event_id": null,
-        "title": "Zimmerman Playground Ribbon Cutting Ceremony"
-      },
-      {
-        "borough": null,
-        "canonical_id": "review_supplemental:tvpp-9vvx:947860@2026-08-15",
-        "current_classification": "civic",
-        "date": "2026-08-15",
-        "location": "Queens",
-        "reason_for_review": "legacy_major_without_current_evidence",
-        "recommended_action": "keep_off_major_until_current_signal",
-        "source_dataset": null,
-        "source_event_id": null,
-        "title": "krishna balarama ratha yatra"
-      },
-      {
-        "borough": null,
-        "canonical_id": "review_supplemental:tvpp-9vvx:946008@2026-08-16",
-        "current_classification": "civic",
-        "date": "2026-08-16",
-        "location": "Queens",
-        "reason_for_review": "legacy_major_without_current_evidence",
-        "recommended_action": "keep_off_major_until_current_signal",
-        "source_dataset": null,
-        "source_event_id": null,
-        "title": "Religious Procession"
-      },
-      {
-        "borough": null,
-        "canonical_id": "review_supplemental:tvpp-9vvx:953509@2026-08-22",
-        "current_classification": "civic",
-        "date": "2026-08-22",
-        "location": "Queens",
-        "reason_for_review": "legacy_major_without_current_evidence",
-        "recommended_action": "keep_off_major_until_current_signal",
-        "source_dataset": null,
-        "source_event_id": null,
-        "title": "WORSHIPPING FAR ROCKAWAY"
-      },
-      {
-        "borough": null,
-        "canonical_id": "review_supplemental:tvpp-9vvx:962769@2026-08-22",
-        "current_classification": "civic",
-        "date": "2026-08-22",
-        "location": "Brooklyn",
-        "reason_for_review": "legacy_major_without_current_evidence",
-        "recommended_action": "keep_off_major_until_current_signal",
-        "source_dataset": null,
-        "source_event_id": null,
-        "title": "BSSI Youth Health Expo"
-      },
-      {
-        "borough": null,
-        "canonical_id": "review_supplemental:tvpp-9vvx:931872@2026-08-23",
-        "current_classification": "civic",
-        "date": "2026-08-23",
-        "location": "Manhattan",
-        "reason_for_review": "legacy_major_without_current_evidence",
-        "recommended_action": "keep_off_major_until_current_signal",
-        "source_dataset": null,
-        "source_event_id": null,
-        "title": "Americas 911 Ride"
-      },
-      {
-        "borough": null,
-        "canonical_id": "review_supplemental:tvpp-9vvx:944030@2026-09-11",
-        "current_classification": "civic",
-        "date": "2026-09-11",
-        "location": "Brooklyn",
-        "reason_for_review": "legacy_major_without_current_evidence",
-        "recommended_action": "keep_off_major_until_current_signal",
-        "source_dataset": null,
-        "source_event_id": null,
-        "title": "Brooklyn Bedford Park 911 Memorial Candle Vigil"
-      },
-      {
-        "borough": null,
-        "canonical_id": "review_supplemental:tvpp-9vvx:955768@2026-09-25",
-        "current_classification": "general",
-        "date": "2026-09-25",
-        "location": "Bronx",
-        "reason_for_review": "legacy_major_without_current_evidence",
-        "recommended_action": "keep_off_major_until_current_signal",
-        "source_dataset": null,
-        "source_event_id": null,
-        "title": "Pals BBQ"
-      },
-      {
-        "borough": null,
-        "canonical_id": "review_supplemental:tvpp-9vvx:955773@2026-10-02",
-        "current_classification": "general",
-        "date": "2026-10-02",
-        "location": "Bronx",
-        "reason_for_review": "legacy_major_without_current_evidence",
-        "recommended_action": "keep_off_major_until_current_signal",
-        "source_dataset": null,
-        "source_event_id": null,
-        "title": "PALS BBQ - Rain Date"
-      }
-    ],
+    "legacy_major_quarantine_sample": [],
     "low_confidence_sample": [
       {
         "borough": null,
