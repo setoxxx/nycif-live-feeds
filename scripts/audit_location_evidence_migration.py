@@ -1,0 +1,152 @@
+#!/usr/bin/env python3
+"""Read-only audit of location-evidence migration debt for official permit events.
+
+This script deliberately does not promote, geocode, mutate caches, or write any
+production feed. It classifies the current match selected by the existing
+matching stack so recovery work can distinguish true location gaps from valid
+coordinates blocked only by an incomplete evidence migration.
+"""
+from __future__ import annotations
+
+import json
+import math
+from collections import Counter, defaultdict
+from datetime import datetime, timezone
+from typing import Any
+
+try:
+    from scripts import build_test_enriched_feed as enrich
+    from scripts.location_evidence_contract import normalize_location_evidence
+except ModuleNotFoundError:  # pragma: no cover - direct script execution
+    import build_test_enriched_feed as enrich  # type: ignore[no-redef]
+    from location_evidence_contract import normalize_location_evidence
+
+
+def _finite(value: Any) -> float | None:
+    try:
+        number = float(value)
+    except (TypeError, ValueError):
+        return None
+    return number if math.isfinite(number) else None
+
+
+def coordinate_pair(match: dict[str, Any] | None) -> tuple[float, float] | None:
+    if not isinstance(match, dict):
+        return None
+    lat = _finite(match.get("lat", match.get("latitude")))
+    lng = _finite(match.get("lng", match.get("longitude")))
+    if lat is None or lng is None:
+        return None
+    return lat, lng
+
+
+def classification(match_type: str, match: dict[str, Any] | None) -> str:
+    evidence = normalize_location_evidence(match_type, match)
+    coords = coordinate_pair(match)
+    exact = evidence.get("exact_pin_eligible") is True
+    validated = str(evidence.get("validation_state") or "").lower() == "validated"
+    tier = str(evidence.get("tier") or "")
+
+    if exact and validated and coords is not None:
+        return "READY_EXPLICIT_EVIDENCE"
+    if coords is not None and tier == "legacy_match":
+        return "MIGRATION_DEBT_LEGACY_COORDINATES"
+    if coords is not None and tier == "exact_source_coordinate" and not (exact and validated):
+        return "MIGRATION_DEBT_SOURCE_COORDINATES"
+    if coords is not None and evidence.get("reason_code") == "NO_EXPLICIT_EXACT_LOCATION_EVIDENCE":
+        return "MIGRATION_DEBT_COORDINATES_NO_ENVELOPE"
+    if coords is not None:
+        return "COORDINATES_REQUIRE_VALIDATION"
+    if match_type == "none" or not isinstance(match, dict):
+        return "UNRESOLVED_NO_MATCH"
+    return "MATCH_WITHOUT_COORDINATES"
+
+
+def audit_rows(
+    raw_rows: list[dict[str, Any]],
+    enriched: list[dict[str, Any]],
+    cache: dict[str, Any],
+    resolver: Any,
+) -> dict[str, Any]:
+    indexes = enrich.build_indexes(enriched)
+    buckets: Counter[str] = Counter()
+    match_counts: Counter[str] = Counter()
+    by_match: dict[str, Counter[str]] = defaultdict(Counter)
+    samples: dict[str, list[dict[str, Any]]] = defaultdict(list)
+
+    for raw in raw_rows:
+        match_type, match = enrich.find_match(raw, indexes, cache, resolver)
+        bucket = classification(match_type, match)
+        match_counts[match_type] += 1
+        buckets[bucket] += 1
+        by_match[match_type][bucket] += 1
+        if len(samples[bucket]) < 5:
+            evidence = normalize_location_evidence(match_type, match)
+            samples[bucket].append({
+                "source_event_id": raw.get("event_id") or raw.get("source_event_id") or raw.get("id"),
+                "title": raw.get("event_name") or raw.get("title") or raw.get("name"),
+                "start_date_time": raw.get("start_date_time"),
+                "match_type": match_type,
+                "coordinate_pair_present": coordinate_pair(match) is not None,
+                "evidence_tier": evidence.get("tier"),
+                "validation_state": evidence.get("validation_state"),
+                "exact_pin_eligible": evidence.get("exact_pin_eligible") is True,
+                "source_provenance": evidence.get("source_provenance"),
+                "reason_code": evidence.get("reason_code"),
+            })
+
+    total = len(raw_rows)
+    accounted = sum(buckets.values())
+    migration_debt = sum(
+        count for key, count in buckets.items() if key.startswith("MIGRATION_DEBT_")
+    )
+    return {
+        "schema_version": "NYCIF_LOCATION_EVIDENCE_MIGRATION_AUDIT_V1",
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "source_dataset": "tvpp-9vvx",
+        "read_only": True,
+        "promotion_allowed": False,
+        "input_rows": total,
+        "accounted_rows": accounted,
+        "silent_loss_count": total - accounted,
+        "migration_debt_count": migration_debt,
+        "bucket_counts": dict(sorted(buckets.items())),
+        "match_counts": dict(sorted(match_counts.items())),
+        "match_bucket_matrix": {
+            key: dict(sorted(value.items())) for key, value in sorted(by_match.items())
+        },
+        "samples": dict(sorted(samples.items())),
+    }
+
+
+def build_audit() -> dict[str, Any]:
+    raw_rows = enrich.fetch_raw_rows()
+    raw_current = [
+        row for row in raw_rows
+        if enrich.date_key(row.get("start_date_time")) >= enrich.TODAY_NYC
+    ]
+    enriched = enrich.rows_from_payload(enrich.load_json_file(enrich.ENRICHED_PATH, []))
+    cache = enrich.location_cache_entries()
+    resolver = enrich.NYCLocationResolver.load_default()
+    before_live_calls = resolver._live_calls
+    report = audit_rows(raw_current, enriched, cache, resolver)
+    if resolver._live_calls != before_live_calls:
+        raise RuntimeError("read-only migration audit unexpectedly performed live geosearch")
+    report["raw_rows_loaded"] = len(raw_rows)
+    report["current_future_rows"] = len(raw_current)
+    report["enriched_rows_loaded"] = len(enriched)
+    report["location_cache_entries_loaded"] = len(cache)
+    report["live_geosearch_calls"] = 0
+    return report
+
+
+def main() -> int:
+    report = build_audit()
+    print(json.dumps(report, indent=2, ensure_ascii=False, sort_keys=True))
+    if report["silent_loss_count"] != 0:
+        raise RuntimeError(f"location migration audit lost rows: {report['silent_loss_count']}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
