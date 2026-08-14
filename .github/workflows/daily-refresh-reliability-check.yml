@@ -7,6 +7,8 @@ on:
       - '.github/workflows/discovery-feed-refresh.yml'
       - '.github/workflows/daily-refresh-reliability-check.yml'
       - 'scripts/run_discovery_feed_refresh.sh'
+      - 'scripts/prepare_v3_runtime_validator.py'
+      - 'tests/test_prepare_v3_runtime_validator.py'
       - 'scripts/publish_blocked_daily_refresh.sh'
       - 'scripts/run_daily_refresh_stage.py'
       - 'scripts/record_blocked_daily_data_health.py'
@@ -41,7 +43,16 @@ jobs:
             scripts/run_daily_refresh_stage.py \
             scripts/record_blocked_daily_data_health.py \
             scripts/test_live_event_intake_refresh_current.py \
-            scripts/test_daily_production_hardening.py
+            scripts/test_daily_production_hardening.py \
+            scripts/prepare_v3_runtime_validator.py
+
+      - name: Run V3 zero-MAP_READY runtime-guard regressions
+        run: |
+          python -m unittest tests.test_prepare_v3_runtime_validator -v
+          python scripts/prepare_v3_runtime_validator.py \
+            --source scripts/run_discovery_feed_refresh.sh \
+            --output /tmp/nycif-run-discovery-feed-refresh-v3.sh
+          bash -n /tmp/nycif-run-discovery-feed-refresh-v3.sh
 
       - name: Run date-safe live intake regressions
         run: python scripts/test_live_event_intake_refresh_current.py
