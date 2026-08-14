@@ -11,9 +11,16 @@ from scripts.audit_street_segment_geosupport_recovery_v2 import (
 
 
 class FakeGeoSupport:
-    def __init__(self, *, mismatch_segment: bool = False, bad_coordinate: bool = False) -> None:
+    def __init__(
+        self,
+        *,
+        mismatch_segment: bool = False,
+        bad_coordinate: bool = False,
+        missing_segment_identifier: bool = False,
+    ) -> None:
         self.mismatch_segment = mismatch_segment
         self.bad_coordinate = bad_coordinate
+        self.missing_segment_identifier = missing_segment_identifier
 
     def call(self, payload):
         function = str(payload.get("function")).upper()
@@ -41,11 +48,15 @@ class FakeGeoSupport:
             raise RuntimeError("node not found")
         if function == "3":
             if self.mismatch_segment:
-                return {"From Node": "9999999", "To Node": "0020353", "Segment IDs": []}
+                return {
+                    "From Node": "9999999",
+                    "To Node": "0020353",
+                    "Segment Identifier": "0023578",
+                }
             return {
                 "From Node": "0015487",
                 "To Node": "0020353",
-                "Segment IDs": ["0023578", "0032059"],
+                "Segment Identifier": "" if self.missing_segment_identifier else "0023578",
             }
         raise RuntimeError(f"unsupported function {function}")
 
@@ -75,6 +86,10 @@ class GeoSupportStreetSegmentRecoveryTests(unittest.TestCase):
         self.assertFalse(result["projector_consumed"])
         self.assertEqual(result["function_3_from_node"], "0015487")
         self.assertEqual(result["function_3_to_node"], "0020353")
+        self.assertEqual(result["function_3_segment_identifier"], "0023578")
+        self.assertTrue(
+            result["candidate_midpoint"]["must_not_be_used_as_public_exact_point"]
+        )
         self.assertGreater(result["distance_m"], 20)
 
     def test_function_3_node_pair_mismatch_blocks(self) -> None:
@@ -82,6 +97,12 @@ class GeoSupportStreetSegmentRecoveryTests(unittest.TestCase):
         result = evidence.resolve_segment(CLAIM)
         self.assertFalse(result["strict_nonpublic_segment_evidence"])
         self.assertEqual(result["reason_code"], "SEGMENT_NODE_PAIR_MISMATCH")
+
+    def test_missing_segment_identifier_blocks(self) -> None:
+        evidence = GeoSupportStreetEvidence(FakeGeoSupport(missing_segment_identifier=True))
+        result = evidence.resolve_segment(CLAIM)
+        self.assertFalse(result["strict_nonpublic_segment_evidence"])
+        self.assertEqual(result["reason_code"], "SEGMENT_IDENTIFIER_MISSING")
 
     def test_invalid_endpoint_coordinate_blocks(self) -> None:
         evidence = GeoSupportStreetEvidence(FakeGeoSupport(bad_coordinate=True))
@@ -98,6 +119,10 @@ class GeoSupportStreetSegmentRecoveryTests(unittest.TestCase):
         self.assertEqual(report["unresolved_or_blocked_claim_count"], 0)
         self.assertEqual(report["geosupport_call_count"], 5)
         self.assertEqual(
+            report["geometry_join_status"],
+            "SEGMENT_IDENTIFIER_ONLY_GEOMETRY_NOT_YET_JOINED",
+        )
+        self.assertEqual(
             report["hard_zero_gates"],
             {
                 "publication_count": 0,
@@ -105,6 +130,7 @@ class GeoSupportStreetSegmentRecoveryTests(unittest.TestCase):
                 "public_map_write_count": 0,
                 "location_cache_write_count": 0,
                 "projector_consumed_count": 0,
+                "midpoint_publication_count": 0,
             },
         )
 
