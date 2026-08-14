@@ -3,8 +3,8 @@
 
 This script deliberately does not promote, geocode, mutate caches, or write any
 production feed. It classifies the current match selected by the existing
-matching stack so recovery work can distinguish true location gaps from valid
-coordinates blocked only by an incomplete evidence migration.
+matching stack and separately reports which rows would pass the deterministic
+Wave 1 migration gate.
 """
 from __future__ import annotations
 
@@ -16,9 +16,11 @@ from typing import Any
 
 try:
     from scripts import build_test_enriched_feed as enrich
+    from scripts.legacy_location_evidence_migration import migration_decision
     from scripts.location_evidence_contract import normalize_location_evidence
 except ModuleNotFoundError:  # pragma: no cover - direct script execution
     import build_test_enriched_feed as enrich  # type: ignore[no-redef]
+    from legacy_location_evidence_migration import migration_decision
     from location_evidence_contract import normalize_location_evidence
 
 
@@ -71,15 +73,24 @@ def audit_rows(
     indexes = enrich.build_indexes(enriched)
     buckets: Counter[str] = Counter()
     match_counts: Counter[str] = Counter()
+    migration_reasons: Counter[str] = Counter()
+    migration_tiers: Counter[str] = Counter()
     by_match: dict[str, Counter[str]] = defaultdict(Counter)
     samples: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    wave1_eligible = 0
 
     for raw in raw_rows:
         match_type, match = enrich.find_match(raw, indexes, cache, resolver)
         bucket = classification(match_type, match)
+        migration = migration_decision(raw, match_type, match)
         match_counts[match_type] += 1
         buckets[bucket] += 1
         by_match[match_type][bucket] += 1
+        reason = str(migration.get("reason_code") or "UNSPECIFIED")
+        migration_reasons[reason] += 1
+        if migration.get("eligible"):
+            wave1_eligible += 1
+            migration_tiers[str(migration.get("tier") or "UNSPECIFIED")] += 1
         if len(samples[bucket]) < 5:
             evidence = normalize_location_evidence(match_type, match)
             samples[bucket].append({
@@ -93,6 +104,9 @@ def audit_rows(
                 "exact_pin_eligible": evidence.get("exact_pin_eligible") is True,
                 "source_provenance": evidence.get("source_provenance"),
                 "reason_code": evidence.get("reason_code"),
+                "wave1_migration_eligible": bool(migration.get("eligible")),
+                "wave1_migration_reason": migration.get("reason_code"),
+                "wave1_migration_tier": migration.get("tier"),
             })
 
     total = len(raw_rows)
@@ -101,7 +115,7 @@ def audit_rows(
         count for key, count in buckets.items() if key.startswith("MIGRATION_DEBT_")
     )
     return {
-        "schema_version": "NYCIF_LOCATION_EVIDENCE_MIGRATION_AUDIT_V1",
+        "schema_version": "NYCIF_LOCATION_EVIDENCE_MIGRATION_AUDIT_V2",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "source_dataset": "tvpp-9vvx",
         "read_only": True,
@@ -110,6 +124,9 @@ def audit_rows(
         "accounted_rows": accounted,
         "silent_loss_count": total - accounted,
         "migration_debt_count": migration_debt,
+        "wave1_migration_eligible_count": wave1_eligible,
+        "wave1_migration_reason_counts": dict(sorted(migration_reasons.items())),
+        "wave1_migration_tier_counts": dict(sorted(migration_tiers.items())),
         "bucket_counts": dict(sorted(buckets.items())),
         "match_counts": dict(sorted(match_counts.items())),
         "match_bucket_matrix": {
