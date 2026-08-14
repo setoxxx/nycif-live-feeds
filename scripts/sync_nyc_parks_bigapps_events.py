@@ -6,8 +6,10 @@ Dataset ``w3wp-dpdi`` is the current upcoming-events transport used by the V3
 line and exposes the event schema, including first-party coordinate pairs.
 
 This collector never geocodes. A valid coordinate supplied by the official
-source is carried as explicit ``exact_source_coordinate`` evidence. Missing or
-invalid coordinates remain non-exact for downstream Projector V3 handling.
+source is preserved as ``exact_source_coordinate`` evidence, but source presence
+alone is not exact-site certification. The coordinate remains site-validation
+pending until downstream semantic validation proves it represents the event's
+actual stated site. Missing or invalid coordinates remain non-exact.
 """
 
 from __future__ import annotations
@@ -112,19 +114,31 @@ def link_value(value: Any) -> str | None:
     return text(value) or None
 
 
-def official_coordinate_evidence(lat: float | None, lng: float | None) -> dict[str, Any] | None:
+def official_coordinate_evidence(
+    lat: float | None,
+    lng: float | None,
+    *,
+    source_event_id: str | None = None,
+) -> dict[str, Any] | None:
     if lat is None or lng is None:
         return None
-    return {
+    evidence = {
         "tier": "exact_source_coordinate",
-        "validation_state": "validated",
-        "exact_pin_eligible": True,
+        "validation_state": "unvalidated",
+        "site_validation_state": "pending",
+        "exact_pin_eligible": False,
         "source_provenance": EVENTS_URL,
         "provider": "NYC Parks / NYC Open Data",
         "source_dataset_id": DATASET_ID,
-        "reason_code": "OFFICIAL_SOURCE_COORDINATE",
-        "reason_detail": "Coordinate pair supplied directly by the current NYC Parks Open Data event record.",
+        "reason_code": "OFFICIAL_SOURCE_COORDINATE_SITE_VALIDATION_PENDING",
+        "reason_detail": (
+            "Coordinate pair supplied directly by the current NYC Parks Open Data event record; "
+            "exact event-site agreement has not yet been independently validated."
+        ),
     }
+    if source_event_id:
+        evidence["source_event_id"] = source_event_id
+    return evidence
 
 
 def normalize_event_item(item: dict[str, Any]) -> dict[str, Any]:
@@ -135,10 +149,11 @@ def normalize_event_item(item: dict[str, Any]) -> dict[str, Any]:
     end_clock = time_part(item.get("endtime"))
     park_name = text(item.get("parknames"))
     location = text(item.get("location")) or park_name
+    source_event_id = text(item.get("guid"))
 
     return {
         "source_dataset": "nyc-parks-bigapps-events",
-        "source_event_id": text(item.get("guid")),
+        "source_event_id": source_event_id,
         "source_authority_dataset": DATASET_ID,
         "source_contract_version": SOURCE_CONTRACT_VERSION,
         "title": item.get("title"),
@@ -162,7 +177,11 @@ def normalize_event_item(item: dict[str, Any]) -> dict[str, Any]:
         "image": link_value(item.get("image")),
         "lat": lat,
         "lng": lng,
-        "location_evidence": official_coordinate_evidence(lat, lng),
+        "location_evidence": official_coordinate_evidence(
+            lat,
+            lng,
+            source_event_id=source_event_id or None,
+        ),
         "manual_review_status": "pending",
         "promotion_allowed": False,
         "public_map_modified": False,
@@ -194,13 +213,20 @@ def main() -> int:
         if text(row.get("end_date") or row.get("start_date") or row.get("start_date_time"))[:10] >= today_nyc
     ]
     with_coords = sum(1 for row in normalized if row.get("lat") is not None and row.get("lng") is not None)
-    with_exact_source_evidence = sum(
+    with_source_coordinate_evidence = sum(
         1
         for row in normalized
         if isinstance(row.get("location_evidence"), dict)
+        and row["location_evidence"].get("tier") == "exact_source_coordinate"
+    )
+    with_site_validated_coordinates = sum(
+        1
+        for row in normalized
+        if isinstance(row.get("location_evidence"), dict)
+        and row["location_evidence"].get("site_validation_state") == "validated"
         and row["location_evidence"].get("exact_pin_eligible") is True
     )
-    qa_pass = bool(current_future) and not error and with_exact_source_evidence == with_coords
+    qa_pass = bool(current_future) and not error and with_source_coordinate_evidence == with_coords
 
     snapshot = {
         "generated_at_utc": generated_at,
@@ -227,8 +253,10 @@ def main() -> int:
         "today_nyc": today_nyc,
         "date_boundary_timezone": "America/New_York",
         "rows_with_coordinates": with_coords,
-        "rows_with_exact_source_coordinate_evidence": with_exact_source_evidence,
-        "coordinate_evidence_parity": with_exact_source_evidence == with_coords,
+        "rows_with_source_coordinate_evidence": with_source_coordinate_evidence,
+        "rows_with_site_validated_coordinates": with_site_validated_coordinates,
+        "coordinate_evidence_parity": with_source_coordinate_evidence == with_coords,
+        "exact_site_validation_required_downstream": True,
         "error": error,
         "live_fetch_error": error,
         "legacy_source_url": LEGACY_BIGAPPS_URL,
