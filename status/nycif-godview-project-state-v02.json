@@ -11,7 +11,7 @@
     {
       "severity": "high",
       "source": "daily_data_health",
-      "text": "Daily production refresh failed at stage 'unknown_stage' (exit 1, shell line unknown). Public feeds were not committed. [.github/workflows/discovery-feed-refresh.yml]"
+      "text": "Daily production refresh failed at stage 'final_runtime_validation' (command 'validate_complete_runtime_artifacts', exit 1). [.github/workflows/discovery-feed-refresh.yml]"
     },
     {
       "severity": "medium",
@@ -66,11 +66,15 @@
       {
         "artifact": ".github/workflows/discovery-feed-refresh.yml",
         "code": "daily_refresh_stage_failed",
+        "command_id": "validate_complete_runtime_artifacts",
+        "error_summary": "A shell command failed before a captured stderr summary was available. Review the GitHub Actions job log for this stage.",
+        "exception_class": "ShellCommandFailure",
         "exit_code": 1,
-        "line": "unknown",
-        "message": "Daily production refresh failed at stage 'unknown_stage' (exit 1, shell line unknown). Public feeds were not committed.",
+        "message": "Daily production refresh failed at stage 'final_runtime_validation' (command 'validate_complete_runtime_artifacts', exit 1).",
+        "public_feed_commit_occurred": false,
         "severity": "critical",
-        "stage": "unknown_stage"
+        "shell_line": "164",
+        "stage": "final_runtime_validation"
       }
     ],
     "company_focus": "News Desk live-data completeness, freshness, and duplicate safety",
@@ -81,7 +85,7 @@
       "note": "V1 remains the sole production authority.",
       "production_authority": false
     },
-    "generated_at_utc": "2026-08-06T12:30:15Z",
+    "generated_at_utc": "2026-08-14T03:55:56Z",
     "operating_rule": "Do not commit or publish a refreshed public feed unless status is READY.",
     "pipeline": {
       "canonical_identity_clean": false,
@@ -91,11 +95,11 @@
     },
     "release_ready": false,
     "rollback": {
-      "previous_public_feed_commit": "3e42933a03eaff186811a06321989d9f98089e26",
+      "previous_public_feed_commit": "bba81d46c7cf32e18a3b73ee95ffe8ccfe170ec2",
       "strategy": "Failed runs do not commit; revert the READY refresh commit to restore this prior commit."
     },
-    "rollback_rule": "The failed transaction was discarded; the previous serving commit remains authoritative.",
-    "schema_version": "1.2.0",
+    "rollback_rule": "The previous serving commit remains authoritative until a later refresh is READY.",
+    "schema_version": "1.3.0",
     "sources": [],
     "status": "BLOCKED"
   },
@@ -184,11 +188,11 @@
       "viewer": 61
     }
   },
-  "generated_at_utc": "2026-08-06T12:30:15Z",
+  "generated_at_utc": "2026-08-14T03:55:56Z",
   "github_tracker": {
     "artifact_type": "nycif_github_tracker",
     "closed_issues_recent": [],
-    "generated_at_utc": "2026-08-06T12:30:15Z",
+    "generated_at_utc": "2026-08-14T03:55:56Z",
     "open_issues_field_desk": [],
     "open_issues_live_feeds": [],
     "open_prs": [],
@@ -202,7 +206,7 @@
     },
     "daily_data_health": {
       "artifact": "status/nycif-daily-data-health.json",
-      "generated_at_utc": "2026-08-06T12:30:15Z",
+      "generated_at_utc": "2026-08-14T03:55:56Z",
       "qa_pass": false,
       "status": "BLOCKED"
     },
@@ -233,7 +237,7 @@
       "text": "Field-desk deploy automation (issues #127/#128 closed)"
     },
     {
-      "resolved_at_utc": "2026-08-06T12:30:15Z",
+      "resolved_at_utc": "2026-08-14T03:55:56Z",
       "text": "M11 supplemental first-pass: 3543 rows approved in queue"
     }
   ],
@@ -410,7 +414,7 @@
         "data/schema-v1-discovery/shared-cems-occurrence-dedupe-summary.json"
       ],
       "blockers": [
-        "Daily production refresh failed at stage 'unknown_stage' (exit 1, shell line unknown). Public feeds were not committed. [.github/workflows/discovery-feed-refresh.yml]"
+        "Daily production refresh failed at stage 'final_runtime_validation' (command 'validate_complete_runtime_artifacts', exit 1). [.github/workflows/discovery-feed-refresh.yml]"
       ],
       "id": "daily_live_data",
       "status": "blocked",
