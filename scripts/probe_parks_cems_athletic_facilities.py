@@ -72,10 +72,12 @@ def normalized_field_number(value: Any) -> str:
 
 
 def facility_descriptor(value: str) -> tuple[str, str]:
-    normalized = normalize_text_legacy(value)
-    # Examples: Basketball-01, Soccer-02-Stanton St, Football-01.
-    sport = re.split(r"[-_/]", normalized, maxsplit=1)[0].strip()
-    number = normalized_field_number(normalized.replace("-", " ").replace("_", " "))
+    # Preserve separators long enough to distinguish the sport token from the
+    # numeric field token; normalize each component only after splitting.
+    raw = str(value or "").strip()
+    sport_raw = re.split(r"[-_/]", raw, maxsplit=1)[0].strip()
+    sport = normalize_text_legacy(sport_raw)
+    number = normalized_field_number(raw.replace("-", " ").replace("_", " "))
     return sport, number
 
 
