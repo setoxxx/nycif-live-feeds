@@ -74,11 +74,15 @@ def source_key(row: dict[str, Any]) -> SourceKey:
         or source.get("dataset")
         or "nyc-open-data"
     ).strip()
+    # Canonical records carry their source identity in nested ``source`` while
+    # top-level ``id`` is the canonical record ID. Never let that canonical ID
+    # shadow the underlying source event ID. Raw rows still retain their normal
+    # source_event_id -> event_id -> id fallback order.
     source_event_id = str(
         row.get("source_event_id")
+        or source.get("source_event_id")
         or row.get("event_id")
         or row.get("id")
-        or source.get("source_event_id")
         or "missing"
     ).strip()
     return dataset, source_event_id
