@@ -28,8 +28,6 @@ TRUSTED_LEGACY_SOURCES = {
 TRUSTED_MATCH_TYPES = {
     "event_id",
     "location_cache",
-    "cemsid",
-    "text_date_location",
 }
 
 
@@ -61,10 +59,6 @@ def _raw_borough(raw: dict[str, Any]) -> str:
     return _text(raw.get("event_borough") or raw.get("borough"))
 
 
-def _match_borough(match: dict[str, Any]) -> str:
-    return _text(match.get("borough") or match.get("event_borough"))
-
-
 def _same_location(raw: dict[str, Any], match: dict[str, Any]) -> bool:
     left = normalize_text_legacy(_raw_location(raw))
     right = normalize_text_legacy(_match_location(match))
@@ -83,24 +77,14 @@ def _evidence_tier(raw: dict[str, Any]) -> str | None:
     normalized = normalize_text_legacy(location)
     cemsids = [value for value in _split_ids(raw.get("cemsid") or raw.get("source_cemsid")) if value != "0"]
 
-    # CEMSID is an authoritative facility/location identifier carried by the
-    # current permit row, so a revalidated matching coordinate can use the
-    # existing certified-facility tier.
     if cemsids:
         return "certified_facility"
-
-    # Street-segment permit descriptions explicitly identify the segment.
     if re.search(r"\bbetween\b.+\band\b", normalized):
         return "certified_street_segment"
-
-    # Numbered street address.
     if re.match(r"^\d+[a-z-]*\s+\S", location.strip(), flags=re.IGNORECASE):
         return "exact_address"
-
-    # Explicit intersection syntax. Avoid treating general venue text as exact.
     if re.search(r"\s(?:at|@|&)\s", location, flags=re.IGNORECASE):
         return "exact_intersection"
-
     return None
 
 
@@ -126,7 +110,7 @@ def migration_decision(
         return {"eligible": False, "reason_code": "SOURCE_EVENT_ID_MISMATCH"}
 
     source = _text(match.get("source") or match.get("location_source"))
-    if source and source not in TRUSTED_LEGACY_SOURCES and match_type == "location_cache":
+    if match_type == "location_cache" and source not in TRUSTED_LEGACY_SOURCES:
         return {"eligible": False, "reason_code": "LEGACY_PROVENANCE_NOT_ALLOWLISTED"}
 
     tier = _evidence_tier(raw)
@@ -139,7 +123,7 @@ def migration_decision(
         "latitude": lat,
         "longitude": lng,
         "tier": tier,
-        "source_provenance": source or f"legacy:{match_type}",
+        "source_provenance": source or "exact_source_event_id_location_match",
     }
 
 
