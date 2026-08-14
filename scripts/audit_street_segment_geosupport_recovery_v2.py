@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Read-only local GeoSupport audit for TVPP street-segment evidence.
 
-This lane exists to evaluate NYC Planning Geosupport Desktop Edition as an
-authoritative *evidence source* for unresolved ``MAIN between CROSS1 and CROSS2``
-claims without requiring Geoclient API credentials.
+This lane evaluates NYC Planning Geosupport as an authoritative *evidence source*
+for unresolved ``MAIN between CROSS1 and CROSS2`` claims without requiring
+Geoclient API credentials.
 
 Important safety boundary:
 - this audit never mutates location caches or public feeds;
@@ -14,9 +14,10 @@ Important safety boundary:
   blockface, and its endpoint node pair agrees with the two intersections.
 
 The Python binding is intentionally optional at import time so unit tests can
-run with a fake backend. The live audit workflow installs the pinned public
-``ishiland/python-geosupport`` project and NYC Planning Geosupport Desktop
-Edition separately.
+run with a fake backend. The live audit executes inside NYC Planning's published
+``nycplanning/docker-geosupport`` runtime, which includes Geosupport and the
+python-geosupport binding. The container is an evidence runtime only; it does
+not become Projector or publication authority.
 """
 from __future__ import annotations
 
@@ -47,8 +48,10 @@ except ModuleNotFoundError:  # pragma: no cover
 
 SCHEMA_VERSION = "NYCIF_STREET_SEGMENT_GEOSUPPORT_RECOVERY_AUDIT_V2"
 EVIDENCE_CLASS = "NYC_PLANNING_GEOSUPPORT_STREET_SEGMENT_NONPUBLIC"
-PYTHON_GEOSUPPORT_REPOSITORY = "ishiland/python-geosupport"
-PYTHON_GEOSUPPORT_PIN = "82c39e82b4d4dc7773fa67d32ef7f3787ef4d27e"
+GEOSUPPORT_RUNTIME_REPOSITORY = "NYCPlanning/data-engineering"
+GEOSUPPORT_RUNTIME_SOURCE_PATH = "admin/run_environment/docker/docker-geosupport"
+GEOSUPPORT_RUNTIME_SOURCE_COMMIT = "fe4225182844c3431ddc6c08dcae82fe9187f8fc"
+DEFAULT_GEOSUPPORT_RUNTIME_IMAGE = "nycplanning/docker-geosupport:26.2.0"
 
 BOROUGH_CODES = {
     "manhattan": "MN",
@@ -320,13 +323,17 @@ def audit_claims(
             }
         )
 
+    runtime_image = os.environ.get(
+        "GEOSUPPORT_RUNTIME_IMAGE", DEFAULT_GEOSUPPORT_RUNTIME_IMAGE
+    ).strip() or DEFAULT_GEOSUPPORT_RUNTIME_IMAGE
     return {
         "schema_version": SCHEMA_VERSION,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "source_authority": "NYC Planning Geosupport Desktop Edition",
-        "source_library_repository": PYTHON_GEOSUPPORT_REPOSITORY,
-        "source_library_commit": PYTHON_GEOSUPPORT_PIN,
-        "geosupport_desktop_version": os.environ.get("GEO_VERSION", "UNSPECIFIED"),
+        "geosupport_runtime_repository": GEOSUPPORT_RUNTIME_REPOSITORY,
+        "geosupport_runtime_source_path": GEOSUPPORT_RUNTIME_SOURCE_PATH,
+        "geosupport_runtime_source_commit": GEOSUPPORT_RUNTIME_SOURCE_COMMIT,
+        "geosupport_runtime_image": runtime_image,
         "read_only": True,
         "promotion_allowed": False,
         "publication_authority_granted": False,
@@ -355,7 +362,7 @@ def load_geosupport_backend() -> Any:
         from geosupport import Geosupport
     except ImportError as exc:  # pragma: no cover - exercised by live workflow
         raise RuntimeError(
-            "python-geosupport is not installed; live audit requires the pinned public dependency"
+            "python-geosupport is not installed; live audit must run inside the approved GeoSupport runtime"
         ) from exc
     return Geosupport()
 
@@ -388,8 +395,9 @@ def main() -> int:
     summary_keys = (
         "schema_version",
         "source_authority",
-        "source_library_commit",
-        "geosupport_desktop_version",
+        "geosupport_runtime_repository",
+        "geosupport_runtime_source_commit",
+        "geosupport_runtime_image",
         "api_credentials_required",
         "raw_rows_loaded",
         "unique_segment_claim_count",
