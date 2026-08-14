@@ -3,9 +3,15 @@
 
 This is a NONPUBLIC_EVIDENCE_ONLY geometry audit. It accepts only source-faithful
 LineString/MultiLineString geometry keyed by the Function 3 Segment Identifier,
-requires one source feature per strict identity, hashes the preserved geometry,
-and checks that both independently resolved GeoSupport endpoint nodes agree with
-the source line endpoints within a conservative tolerance.
+hashes the preserved geometry, and checks that both independently resolved
+GeoSupport endpoint nodes agree with the source line endpoints within a
+conservative tolerance.
+
+LION can expose more than one row for one SegmentID because alternate Join_ID
+representations can point at the same physical centerline segment. Multiple
+rows are collapsible only when their canonical geometry bytes and ordered
+NodeIDFrom/NodeIDTo pair are identical. Any conflicting representation remains
+blocked.
 
 It never converts a line to a public point and never grants Projector or
 publication authority.
@@ -107,6 +113,46 @@ def _feature_segment_id(feature: dict[str, Any]) -> str:
     return ""
 
 
+def _feature_node_pair(feature: dict[str, Any]) -> tuple[str, str]:
+    props = feature.get("properties")
+    if not isinstance(props, dict):
+        return ("", "")
+    return (
+        str(props.get("NodeIDFrom") or "").strip(),
+        str(props.get("NodeIDTo") or "").strip(),
+    )
+
+
+def _equivalent_source_rows(source_rows: list[dict[str, Any]]) -> tuple[dict[str, Any] | None, int]:
+    """Collapse only exact-equivalent source representations.
+
+    Alternate Join_ID rows are accepted as one source representation only when
+    every row has valid linear geometry, the canonical geometry hash is
+    identical, and the ordered LION node pair is identical. This deliberately
+    does not treat same SegmentID alone as sufficient equivalence.
+    """
+    if not source_rows:
+        return None, 0
+    if len(source_rows) == 1:
+        return source_rows[0], 1
+
+    geometry_hashes: set[str] = set()
+    node_pairs: set[tuple[str, str]] = set()
+    for feature in source_rows:
+        geometry = feature.get("geometry")
+        if not isinstance(geometry, dict) or geometry.get("type") not in {"LineString", "MultiLineString"}:
+            return None, len(source_rows)
+        geometry_hashes.add(geometry_sha256(geometry))
+        node_pair = _feature_node_pair(feature)
+        if not all(node_pair):
+            return None, len(source_rows)
+        node_pairs.add(node_pair)
+
+    if len(geometry_hashes) != 1 or len(node_pairs) != 1:
+        return None, len(source_rows)
+    return source_rows[0], len(source_rows)
+
+
 def audit(identity_report: dict[str, Any], lion_geojson: dict[str, Any]) -> dict[str, Any]:
     if identity_report.get("schema_version") != "NYCIF_STREET_SEGMENT_GEOSUPPORT_RECOVERY_AUDIT_V2":
         raise ValueError("unexpected GeoSupport identity report schema")
@@ -136,6 +182,8 @@ def audit(identity_report: dict[str, Any], lion_geojson: dict[str, Any]) -> dict
     entries: list[dict[str, Any]] = []
     geometry_hashes: Counter[str] = Counter()
     joined_segment_ids: Counter[str] = Counter()
+    equivalent_source_representation_groups = 0
+    equivalent_source_representation_rows = 0
 
     strict_claims = [
         claim for claim in (identity_report.get("claims") or [])
@@ -167,12 +215,24 @@ def audit(identity_report: dict[str, Any], lion_geojson: dict[str, Any]) -> dict
             reason_counts["OFFICIAL_LION_SEGMENT_NOT_FOUND"] += 1
             entries.append({**base, "geometry_joined": False, "reason_code": "OFFICIAL_LION_SEGMENT_NOT_FOUND"})
             continue
-        if len(source_rows) != 1:
-            reason_counts["OFFICIAL_LION_SEGMENT_NOT_UNIQUE"] += 1
-            entries.append({**base, "geometry_joined": False, "reason_code": "OFFICIAL_LION_SEGMENT_NOT_UNIQUE", "source_feature_count": len(source_rows)})
+
+        feature, representation_count = _equivalent_source_rows(source_rows)
+        if feature is None:
+            reason_counts["OFFICIAL_LION_SEGMENT_REPRESENTATIONS_CONFLICT"] += 1
+            entries.append({
+                **base,
+                "geometry_joined": False,
+                "reason_code": "OFFICIAL_LION_SEGMENT_REPRESENTATIONS_CONFLICT",
+                "source_feature_count": len(source_rows),
+                "source_equivalence_collapsed": False,
+            })
             continue
 
-        feature = source_rows[0]
+        equivalence_collapsed = representation_count > 1
+        if equivalence_collapsed:
+            equivalent_source_representation_groups += 1
+            equivalent_source_representation_rows += representation_count
+
         geometry = feature.get("geometry")
         if not isinstance(geometry, dict) or geometry.get("type") not in {"LineString", "MultiLineString"}:
             reason_counts["OFFICIAL_LION_GEOMETRY_INVALID_TYPE"] += 1
@@ -184,17 +244,31 @@ def audit(identity_report: dict[str, Any], lion_geojson: dict[str, Any]) -> dict
             entries.append({**base, "geometry_joined": False, "reason_code": "OFFICIAL_LION_GEOMETRY_ENDPOINTS_INVALID"})
             continue
 
+        source_from_node, source_to_node = _feature_node_pair(feature)
+        source_detail = {
+            "source_feature_count": representation_count,
+            "source_equivalence_collapsed": equivalence_collapsed,
+            "source_lion_from_node": source_from_node,
+            "source_lion_to_node": source_to_node,
+        }
+
         endpoint_1_distance = _nearest_endpoint_distance_m(claim.get("endpoint_1") or {}, source_endpoints)
         endpoint_2_distance = _nearest_endpoint_distance_m(claim.get("endpoint_2") or {}, source_endpoints)
         if endpoint_1_distance is None or endpoint_2_distance is None:
             reason_counts["GEOSUPPORT_ENDPOINT_COORDINATE_MISSING"] += 1
-            entries.append({**base, "geometry_joined": False, "reason_code": "GEOSUPPORT_ENDPOINT_COORDINATE_MISSING"})
+            entries.append({
+                **base,
+                **source_detail,
+                "geometry_joined": False,
+                "reason_code": "GEOSUPPORT_ENDPOINT_COORDINATE_MISSING",
+            })
             continue
         max_distance = max(endpoint_1_distance, endpoint_2_distance)
         if max_distance > MAX_ENDPOINT_DISTANCE_M:
             reason_counts["LION_GEOMETRY_ENDPOINT_DISAGREEMENT"] += 1
             entries.append({
                 **base,
+                **source_detail,
                 "geometry_joined": False,
                 "reason_code": "LION_GEOMETRY_ENDPOINT_DISAGREEMENT",
                 "endpoint_1_nearest_source_endpoint_m": round(endpoint_1_distance, 3),
@@ -208,6 +282,7 @@ def audit(identity_report: dict[str, Any], lion_geojson: dict[str, Any]) -> dict
         reason_counts["OFFICIAL_LION_SEGMENT_GEOMETRY_JOINED"] += 1
         entries.append({
             **base,
+            **source_detail,
             "geometry_joined": True,
             "reason_code": "OFFICIAL_LION_SEGMENT_GEOMETRY_JOINED",
             "source_dataset_id": SOURCE_DATASET_ID,
@@ -244,8 +319,16 @@ def audit(identity_report: dict[str, Any], lion_geojson: dict[str, Any]) -> dict
         "input_strict_identity_count": len(strict_claims),
         "source_feature_count": len(features),
         "source_feature_without_segment_identifier_count": missing_source_segment_id,
+        "equivalent_source_representation_group_count": equivalent_source_representation_groups,
+        "equivalent_source_representation_row_count": equivalent_source_representation_rows,
         "joined_geometry_count": len(joined),
+        "joined_occurrence_coverage": sum(int(entry.get("occurrence_count") or 0) for entry in joined),
         "unresolved_or_blocked_geometry_count": len(strict_claims) - len(joined),
+        "unresolved_or_blocked_occurrence_count": sum(
+            int(entry.get("occurrence_count") or 0)
+            for entry in entries
+            if entry.get("geometry_joined") is not True
+        ),
         "unique_joined_segment_identifier_count": len(joined_segment_ids),
         "duplicate_joined_segment_identifier_count": duplicate_joined_segment_ids,
         "unique_geometry_hash_count": len(geometry_hashes),
@@ -283,8 +366,12 @@ def main() -> int:
         "source_version_expected",
         "input_strict_identity_count",
         "source_feature_count",
+        "equivalent_source_representation_group_count",
+        "equivalent_source_representation_row_count",
         "joined_geometry_count",
+        "joined_occurrence_coverage",
         "unresolved_or_blocked_geometry_count",
+        "unresolved_or_blocked_occurrence_count",
         "unique_joined_segment_identifier_count",
         "duplicate_joined_segment_identifier_count",
         "unique_geometry_hash_count",
