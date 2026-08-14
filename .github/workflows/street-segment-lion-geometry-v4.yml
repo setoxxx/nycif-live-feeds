@@ -110,14 +110,19 @@ jobs:
 
           while IFS= read -r gdb; do
             echo "NYCIF_GDB_LAYER_LIST=$gdb"
-            ogrinfo -ro "$gdb" 2>/dev/null || true
+            layer_list="$(ogrinfo -ro "$gdb" 2>/dev/null || true)"
+            printf '%s\n' "$layer_list"
             while IFS= read -r layer; do
               [ -n "$layer" ] || continue
               info="$(ogrinfo -ro -so "$gdb" "$layer" 2>/dev/null || true)"
               if printf '%s\n' "$info" | grep -qiE '^[[:space:]]*SegmentID:' && printf '%s\n' "$info" | grep -qiE '^[[:space:]]*Geometry: (Line String|Multi Line String)'; then
                 printf 'gdb\t%s\t%s\n' "$gdb" "$layer" >> "$candidates"
               fi
-            done < <(ogrinfo -ro "$gdb" 2>/dev/null | sed -n -E 's/^[[:space:]]*[0-9]+: (.*) \([^)]*\)$/\1/p')
+            done < <(
+              printf '%s\n' "$layer_list" | sed -n -E \
+                -e 's/^Layer: (.*) \([^)]*\)$/\1/p' \
+                -e 's/^[[:space:]]*[0-9]+: (.*) \([^)]*\)$/\1/p' | sort -u
+            )
           done < <(find /tmp/nycif-lion-v4/lion-package -type d -iname '*.gdb' | sort)
 
           cat "$candidates"
