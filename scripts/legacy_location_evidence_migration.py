@@ -3,10 +3,12 @@
 
 This is deliberately narrow. It does not geocode and does not certify a point
 merely because coordinates exist. A legacy match is promotable only when the
-current official row, matched record, geometry, borough, and location text agree.
+current official row, matched record, geometry, borough, and location text agree,
+and the current location claim maps to an already-recognized exact evidence tier.
 """
 from __future__ import annotations
 
+import re
 from copy import deepcopy
 from typing import Any
 
@@ -19,7 +21,6 @@ except ModuleNotFoundError:  # pragma: no cover
     from nyc_location_resolver import coordinate_matches_borough
     from pin_integrity import certify_nyc_pin
 
-MIGRATED_TIER = "verified_legacy_location_match"
 TRUSTED_LEGACY_SOURCES = {
     "existing_enriched_feed_gps",
     "latest_test_feed_gps",
@@ -34,6 +35,12 @@ TRUSTED_MATCH_TYPES = {
 
 def _text(value: Any) -> str:
     return str(value or "").strip()
+
+
+def _split_ids(value: Any) -> list[str]:
+    if isinstance(value, list):
+        return [_text(item) for item in value if _text(item)]
+    return [part.strip() for part in _text(value).split(",") if part.strip()]
 
 
 def _match_coords(match: dict[str, Any]) -> tuple[float | None, float | None, bool, str]:
@@ -64,16 +71,37 @@ def _same_location(raw: dict[str, Any], match: dict[str, Any]) -> bool:
     return bool(left and right and left == right)
 
 
-def _same_borough(raw: dict[str, Any], match: dict[str, Any]) -> bool:
-    raw_borough = normalize_text_legacy(_raw_borough(raw))
-    match_borough = normalize_text_legacy(_match_borough(match))
-    return bool(raw_borough and match_borough and raw_borough == match_borough)
-
-
 def _same_event_id(raw: dict[str, Any], match: dict[str, Any]) -> bool:
     raw_id = _text(raw.get("event_id") or raw.get("source_event_id"))
     match_id = _text(match.get("source_event_id") or match.get("event_id"))
     return bool(raw_id and match_id and raw_id == match_id)
+
+
+def _evidence_tier(raw: dict[str, Any]) -> str | None:
+    """Map a current official location claim into an existing V3 exact tier."""
+    location = _raw_location(raw)
+    normalized = normalize_text_legacy(location)
+    cemsids = [value for value in _split_ids(raw.get("cemsid") or raw.get("source_cemsid")) if value != "0"]
+
+    # CEMSID is an authoritative facility/location identifier carried by the
+    # current permit row, so a revalidated matching coordinate can use the
+    # existing certified-facility tier.
+    if cemsids:
+        return "certified_facility"
+
+    # Street-segment permit descriptions explicitly identify the segment.
+    if re.search(r"\bbetween\b.+\band\b", normalized):
+        return "certified_street_segment"
+
+    # Numbered street address.
+    if re.match(r"^\d+[a-z-]*\s+\S", location.strip(), flags=re.IGNORECASE):
+        return "exact_address"
+
+    # Explicit intersection syntax. Avoid treating general venue text as exact.
+    if re.search(r"\s(?:at|@|&)\s", location, flags=re.IGNORECASE):
+        return "exact_intersection"
+
+    return None
 
 
 def migration_decision(
@@ -101,11 +129,16 @@ def migration_decision(
     if source and source not in TRUSTED_LEGACY_SOURCES and match_type == "location_cache":
         return {"eligible": False, "reason_code": "LEGACY_PROVENANCE_NOT_ALLOWLISTED"}
 
+    tier = _evidence_tier(raw)
+    if tier is None:
+        return {"eligible": False, "reason_code": "CURRENT_LOCATION_CLAIM_NOT_EXACT_TIER"}
+
     return {
         "eligible": True,
         "reason_code": "LEGACY_LOCATION_REVALIDATED",
         "latitude": lat,
         "longitude": lng,
+        "tier": tier,
         "source_provenance": source or f"legacy:{match_type}",
     }
 
@@ -122,15 +155,15 @@ def migrate_match(
     migrated["lat"] = decision["latitude"]
     migrated["lng"] = decision["longitude"]
     migrated["location_evidence"] = {
-        "tier": MIGRATED_TIER,
+        "tier": decision["tier"],
         "validation_state": "validated",
         "exact_pin_eligible": True,
         "source_provenance": decision["source_provenance"],
         "provider": "NYCIF deterministic legacy-location migration",
         "reason_code": "LEGACY_LOCATION_REVALIDATED",
         "reason_detail": (
-            "Current official event identity/location and borough-safe geometry "
-            "agree with the existing resolved location candidate."
+            "Current official location claim, matched location text and borough-safe "
+            "geometry agree; migrated into an existing V3 exact evidence tier."
         ),
     }
     return migrated, decision
