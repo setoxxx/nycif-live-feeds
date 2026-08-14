@@ -91,7 +91,7 @@ jobs:
             "$LION_DATASET_URL"
           unzip -q /tmp/nycif-lion-v4/lion.zip -d /tmp/nycif-lion-v4/lion-package
           echo 'NYCIF_LION_PACKAGE_TOP_LEVEL:'
-          find /tmp/nycif-lion-v4/lion-package -maxdepth 2 -type f -o -type d | head -n 80
+          find /tmp/nycif-lion-v4/lion-package -maxdepth 2 \( -type f -o -type d \) | head -n 80
 
       - name: Discover official vector layer carrying SegmentID
         shell: bash
@@ -103,19 +103,21 @@ jobs:
           while IFS= read -r shp; do
             layer="$(basename "$shp" .shp)"
             info="$(ogrinfo -ro -so "$shp" "$layer" 2>/dev/null || true)"
-            if printf '%s\n' "$info" | grep -qiE '^SegmentID:' && printf '%s\n' "$info" | grep -qiE '^Geometry: (Line String|Multi Line String)'; then
+            if printf '%s\n' "$info" | grep -qiE '^[[:space:]]*SegmentID:' && printf '%s\n' "$info" | grep -qiE '^[[:space:]]*Geometry: (Line String|Multi Line String)'; then
               printf 'shp\t%s\t%s\n' "$shp" "$layer" >> "$candidates"
             fi
           done < <(find /tmp/nycif-lion-v4/lion-package -type f -iname '*.shp' | sort)
 
           while IFS= read -r gdb; do
+            echo "NYCIF_GDB_LAYER_LIST=$gdb"
+            ogrinfo -ro "$gdb" 2>/dev/null || true
             while IFS= read -r layer; do
               [ -n "$layer" ] || continue
               info="$(ogrinfo -ro -so "$gdb" "$layer" 2>/dev/null || true)"
-              if printf '%s\n' "$info" | grep -qiE '^SegmentID:' && printf '%s\n' "$info" | grep -qiE '^Geometry: (Line String|Multi Line String)'; then
+              if printf '%s\n' "$info" | grep -qiE '^[[:space:]]*SegmentID:' && printf '%s\n' "$info" | grep -qiE '^[[:space:]]*Geometry: (Line String|Multi Line String)'; then
                 printf 'gdb\t%s\t%s\n' "$gdb" "$layer" >> "$candidates"
               fi
-            done < <(ogrinfo -ro "$gdb" 2>/dev/null | sed -n 's/^[[:space:]]*[0-9][0-9]*: \([^ (][^ (]*\).*/\1/p')
+            done < <(ogrinfo -ro "$gdb" 2>/dev/null | sed -n -E 's/^[[:space:]]*[0-9]+: (.*) \([^)]*\)$/\1/p')
           done < <(find /tmp/nycif-lion-v4/lion-package -type d -iname '*.gdb' | sort)
 
           cat "$candidates"
