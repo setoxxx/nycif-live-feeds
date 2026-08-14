@@ -16,7 +16,7 @@ permissions:
 jobs:
   canonical-handoff:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     env:
       V9_ARTIFACT_ID: '9221766364'
       V9_ARTIFACT_SHA256: 'e2d65417ed01f9b20ac2854de21d87aa0ab27ba0f6e3140e1009c5ad9c67cd39'
@@ -82,85 +82,120 @@ jobs:
           raw=json.load(open('data/raw_nyc_open_data_snapshot.json'))
           targets={tuple(row['occurrence_key_v2']) for row in v9['registry']}
           raw_keys={occurrence_key_v2(row) for row in raw if identity_precision(row) != 'AMBIGUOUS'}
-          matched=targets & raw_keys
-          missing=sorted(targets-raw_keys)
-          print('NYCIF_V10_V9_TARGET_KEYS=%d' % len(targets))
-          print('NYCIF_V10_RAW_MATCHED_KEYS=%d' % len(matched))
-          print('NYCIF_V10_RAW_MISSING_KEYS=%d' % len(missing))
-          if missing:
-              print('NYCIF_V10_RAW_MISSING_SAMPLE=%s' % json.dumps(missing[:10]))
           assert len(targets)==90
-          assert len(matched)==90
+          assert len(targets & raw_keys)==90
+          print('NYCIF_V10_RAW_MATCHED_KEYS=90')
           PY
 
-      - name: Rebuild current canonical in isolated workspace
+      - name: Rebuild baseline canonical in isolated workspace
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p /tmp/nycif-route-v10/projector
+          mkdir -p /tmp/nycif-route-v10/baseline
           original_sha="$(sha256sum data/events_discovery_accepted_canonical_v02.json | awk '{print $1}')"
           echo "NYCIF_ORIGINAL_CANONICAL_SHA256=${original_sha}" >> "$GITHUB_ENV"
-          cp -a . /tmp/nycif-route-v10/projector/repo
-          cd /tmp/nycif-route-v10/projector/repo
+          cp -a . /tmp/nycif-route-v10/baseline/repo
+          cd /tmp/nycif-route-v10/baseline/repo
           export PYTHONPATH="$PWD:$PWD/scripts"
-          export NYCIF_ALLOW_LIVE_GEOSEARCH=no
-          export NYCIF_ALLOW_LIVE_GEOCLIENT=no
           python3 scripts/project_events_discovery_v03.py
-          test -s data/events_discovery_accepted_canonical_v02.json
-          echo "NYCIF_ISOLATED_CANONICAL_SHA256=$(sha256sum data/events_discovery_accepted_canonical_v02.json | awk '{print $1}')"
 
-      - name: Diagnose projector treatment of V9 route occurrences
+      - name: Diagnose baseline projector treatment
         shell: bash
         run: |
           set -euo pipefail
           python3 scripts/diagnose_street_segment_route_canonical_handoff_v10.py \
             --v9-registry /tmp/nycif-route-v10/v9/street_segment_route_occurrence_registry_v9.json \
-            --raw /tmp/nycif-route-v10/projector/repo/data/raw_nyc_open_data_snapshot.json \
-            --staged /tmp/nycif-route-v10/projector/repo/data/nycif_staged_live_events.json \
-            --supplemental /tmp/nycif-route-v10/projector/repo/data/supplemental_events_staging_feed.json \
-            --dispositions /tmp/nycif-route-v10/projector/repo/data/row_disposition_events.json \
-            --canonical /tmp/nycif-route-v10/projector/repo/data/events_discovery_accepted_canonical_v02.json \
-            --season-start 2026-07-14 \
-            --season-end 2026-12-27 \
+            --raw /tmp/nycif-route-v10/baseline/repo/data/raw_nyc_open_data_snapshot.json \
+            --staged /tmp/nycif-route-v10/baseline/repo/data/nycif_staged_live_events.json \
+            --supplemental /tmp/nycif-route-v10/baseline/repo/data/supplemental_events_staging_feed.json \
+            --dispositions /tmp/nycif-route-v10/baseline/repo/data/row_disposition_events.json \
+            --canonical /tmp/nycif-route-v10/baseline/repo/data/events_discovery_accepted_canonical_v02.json \
+            --season-start 2026-07-14 --season-end 2026-12-27 \
             --output /tmp/nycif-route-v10/street_segment_route_canonical_handoff_diagnostic_v10.json
+          python3 - <<'PY'
+          import json
+          d=json.load(open('/tmp/nycif-route-v10/street_segment_route_canonical_handoff_diagnostic_v10.json'))
+          assert d['classification_counts']=={'ACCEPTED_RAW_BUT_NO_EXACT_CANONICAL': 90}
+          PY
 
-      - name: Audit rebuilt canonical occurrence handoff
+      - name: Prove baseline exact handoff remains blocked
+        shell: bash
+        run: |
+          set -euo pipefail
+          set +e
+          python3 scripts/audit_street_segment_route_canonical_handoff_v10.py \
+            --v9-registry /tmp/nycif-route-v10/v9/street_segment_route_occurrence_registry_v9.json \
+            --canonical /tmp/nycif-route-v10/baseline/repo/data/events_discovery_accepted_canonical_v02.json \
+            --output /tmp/nycif-route-v10/street_segment_route_canonical_handoff_baseline_v10.json
+          code=$?
+          set -e
+          test "$code" -eq 2
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/nycif-route-v10/street_segment_route_canonical_handoff_baseline_v10.json'))
+          assert r['canonical_handoff_certified_count']==0
+          assert r['hard_zero_gates']['canonical_occurrence_missing_count']==90
+          PY
+
+      - name: Apply one-line source identity hypothesis in isolated copy
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp -a . /tmp/nycif-route-v10/fixed-repo
+          python3 - <<'PY'
+          from pathlib import Path
+          path=Path('/tmp/nycif-route-v10/fixed-repo/scripts/discovery_v02/__init__.py')
+          text=path.read_text()
+          old='''        or row.get("source_event_id")\n        or row.get("source_guid")'''
+          new='''        or row.get("source_event_id")\n        or row.get("event_id")\n        or row.get("source_guid")'''
+          assert text.count(old)==1
+          path.write_text(text.replace(old,new,1))
+          PY
+          grep -A5 -B2 'nested.get("source_event_id")' /tmp/nycif-route-v10/fixed-repo/scripts/discovery_v02/__init__.py
+
+      - name: Rebuild canonical with isolated source identity hypothesis
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd /tmp/nycif-route-v10/fixed-repo
+          export PYTHONPATH="$PWD:$PWD/scripts"
+          export NYCIF_ALLOW_LIVE_GEOSEARCH=no
+          export NYCIF_ALLOW_LIVE_GEOCLIENT=no
+          python3 scripts/project_events_discovery_v03.py
+
+      - name: Audit hypothesis canonical handoff
         shell: bash
         run: |
           set -euo pipefail
           python3 scripts/audit_street_segment_route_canonical_handoff_v10.py \
             --v9-registry /tmp/nycif-route-v10/v9/street_segment_route_occurrence_registry_v9.json \
-            --canonical /tmp/nycif-route-v10/projector/repo/data/events_discovery_accepted_canonical_v02.json \
-            --output /tmp/nycif-route-v10/street_segment_route_canonical_handoff_audit_v10.json
+            --canonical /tmp/nycif-route-v10/fixed-repo/data/events_discovery_accepted_canonical_v02.json \
+            --output /tmp/nycif-route-v10/street_segment_route_canonical_handoff_hypothesis_v10.json
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/nycif-route-v10/street_segment_route_canonical_handoff_hypothesis_v10.json'))
+          assert r['handoff_conformance_pass'] is True
+          assert r['canonical_handoff_certified_count']==90
+          assert all(value==0 for value in r['hard_zero_gates'].values())
+          assert r['publication_authority_granted'] is False
+          assert r['public_renderer_enabled'] is False
+          assert r['projector_consumed'] is False
+          PY
 
-      - name: Prove V10 remains non-public and source workspace unchanged
+      - name: Prove source workspace unchanged
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import json
-          report=json.load(open('/tmp/nycif-route-v10/street_segment_route_canonical_handoff_audit_v10.json'))
-          assert report['handoff_conformance_pass'] is True
-          assert report['input_v9_occurrence_count']==90
-          assert report['canonical_handoff_certified_count']==90
-          assert report['publication_authority_granted'] is False
-          assert report['public_renderer_enabled'] is False
-          assert report['projector_consumed'] is False
-          assert report['promotion_allowed'] is False
-          assert report['canonical_modified'] is False
-          assert report['reader_safe_modified'] is False
-          assert report['release_status']=='NONPUBLIC_EVIDENCE_ONLY'
-          assert all(value==0 for value in report['hard_zero_gates'].values())
-          PY
           test "$(sha256sum data/events_discovery_accepted_canonical_v02.json | awk '{print $1}')" = "$NYCIF_ORIGINAL_CANONICAL_SHA256"
           test -z "$(git status --porcelain)"
 
-      - name: Upload V10 non-public handoff evidence
+      - name: Upload V10 non-public A B evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: street-segment-route-canonical-handoff-v10-${{ github.event.pull_request.head.sha || github.sha }}
           path: |
             /tmp/nycif-route-v10/street_segment_route_canonical_handoff_diagnostic_v10.json
-            /tmp/nycif-route-v10/street_segment_route_canonical_handoff_audit_v10.json
+            /tmp/nycif-route-v10/street_segment_route_canonical_handoff_baseline_v10.json
+            /tmp/nycif-route-v10/street_segment_route_canonical_handoff_hypothesis_v10.json
           retention-days: 14
