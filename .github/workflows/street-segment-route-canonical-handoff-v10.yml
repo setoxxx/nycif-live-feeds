@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'scripts/audit_street_segment_route_canonical_handoff_v10.py'
+      - 'scripts/diagnose_street_segment_route_canonical_handoff_v10.py'
       - 'tests/test_street_segment_route_canonical_handoff_v10.py'
       - '.github/workflows/street-segment-route-canonical-handoff-v10.yml'
   workflow_dispatch:
@@ -43,11 +44,12 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Test V10 handoff audit
+      - name: Test V10 handoff audit and diagnostics
         shell: bash
         run: |
           set -euo pipefail
           python3 -m py_compile scripts/audit_street_segment_route_canonical_handoff_v10.py
+          python3 -m py_compile scripts/diagnose_street_segment_route_canonical_handoff_v10.py
           python3 -m unittest tests.test_street_segment_route_canonical_handoff_v10 -v
 
       - name: Download frozen V9 evidence artifact
@@ -107,6 +109,21 @@ jobs:
           test -s data/events_discovery_accepted_canonical_v02.json
           echo "NYCIF_ISOLATED_CANONICAL_SHA256=$(sha256sum data/events_discovery_accepted_canonical_v02.json | awk '{print $1}')"
 
+      - name: Diagnose projector treatment of V9 route occurrences
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/diagnose_street_segment_route_canonical_handoff_v10.py \
+            --v9-registry /tmp/nycif-route-v10/v9/street_segment_route_occurrence_registry_v9.json \
+            --raw /tmp/nycif-route-v10/projector/repo/data/raw_nyc_open_data_snapshot.json \
+            --staged /tmp/nycif-route-v10/projector/repo/data/nycif_staged_live_events.json \
+            --supplemental /tmp/nycif-route-v10/projector/repo/data/supplemental_events_staging_feed.json \
+            --dispositions /tmp/nycif-route-v10/projector/repo/data/row_disposition_events.json \
+            --canonical /tmp/nycif-route-v10/projector/repo/data/events_discovery_accepted_canonical_v02.json \
+            --season-start 2026-07-14 \
+            --season-end 2026-12-27 \
+            --output /tmp/nycif-route-v10/street_segment_route_canonical_handoff_diagnostic_v10.json
+
       - name: Audit rebuilt canonical occurrence handoff
         shell: bash
         run: |
@@ -143,5 +160,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: street-segment-route-canonical-handoff-v10-${{ github.event.pull_request.head.sha || github.sha }}
-          path: /tmp/nycif-route-v10/street_segment_route_canonical_handoff_audit_v10.json
+          path: |
+            /tmp/nycif-route-v10/street_segment_route_canonical_handoff_diagnostic_v10.json
+            /tmp/nycif-route-v10/street_segment_route_canonical_handoff_audit_v10.json
           retention-days: 14
