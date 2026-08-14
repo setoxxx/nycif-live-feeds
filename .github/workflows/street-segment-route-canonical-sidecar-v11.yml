@@ -1,0 +1,121 @@
+name: Street Segment Route Canonical Sidecar V11
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/build_street_segment_route_canonical_sidecar_v11.py'
+      - 'tests/test_street_segment_route_canonical_sidecar_v11.py'
+      - '.github/workflows/street-segment-route-canonical-sidecar-v11.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  canonical-sidecar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      V10_ARTIFACT_ID: '9222477565'
+      V10_ARTIFACT_SHA256: '23aa74e62ddfb0e06c69573abbe01d7d565c67b7c509ac268363faca633942f7'
+      PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/scripts
+    steps:
+      - name: Check out exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Attest exact source head
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="${{ github.event.pull_request.head.sha || github.sha }}"
+          actual="$(git rev-parse HEAD)"
+          echo "NYCIF_EXPECTED_HEAD=${expected}"
+          echo "NYCIF_CHECKED_OUT_HEAD=${actual}"
+          test "$actual" = "$expected"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Test V11 sidecar contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m py_compile scripts/build_street_segment_route_canonical_sidecar_v11.py
+          python3 -m unittest tests.test_street_segment_route_canonical_sidecar_v11 -v
+
+      - name: Download frozen V10 handoff evidence
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/nycif-route-v11/v10
+          curl --fail --location --retry 3 \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/artifacts/${V10_ARTIFACT_ID}/zip" \
+            -o /tmp/nycif-route-v11/v10.zip
+          actual="$(sha256sum /tmp/nycif-route-v11/v10.zip | awk '{print $1}')"
+          echo "NYCIF_V10_ARTIFACT_SHA256=${actual}"
+          test "$actual" = "$V10_ARTIFACT_SHA256"
+          unzip -q /tmp/nycif-route-v11/v10.zip -d /tmp/nycif-route-v11/v10
+          handoff="$(find /tmp/nycif-route-v11/v10 -type f -name 'street_segment_route_canonical_handoff_audit_v10.json' -print -quit)"
+          test -n "$handoff"
+          cp "$handoff" /tmp/nycif-route-v11/v10_handoff.json
+
+      - name: Build frozen non-public canonical sidecar
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/build_street_segment_route_canonical_sidecar_v11.py \
+            --v10-handoff /tmp/nycif-route-v11/v10_handoff.json \
+            --output /tmp/nycif-route-v11/street_segment_route_canonical_sidecar_v11.json
+
+      - name: Prove V11 reference-only boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          r=json.load(open('/tmp/nycif-route-v11/street_segment_route_canonical_sidecar_v11.json'))
+          assert r['sidecar_conformance_pass'] is True
+          assert r['input_v10_handoff_count']==90
+          assert r['sidecar_entry_count']==90
+          assert r['unique_occurrence_key_count']==90
+          assert r['unique_canonical_event_id_count']==90
+          assert r['unique_v9_registry_key_count']==90
+          assert r['unique_sidecar_key_count']==90
+          assert r['publication_authority_granted'] is False
+          assert r['public_renderer_enabled'] is False
+          assert r['projector_consumed'] is False
+          assert r['promotion_allowed'] is False
+          assert r['canonical_modified'] is False
+          assert r['reader_safe_modified'] is False
+          assert r['location_cache_modified'] is False
+          assert r['public_map_modified'] is False
+          assert r['release_status']=='NONPUBLIC_EVIDENCE_ONLY'
+          assert all(value==0 for value in r['hard_zero_gates'].values())
+          for row in r['sidecar']:
+              assert row['attachment_state']=='REFERENCE_ONLY_NOT_ATTACHED_TO_CANONICAL'
+              assert row['contains_geometry'] is False
+              assert row['contains_coordinates'] is False
+              assert row['publication_allowed'] is False
+              assert row['exact_pin_eligible'] is False
+              assert row['canonical_write_allowed'] is False
+              assert row['reader_write_allowed'] is False
+          PY
+          test -z "$(git status --porcelain)"
+
+      - name: Upload V11 non-public sidecar evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: street-segment-route-canonical-sidecar-v11-${{ github.event.pull_request.head.sha || github.sha }}
+          path: /tmp/nycif-route-v11/street_segment_route_canonical_sidecar_v11.json
+          retention-days: 14
