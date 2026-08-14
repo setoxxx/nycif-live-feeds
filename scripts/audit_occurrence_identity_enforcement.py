@@ -57,6 +57,7 @@ OUTPUT_FILENAMES = {
 
 SEASON_START = "2026-07-14"
 SEASON_END = "2026-12-27"
+KNOWN_ISSUE_324_HISTORICAL_HIDDEN_COUNT = 4203
 
 SAFETY_ASSERTIONS = {
     "production_feed_modified": False,
@@ -248,12 +249,16 @@ Generated: {summary['generated_at_utc']}
 - Raw-disposition accounting: **{summary['raw_disposition_accounting_pass']}**
 - Duplicate safety: **{summary['duplicate_safety_pass']}**
 - Source-lineage contract compliance: **{summary['source_lineage_contract_compliance_pass']}**
+- Historical Issue #324 baseline comparison applicable: **{summary['known_issue_324_baseline_comparison_applicable']}**
+- Historical/current baseline state valid: **{summary['known_issue_324_baseline_state_pass']}**
 - Launch readiness: **{summary['launch_readiness']}**
 
 ## Counts
 
+- Staged rows / sources: **{summary['staged_row_count']} / {summary['staged_source_count']}**
 - Open Data hidden before source-ID fix: **{summary['before_open_data_in_window_hidden_by_source_id']}**
 - Open Data hidden after dated-occurrence fix: **{summary['after_open_data_in_window_hidden_by_source_id']}**
+- Historical Issue #324 hidden reference: **{summary['known_issue_324_baseline_hidden_count']}**
 - Duplicate canonical IDs after projector fix: **{summary['duplicate_canonical_id_count']}**
 - Raw source rows accounted: **{summary['raw_rows_accounted']} / {summary['raw_source_rows']}**
 
@@ -348,6 +353,17 @@ def main() -> int:
     raw_rows_accounted = sum(after_open_counts.values()) + sum(calparks_counts.values())
     raw_accounting_pass = raw_rows_accounted == raw_source_rows
 
+    # Issue #324's 4,203-row value is a historical snapshot baseline, not a
+    # timeless current-corpus invariant. It is meaningful only when the current
+    # corpus has staged sources against which source-ID-only matching can hide
+    # sibling occurrences. With an intentionally empty staged feed, the only
+    # valid current baseline is zero staged sources and zero hidden-before rows.
+    baseline_comparison_applicable = bool(staged_sources)
+    if baseline_comparison_applicable:
+        baseline_state_pass = before_hidden == KNOWN_ISSUE_324_HISTORICAL_HIDDEN_COUNT
+    else:
+        baseline_state_pass = len(staged_rows) == 0 and len(staged_sources) == 0 and before_hidden == 0
+
     safety = dict(SAFETY_ASSERTIONS)
     safety["location_cache_sha256"] = sha256_file(LOCATION_CACHE)
 
@@ -359,10 +375,18 @@ def main() -> int:
         "repository_sha": os.environ.get("AUDIT_SOURCE_SHA") or os.environ.get("GITHUB_SHA"),
         "season_start": SEASON_START,
         "season_end": SEASON_END,
+        "staged_row_count": len(staged_rows),
+        "staged_source_count": len(staged_sources),
         "before_open_data_in_window_hidden_by_source_id": before_hidden,
         "after_open_data_in_window_hidden_by_source_id": after_hidden,
-        "known_issue_324_baseline_hidden_count": 4203,
-        "known_issue_324_baseline_matches_computed_before": before_hidden == 4203,
+        "known_issue_324_baseline_hidden_count": KNOWN_ISSUE_324_HISTORICAL_HIDDEN_COUNT,
+        "known_issue_324_baseline_comparison_applicable": baseline_comparison_applicable,
+        "known_issue_324_baseline_matches_computed_before": (
+            before_hidden == KNOWN_ISSUE_324_HISTORICAL_HIDDEN_COUNT
+            if baseline_comparison_applicable
+            else None
+        ),
+        "known_issue_324_baseline_state_pass": baseline_state_pass,
         "duplicate_canonical_id_count": duplicate_report["duplicate_canonical_id_count"],
         "raw_source_rows": raw_source_rows,
         "raw_rows_accounted": raw_rows_accounted,
@@ -372,7 +396,7 @@ def main() -> int:
         "projector_implementation_correctness_pass": projector["projector_occurrence_identity_pass"],
         "source_lineage_contract_compliance_pass": lineage["source_lineage_contract_compliance_pass"],
         "audit_execution_integrity_pass": True,
-        "occurrence_identity_implementation_correctness_pass": after_hidden == 0 and before_hidden > 0,
+        "occurrence_identity_implementation_correctness_pass": after_hidden == 0 and baseline_state_pass,
         "duplicate_safety_pass": duplicate_report["duplicate_safety_pass"],
         "launch_readiness": False,
         "issue_132_gate_pass": False,
@@ -409,6 +433,9 @@ def main() -> int:
             "before_hidden_count": before_hidden,
             "after_hidden_count": after_hidden,
             "resolved_hidden_count": before_hidden - after_hidden,
+            "historical_baseline_hidden_count": KNOWN_ISSUE_324_HISTORICAL_HIDDEN_COUNT,
+            "historical_baseline_comparison_applicable": baseline_comparison_applicable,
+            "historical_baseline_state_pass": baseline_state_pass,
             "sample_resolved_occurrences": [
                 row for row in open_ledger if row["before_disposition"] == "in_window_occurrence_hidden_by_source_id_match"
             ][:100],
