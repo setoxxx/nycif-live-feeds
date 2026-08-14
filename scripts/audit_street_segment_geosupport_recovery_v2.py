@@ -11,7 +11,9 @@ Important safety boundary:
 - it never marks a result exact-pin eligible;
 - a candidate survives only when both stated intersections resolve uniquely,
   Function 2/2W coordinates are borough-valid, Function 3 resolves the claimed
-  blockface, and its endpoint node pair agrees with the two intersections.
+  blockface, its endpoint node pair agrees with the two intersections, and
+  Function 3 supplies an official Segment Identifier suitable for a later
+  centerline-geometry join.
 
 The Python binding is intentionally optional at import time so unit tests can
 run with a fake backend. The live audit executes inside NYC Planning's published
@@ -123,8 +125,6 @@ class GeoSupportStreetEvidence:
                 }
             )
         except Exception:
-            # Function 2 fails for unresolved/ambiguous multiple intersections;
-            # ambiguity is a hard stop in this evidence lane.
             return None, "INTERSECTION_UNRESOLVED_OR_AMBIGUOUS"
 
         node = _clean_node(base.get("LION Node Number"))
@@ -243,6 +243,17 @@ class GeoSupportStreetEvidence:
                 "function_3_to_node": to_node,
             }
 
+        segment_identifier = str(segment.get("Segment Identifier") or "").strip()
+        if not segment_identifier:
+            return {
+                "strict_nonpublic_segment_evidence": False,
+                "reason_code": "SEGMENT_IDENTIFIER_MISSING",
+                "endpoint_1": first,
+                "endpoint_2": second,
+                "function_3_from_node": from_node,
+                "function_3_to_node": to_node,
+            }
+
         distance_m = haversine_m(
             first["latitude"],
             first["longitude"],
@@ -270,7 +281,7 @@ class GeoSupportStreetEvidence:
 
         return {
             "strict_nonpublic_segment_evidence": True,
-            "reason_code": "GEOSUPPORT_ENDPOINTS_AND_SEGMENT_NODES_AGREE",
+            "reason_code": "GEOSUPPORT_ENDPOINTS_SEGMENT_IDENTITY_AGREE",
             "evidence_class": EVIDENCE_CLASS,
             "publication_state": "NONPUBLIC_EVIDENCE_ONLY",
             "publication_allowed": False,
@@ -280,12 +291,13 @@ class GeoSupportStreetEvidence:
             "endpoint_2": second,
             "function_3_from_node": from_node,
             "function_3_to_node": to_node,
-            "function_3_segment_ids": segment.get("Segment IDs") or [],
+            "function_3_segment_identifier": segment_identifier,
             "distance_m": round(distance_m, 2),
             "candidate_midpoint": {
                 "latitude": midpoint_lat,
                 "longitude": midpoint_lng,
                 "generated_for_nonpublic_audit_only": True,
+                "must_not_be_used_as_public_exact_point": True,
             },
         }
 
@@ -315,13 +327,7 @@ def audit_claims(
         if strict:
             strict_count += 1
             occurrence_coverage += int(claim.get("occurrence_count") or 0)
-        rows.append(
-            {
-                **claim,
-                "claim_key": key,
-                **result,
-            }
-        )
+        rows.append({**claim, "claim_key": key, **result})
 
     runtime_image = os.environ.get(
         "GEOSUPPORT_RUNTIME_IMAGE", DEFAULT_GEOSUPPORT_RUNTIME_IMAGE
@@ -340,6 +346,7 @@ def audit_claims(
         "public_map_modified": False,
         "location_cache_modified": False,
         "projector_consumed": False,
+        "geometry_join_status": "SEGMENT_IDENTIFIER_ONLY_GEOMETRY_NOT_YET_JOINED",
         "unique_segment_claim_count": len(claims),
         "strict_nonpublic_segment_evidence_count": strict_count,
         "strict_nonpublic_occurrence_coverage": occurrence_coverage,
@@ -352,6 +359,7 @@ def audit_claims(
             "public_map_write_count": 0,
             "location_cache_write_count": 0,
             "projector_consumed_count": 0,
+            "midpoint_publication_count": 0,
         },
         "claims": rows,
     }
@@ -360,7 +368,7 @@ def audit_claims(
 def load_geosupport_backend() -> Any:
     try:
         from geosupport import Geosupport
-    except ImportError as exc:  # pragma: no cover - exercised by live workflow
+    except ImportError as exc:  # pragma: no cover
         raise RuntimeError(
             "python-geosupport is not installed; live audit must run inside the approved GeoSupport runtime"
         ) from exc
@@ -406,6 +414,7 @@ def main() -> int:
         "unresolved_or_blocked_claim_count",
         "geosupport_call_count",
         "reason_counts",
+        "geometry_join_status",
         "hard_zero_gates",
     )
     print(json.dumps({key: report[key] for key in summary_keys}, indent=2, sort_keys=True))
