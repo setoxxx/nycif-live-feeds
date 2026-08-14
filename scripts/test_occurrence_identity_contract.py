@@ -26,6 +26,19 @@ def main() -> int:
         "source_event_id": "abc123",
         "start_date_time": "2026-07-20T09:00:00",
     }
+    canonical = {
+        "id": "review_supplemental:tvpp-9vvx:abc123@2026-07-20",
+        "source": {
+            "dataset": "tvpp-9vvx",
+            "source_event_id": "abc123",
+        },
+        "start_date_time": "2026-07-20T09:00:00",
+    }
+    raw_event_id_only = {
+        "source_dataset": "tvpp-9vvx",
+        "event_id": "raw-event-id",
+        "start_date_time": "2026-07-20T10:00:00",
+    }
     same_date = {
         "dataset": "tvpp-9vvx",
         "source_event_id": "abc123",
@@ -67,6 +80,9 @@ def main() -> int:
     rejected_occurrences = {occurrence_key(rejected)}
 
     assert source_key(staged) == ("tvpp-9vvx", "abc123")
+    assert source_key(canonical) == ("tvpp-9vvx", "abc123")
+    assert occurrence_key_v2(canonical) == occurrence_key_v2(staged)
+    assert source_key(raw_event_id_only) == ("tvpp-9vvx", "raw-event-id")
     assert occurrence_key(staged) == ("tvpp-9vvx", "abc123", "2026-07-20")
     assert occurrence_key_v2(staged) == ("tvpp-9vvx", "abc123", "2026-07-20T09:00:00")
     assert occurrence_key_v2(same_day_different_time) == (
@@ -80,7 +96,6 @@ def main() -> int:
     assert identity_precision(missing_time_and_date) == "AMBIGUOUS"
     assert source_id_only_matching_allowed_for_recurring_event_feeds() is False
 
-    # Exact-start rejection must not widen to a sibling occurrence on the same day.
     exact_rejection = {
         **same_date,
         "manual_review_status": "rejected",
@@ -100,7 +115,6 @@ def main() -> int:
         rejected_sources=sources,
     ) is False
 
-    # Source-wide rejection is allowed only when explicitly declared.
     source_wide_rejection = {
         "dataset": "tvpp-9vvx",
         "source_event_id": "abc123",
