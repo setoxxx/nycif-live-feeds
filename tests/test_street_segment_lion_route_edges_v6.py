@@ -16,13 +16,15 @@ V5 = {
             "claim_key": "mn|route",
             "occurrence_count": 2,
             "route_topology_certified": True,
+            "endpoint_1": {"main_street": "TEST STREET"},
+            "endpoint_2": {"main_street": "TEST STREET"},
             "ordered_edge_node_pairs": [["0000001", "0000002"], ["0000002", "0000003"]],
         }
     ],
 }
 
 
-def feature(a, b, segment="1", coords=None, join="A"):
+def feature(a, b, segment="1", coords=None, join="A", street="TEST STREET"):
     if coords is None:
         coords = [[-74.0, 40.70], [-73.999, 40.701]]
     return {
@@ -32,7 +34,7 @@ def feature(a, b, segment="1", coords=None, join="A"):
             "NodeIDTo": b,
             "SegmentID": segment,
             "Join_ID": join,
-            "Street": "TEST STREET",
+            "Street": street,
             "FeatureTyp": "0",
             "SegmentTyp": "U",
             "RB_Layer": "B",
@@ -82,6 +84,33 @@ class RouteEdgeV6Tests(unittest.TestCase):
         self.assertEqual(len({row["geometry_sha256"] for row in diagnostics}), 2)
         self.assertNotIn("geometry", diagnostics[0])
         self.assertEqual(result["fully_source_resolved_route_count"], 0)
+
+    def test_exact_certified_street_name_disambiguates_mixed_features(self):
+        street = feature("0000001", "0000002", "10", coords=[[-74.0, 40.70], [-73.999, 40.701]], street="TEST STREET")
+        boundary = feature("0000001", "0000002", "12", coords=[[-74.0, 40.70], [-73.998, 40.702]], street="2020 CB BOUNDARY")
+        source = {"type": "FeatureCollection", "features": [street, boundary, feature("0000002", "0000003", "11")]}
+        result = audit(copy.deepcopy(V5), source)
+        edge = result["routes"][0]["edges"][0]
+        self.assertEqual(edge["reason_code"], "LION_ROUTE_EDGE_STREET_NAME_DISAMBIGUATED")
+        self.assertTrue(edge["edge_geometry_candidate_accepted"])
+        self.assertEqual(edge["source_segment_id"], "10")
+        self.assertEqual(result["fully_source_resolved_route_count"], 1)
+
+    def test_conflicting_same_street_rows_remain_blocked(self):
+        first = feature("0000001", "0000002", "10", coords=[[-74.0, 40.70], [-73.999, 40.701]], street="TEST STREET")
+        second = feature("0000001", "0000002", "12", coords=[[-74.0, 40.70], [-73.998, 40.702]], street="TEST STREET")
+        source = {"type": "FeatureCollection", "features": [first, second, feature("0000002", "0000003", "11")]}
+        result = audit(copy.deepcopy(V5), source)
+        self.assertEqual(result["routes"][0]["edges"][0]["reason_code"], "LION_ROUTE_EDGE_CONFLICTING_SOURCE_ROWS")
+
+    def test_endpoint_main_street_disagreement_disables_disambiguation(self):
+        v5 = copy.deepcopy(V5)
+        v5["routes"][0]["endpoint_2"]["main_street"] = "OTHER STREET"
+        street = feature("0000001", "0000002", "10", coords=[[-74.0, 40.70], [-73.999, 40.701]], street="TEST STREET")
+        boundary = feature("0000001", "0000002", "12", coords=[[-74.0, 40.70], [-73.998, 40.702]], street="2020 CB BOUNDARY")
+        source = {"type": "FeatureCollection", "features": [street, boundary, feature("0000002", "0000003", "11")]}
+        result = audit(v5, source)
+        self.assertEqual(result["routes"][0]["edges"][0]["reason_code"], "LION_ROUTE_EDGE_CONFLICTING_SOURCE_ROWS")
 
     def test_missing_edge_blocks(self):
         source = {"type": "FeatureCollection", "features": [feature("0000001", "0000002", "10")]}
