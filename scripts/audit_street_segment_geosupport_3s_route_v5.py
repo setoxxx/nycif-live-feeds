@@ -1,27 +1,23 @@
 #!/usr/bin/env python3
 """Certify ordered GeoSupport 3S route topology for V4-blocked street claims.
 
-This is a NONPUBLIC_EVIDENCE_ONLY topology audit. It targets only V4 entries
-blocked by LION_GEOMETRY_ENDPOINT_DISAGREEMENT and asks NYC Planning Geosupport
-Function 3S for the ordered list of intersections along the stated on/from/to
-street stretch.
+This NONPUBLIC_EVIDENCE_ONLY audit targets only V4 entries blocked by
+LION_GEOMETRY_ENDPOINT_DISAGREEMENT. V4 chooses the target set; the original
+V2 GeoSupport identity report independently supplies the certified endpoint
+nodes and coordinates. V5 refuses any missing or non-unique claim-key handoff.
 
-A route topology candidate survives only when:
-- the original street-between claim parses;
-- 3S returns a self-consistent intersection count;
-- the ordered node list has at least two unique nodes and no repeated node;
-- the first/last 3S nodes exactly equal the two independently certified V2
-  endpoint nodes, in either forward or reverse order;
-- the route remains below a conservative node-count cap.
+A route topology candidate survives only when Function 3S returns a
+self-consistent, acyclic ordered node list whose terminal nodes exactly equal
+the independently certified V2 endpoint nodes (forward or reverse).
 
-This script does not join geometry, does not choose a shortest path, does not
-create a point, and grants no Projector/publication authority.
+No geometry is joined here. No shortest-path algorithm, point generation,
+Projector consumption, cache/map write, renderer, or publication is allowed.
 """
 from __future__ import annotations
 
 import argparse
 import json
-from collections import Counter
+from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -36,6 +32,8 @@ except ModuleNotFoundError:  # pragma: no cover
 SCHEMA_VERSION = "NYCIF_STREET_SEGMENT_GEOSUPPORT_3S_ROUTE_AUDIT_V5"
 MAX_ROUTE_NODES = 80
 TARGET_V4_REASON = "LION_GEOMETRY_ENDPOINT_DISAGREEMENT"
+V2_SCHEMA = "NYCIF_STREET_SEGMENT_GEOSUPPORT_RECOVERY_AUDIT_V2"
+V4_SCHEMA = "NYCIF_STREET_SEGMENT_LION_GEOMETRY_AUDIT_V4"
 
 
 def _node(value: Any) -> str:
@@ -57,9 +55,9 @@ class GeoSupport3SRouteEvidence:
         self.backend = backend
         self.call_count = 0
 
-    def resolve(self, v4_entry: dict[str, Any]) -> dict[str, Any]:
-        display = str(v4_entry.get("event_location") or "").strip()
-        borough = str(v4_entry.get("borough") or "").strip()
+    def resolve(self, claim: dict[str, Any]) -> dict[str, Any]:
+        display = str(claim.get("event_location") or "").strip()
+        borough = str(claim.get("borough") or "").strip()
         parsed = parse_street_between(display)
         if not parsed:
             return {"route_topology_certified": False, "reason_code": "NOT_STREET_BETWEEN_CLAIM"}
@@ -113,8 +111,8 @@ class GeoSupport3SRouteEvidence:
         if len(set(nodes)) != len(nodes):
             return {"route_topology_certified": False, "reason_code": "GEOSUPPORT_3S_ROUTE_REPEATS_NODE"}
 
-        expected_1 = _node((v4_entry.get("endpoint_1") or {}).get("node"))
-        expected_2 = _node((v4_entry.get("endpoint_2") or {}).get("node"))
+        expected_1 = _node((claim.get("endpoint_1") or {}).get("node"))
+        expected_2 = _node((claim.get("endpoint_2") or {}).get("node"))
         if not expected_1 or not expected_2:
             return {"route_topology_certified": False, "reason_code": "CERTIFIED_ENDPOINT_NODE_MISSING"}
 
@@ -150,13 +148,26 @@ class GeoSupport3SRouteEvidence:
         }
 
 
-def audit(v4_report: dict[str, Any], backend: Any) -> dict[str, Any]:
-    if v4_report.get("schema_version") != "NYCIF_STREET_SEGMENT_LION_GEOMETRY_AUDIT_V4":
+def audit(identity_report: dict[str, Any], v4_report: dict[str, Any], backend: Any) -> dict[str, Any]:
+    if identity_report.get("schema_version") != V2_SCHEMA:
+        raise ValueError("unexpected V2 identity report schema")
+    if identity_report.get("publication_authority_granted") is not False:
+        raise ValueError("V2 identity report unexpectedly grants publication authority")
+    if identity_report.get("projector_consumed") is not False:
+        raise ValueError("V2 identity report unexpectedly consumed by Projector")
+    if v4_report.get("schema_version") != V4_SCHEMA:
         raise ValueError("unexpected V4 report schema")
     if v4_report.get("publication_authority_granted") is not False:
         raise ValueError("V4 report unexpectedly grants publication authority")
     if v4_report.get("projector_consumed") is not False:
         raise ValueError("V4 report unexpectedly consumed by Projector")
+
+    v2_by_key: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for claim in identity_report.get("claims") or []:
+        if isinstance(claim, dict) and claim.get("strict_nonpublic_segment_evidence") is True:
+            key = str(claim.get("claim_key") or "").strip()
+            if key:
+                v2_by_key[key].append(claim)
 
     targets = [
         entry for entry in (v4_report.get("entries") or [])
@@ -169,9 +180,24 @@ def audit(v4_report: dict[str, Any], backend: Any) -> dict[str, Any]:
     reasons: Counter[str] = Counter()
     certified = 0
     certified_occurrences = 0
+    v2_handoff_miss = 0
+    v2_handoff_duplicate = 0
 
     for target in targets:
-        result = evidence.resolve(target)
+        claim_key = str(target.get("claim_key") or "").strip()
+        matches = v2_by_key.get(claim_key, [])
+        if len(matches) == 0:
+            result = {"route_topology_certified": False, "reason_code": "V2_IDENTITY_HANDOFF_MISSING"}
+            claim = target
+            v2_handoff_miss += 1
+        elif len(matches) > 1:
+            result = {"route_topology_certified": False, "reason_code": "V2_IDENTITY_HANDOFF_NOT_UNIQUE"}
+            claim = target
+            v2_handoff_duplicate += 1
+        else:
+            claim = matches[0]
+            result = evidence.resolve(claim)
+
         reason = str(result.get("reason_code") or "UNSPECIFIED")
         reasons[reason] += 1
         if result.get("route_topology_certified") is True:
@@ -179,14 +205,15 @@ def audit(v4_report: dict[str, Any], backend: Any) -> dict[str, Any]:
             certified_occurrences += int(target.get("occurrence_count") or 0)
         rows.append(
             {
-                "claim_key": target.get("claim_key"),
+                "claim_key": claim_key,
                 "borough": target.get("borough"),
                 "event_location": target.get("event_location"),
                 "occurrence_count": target.get("occurrence_count"),
                 "source_event_ids": target.get("source_event_ids"),
-                "endpoint_1": target.get("endpoint_1"),
-                "endpoint_2": target.get("endpoint_2"),
+                "endpoint_1": claim.get("endpoint_1"),
+                "endpoint_2": claim.get("endpoint_2"),
                 "v4_reason_code": target.get("reason_code"),
+                "v2_identity_handoff_count": len(matches),
                 **result,
             }
         )
@@ -194,6 +221,7 @@ def audit(v4_report: dict[str, Any], backend: Any) -> dict[str, Any]:
     return {
         "schema_version": SCHEMA_VERSION,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "parent_v2_schema_version": identity_report.get("schema_version"),
         "parent_v4_schema_version": v4_report.get("schema_version"),
         "source_authority": "NYC Planning Geosupport Desktop Edition Function 3S",
         "read_only": True,
@@ -208,6 +236,8 @@ def audit(v4_report: dict[str, Any], backend: Any) -> dict[str, Any]:
         "target_v4_reason": TARGET_V4_REASON,
         "target_claim_count": len(targets),
         "target_occurrence_count": sum(int(entry.get("occurrence_count") or 0) for entry in targets),
+        "v2_identity_handoff_missing_count": v2_handoff_miss,
+        "v2_identity_handoff_not_unique_count": v2_handoff_duplicate,
         "route_topology_certified_count": certified,
         "route_topology_certified_occurrence_count": certified_occurrences,
         "route_topology_blocked_count": len(targets) - certified,
@@ -237,17 +267,21 @@ def load_backend() -> Any:
 
 def main() -> int:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--identity-report", type=Path, required=True)
     parser.add_argument("--v4-report", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
+    identity = json.loads(args.identity_report.read_text(encoding="utf-8"))
     v4 = json.loads(args.v4_report.read_text(encoding="utf-8"))
-    result = audit(v4, load_backend())
+    result = audit(identity, v4, load_backend())
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     keys = (
         "schema_version",
         "target_claim_count",
         "target_occurrence_count",
+        "v2_identity_handoff_missing_count",
+        "v2_identity_handoff_not_unique_count",
         "route_topology_certified_count",
         "route_topology_certified_occurrence_count",
         "route_topology_blocked_count",
