@@ -83,6 +83,27 @@ class RouteOccurrenceRegistryV9Tests(unittest.TestCase):
         self.assertEqual(result["exact_start_occurrence_count"], 2)
         self.assertTrue(all(value == 0 for value in result["hard_zero_gates"].values()))
 
+    def test_missing_dataset_restores_tvpp_provenance(self):
+        v2, v5, v7, v8 = reports()
+        rows = [raw("2026-09-01T10:00:00"), raw("2026-09-08T10:00:00")]
+        for row in rows:
+            row.pop("source_dataset")
+        result = audit(v2=v2, v5=v5, v7=v7, v8=v8, raw_rows=rows)
+        self.assertTrue(result["registry_conformance_pass"])
+        self.assertEqual(result["source_dataset_authority"], "tvpp-9vvx")
+        self.assertEqual({entry["source_dataset"] for entry in result["registry"]}, {"tvpp-9vvx"})
+
+    def test_explicit_dataset_is_not_rewritten(self):
+        v2, v5, v7, v8 = reports()
+        result = audit(
+            v2=v2, v5=v5, v7=v7, v8=v8,
+            raw_rows=[raw("2026-09-01T10:00:00"), raw("2026-09-08T10:00:00")],
+        )
+        self.assertEqual(
+            {entry["source_dataset"] for entry in result["registry"]},
+            {"nyc-open-data-permitted-events"},
+        )
+
     def test_duplicate_same_start_occurrence_blocks(self):
         v2, v5, v7, v8 = reports()
         rows = [raw("2026-09-01T10:00:00"), raw("2026-09-01T10:00:00")]
