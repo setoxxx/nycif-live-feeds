@@ -5,6 +5,10 @@ This keeps the existing source acquisition and matching machinery, but makes
 location evidence authoritative before a row can enter the exact-pin staging
 feed. Coordinates without validated evidence remain review/list material and are
 never promoted merely because they fall inside NYC bounds.
+
+TVPP-style street-segment claims bypass legacy coordinate caches and are
+re-resolved through the canonical segment authority before publication. This is
+intentional protection against the legacy wrong-block/wrong-borough pin class.
 """
 from __future__ import annotations
 
@@ -17,13 +21,40 @@ try:
     from scripts import build_test_enriched_feed as legacy_enrich
     from scripts.legacy_location_evidence_migration import migrate_match
     from scripts.location_evidence_contract import normalize_location_evidence, safe_location_evidence_copy
+    from scripts.nyc_location_resolver import parse_street_between
     from scripts.projector_v2_authority import semantic_map_decision
 except ModuleNotFoundError:  # pragma: no cover - direct script execution
     import build_staged_production_feed as legacy_stage  # type: ignore[no-redef]
     import build_test_enriched_feed as legacy_enrich  # type: ignore[no-redef]
     from legacy_location_evidence_migration import migrate_match
     from location_evidence_contract import normalize_location_evidence, safe_location_evidence_copy
+    from nyc_location_resolver import parse_street_between
     from projector_v2_authority import semantic_map_decision
+
+
+def authoritative_match_for_raw(
+    raw: dict[str, Any],
+    indexes: dict[str, dict[str, dict[str, Any]]],
+    cache: dict[str, dict[str, Any]],
+    resolver: Any,
+) -> tuple[str, dict[str, Any] | None, str]:
+    """Choose location evidence without letting legacy segment coordinates win.
+
+    Street-segment claims are a known legacy wrong-pin class. They go directly
+    to the canonical segment resolver. If authoritative segment evidence is not
+    available, retain the event without an exact coordinate rather than falling
+    back to an old cache/event-id coordinate.
+    """
+    display = str(raw.get("event_location") or raw.get("location") or "").strip()
+    borough = str(raw.get("event_borough") or raw.get("borough") or "").strip()
+    if parse_street_between(display):
+        segment = resolver._resolve_street_segment(display, borough)  # canonical internal authority
+        if segment is not None and segment.resolved:
+            return segment.tier, segment.as_match_dict(), "street_segment_authority"
+        return "street_segment_unresolved", None, "street_segment_authority"
+
+    match_type, match = legacy_enrich.find_match(raw, indexes, cache, resolver)
+    return match_type, match, "legacy_match_stack"
 
 
 def enrich_with_location_authority(
@@ -58,19 +89,28 @@ def build_semantic_enriched_feed() -> tuple[dict[str, Any], dict[str, Any]]:
 
     events: list[dict[str, Any]] = []
     match_counts: dict[str, int] = {}
+    route_counts: dict[str, int] = {}
     map_state_counts: dict[str, int] = {}
     migration_reason_counts: dict[str, int] = {}
     migration_tier_counts: dict[str, int] = {}
     certified = 0
     migrated_certified = 0
+    segment_authority_certified = 0
+    segment_authority_unresolved = 0
 
     for raw in raw_current:
-        match_type, match = legacy_enrich.find_match(raw, indexes, cache, resolver)
+        match_type, match, route = authoritative_match_for_raw(raw, indexes, cache, resolver)
         match_counts[match_type] = match_counts.get(match_type, 0) + 1
+        route_counts[route] = route_counts.get(route, 0) + 1
         event = enrich_with_location_authority(raw, match_type, match)
         state = str(event.get("map_eligibility_state") or "REVIEW_REQUIRED")
         map_state_counts[state] = map_state_counts.get(state, 0) + 1
         certified += int(event.get("certified_pin") is True)
+        if route == "street_segment_authority":
+            if event.get("certified_pin") is True:
+                segment_authority_certified += 1
+            else:
+                segment_authority_unresolved += 1
         reason = str(event.get("location_evidence_migration_reason") or "UNSPECIFIED")
         migration_reason_counts[reason] = migration_reason_counts.get(reason, 0) + 1
         if event.get("location_evidence_migration_eligible") is True:
@@ -81,6 +121,9 @@ def build_semantic_enriched_feed() -> tuple[dict[str, Any], dict[str, Any]]:
 
     if resolver._live_calls:
         resolver.save_geosearch_cache()
+    geoclient_live_calls = int(getattr(getattr(resolver, "geoclient", None), "live_calls", 0) or 0)
+    if geoclient_live_calls:
+        resolver.geoclient.save_cache()
 
     events.sort(key=lambda row: (
         row.get("date") or "9999-99-99",
@@ -105,11 +148,15 @@ def build_semantic_enriched_feed() -> tuple[dict[str, Any], dict[str, Any]]:
         "enriched_rows_loaded": len(enriched),
         "location_cache_entries_loaded": len(cache),
         "location_resolver_live_geosearch_calls": resolver._live_calls,
+        "location_resolver_live_geoclient_calls": geoclient_live_calls,
         "semantic_feed_events": len(events),
         "certified_map_ready_events": certified,
         "migrated_legacy_matches_certified": migrated_certified,
+        "street_segment_authority_certified": segment_authority_certified,
+        "street_segment_authority_unresolved": segment_authority_unresolved,
         "map_state_counts": dict(sorted(map_state_counts.items())),
         "match_counts": dict(sorted(match_counts.items())),
+        "route_counts": dict(sorted(route_counts.items())),
         "migration_reason_counts": dict(sorted(migration_reason_counts.items())),
         "migration_tier_counts": dict(sorted(migration_tier_counts.items())),
         "coordinates_without_exact_evidence_promoted": 0,
