@@ -4,7 +4,10 @@ on:
   pull_request:
     paths:
       - 'scripts/audit_street_segment_geosupport_recovery_v2.py'
+      - 'scripts/audit_street_segment_geosupport_evidence_contract_v3.py'
       - 'tests/test_street_segment_geosupport_recovery_v2.py'
+      - 'tests/test_street_segment_geosupport_evidence_contract_v3.py'
+      - 'docs/contracts/EXACT_EVENT_STREET_SEGMENT_EVIDENCE_V1.json'
       - '.github/workflows/street-segment-geosupport-recovery-audit.yml'
   workflow_dispatch:
 
@@ -49,7 +52,7 @@ jobs:
           docker run --rm "$GEOSUPPORT_RUNTIME_IMAGE" \
             python -c 'from geosupport import Geosupport; g = Geosupport(); print("NYCIF_GEOSUPPORT_IMPORT_OK=1")'
 
-      - name: Compile and test non-public audit inside official runtime
+      - name: Compile and test non-public evidence code inside official runtime
         shell: bash
         run: |
           set -euo pipefail
@@ -61,7 +64,7 @@ jobs:
             -v "$GITHUB_WORKSPACE:/workspace:ro" \
             -w /workspace \
             "$GEOSUPPORT_RUNTIME_IMAGE" \
-            bash -lc 'python -c "from pathlib import Path; p=Path(\"scripts/audit_street_segment_geosupport_recovery_v2.py\"); compile(p.read_text(encoding=\"utf-8\"), str(p), \"exec\")" && python -m unittest tests.test_street_segment_geosupport_recovery_v2 -v'
+            bash -lc 'python -c "from pathlib import Path; [compile(Path(p).read_text(encoding=\"utf-8\"), p, \"exec\") for p in (\"scripts/audit_street_segment_geosupport_recovery_v2.py\", \"scripts/audit_street_segment_geosupport_evidence_contract_v3.py\")]" && python -m unittest tests.test_street_segment_geosupport_recovery_v2 tests.test_street_segment_geosupport_evidence_contract_v3 -v'
 
       - name: Run local authoritative street-segment evidence audit
         shell: bash
@@ -80,13 +83,24 @@ jobs:
             python scripts/audit_street_segment_geosupport_recovery_v2.py \
               --output /evidence/street_segment_geosupport_recovery_audit_v2.json
 
+      - name: Enforce non-public street-segment evidence contract
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/audit_street_segment_geosupport_evidence_contract_v3.py \
+            --contract docs/contracts/EXACT_EVENT_STREET_SEGMENT_EVIDENCE_V1.json \
+            --report /tmp/nycif-street-geosupport-audit/street_segment_geosupport_recovery_audit_v2.json \
+            --output /tmp/nycif-street-geosupport-audit/street_segment_geosupport_evidence_contract_audit_v3.json
+
       - name: Prove hard non-public gates and clean worktree
         shell: bash
         run: |
           python3 - <<'PY'
           import json
-          path = '/tmp/nycif-street-geosupport-audit/street_segment_geosupport_recovery_audit_v2.json'
-          report = json.load(open(path, encoding='utf-8'))
+          evidence_path = '/tmp/nycif-street-geosupport-audit/street_segment_geosupport_recovery_audit_v2.json'
+          contract_path = '/tmp/nycif-street-geosupport-audit/street_segment_geosupport_evidence_contract_audit_v3.json'
+          report = json.load(open(evidence_path, encoding='utf-8'))
+          contract = json.load(open(contract_path, encoding='utf-8'))
           assert report['read_only'] is True
           assert report['promotion_allowed'] is False
           assert report['publication_authority_granted'] is False
@@ -94,8 +108,14 @@ jobs:
           assert report['location_cache_modified'] is False
           assert report['projector_consumed'] is False
           assert report['api_credentials_required'] is False
+          assert report['geometry_join_status'] == 'SEGMENT_IDENTIFIER_ONLY_GEOMETRY_NOT_YET_JOINED'
           assert report['geosupport_runtime_image'] == 'nycplanning/docker-geosupport:26.2.0'
           assert all(value == 0 for value in report['hard_zero_gates'].values())
+          assert contract['conforms'] is True
+          assert contract['geometry_join_completed'] is False
+          assert contract['publication_authority_granted'] is False
+          assert contract['projector_consumed'] is False
+          assert contract['public_renderer_enabled'] is False
           PY
           test -z "$(git status --porcelain)"
 
