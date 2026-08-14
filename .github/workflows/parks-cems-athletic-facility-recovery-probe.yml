@@ -9,12 +9,14 @@ on:
       - 'scripts/probe_parks_cems_facility_numbering_v4.py'
       - 'scripts/probe_parks_cems_permit_flag_v5.py'
       - 'scripts/probe_parks_cems_strict_facility_area_v6.py'
+      - 'scripts/build_parks_cems_area_evidence_registry_v7.py'
       - 'tests/test_parks_cems_athletic_facility_probe.py'
       - 'tests/test_parks_cems_athletic_facility_probe_v2.py'
       - 'tests/test_parks_cems_facility_area_probe_v3.py'
       - 'tests/test_parks_cems_facility_numbering_v4.py'
       - 'tests/test_parks_cems_permit_flag_v5.py'
       - 'tests/test_parks_cems_strict_facility_area_v6.py'
+      - 'tests/test_parks_cems_area_evidence_registry_v7.py'
       - '.github/workflows/parks-cems-athletic-facility-recovery-probe.yml'
   workflow_dispatch:
 
@@ -56,12 +58,14 @@ jobs:
           python3 -m py_compile scripts/probe_parks_cems_facility_numbering_v4.py
           python3 -m py_compile scripts/probe_parks_cems_permit_flag_v5.py
           python3 -m py_compile scripts/probe_parks_cems_strict_facility_area_v6.py
+          python3 -m py_compile scripts/build_parks_cems_area_evidence_registry_v7.py
           python3 -m unittest tests.test_parks_cems_athletic_facility_probe -v
           python3 -m unittest tests.test_parks_cems_athletic_facility_probe_v2 -v
           python3 -m unittest tests.test_parks_cems_facility_area_probe_v3 -v
           python3 -m unittest tests.test_parks_cems_facility_numbering_v4 -v
           python3 -m unittest tests.test_parks_cems_permit_flag_v5 -v
           python3 -m unittest tests.test_parks_cems_strict_facility_area_v6 -v
+          python3 -m unittest tests.test_parks_cems_area_evidence_registry_v7 -v
 
       - name: Probe official CEMS athletic facilities
         env:
@@ -80,6 +84,9 @@ jobs:
             --output /tmp/nycif-cems-facility-probe/parks_cems_permit_flag_facility_area_probe_v5.json
           python3 scripts/probe_parks_cems_strict_facility_area_v6.py \
             --output /tmp/nycif-cems-facility-probe/parks_cems_strict_facility_area_probe_v6.json
+          python3 scripts/build_parks_cems_area_evidence_registry_v7.py \
+            --v6-report /tmp/nycif-cems-facility-probe/parks_cems_strict_facility_area_probe_v6.json \
+            --output /tmp/nycif-cems-facility-probe/parks_cems_area_evidence_registry_v7.json
 
       - name: Prove probes stayed non-mutating
         run: test -z "$(git status --porcelain)"
