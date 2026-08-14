@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     env:
-      GEO_VERSION: 25c
+      GEOSUPPORT_RUNTIME_IMAGE: 'nycplanning/docker-geosupport:26.2.0'
       NYCIF_ALLOW_LIVE_GEOSEARCH: 'no'
       NYCIF_ALLOW_LIVE_GEOCLIENT: 'no'
     steps:
@@ -35,48 +35,48 @@ jobs:
           echo "NYCIF_CHECKED_OUT_HEAD=${actual}"
           test "${actual}" = "${expected}"
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install NYC Planning Geosupport Desktop Edition 25c
+      - name: Pull pinned NYC Planning GeoSupport runtime
         shell: bash
         run: |
           set -euo pipefail
-          num="${GEO_VERSION:0:2}"
-          letter="${GEO_VERSION: -1}"
-          case "$letter" in
-            a) minor=1;;
-            b) minor=2;;
-            c) minor=3;;
-            *) echo "Unsupported GEO_VERSION: $GEO_VERSION" >&2; exit 1;;
-          esac
-          filename="linux_geo${GEO_VERSION}_${num}.${minor}.zip"
-          url="https://s-media.nyc.gov/agencies/dcp/assets/files/zip/data-tools/bytes/geosupport/${filename}"
-          curl --fail --location --retry 3 --output "$filename" "$url"
-          mkdir -p /tmp/geosupport-install-lx
-          unzip -q "$filename" -d /tmp/geosupport-install-lx
-          geo_dir="$(find /tmp/geosupport-install-lx -type d -name "version-${GEO_VERSION}_*" | head -n 1)"
-          test -n "$geo_dir"
-          echo "GEOFILES=${geo_dir}/fls/" >> "$GITHUB_ENV"
-          echo "LD_LIBRARY_PATH=${geo_dir}/lib/:${LD_LIBRARY_PATH:-}" >> "$GITHUB_ENV"
+          docker pull "$GEOSUPPORT_RUNTIME_IMAGE"
+          docker image inspect "$GEOSUPPORT_RUNTIME_IMAGE" --format 'NYCIF_GEOSUPPORT_IMAGE_ID={{.Id}}'
 
-      - name: Install dependencies and pinned public Python wrapper
+      - name: Verify official runtime contains Python GeoSupport binding
         shell: bash
         run: |
-          python3 -m pip install -r requirements.txt
-          python3 -m pip install 'git+https://github.com/ishiland/python-geosupport.git@82c39e82b4d4dc7773fa67d32ef7f3787ef4d27e'
+          set -euo pipefail
+          docker run --rm "$GEOSUPPORT_RUNTIME_IMAGE" \
+            python -c 'from geosupport import Geosupport; g = Geosupport(); print("NYCIF_GEOSUPPORT_IMPORT_OK=1")'
 
-      - name: Compile and test non-public audit
+      - name: Compile and test non-public audit inside official runtime
+        shell: bash
         run: |
-          python3 -m py_compile scripts/audit_street_segment_geosupport_recovery_v2.py
-          python3 -m unittest tests.test_street_segment_geosupport_recovery_v2 -v
+          set -euo pipefail
+          docker run --rm \
+            -e NYCIF_ALLOW_LIVE_GEOSEARCH=no \
+            -e NYCIF_ALLOW_LIVE_GEOCLIENT=no \
+            -e GEOSUPPORT_RUNTIME_IMAGE="$GEOSUPPORT_RUNTIME_IMAGE" \
+            -v "$GITHUB_WORKSPACE:/workspace:ro" \
+            -w /workspace \
+            "$GEOSUPPORT_RUNTIME_IMAGE" \
+            bash -lc 'python -m py_compile scripts/audit_street_segment_geosupport_recovery_v2.py && python -m unittest tests.test_street_segment_geosupport_recovery_v2 -v'
 
       - name: Run local authoritative street-segment evidence audit
+        shell: bash
         run: |
+          set -euo pipefail
           mkdir -p /tmp/nycif-street-geosupport-audit
-          python3 scripts/audit_street_segment_geosupport_recovery_v2.py \
-            --output /tmp/nycif-street-geosupport-audit/street_segment_geosupport_recovery_audit_v2.json
+          docker run --rm \
+            -e NYCIF_ALLOW_LIVE_GEOSEARCH=no \
+            -e NYCIF_ALLOW_LIVE_GEOCLIENT=no \
+            -e GEOSUPPORT_RUNTIME_IMAGE="$GEOSUPPORT_RUNTIME_IMAGE" \
+            -v "$GITHUB_WORKSPACE:/workspace:ro" \
+            -v /tmp/nycif-street-geosupport-audit:/evidence \
+            -w /workspace \
+            "$GEOSUPPORT_RUNTIME_IMAGE" \
+            python scripts/audit_street_segment_geosupport_recovery_v2.py \
+              --output /evidence/street_segment_geosupport_recovery_audit_v2.json
 
       - name: Prove hard non-public gates and clean worktree
         shell: bash
@@ -91,6 +91,8 @@ jobs:
           assert report['public_map_modified'] is False
           assert report['location_cache_modified'] is False
           assert report['projector_consumed'] is False
+          assert report['api_credentials_required'] is False
+          assert report['geosupport_runtime_image'] == 'nycplanning/docker-geosupport:26.2.0'
           assert all(value == 0 for value in report['hard_zero_gates'].values())
           PY
           test -z "$(git status --porcelain)"
