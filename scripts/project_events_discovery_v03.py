@@ -105,7 +105,13 @@ def apply_v3_map_publication_gate(
     )
     exact = semantic_exact and standalone_public
 
-    if semantic_exact and not standalone_public:
+    explicitly_non_marker = (
+        event_role in NON_PUBLIC_GROUP_ROLES
+        or parent_event_id not in (None, "")
+        or disposition in PRESERVED_NON_MARKER_DISPOSITIONS
+    )
+
+    if not standalone_public and explicitly_non_marker:
         state = "LIST_ONLY"
         if event_role != "public_event":
             gate_reason = "EVENT_ROLE_NOT_PUBLIC"

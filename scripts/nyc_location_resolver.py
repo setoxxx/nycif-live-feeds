@@ -3,7 +3,10 @@
 Resolver success is evidence, not publication authority. Callers must not treat a
 returned coordinate as an exact public pin unless exact_pin_eligible is true.
 Street-segment resolution is fail-closed: no generic street-name fallback may
-stand in for a certified segment.
+stand in for a certified segment. Exact street-segment publication requires an
+explicit certified reference or two borough-valid NYC Geoclient intersections.
+Planning Labs GeoSearch remains candidate evidence for non-segment lookups; it is
+not authoritative enough to certify a TVPP-style street segment.
 """
 
 from __future__ import annotations
@@ -23,6 +26,7 @@ from typing import Any
 
 try:
     from scripts.gps_identity import normalize_text_legacy
+    from scripts.nyc_geoclient_client import NYCGeoclientClient
     from scripts.nyc_location_gazetteer import (
         GEOSEARCH_CACHE_PATH,
         GAZETTEER_PATH,
@@ -34,6 +38,7 @@ try:
     )
 except ModuleNotFoundError:  # pragma: no cover
     from gps_identity import normalize_text_legacy
+    from nyc_geoclient_client import NYCGeoclientClient
     from nyc_location_gazetteer import (
         GEOSEARCH_CACHE_PATH,
         GAZETTEER_PATH,
@@ -155,7 +160,7 @@ def intersection_query_variants(main_street: str, cross_street: str) -> list[str
 
 
 class NYCLocationResolver:
-    """Tiered resolver: NYCIF gazetteer -> GeoSearch cache -> live GeoSearch."""
+    """Tiered resolver with fail-closed exact-location authority."""
 
     def __init__(
         self,
@@ -163,10 +168,15 @@ class NYCLocationResolver:
         geosearch_cache: dict[str, dict[str, Any]],
         *,
         allow_live_geosearch: bool = False,
+        geoclient: NYCGeoclientClient | None = None,
     ) -> None:
         self.gazetteer = gazetteer
         self.geosearch_cache = geosearch_cache
         self.allow_live_geosearch = allow_live_geosearch
+        self.geoclient = geoclient or NYCGeoclientClient.load_default(
+            allow_live=os.environ.get("NYCIF_ALLOW_LIVE_GEOCLIENT", "").strip().lower()
+            in {"1", "true", "yes"}
+        )
         self._live_calls = 0
 
     @classmethod
@@ -176,12 +186,22 @@ class NYCLocationResolver:
             "true",
             "yes",
         }
+        allow_live_geoclient = os.environ.get("NYCIF_ALLOW_LIVE_GEOCLIENT", "").strip().lower() in {
+            "1",
+            "true",
+            "yes",
+        }
         gazetteer = NYCLocationGazetteer.from_file(GAZETTEER_PATH)
         cache_payload = load_json(GEOSEARCH_CACHE_PATH, {})
         entries = cache_payload.get("entries", {}) if isinstance(cache_payload, dict) else {}
         if not isinstance(entries, dict):
             entries = {}
-        return cls(gazetteer, entries, allow_live_geosearch=allow_live)
+        return cls(
+            gazetteer,
+            entries,
+            allow_live_geosearch=allow_live,
+            geoclient=NYCGeoclientClient.load_default(allow_live=allow_live_geoclient),
+        )
 
     def _from_entry(self, tier: str, entry: dict[str, Any]) -> ResolveResult:
         return ResolveResult(
@@ -205,7 +225,7 @@ class NYCLocationResolver:
     def _geosearch_live(self, query: str) -> dict[str, Any] | None:
         params = urllib.parse.urlencode({"text": query, "size": 5})
         url = f"{GEOSEARCH_BASE}?{params}"
-        request = urllib.request.Request(url, headers={"User-Agent": "nycif-location-resolver/1.1"})
+        request = urllib.request.Request(url, headers={"User-Agent": "nycif-location-resolver/1.2"})
         try:
             with urllib.request.urlopen(request, timeout=20) as response:
                 payload = json.load(response)
@@ -268,21 +288,28 @@ class NYCLocationResolver:
             reason_detail="GeoSearch returned a candidate coordinate; semantic validation is still required.",
         )
 
-    def _resolve_intersection_endpoint(
+    def _resolve_geoclient_endpoint(
         self,
         main_street: str,
         cross_street: str,
         borough: str | None,
-    ) -> tuple[float, float, str, str] | None:
-        for query in intersection_query_variants(main_street, cross_street):
-            hit = self._resolve_geosearch(query, borough)
-            if hit is None or hit.lat is None or hit.lng is None:
-                continue
-            lat, lng = float(hit.lat), float(hit.lng)
-            if not coordinate_matches_borough(lat, lng, borough):
-                continue
-            return lat, lng, hit.label or query, query
-        return None
+    ) -> tuple[float, float, str] | None:
+        if not borough or self.geoclient is None:
+            return None
+        hit = self.geoclient.resolve_intersection(main_street, cross_street, borough)
+        if not isinstance(hit, dict):
+            return None
+        try:
+            lat = float(hit.get("lat"))
+            lng = float(hit.get("lng"))
+        except (TypeError, ValueError):
+            return None
+        if not valid_nyc_lat_lng(lat, lng) or not coordinate_matches_borough(lat, lng, borough):
+            return None
+        source = str(hit.get("geocoder_source") or "")
+        if source != "nyc_geoclient_intersection":
+            return None
+        return lat, lng, str(hit.get("geoclient_label") or f"{main_street} & {cross_street}")
 
     def _certified_segment_reference(self, display: str, borough: str | None) -> ResolveResult | None:
         key = (normalized_text(borough), normalized_text(display))
@@ -318,8 +345,8 @@ class NYCLocationResolver:
             return certified
 
         main_street, cross1, cross2 = parsed
-        first = self._resolve_intersection_endpoint(main_street, cross1, borough)
-        second = self._resolve_intersection_endpoint(main_street, cross2, borough)
+        first = self._resolve_geoclient_endpoint(main_street, cross1, borough)
+        second = self._resolve_geoclient_endpoint(main_street, cross2, borough)
         if first is None or second is None:
             return None
 
@@ -337,17 +364,20 @@ class NYCLocationResolver:
             tier="certified_street_segment",
             lat=midpoint_lat,
             lng=midpoint_lng,
-            source="nyc_geosearch_planninglabs_midpoint",
-            confidence="medium",
+            source="nyc_geoclient_segment_midpoint",
+            confidence="high",
             confidence_reason=(
-                f"Midpoint from borough-valid GeoSearch intersections '{first[2]}' and '{second[2]}'."
+                f"Midpoint from borough-valid NYC Geoclient intersections '{first[2]}' and '{second[2]}'."
             ),
             label=display,
-            query_used=f"{first[3]} / {second[3]}",
+            query_used=f"{main_street} & {cross1} / {main_street} & {cross2}",
             validation_state="validated",
             exact_pin_eligible=True,
-            reason_code="SEGMENT_ENDPOINTS_VALIDATED",
-            reason_detail="Both segment endpoints and midpoint passed the canonical segment checks.",
+            reason_code="SEGMENT_GEOCLIENT_ENDPOINTS_VALIDATED",
+            reason_detail=(
+                "Both stated blockface endpoints were independently resolved by NYC Geoclient, "
+                "passed borough containment, and produced a sane segment midpoint."
+            ),
         )
 
     def resolve(
@@ -385,8 +415,9 @@ class NYCLocationResolver:
             result.label = result.label or display
             return result
 
-        # Street-segment claims are special: if the segment cannot be certified,
-        # stop. Never continue into generic display/street/neighborhood geocoding.
+        # Street-segment claims are special: if NYC authoritative endpoint
+        # evidence cannot certify the blockface, stop. Never continue into generic
+        # display/street/neighborhood GeoSearch.
         if parse_street_between(display):
             street = self._resolve_street_segment(display, borough)
             if street:
@@ -398,13 +429,16 @@ class NYCLocationResolver:
                 lng=None,
                 source=None,
                 confidence=None,
-                confidence_reason="Street segment could not be certified from both endpoints.",
+                confidence_reason="Street segment could not be certified from authoritative endpoint evidence.",
                 label=display,
                 query_used=display,
                 validation_state="invalid",
                 exact_pin_eligible=False,
                 reason_code="SEGMENT_UNCERTIFIED",
-                reason_detail="No certified segment reference or two validated endpoint intersections were available.",
+                reason_detail=(
+                    "No explicit certified segment reference or two borough-valid NYC Geoclient "
+                    "endpoint intersections were available."
+                ),
             )
 
         parent = display.split(":")[0].strip() if ":" in display else display

@@ -3,8 +3,8 @@
 
 This module intentionally does not redefine occurrence identity, rejection scope,
 or exact-pin evidence rules. It delegates those decisions to the canonical
-OccurrenceIdentityV2 and pin-integrity authorities so the projector has one
-narrow integration surface.
+OccurrenceIdentityV2, pin-integrity, and exact-event-site authorities so the
+projector has one narrow integration surface.
 """
 
 from __future__ import annotations
@@ -18,6 +18,7 @@ SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPTS_DIR))
 
+from exact_location_authority import enforce_exact_site_on_map_decision  # noqa: E402
 from occurrence_identity_contract import (  # noqa: E402
     identity_precision,
     occurrence_day_key,
@@ -127,14 +128,15 @@ def general_area_label(row: dict[str, Any]) -> str | None:
 def semantic_map_decision(row: dict[str, Any]) -> dict[str, Any]:
     """Return the canonical map state for projector integration.
 
-    Exact coordinates are returned only for shared-authority MAP_READY. All
-    other states fail closed. GENERAL_AREA includes only a generalized label.
+    Exact coordinates survive only when both shared semantic eligibility and the
+    final exact-event-site gate pass. A point that is merely inside NYC, near a
+    venue, or inherited from legacy data is not sufficient for public geometry.
     """
     decision = evaluate_map_eligibility(row)
     state = str(decision.get("map_eligibility") or "REVIEW_REQUIRED")
     exact = state == "MAP_READY" and decision.get("exact_pin_eligible") is True
 
-    return {
+    candidate = {
         "map_eligibility_state": state,
         "exact_pin_eligible": exact,
         "geometry_valid": bool(decision.get("geometry_valid")),
@@ -145,6 +147,7 @@ def semantic_map_decision(row: dict[str, Any]) -> dict[str, Any]:
         "coordinate_status": "map_ready" if exact else "list_only",
         "certified_pin": exact,
     }
+    return enforce_exact_site_on_map_decision(row, candidate)
 
 
 def projector_authority_summary(
@@ -171,5 +174,10 @@ def projector_authority_summary(
             for item in map_decisions
             if item["latitude"] is not None
             and not (item["map_eligibility_state"] == "MAP_READY" and item["certified_pin"] is True)
+        ),
+        "exact_site_unverified_count": sum(
+            1
+            for item in map_decisions
+            if item.get("exact_site_validated") is False
         ),
     }

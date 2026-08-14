@@ -6,7 +6,8 @@ def exact_evidence():
         "tier": "exact_address",
         "validation_state": "validated",
         "exact_pin_eligible": True,
-        "source_provenance": "nyc_geosearch",
+        "source_provenance": "nyc_geoclient_address",
+        "reason_code": "ADDRESS_GEOCLIENT_VALIDATED",
     }
 
 
@@ -120,6 +121,18 @@ def test_v3_non_standalone_public_event_cannot_be_map_ready(monkeypatch):
     assert event["latitude"] is None
     assert event["longitude"] is None
     assert event["nycif"]["map_eligibility_state"] == "LIST_ONLY"
+    assert event["nycif"]["certified_pin"] is False
+
+
+def test_unverified_exact_address_remains_review_required():
+    evidence = exact_evidence()
+    evidence["source_provenance"] = "nyc_geosearch_planninglabs"
+    evidence["reason_code"] = "address_and_borough_validated"
+    event = build(base_row(lat=40.7128, lng=-74.0060, location_evidence=evidence), index=6)
+    assert event is not None
+    assert event["latitude"] is None
+    assert event["longitude"] is None
+    assert event["nycif"]["map_eligibility_state"] == "REVIEW_REQUIRED"
     assert event["nycif"]["certified_pin"] is False
 
 
