@@ -8,9 +8,13 @@ conflicting candidates?
 
 This audit does NOT promote route geometry. It preserves candidate source
 geometry only inside NONPUBLIC_EVIDENCE_ONLY evidence, and it fails closed on
-missing or conflicting edge evidence. No shortest-path search, midpoint/point
-generation, Projector consumption, cache/public-map write, renderer enablement,
-or publication authority is permitted.
+missing or conflicting edge evidence. For blocked conflicts it records a
+bounded diagnostic summary of the competing official rows so later review can
+distinguish source semantics without choosing a winner.
+
+No shortest-path search, midpoint/point generation, Projector consumption,
+cache/public-map write, renderer enablement, or publication authority is
+permitted.
 """
 from __future__ import annotations
 
@@ -25,6 +29,7 @@ from typing import Any
 SCHEMA_VERSION = "NYCIF_STREET_SEGMENT_LION_ROUTE_EDGE_AUDIT_V6"
 V5_SCHEMA = "NYCIF_STREET_SEGMENT_GEOSUPPORT_3S_ROUTE_AUDIT_V5"
 SOURCE_DATASET_ID = "2v4z-66xt"
+MAX_BLOCKED_CANDIDATE_DIAGNOSTICS = 8
 
 
 def _node(value: Any) -> str:
@@ -63,6 +68,27 @@ def _candidate_signature(feature: dict[str, Any]) -> tuple[str, tuple[str, str]]
     if not all(pair):
         return None
     return _geometry_hash(geometry), pair
+
+
+def _candidate_diagnostic(feature: dict[str, Any]) -> dict[str, Any]:
+    """Return bounded, non-promotional source diagnostics for blocked rows."""
+    props = _properties(feature)
+    geometry = feature.get("geometry")
+    geometry_valid = isinstance(geometry, dict) and geometry.get("type") in {"LineString", "MultiLineString"}
+    return {
+        "geometry_type": geometry.get("type") if isinstance(geometry, dict) else None,
+        "geometry_sha256": _geometry_hash(geometry) if geometry_valid else None,
+        "source_segment_id": str(props.get("SegmentID") or "").strip(),
+        "source_node_id_from": _node(props.get("NodeIDFrom")),
+        "source_node_id_to": _node(props.get("NodeIDTo")),
+        "source_street": props.get("Street"),
+        "source_feature_type": props.get("FeatureTyp"),
+        "source_segment_type": props.get("SegmentTyp"),
+        "source_rb_layer": props.get("RB_Layer"),
+        "source_physical_id": props.get("PhysicalID"),
+        "source_generic_id": props.get("GenericID"),
+        "source_join_id": props.get("Join_ID"),
+    }
 
 
 def audit(v5_report: dict[str, Any], lion_geojson: dict[str, Any]) -> dict[str, Any]:
@@ -160,6 +186,16 @@ def audit(v5_report: dict[str, Any], lion_geojson: dict[str, Any]) -> dict[str, 
                 })
             else:
                 blocked_edges += 1
+                if source_rows:
+                    diagnostics = [
+                        _candidate_diagnostic(feature)
+                        for feature in source_rows[:MAX_BLOCKED_CANDIDATE_DIAGNOSTICS]
+                    ]
+                    record.update({
+                        "blocked_source_candidate_diagnostics": diagnostics,
+                        "blocked_source_candidate_diagnostic_count": len(diagnostics),
+                        "blocked_source_candidate_diagnostics_truncated": len(source_rows) > len(diagnostics),
+                    })
             record["reason_code"] = reason
             reason_counts[reason] += 1
             route_edge_records.append(record)
@@ -194,6 +230,7 @@ def audit(v5_report: dict[str, Any], lion_geojson: dict[str, Any]) -> dict[str, 
         "public_map_modified": False,
         "route_geometry_join_completed": False,
         "shortest_path_algorithm_used": False,
+        "blocked_candidate_diagnostic_limit": MAX_BLOCKED_CANDIDATE_DIAGNOSTICS,
         "certified_route_count": len(routes),
         "certified_route_occurrence_count": sum(int(route.get("occurrence_count") or 0) for route in routes),
         "ordered_route_edge_count": total_edges,
