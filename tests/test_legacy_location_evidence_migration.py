@@ -5,7 +5,7 @@ from scripts.legacy_location_evidence_migration import migrate_match, migration_
 
 
 class LegacyLocationEvidenceMigrationTests(unittest.TestCase):
-    def test_event_id_facility_match_can_be_revalidated(self):
+    def test_event_id_facility_match_becomes_candidate_not_certificate(self):
         raw = {
             "event_id": "123",
             "event_borough": "Manhattan",
@@ -21,10 +21,13 @@ class LegacyLocationEvidenceMigrationTests(unittest.TestCase):
         }
         original = copy.deepcopy(match)
         migrated, decision = migrate_match(raw, "event_id", match)
-        self.assertTrue(decision["eligible"])
-        self.assertEqual(decision["tier"], "certified_facility")
-        self.assertEqual(migrated["location_evidence"]["validation_state"], "validated")
-        self.assertTrue(migrated["location_evidence"]["exact_pin_eligible"])
+        self.assertFalse(decision["eligible"])
+        self.assertTrue(decision["candidate"])
+        self.assertEqual(decision["candidate_tier"], "certified_facility")
+        self.assertEqual(decision["reason_code"], "FACILITY_SITE_VALIDATION_REQUIRED")
+        self.assertEqual(decision["facility_ids"], ["456"])
+        self.assertEqual(migrated, original)
+        self.assertNotIn("location_evidence", migrated)
         self.assertEqual(match, original)
 
     def test_location_cache_requires_allowlisted_provenance(self):
@@ -41,6 +44,7 @@ class LegacyLocationEvidenceMigrationTests(unittest.TestCase):
         }
         rejected = migration_decision(raw, "location_cache", dict(base, source="unknown"))
         self.assertFalse(rejected["eligible"])
+        self.assertFalse(rejected["candidate"])
         self.assertEqual(rejected["reason_code"], "LEGACY_PROVENANCE_NOT_ALLOWLISTED")
 
         accepted = migration_decision(
@@ -48,8 +52,10 @@ class LegacyLocationEvidenceMigrationTests(unittest.TestCase):
             "location_cache",
             dict(base, source="existing_enriched_feed_gps"),
         )
-        self.assertTrue(accepted["eligible"])
-        self.assertEqual(accepted["tier"], "exact_address")
+        self.assertFalse(accepted["eligible"])
+        self.assertTrue(accepted["candidate"])
+        self.assertEqual(accepted["candidate_tier"], "exact_address")
+        self.assertEqual(accepted["reason_code"], "ADDRESS_CANONICAL_RERESOLUTION_REQUIRED")
 
     def test_legacy_street_segment_requires_canonical_reresolution(self):
         raw = {
@@ -67,6 +73,8 @@ class LegacyLocationEvidenceMigrationTests(unittest.TestCase):
         }
         decision = migration_decision(raw, "event_id", match)
         self.assertFalse(decision["eligible"])
+        self.assertTrue(decision["candidate"])
+        self.assertEqual(decision["candidate_tier"], "certified_street_segment")
         self.assertEqual(
             decision["reason_code"],
             "STREET_SEGMENT_REQUIRES_CANONICAL_RERESOLUTION",
@@ -87,6 +95,7 @@ class LegacyLocationEvidenceMigrationTests(unittest.TestCase):
         }
         decision = migration_decision(raw, "event_id", match)
         self.assertFalse(decision["eligible"])
+        self.assertFalse(decision["candidate"])
         self.assertEqual(decision["reason_code"], "CURRENT_LOCATION_TEXT_MISMATCH")
 
     def test_event_id_mismatch_stays_blocked(self):
@@ -104,6 +113,7 @@ class LegacyLocationEvidenceMigrationTests(unittest.TestCase):
         }
         decision = migration_decision(raw, "event_id", match)
         self.assertFalse(decision["eligible"])
+        self.assertFalse(decision["candidate"])
         self.assertEqual(decision["reason_code"], "SOURCE_EVENT_ID_MISMATCH")
 
     def test_borough_coordinate_contradiction_stays_blocked(self):
@@ -121,6 +131,7 @@ class LegacyLocationEvidenceMigrationTests(unittest.TestCase):
         }
         decision = migration_decision(raw, "event_id", match)
         self.assertFalse(decision["eligible"])
+        self.assertFalse(decision["candidate"])
         self.assertEqual(decision["reason_code"], "CURRENT_BOROUGH_COORDINATE_MISMATCH")
 
     def test_general_venue_without_exact_claim_stays_blocked(self):
@@ -138,6 +149,7 @@ class LegacyLocationEvidenceMigrationTests(unittest.TestCase):
         }
         decision = migration_decision(raw, "event_id", match)
         self.assertFalse(decision["eligible"])
+        self.assertFalse(decision["candidate"])
         self.assertEqual(decision["reason_code"], "CURRENT_LOCATION_CLAIM_NOT_EXACT_TIER")
 
     def test_secondary_match_classes_are_not_in_wave_one(self):
@@ -156,6 +168,7 @@ class LegacyLocationEvidenceMigrationTests(unittest.TestCase):
             with self.subTest(match_type=match_type):
                 decision = migration_decision(raw, match_type, match)
                 self.assertFalse(decision["eligible"])
+                self.assertFalse(decision["candidate"])
                 self.assertEqual(decision["reason_code"], "MATCH_CLASS_NOT_MIGRATABLE")
 
 
