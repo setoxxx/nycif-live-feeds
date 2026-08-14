@@ -16,6 +16,8 @@ on:
     paths:
       - '.github/workflows/discovery-feed-refresh.yml'
       - 'scripts/run_discovery_feed_refresh.sh'
+      - 'scripts/prepare_v3_runtime_validator.py'
+      - 'tests/test_prepare_v3_runtime_validator.py'
       - 'scripts/publish_blocked_daily_refresh.sh'
       - 'scripts/run_daily_refresh_stage.py'
       - 'scripts/test_live_event_intake_refresh_current.py'
@@ -54,9 +56,18 @@ jobs:
         with:
           python-version: '3.11'
 
+      - name: Verify guarded V3 runtime preparation
+        run: |
+          python -m py_compile scripts/prepare_v3_runtime_validator.py
+          python -m unittest tests.test_prepare_v3_runtime_validator -v
+          python scripts/prepare_v3_runtime_validator.py \
+            --source scripts/run_discovery_feed_refresh.sh \
+            --output /tmp/nycif-run-discovery-feed-refresh-v3.sh
+          bash -n /tmp/nycif-run-discovery-feed-refresh-v3.sh
+
       - name: Build, validate, and commit READY discovery feed
         id: production
-        run: bash scripts/run_discovery_feed_refresh.sh
+        run: bash /tmp/nycif-run-discovery-feed-refresh-v3.sh
 
       - name: Publish BLOCKED God View status without changing feeds
         if: failure()
