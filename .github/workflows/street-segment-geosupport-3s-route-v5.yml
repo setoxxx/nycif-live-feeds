@@ -145,6 +145,7 @@ jobs:
             -w /workspace \
             "$GEOSUPPORT_RUNTIME_IMAGE" \
             python scripts/audit_street_segment_geosupport_3s_route_v5.py \
+              --identity-report /evidence/street_segment_geosupport_recovery_audit_v2.json \
               --v4-report /evidence/street_segment_lion_geometry_audit_v4.json \
               --output /evidence/street_segment_geosupport_3s_route_audit_v5.json
 
@@ -157,6 +158,8 @@ jobs:
           v4 = json.load(open('/tmp/nycif-route-v5/street_segment_lion_geometry_audit_v4.json', encoding='utf-8'))
           v5 = json.load(open('/tmp/nycif-route-v5/street_segment_geosupport_3s_route_audit_v5.json', encoding='utf-8'))
           assert v5['target_claim_count'] == v4['reason_counts'].get('LION_GEOMETRY_ENDPOINT_DISAGREEMENT', 0)
+          assert v5['v2_identity_handoff_missing_count'] == 0
+          assert v5['v2_identity_handoff_not_unique_count'] == 0
           assert v5['read_only'] is True
           assert v5['promotion_allowed'] is False
           assert v5['publication_authority_granted'] is False
