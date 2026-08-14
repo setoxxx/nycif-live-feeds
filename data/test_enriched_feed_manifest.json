@@ -1,26 +1,41 @@
 {
-  "current_future_rows": 30354,
-  "date_boundary_timezone": "America/New_York",
+  "certified_map_ready_events": 0,
+  "coordinates_without_exact_evidence_promoted": 0,
+  "current_future_rows": 25763,
   "enriched_rows_loaded": 33084,
-  "generated_at_utc": "2026-08-03T17:27:01.209067+00:00",
-  "gps_ready_events": 30131,
+  "generated_at_utc": "2026-08-14T04:29:01.534495+00:00",
   "location_cache_entries_loaded": 40151,
-  "location_resolver_live_geosearch_calls": 2527,
-  "match_counts": {
-    "event_id": 671,
-    "location_cache": 28569,
-    "none": 223,
-    "tier_1_gazetteer_display": 402,
-    "tier_2_geosearch_cache": 471,
-    "tier_2_geosearch_midpoint": 6,
-    "tier_3_nyc_geosearch_live": 12
+  "location_resolver_live_geoclient_calls": 0,
+  "location_resolver_live_geosearch_calls": 0,
+  "map_state_counts": {
+    "LIST_ONLY": 1039,
+    "REVIEW_REQUIRED": 24724
   },
-  "needs_review_events": 223,
-  "production_feed": false,
-  "raw_page_limit": 50000,
-  "raw_rows_loaded": 31673,
+  "match_counts": {
+    "event_id": 371,
+    "location_cache": 23253,
+    "none": 233,
+    "street_segment_unresolved": 806,
+    "tier_1_gazetteer_display": 632,
+    "tier_2_geosearch_cache": 468
+  },
+  "migrated_legacy_matches_certified": 0,
+  "migration_reason_counts": {
+    "CURRENT_BOROUGH_COORDINATE_MISMATCH": 247,
+    "CURRENT_LOCATION_TEXT_MISMATCH": 805,
+    "FACILITY_SITE_VALIDATION_REQUIRED": 21637,
+    "LEGACY_PROVENANCE_NOT_ALLOWLISTED": 935,
+    "MATCH_CLASS_NOT_MIGRATABLE": 2139
+  },
+  "migration_tier_counts": {},
+  "raw_rows_loaded": 26909,
+  "route_counts": {
+    "legacy_match_stack": 24957,
+    "street_segment_authority": 806
+  },
+  "semantic_feed_events": 25763,
   "source_dataset": "tvpp-9vvx",
-  "test_feed_events": 30354,
-  "today_nyc": "2026-08-03",
-  "today_utc": "2026-08-03"
+  "street_segment_authority_certified": 0,
+  "street_segment_authority_unresolved": 806,
+  "today_nyc": "2026-08-14"
 }

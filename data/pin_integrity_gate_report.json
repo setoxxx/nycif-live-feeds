@@ -9,42 +9,36 @@
   "demotion_count": 0,
   "demotion_reason_counts": {},
   "demotions_artifact": "data/pin_integrity_demotions.json",
-  "generated_at_utc": "2026-08-03T17:28:03Z",
+  "generated_at_utc": "2026-08-14T04:29:29Z",
   "location_cache_modified": false,
-  "map_ready_after_total": 3783,
-  "map_ready_before_total": 3783,
-  "notes": "Demotes invalid map_ready to list_only and clears lat/lng on pin path. Swap auto-correct only when as-is OOB and swapped pair is inside NYC box.",
-  "pre_fix_audit": {
-    "note": "Before viral pack rebuild, crowd_magnets claimed map_ready without lat/lng (40). Gate demoted them; viral builder now attaches current Money-Day coords only.",
-    "remediation": "build_photographer_viral_recurrence certifies current-side coords",
-    "viral_map_ready_without_coords_caught": 40
-  },
+  "map_ready_after_total": 0,
+  "map_ready_before_total": 3380,
+  "notes": "Geometry validation never creates certification. Legacy in-bounds map_ready rows without validated location evidence may remain as migration state, but certified_pin, semantic MAP_READY and exact map links are cleared.",
   "promotion_allowed": false,
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
   "remaining_bad_count": 0,
   "remaining_bad_map_ready": [],
-  "rule": "ZERO map_ready rows may fail NYC certification after gate",
-  "schema_version": "pin-integrity-gate-v1",
+  "rule": "ZERO unsupported exact-pin claims; legacy coordinates may remain review-required during evidence migration",
+  "schema_version": "pin-integrity-gate-v2",
   "staged_feed_modified": false,
   "surfaces": [
     {
       "artifact": "data/photographer_assignment_calendar_2mo.json",
       "demotion_count": 0,
-      "map_ready_after": 204,
-      "map_ready_before": 204,
+      "map_ready_after": 0,
+      "map_ready_before": 0,
       "reason_counts": {
-        "missing_coords": 14,
-        "ok_nyc_certified": 204
+        "missing_coords": 41
       },
       "remaining_bad_map_ready": [],
       "surface": "money_day"
     },
     {
       "demotion_count": 0,
-      "map_ready_after": 3,
-      "map_ready_before": 3,
+      "map_ready_after": 0,
+      "map_ready_before": 0,
       "packs": [
         {
           "demotions": 0,
@@ -55,8 +49,8 @@
         {
           "demotions": 0,
           "file": "photographer_money_day_pack_tomorrow.json",
-          "map_ready_after": 3,
-          "map_ready_before": 3
+          "map_ready_after": 0,
+          "map_ready_before": 0
         }
       ],
       "surface": "money_day_packs"
@@ -64,28 +58,28 @@
     {
       "artifact": "data/photographer_viral_recurrence_pack_next_14d.json",
       "demotion_count": 0,
-      "map_ready_after": 38,
-      "map_ready_before": 38,
+      "map_ready_after": 0,
+      "map_ready_before": 0,
       "surface": "viral"
     },
     {
       "artifact": "data/civic_people_facing_staging_feed.json",
       "demotion_count": 0,
-      "map_ready_after": 3538,
-      "map_ready_before": 3538,
+      "map_ready_after": 0,
+      "map_ready_before": 3380,
       "reason_counts": {
-        "missing_coords": 1292,
-        "ok_nyc_certified": 3538
+        "LEGACY_EVIDENCE_PENDING_MIGRATION": 3380,
+        "missing_coords": 1290
       },
       "surface": "civic"
     },
     {
       "artifact": "data/schema-v1-discovery/major/events.json",
-      "map_ready_scanned": 342,
-      "note": "Major feed scan is report-only here; Field Desk JS also refuses non-NYC pins at render.",
+      "map_ready_scanned": 0,
+      "note": "Report-only scan; legacy map_ready without exact authority is migration state, not certification.",
       "surface": "field_desk_feed",
-      "would_demote_count": 0,
-      "would_demote_examples": []
+      "unsupported_exact_claim_count": 0,
+      "unsupported_exact_claim_examples": []
     }
   ]
 }

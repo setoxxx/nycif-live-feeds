@@ -1,27 +1,27 @@
 {
   "civic": {
-    "accepted": 4830,
+    "accepted": 4670,
     "date_time_location_qa_pass": true,
-    "list_only": 1292,
+    "list_only": 1290,
     "map_coverage_qa_pass": true,
-    "map_ready": 3538
+    "map_ready": 3380
   },
   "failed_steps": [],
-  "generated_at_utc": "2026-08-03T17:27:26Z",
+  "generated_at_utc": "2026-08-14T04:29:23Z",
   "location_cache_modified": false,
   "notes": "Safe daily desk sync. Does not run build_staged_production_feed / build_location_cache / public WordPress publish. Pin integrity gate fail-closed: qa_pass requires ZERO bad map_ready pins. Full permit→staged refresh remains live-sync-qa (manual dispatch).",
   "photographer_calendar": {
-    "days_with_coverage": 40,
-    "events_removed_vs_baseline": 624,
+    "days_with_coverage": 15,
+    "events_removed_vs_baseline": 801,
     "month_counts": [
       {
-        "days_with_events": 25,
-        "event_count": 164,
+        "days_with_events": 6,
+        "event_count": 18,
         "label": "August 2026"
       },
       {
-        "days_with_events": 15,
-        "event_count": 54,
+        "days_with_events": 9,
+        "event_count": 23,
         "label": "September 2026"
       }
     ],
@@ -29,42 +29,48 @@
       "qa_pass": true,
       "today": {
         "borough_cluster_count": 0,
-        "date": "2026-08-03",
+        "date": "2026-08-14",
         "map_ready_count": 0,
-        "total_events": 0
+        "total_events": 1
       },
       "tomorrow": {
-        "borough_cluster_count": 2,
-        "date": "2026-08-04",
-        "map_ready_count": 3,
+        "borough_cluster_count": 0,
+        "date": "2026-08-15",
+        "map_ready_count": 0,
         "top_go_shoot": [
           {
-            "borough": "Manhattan",
-            "score": 490,
-            "time": "2026-08-04T13:30:00.000",
-            "title": "CDP Democratic Marathon Protests"
+            "borough": null,
+            "score": 510,
+            "time": "2026-08-15T19:00:00",
+            "title": "Bryant Park Picnic Performance: New York Guitar Festival"
+          },
+          {
+            "borough": "Queens",
+            "score": 400,
+            "time": "2026-08-15T10:00:00.000-04:00",
+            "title": "MARCH FOR JESUS"
           },
           {
             "borough": "Brooklyn",
-            "score": 340,
-            "time": "2026-08-04T09:00:00.000",
-            "title": "NYP Youth Market - Brooklyn"
+            "score": 400,
+            "time": "2026-08-15T12:00:00.000-04:00",
+            "title": "SHU-SHU VICTORY PARADE"
           },
           {
-            "borough": "Manhattan",
-            "score": 310,
-            "time": "2026-08-04T12:00:00.000",
-            "title": "TSQ LIVE: 45/46 Plaza Programming"
+            "borough": "Brooklyn",
+            "score": 380,
+            "time": "2026-08-15T11:00:00.000-04:00",
+            "title": "Access Benefits at Community Family Festival 2026 - Brooklyn"
           }
         ],
-        "total_events": 3
+        "total_events": 4
       }
     },
     "pin_integrity": {
       "demotion_count": 0,
       "demotion_reason_counts": {},
-      "map_ready_after_total": 3783,
-      "map_ready_before_total": 3783,
+      "map_ready_after_total": 0,
+      "map_ready_before_total": 3380,
       "qa_pass": true,
       "report": "data/pin_integrity_gate_report.json"
     },
@@ -74,18 +80,17 @@
       "pack": "data/photographer_shoot_day_certified_pack.json",
       "qa_pass": true,
       "today_certified_pins": 0,
-      "tomorrow_certified_pins": 3
+      "tomorrow_certified_pins": 0
     },
-    "total_events": 218,
+    "total_events": 41,
     "viral_recurrence": {
       "historical_rows": 2450,
       "label_counts": {
-        "possible": 61,
-        "returning_likely": 120,
-        "weak": 54
+        "possible": 14,
+        "returning_likely": 2
       },
-      "match_count": 235,
-      "next_14d_crowd_magnets": 38,
+      "match_count": 16,
+      "next_14d_crowd_magnets": 0,
       "qa_pass": true
     }
   },
