@@ -22,8 +22,10 @@ def exact_row(start="2026-08-07T10:00:00-04:00"):
         "location_evidence": {
             "tier": "exact_source_coordinate",
             "validation_state": "validated",
+            "site_validation_state": "validated",
             "exact_pin_eligible": True,
             "source_provenance": "fixture",
+            "reason_code": "SOURCE_COORDINATE_SITE_VALIDATED",
         },
     }
 
@@ -127,8 +129,53 @@ def test_valid_shared_exact_is_map_ready():
     result = semantic_map_decision(exact_row())
     assert result["map_eligibility_state"] == "MAP_READY"
     assert result["certified_pin"] is True
+    assert result["exact_site_validated"] is True
     assert result["latitude"] == 40.7128
     assert result["longitude"] == -74.0060
+
+
+def test_source_coordinate_without_site_validation_is_not_map_ready():
+    row = exact_row()
+    row["location_evidence"] = dict(row["location_evidence"])
+    row["location_evidence"].pop("site_validation_state")
+    row["location_evidence"]["reason_code"] = "OFFICIAL_SOURCE_COORDINATE"
+    result = semantic_map_decision(row)
+    assert result["map_eligibility_state"] == "REVIEW_REQUIRED"
+    assert result["certified_pin"] is False
+    assert result["latitude"] is None
+    assert result["longitude"] is None
+    assert result["reason_code"] == "SOURCE_COORDINATE_SITE_UNVERIFIED"
+
+
+def test_legacy_geosearch_midpoint_tier_cannot_publish_exact_geometry():
+    row = exact_row()
+    row["location_evidence"] = {
+        "tier": "tier_2_geosearch_midpoint",
+        "validation_state": "validated",
+        "exact_pin_eligible": True,
+        "source_provenance": "nyc_geosearch_planninglabs_midpoint",
+        "reason_code": "SEGMENT_ENDPOINTS_VALIDATED",
+    }
+    result = semantic_map_decision(row)
+    assert result["map_eligibility_state"] == "REVIEW_REQUIRED"
+    assert result["certified_pin"] is False
+    assert result["latitude"] is None
+    assert result["longitude"] is None
+    assert result["reason_code"] == "LEGACY_EXACT_TIER_PROHIBITED"
+
+
+def test_exact_address_requires_site_validation():
+    row = exact_row()
+    row["location_evidence"] = {
+        "tier": "exact_address",
+        "validation_state": "validated",
+        "exact_pin_eligible": True,
+        "source_provenance": "nyc_geoclient_address",
+        "reason_code": "ADDRESS_GEOCLIENT_VALIDATED",
+    }
+    result = semantic_map_decision(row)
+    assert result["map_eligibility_state"] == "MAP_READY"
+    assert result["certified_pin"] is True
 
 
 def test_intake_exact_duplicate_is_documented_duplicate():
