@@ -15,18 +15,23 @@ from typing import Any
 try:
     from scripts import build_staged_production_feed as legacy_stage
     from scripts import build_test_enriched_feed as legacy_enrich
+    from scripts.legacy_location_evidence_migration import migrate_match
     from scripts.location_evidence_contract import normalize_location_evidence, safe_location_evidence_copy
     from scripts.projector_v2_authority import semantic_map_decision
 except ModuleNotFoundError:  # pragma: no cover - direct script execution
     import build_staged_production_feed as legacy_stage  # type: ignore[no-redef]
     import build_test_enriched_feed as legacy_enrich  # type: ignore[no-redef]
+    from legacy_location_evidence_migration import migrate_match
     from location_evidence_contract import normalize_location_evidence, safe_location_evidence_copy
     from projector_v2_authority import semantic_map_decision
 
 
-def enrich_with_location_authority(raw: dict[str, Any], match_type: str, match: dict[str, Any] | None) -> dict[str, Any]:
-    event = legacy_enrich.build_event(raw, match_type, match)
-    evidence = normalize_location_evidence(match_type, match)
+def enrich_with_location_authority(
+    raw: dict[str, Any], match_type: str, match: dict[str, Any] | None
+) -> tuple[dict[str, Any], dict[str, Any]]:
+    migrated_match, migration = migrate_match(raw, match_type, match)
+    event = legacy_enrich.build_event(raw, match_type, migrated_match)
+    evidence = normalize_location_evidence(match_type, migrated_match)
     event["location_evidence"] = evidence
     decision = semantic_map_decision(event)
     event["map_eligibility_state"] = decision["map_eligibility_state"]
@@ -34,10 +39,11 @@ def enrich_with_location_authority(raw: dict[str, Any], match_type: str, match: 
     event["certified_pin"] = decision["certified_pin"]
     event["pin_integrity_reason"] = decision["reason_code"]
     event["needs_review"] = decision["map_eligibility_state"] != "MAP_READY"
+    event["location_evidence_migration_reason"] = migration.get("reason_code")
     if decision["map_eligibility_state"] == "MAP_READY":
         event["lat"] = decision["latitude"]
         event["lng"] = decision["longitude"]
-    return event
+    return event, migration
 
 
 def build_semantic_enriched_feed() -> tuple[dict[str, Any], dict[str, Any]]:
@@ -51,15 +57,24 @@ def build_semantic_enriched_feed() -> tuple[dict[str, Any], dict[str, Any]]:
     events: list[dict[str, Any]] = []
     match_counts: dict[str, int] = {}
     map_state_counts: dict[str, int] = {}
+    migration_reason_counts: dict[str, int] = {}
+    migration_tier_counts: dict[str, int] = {}
     certified = 0
+    migrated_certified = 0
 
     for raw in raw_current:
         match_type, match = legacy_enrich.find_match(raw, indexes, cache, resolver)
         match_counts[match_type] = match_counts.get(match_type, 0) + 1
-        event = enrich_with_location_authority(raw, match_type, match)
+        event, migration = enrich_with_location_authority(raw, match_type, match)
         state = str(event.get("map_eligibility_state") or "REVIEW_REQUIRED")
         map_state_counts[state] = map_state_counts.get(state, 0) + 1
         certified += int(event.get("certified_pin") is True)
+        reason = str(migration.get("reason_code") or "UNSPECIFIED")
+        migration_reason_counts[reason] = migration_reason_counts.get(reason, 0) + 1
+        if migration.get("eligible"):
+            tier = str(migration.get("tier") or "UNSPECIFIED")
+            migration_tier_counts[tier] = migration_tier_counts.get(tier, 0) + 1
+            migrated_certified += int(event.get("certified_pin") is True)
         events.append(event)
 
     if resolver._live_calls:
@@ -90,8 +105,11 @@ def build_semantic_enriched_feed() -> tuple[dict[str, Any], dict[str, Any]]:
         "location_resolver_live_geosearch_calls": resolver._live_calls,
         "semantic_feed_events": len(events),
         "certified_map_ready_events": certified,
+        "migrated_legacy_matches_certified": migrated_certified,
         "map_state_counts": dict(sorted(map_state_counts.items())),
         "match_counts": dict(sorted(match_counts.items())),
+        "migration_reason_counts": dict(sorted(migration_reason_counts.items())),
+        "migration_tier_counts": dict(sorted(migration_tier_counts.items())),
         "coordinates_without_exact_evidence_promoted": 0,
     }
     legacy_enrich.save_json_file(legacy_enrich.TEST_FEED_PATH, feed)
@@ -106,6 +124,7 @@ def semantic_staged_event(row: dict[str, Any]) -> dict[str, Any]:
     staged["coordinate_status"] = "map_ready"
     staged["certified_pin"] = True
     staged["pin_integrity_reason"] = row.get("pin_integrity_reason")
+    staged["location_evidence_migration_reason"] = row.get("location_evidence_migration_reason")
     return staged
 
 
