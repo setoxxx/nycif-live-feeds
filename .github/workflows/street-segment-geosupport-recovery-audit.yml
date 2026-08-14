@@ -54,13 +54,14 @@ jobs:
         run: |
           set -euo pipefail
           docker run --rm \
+            -e PYTHONDONTWRITEBYTECODE=1 \
             -e NYCIF_ALLOW_LIVE_GEOSEARCH=no \
             -e NYCIF_ALLOW_LIVE_GEOCLIENT=no \
             -e GEOSUPPORT_RUNTIME_IMAGE="$GEOSUPPORT_RUNTIME_IMAGE" \
             -v "$GITHUB_WORKSPACE:/workspace:ro" \
             -w /workspace \
             "$GEOSUPPORT_RUNTIME_IMAGE" \
-            bash -lc 'python -m py_compile scripts/audit_street_segment_geosupport_recovery_v2.py && python -m unittest tests.test_street_segment_geosupport_recovery_v2 -v'
+            bash -lc 'python -c "from pathlib import Path; p=Path(\"scripts/audit_street_segment_geosupport_recovery_v2.py\"); compile(p.read_text(encoding=\"utf-8\"), str(p), \"exec\")" && python -m unittest tests.test_street_segment_geosupport_recovery_v2 -v'
 
       - name: Run local authoritative street-segment evidence audit
         shell: bash
@@ -68,6 +69,7 @@ jobs:
           set -euo pipefail
           mkdir -p /tmp/nycif-street-geosupport-audit
           docker run --rm \
+            -e PYTHONDONTWRITEBYTECODE=1 \
             -e NYCIF_ALLOW_LIVE_GEOSEARCH=no \
             -e NYCIF_ALLOW_LIVE_GEOCLIENT=no \
             -e GEOSUPPORT_RUNTIME_IMAGE="$GEOSUPPORT_RUNTIME_IMAGE" \
