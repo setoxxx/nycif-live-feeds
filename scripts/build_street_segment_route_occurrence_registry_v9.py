@@ -8,6 +8,11 @@ the repository's occurrence_key_v2 contract:
 
     (dataset, source_event_id, exact source occurrence start)
 
+This lane is specific to the NYC Open Data Permitted Event Information feed
+(`tvpp-9vvx`). Live Socrata resource rows do not necessarily carry a dataset
+field, so V9 restores that known source provenance only when it is absent. It
+never rewrites an explicit source dataset supplied by an input row.
+
 Any ambiguous occurrence start, duplicate occurrence key, source-ID multiset
 mismatch, claim-count mismatch, or upstream handoff mismatch blocks registry
 conformance. The registry stores route bundle hashes only; it grants no public
@@ -26,17 +31,12 @@ from typing import Any
 try:
     from scripts.audit_street_segment_geoclient_recovery import claim_key
     from scripts.nyc_location_resolver import parse_street_between
-    from scripts.occurrence_identity_contract import (
-        identity_precision,
-        occurrence_key_v2,
-        occurrence_start,
-        source_key,
-    )
+    from scripts.occurrence_identity_contract import identity_precision, occurrence_key_v2
     from scripts.sync_nyc_open_data import date_key
 except ModuleNotFoundError:  # pragma: no cover
     from audit_street_segment_geoclient_recovery import claim_key
     from nyc_location_resolver import parse_street_between
-    from occurrence_identity_contract import identity_precision, occurrence_key_v2, occurrence_start, source_key
+    from occurrence_identity_contract import identity_precision, occurrence_key_v2
     from sync_nyc_open_data import date_key
 
 SCHEMA_VERSION = "NYCIF_STREET_SEGMENT_ROUTE_OCCURRENCE_REGISTRY_V9"
@@ -45,6 +45,7 @@ V5_SCHEMA = "NYCIF_STREET_SEGMENT_GEOSUPPORT_3S_ROUTE_AUDIT_V5"
 V7_SCHEMA = "NYCIF_STREET_SEGMENT_ROUTE_GEOMETRY_BUNDLE_AUDIT_V7"
 V8_SCHEMA = "NYCIF_STREET_SEGMENT_ROUTE_EVIDENCE_CONTRACT_AUDIT_V8"
 EVIDENCE_CLASS = "NYCIF_EXACT_ROUTE_OCCURRENCE_NONPUBLIC_V1"
+TVPP_DATASET_ID = "tvpp-9vvx"
 
 
 def _sha(value: Any) -> str:
@@ -67,11 +68,23 @@ def _single_by_claim(rows: list[dict[str, Any]], predicate) -> tuple[dict[str, d
     return mapping, non_unique
 
 
+def _with_tvpp_provenance(row: dict[str, Any]) -> dict[str, Any]:
+    """Restore known TVPP dataset provenance only when the source omitted it."""
+    source = row.get("source") if isinstance(row.get("source"), dict) else {}
+    explicit = row.get("source_dataset") or row.get("dataset") or source.get("dataset")
+    if str(explicit or "").strip():
+        return row
+    normalized = dict(row)
+    normalized["source_dataset"] = TVPP_DATASET_ID
+    return normalized
+
+
 def _raw_current_street_rows(raw_rows: list[dict[str, Any]], today_nyc: str) -> dict[str, list[dict[str, Any]]]:
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    for row in raw_rows:
-        if not isinstance(row, dict):
+    for original in raw_rows:
+        if not isinstance(original, dict):
             continue
+        row = _with_tvpp_provenance(original)
         if date_key(row.get("start_date_time")) < today_nyc:
             continue
         location = str(row.get("event_location") or row.get("location") or "").strip()
@@ -154,11 +167,16 @@ def audit(
             continue
 
         c2, c5, c7 = v2_map[claim], v5_map[claim], v7_map[claim]
-        counts = [int(c2.get("occurrence_count") or 0), int(c5.get("occurrence_count") or 0), int(c7.get("occurrence_count") or 0)]
+        counts = [
+            int(c2.get("occurrence_count") or 0),
+            int(c5.get("occurrence_count") or 0),
+            int(c7.get("occurrence_count") or 0),
+        ]
         if len(set(counts)) != 1 or counts[0] <= 0:
             gates["claim_occurrence_count_mismatch_count"] += 1
             continue
         expected_count = counts[0]
+
         ids2 = [str(value or "").strip() for value in (c2.get("source_event_ids") or [])]
         ids5 = [str(value or "").strip() for value in (c5.get("source_event_ids") or [])]
         if Counter(ids2) != Counter(ids5) or len(ids2) != expected_count or any(not value for value in ids2):
@@ -198,7 +216,7 @@ def audit(
                 "claim_key": claim,
                 "route_bundle_sha256": bundle_hash,
             })
-            entry = {
+            claim_entries.append({
                 "registry_key": registry_key,
                 "evidence_class": EVIDENCE_CLASS,
                 "publication_state": "NONPUBLIC_EVIDENCE_ONLY",
@@ -213,8 +231,7 @@ def audit(
                 "occurrence_start": start,
                 "occurrence_identity_precision": precision,
                 "occurrence_key_v2": [dataset, event_id, start],
-            }
-            claim_entries.append(entry)
+            })
 
         if claim_failed:
             continue
@@ -229,18 +246,18 @@ def audit(
                 day_precision_count += 1
             registry.append(entry)
 
-    duplicate_occurrences = sum(1 for count in registry_occurrence_keys.values() if count > 1)
-    duplicate_registry_keys = len(registry) - len({entry["registry_key"] for entry in registry})
-    gates["duplicate_occurrence_key_count"] = duplicate_occurrences
-    gates["duplicate_registry_key_count"] = duplicate_registry_keys
+    gates["duplicate_occurrence_key_count"] = sum(
+        1 for count in registry_occurrence_keys.values() if count > 1
+    )
+    gates["duplicate_registry_key_count"] = len(registry) - len({entry["registry_key"] for entry in registry})
 
     for claim, count in v8_claim_counts.items():
         if count == 1 and claim in v2_map:
             expected = int(v2_map[claim].get("occurrence_count") or 0)
-            if registry_claim_counts[claim] != expected:
-                gates["silent_occurrence_identity_loss_count"] += max(expected - registry_claim_counts[claim], 0)
-                if registry_claim_counts[claim] > expected:
-                    gates["unexpected_occurrence_identity_gain_count"] += registry_claim_counts[claim] - expected
+            actual = registry_claim_counts[claim]
+            if actual != expected:
+                gates["silent_occurrence_identity_loss_count"] += max(expected - actual, 0)
+                gates["unexpected_occurrence_identity_gain_count"] += max(actual - expected, 0)
 
     required_gate_names = (
         "v8_claim_handoff_not_unique_count",
@@ -270,11 +287,11 @@ def audit(
     })
     conformant = all(value == 0 for value in hard_gates.values())
 
-    recurring_source_id_count = sum(1 for count in source_id_counts.values() if count > 1)
     return {
         "schema_version": SCHEMA_VERSION,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "today_nyc": today_nyc,
+        "source_dataset_authority": TVPP_DATASET_ID,
         "read_only": True,
         "promotion_allowed": False,
         "publication_authority_granted": False,
@@ -288,12 +305,15 @@ def audit(
         "registry_occurrence_count": len(registry),
         "unique_occurrence_key_v2_count": len(registry_occurrence_keys),
         "unique_source_event_id_count": len(source_id_counts),
-        "recurring_source_event_id_count": recurring_source_id_count,
+        "recurring_source_event_id_count": sum(1 for count in source_id_counts.values() if count > 1),
         "exact_start_occurrence_count": exact_start_count,
         "day_precision_occurrence_count": day_precision_count,
         "hard_zero_gates": hard_gates,
         "release_status": "NONPUBLIC_EVIDENCE_ONLY",
-        "registry": sorted(registry, key=lambda row: (row["claim_key"], row["occurrence_start"], row["source_event_id"])),
+        "registry": sorted(
+            registry,
+            key=lambda row: (row["claim_key"], row["occurrence_start"], row["source_event_id"]),
+        ),
     }
 
 
@@ -319,11 +339,11 @@ def main() -> int:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     keys = (
-        "schema_version", "registry_conformance_pass", "input_v8_conformant_route_count",
-        "registry_route_count", "registry_occurrence_count", "unique_occurrence_key_v2_count",
-        "unique_source_event_id_count", "recurring_source_event_id_count",
-        "exact_start_occurrence_count", "day_precision_occurrence_count",
-        "hard_zero_gates", "release_status",
+        "schema_version", "registry_conformance_pass", "source_dataset_authority",
+        "input_v8_conformant_route_count", "registry_route_count", "registry_occurrence_count",
+        "unique_occurrence_key_v2_count", "unique_source_event_id_count",
+        "recurring_source_event_id_count", "exact_start_occurrence_count",
+        "day_precision_occurrence_count", "hard_zero_gates", "release_status",
     )
     print(json.dumps({key: result[key] for key in keys}, indent=2, sort_keys=True))
     return 0 if result["registry_conformance_pass"] else 2
