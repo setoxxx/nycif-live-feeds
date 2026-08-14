@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
-"""Prepare the production refresh transaction with the V3 zero-MAP_READY gate.
+"""Prepare the production refresh transaction with current V3 runtime gates.
 
 The production transaction predates the fail-closed V3 semantic projector and
-contains a legacy assertion that the staged MAP_READY feed must be non-empty.
-V3 can legitimately certify zero MAP_READY occurrences when every accepted
-occurrence remains LIST_ONLY/REVIEW_REQUIRED and all exact-location zero gates
-pass.
+contains two legacy final-runtime assumptions:
 
-This helper performs one fail-closed, exact-source transformation into a
+1. the staged MAP_READY feed must be non-empty; and
+2. cross-date street suppression is reported by the staged manifest.
+
+V3 can legitimately certify zero MAP_READY occurrences when every accepted
+occurrence remains LIST_ONLY/REVIEW_REQUIRED, and the current cross-date safety
+count is emitted by the READY daily-health pipeline rather than the staged
+manifest.
+
+This helper performs two fail-closed, exact-source transformations into a
 temporary execution copy. It never changes the repository transaction script.
-If the expected legacy block is missing or has drifted, preparation fails.
+If either expected legacy block is missing, duplicated, or has drifted,
+preparation fails.
 """
 from __future__ import annotations
 
@@ -69,19 +75,55 @@ elif (
     )
 '''
 
+LEGACY_CROSS_DATE_BLOCK = '''if staged_manifest.get("cross_date_street_occurrences_suppressed") != 0:
+    sys.exit("cross-date recurring street occurrences were suppressed")
+'''
+
+V3_CROSS_DATE_BLOCK = '''health_pipeline = health.get("pipeline") if isinstance(health.get("pipeline"), dict) else {}
+cross_date_street_occurrences_suppressed = health_pipeline.get(
+    "cross_date_street_occurrences_suppressed"
+)
+# Current V3 daily health owns this runtime safety aggregate. Missing, boolean,
+# negative, or non-integer values are not evidence; any non-zero count fails.
+if (
+    isinstance(cross_date_street_occurrences_suppressed, bool)
+    or not isinstance(cross_date_street_occurrences_suppressed, int)
+    or cross_date_street_occurrences_suppressed != 0
+):
+    sys.exit(
+        "cross-date recurring street occurrence gate failed: "
+        f"{cross_date_street_occurrences_suppressed!r}"
+    )
+'''
+
+
+def _replace_exactly_once(source: str, legacy: str, replacement: str, label: str) -> str:
+    occurrences = source.count(legacy)
+    if occurrences != 1:
+        raise RuntimeError(f"expected exactly one {label}; found {occurrences}")
+    transformed = source.replace(legacy, replacement, 1)
+    if legacy in transformed:
+        raise RuntimeError(f"{label} remained after transform")
+    return transformed
+
 
 def transform(source: str) -> str:
-    occurrences = source.count(LEGACY_BLOCK)
-    if occurrences != 1:
-        raise RuntimeError(
-            "expected exactly one legacy staged MAP_READY validation block; "
-            f"found {occurrences}"
-        )
-    transformed = source.replace(LEGACY_BLOCK, V3_BLOCK, 1)
-    if LEGACY_BLOCK in transformed:
-        raise RuntimeError("legacy staged MAP_READY validation block remained after transform")
+    transformed = _replace_exactly_once(
+        source,
+        LEGACY_BLOCK,
+        V3_BLOCK,
+        "legacy staged MAP_READY validation block",
+    )
+    transformed = _replace_exactly_once(
+        transformed,
+        LEGACY_CROSS_DATE_BLOCK,
+        V3_CROSS_DATE_BLOCK,
+        "legacy cross-date suppression validation block",
+    )
     if "Never invent a" not in transformed:
         raise RuntimeError("V3 zero-MAP_READY validation block was not installed")
+    if 'health_pipeline.get(' not in transformed:
+        raise RuntimeError("V3 cross-date suppression validation block was not installed")
     return transformed
 
 
