@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""Deterministically migrate trusted legacy location matches into V3 evidence.
+"""Classify trusted legacy location matches for V3 evidence recovery.
 
-This is deliberately narrow. It does not geocode and does not certify a point
-merely because coordinates exist. A legacy match is promotable only when the
-current official row, matched record, geometry, borough, and location text agree,
-and the current location claim maps to an already-recognized exact evidence tier.
+This module deliberately separates *candidate evidence* from *publication-ready
+evidence*. A legacy/cache coordinate can be useful for deciding what to
+re-resolve, but it is not certified merely because current location text,
+borough, and an old point agree.
 
-Street-segment claims are intentionally excluded from legacy-coordinate
-migration. Those rows were a known wrong-pin class in the legacy map and must be
-re-resolved by the canonical street-segment resolver before exact publication.
+Street-segment claims are excluded from legacy-coordinate reuse entirely because
+they are a known historical wrong-pin class. Facilities, addresses, and
+intersections may enter a deterministic recovery queue, but they require their
+own current-authority site validation before exact publication.
 """
 from __future__ import annotations
 
 import re
-from copy import deepcopy
 from typing import Any
 
 try:
@@ -80,89 +80,91 @@ def _is_street_segment_claim(raw: dict[str, Any]) -> bool:
     return bool(re.search(r"\bbetween\b.+\band\b", normalized))
 
 
-def _evidence_tier(raw: dict[str, Any]) -> str | None:
-    """Map a current official location claim into an existing V3 exact tier."""
+def _candidate_tier(raw: dict[str, Any]) -> tuple[str | None, list[str]]:
+    """Classify the current claim for independent re-resolution; do not certify it."""
     location = _raw_location(raw)
     cemsids = [value for value in _split_ids(raw.get("cemsid") or raw.get("source_cemsid")) if value != "0"]
-
     if cemsids:
-        return "certified_facility"
+        return "certified_facility", cemsids
     if re.match(r"^\d+[a-z-]*\s+\S", location.strip(), flags=re.IGNORECASE):
-        return "exact_address"
+        return "exact_address", []
     if re.search(r"\s(?:at|@|&)\s", location, flags=re.IGNORECASE):
-        return "exact_intersection"
-    return None
+        return "exact_intersection", []
+    return None, []
+
+
+def _candidate_reason(tier: str) -> str:
+    if tier == "certified_facility":
+        return "FACILITY_SITE_VALIDATION_REQUIRED"
+    if tier == "exact_address":
+        return "ADDRESS_CANONICAL_RERESOLUTION_REQUIRED"
+    if tier == "exact_intersection":
+        return "INTERSECTION_CANONICAL_RERESOLUTION_REQUIRED"
+    return "CURRENT_LOCATION_CLAIM_NOT_EXACT_TIER"
 
 
 def migration_decision(
     raw: dict[str, Any], match_type: str, match: dict[str, Any] | None
 ) -> dict[str, Any]:
-    """Return a deterministic migration decision without mutating inputs."""
+    """Return deterministic recovery classification without granting publication authority."""
     if match_type not in TRUSTED_MATCH_TYPES or not isinstance(match, dict):
-        return {"eligible": False, "reason_code": "MATCH_CLASS_NOT_MIGRATABLE"}
+        return {"eligible": False, "candidate": False, "reason_code": "MATCH_CLASS_NOT_MIGRATABLE"}
 
     lat, lng, geometry_ok, geometry_reason = _match_coords(match)
     if not geometry_ok or lat is None or lng is None:
-        return {"eligible": False, "reason_code": geometry_reason}
+        return {"eligible": False, "candidate": False, "reason_code": geometry_reason}
 
     borough = _raw_borough(raw)
     if not borough or not coordinate_matches_borough(lat, lng, borough):
-        return {"eligible": False, "reason_code": "CURRENT_BOROUGH_COORDINATE_MISMATCH"}
+        return {"eligible": False, "candidate": False, "reason_code": "CURRENT_BOROUGH_COORDINATE_MISMATCH"}
 
     if not _same_location(raw, match):
-        return {"eligible": False, "reason_code": "CURRENT_LOCATION_TEXT_MISMATCH"}
+        return {"eligible": False, "candidate": False, "reason_code": "CURRENT_LOCATION_TEXT_MISMATCH"}
 
     if match_type == "event_id" and not _same_event_id(raw, match):
-        return {"eligible": False, "reason_code": "SOURCE_EVENT_ID_MISMATCH"}
+        return {"eligible": False, "candidate": False, "reason_code": "SOURCE_EVENT_ID_MISMATCH"}
 
     source = _text(match.get("source") or match.get("location_source"))
     if match_type == "location_cache" and source not in TRUSTED_LEGACY_SOURCES:
-        return {"eligible": False, "reason_code": "LEGACY_PROVENANCE_NOT_ALLOWLISTED"}
+        return {"eligible": False, "candidate": False, "reason_code": "LEGACY_PROVENANCE_NOT_ALLOWLISTED"}
 
-    # Known legacy wrong-pin class. Text/borough agreement is not proof that the
-    # old coordinate lies on the claimed blockface. Require the canonical
-    # Geoclient/segment resolver to rebuild evidence from current street claims.
     if _is_street_segment_claim(raw):
         return {
             "eligible": False,
+            "candidate": True,
+            "candidate_tier": "certified_street_segment",
             "reason_code": "STREET_SEGMENT_REQUIRES_CANONICAL_RERESOLUTION",
+            "latitude": lat,
+            "longitude": lng,
+            "source_provenance": source or "legacy_exact_event_id_location_match",
         }
 
-    tier = _evidence_tier(raw)
+    tier, facility_ids = _candidate_tier(raw)
     if tier is None:
-        return {"eligible": False, "reason_code": "CURRENT_LOCATION_CLAIM_NOT_EXACT_TIER"}
+        return {"eligible": False, "candidate": False, "reason_code": "CURRENT_LOCATION_CLAIM_NOT_EXACT_TIER"}
 
-    return {
-        "eligible": True,
-        "reason_code": "LEGACY_LOCATION_REVALIDATED",
+    result = {
+        "eligible": False,
+        "candidate": True,
+        "candidate_tier": tier,
+        "reason_code": _candidate_reason(tier),
         "latitude": lat,
         "longitude": lng,
-        "tier": tier,
-        "source_provenance": source or "exact_source_event_id_location_match",
+        "source_provenance": source or "legacy_exact_event_id_location_match",
     }
+    if facility_ids:
+        result["facility_ids"] = facility_ids
+    return result
 
 
 def migrate_match(
     raw: dict[str, Any], match_type: str, match: dict[str, Any] | None
 ) -> tuple[dict[str, Any] | None, dict[str, Any]]:
-    """Return a copied match carrying explicit evidence when revalidation passes."""
-    decision = migration_decision(raw, match_type, match)
-    if not isinstance(match, dict) or not decision.get("eligible"):
-        return match, decision
+    """Return legacy match unchanged until an independent validator certifies the site.
 
-    migrated = deepcopy(match)
-    migrated["lat"] = decision["latitude"]
-    migrated["lng"] = decision["longitude"]
-    migrated["location_evidence"] = {
-        "tier": decision["tier"],
-        "validation_state": "validated",
-        "exact_pin_eligible": True,
-        "source_provenance": decision["source_provenance"],
-        "provider": "NYCIF deterministic legacy-location migration",
-        "reason_code": "LEGACY_LOCATION_REVALIDATED",
-        "reason_detail": (
-            "Current official location claim, matched location text and borough-safe "
-            "geometry agree; migrated into an existing V3 exact evidence tier."
-        ),
-    }
-    return migrated, decision
+    This function intentionally performs no evidence-envelope promotion. Its
+    compatibility role is to let the semantic intake retain the original
+    candidate while the decision object records the exact recovery lane.
+    """
+    decision = migration_decision(raw, match_type, match)
+    return match, decision
