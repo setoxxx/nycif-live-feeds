@@ -32,6 +32,10 @@ SOURCE_DATASET_ID = "2v4z-66xt"
 MAX_BLOCKED_CANDIDATE_DIAGNOSTICS = 8
 
 
+def _street(value: Any) -> str:
+    return " ".join(str(value or "").upper().split())
+
+
 def _node(value: Any) -> str:
     text = str(value or "").strip()
     return text.zfill(7) if text.isdigit() else text
@@ -161,9 +165,32 @@ def audit(v5_report: dict[str, Any], lion_geojson: dict[str, Any]) -> dict[str, 
                 elif len(set(signatures)) == 1:
                     reason = "LION_ROUTE_EDGE_EQUIVALENT_SOURCE_ROWS"
                 else:
-                    reason = "LION_ROUTE_EDGE_CONFLICTING_SOURCE_ROWS"
+                    endpoint_1 = route.get("endpoint_1") if isinstance(route.get("endpoint_1"), dict) else {}
+                    endpoint_2 = route.get("endpoint_2") if isinstance(route.get("endpoint_2"), dict) else {}
+                    expected_1 = _street(endpoint_1.get("main_street"))
+                    expected_2 = _street(endpoint_2.get("main_street"))
+                    expected_street = expected_1 if expected_1 and expected_1 == expected_2 else ""
+                    matching_rows = [
+                        feature for feature in source_rows
+                        if expected_street and _street(_properties(feature).get("Street")) == expected_street
+                    ]
+                    matching_signatures = [_candidate_signature(feature) for feature in matching_rows]
+                    if (
+                        expected_street
+                        and matching_rows
+                        and all(signature is not None for signature in matching_signatures)
+                        and len(set(matching_signatures)) == 1
+                    ):
+                        reason = "LION_ROUTE_EDGE_STREET_NAME_DISAMBIGUATED"
+                        source_rows = matching_rows
+                    else:
+                        reason = "LION_ROUTE_EDGE_CONFLICTING_SOURCE_ROWS"
 
-            if reason in {"LION_ROUTE_EDGE_UNIQUE_SOURCE", "LION_ROUTE_EDGE_EQUIVALENT_SOURCE_ROWS"}:
+            if reason in {
+                "LION_ROUTE_EDGE_UNIQUE_SOURCE",
+                "LION_ROUTE_EDGE_EQUIVALENT_SOURCE_ROWS",
+                "LION_ROUTE_EDGE_STREET_NAME_DISAMBIGUATED",
+            }:
                 accepted_edges += 1
                 chosen = source_rows[0]
                 geometry = chosen["geometry"]
