@@ -31,7 +31,7 @@ class LegacyLocationEvidenceMigrationTests(unittest.TestCase):
         raw = {
             "event_id": "123",
             "event_borough": "Brooklyn",
-            "event_location": "EAST 10 STREET between AVENUE A and AVENUE B",
+            "event_location": "100 Main Street",
         }
         base = {
             "borough": "Brooklyn",
@@ -49,7 +49,28 @@ class LegacyLocationEvidenceMigrationTests(unittest.TestCase):
             dict(base, source="existing_enriched_feed_gps"),
         )
         self.assertTrue(accepted["eligible"])
-        self.assertEqual(accepted["tier"], "certified_street_segment")
+        self.assertEqual(accepted["tier"], "exact_address")
+
+    def test_legacy_street_segment_requires_canonical_reresolution(self):
+        raw = {
+            "event_id": "123",
+            "event_borough": "Brooklyn",
+            "event_location": "EAST 10 STREET between AVENUE A and AVENUE B",
+        }
+        match = {
+            "source_event_id": "123",
+            "borough": "Brooklyn",
+            "display_location": raw["event_location"],
+            "lat": 40.65,
+            "lng": -73.95,
+            "source": "existing_enriched_feed_gps",
+        }
+        decision = migration_decision(raw, "event_id", match)
+        self.assertFalse(decision["eligible"])
+        self.assertEqual(
+            decision["reason_code"],
+            "STREET_SEGMENT_REQUIRES_CANONICAL_RERESOLUTION",
+        )
 
     def test_location_text_mismatch_stays_blocked(self):
         raw = {
