@@ -84,6 +84,32 @@ class ParksCemsStrictFacilityAreaV6Tests(unittest.TestCase):
         self.assertEqual(report["strict_facility_area_candidate_count"], 0)
         self.assertEqual(report["disposition_counts"]["UNIQUE_ROW_NOT_ACTIVE"], 1)
 
+    def test_missing_status_is_blocked(self):
+        claims = {
+            "m": {
+                "borough_code": "M",
+                "park_name": "Example Park",
+                "facility_descriptor": "Soccer-01",
+                "occurrence_count": 2,
+                "source_event_ids": [],
+                "source_cemsids": [],
+            }
+        }
+        properties = [{"gispropnum": "M001", "signname": "Example Park"}]
+        facilities = [
+            {
+                "gispropnum": "M001",
+                "system": "M001-SOCCER-1",
+                "field_number": "01",
+                "regulation_soccer": True,
+                "multipolygon": {"type": "MultiPolygon", "coordinates": []},
+            }
+        ]
+        report = probe_claims(claims, properties, facilities)
+        self.assertEqual(report["strict_facility_area_candidate_count"], 0)
+        self.assertEqual(report["strict_occurrence_coverage"], 0)
+        self.assertEqual(report["disposition_counts"]["UNIQUE_ROW_STATUS_MISSING"], 1)
+
 
 if __name__ == "__main__":
     unittest.main()

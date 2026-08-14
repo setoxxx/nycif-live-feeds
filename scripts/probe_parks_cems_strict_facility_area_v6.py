@@ -238,7 +238,9 @@ def probe_claims(
                         _, _, system, official_gispropnum = official_descriptor(row)
                         geometry = geometry_from_row(row)
                         geometry_type = geometry.get("type") if isinstance(geometry, dict) else None
-                        if status and status != "active":
+                        if not status:
+                            disposition = "UNIQUE_ROW_STATUS_MISSING"
+                        elif status != "active":
                             disposition = "UNIQUE_ROW_NOT_ACTIVE"
                         elif not system:
                             disposition = "UNIQUE_ROW_SYSTEM_ID_MISSING"
