@@ -1,0 +1,58 @@
+{
+  "artifact_type": "NYCIF_RUNG8_MAIN_RELEASE_RECONCILIATION_V1",
+  "status": "resolved_nonproduction_merge_tree",
+  "ladder": {
+    "completed_rungs": 7,
+    "total_rungs": 8,
+    "active_rung": 8
+  },
+  "parents": {
+    "certified_release": "a9bddcf996d455e70e611486d144361af22178fb",
+    "current_main": "2add07811c9583f7cc5064b3cc58e8e4b7abb73a",
+    "common_ancestor": "d28b85c8950c3ae2ec5483a83181d66e061c56b0"
+  },
+  "resolution_policy": {
+    "semantic_base": "certified release tree",
+    "main_history_preserved_as_parent": true,
+    "force_push": false,
+    "production_deploy": false,
+    "generated_runtime_rule": "Do not hand-merge generated runtime snapshots as source authority; regenerate under certified production code after promotion.",
+    "exact_location_rule": "Release-side fail-closed V3 location authority wins over weaker historical coordinate semantics."
+  },
+  "explicit_resolutions": [
+    {
+      "path": ".github/workflows/discovery-feed-refresh.yml",
+      "resolution": "preserve current-main production run-name and source-adapter trigger paths",
+      "reason": "These are production control-plane improvements and do not weaken V3 semantic authority."
+    },
+    {
+      "path": "docs/borg-event-intelligence-reconciliation-2026-08-09.md",
+      "resolution": "preserve main-only documentation",
+      "reason": "Historical cross-repo authority analysis is additive evidence and was absent from the release tree."
+    },
+    {
+      "path": "scripts/sync_nyc_parks_bigapps_events.py",
+      "resolution": "certified release version",
+      "reason": "Release retains the current w3wp-dpdi transport and additionally requires source coordinates to remain site-validation pending rather than exact by presence alone."
+    },
+    {
+      "path": "scripts/run_discovery_feed_refresh.sh",
+      "resolution": "certified release version",
+      "reason": "Release preserves main's one-authoritative-acquisition-pass correction and adds V3 projection, reader-safe outputs, and V3 health augmentation."
+    },
+    {
+      "path": "legacy main-only Parks V2 tests",
+      "resolution": "superseded by certified release V3 source contract and tests",
+      "reason": "The earlier fudw-fgrp multi-table contract was replaced on main itself by the current w3wp-dpdi upcoming-events transport before the certified recovery line tightened site validation."
+    }
+  ],
+  "required_post_resolution_validation": [
+    "production-promotion PR becomes mergeable",
+    "all required PR CI succeeds on the resolved release head / merge ref",
+    "strict reconciliation remains true with unexplained gap zero",
+    "silent identity loss remains zero",
+    "unsupported and wrong-authority exact markers remain zero",
+    "V7 area evidence remains non-public and projector-isolated",
+    "no production deployment occurs before production PR merge"
+  ]
+}

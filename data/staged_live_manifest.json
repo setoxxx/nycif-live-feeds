@@ -1,33 +1,35 @@
 {
   "borough_counts": {
-    "Bronx": 3307,
-    "Brooklyn": 5912,
-    "Manhattan": 9879,
-    "Queens": 5479,
-    "Staten Island": 982
+    "Bronx": 4296,
+    "Brooklyn": 7169,
+    "Manhattan": 10731,
+    "Queens": 6670,
+    "Staten Island": 1264,
+    "Unknown": 1
   },
   "category_counts": {
-    "arts": 160,
-    "fitness": 160,
-    "general": 17,
-    "market": 971,
-    "parks": 3642,
-    "sports": 20609
+    "arts": 187,
+    "fitness": 180,
+    "general": 23,
+    "market": 997,
+    "parks": 3951,
+    "sports": 24793
   },
   "cross_date_street_occurrences_suppressed": 0,
   "duplicate_policy": {
     "production_feeds_modified": false,
     "street_events": "dedupe only exact title + borough + location + coordinate + date + start/end + CEMS occurrence; recurring dates remain distinct"
   },
-  "eligible_rows_before_one_day_street_dedupe": 25559,
+  "eligible_rows_before_one_day_street_dedupe": 30131,
   "exact_occurrence_duplicates_suppressed": 0,
-  "generated_at_utc": "2026-08-13T12:40:42.092409+00:00",
+  "generated_at_utc": "2026-08-03T17:27:02.705292+00:00",
   "match_counts": {
-    "event_id": 462,
-    "location_cache": 23719,
-    "tier_1_gazetteer_display": 609,
-    "tier_2_geosearch_cache": 762,
-    "tier_2_geosearch_midpoint": 7
+    "event_id": 671,
+    "location_cache": 28569,
+    "tier_1_gazetteer_display": 402,
+    "tier_2_geosearch_cache": 471,
+    "tier_2_geosearch_midpoint": 6,
+    "tier_3_nyc_geosearch_live": 12
   },
   "one_day_street_duplicates_suppressed": 0,
   "production_feed": false,
@@ -36,174 +38,170 @@
   "sample_skipped_rows": [
     {
       "borough": "Manhattan",
-      "display_location": "EAST  124 STREET between MADISON AVENUE and PARK AVENUE",
-      "display_time": "9:00 AM",
+      "display_location": "EAST   42 STREET between PARK AVENUE and LEXINGTON AVENUE",
+      "display_time": "12:01 AM",
       "source_cemsid": [],
-      "source_event_id": "952837",
-      "title": "Annual Back To School Rally"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "BREVOORT PLACE between FRANKLIN AVENUE and BEDFORD AVENUE",
-      "display_time": "10:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "961880",
-      "title": "NYC ACS Annual Keisha J. Baxter Back to School Community and Resource Fair"
+      "source_event_id": "959717",
+      "title": "BTS THE CITY ARIRANG NEW YORK"
     },
     {
       "borough": "Manhattan",
-      "display_location": "WEST  120 STREET between MORNINGSIDE DRIVE and AMSTERDAM AVENUE,  EDGECOMBE AVENUE between WEST  142 STREET and WEST  141 STREET",
-      "display_time": "10:00 AM",
+      "display_location": "WEST  124 STREET between 7 AVENUE and FREDRICK DOUGLASS BOULEVARD",
+      "display_time": "1:00 PM",
       "source_cemsid": [],
-      "source_event_id": "164757",
-      "title": "TEST EVENT- Pedestrian Plaza asfsda fdsf."
+      "source_event_id": "939843",
+      "title": "New Student Orientation"
     },
     {
-      "borough": "Brooklyn",
-      "display_location": "SACKETT STREET between VAN BRUNT STREET and DEAD END",
-      "display_time": "12:00 PM",
+      "borough": "Manhattan",
+      "display_location": "EAST   42 STREET between PARK AVENUE and LEXINGTON AVENUE",
+      "display_time": "12:01 AM",
+      "source_cemsid": [],
+      "source_event_id": "959717",
+      "title": "BTS THE CITY ARIRANG NEW YORK"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "EAST   55 STREET between PARK AVENUE and LEXINGTON AVENUE",
+      "display_time": "6:30 AM",
+      "source_cemsid": [],
+      "source_event_id": "923099",
+      "title": "Breakfast Program"
+    },
+    {
+      "borough": "Queens",
+      "display_location": "27 STREET between DITMARS BOULEVARD and 21 AVENUE,  CRESCENT STREET between DITMARS BOULEVARD and 21 AVENUE, 21-21 CRESCENT STREET, 21 AVENUE between 27 STREET and CRESCENT STREET,  DITMARS BOULEVARD between 19 STREET and SHORE BOULEVARD,  19 STREET between 23 AVENUE and DITMARS BOULEVARD",
+      "display_time": "7:00 AM",
       "source_cemsid": [
         "0"
       ],
-      "source_event_id": "964434",
-      "title": "Sackett St Open Streets Event"
-    },
-    {
-      "borough": "Queens",
-      "display_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
-      "display_time": "12:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "964160",
-      "title": "Boombox in Jamaica"
+      "source_event_id": "964753",
+      "title": "Permitted Film Event"
     },
     {
       "borough": "Manhattan",
-      "display_location": "EAST   86 STREET between 3 AVENUE and LEXINGTON AVENUE",
-      "display_time": "2:00 PM",
+      "display_location": "WEST   49 STREET between 11 AVENUE and 12 AVENUE",
+      "display_time": "8:30 AM",
       "source_cemsid": [],
-      "source_event_id": "963524",
-      "title": "Peach Lily Zombie Cream Sampling Cart"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "LINCOLN PLACE between 7 AVENUE and 6 AVENUE",
-      "display_time": "6:30 PM",
-      "source_cemsid": [],
-      "source_event_id": "955550",
-      "title": "Midsummer Night Concert"
-    },
-    {
-      "borough": "Queens",
-      "display_location": "56 ROAD between 61 STREET and 64 STREET,  61 STREET between 56 ROAD and 56 AVENUE,  56 AVENUE between 61 STREET and 64 STREET,  64 STREET between 56 ROAD and 56 AVENUE,  56 ROAD between 61 STREET and 64 STREET",
-      "display_time": "7:30 PM",
-      "source_cemsid": [],
-      "source_event_id": "962202",
-      "title": "Fatima Devotion Procession"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "DESBROSSES STREET between HUDSON STREET and GREENWICH STREET",
-      "display_time": "12:01 AM",
-      "source_cemsid": [],
-      "source_event_id": "965134",
-      "title": "Tribeca Rooftop - 8/14 - 8/28"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "EAST  116 STREET between LEXINGTON AVENUE and 3 AVENUE",
-      "display_time": "9:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "932058",
-      "title": "Junglegym 2026"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "CHAUNCEY STREET between SARATOGA AVENUE and THOMAS BOYLAND STREET",
-      "display_time": "10:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "948153",
-      "title": "Love Thy neighbor"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "WEST  120 STREET between MORNINGSIDE DRIVE and AMSTERDAM AVENUE,  EDGECOMBE AVENUE between WEST  142 STREET and WEST  141 STREET",
-      "display_time": "10:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "164757",
-      "title": "TEST EVENT- Pedestrian Plaza asfsda fdsf."
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "SACKETT STREET between VAN BRUNT STREET and DEAD END",
-      "display_time": "12:00 PM",
-      "source_cemsid": [
-        "0"
-      ],
-      "source_event_id": "964434",
-      "title": "Sackett St Open Streets Event"
-    },
-    {
-      "borough": "Queens",
-      "display_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
-      "display_time": "12:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "964160",
-      "title": "Boombox in Jamaica"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "WEST    9 STREET between HENRY STREET and HICKS STREET",
-      "display_time": "1:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "923957",
-      "title": "Red Hook Initiative Block Party"
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "EAST  125 STREET between PARK AVENUE and LEXINGTON AVENUE",
-      "display_time": "1:00 PM",
-      "source_cemsid": [],
-      "source_event_id": "964005",
-      "title": "Zedd in the Park Shuttle - E. 125th St."
-    },
-    {
-      "borough": "Manhattan",
-      "display_location": "EAST   42 STREET between LEXINGTON AVENUE and PARK AVENUE",
-      "display_time": "12:01 AM",
-      "source_cemsid": [],
-      "source_event_id": "962842",
-      "title": "Pickwick Vintage Show"
-    },
-    {
-      "borough": "Brooklyn",
-      "display_location": "NOSTRAND AVENUE between FLATBUSH AVENUE and GLENWOOD ROAD",
-      "display_time": "8:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "960998",
-      "title": "Youth Led Farmers Market"
-    },
-    {
-      "borough": "Queens",
-      "display_location": "NORTHERN BOULEVARD between LEAVITT STREET and LINDEN PLACE",
-      "display_time": "8:00 AM",
-      "source_cemsid": [],
-      "source_event_id": "966657",
-      "title": "1-ESPN US Tennis Open 2026 Shuttle - The Westin Flushing LaGuardia Airport"
+      "source_event_id": "961235",
+      "title": "Wella Brand Event"
     },
     {
       "borough": "Bronx",
-      "display_location": "Pelham Bay Park and Orchard Beach: North Picnic Area Special",
-      "display_time": "9:00 AM",
-      "source_cemsid": [
-        "11437"
-      ],
-      "source_event_id": "962260",
-      "title": "Family Cookout"
+      "display_location": "EAST  188 STREET between VALENTINE AVENUE and TIEBOUT AVENUE",
+      "display_time": "11:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "952208",
+      "title": "National Health Center Week 2026"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "PARK PLACE between BROOKLYN AVENUE and KINGSTON AVENUE",
+      "display_time": "12:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "911454",
+      "title": "National Night Out 2026"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "BLAKE AVENUE between THOMAS S BOYLAND STREET and BRISTOL STREET",
+      "display_time": "1:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "936742",
+      "title": "National Night Out 2026"
+    },
+    {
+      "borough": "Bronx",
+      "display_location": "METCALF AVENUE between LAFAYETTE AVENUE and STORY AVENUE",
+      "display_time": "3:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "965433",
+      "title": "43rd Precinct and PSA 8 2026 National Night Out"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "MENAHAN STREET between WILSON AVENUE and KNICKERBOCKER AVENUE",
+      "display_time": "3:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "960244",
+      "title": "National Night Out Against Crime"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "8 AVENUE between WEST  155 STREET and WEST  154 STREET",
+      "display_time": "5:00 PM",
+      "source_cemsid": [],
+      "source_event_id": "960376",
+      "title": "Load-in/out"
+    },
+    {
+      "borough": "Bronx",
+      "display_location": "MORRISON AVENUE between WATSON AVENUE and HARROD PLACE",
+      "display_time": "8:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "960947",
+      "title": "Temporary curb lane and limited sidewalk occupancy on Watson Avenue to support NY vs. NY Tournament"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "EAST   84 STREET between FIFTH AVENUE and MADISON AVENUE",
+      "display_time": "8:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "960605",
+      "title": "Delivery/Collection"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "EAST   31 STREET between MADISON AVENUE and FIFTH AVENUE",
+      "display_time": "11:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "964267",
+      "title": "Pick-Up and Drop Off - Arlo Nomad Hotel"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "WEST   32 STREET between 7 AVENUE and 6 AVENUE",
+      "display_time": "11:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "964274",
+      "title": "Pick-Up and Drop Off - Madison Square Garden"
+    },
+    {
+      "borough": "Manhattan",
+      "display_location": "WEST   25 STREET between 11 AVENUE and 10 AVENUE",
+      "display_time": "12:30 AM",
+      "source_cemsid": [],
+      "source_event_id": "963244",
+      "title": "Logitech Production Parking"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "LIBERTY AVENUE between NEW JERSEY AVENUE and VERMONT STREET",
+      "display_time": "8:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "961724",
+      "title": "127 NYPD COMMUNITY CENTER DAY"
+    },
+    {
+      "borough": "Brooklyn",
+      "display_location": "WILLOUGHBY AVENUE between THROOP AVENUE and MARCUS GARVEY BOULEVARD",
+      "display_time": "10:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "943915",
+      "title": "Community Day 2026"
+    },
+    {
+      "borough": "Queens",
+      "display_location": "MERRICK BOULEVARD between 222 STREET and 223 STREET",
+      "display_time": "11:00 AM",
+      "source_cemsid": [],
+      "source_event_id": "962933",
+      "title": "Black Business Outreach: Queens"
     }
   ],
-  "skipped_needs_review_or_bad_gps": 311,
+  "skipped_needs_review_or_bad_gps": 223,
   "source": "nycif_live_test_enriched_events.json",
   "staged_feed": true,
-  "staged_feed_events": 25559,
-  "test_feed_rows_loaded": 25870
+  "staged_feed_events": 30131,
+  "test_feed_rows_loaded": 30354
 }

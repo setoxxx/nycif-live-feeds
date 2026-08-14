@@ -1,0 +1,248 @@
+name: Live Source V3 Smoke
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/sync_nyc_open_data.py'
+      - 'scripts/sync_nyc_citywide_events_calendar.py'
+      - 'scripts/sync_nyc_parks_bigapps_events.py'
+      - 'scripts/live_event_intake_refresh.py'
+      - 'scripts/build_borg_enigma_handoff.py'
+      - 'tests/test_borg_enigma_handoff.py'
+      - 'scripts/build_semantic_live_intake.py'
+      - 'scripts/project_events_discovery_v03.py'
+      - 'scripts/build_news_desk_reader_safe.py'
+      - 'scripts/build_maplibre_reader_safe_v03.py'
+      - '.github/workflows/live-source-v3-smoke.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  live-source-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Prove BORG to Enigma handoff contract
+        run: python3 -m unittest tests.test_borg_enigma_handoff -v
+
+      - name: Fetch all official source families and build semantic permitted intake
+        env:
+          NYCIF_ALLOW_LIVE_GEOSEARCH: 'no'
+        run: python3 scripts/live_event_intake_refresh.py
+
+      - name: Rebuild Calendar/Parks supplemental occurrences
+        run: python3 scripts/refresh_official_supplemental_occurrences.py
+
+      - name: Rebuild major classification inputs
+        run: python3 scripts/build_events_schema_v1_major.py
+
+      - name: Project canonical discovery with V3 authority
+        run: python3 scripts/project_events_discovery_v03.py
+
+      - name: Build News Desk operator and reader-safe data
+        run: |
+          python3 scripts/run_daily_people_facing_desk_sync.py --skip-network-sync
+          python3 scripts/build_news_desk_reader_safe.py
+
+      - name: Build canonical MapLibre reader-safe source
+        run: python3 scripts/build_maplibre_reader_safe_v03.py
+
+      - name: Verify live acquisition, store-first accounting, P0 reader proof, and zero pin regressions
+        run: |
+          python3 - <<'PY'
+          import json
+          from collections import Counter
+          from pathlib import Path
+
+          raw = json.loads(Path('data/raw_nyc_open_data_snapshot.json').read_text())
+          permit_report = json.loads(Path('data/live_sync_report.json').read_text())
+          cal = json.loads(Path('data/nyc_citywide_events_calendar_snapshot.json').read_text())
+          cal_raw = json.loads(Path('data/nyc_citywide_events_calendar_raw_observations.json').read_text())
+          cal_report = json.loads(Path('data/nyc_citywide_events_calendar_sync_report.json').read_text())
+          parks = json.loads(Path('data/nyc_parks_bigapps_events_snapshot.json').read_text())
+          parks_report = json.loads(Path('data/nyc_parks_bigapps_events_sync_report.json').read_text())
+          handoff = json.loads(Path('data/borg_enigma_handoff_v1.json').read_text())
+          v3 = json.loads(Path('data/events_discovery_v3_authority_report.json').read_text())
+          news = json.loads(Path('data/reader-safe/news-desk-status-v02.json').read_text())
+          map_status = json.loads(Path('data/reader-safe/national-map-events-v03-status.json').read_text())
+          map_feed = json.loads(Path('data/reader-safe/national-map-events-v03.geojson').read_text())
+          staged = json.loads(Path('data/staged_live_manifest.json').read_text())
+          contract = json.loads(Path('data/events_discovery_contract_v02.json').read_text())
+
+          cal_rows = cal if isinstance(cal, list) else cal.get('events', [])
+          parks_rows = parks.get('events', []) if isinstance(parks, dict) else parks
+          valid_categories = set(contract['categories'])
+          category_counts = Counter()
+          safe_public_url_count = 0
+          for feature in map_feed.get('features', []):
+              props = feature.get('properties') or {}
+              category = props.get('category')
+              assert category in valid_categories, category
+              # Current release contract from #391: the reader schema always exposes
+              # one nullable public_url key. Any populated value must remain HTTP(S).
+              assert 'public_url' in props, props
+              public_url = props.get('public_url')
+              if public_url is not None:
+                  assert isinstance(public_url, str) and public_url.lower().startswith(('http://', 'https://')), public_url
+                  safe_public_url_count += 1
+              category_counts[category] += 1
+
+          assert isinstance(raw, list) and len(raw) > 0, 'Permitted Events live fetch empty'
+          assert permit_report.get('raw_rows_loaded') == len(raw), permit_report
+          assert cal_report.get('qa_pass') is True and len(cal_rows) > 0, cal_report
+          assert isinstance(cal_raw, list) and len(cal_raw) > 0, 'Citywide raw observations empty'
+          assert cal_report.get('source_rows_received') == len(cal_raw), cal_report
+          assert cal_report.get('raw_observations_preserved') == len(cal_raw), cal_report
+          assert cal_report.get('window', {}).get('items_returned') == len(cal_raw), cal_report
+          assert parks_report.get('qa_pass') is True and len(parks_rows) > 0, parks_report
+          assert parks_report.get('fetch_mode') == 'live', parks_report
+
+          # BORG/Enigma store-first gate: every acquired observation is registered
+          # before semantic filtering. Exact duplicate observations remain accounted.
+          assert handoff.get('schema_id') == 'nycif-borg-enigma-handoff-v1', handoff
+          assert handoff.get('stage') == 'post_acquisition_pre_semantic_filter', handoff
+          assert handoff.get('qa_pass') is True, handoff
+          assert handoff.get('observed_row_count') == handoff.get('registered_observation_count'), handoff
+          assert handoff.get('unregistered_row_count') == 0, handoff
+          assert handoff.get('coordinates_are_authority') is False, handoff
+          assert handoff.get('identity_authority') == 'OccurrenceIdentityV2', handoff
+          assert handoff.get('exact_location_authority') == 'Projector V3', handoff
+          source_receipts = {row['source_id']: row for row in handoff.get('sources', [])}
+          assert source_receipts['nyc_open_data_permitted_events']['observed_row_count'] == len(raw)
+          assert source_receipts['nyc_citywide_events_calendar']['observed_row_count'] == len(cal_raw)
+          assert source_receipts['nyc_parks_bigapps_events']['observed_row_count'] == len(parks_rows)
+
+          assert staged.get('semantic_location_authority') is True, staged
+          assert staged.get('coordinates_without_exact_evidence_promoted') == 0, staged
+          assert staged.get('all_staged_rows_certified') is True, staged
+          assert v3.get('qa_pass') is True, v3
+          assert v3.get('raw_accounting_pass') is True, v3
+          assert v3.get('silent_identity_loss') == 0, v3
+          assert v3.get('duplicate_exact_occurrences') == 0, v3
+          assert v3.get('unsupported_exact_pin_count') == 0, v3
+          assert v3.get('implicit_source_all_count') == 0, v3
+          assert v3.get('legacy_occurrence_authority_count') == 0, v3
+          assert v3.get('legacy_coordinate_authority_count') == 0, v3
+          assert news.get('unsupported_exact_pin_count') == 0, news
+          assert news.get('browser_raw_repository_required') is False, news
+          assert map_status.get('qa_pass') is True, map_status
+          assert map_status.get('unsupported_marker_count') == 0, map_status
+          assert map_status.get('wrong_authority_marker_count') == 0, map_status
+          assert map_status.get('location_evidence_failure_count') == 0, map_status
+          assert map_status.get('borough_contradiction_count') == 0, map_status
+          assert map_status.get('duplicate_exact_occurrence_count') == 0, map_status
+          assert map_status.get('duplicate_reader_occurrence_count') == 0, map_status
+          assert map_status.get('general_area_exact_geometry_count') == 0, map_status
+
+          # Historical P0 regression fixture. It is mandatory only while its occurrence
+          # date is inside the live reader window. Outside that window, the live gate
+          # proves the opposite safety property: no stale Jamaica occurrence is carried.
+          jamaica_occurrence_date = '2026-08-08'
+          reader_window_start = str(map_status.get('reader_window_start') or '')
+          reader_window_end = str(map_status.get('reader_window_end') or '')
+          assert reader_window_start and reader_window_end, map_status
+          jamaica_in_live_reader_window = (
+              reader_window_start <= jamaica_occurrence_date <= reader_window_end
+          )
+
+          jamaica_matches = []
+          for feature in map_feed.get('features', []):
+              props = feature.get('properties') or {}
+              if (
+                  str(props.get('source_dataset') or '') == 'tvpp-9vvx'
+                  and str(props.get('source_event_id') or '') == '906790'
+              ):
+                  jamaica_matches.append(feature)
+
+          if jamaica_in_live_reader_window:
+              assert len(jamaica_matches) == 1, {
+                  'reason': 'P0 Jamaica permit missing or duplicated while fixture occurrence is in live reader window',
+                  'match_count': len(jamaica_matches),
+                  'reader_window_start': reader_window_start,
+                  'reader_window_end': reader_window_end,
+              }
+              jamaica = jamaica_matches[0]
+              jamaica_props = jamaica.get('properties') or {}
+              assert jamaica_props.get('title') == 'Jamaica Rising Day Parade', jamaica_props
+              assert jamaica.get('geometry') is None, jamaica
+              assert jamaica_props.get('certified_pin') is False, jamaica_props
+              assert jamaica_props.get('map_eligibility_state') != 'MAP_READY', jamaica_props
+              assert jamaica_props.get('event_role') == 'public_event', jamaica_props
+              p0_jamaica_reader_evidence = {
+                  'live_assertion_applicable': True,
+                  'source_dataset': jamaica_props.get('source_dataset'),
+                  'source_event_id': jamaica_props.get('source_event_id'),
+                  'occurrence_id': jamaica_props.get('occurrence_id'),
+                  'occurrence_date': jamaica_occurrence_date,
+                  'title': jamaica_props.get('title'),
+                  'geometry': jamaica.get('geometry'),
+                  'certified_pin': jamaica_props.get('certified_pin'),
+                  'map_eligibility_state': jamaica_props.get('map_eligibility_state'),
+                  'reader_window_start': reader_window_start,
+                  'reader_window_end': reader_window_end,
+                  'reader_build_generated_at_utc': map_status.get('generated_at_utc'),
+                  'reader_safe_event_count': map_status.get('reader_safe_event_count'),
+              }
+          else:
+              assert len(jamaica_matches) == 0, {
+                  'reason': 'Historical P0 Jamaica occurrence leaked outside the live reader window',
+                  'match_count': len(jamaica_matches),
+                  'occurrence_date': jamaica_occurrence_date,
+                  'reader_window_start': reader_window_start,
+                  'reader_window_end': reader_window_end,
+              }
+              p0_jamaica_reader_evidence = {
+                  'live_assertion_applicable': False,
+                  'source_dataset': 'tvpp-9vvx',
+                  'source_event_id': '906790',
+                  'occurrence_date': jamaica_occurrence_date,
+                  'match_count': 0,
+                  'reader_window_start': reader_window_start,
+                  'reader_window_end': reader_window_end,
+                  'reason': 'historical_fixture_outside_live_reader_window',
+                  'deterministic_fixture_regression_preserved': True,
+              }
+
+          print(json.dumps({
+              'generated_at_utc': {
+                  'permitted_events': permit_report.get('generated_at_utc'),
+                  'citywide_calendar': cal_report.get('generated_at_utc'),
+                  'parks_bigapps': parks_report.get('generated_at_utc'),
+                  'news_desk': news.get('generated_at_utc'),
+                  'maplibre': map_status.get('generated_at_utc'),
+              },
+              'borg_enigma': {
+                  'observed': handoff.get('observed_row_count'),
+                  'registered': handoff.get('registered_observation_count'),
+                  'unregistered': handoff.get('unregistered_row_count'),
+                  'citywide_raw_observations': len(cal_raw),
+                  'citywide_semantic_snapshot': len(cal_rows),
+              },
+              'safe_public_url_count': safe_public_url_count,
+              'permitted_events': len(raw),
+              'citywide_calendar': len(cal_rows),
+              'parks_bigapps': len(parks_rows),
+              'staged_exact': staged.get('staged_feed_events'),
+              'canonical_records': v3.get('accepted_records'),
+              'news_desk_money': news.get('money_emitted_rows'),
+              'news_desk_viral': news.get('viral_emitted_rows'),
+              'map_ready': map_status.get('map_state_counts', {}).get('MAP_READY'),
+              'general_area': map_status.get('map_state_counts', {}).get('GENERAL_AREA'),
+              'review_required': map_status.get('map_state_counts', {}).get('REVIEW_REQUIRED'),
+              'list_only': map_status.get('map_state_counts', {}).get('LIST_ONLY'),
+              'exact_markers': map_status.get('exact_marker_count'),
+              'reader_safe_events': map_status.get('reader_safe_event_count'),
+              'reader_safe_non_markers': map_status.get('reader_safe_non_marker_count'),
+              'p0_jamaica_reader_evidence': p0_jamaica_reader_evidence,
+              'category_counts': dict(sorted(category_counts.items())),
+          }, sort_keys=True))
+          PY

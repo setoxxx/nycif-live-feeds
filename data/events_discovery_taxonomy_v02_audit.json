@@ -9,29 +9,28 @@
     "list_only_remain_visible": true,
     "map_ready_standalone_marker_eligible": true
   },
-  "classes_workshops_interest_count": 1036,
+  "classes_workshops_interest_count": 629,
   "classification_confidence_counts": {
-    "high": 25019,
-    "low": 160,
-    "medium": 6356
+    "high": 27921,
+    "low": 170,
+    "medium": 5751
   },
   "classification_version": "discovery-taxonomy-v02",
   "coordinate_status_counts": {
-    "list_only": 3923,
-    "map_ready": 27612
+    "list_only": 1777,
+    "map_ready": 32065
   },
   "display_disposition_counts": {
-    "list_only": 3963,
-    "maintenance_or_closure": 75,
-    "private_or_reserved_activity": 25,
-    "standalone_public_event": 27472
+    "list_only": 1816,
+    "maintenance_or_closure": 82,
+    "private_or_reserved_activity": 29,
+    "standalone_public_event": 31915
   },
   "event_role_counts": {
-    "maintenance_or_closure": 75,
-    "private_or_reserved_activity": 25,
-    "public_event": 31343,
-    "street_closure": 90,
-    "transportation_operation": 2
+    "maintenance_or_closure": 82,
+    "private_or_reserved_activity": 29,
+    "public_event": 33648,
+    "street_closure": 83
   },
   "explore_more_order": [
     "tours",
@@ -41,31 +40,31 @@
     "housing",
     "environment"
   ],
-  "generated_at_utc": "2026-08-13T12:40:45Z",
+  "generated_at_utc": "2026-08-03T17:27:06Z",
   "interest_counts": {
-    "arts": 414,
-    "civic": 572,
-    "education": 1036,
-    "environment": 123,
-    "family": 2444,
-    "fitness": 687,
-    "general": 160,
-    "government": 19,
-    "housing": 16,
-    "market": 939,
-    "media": 53,
-    "parks": 7783,
-    "services": 5,
-    "sports": 21437,
-    "tours": 14,
-    "volunteer": 229
+    "arts": 445,
+    "civic": 478,
+    "education": 629,
+    "environment": 88,
+    "family": 1293,
+    "fitness": 703,
+    "general": 170,
+    "housing": 17,
+    "jobs": 1,
+    "market": 948,
+    "media": 36,
+    "parks": 6067,
+    "services": 21,
+    "sports": 25814,
+    "tours": 10,
+    "volunteer": 140
   },
-  "kids_family_interest_count": 2444,
+  "kids_family_interest_count": 1293,
   "legacy_major": {
-    "demoted": 0,
-    "quarantined": 0,
-    "retained": 351,
-    "reviewed": 351
+    "demoted": 2,
+    "quarantined": 2,
+    "retained": 352,
+    "reviewed": 354
   },
   "main_filter_order": [
     "major_only",
@@ -84,6 +83,48 @@
     "field_intel"
   ],
   "mandatory_record_samples": [
+    {
+      "borough": "Bronx",
+      "canonical_id": "tvpp-9vvx:956269@2026-08-07",
+      "category": "fitness",
+      "classification_confidence": "high",
+      "classification_reason": "high_confidence_program_override_shape_up",
+      "coordinate_status": "map_ready",
+      "coordinates": [
+        40.9,
+        -73.89222
+      ],
+      "date": "2026-08-07",
+      "display_disposition": "standalone_public_event",
+      "event_group_id": "tvpp-9vvx:956269@2026-08-07",
+      "event_role": "public_event",
+      "filters": [
+        "fitness",
+        "parks"
+      ],
+      "grouping_confidence": null,
+      "grouping_reason": null,
+      "interests": [
+        "fitness",
+        "parks"
+      ],
+      "location": "Van Cortlandt Park: Cross Country Parade Ground Broadway 2",
+      "marker_eligible": true,
+      "needle": "Shape Up NYC: Running Group",
+      "parent_event_id": null,
+      "raw_category": "parks",
+      "significance": "standard",
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "956269",
+      "tags": [
+        "fitness-class",
+        "parks-program",
+        "running",
+        "outdoor",
+        "parade",
+        "fitness-class"
+      ]
+    },
     {
       "borough": "Bronx",
       "canonical_id": "tvpp-9vvx:956269@2026-08-14",
@@ -212,7 +253,7 @@
     },
     {
       "borough": null,
-      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2204190@2026-08-12",
+      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2204179@2026-08-03",
       "category": "fitness",
       "classification_confidence": "high",
       "classification_reason": "high_confidence_program_override_shape_up",
@@ -221,9 +262,9 @@
         40.7451662,
         -73.9256081
       ],
-      "date": "2026-08-12",
+      "date": "2026-08-03",
       "display_disposition": "standalone_public_event",
-      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2204190@2026-08-12",
+      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2204179@2026-08-03",
       "event_role": "public_event",
       "filters": [
         "fitness"
@@ -237,10 +278,10 @@
       "marker_eligible": true,
       "needle": "Senior Cardio Sculpt",
       "parent_event_id": null,
-      "raw_category": "Fitness",
+      "raw_category": "Fitness | Shape Up NYC | Seniors | Exercise Classes",
       "significance": "standard",
       "source_dataset": "nyc-parks-bigapps-events",
-      "source_event_id": "2204190",
+      "source_event_id": "2204179",
       "tags": [
         "fitness-class",
         "parks-program",
@@ -250,7 +291,7 @@
     },
     {
       "borough": null,
-      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2204207@2026-08-17",
+      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2129360@2026-08-04",
       "category": "fitness",
       "classification_confidence": "high",
       "classification_reason": "high_confidence_program_override_shape_up",
@@ -259,9 +300,9 @@
         40.7451662,
         -73.9256081
       ],
-      "date": "2026-08-17",
+      "date": "2026-08-04",
       "display_disposition": "standalone_public_event",
-      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2204207@2026-08-17",
+      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2129360@2026-08-04",
       "event_role": "public_event",
       "filters": [
         "fitness"
@@ -275,57 +316,20 @@
       "marker_eligible": true,
       "needle": "Senior Cardio Sculpt",
       "parent_event_id": null,
-      "raw_category": "Fitness",
+      "raw_category": "Fitness | Shape Up NYC | Seniors | Exercise Classes",
       "significance": "standard",
       "source_dataset": "nyc-parks-bigapps-events",
-      "source_event_id": "2204207",
+      "source_event_id": "2129360",
       "tags": [
         "fitness-class",
         "parks-program",
         "workshop",
-        "fitness-class"
-      ]
-    },
-    {
-      "borough": "Queens",
-      "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1169216@2026-08-17",
-      "category": "fitness",
-      "classification_confidence": "high",
-      "classification_reason": "high_confidence_program_override_shape_up",
-      "coordinate_status": "list_only",
-      "coordinates": [
-        null,
-        null
-      ],
-      "date": "2026-08-17",
-      "display_disposition": "list_only",
-      "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1169216@2026-08-17",
-      "event_role": "public_event",
-      "filters": [
-        "fitness"
-      ],
-      "grouping_confidence": null,
-      "grouping_reason": null,
-      "interests": [
-        "fitness"
-      ],
-      "location": "Sunnyside Community Services",
-      "marker_eligible": false,
-      "needle": "Senior Cardio Sculpt",
-      "parent_event_id": null,
-      "raw_category": "Parks & Recreation",
-      "significance": "standard",
-      "source_dataset": "nyc-citywide-events-calendar-api",
-      "source_event_id": "1169216",
-      "tags": [
-        "fitness-class",
-        "parks-program",
         "fitness-class"
       ]
     },
     {
       "borough": null,
-      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2159934@2026-08-18",
+      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2204186@2026-08-05",
       "category": "fitness",
       "classification_confidence": "high",
       "classification_reason": "high_confidence_program_override_shape_up",
@@ -334,9 +338,9 @@
         40.7451662,
         -73.9256081
       ],
-      "date": "2026-08-18",
+      "date": "2026-08-05",
       "display_disposition": "standalone_public_event",
-      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2159934@2026-08-18",
+      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2204186@2026-08-05",
       "event_role": "public_event",
       "filters": [
         "fitness"
@@ -350,10 +354,10 @@
       "marker_eligible": true,
       "needle": "Senior Cardio Sculpt",
       "parent_event_id": null,
-      "raw_category": "Fitness",
+      "raw_category": "Fitness | Shape Up NYC | Seniors | Exercise Classes",
       "significance": "standard",
       "source_dataset": "nyc-parks-bigapps-events",
-      "source_event_id": "2159934",
+      "source_event_id": "2204186",
       "tags": [
         "fitness-class",
         "parks-program",
@@ -362,19 +366,19 @@
       ]
     },
     {
-      "borough": "Queens",
-      "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1169236@2026-08-18",
+      "borough": null,
+      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2204205@2026-08-10",
       "category": "fitness",
       "classification_confidence": "high",
       "classification_reason": "high_confidence_program_override_shape_up",
-      "coordinate_status": "list_only",
+      "coordinate_status": "map_ready",
       "coordinates": [
-        null,
-        null
+        40.7451662,
+        -73.9256081
       ],
-      "date": "2026-08-18",
-      "display_disposition": "list_only",
-      "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1169236@2026-08-18",
+      "date": "2026-08-10",
+      "display_disposition": "standalone_public_event",
+      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2204205@2026-08-10",
       "event_role": "public_event",
       "filters": [
         "fitness"
@@ -385,16 +389,93 @@
         "fitness"
       ],
       "location": "Sunnyside Community Services",
-      "marker_eligible": false,
+      "marker_eligible": true,
       "needle": "Senior Cardio Sculpt",
       "parent_event_id": null,
-      "raw_category": "Parks & Recreation",
+      "raw_category": "Fitness | Shape Up NYC | Seniors | Exercise Classes",
       "significance": "standard",
-      "source_dataset": "nyc-citywide-events-calendar-api",
-      "source_event_id": "1169236",
+      "source_dataset": "nyc-parks-bigapps-events",
+      "source_event_id": "2204205",
       "tags": [
         "fitness-class",
         "parks-program",
+        "workshop",
+        "fitness-class"
+      ]
+    },
+    {
+      "borough": null,
+      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2129405@2026-08-11",
+      "category": "fitness",
+      "classification_confidence": "high",
+      "classification_reason": "high_confidence_program_override_shape_up",
+      "coordinate_status": "map_ready",
+      "coordinates": [
+        40.7451662,
+        -73.9256081
+      ],
+      "date": "2026-08-11",
+      "display_disposition": "standalone_public_event",
+      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2129405@2026-08-11",
+      "event_role": "public_event",
+      "filters": [
+        "fitness"
+      ],
+      "grouping_confidence": null,
+      "grouping_reason": null,
+      "interests": [
+        "fitness"
+      ],
+      "location": "Sunnyside Community Services",
+      "marker_eligible": true,
+      "needle": "Senior Cardio Sculpt",
+      "parent_event_id": null,
+      "raw_category": "Fitness | Shape Up NYC | Seniors | Exercise Classes",
+      "significance": "standard",
+      "source_dataset": "nyc-parks-bigapps-events",
+      "source_event_id": "2129405",
+      "tags": [
+        "fitness-class",
+        "parks-program",
+        "workshop",
+        "fitness-class"
+      ]
+    },
+    {
+      "borough": null,
+      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2208141@2026-08-06",
+      "category": "fitness",
+      "classification_confidence": "high",
+      "classification_reason": "high_confidence_program_override_shape_up",
+      "coordinate_status": "map_ready",
+      "coordinates": [
+        40.886241912842,
+        -73.91463470459
+      ],
+      "date": "2026-08-06",
+      "display_disposition": "standalone_public_event",
+      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2208141@2026-08-06",
+      "event_role": "public_event",
+      "filters": [
+        "fitness"
+      ],
+      "grouping_confidence": null,
+      "grouping_reason": null,
+      "interests": [
+        "fitness"
+      ],
+      "location": "NYPL - Spuyten Duyvil",
+      "marker_eligible": true,
+      "needle": "Strength In Motion",
+      "parent_event_id": null,
+      "raw_category": "Fitness | Shape Up NYC | Exercise Classes | Strength Training/Weightlifting",
+      "significance": "standard",
+      "source_dataset": "nyc-parks-bigapps-events",
+      "source_event_id": "2208141",
+      "tags": [
+        "fitness-class",
+        "parks-program",
+        "workshop",
         "fitness-class"
       ]
     },
@@ -425,7 +506,7 @@
       "marker_eligible": true,
       "needle": "Strength In Motion",
       "parent_event_id": null,
-      "raw_category": "Fitness",
+      "raw_category": "Fitness | Shape Up NYC | Exercise Classes | Strength Training/Weightlifting",
       "significance": "standard",
       "source_dataset": "nyc-parks-bigapps-events",
       "source_event_id": "2208084",
@@ -434,155 +515,6 @@
         "parks-program",
         "workshop",
         "fitness-class"
-      ]
-    },
-    {
-      "borough": "Bronx",
-      "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1175596@2026-08-13",
-      "category": "fitness",
-      "classification_confidence": "high",
-      "classification_reason": "high_confidence_program_override_shape_up",
-      "coordinate_status": "list_only",
-      "coordinates": [
-        null,
-        null
-      ],
-      "date": "2026-08-13",
-      "display_disposition": "list_only",
-      "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1175596@2026-08-13",
-      "event_role": "public_event",
-      "filters": [
-        "fitness"
-      ],
-      "grouping_confidence": null,
-      "grouping_reason": null,
-      "interests": [
-        "fitness"
-      ],
-      "location": "NYPL - Spuyten Duyvil",
-      "marker_eligible": false,
-      "needle": "Strength In Motion",
-      "parent_event_id": null,
-      "raw_category": "Parks & Recreation",
-      "significance": "standard",
-      "source_dataset": "nyc-citywide-events-calendar-api",
-      "source_event_id": "1175596",
-      "tags": [
-        "fitness-class",
-        "parks-program",
-        "workshop"
-      ]
-    },
-    {
-      "borough": null,
-      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2208142@2026-08-20",
-      "category": "fitness",
-      "classification_confidence": "high",
-      "classification_reason": "high_confidence_program_override_shape_up",
-      "coordinate_status": "map_ready",
-      "coordinates": [
-        40.886241912842,
-        -73.91463470459
-      ],
-      "date": "2026-08-20",
-      "display_disposition": "standalone_public_event",
-      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2208142@2026-08-20",
-      "event_role": "public_event",
-      "filters": [
-        "fitness"
-      ],
-      "grouping_confidence": null,
-      "grouping_reason": null,
-      "interests": [
-        "fitness"
-      ],
-      "location": "NYPL - Spuyten Duyvil",
-      "marker_eligible": true,
-      "needle": "Strength In Motion",
-      "parent_event_id": null,
-      "raw_category": "Fitness",
-      "significance": "standard",
-      "source_dataset": "nyc-parks-bigapps-events",
-      "source_event_id": "2208142",
-      "tags": [
-        "fitness-class",
-        "parks-program",
-        "workshop",
-        "fitness-class"
-      ]
-    },
-    {
-      "borough": "Bronx",
-      "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1175616@2026-08-20",
-      "category": "fitness",
-      "classification_confidence": "high",
-      "classification_reason": "high_confidence_program_override_shape_up",
-      "coordinate_status": "list_only",
-      "coordinates": [
-        null,
-        null
-      ],
-      "date": "2026-08-20",
-      "display_disposition": "list_only",
-      "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1175616@2026-08-20",
-      "event_role": "public_event",
-      "filters": [
-        "fitness"
-      ],
-      "grouping_confidence": null,
-      "grouping_reason": null,
-      "interests": [
-        "fitness"
-      ],
-      "location": "NYPL - Spuyten Duyvil",
-      "marker_eligible": false,
-      "needle": "Strength In Motion",
-      "parent_event_id": null,
-      "raw_category": "Parks & Recreation",
-      "significance": "standard",
-      "source_dataset": "nyc-citywide-events-calendar-api",
-      "source_event_id": "1175616",
-      "tags": [
-        "fitness-class",
-        "parks-program",
-        "workshop"
-      ]
-    },
-    {
-      "borough": "Bronx",
-      "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1175636@2026-08-27",
-      "category": "fitness",
-      "classification_confidence": "high",
-      "classification_reason": "high_confidence_program_override_shape_up",
-      "coordinate_status": "list_only",
-      "coordinates": [
-        null,
-        null
-      ],
-      "date": "2026-08-27",
-      "display_disposition": "list_only",
-      "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1175636@2026-08-27",
-      "event_role": "public_event",
-      "filters": [
-        "fitness"
-      ],
-      "grouping_confidence": null,
-      "grouping_reason": null,
-      "interests": [
-        "fitness"
-      ],
-      "location": "NYPL - Spuyten Duyvil",
-      "marker_eligible": false,
-      "needle": "Strength In Motion",
-      "parent_event_id": null,
-      "raw_category": "Parks & Recreation",
-      "significance": "standard",
-      "source_dataset": "nyc-citywide-events-calendar-api",
-      "source_event_id": "1175636",
-      "tags": [
-        "fitness-class",
-        "parks-program",
-        "workshop"
       ]
     },
     {
@@ -626,113 +558,8 @@
       ]
     },
     {
-      "borough": "Queens",
-      "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1191636@2026-09-12",
-      "category": "civic",
-      "classification_confidence": "medium",
-      "classification_reason": "keyword_civic",
-      "coordinate_status": "list_only",
-      "coordinates": [
-        null,
-        null
-      ],
-      "date": "2026-09-12",
-      "display_disposition": "list_only",
-      "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1191636@2026-09-12",
-      "event_role": "public_event",
-      "filters": [
-        "civic"
-      ],
-      "grouping_confidence": null,
-      "grouping_reason": null,
-      "interests": [
-        "civic"
-      ],
-      "location": "86-01 ROCKAWAY BEACH BOULEVARD Queens",
-      "marker_eligible": false,
-      "needle": "Community March",
-      "parent_event_id": null,
-      "raw_category": "Street and Neighborhood",
-      "significance": "major",
-      "source_dataset": "nyc-citywide-events-calendar-api",
-      "source_event_id": "1191636",
-      "tags": [
-        "parade"
-      ]
-    },
-    {
-      "borough": "Queens",
-      "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1191616@2026-09-12",
-      "category": "civic",
-      "classification_confidence": "medium",
-      "classification_reason": "keyword_civic",
-      "coordinate_status": "list_only",
-      "coordinates": [
-        null,
-        null
-      ],
-      "date": "2026-09-12",
-      "display_disposition": "list_only",
-      "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1191616@2026-09-12",
-      "event_role": "public_event",
-      "filters": [
-        "civic"
-      ],
-      "grouping_confidence": null,
-      "grouping_reason": null,
-      "interests": [
-        "civic"
-      ],
-      "location": "14-25 BEACH CHANNEL DRIVE Queens",
-      "marker_eligible": false,
-      "needle": "Community March",
-      "parent_event_id": null,
-      "raw_category": "Street and Neighborhood",
-      "significance": "major",
-      "source_dataset": "nyc-citywide-events-calendar-api",
-      "source_event_id": "1191616",
-      "tags": [
-        "parade"
-      ]
-    },
-    {
-      "borough": "Queens",
-      "canonical_id": "review_supplemental:tvpp-9vvx:966594@2026-08-15",
-      "category": "civic",
-      "classification_confidence": "high",
-      "classification_reason": "event_type_parade+raw_unstaged_open_data_intake",
-      "coordinate_status": "list_only",
-      "coordinates": [
-        null,
-        null
-      ],
-      "date": "2026-08-15",
-      "display_disposition": "list_only",
-      "event_group_id": "review_supplemental:tvpp-9vvx:966594@2026-08-15",
-      "event_role": "public_event",
-      "filters": [
-        "civic"
-      ],
-      "grouping_confidence": null,
-      "grouping_reason": null,
-      "interests": [
-        "civic"
-      ],
-      "location": null,
-      "marker_eligible": false,
-      "needle": "Community March",
-      "parent_event_id": null,
-      "raw_category": null,
-      "significance": "major",
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "966594",
-      "tags": [
-        "parade"
-      ]
-    },
-    {
       "borough": "Brooklyn",
-      "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1193056@2026-08-29",
+      "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1046336@2026-08-29",
       "category": "civic",
       "classification_confidence": "medium",
       "classification_reason": "keyword_civic",
@@ -743,7 +570,7 @@
       ],
       "date": "2026-08-29",
       "display_disposition": "list_only",
-      "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1193056@2026-08-29",
+      "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1046336@2026-08-29",
       "event_role": "public_event",
       "filters": [
         "civic"
@@ -760,7 +587,7 @@
       "raw_category": "Street and Neighborhood",
       "significance": "standard",
       "source_dataset": "nyc-citywide-events-calendar-api",
-      "source_event_id": "1193056",
+      "source_event_id": "1046336",
       "tags": [
         "parade",
         "religious"
@@ -805,7 +632,7 @@
     },
     {
       "borough": null,
-      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2191361@2026-08-25",
+      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2190592@2026-08-11",
       "category": "tours",
       "classification_confidence": "high",
       "classification_reason": "high_confidence_semantic_tours",
@@ -814,45 +641,10 @@
         40.853529061404,
         -73.770661095549
       ],
-      "date": "2026-08-25",
-      "display_disposition": "standalone_public_event",
-      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2191361@2026-08-25",
-      "event_role": "public_event",
-      "filters": [
-        "tours"
-      ],
-      "grouping_confidence": null,
-      "grouping_reason": null,
-      "interests": [
-        "tours"
-      ],
-      "location": "Hart Island",
-      "marker_eligible": true,
-      "needle": "Hart Island Tour",
-      "parent_event_id": null,
-      "raw_category": "History",
-      "significance": "standard",
-      "source_dataset": "nyc-parks-bigapps-events",
-      "source_event_id": "2191361",
-      "tags": [
-        "outdoor"
-      ]
-    },
-    {
-      "borough": "Bronx",
-      "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1129496@2026-08-25",
-      "category": "tours",
-      "classification_confidence": "high",
-      "classification_reason": "high_confidence_semantic_tours",
-      "coordinate_status": "list_only",
-      "coordinates": [
-        null,
-        null
-      ],
-      "date": "2026-08-25",
-      "display_disposition": "list_only",
-      "event_group_id": "review_supplemental:nyc-citywide-events-calendar-api:1129496@2026-08-25",
-      "event_role": "public_event",
+      "date": "2026-08-11",
+      "display_disposition": "maintenance_or_closure",
+      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2190592@2026-08-11",
+      "event_role": "maintenance_or_closure",
       "filters": [
         "tours"
       ],
@@ -865,13 +657,180 @@
       "marker_eligible": false,
       "needle": "Hart Island Tour",
       "parent_event_id": null,
-      "raw_category": "Parks & Recreation",
+      "raw_category": "History | Urban Park Rangers",
       "significance": "standard",
-      "source_dataset": "nyc-citywide-events-calendar-api",
-      "source_event_id": "1129496",
+      "source_dataset": "nyc-parks-bigapps-events",
+      "source_event_id": "2190592",
       "tags": [
-        "outdoor"
+        "outdoor",
+        "maintenance",
+        "maintenance-or-closure"
       ]
+    },
+    {
+      "borough": null,
+      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2168802@2026-08-06",
+      "category": "tours",
+      "classification_confidence": "high",
+      "classification_reason": "high_confidence_semantic_tours",
+      "coordinate_status": "map_ready",
+      "coordinates": [
+        40.89870071411133,
+        -73.9124984741211
+      ],
+      "date": "2026-08-06",
+      "display_disposition": "standalone_public_event",
+      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2168802@2026-08-06",
+      "event_role": "public_event",
+      "filters": [
+        "tours"
+      ],
+      "grouping_confidence": null,
+      "grouping_reason": null,
+      "interests": [
+        "tours"
+      ],
+      "location": "Wave Hill",
+      "marker_eligible": true,
+      "needle": "Public Gallery Tour",
+      "parent_event_id": null,
+      "raw_category": "Education | Art",
+      "significance": "standard",
+      "source_dataset": "nyc-parks-bigapps-events",
+      "source_event_id": "2168802",
+      "tags": []
+    },
+    {
+      "borough": null,
+      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2168803@2026-08-08",
+      "category": "tours",
+      "classification_confidence": "high",
+      "classification_reason": "high_confidence_semantic_tours",
+      "coordinate_status": "map_ready",
+      "coordinates": [
+        40.89870071411133,
+        -73.9124984741211
+      ],
+      "date": "2026-08-08",
+      "display_disposition": "standalone_public_event",
+      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2168803@2026-08-08",
+      "event_role": "public_event",
+      "filters": [
+        "tours"
+      ],
+      "grouping_confidence": null,
+      "grouping_reason": null,
+      "interests": [
+        "tours"
+      ],
+      "location": "Wave Hill",
+      "marker_eligible": true,
+      "needle": "Public Gallery Tour",
+      "parent_event_id": null,
+      "raw_category": "Education | Art",
+      "significance": "standard",
+      "source_dataset": "nyc-parks-bigapps-events",
+      "source_event_id": "2168803",
+      "tags": []
+    },
+    {
+      "borough": "Manhattan",
+      "canonical_id": "tvpp-9vvx:887399@2026-08-04",
+      "category": "market",
+      "classification_confidence": "medium",
+      "classification_reason": "authoritative_source_category",
+      "coordinate_status": "map_ready",
+      "coordinates": [
+        40.704083,
+        -74.013754
+      ],
+      "date": "2026-08-04",
+      "display_disposition": "standalone_public_event",
+      "event_group_id": "tvpp-9vvx:887399@2026-08-04",
+      "event_role": "public_event",
+      "filters": [
+        "market"
+      ],
+      "grouping_confidence": null,
+      "grouping_reason": null,
+      "interests": [
+        "market"
+      ],
+      "location": "Bowling Green: Subway Plaza (Cobblestone)",
+      "marker_eligible": true,
+      "needle": "Green Market",
+      "parent_event_id": null,
+      "raw_category": "market",
+      "significance": "standard",
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "887399",
+      "tags": []
+    },
+    {
+      "borough": "Manhattan",
+      "canonical_id": "tvpp-9vvx:887399@2026-08-06",
+      "category": "market",
+      "classification_confidence": "medium",
+      "classification_reason": "authoritative_source_category",
+      "coordinate_status": "map_ready",
+      "coordinates": [
+        40.704083,
+        -74.013754
+      ],
+      "date": "2026-08-06",
+      "display_disposition": "standalone_public_event",
+      "event_group_id": "tvpp-9vvx:887399@2026-08-06",
+      "event_role": "public_event",
+      "filters": [
+        "market"
+      ],
+      "grouping_confidence": null,
+      "grouping_reason": null,
+      "interests": [
+        "market"
+      ],
+      "location": "Bowling Green: Subway Plaza (Cobblestone)",
+      "marker_eligible": true,
+      "needle": "Green Market",
+      "parent_event_id": null,
+      "raw_category": "market",
+      "significance": "standard",
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "887399",
+      "tags": []
+    },
+    {
+      "borough": "Manhattan",
+      "canonical_id": "tvpp-9vvx:887399@2026-08-11",
+      "category": "market",
+      "classification_confidence": "medium",
+      "classification_reason": "authoritative_source_category",
+      "coordinate_status": "map_ready",
+      "coordinates": [
+        40.704083,
+        -74.013754
+      ],
+      "date": "2026-08-11",
+      "display_disposition": "standalone_public_event",
+      "event_group_id": "tvpp-9vvx:887399@2026-08-11",
+      "event_role": "public_event",
+      "filters": [
+        "market"
+      ],
+      "grouping_confidence": null,
+      "grouping_reason": null,
+      "interests": [
+        "market"
+      ],
+      "location": "Bowling Green: Subway Plaza (Cobblestone)",
+      "marker_eligible": true,
+      "needle": "Green Market",
+      "parent_event_id": null,
+      "raw_category": "market",
+      "significance": "standard",
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "887399",
+      "tags": []
     },
     {
       "borough": "Manhattan",
@@ -941,102 +900,77 @@
     },
     {
       "borough": "Manhattan",
-      "canonical_id": "tvpp-9vvx:887399@2026-08-20",
-      "category": "market",
+      "canonical_id": "tvpp-9vvx:889689@2026-08-04",
+      "category": "parks",
       "classification_confidence": "medium",
       "classification_reason": "authoritative_source_category",
       "coordinate_status": "map_ready",
       "coordinates": [
-        40.704083,
-        -74.013754
+        40.7911,
+        -73.9598
       ],
-      "date": "2026-08-20",
-      "display_disposition": "standalone_public_event",
-      "event_group_id": "tvpp-9vvx:887399@2026-08-20",
-      "event_role": "public_event",
+      "date": "2026-08-04",
+      "display_disposition": "maintenance_or_closure",
+      "event_group_id": "tvpp-9vvx:889689@2026-08-04",
+      "event_role": "maintenance_or_closure",
       "filters": [
-        "market"
+        "parks"
       ],
       "grouping_confidence": null,
       "grouping_reason": null,
       "interests": [
-        "market"
+        "parks"
       ],
-      "location": "Bowling Green: Subway Plaza (Cobblestone)",
-      "marker_eligible": true,
-      "needle": "Green Market",
+      "location": "Central Park: Bowling Green Lawn",
+      "marker_eligible": false,
+      "needle": "Bowling Greens - Maintenance Day",
       "parent_event_id": null,
-      "raw_category": "market",
+      "raw_category": "parks",
       "significance": "standard",
       "source_dataset": "tvpp-9vvx",
-      "source_event_id": "887399",
-      "tags": []
+      "source_event_id": "889689",
+      "tags": [
+        "outdoor",
+        "maintenance",
+        "maintenance-or-closure"
+      ]
     },
     {
       "borough": "Manhattan",
-      "canonical_id": "tvpp-9vvx:887399@2026-08-25",
-      "category": "market",
+      "canonical_id": "tvpp-9vvx:889689@2026-08-11",
+      "category": "parks",
       "classification_confidence": "medium",
       "classification_reason": "authoritative_source_category",
       "coordinate_status": "map_ready",
       "coordinates": [
-        40.704083,
-        -74.013754
+        40.7911,
+        -73.9598
       ],
-      "date": "2026-08-25",
-      "display_disposition": "standalone_public_event",
-      "event_group_id": "tvpp-9vvx:887399@2026-08-25",
-      "event_role": "public_event",
+      "date": "2026-08-11",
+      "display_disposition": "maintenance_or_closure",
+      "event_group_id": "tvpp-9vvx:889689@2026-08-11",
+      "event_role": "maintenance_or_closure",
       "filters": [
-        "market"
+        "parks"
       ],
       "grouping_confidence": null,
       "grouping_reason": null,
       "interests": [
-        "market"
+        "parks"
       ],
-      "location": "Bowling Green: Subway Plaza (Cobblestone)",
-      "marker_eligible": true,
-      "needle": "Green Market",
+      "location": "Central Park: Bowling Green Lawn",
+      "marker_eligible": false,
+      "needle": "Bowling Greens - Maintenance Day",
       "parent_event_id": null,
-      "raw_category": "market",
+      "raw_category": "parks",
       "significance": "standard",
       "source_dataset": "tvpp-9vvx",
-      "source_event_id": "887399",
-      "tags": []
-    },
-    {
-      "borough": "Manhattan",
-      "canonical_id": "tvpp-9vvx:887399@2026-08-27",
-      "category": "market",
-      "classification_confidence": "medium",
-      "classification_reason": "authoritative_source_category",
-      "coordinate_status": "map_ready",
-      "coordinates": [
-        40.704083,
-        -74.013754
-      ],
-      "date": "2026-08-27",
-      "display_disposition": "standalone_public_event",
-      "event_group_id": "tvpp-9vvx:887399@2026-08-27",
-      "event_role": "public_event",
-      "filters": [
-        "market"
-      ],
-      "grouping_confidence": null,
-      "grouping_reason": null,
-      "interests": [
-        "market"
-      ],
-      "location": "Bowling Green: Subway Plaza (Cobblestone)",
-      "marker_eligible": true,
-      "needle": "Green Market",
-      "parent_event_id": null,
-      "raw_category": "market",
-      "significance": "standard",
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "887399",
-      "tags": []
+      "source_event_id": "889689",
+      "tags": [
+        "outdoor",
+        "maintenance",
+        "maintenance-or-closure"
+      ]
     },
     {
       "borough": "Manhattan",
@@ -1114,82 +1048,81 @@
     }
   ],
   "primary_category_counts": {
-    "arts": 409,
-    "civic": 571,
-    "education": 159,
-    "environment": 13,
-    "family": 2255,
-    "fitness": 687,
-    "general": 160,
-    "government": 19,
-    "housing": 16,
-    "market": 746,
-    "media": 53,
-    "parks": 4762,
-    "services": 5,
-    "sports": 21437,
-    "tours": 14,
-    "volunteer": 229
+    "arts": 440,
+    "civic": 477,
+    "education": 130,
+    "environment": 8,
+    "family": 1140,
+    "fitness": 703,
+    "general": 170,
+    "housing": 17,
+    "jobs": 1,
+    "market": 750,
+    "media": 36,
+    "parks": 3985,
+    "services": 21,
+    "sports": 25814,
+    "tours": 10,
+    "volunteer": 140
   },
   "qa_pass": true,
   "significance_counts": {
-    "major": 393,
-    "standard": 31142
+    "major": 365,
+    "standard": 33477
   },
   "strict_reconciliation": {
-    "documented_human_rejected": 17,
+    "documented_human_rejected": 19,
     "documented_source_canceled": 0,
     "exact_duplicate_rows_excluded": 0,
-    "raw_calendar_parks_gap": 17,
+    "raw_calendar_parks_gap": 19,
     "source_intake_clean": true,
     "unexplained_gap": 0
   },
   "strict_reconciliation_pass": true,
   "tag_counts": {
     "annual": 42,
-    "cleanup": 54,
-    "family-friendly": 2566,
+    "cleanup": 20,
+    "family-friendly": 1378,
     "feast": 37,
     "festival": 38,
     "fifa": 4,
-    "film": 203,
-    "fitness-class": 1104,
+    "film": 147,
+    "fitness-class": 844,
     "food-festival": 1,
-    "free": 2076,
+    "free": 939,
     "holiday-market": 1,
-    "kids": 4486,
-    "maintenance": 76,
-    "maintenance-or-closure": 75,
+    "kids": 2256,
+    "maintenance": 83,
+    "maintenance-or-closure": 82,
     "marathon": 1,
     "multi-day": 9,
-    "outdoor": 21206,
-    "parade": 696,
-    "parks-program": 318,
+    "outdoor": 23904,
+    "parade": 752,
+    "parks-program": 319,
     "pride": 1,
-    "private-or-reserved-activity": 25,
+    "private-or-reserved-activity": 29,
     "race": 1,
-    "religious": 260,
-    "running": 149,
-    "street-closure": 470,
+    "religious": 259,
+    "running": 94,
+    "street-closure": 462,
     "street-fair": 1,
-    "transportation": 712,
-    "transportation-operation": 2,
-    "workshop": 1155,
+    "transportation": 754,
+    "workshop": 826,
     "world-cup": 2
   },
   "totals": {
-    "accepted_canonical_records": 31535,
+    "accepted_canonical_records": 33842,
     "grouped_under_public_events": 0,
     "invalid_rejected": 0,
-    "list_only": 3963,
-    "maintenance_or_closure": 75,
-    "map_ready": 27612,
-    "private_or_reserved": 25,
-    "standalone_public_events": 27472,
-    "street_closures": 90,
+    "list_only": 1816,
+    "maintenance_or_closure": 82,
+    "map_ready": 32065,
+    "private_or_reserved": 29,
+    "standalone_public_events": 31915,
+    "street_closures": 83,
     "supporting_permits": 0,
-    "transportation_operations": 2
+    "transportation_operations": 0
   },
-  "tours_category_count": 14,
-  "volunteer_category_count": 229
+  "tours_category_count": 10,
+  "volunteer_category_count": 140
 }

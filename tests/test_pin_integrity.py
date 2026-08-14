@@ -1,4 +1,4 @@
-"""Pin integrity — ocean / Null Island / swap / OOB cannot remain map_ready."""
+"""Pin integrity — geometry validity is not semantic location certification."""
 
 from __future__ import annotations
 
@@ -9,6 +9,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from pin_integrity import (  # noqa: E402
+    REASON_EXACT_ELIGIBLE,
+    REASON_LEGACY_EVIDENCE,
     REASON_NULL_ISLAND,
     REASON_OK,
     REASON_OK_SWAP,
@@ -16,6 +18,7 @@ from pin_integrity import (  # noqa: E402
     REASON_SWAP_SUSPECTED,
     certify_event_pin,
     certify_nyc_pin,
+    evaluate_map_eligibility,
 )
 
 
@@ -35,7 +38,6 @@ def test_null_island_rejected():
 
 
 def test_ocean_oob_rejected():
-    # Mid-Atlantic roughly east of NYC
     lat, _lng, ok, reason = certify_nyc_pin(40.5, -70.0)
     assert not ok
     assert reason == REASON_OOB
@@ -43,14 +45,12 @@ def test_ocean_oob_rejected():
 
 
 def test_mainland_us_false_pin_rejected():
-    # Chicago
     _lat, _lng, ok, reason = certify_nyc_pin(41.88, -87.63)
     assert not ok
     assert reason == REASON_OOB
 
 
 def test_unambiguous_swap_auto_correct():
-    # Stored as lng,lat flipped — as-is OOB, swapped in NYC box.
     lat, lng, ok, reason = certify_nyc_pin(-73.985, 40.758)
     assert ok
     assert reason == REASON_OK_SWAP
@@ -95,17 +95,63 @@ def test_null_island_map_ready_demoted():
     assert event["lat"] is None and event["lng"] is None
 
 
-def test_green_path_keeps_certified_map_ready():
+def test_bounding_box_only_coordinate_cannot_create_certified_pin():
     event = {
         "coordinate_status": "map_ready",
         "latitude": 40.7128,
         "longitude": -74.0060,
     }
+    eligibility = evaluate_map_eligibility(event)
+    assert eligibility["geometry_valid"] is True
+    assert eligibility["map_eligibility"] == "REVIEW_REQUIRED"
+    assert eligibility["reason_code"] == REASON_LEGACY_EVIDENCE
+    assert eligibility["exact_pin_eligible"] is False
+
     result = certify_event_pin(event)
-    assert not result.get("demoted")
+    assert result["status"] == "legacy_evidence_pending_migration"
     assert event["coordinate_status"] == "map_ready"
+    assert event["map_eligibility_state"] == "REVIEW_REQUIRED"
+    assert event["certified_pin"] is False
+
+
+def test_validated_source_coordinate_can_certify_exact_pin():
+    event = {
+        "coordinate_status": "map_ready",
+        "latitude": 40.7128,
+        "longitude": -74.0060,
+        "location_evidence": {
+            "tier": "exact_source_coordinate",
+            "validation_state": "validated",
+            "exact_pin_eligible": True,
+            "source_provenance": "source_provided",
+        },
+    }
+    eligibility = evaluate_map_eligibility(event)
+    assert eligibility["map_eligibility"] == "MAP_READY"
+    assert eligibility["reason_code"] == REASON_EXACT_ELIGIBLE
+    assert eligibility["exact_pin_eligible"] is True
+
+    result = certify_event_pin(event)
+    assert result["status"] == "map_ready"
+    assert event["map_eligibility_state"] == "MAP_READY"
     assert event["certified_pin"] is True
-    assert abs(float(event["latitude"]) - 40.7128) < 1e-9
+
+
+def test_unvalidated_geocoder_candidate_cannot_certify_exact_pin():
+    event = {
+        "coordinate_status": "map_ready",
+        "latitude": 40.7128,
+        "longitude": -74.0060,
+        "location_evidence": {
+            "tier": "exact_address",
+            "validation_state": "unvalidated",
+            "exact_pin_eligible": False,
+            "geocoder_provenance": "nyc_geosearch_planninglabs",
+        },
+    }
+    eligibility = evaluate_map_eligibility(event)
+    assert eligibility["map_eligibility"] == "REVIEW_REQUIRED"
+    assert eligibility["exact_pin_eligible"] is False
 
 
 def test_shoot_day_magnet_rank_prefers_parade_over_greenmarket():
@@ -122,3 +168,85 @@ def test_shoot_day_magnet_rank_prefers_parade_over_greenmarket():
         "assignment_score": 400,
     }
     assert magnet_rank(parade) < magnet_rank(market)
+
+
+def test_shoot_day_legacy_map_ready_cannot_emit_exact_directions():
+    from build_photographer_shoot_day_certified import certified_row
+
+    legacy = {
+        "id": "legacy-pin",
+        "title": "Legacy in-bounds event",
+        "date": "2026-08-07",
+        "coordinate_status": "map_ready",
+        "latitude": 40.7128,
+        "longitude": -74.0060,
+        "source": {"dataset": "tvpp-9vvx", "source_event_id": "legacy-pin"},
+    }
+    assert certified_row(legacy) is None
+
+
+def test_shoot_day_validated_exact_pin_can_emit_directions():
+    from build_photographer_shoot_day_certified import certified_row
+
+    exact = {
+        "id": "exact-pin",
+        "title": "Validated event",
+        "date": "2026-08-07",
+        "coordinate_status": "map_ready",
+        "latitude": 40.7128,
+        "longitude": -74.0060,
+        "location_evidence": {
+            "tier": "exact_source_coordinate",
+            "validation_state": "validated",
+            "exact_pin_eligible": True,
+            "source_provenance": "source_provided",
+        },
+        "source": {"dataset": "tvpp-9vvx", "source_event_id": "exact-pin"},
+    }
+    row = certified_row(exact)
+    assert row is not None
+    assert row["certified_pin"] is True
+    assert row["map_eligibility_state"] == "MAP_READY"
+    assert row["map_link"] == "https://www.google.com/maps?q=40.7128,-74.006"
+
+
+def test_pin_gate_legacy_map_ready_is_not_semantically_ready_or_recertified():
+    from build_pin_integrity_gate import _mark_certified_flags, _semantic_exact_ready
+
+    legacy = {
+        "id": "legacy-gate",
+        "coordinate_status": "map_ready",
+        "latitude": 40.7128,
+        "longitude": -74.0060,
+        "certified_pin": True,
+        "map_link": "https://www.google.com/maps?q=40.7128,-74.006",
+    }
+    certify_event_pin(legacy)
+    assert legacy["map_eligibility_state"] == "REVIEW_REQUIRED"
+    assert legacy["certified_pin"] is False
+    assert _semantic_exact_ready(legacy) is False
+    _mark_certified_flags([legacy])
+    assert legacy["certified_pin"] is False
+    assert legacy["map_link"] is None
+
+
+def test_pin_gate_validated_exact_evidence_remains_semantically_ready():
+    from build_pin_integrity_gate import _mark_certified_flags, _semantic_exact_ready
+
+    exact = {
+        "id": "exact-gate",
+        "coordinate_status": "map_ready",
+        "latitude": 40.7128,
+        "longitude": -74.0060,
+        "location_evidence": {
+            "tier": "exact_source_coordinate",
+            "validation_state": "validated",
+            "exact_pin_eligible": True,
+            "source_provenance": "source_provided",
+        },
+    }
+    certify_event_pin(exact)
+    assert _semantic_exact_ready(exact) is True
+    _mark_certified_flags([exact])
+    assert exact["certified_pin"] is True
+    assert exact["map_link"] == "https://www.google.com/maps?q=40.7128,-74.006"

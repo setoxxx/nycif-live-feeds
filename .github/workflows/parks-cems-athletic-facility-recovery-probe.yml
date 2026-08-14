@@ -1,0 +1,109 @@
+name: Parks CEMS Athletic Facility Recovery Probe
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/probe_parks_cems_athletic_facilities.py'
+      - 'scripts/probe_parks_cems_athletic_facilities_v2.py'
+      - 'scripts/probe_parks_cems_facility_area_v3.py'
+      - 'scripts/probe_parks_cems_facility_numbering_v4.py'
+      - 'scripts/probe_parks_cems_permit_flag_v5.py'
+      - 'scripts/probe_parks_cems_strict_facility_area_v6.py'
+      - 'scripts/build_parks_cems_area_evidence_registry_v7.py'
+      - 'scripts/audit_exact_event_area_evidence_v1.py'
+      - 'docs/contracts/EXACT_EVENT_AREA_EVIDENCE_V1.json'
+      - 'tests/test_parks_cems_athletic_facility_probe.py'
+      - 'tests/test_parks_cems_athletic_facility_probe_v2.py'
+      - 'tests/test_parks_cems_facility_area_probe_v3.py'
+      - 'tests/test_parks_cems_facility_numbering_v4.py'
+      - 'tests/test_parks_cems_permit_flag_v5.py'
+      - 'tests/test_parks_cems_strict_facility_area_v6.py'
+      - 'tests/test_parks_cems_area_evidence_registry_v7.py'
+      - 'tests/test_exact_event_area_evidence_audit_v1.py'
+      - '.github/workflows/parks-cems-athletic-facility-recovery-probe.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  parks-cems-facility-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+
+      - name: Attest exact source head
+        shell: bash
+        run: |
+          expected="${{ github.event.pull_request.head.sha || github.sha }}"
+          actual="$(git rev-parse HEAD)"
+          echo "NYCIF_EXPECTED_HEAD=${expected}"
+          echo "NYCIF_CHECKED_OUT_HEAD=${actual}"
+          test "${actual}" = "${expected}"
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Compile and test probes
+        run: |
+          python3 -m py_compile scripts/probe_parks_cems_athletic_facilities.py
+          python3 -m py_compile scripts/probe_parks_cems_athletic_facilities_v2.py
+          python3 -m py_compile scripts/probe_parks_cems_facility_area_v3.py
+          python3 -m py_compile scripts/probe_parks_cems_facility_numbering_v4.py
+          python3 -m py_compile scripts/probe_parks_cems_permit_flag_v5.py
+          python3 -m py_compile scripts/probe_parks_cems_strict_facility_area_v6.py
+          python3 -m py_compile scripts/build_parks_cems_area_evidence_registry_v7.py
+          python3 -m py_compile scripts/audit_exact_event_area_evidence_v1.py
+          python3 -m unittest tests.test_parks_cems_athletic_facility_probe -v
+          python3 -m unittest tests.test_parks_cems_athletic_facility_probe_v2 -v
+          python3 -m unittest tests.test_parks_cems_facility_area_probe_v3 -v
+          python3 -m unittest tests.test_parks_cems_facility_numbering_v4 -v
+          python3 -m unittest tests.test_parks_cems_permit_flag_v5 -v
+          python3 -m unittest tests.test_parks_cems_strict_facility_area_v6 -v
+          python3 -m unittest tests.test_parks_cems_area_evidence_registry_v7 -v
+          python3 -m unittest tests.test_exact_event_area_evidence_audit_v1 -v
+
+      - name: Probe official CEMS athletic facilities
+        env:
+          NYCIF_ALLOW_LIVE_GEOSEARCH: 'no'
+        run: |
+          mkdir -p /tmp/nycif-cems-facility-probe
+          python3 scripts/probe_parks_cems_athletic_facilities.py \
+            --output /tmp/nycif-cems-facility-probe/parks_cems_athletic_facility_recovery_probe_v1.json
+          python3 scripts/probe_parks_cems_athletic_facilities_v2.py \
+            --output /tmp/nycif-cems-facility-probe/parks_cems_athletic_facility_recovery_probe_v2.json
+          python3 scripts/probe_parks_cems_facility_area_v3.py \
+            --output /tmp/nycif-cems-facility-probe/parks_cems_facility_area_recovery_probe_v3.json
+          python3 scripts/probe_parks_cems_facility_numbering_v4.py \
+            --output /tmp/nycif-cems-facility-probe/parks_cems_facility_numbering_diagnostic_v4.json
+          python3 scripts/probe_parks_cems_permit_flag_v5.py \
+            --output /tmp/nycif-cems-facility-probe/parks_cems_permit_flag_facility_area_probe_v5.json
+          python3 scripts/probe_parks_cems_strict_facility_area_v6.py \
+            --output /tmp/nycif-cems-facility-probe/parks_cems_strict_facility_area_probe_v6.json
+          python3 scripts/build_parks_cems_area_evidence_registry_v7.py \
+            --v6-report /tmp/nycif-cems-facility-probe/parks_cems_strict_facility_area_probe_v6.json \
+            --output /tmp/nycif-cems-facility-probe/parks_cems_area_evidence_registry_v7.json
+          python3 scripts/audit_exact_event_area_evidence_v1.py \
+            --contract docs/contracts/EXACT_EVENT_AREA_EVIDENCE_V1.json \
+            --registry /tmp/nycif-cems-facility-probe/parks_cems_area_evidence_registry_v7.json \
+            --output /tmp/nycif-cems-facility-probe/exact_event_area_evidence_audit_v1.json
+
+      - name: Prove probes stayed non-mutating
+        run: test -z "$(git status --porcelain)"
+
+      - name: Upload facility evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: parks-cems-facility-${{ github.event.pull_request.head.sha || github.sha }}
+          path: /tmp/nycif-cems-facility-probe
+          retention-days: 14

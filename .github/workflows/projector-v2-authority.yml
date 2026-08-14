@@ -1,0 +1,29 @@
+name: Projector V2 Authority QA
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/projector_v2_authority.py'
+      - 'tests/test_projector_v2_authority.py'
+      - 'scripts/occurrence_identity_contract.py'
+      - 'scripts/pin_integrity.py'
+      - '.github/workflows/projector-v2-authority.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  projector-v2-authority:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install test runner
+        run: python -m pip install pytest==9.0.2
+      - name: Syntax check
+        run: python -m py_compile scripts/projector_v2_authority.py tests/test_projector_v2_authority.py
+      - name: Run focused authority tests
+        run: python -m pytest -q tests/test_projector_v2_authority.py

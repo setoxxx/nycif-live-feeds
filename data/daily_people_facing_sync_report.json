@@ -1,100 +1,70 @@
 {
   "civic": {
-    "accepted": 4687,
+    "accepted": 4830,
     "date_time_location_qa_pass": true,
-    "list_only": 1291,
+    "list_only": 1292,
     "map_coverage_qa_pass": true,
-    "map_ready": 3396
+    "map_ready": 3538
   },
   "failed_steps": [],
-  "generated_at_utc": "2026-08-13T12:41:05Z",
+  "generated_at_utc": "2026-08-03T17:27:26Z",
   "location_cache_modified": false,
   "notes": "Safe daily desk sync. Does not run build_staged_production_feed / build_location_cache / public WordPress publish. Pin integrity gate fail-closed: qa_pass requires ZERO bad map_ready pins. Full permit→staged refresh remains live-sync-qa (manual dispatch).",
   "photographer_calendar": {
-    "days_with_coverage": 39,
-    "events_removed_vs_baseline": 612,
+    "days_with_coverage": 40,
+    "events_removed_vs_baseline": 624,
     "month_counts": [
       {
-        "days_with_events": 18,
-        "event_count": 123,
+        "days_with_events": 25,
+        "event_count": 164,
         "label": "August 2026"
       },
       {
-        "days_with_events": 21,
-        "event_count": 107,
+        "days_with_events": 15,
+        "event_count": 54,
         "label": "September 2026"
       }
     ],
     "packs": {
       "qa_pass": true,
       "today": {
-        "borough_cluster_count": 2,
-        "date": "2026-08-13",
-        "map_ready_count": 5,
-        "total_events": 5
+        "borough_cluster_count": 0,
+        "date": "2026-08-03",
+        "map_ready_count": 0,
+        "total_events": 0
       },
       "tomorrow": {
-        "borough_cluster_count": 3,
-        "date": "2026-08-14",
-        "map_ready_count": 8,
+        "borough_cluster_count": 2,
+        "date": "2026-08-04",
+        "map_ready_count": 3,
         "top_go_shoot": [
           {
-            "borough": null,
-            "score": 510,
-            "time": "2026-08-14T19:00:00",
-            "title": "Bryant Park Picnic Performance: New York Guitar Festival"
-          },
-          {
             "borough": "Manhattan",
-            "score": 440,
-            "time": "2026-08-14T10:00:00.000",
-            "title": "Times Square Arts Artist-in-Residence Performance"
+            "score": 490,
+            "time": "2026-08-04T13:30:00.000",
+            "title": "CDP Democratic Marathon Protests"
           },
           {
-            "borough": "Bronx",
-            "score": 400,
-            "time": "2026-08-14T13:00:00.000",
-            "title": "Zimmerman Playground Ribbon Cutting Ceremony"
-          },
-          {
-            "borough": "Manhattan",
-            "score": 380,
-            "time": "2026-08-14T00:00:00.000",
-            "title": "SummerStage Festival - Good Morning America"
-          },
-          {
-            "borough": "Manhattan",
+            "borough": "Brooklyn",
             "score": 340,
-            "time": "2026-08-14T08:00:00.000",
-            "title": "HHFM Harlem Hospital Market"
-          },
-          {
-            "borough": "Bronx",
-            "score": 340,
-            "time": "2026-08-14T08:00:00.000",
-            "title": "HHFM Jacobi Hospital Market"
-          },
-          {
-            "borough": "Manhattan",
-            "score": 340,
-            "time": "2026-08-14T08:00:00.000",
-            "title": "HHFM Metropolitan Market"
+            "time": "2026-08-04T09:00:00.000",
+            "title": "NYP Youth Market - Brooklyn"
           },
           {
             "borough": "Manhattan",
             "score": 310,
-            "time": "2026-08-14T12:00:00.000",
+            "time": "2026-08-04T12:00:00.000",
             "title": "TSQ LIVE: 45/46 Plaza Programming"
           }
         ],
-        "total_events": 8
+        "total_events": 3
       }
     },
     "pin_integrity": {
       "demotion_count": 0,
       "demotion_reason_counts": {},
-      "map_ready_after_total": 3648,
-      "map_ready_before_total": 3648,
+      "map_ready_after_total": 3783,
+      "map_ready_before_total": 3783,
       "qa_pass": true,
       "report": "data/pin_integrity_gate_report.json"
     },
@@ -103,19 +73,19 @@
     "shoot_day_certified": {
       "pack": "data/photographer_shoot_day_certified_pack.json",
       "qa_pass": true,
-      "today_certified_pins": 5,
-      "tomorrow_certified_pins": 8
+      "today_certified_pins": 0,
+      "tomorrow_certified_pins": 3
     },
-    "total_events": 230,
+    "total_events": 218,
     "viral_recurrence": {
       "historical_rows": 2450,
       "label_counts": {
-        "possible": 63,
-        "returning_likely": 112,
-        "weak": 52
+        "possible": 61,
+        "returning_likely": 120,
+        "weak": 54
       },
-      "match_count": 227,
-      "next_14d_crowd_magnets": 37,
+      "match_count": 235,
+      "next_14d_crowd_magnets": 38,
       "qa_pass": true
     }
   },

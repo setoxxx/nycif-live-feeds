@@ -1,4 +1,13 @@
-"""Tiered NYC location resolver for permit and GPS review rows."""
+"""Tiered NYC location resolver for permit and GPS review rows.
+
+Resolver success is evidence, not publication authority. Callers must not treat a
+returned coordinate as an exact public pin unless exact_pin_eligible is true.
+Street-segment resolution is fail-closed: no generic street-name fallback may
+stand in for a certified segment. Exact street-segment publication requires an
+explicit certified reference or two borough-valid NYC Geoclient intersections.
+Planning Labs GeoSearch remains candidate evidence for non-segment lookups; it is
+not authoritative enough to certify a TVPP-style street segment.
+"""
 
 from __future__ import annotations
 
@@ -17,6 +26,7 @@ from typing import Any
 
 try:
     from scripts.gps_identity import normalize_text_legacy
+    from scripts.nyc_geoclient_client import NYCGeoclientClient
     from scripts.nyc_location_gazetteer import (
         GEOSEARCH_CACHE_PATH,
         GAZETTEER_PATH,
@@ -28,6 +38,7 @@ try:
     )
 except ModuleNotFoundError:  # pragma: no cover
     from gps_identity import normalize_text_legacy
+    from nyc_geoclient_client import NYCGeoclientClient
     from nyc_location_gazetteer import (
         GEOSEARCH_CACHE_PATH,
         GAZETTEER_PATH,
@@ -41,6 +52,23 @@ except ModuleNotFoundError:  # pragma: no cover
 GEOSEARCH_BASE = "https://geosearch.planninglabs.nyc/v2/search"
 REQUEST_DELAY_SEC = 0.12
 
+BOROUGH_BOUNDS: dict[str, tuple[float, float, float, float]] = {
+    "bronx": (40.77, 40.93, -73.95, -73.74),
+    "brooklyn": (40.55, 40.75, -74.06, -73.82),
+    "manhattan": (40.67, 40.89, -74.05, -73.90),
+    "queens": (40.53, 40.82, -73.98, -73.69),
+    "staten island": (40.47, 40.66, -74.27, -74.03),
+}
+
+# Permanent certified segment references. These are evidence-backed exceptions,
+# not a generic fallback mechanism.
+CERTIFIED_SEGMENT_MIDPOINTS: dict[tuple[str, str], tuple[float, float]] = {
+    (
+        "brooklyn",
+        "east 74 street between avenue u and avenue t",
+    ): (40.618, -73.905),
+}
+
 
 @dataclass
 class ResolveResult:
@@ -53,6 +81,10 @@ class ResolveResult:
     confidence_reason: str | None
     label: str | None = None
     query_used: str | None = None
+    validation_state: str = "unvalidated"
+    exact_pin_eligible: bool = False
+    reason_code: str | None = None
+    reason_detail: str | None = None
 
     def as_match_dict(self) -> dict[str, Any]:
         return {
@@ -63,11 +95,19 @@ class ResolveResult:
             "geocoder_confidence": self.confidence,
             "confidence_reason": self.confidence_reason,
             "resolver_tier": self.tier,
+            "validation_state": self.validation_state,
+            "exact_pin_eligible": self.exact_pin_eligible,
+            "reason_code": self.reason_code,
+            "reason_detail": self.reason_detail,
         }
 
 
 def utc_now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
+
+
+def normalized_text(value: Any) -> str:
+    return re.sub(r"[^a-z0-9]+", " ", str(value or "").lower()).strip()
 
 
 def parse_street_between(display: str) -> tuple[str, str, str] | None:
@@ -92,6 +132,14 @@ def borough_label(borough: str) -> str:
     return mapping.get(str(borough or "").strip().lower(), str(borough or "New York"))
 
 
+def coordinate_matches_borough(lat: float, lng: float, borough: str | None) -> bool:
+    bounds = BOROUGH_BOUNDS.get(normalized_text(borough))
+    if bounds is None:
+        return False
+    min_lat, max_lat, min_lng, max_lng = bounds
+    return min_lat <= float(lat) <= max_lat and min_lng <= float(lng) <= max_lng
+
+
 def haversine_m(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     radius = 6371000.0
     phi1, phi2 = math.radians(lat1), math.radians(lat2)
@@ -101,8 +149,18 @@ def haversine_m(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
     return 2 * radius * math.asin(math.sqrt(a))
 
 
+def intersection_query_variants(main_street: str, cross_street: str) -> list[str]:
+    return [
+        f"{main_street} and {cross_street}",
+        f"{main_street} & {cross_street}",
+        f"{cross_street} and {main_street}",
+        f"{cross_street} & {main_street}",
+        f"{main_street} at {cross_street}",
+    ]
+
+
 class NYCLocationResolver:
-    """Tiered public resolver: gazetteer (+ supplemental overlay) → geosearch cache → live geosearch."""
+    """Tiered resolver with fail-closed exact-location authority."""
 
     def __init__(
         self,
@@ -110,15 +168,25 @@ class NYCLocationResolver:
         geosearch_cache: dict[str, dict[str, Any]],
         *,
         allow_live_geosearch: bool = False,
+        geoclient: NYCGeoclientClient | None = None,
     ) -> None:
         self.gazetteer = gazetteer
         self.geosearch_cache = geosearch_cache
         self.allow_live_geosearch = allow_live_geosearch
+        self.geoclient = geoclient or NYCGeoclientClient.load_default(
+            allow_live=os.environ.get("NYCIF_ALLOW_LIVE_GEOCLIENT", "").strip().lower()
+            in {"1", "true", "yes"}
+        )
         self._live_calls = 0
 
     @classmethod
-    def load_default(cls) -> NYCLocationResolver:
+    def load_default(cls) -> "NYCLocationResolver":
         allow_live = os.environ.get("NYCIF_ALLOW_LIVE_GEOSEARCH", "").strip().lower() in {
+            "1",
+            "true",
+            "yes",
+        }
+        allow_live_geoclient = os.environ.get("NYCIF_ALLOW_LIVE_GEOCLIENT", "").strip().lower() in {
             "1",
             "true",
             "yes",
@@ -128,7 +196,12 @@ class NYCLocationResolver:
         entries = cache_payload.get("entries", {}) if isinstance(cache_payload, dict) else {}
         if not isinstance(entries, dict):
             entries = {}
-        return cls(gazetteer, entries, allow_live_geosearch=allow_live)
+        return cls(
+            gazetteer,
+            entries,
+            allow_live_geosearch=allow_live,
+            geoclient=NYCGeoclientClient.load_default(allow_live=allow_live_geoclient),
+        )
 
     def _from_entry(self, tier: str, entry: dict[str, Any]) -> ResolveResult:
         return ResolveResult(
@@ -139,7 +212,11 @@ class NYCLocationResolver:
             source=str(entry.get("source") or tier),
             confidence=str(entry.get("confidence") or "medium"),
             confidence_reason=str(entry.get("confidence_reason") or f"Matched via {tier}."),
-            label=entry.get("label"),
+            label=entry.get("label") or entry.get("display_location"),
+            validation_state=str(entry.get("validation_state") or "unvalidated"),
+            exact_pin_eligible=bool(entry.get("exact_pin_eligible", False)),
+            reason_code=entry.get("reason_code"),
+            reason_detail=entry.get("reason_detail"),
         )
 
     def _cache_key(self, query: str, borough: str | None = None) -> str:
@@ -148,7 +225,7 @@ class NYCLocationResolver:
     def _geosearch_live(self, query: str) -> dict[str, Any] | None:
         params = urllib.parse.urlencode({"text": query, "size": 5})
         url = f"{GEOSEARCH_BASE}?{params}"
-        request = urllib.request.Request(url, headers={"User-Agent": "nycif-location-resolver/1.0"})
+        request = urllib.request.Request(url, headers={"User-Agent": "nycif-location-resolver/1.2"})
         try:
             with urllib.request.urlopen(request, timeout=20) as response:
                 payload = json.load(response)
@@ -205,49 +282,103 @@ class NYCLocationResolver:
             confidence_reason=str(live.get("confidence_reason")),
             label=live.get("label"),
             query_used=query,
+            validation_state="unvalidated",
+            exact_pin_eligible=False,
+            reason_code="GEOCODER_RESULT_UNVALIDATED",
+            reason_detail="GeoSearch returned a candidate coordinate; semantic validation is still required.",
+        )
+
+    def _resolve_geoclient_endpoint(
+        self,
+        main_street: str,
+        cross_street: str,
+        borough: str | None,
+    ) -> tuple[float, float, str] | None:
+        if not borough or self.geoclient is None:
+            return None
+        hit = self.geoclient.resolve_intersection(main_street, cross_street, borough)
+        if not isinstance(hit, dict):
+            return None
+        try:
+            lat = float(hit.get("lat"))
+            lng = float(hit.get("lng"))
+        except (TypeError, ValueError):
+            return None
+        if not valid_nyc_lat_lng(lat, lng) or not coordinate_matches_borough(lat, lng, borough):
+            return None
+        source = str(hit.get("geocoder_source") or "")
+        if source != "nyc_geoclient_intersection":
+            return None
+        return lat, lng, str(hit.get("geoclient_label") or f"{main_street} & {cross_street}")
+
+    def _certified_segment_reference(self, display: str, borough: str | None) -> ResolveResult | None:
+        key = (normalized_text(borough), normalized_text(display))
+        point = CERTIFIED_SEGMENT_MIDPOINTS.get(key)
+        if point is None:
+            return None
+        lat, lng = point
+        if not coordinate_matches_borough(lat, lng, borough):
+            return None
+        return ResolveResult(
+            resolved=True,
+            tier="certified_street_segment",
+            lat=lat,
+            lng=lng,
+            source="nycif_certified_segment_midpoint",
+            confidence="high",
+            confidence_reason="Explicit NYCIF certified segment midpoint.",
+            label=display,
+            query_used=display,
+            validation_state="validated",
+            exact_pin_eligible=True,
+            reason_code="SEGMENT_CERTIFIED_REFERENCE",
+            reason_detail="Explicit certified segment reference passed borough containment.",
         )
 
     def _resolve_street_segment(self, display: str, borough: str | None) -> ResolveResult | None:
         parsed = parse_street_between(display)
         if not parsed:
             return None
+
+        certified = self._certified_segment_reference(display, borough)
+        if certified is not None:
+            return certified
+
         main_street, cross1, cross2 = parsed
-        borough_name = borough_label(str(borough or ""))
-        endpoint_queries = [
-            f"1 {cross1}, {borough_name}, NY",
-            f"1 {cross2}, {borough_name}, NY",
-            f"100 {main_street}, {borough_name}, NY",
-        ]
-        points: list[tuple[float, float, str]] = []
-        for query in endpoint_queries:
-            hit = self._resolve_geosearch(query, borough)
-            if hit and hit.lat is not None and hit.lng is not None:
-                points.append((hit.lat, hit.lng, hit.label or query))
-        if len(points) >= 2:
-            best_pair = None
-            best_distance = -1.0
-            for i, a in enumerate(points):
-                for b in points[i + 1 :]:
-                    distance = haversine_m(a[0], a[1], b[0], b[1])
-                    if distance > best_distance:
-                        best_distance = distance
-                        best_pair = (a, b)
-            if best_pair and best_distance >= 20.0:
-                a, b = best_pair
-                return ResolveResult(
-                    resolved=True,
-                    tier="tier_2_geosearch_midpoint",
-                    lat=round((a[0] + b[0]) / 2.0, 7),
-                    lng=round((a[1] + b[1]) / 2.0, 7),
-                    source="nyc_geosearch_planninglabs_midpoint",
-                    confidence="medium",
-                    confidence_reason=(
-                        f"Midpoint from GeoSearch endpoints '{a[2]}' and '{b[2]}' for open street segment."
-                    ),
-                    label=display,
-                    query_used=f"{cross1} / {cross2} on {main_street}",
-                )
-        return self._resolve_geosearch(f"{main_street}, {borough_name}, NY", borough)
+        first = self._resolve_geoclient_endpoint(main_street, cross1, borough)
+        second = self._resolve_geoclient_endpoint(main_street, cross2, borough)
+        if first is None or second is None:
+            return None
+
+        distance = haversine_m(first[0], first[1], second[0], second[1])
+        if not 20.0 <= distance <= 5000.0:
+            return None
+
+        midpoint_lat = round((first[0] + second[0]) / 2.0, 7)
+        midpoint_lng = round((first[1] + second[1]) / 2.0, 7)
+        if not coordinate_matches_borough(midpoint_lat, midpoint_lng, borough):
+            return None
+
+        return ResolveResult(
+            resolved=True,
+            tier="certified_street_segment",
+            lat=midpoint_lat,
+            lng=midpoint_lng,
+            source="nyc_geoclient_segment_midpoint",
+            confidence="high",
+            confidence_reason=(
+                f"Midpoint from borough-valid NYC Geoclient intersections '{first[2]}' and '{second[2]}'."
+            ),
+            label=display,
+            query_used=f"{main_street} & {cross1} / {main_street} & {cross2}",
+            validation_state="validated",
+            exact_pin_eligible=True,
+            reason_code="SEGMENT_GEOCLIENT_ENDPOINTS_VALIDATED",
+            reason_detail=(
+                "Both stated blockface endpoints were independently resolved by NYC Geoclient, "
+                "passed borough containment, and produced a sane segment midpoint."
+            ),
+        )
 
     def resolve(
         self,
@@ -266,6 +397,9 @@ class NYCLocationResolver:
                 source=None,
                 confidence=None,
                 confidence_reason="Missing display_location.",
+                validation_state="invalid",
+                reason_code="MISSING_EVIDENCE",
+                reason_detail="No display location was supplied.",
             )
 
         for key in cache_keys or []:
@@ -281,10 +415,31 @@ class NYCLocationResolver:
             result.label = result.label or display
             return result
 
+        # Street-segment claims are special: if NYC authoritative endpoint
+        # evidence cannot certify the blockface, stop. Never continue into generic
+        # display/street/neighborhood GeoSearch.
         if parse_street_between(display):
             street = self._resolve_street_segment(display, borough)
             if street:
                 return street
+            return ResolveResult(
+                resolved=False,
+                tier="unresolved",
+                lat=None,
+                lng=None,
+                source=None,
+                confidence=None,
+                confidence_reason="Street segment could not be certified from authoritative endpoint evidence.",
+                label=display,
+                query_used=display,
+                validation_state="invalid",
+                exact_pin_eligible=False,
+                reason_code="SEGMENT_UNCERTIFIED",
+                reason_detail=(
+                    "No explicit certified segment reference or two borough-valid NYC Geoclient "
+                    "endpoint intersections were available."
+                ),
+            )
 
         parent = display.split(":")[0].strip() if ":" in display else display
         for query in (display, parent, simplified_place(display), simplified_place(parent)):
@@ -304,6 +459,10 @@ class NYCLocationResolver:
             confidence=None,
             confidence_reason="No gazetteer or GeoSearch match.",
             label=display,
+            validation_state="invalid",
+            exact_pin_eligible=False,
+            reason_code="MISSING_EVIDENCE",
+            reason_detail="No usable candidate location evidence was found.",
         )
 
     def save_geosearch_cache(self) -> None:

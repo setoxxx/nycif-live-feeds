@@ -1,0 +1,54 @@
+{
+  "schema_version": "nycif-pr-appsec-independent-review-v1",
+  "generated_at": "2026-08-07T11:31:00-04:00",
+  "repository": "setoxxx/nycif-live-feeds",
+  "pull_request": 384,
+  "reviewed_head": "a8da17df48312c126c99697360984fe7b8b69449",
+  "review_scope": [
+    ".github/workflows/projector-v2-authority.yml",
+    "docs/evidence/PROJECTOR_V2_IMPLEMENTATION_REPORT.json",
+    "scripts/projector_v2_authority.py",
+    "tests/test_projector_v2_authority.py"
+  ],
+  "sonar": {
+    "quality_gate": "PASSED",
+    "new_issues": 0,
+    "accepted_issues": 0,
+    "security_hotspots": 0,
+    "security_gate_required": "PASS",
+    "latest_confirmed_result": "PASS",
+    "relationship_to_ci_dependency_pinning": "NOT_ATTRIBUTED_WITHOUT_FINDING_LEVEL_EVIDENCE"
+  },
+  "independent_review": {
+    "unsafe_subprocess_execution": "NOT_FOUND",
+    "shell_interpolation": "NOT_FOUND",
+    "path_traversal": "NOT_FOUND_IN_CHANGED_CODE",
+    "unsafe_url_handling": "NOT_FOUND",
+    "unsafe_temporary_file_use": "NOT_FOUND",
+    "credential_exposure": "NOT_FOUND",
+    "sensitive_logging": "NOT_FOUND",
+    "unsafe_deserialization": "NOT_FOUND",
+    "overly_broad_exception_handling": "NOT_FOUND",
+    "untrusted_filesystem_write": "NOT_FOUND",
+    "dynamic_import_path": {
+      "status": "REVIEWED_NOT_USER_CONTROLLED",
+      "detail": "scripts/projector_v2_authority.py prepends Path(__file__).resolve().parent to sys.path. The inserted path is derived from the checked-out module location, not event/user input."
+    },
+    "ci_dependency_pinning": {
+      "status": "REMEDIATED_INDEPENDENT_HARDENING",
+      "detail": "Projector V2 Authority QA now pins pytest==9.0.2, matching repository requirements.txt policy.",
+      "sonar_attribution": "NOT_CLAIMED"
+    }
+  },
+  "security_gate": {
+    "pass": true,
+    "reason": "Latest SonarQube Cloud PR analysis reports Quality Gate passed, 0 new issues, 0 accepted issues, and 0 Security Hotspots."
+  },
+  "projector_splice_gate": {
+    "pass": false,
+    "reason": "scripts/project_events_discovery_v02.py still requires the authorized line-level V2 authority splice and exact zero-loss reconciliation."
+  },
+  "production_mutation": false,
+  "merge_authorized": false,
+  "DoD_met": false
+}

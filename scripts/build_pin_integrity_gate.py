@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
-"""Pin integrity gate — certify desk pin surfaces, demote bad map_ready, fail closed.
+"""Pin integrity gate — enforce semantic exact-pin eligibility, fail closed.
 
 Writes:
   data/pin_integrity_gate_report.json
   data/pin_integrity_demotions.json
 
-Rewrites certified artifacts in place (staging only; never protected production files).
-qa_pass is TRUE only when ZERO remaining map_ready rows fail NYC certification.
+Rewrites certified artifacts in place (staging only; never protected production
+files). Geometry validity remains a low-level guard. A row is an exact public
+pin only when the canonical semantic location-evidence authority returns
+MAP_READY and certified_pin is true.
+
+Backward-compatible migration rule: legacy in-bounds ``map_ready`` coordinates
+may remain present while their evidence is rebuilt, but they must not carry an
+exact-pin claim, exact map link, or semantic MAP_READY state until validated.
 """
 
 from __future__ import annotations
@@ -25,7 +31,6 @@ from civic_people_facing_common import DATA_DIR, load_json, save_json, utc_now  
 from pin_integrity import (  # noqa: E402
     NYC_BOUNDS_DOC,
     certify_event_pin,
-    certify_nyc_pin,
     nested_nycif_certify,
 )
 
@@ -48,6 +53,25 @@ def _demotion_record(surface: str, row: dict[str, Any], result: dict[str, Any], 
     }
 
 
+def _semantic_exact_ready(row: dict[str, Any]) -> bool:
+    return (
+        row.get("coordinate_status") == "map_ready"
+        and row.get("map_eligibility_state") == "MAP_READY"
+        and row.get("certified_pin") is True
+        and row.get("latitude") is not None
+        and row.get("longitude") is not None
+    )
+
+
+def _claims_exact_pin(row: dict[str, Any]) -> bool:
+    """Return whether a row currently exposes or asserts exact-pin authority."""
+    return (
+        row.get("certified_pin") is True
+        or row.get("map_eligibility_state") == "MAP_READY"
+        or bool(row.get("map_link"))
+    )
+
+
 def _scan_flat_events(rows: list[dict[str, Any]], *, surface: str) -> tuple[int, int, list[dict[str, Any]], Counter]:
     before = sum(1 for r in rows if r.get("coordinate_status") == "map_ready")
     demotions: list[dict[str, Any]] = []
@@ -58,36 +82,45 @@ def _scan_flat_events(rows: list[dict[str, Any]], *, surface: str) -> tuple[int,
         reasons[result.get("reason") or "unknown"] += 1
         if result.get("demoted") and was_ready:
             demotions.append(_demotion_record(surface, row, result))
-    after = sum(1 for r in rows if r.get("coordinate_status") == "map_ready")
+    after = sum(1 for r in rows if _semantic_exact_ready(r))
     return before, after, demotions, reasons
 
 
 def _verify_zero_bad_map_ready(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    bad = []
+    """Return unsupported exact-pin claims; legacy review state is allowed.
+
+    ``coordinate_status=map_ready`` by itself is treated as a legacy transport
+    state during migration. It is not an exact-pin claim unless the row also
+    asserts semantic MAP_READY, certified_pin=true, or an exact map link.
+    """
+    bad: list[dict[str, Any]] = []
     for row in rows:
-        if row.get("coordinate_status") != "map_ready":
+        if not _claims_exact_pin(row):
             continue
-        _lat, _lng, ok, reason = certify_nyc_pin(
-            row.get("latitude"), row.get("longitude"), allow_swap_correct=False
-        )
-        if not ok:
+        candidate = dict(row)
+        if isinstance(row.get("location_evidence"), dict):
+            candidate["location_evidence"] = dict(row["location_evidence"])
+        result = certify_event_pin(candidate, allow_swap_correct=False)
+        if not _semantic_exact_ready(candidate):
             bad.append(
                 {
                     "id": _id_of(row),
-                    "reason": reason,
+                    "reason": result.get("reason") or candidate.get("pin_integrity_reason") or "semantic_map_eligibility_failed",
                     "lat": row.get("latitude"),
                     "lng": row.get("longitude"),
+                    "map_eligibility_state": candidate.get("map_eligibility_state"),
+                    "certified_pin": candidate.get("certified_pin"),
+                    "map_link": row.get("map_link"),
                 }
             )
     return bad
 
 
 def _mark_certified_flags(events: list[dict[str, Any]]) -> None:
+    """Create exact links only from already-proven semantic certification."""
     for e in events:
-        ready = e.get("coordinate_status") == "map_ready" and e.get("latitude") is not None
-        if ready:
+        if _semantic_exact_ready(e):
             e["map_link"] = f"https://www.google.com/maps?q={e['latitude']},{e['longitude']}"
-            e["certified_pin"] = True
         else:
             e["map_link"] = None
             e["certified_pin"] = False
@@ -104,14 +137,14 @@ def certify_money_day() -> dict[str, Any]:
     payload["pin_integrity"] = {
         "certified_at_utc": utc_now(),
         "map_ready_before": before,
-        "map_ready_after": after,
+        "semantic_map_ready_after": after,
         "bounds": NYC_BOUNDS_DOC,
     }
     _mark_certified_flags(events)
     payload["go_shoot_these"] = sorted(
         events,
         key=lambda e: (
-            0 if e.get("coordinate_status") == "map_ready" else 1,
+            0 if _semantic_exact_ready(e) else 1,
             -(e.get("assignment_score") or 0),
             e.get("date") or "",
         ),
@@ -154,19 +187,11 @@ def _unique_pack_rows(pack: dict[str, Any]) -> list[dict[str, Any]]:
 def _filter_certified_clusters(pack: dict[str, Any]) -> None:
     new_clusters = []
     for cluster in pack.get("borough_clusters") or []:
-        events = [
-            e
-            for e in (cluster.get("events") or [])
-            if e.get("coordinate_status") == "map_ready" and e.get("certified_pin")
-        ]
+        events = [e for e in (cluster.get("events") or []) if _semantic_exact_ready(e)]
         if events:
             new_clusters.append({**cluster, "events": events, "count": len(events)})
     pack["borough_clusters"] = new_clusters
-    pack["go_shoot"] = [
-        e
-        for e in (pack.get("go_shoot") or [])
-        if e.get("coordinate_status") == "map_ready" and e.get("certified_pin")
-    ]
+    pack["go_shoot"] = [e for e in (pack.get("go_shoot") or []) if _semantic_exact_ready(e)]
     pack["map_ready_count"] = sum(len(c.get("events") or []) for c in new_clusters)
     pack["list_only_count"] = max(0, int(pack.get("total_events") or 0) - pack["map_ready_count"])
     pack["pin_integrity"] = {"certified_at_utc": utc_now(), "bounds": NYC_BOUNDS_DOC}
@@ -188,7 +213,6 @@ def certify_money_packs() -> dict[str, Any]:
             result = certify_event_pin(r)
             if result.get("demoted") and was:
                 demotions.append(_demotion_record("money_day_packs", r, result, pack=name))
-        # Also certify nested cluster/go_shoot objects that may share ids but not identity
         for cluster in pack.get("borough_clusters") or []:
             for e in cluster.get("events") or []:
                 certify_event_pin(e)
@@ -216,7 +240,7 @@ def _certify_magnet_list(magnets: list[dict[str, Any]], *, surface: str) -> tupl
         result = certify_event_pin(m)
         if result.get("demoted") and was:
             demotions.append(_demotion_record(surface, m, result))
-        if m.get("coordinate_status") == "map_ready" and m.get("certified_pin"):
+        if _semantic_exact_ready(m):
             kept.append(m)
     return kept, demotions
 
@@ -292,8 +316,11 @@ def certify_civic_staging() -> dict[str, Any]:
                 before += 1
             result = nested_nycif_certify(row) if isinstance(row.get("nycif"), dict) else certify_event_pin(row)
             reasons[result.get("reason") or "unknown"] += 1
-            new_status = _row_status(row)
-            if new_status == "map_ready":
+            semantic_ready = (
+                (row.get("nycif") or {}).get("map_eligibility_state") == "MAP_READY"
+                and (row.get("nycif") or {}).get("certified_pin") is True
+            ) if isinstance(row.get("nycif"), dict) else _semantic_exact_ready(row)
+            if semantic_ready:
                 after += 1
             if result.get("demoted") and status == "map_ready":
                 demotions.append(_demotion_record("civic", row, result, bag=key))
@@ -319,7 +346,7 @@ def _field_desk_candidates() -> list[Path]:
 
 
 def field_desk_feed_scan() -> dict[str, Any]:
-    """Scan discovery major events feed used by Field Desk (report-only demotion tally)."""
+    """Report exact-pin claims that would fail semantic certification."""
     for path in _field_desk_candidates():
         payload = load_json(path, None)
         if not payload:
@@ -336,18 +363,28 @@ def field_desk_feed_scan() -> dict[str, Any]:
             if status != "map_ready":
                 continue
             before += 1
-            _lat, _lng, ok, reason = certify_nyc_pin(
-                row.get("latitude"), row.get("longitude"), allow_swap_correct=True
-            )
-            if not ok:
+            candidate = dict(row)
+            if isinstance(row.get("nycif"), dict):
+                candidate["nycif"] = dict(row["nycif"])
+                result = nested_nycif_certify(candidate)
+                semantic_ready = (
+                    candidate["nycif"].get("map_eligibility_state") == "MAP_READY"
+                    and candidate["nycif"].get("certified_pin") is True
+                )
+                reason = result.get("reason") or candidate["nycif"].get("pin_integrity_reason")
+            else:
+                result = certify_event_pin(candidate)
+                semantic_ready = _semantic_exact_ready(candidate)
+                reason = result.get("reason") or candidate.get("pin_integrity_reason")
+            if not semantic_ready and _claims_exact_pin(row):
                 would_demote.append({"id": _id_of(row), "title": row.get("title"), "reason": reason})
         return {
             "surface": "field_desk_feed",
             "artifact": str(path.relative_to(ROOT)),
             "map_ready_scanned": before,
-            "would_demote_count": len(would_demote),
-            "would_demote_examples": would_demote[:20],
-            "note": "Major feed scan is report-only here; Field Desk JS also refuses non-NYC pins at render.",
+            "unsupported_exact_claim_count": len(would_demote),
+            "unsupported_exact_claim_examples": would_demote[:20],
+            "note": "Report-only scan; legacy map_ready without exact authority is migration state, not certification.",
         }
     return {"surface": "field_desk_feed", "skipped": True}
 
@@ -361,13 +398,18 @@ def _flatten_civic_for_verify(civic: dict[str, Any]) -> list[dict[str, Any]]:
         for row in val:
             if not isinstance(row, dict):
                 continue
+            nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
             bags.append(
                 {
                     "id": row.get("id"),
                     "title": row.get("title"),
-                    "coordinate_status": _row_status(row),
+                    "coordinate_status": nycif.get("coordinate_status") or row.get("coordinate_status"),
                     "latitude": row.get("latitude"),
                     "longitude": row.get("longitude"),
+                    "location_evidence": nycif.get("location_evidence") or row.get("location_evidence"),
+                    "map_eligibility_state": nycif.get("map_eligibility_state") or row.get("map_eligibility_state"),
+                    "certified_pin": nycif.get("certified_pin") if "certified_pin" in nycif else row.get("certified_pin"),
+                    "map_link": row.get("map_link"),
                 }
             )
     return bags
@@ -423,11 +465,11 @@ def main() -> int:
     save_json(DATA_DIR / "pin_integrity_demotions.json", demotions_payload)
 
     report = {
-        "schema_version": "pin-integrity-gate-v1",
+        "schema_version": "pin-integrity-gate-v2",
         "generated_at_utc": utc_now(),
         "qa_pass": qa_pass,
         "bounds": NYC_BOUNDS_DOC,
-        "rule": "ZERO map_ready rows may fail NYC certification after gate",
+        "rule": "ZERO unsupported exact-pin claims; legacy coordinates may remain review-required during evidence migration",
         "surfaces": [{k: v for k, v in s.items() if k != "demotions"} for s in surfaces],
         "demotion_count": len(all_demotions),
         "demotion_reason_counts": dict(reason_totals),
@@ -441,17 +483,9 @@ def main() -> int:
         "public_map_modified": False,
         "location_cache_modified": False,
         "staged_feed_modified": False,
-        "pre_fix_audit": {
-            "note": (
-                "Before viral pack rebuild, crowd_magnets claimed map_ready without lat/lng (40). "
-                "Gate demoted them; viral builder now attaches current Money-Day coords only."
-            ),
-            "viral_map_ready_without_coords_caught": 40,
-            "remediation": "build_photographer_viral_recurrence certifies current-side coords",
-        },
         "notes": (
-            "Demotes invalid map_ready to list_only and clears lat/lng on pin path. "
-            "Swap auto-correct only when as-is OOB and swapped pair is inside NYC box."
+            "Geometry validation never creates certification. Legacy in-bounds map_ready rows without validated "
+            "location evidence may remain as migration state, but certified_pin, semantic MAP_READY and exact map links are cleared."
         ),
     }
     save_json(DATA_DIR / "pin_integrity_gate_report.json", report)

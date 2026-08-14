@@ -1,0 +1,180 @@
+name: Daily V3 Candidate Transaction
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/live_event_intake_refresh.py'
+      - 'scripts/build_semantic_live_intake.py'
+      - 'scripts/project_events_discovery_v03.py'
+      - 'scripts/build_news_desk_reader_safe.py'
+      - 'scripts/build_maplibre_reader_safe_v03.py'
+      - 'scripts/augment_daily_data_health_v03.py'
+      - 'scripts/run_discovery_feed_refresh.sh'
+      - '.github/workflows/daily-v3-candidate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-v3-candidate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  complete-v3-transaction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: python3 -m pip install -r requirements.txt
+      - name: Compile V3 transaction code
+        run: |
+          python3 -m py_compile \
+            scripts/live_event_intake_refresh.py \
+            scripts/build_semantic_live_intake.py \
+            scripts/project_events_discovery_v03.py \
+            scripts/build_news_desk_reader_safe.py \
+            scripts/build_maplibre_reader_safe_v03.py \
+            scripts/augment_daily_data_health_v03.py
+      - name: Verify production transaction is wired to V3 authority
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          text = Path('scripts/run_discovery_feed_refresh.sh').read_text(encoding='utf-8')
+          required = (
+              'python scripts/project_events_discovery_v03.py',
+              'python scripts/build_news_desk_reader_safe.py',
+              'python scripts/build_maplibre_reader_safe_v03.py',
+              'python scripts/augment_daily_data_health_v03.py',
+              'data/events_discovery_v3_authority_report.json',
+              'data/reader-safe/news-desk-money-v02.json',
+              'data/reader-safe/news-desk-viral-v02.json',
+              'data/reader-safe/news-desk-status-v02.json',
+              'data/reader-safe/national-map-events-v03.geojson',
+              'data/reader-safe/national-map-events-v03-status.json',
+          )
+          for needle in required:
+              assert needle in text, needle
+          assert 'python scripts/project_events_discovery_v02.py' not in text
+          assert 'unsupported_marker_count' in text
+          assert 'wrong_authority_marker_count' in text
+          assert 'location_evidence_failure_count' in text
+          assert 'borough_contradiction_count' in text
+          assert 'general_area_exact_geometry_count' in text
+          assert 'silent_identity_loss' in text
+          assert 'legacy_occurrence_authority_count' in text
+          assert 'legacy_coordinate_authority_count' in text
+          PY
+      - name: Fetch official sources and build semantic permitted intake
+        env:
+          NYCIF_ALLOW_LIVE_GEOSEARCH: 'no'
+        run: python3 scripts/live_event_intake_refresh.py
+      - name: Build Calendar and Parks exact occurrence intake
+        run: python3 scripts/refresh_official_supplemental_occurrences.py
+      - name: Build major and street-festival classification inputs
+        run: |
+          python3 scripts/build_events_schema_v1_major.py
+          python3 scripts/build_street_festivals_feed.py
+      - name: Project canonical discovery through V3 authority
+        run: python3 scripts/project_events_discovery_v03.py
+      - name: Enforce strict source reconciliation
+        run: python3 scripts/enforce_strict_discovery_reconciliation.py
+      - name: Build comprehensive discovery feed
+        run: python3 scripts/build_comprehensive_event_feed.py
+      - name: Build News Desk operator signals and reader-safe artifacts
+        run: |
+          python3 scripts/run_daily_people_facing_desk_sync.py --skip-network-sync
+          python3 scripts/build_news_desk_reader_safe.py
+      - name: Build canonical MapLibre reader-safe source
+        run: python3 scripts/build_maplibre_reader_safe_v03.py
+      - name: Refresh runtime fallback artifacts
+        run: python3 scripts/refresh_runtime_fallback_feeds.py
+      - name: Build existing daily data health
+        run: python3 scripts/build_daily_data_health.py
+      - name: Attach and enforce V3 health telemetry
+        run: python3 scripts/augment_daily_data_health_v03.py
+      - name: Final complete-transaction certification
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json
+          from collections import Counter
+          from pathlib import Path
+
+          def load(path):
+              return json.loads(Path(path).read_text(encoding='utf-8'))
+
+          health = load('status/nycif-daily-data-health.json')
+          v3 = load('data/events_discovery_v3_authority_report.json')
+          news = load('data/reader-safe/news-desk-status-v02.json')
+          map_status = load('data/reader-safe/national-map-events-v03-status.json')
+          map_feed = load('data/reader-safe/national-map-events-v03.geojson')
+          contract = load('data/events_discovery_contract_v02.json')
+          canonical = load('data/events_discovery_accepted_canonical_v02.json')
+          canonical_rows = canonical.get('events', canonical if isinstance(canonical, list) else [])
+          runtime = health.get('v3_runtime', {})
+
+          assert v3['qa_pass'] is True, v3
+          assert v3['raw_accounting_pass'] is True, v3
+          for key in (
+              'silent_identity_loss',
+              'duplicate_exact_occurrences',
+              'unsupported_exact_pin_count',
+              'implicit_source_all_count',
+              'legacy_occurrence_authority_count',
+              'legacy_coordinate_authority_count',
+          ):
+              assert v3[key] == 0, (key, v3[key])
+          assert v3.get('invalid_publication_state_count', 0) == 0, v3
+
+          assert runtime['all_sources_live_non_empty'] is True, runtime
+          assert runtime['zero_gate_pass'] is True, runtime
+          assert runtime['projector_v3_qa_pass'] is True, runtime
+          assert runtime['raw_accounting_pass'] is True, runtime
+          assert runtime['canonical_event_count'] == len(canonical_rows), runtime
+          assert runtime['semantic_authority_row_count'] == len(canonical_rows), runtime
+          assert news['unsupported_exact_pin_count'] == 0, news
+          assert news['browser_raw_repository_required'] is False, news
+          assert runtime['news_desk']['money_count'] == news['money_emitted_rows'], runtime
+          assert runtime['news_desk']['viral_count'] == news['viral_emitted_rows'], runtime
+
+          assert map_status['qa_pass'] is True, map_status
+          assert map_status['unsupported_marker_count'] == 0, map_status
+          assert map_status['wrong_authority_marker_count'] == 0, map_status
+          assert map_status['location_evidence_failure_count'] == 0, map_status
+          assert map_status['borough_contradiction_count'] == 0, map_status
+          assert map_status['duplicate_exact_occurrence_count'] == 0, map_status
+          assert map_status['general_area_exact_geometry_count'] == 0, map_status
+
+          valid_categories = set(contract['categories'])
+          category_counts = Counter()
+          for feature in map_feed.get('features', []):
+              category = (feature.get('properties') or {}).get('category')
+              assert category in valid_categories, category
+              category_counts[category] += 1
+
+          print(json.dumps({
+              'sources': runtime['sources'],
+              'semantic_staged_count': runtime['semantic_staged_count'],
+              'map_state_counts': runtime['map_state_counts'],
+              'map_ready_count': runtime['map_ready_count'],
+              'review_count': runtime['review_count'],
+              'zero_gates': runtime['zero_gates'],
+              'news_desk': runtime['news_desk'],
+              'maplibre': map_status,
+              'category_counts': dict(sorted(category_counts.items())),
+              'projector_v3_qa_pass': runtime['projector_v3_qa_pass'],
+              'raw_accounting_pass': runtime['raw_accounting_pass'],
+          }, indent=2, sort_keys=True))
+          PY
+      - name: Prove candidate is non-publishing
+        run: |
+          test "$(git status --porcelain | wc -l)" -gt 0
+          echo 'Candidate generated runtime artifacts in the ephemeral runner only.'
+          echo 'No repository push, Pages deploy, WordPress write, or production pointer mutation occurred.'

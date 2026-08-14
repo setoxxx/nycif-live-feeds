@@ -1,0 +1,104 @@
+{
+  "artifact_type": "nycif_exact_event_area_evidence_contract_v1",
+  "status": "recovery_evidence_only",
+  "parent_contract": "docs/contracts/EXACT_EVENT_SITE_PUBLICATION_V1.json",
+  "purpose": "Define the evidence requirements for preserving an exact supported event-area geometry without converting it to a point or granting publication authority.",
+  "scope": {
+    "geometry_role": "event_site_area_evidence",
+    "current_lane": "NYC Parks CEMS athletic facility recovery",
+    "public_renderer_enabled": false,
+    "projector_consumption_enabled": false,
+    "publication_authority_granted": false
+  },
+  "core_rules": {
+    "exactness_means_faithful_supported_geometry": true,
+    "area_geometry_must_not_be_coerced_to_point": true,
+    "source_geometry_must_be_preserved": true,
+    "geometry_integrity_must_be_hash_verifiable": true,
+    "source_claim_to_official_facility_identity_must_be_one_to_one": true,
+    "ambiguous_or_coarser_official_geometry_must_remain_blocked": true,
+    "missing_area_evidence_must_not_drop_event": true,
+    "contract_conformance_is_not_publication_authority": true
+  },
+  "parks_cems_required_evidence": [
+    "strict source claim identity",
+    "exactly one source CEMSID",
+    "exact parent park/property name plus borough resolving to one GISPROPNUM",
+    "exactly one recognized adjacent sport and field identifier pair",
+    "suffix-preserving exact FIELD_NUMBER agreement",
+    "explicit applicable sport permitability flag on the official facility row",
+    "explicit FEATURESTATUS equal to Active",
+    "exactly one official Athletic Facilities SYSTEM row",
+    "official SYSTEM used by exactly one strict source claim",
+    "official MultiPolygon geometry",
+    "canonical SHA-256 of the preserved source geometry"
+  ],
+  "required_registry_entry_fields": [
+    "registry_key",
+    "evidence_class",
+    "publication_state",
+    "claim_key",
+    "borough_code",
+    "park_name",
+    "facility_descriptor",
+    "parsed_sport",
+    "parsed_field_id",
+    "source_cemsid",
+    "official_system_id",
+    "official_gispropnum",
+    "official_featurestatus",
+    "matched_permit_fields",
+    "geometry_type",
+    "geometry_source_field",
+    "geometry_sha256",
+    "geometry",
+    "event_site_agreement",
+    "point_generated",
+    "centroid_generated",
+    "publication_eligible",
+    "exact_pin_eligible"
+  ],
+  "required_event_site_agreement_flags": [
+    "property_name_and_borough_unique",
+    "sport_field_pair_strict",
+    "field_identifier_exact",
+    "sport_permit_explicit",
+    "source_cemsid_singleton",
+    "official_system_one_to_one",
+    "featurestatus_active"
+  ],
+  "allowed_geometry_types": [
+    "MultiPolygon"
+  ],
+  "prohibited_transformations": [
+    "polygon centroid used as exact event point",
+    "representative point generated from facility geometry",
+    "parent park centroid substituted for facility geometry",
+    "geometry simplification that changes source-site identity without a separately reviewed contract",
+    "merging distinct source claims solely because the official geometry is coarser"
+  ],
+  "contract_audit_gates": {
+    "invalid_registry_entry_count_required": 0,
+    "duplicate_registry_system_count_required": 0,
+    "duplicate_registry_source_cemsid_count_required": 0,
+    "geometry_hash_mismatch_count_required": 0,
+    "point_generated_count_required": 0,
+    "centroid_generated_count_required": 0,
+    "publication_eligible_count_required": 0,
+    "exact_pin_candidate_count_required": 0,
+    "projector_consumed_required": false
+  },
+  "publication_boundary": {
+    "contract_conformant_entry_meaning": "The entry is suitable for retention as non-public exact-area evidence only.",
+    "not_authorized": [
+      "MAP_READY promotion",
+      "exact-pin publication",
+      "public polygon rendering",
+      "production feed mutation",
+      "location-cache mutation",
+      "projector consumption"
+    ],
+    "future_requirement": "Any public area rendering requires a separately reviewed area-geometry schema, renderer contract, corpus QA, and release decision."
+  },
+  "release_status": "NONPUBLIC_EVIDENCE_ONLY"
+}

@@ -1,0 +1,107 @@
+{
+  "artifact_type": "nycif_exact_event_site_publication_contract_v1",
+  "status": "active_recovery_branch_contract",
+  "purpose": "Ensure every public exact point represents the event's actual supported site, never a nearby or representative coordinate.",
+  "core_rules": {
+    "accepted_events_must_remain_accounted": true,
+    "missing_exact_location_must_not_drop_event": true,
+    "nearby_point_is_not_exact": true,
+    "coordinate_presence_is_not_certification": true,
+    "official_source_coordinate_is_evidence_not_automatic_site_certification": true,
+    "legacy_coordinate_is_evidence_not_automatic_site_certification": true,
+    "approximate_coordinate_may_not_render_as_normal_exact_pin": true,
+    "public_exact_pin_requires_exact_event_site_validation": true
+  },
+  "exact_point_tiers": {
+    "exact_source_coordinate": {
+      "required": [
+        "occurrence-level source identity",
+        "source-coordinate provenance",
+        "semantic site validation against the event location claim or source geometry"
+      ],
+      "not_sufficient": [
+        "finite coordinate",
+        "inside NYC bounds",
+        "official source status alone"
+      ]
+    },
+    "exact_address": {
+      "required": [
+        "complete numbered address",
+        "authoritative or approved exact-address geocoder result",
+        "borough or municipality agreement",
+        "address-token agreement"
+      ]
+    },
+    "exact_intersection": {
+      "required": [
+        "two explicit street claims",
+        "authoritative or approved intersection resolution",
+        "borough agreement",
+        "both street tokens validated"
+      ]
+    },
+    "certified_street_segment": {
+      "required": [
+        "main street",
+        "two cross streets",
+        "two independently resolved authoritative endpoints or explicit certified reference",
+        "borough agreement",
+        "blockface-scale endpoint separation",
+        "midpoint derived only from certified endpoints"
+      ],
+      "prohibited": [
+        "generic main-street fallback",
+        "Planning Labs GeoSearch midpoint as certification authority",
+        "legacy coordinate reuse without canonical re-resolution"
+      ]
+    },
+    "certified_facility": {
+      "required": [
+        "authoritative facility, park, or venue identifier",
+        "registry match",
+        "event-site agreement",
+        "boundary containment when facility geometry exists"
+      ],
+      "not_sufficient": [
+        "facility name alone",
+        "park centroid",
+        "parent park centroid"
+      ]
+    }
+  },
+  "non_point_events": {
+    "route_event": "Use exact route/line geometry or an explicitly supported route anchor when the source defines one; never fabricate a midpoint point.",
+    "area_event": "Use exact area/polygon geometry when supported; otherwise retain as non-point/list presentation.",
+    "citywide_event": "Retain and display without a fabricated exact point unless the source identifies a specific site."
+  },
+  "prohibited_public_exact_provenance": [
+    "generic_fallback",
+    "neighborhood_centroid",
+    "municipality_centroid",
+    "park_level_anchor",
+    "parks_properties_centroid",
+    "parent_park_fallback",
+    "planninglabs_midpoint",
+    "tier_1_certified_segment",
+    "tier_2_geosearch_midpoint"
+  ],
+  "release_accounting": {
+    "accepted_occurrence_equation": "accepted = exact_point + exact_route_or_area + retained_location_pending + explicit_non_point_disposition + dedupe_with_lineage",
+    "silent_loss_count_required": 0,
+    "unsupported_exact_pin_count_required": 0,
+    "known_wrong_location_regression_count_required": 0,
+    "exact_pin_without_site_validation_count_required": 0,
+    "nearby_or_centroid_exact_pin_count_required": 0
+  },
+  "per_event_exactness_goal": {
+    "target": "Resolve every accepted event to the most precise location the source evidence can truthfully support.",
+    "important_constraint": "Do not force a point for events whose real-world footprint is a route, area, multi-site activity, or unspecified location. Exactness means faithful geometry, not necessarily Point geometry."
+  },
+  "regression_examples": [
+    "East 74 Street between Avenue U and Avenue T must remain Brooklyn and must not regress to a nearby/wrong-block point.",
+    "A park-level centroid must not stand in for a named event site inside a large park.",
+    "An official source coordinate must remain non-public as an exact pin until event-site agreement is validated."
+  ],
+  "release_status": "NOT_CERTIFIED_UNTIL_CORPUS_VALIDATION_RUNS"
+}

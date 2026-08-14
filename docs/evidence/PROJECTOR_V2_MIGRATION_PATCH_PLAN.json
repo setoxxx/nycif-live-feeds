@@ -1,0 +1,119 @@
+{
+  "artifact_type": "nycif_projector_v2_migration_patch_plan_v1",
+  "target": "scripts/project_events_discovery_v02.py",
+  "branch": "fix/step2a-location-identity",
+  "implementation_status": "PLAN_ONLY_NO_PROJECTOR_MUTATION",
+  "reason": "Current connected write path is whole-file replacement. The projector is large and combines classification, grouping, reconciliation, page generation, dedupe and publication artifacts; a blind whole-file rewrite is not release-safe.",
+  "required_safe_edit": "surgical patch/code-edit environment or dedicated reviewed projector branch after caller audit",
+  "occurrences": [
+    {
+      "symbol": "occurrence_key",
+      "block": "module import from occurrence_identity_contract",
+      "current_behavior": "imports legacy date-key identity",
+      "new_behavior": "import occurrence_key_v2 plus ambiguity/rejection helpers",
+      "dependency": "OccurrenceIdentityV2",
+      "regression_risk": "HIGH",
+      "test": "same-source same-day different-time remains distinct"
+    },
+    {
+      "symbol": "occurrence_key_set",
+      "block": "module import from occurrence_identity_contract",
+      "current_behavior": "imports legacy date-key set builder",
+      "new_behavior": "import occurrence_key_v2_set",
+      "dependency": "OccurrenceIdentityV2",
+      "regression_risk": "HIGH",
+      "test": "same-source recurring occurrences preserve exact-start identity"
+    },
+    {
+      "symbol": "staged_occurrence_keys",
+      "block": "raw open-data unstaged intake",
+      "current_behavior": "occurrence_key_set(staged_rows) collapses same-day different-time source occurrences",
+      "new_behavior": "occurrence_key_v2_set(staged_rows); ambiguous identities never count as represented",
+      "dependency": "occurrence_key_v2_set",
+      "regression_risk": "HIGH",
+      "test": "same source same day different time is accepted when not otherwise represented"
+    },
+    {
+      "symbol": "raw_occurrence_key",
+      "block": "raw open-data unstaged intake loop",
+      "current_behavior": "occurrence_key(row) uses date precision",
+      "new_behavior": "occurrence_key_v2(row) with explicit AMBIGUOUS handling",
+      "dependency": "identity_precision / occurrence_key_v2_is_ambiguous",
+      "regression_risk": "HIGH",
+      "test": "IDENTITY_AMBIGUOUS cannot be silently suppressed"
+    },
+    {
+      "symbol": "rejected_occurrence_keys",
+      "block": "rejected_open_data_identity_sets / raw unstaged intake",
+      "current_behavior": "day-key rejection plus broad source-key rejection can suppress sibling recurring occurrences",
+      "new_behavior": "rejection_identity_sets + rejection_matches with EXACT_START > DAY > explicit SOURCE_ALL_OCCURRENCES precedence",
+      "dependency": "scoped rejection helpers in occurrence_identity_contract.py",
+      "regression_risk": "CRITICAL",
+      "test": "exact-start rejection preserves same-day sibling occurrence"
+    },
+    {
+      "symbol": "accepted_occurrence_keys",
+      "block": "projected feast reference intake",
+      "current_behavior": "date-key set built from staged rows and accepted events",
+      "new_behavior": "V2 exact-start set; ambiguous keys are not used for automatic suppression",
+      "dependency": "occurrence_key_v2 / occurrence_key_v2_set",
+      "regression_risk": "HIGH",
+      "test": "projected same-day distinct-time occurrence is not collapsed"
+    },
+    {
+      "symbol": "projected_occurrence_key",
+      "block": "projected feast reference intake loop",
+      "current_behavior": "date-key duplicate check",
+      "new_behavior": "V2 exact-start duplicate check with ambiguity routed to review",
+      "dependency": "OccurrenceIdentityV2",
+      "regression_risk": "HIGH",
+      "test": "exact duplicate suppressed; different start preserved"
+    },
+    {
+      "symbol": "resolve_coords",
+      "block": "build_base_event",
+      "current_behavior": "returns lat/lng/map_ready where map_ready is coordinate/geometry readiness",
+      "new_behavior": "preserve coordinate candidate but pass evidence through evaluate_map_eligibility before exact publication state",
+      "dependency": "pin_integrity.evaluate_map_eligibility and upstream location_evidence",
+      "regression_risk": "CRITICAL",
+      "test": "bounding-box-only coordinate cannot create exact marker"
+    },
+    {
+      "symbol": "coordinate_status",
+      "block": "build_base_event nycif payload",
+      "current_behavior": "sets map_ready directly from resolve_coords boolean",
+      "new_behavior": "derive from semantic eligibility: MAP_READY=>map_ready; all other states non-exact/list or review semantics",
+      "dependency": "canonical map eligibility contract",
+      "regression_risk": "CRITICAL",
+      "test": "validated exact evidence can map; legacy evidence cannot"
+    },
+    {
+      "symbol": "coordinate_status",
+      "block": "group_events supporting-record fallback",
+      "current_behavior": "uses map_ready/list_only to choose display disposition",
+      "new_behavior": "use semantic map eligibility/certification state rather than geometry-ready status",
+      "dependency": "semantic eligibility fields on projected events",
+      "regression_risk": "MEDIUM",
+      "test": "supporting record without certified pin remains list-only"
+    },
+    {
+      "symbol": "marker_eligible",
+      "block": "find_samples audit output",
+      "current_behavior": "coordinate_status == map_ready plus public/disposition checks",
+      "new_behavior": "require semantic MAP_READY and certified_pin=true plus existing public/disposition/parent checks",
+      "dependency": "nycif.map_eligibility_state + certified_pin",
+      "regression_risk": "HIGH",
+      "test": "legacy map_ready sample cannot be marker eligible"
+    },
+    {
+      "symbol": "map_ready_standalone_marker_eligible",
+      "block": "audit.accessibility_claims",
+      "current_behavior": "validates display disposition for coordinate_status map_ready",
+      "new_behavior": "validate marker behavior against semantic MAP_READY/certified_pin authority",
+      "dependency": "semantic eligibility fields",
+      "regression_risk": "MEDIUM",
+      "test": "all exact marker candidates are semantically certified"
+    }
+  ],
+  "release_rule": "Do not mutate projector through blind whole-file reconstruction. Implement only through a safe surgical edit path, then rerun full discovery/identity/reconciliation CI on one exact head."
+}

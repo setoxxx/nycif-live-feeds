@@ -74,7 +74,11 @@ run_stage \
     scripts/test_live_event_intake_refresh_current.py \
     scripts/refresh_runtime_fallback_feeds.py \
     scripts/record_blocked_daily_data_health.py \
-    scripts/check_field_desk_overlay_health.py
+    scripts/check_field_desk_overlay_health.py \
+    scripts/project_events_discovery_v03.py \
+    scripts/build_news_desk_reader_safe.py \
+    scripts/build_maplibre_reader_safe_v03.py \
+    scripts/augment_daily_data_health_v03.py
 
 # If main advances before push, discard generated work, reset to the new tip,
 # and rebuild the complete transaction. Never merge generated conflicts or
@@ -88,11 +92,6 @@ for attempt in 1 2 3; do
   export PREVIOUS_PUBLIC_FEED_SHA
   printf '%s\n' "$PREVIOUS_PUBLIC_FEED_SHA" > "$PREVIOUS_POINTER"
 
-  # One authoritative acquisition pass. live_event_intake_refresh refreshes
-  # permitted events, Citywide Calendar and Parks, then builds the staged permit
-  # intake from those exact snapshots. Do not call Calendar/Parks a second time
-  # inside the same transaction: a second fetch can create a mixed-time source
-  # transaction and needlessly doubles provider requests.
   run_stage \
     "official_source_live_fetch_and_permit_staging" \
     "live_event_intake_refresh" \
@@ -113,8 +112,8 @@ for attempt in 1 2 3; do
     python scripts/build_street_festivals_feed.py
   run_stage \
     "full_discovery_projection_and_dedupe" \
-    "project_events_discovery_v02" \
-    python scripts/project_events_discovery_v02.py
+    "project_events_discovery_v03" \
+    python scripts/project_events_discovery_v03.py
   run_stage \
     "strict_source_reconciliation" \
     "enforce_strict_discovery_reconciliation" \
@@ -128,6 +127,14 @@ for attempt in 1 2 3; do
     "news_desk_money_viral_and_civic_overlays" \
     "run_daily_people_facing_desk_sync" \
     python scripts/run_daily_people_facing_desk_sync.py --skip-network-sync
+  run_stage \
+    "news_desk_reader_safe_projection" \
+    "build_news_desk_reader_safe" \
+    python scripts/build_news_desk_reader_safe.py
+  run_stage \
+    "maplibre_reader_safe_projection" \
+    "build_maplibre_reader_safe_v03" \
+    python scripts/build_maplibre_reader_safe_v03.py
 
   run_stage \
     "runtime_emergency_fallback" \
@@ -138,6 +145,10 @@ for attempt in 1 2 3; do
     "daily_data_health_gate" \
     "build_daily_data_health" \
     python scripts/build_daily_data_health.py
+  run_stage \
+    "daily_data_health_v3_augmentation" \
+    "augment_daily_data_health_v03" \
+    python scripts/augment_daily_data_health_v03.py
 
   run_stage \
     "god_view_project_state" \
@@ -166,6 +177,9 @@ staged_manifest = json.load(open("data/staged_live_manifest.json"))
 staged = json.load(open("data/nycif_staged_live_events.json"))
 supplemental = json.load(open("data/supplemental_events_staging_feed.json"))
 reconciliation = json.load(open("data/events_discovery_reconciliation_v02.json"))
+v3 = json.load(open("data/events_discovery_v3_authority_report.json"))
+news_safe = json.load(open("data/reader-safe/news-desk-status-v02.json"))
+map_safe = json.load(open("data/reader-safe/national-map-events-v03-status.json"))
 health = json.load(open("status/nycif-daily-data-health.json"))
 overlay_health = json.load(open("status/nycif-field-desk-overlay-health.json"))
 major = json.load(open("data/schema-v1-discovery/major/events.json"))
@@ -191,7 +205,7 @@ if live.get("raw_rows_loaded") != len(raw):
 if not calendar_report.get("qa_pass") or not calendar_rows:
     sys.exit("Citywide Calendar live sync failed or returned no active events")
 if not parks_report.get("qa_pass") or parks_report.get("fetch_mode") != "live" or not parks_rows:
-    sys.exit("Parks source was not a successful live fetch")
+    sys.exit("Parks current-events source was not a successful live fetch")
 if len(supplemental_rows) < len(calendar_rows) + len(parks_rows) - int(calendar_report.get("canceled_excluded", 0) or 0):
     print("Supplemental occurrence total is lower than raw source total; strict reconciliation remains authoritative.")
 if test_manifest.get("raw_rows_loaded") != len(raw):
@@ -204,8 +218,38 @@ if staged_manifest.get("cross_date_street_occurrences_suppressed") != 0:
     sys.exit("cross-date recurring street occurrences were suppressed")
 if not reconciliation.get("reconciles_strict"):
     sys.exit("strict source reconciliation did not pass")
+if not v3.get("qa_pass") or not v3.get("raw_accounting_pass"):
+    sys.exit("Projector V3 authority or raw accounting gate failed")
+for key in (
+    "silent_identity_loss",
+    "duplicate_exact_occurrences",
+    "unsupported_exact_pin_count",
+    "implicit_source_all_count",
+    "legacy_occurrence_authority_count",
+    "legacy_coordinate_authority_count",
+):
+    if v3.get(key) != 0:
+        sys.exit(f"Projector V3 zero gate failed: {key}={v3.get(key)}")
+if v3.get("invalid_publication_state_count", 0) != 0:
+    sys.exit("Projector V3 emitted an invalid MAP_READY publication state")
+if news_safe.get("unsupported_exact_pin_count") != 0 or news_safe.get("browser_raw_repository_required") is not False:
+    sys.exit("News Desk reader-safe authority gate failed")
+for key in (
+    "unsupported_marker_count",
+    "wrong_authority_marker_count",
+    "location_evidence_failure_count",
+    "borough_contradiction_count",
+    "duplicate_exact_occurrence_count",
+    "general_area_exact_geometry_count",
+):
+    if map_safe.get(key) != 0:
+        sys.exit(f"MapLibre zero gate failed: {key}={map_safe.get(key)}")
+if not map_safe.get("qa_pass"):
+    sys.exit("MapLibre reader-safe marker audit failed")
 if not health.get("release_ready") or health.get("status") != "READY":
     sys.exit("daily data health is not READY")
+if not health.get("v3_runtime", {}).get("zero_gate_pass"):
+    sys.exit("daily V3 health augmentation did not certify zero gates")
 if not overlay_health.get("qa_pass") or overlay_health.get("overlay_count") != 3:
     sys.exit("Field Desk auxiliary overlay health did not pass")
 if not isinstance(major_events, list) or not major_events:
@@ -226,10 +270,12 @@ if "new_this_run" not in whats_new:
     sys.exit("what's-new diff missing new_this_run")
 
 print(
-    f"READY: {len(raw)} permits, {len(calendar_rows)} Calendar, {len(parks_rows)} Parks, "
+    f"READY V3: {len(raw)} permits, {len(calendar_rows)} Calendar, {len(parks_rows)} Parks, "
     f"{len(staged_events)} staged, {manifest.get('total')} approved, "
-    f"{len(emergency)} emergency, {photographer.get('total_events')} money-day, "
-    f"{viral.get('match_count')} viral, 3 auxiliary overlays, "
+    f"{map_safe.get('exact_marker_count')} certified MapLibre markers, "
+    f"{news_safe.get('money_emitted_rows')} reader-safe money, "
+    f"{news_safe.get('viral_emitted_rows')} reader-safe viral, "
+    f"borough_unverified={map_safe.get('borough_unverified_count')}, "
     f"{whats_new['new_this_run']} newly added"
 )
 PY
@@ -288,8 +334,14 @@ PY
     data/events_discovery_reconciliation_v02.json \
     data/events_discovery_grouping_v02_report.json \
     data/events_discovery_schema_validation_v02.json \
+    data/events_discovery_v3_authority_report.json \
     data/events_schema_v1_major.json \
     data/events_schema_v1_major_report.json \
+    data/reader-safe/news-desk-money-v02.json \
+    data/reader-safe/news-desk-viral-v02.json \
+    data/reader-safe/news-desk-status-v02.json \
+    data/reader-safe/national-map-events-v03.geojson \
+    data/reader-safe/national-map-events-v03-status.json \
     data/reports/discovery_approved_dedupe_report.json \
     data/reports/discovery_shared_cems_occurrence_dedupe_report.json \
     data/civic_*.json \

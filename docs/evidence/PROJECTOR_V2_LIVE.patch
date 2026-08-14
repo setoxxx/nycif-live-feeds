@@ -1,0 +1,201 @@
+diff --git a/scripts/project_events_discovery_v02.py b/scripts/project_events_discovery_v02.py
+--- a/scripts/project_events_discovery_v02.py
++++ b/scripts/project_events_discovery_v02.py
+@@ -20,7 +20,6 @@ from discovery_v02 import (  # noqa: E402
+     load_contract,
+     match_recurring_registry,
+     preserve_date,
+-    resolve_coords,
+     source_parts,
+     stable_canonical_id,
+     utc_now,
+@@ -30,9 +29,13 @@ from discovery_v02 import (  # noqa: E402
+     write_json,
+ )
+ from schema_v1_common import DEFAULT_TIMEZONE, envelope  # noqa: E402
+-from occurrence_identity_contract import (  # noqa: E402
+-    occurrence_key,
+-    occurrence_key_set,
++from projector_v2_authority import (  # noqa: E402
++    build_rejection_contract,
++    classify_occurrence_intake,
++    occurrence_identity_v2,
++    occurrence_identity_v2_set,
++    semantic_map_decision,
+ )
+ 
+ STAGED = ROOT / "data" / "nycif_staged_live_events.json"
+@@ -177,7 +180,19 @@ def build_base_event(
+         return None
+ 
+     classified = classify_record(row)
+-    lat, lng, map_ready = resolve_coords(row)
++    map_decision = semantic_map_decision(row)
++    lat = map_decision.get("latitude")
++    lng = map_decision.get("longitude")
++    map_ready = map_decision.get("map_eligibility_state") == "MAP_READY" and map_decision.get("certified_pin") is True
++    borough = borough_label(row.get("borough") or row.get("event_borough"))
++    raw_location = str(row.get("location") or row.get("display_location") or row.get("address") or "").strip() or None
++    if map_ready:
++        public_location = raw_location
++        public_address = row.get("address")
++    else:
++        public_location = map_decision.get("general_area_label") or row.get("neighborhood") or borough or None
++        public_address = None
+     event_role = classified["event_role"]
+     category = classified["category"]
+     if category not in valid_categories():
+@@ -319,12 +334,13 @@ def build_base_event(
+         "start_date_time": start_of(row),
+         "end_date_time": end_of(row),
+         "timezone": str(row.get("timezone") or DEFAULT_TIMEZONE),
+-        "borough": borough_label(row.get("borough") or row.get("event_borough")),
++        "borough": borough,
+         "neighborhood": row.get("neighborhood"),
+-        "location": str(row.get("location") or row.get("display_location") or row.get("address") or "")
+-        or None,
+-        "address": row.get("address"),
++        "location": public_location,
++        "address": public_address,
+         "latitude": lat,
+         "longitude": lng,
++        "location_evidence": row.get("location_evidence") if isinstance(row.get("location_evidence"), dict) else None,
+         "source": {
+             "dataset": dataset,
+             "source_event_id": seid,
+@@ -333,7 +349,10 @@ def build_base_event(
+         },
+         "nycif": {
+             "data_layer": data_layer,
+-            "coordinate_status": "map_ready" if map_ready else "list_only",
++            "coordinate_status": map_decision.get("coordinate_status") or "list_only",
++            "map_eligibility_state": map_decision.get("map_eligibility_state") or "REVIEW_REQUIRED",
++            "certified_pin": map_decision.get("certified_pin") is True,
++            "pin_integrity_reason": map_decision.get("reason_code"),
+             "display_disposition": disposition,
+             "classification_version": CLASSIFICATION_VERSION,
+             "classification_reason": classified["classification_reason"],
+@@ -741,18 +760,27 @@ def main() -> int:
+         if str(e.get("disposition") or "").lower() in {"rejected", "drop", "invalid"}
+         or "reject" in str(e.get("reason") or "").lower()
+     ]
+-    staged_keys = staged_source_keys(staged_rows)
+-    staged_occurrence_keys = occurrence_key_set(staged_rows)
+-    rejected_keys, rejected_occurrence_keys = rejected_open_data_identity_sets(rejected_disp)
++    represented_occurrences = occurrence_identity_v2_set(staged_rows)
++    rejection_contract = build_rejection_contract(rejected_disp)
++    raw_intake_counts: Counter = Counter()
+     unstaged_intake_count = 0
+     for i, row in enumerate(raw_rows):
+-        dataset, source_event_id = source_parts_safe(row)
+-        raw_occurrence_key = occurrence_key(row)
+-        if raw_occurrence_key in staged_occurrence_keys:
+-            continue
+-        if raw_occurrence_key in rejected_occurrence_keys or (dataset, source_event_id) in rejected_keys:
+-            continue
+-        if not event_overlaps_season(row, SEASON_START_DATE, SEASON_END_DATE):
++        bucket = classify_occurrence_intake(
++            row,
++            represented_occurrences=represented_occurrences,
++            rejection_contract=rejection_contract,
++            season_start=SEASON_START_DATE,
++            season_end=SEASON_END_DATE,
++        )
++        raw_intake_counts[bucket] += 1
++        if bucket in {
++            "documented_duplicate",
++            "rejected_exact",
++            "rejected_day",
++            "rejected_source_all",
++            "outside_window",
++        }:
+             continue
+         event = build_base_event(
+             row,
+@@ -762,12 +790,18 @@ def main() -> int:
+             current_major_keys=current_major_keys,
+         )
+         if event is None:
++            raw_intake_counts[bucket] -= 1
++            raw_intake_counts["invalid"] += 1
+             invalid.append(invalid_item(row, "unstaged_open_data_missing_identity", "raw_unstaged_open_data"))
+             continue
+         event["nycif"]["raw_unstaged_open_data"] = True
++        event["nycif"]["occurrence_intake_class"] = bucket
+         event["nycif"]["classification_reason"] = (
+             str(event["nycif"].get("classification_reason") or "") + "+raw_unstaged_open_data_intake"
+         )
+         accepted.append(event)
++        represented_occurrences.add(occurrence_identity_v2(row)["key"])
+         unstaged_intake_count += 1
+ 
++    silent_identity_loss = len(raw_rows) - sum(raw_intake_counts.values())
++    if silent_identity_loss != 0:
++        raise RuntimeError(f"Projector V2 silent identity loss: {silent_identity_loss}")
++
+     projected_feast_count = 0
+     if PROJECTED_FEAST.exists():
+         projected_rows = load_events(PROJECTED_FEAST)
+         accepted_keys = {source_parts_safe(row) for row in staged_rows}
+-        accepted_occurrence_keys = occurrence_key_set(staged_rows)
++        accepted_occurrence_keys = occurrence_identity_v2_set(staged_rows)
+         for e in accepted:
+             src = e.get("source") if isinstance(e.get("source"), dict) else {}
+             accepted_keys.add(
+                 (str(src.get("dataset") or ""), str(src.get("source_event_id") or ""))
+             )
+-            accepted_occurrence_keys.add(occurrence_key(e))
++            accepted_occurrence_keys.add(occurrence_identity_v2(e)["key"])
+         for i, row in enumerate(projected_rows):
+             dataset, source_event_id = source_parts_safe(row)
+-            projected_occurrence_key = occurrence_key(row)
++            projected_occurrence_key = occurrence_identity_v2(row)["key"]
+             if projected_occurrence_key in accepted_occurrence_keys:
+                 continue
+             event = build_base_event(
+@@ -913,6 +947,13 @@ def main() -> int:
+     staged_covers = len(staged_rows)
+     open_data_accounted = staged_covers + len(rejected_disp)
+     # Calendar/parks: in supplemental or unlinked accepted or still missing
++    unsupported_exact_pin_count = sum(
++        1
++        for e in accepted
++        if (e.get("latitude") is not None or e.get("longitude") is not None)
++        and not ((e.get("nycif") or {}).get("map_eligibility_state") == "MAP_READY" and (e.get("nycif") or {}).get("certified_pin") is True)
++    )
+     cal_parks_raw = len(cal_rows) + len(parks_rows)
+     cal_parks_accepted = len(supp_rows) + len(unlinked)
+     cal_parks_gap = max(0, cal_parks_raw - cal_parks_accepted)
+@@ -947,6 +988,22 @@ def main() -> int:
+             "calendar_parks_unaccounted_gap": cal_parks_gap,
+         },
++        "v2_authority": {
++            "raw_intake_buckets": {
++                key: int(raw_intake_counts.get(key, 0))
++                for key in (
++                    "documented_duplicate", "rejected_exact", "rejected_day",
++                    "rejected_source_all", "outside_window", "identity_ambiguous_review",
++                    "accepted_review_supplemental", "invalid"
++                )
++            },
++            "raw_accounting_pass": sum(raw_intake_counts.values()) == len(raw_rows),
++            "silent_identity_loss": silent_identity_loss,
++            "implicit_source_all_count": 0,
++            "unsupported_exact_pin_count": unsupported_exact_pin_count,
++            "legacy_occurrence_authority_count": 0,
++            "legacy_coordinate_authority_count": 0,
++        },
+         "reconciles": reconciles_accept and cal_parks_gap == 0,
+         "notes": [
+             "Generated schema dumps and duplicative all-radar/enriched feeds excluded from raw intake.",
+@@ -959,6 +1016,11 @@ def main() -> int:
+         recon["reconciles_disposition_layer"] = reconciles_accept
+         recon["reconciles"] = reconciles_accept  # primary mandatory equation
++    zero_targets = recon["v2_authority"]
++    if not zero_targets["raw_accounting_pass"] or any(
++        zero_targets[key] != 0 for key in (
++            "silent_identity_loss", "implicit_source_all_count", "unsupported_exact_pin_count", "legacy_occurrence_authority_count", "legacy_coordinate_authority_count"
++        )
++    ):
++        raise RuntimeError(f"Projector V2 authority gate failed: {zero_targets}")
+     write_json("data/events_discovery_reconciliation_v02.json", recon)

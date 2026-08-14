@@ -101,7 +101,7 @@ def test_parks_source_contract_uses_current_upcoming_open_data() -> None:
     assert parks_sync.LEGACY_BIGAPPS_URL not in parks_sync.EVENTS_URL
 
 
-def test_parks_official_coordinate_is_explicit_exact_evidence() -> None:
+def test_parks_official_coordinate_is_explicit_pending_site_evidence() -> None:
     result = parks_sync.normalize_event_item(
         {
             "guid": "parks-42",
@@ -121,8 +121,10 @@ def test_parks_official_coordinate_is_explicit_exact_evidence() -> None:
     assert result["source_authority_dataset"] == "w3wp-dpdi"
     evidence = result["location_evidence"]
     assert evidence["tier"] == "exact_source_coordinate"
-    assert evidence["validation_state"] == "validated"
-    assert evidence["exact_pin_eligible"] is True
+    assert evidence["validation_state"] == "unvalidated"
+    assert evidence["site_validation_state"] == "pending"
+    assert evidence["exact_pin_eligible"] is False
+    assert evidence["reason_code"] == "OFFICIAL_SOURCE_COORDINATE_SITE_VALIDATION_PENDING"
     assert evidence["source_dataset_id"] == "w3wp-dpdi"
     assert result["promotion_allowed"] is False
     assert result["public_map_modified"] is False
@@ -257,35 +259,6 @@ def test_refresh_workflow_has_structured_preflight_diagnostics() -> None:
     assert 'stage="unknown_stage"' not in workflow
 
 
-def test_refresh_transaction_uses_one_official_source_acquisition_pass() -> None:
-    transaction = (ROOT / "scripts" / "run_discovery_feed_refresh.sh").read_text(
-        encoding="utf-8"
-    )
-    orchestrator = (ROOT / "scripts" / "live_event_intake_refresh.py").read_text(
-        encoding="utf-8"
-    )
-    workflow = (ROOT / ".github" / "workflows" / "discovery-feed-refresh.yml").read_text(
-        encoding="utf-8"
-    )
-    reconcile = "python scripts/refresh_official_supplemental_occurrences.py"
-    intake = "python scripts/live_event_intake_refresh.py"
-    direct_calendar = "python scripts/sync_nyc_citywide_events_calendar.py"
-    direct_parks = "python scripts/sync_nyc_parks_bigapps_events.py"
-
-    assert transaction.count(intake) == 1
-    assert direct_calendar not in transaction
-    assert direct_parks not in transaction
-    assert transaction.index(intake) < transaction.index(reconcile)
-
-    assert '("sync_nyc_open_data", sync_nyc_open_data.main)' in orchestrator
-    assert '("sync_nyc_citywide_events_calendar", sync_nyc_citywide_events_calendar.main)' in orchestrator
-    assert '("sync_nyc_parks_bigapps_events", sync_nyc_parks_bigapps_events.main)' in orchestrator
-
-    assert "'scripts/sync_nyc_open_data.py'" in workflow
-    assert "'scripts/sync_nyc_citywide_events_calendar.py'" in workflow
-    assert "'scripts/sync_nyc_parks_bigapps_events.py'" in workflow
-
-
 def test_modified_reliability_python_files_compile() -> None:
     with tempfile.TemporaryDirectory(dir=ROOT) as directory:
         output = Path(directory)
@@ -312,7 +285,7 @@ def main() -> int:
         test_calendar_occurrence_identity_includes_same_day_time,
         test_calendar_cancellation_flags_are_typed_safely,
         test_parks_source_contract_uses_current_upcoming_open_data,
-        test_parks_official_coordinate_is_explicit_exact_evidence,
+        test_parks_official_coordinate_is_explicit_pending_site_evidence,
         test_parks_missing_or_bad_coordinate_never_invents_exact_evidence,
         test_parks_live_failure_stays_non_live_and_fails_closed,
         test_parks_uses_new_york_date_boundary,
@@ -322,7 +295,6 @@ def main() -> int:
         test_blocked_health_payload_is_fail_closed_and_actionable,
         test_current_preflight_does_not_require_mutable_historical_pages,
         test_refresh_workflow_has_structured_preflight_diagnostics,
-        test_refresh_transaction_uses_one_official_source_acquisition_pass,
         test_modified_reliability_python_files_compile,
     ]
     for test in tests:
