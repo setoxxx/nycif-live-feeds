@@ -15,11 +15,13 @@ permissions:
 jobs:
   canonical-handoff:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     env:
       V9_ARTIFACT_ID: '9221766364'
       V9_ARTIFACT_SHA256: 'e2d65417ed01f9b20ac2854de21d87aa0ab27ba0f6e3140e1009c5ad9c67cd39'
       PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/scripts
+      NYCIF_ALLOW_LIVE_GEOSEARCH: 'no'
+      NYCIF_ALLOW_LIVE_GEOCLIENT: 'no'
     steps:
       - name: Check out exact PR head
         uses: actions/checkout@v4
@@ -67,16 +69,54 @@ jobs:
           unzip -q /tmp/nycif-route-v10/v9.zip -d /tmp/nycif-route-v10/v9
           test -f /tmp/nycif-route-v10/v9/street_segment_route_occurrence_registry_v9.json
 
-      - name: Audit canonical occurrence handoff
+      - name: Prove V9 occurrences exist in current checked-in raw snapshot
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from scripts.occurrence_identity_contract import occurrence_key_v2, identity_precision
+          v9=json.load(open('/tmp/nycif-route-v10/v9/street_segment_route_occurrence_registry_v9.json'))
+          raw=json.load(open('data/raw_nyc_open_data_snapshot.json'))
+          targets={tuple(row['occurrence_key_v2']) for row in v9['registry']}
+          raw_keys={occurrence_key_v2(row) for row in raw if identity_precision(row) != 'AMBIGUOUS'}
+          matched=targets & raw_keys
+          missing=sorted(targets-raw_keys)
+          print('NYCIF_V10_V9_TARGET_KEYS=%d' % len(targets))
+          print('NYCIF_V10_RAW_MATCHED_KEYS=%d' % len(matched))
+          print('NYCIF_V10_RAW_MISSING_KEYS=%d' % len(missing))
+          if missing:
+              print('NYCIF_V10_RAW_MISSING_SAMPLE=%s' % json.dumps(missing[:10]))
+          assert len(targets)==90
+          assert len(matched)==90
+          PY
+
+      - name: Rebuild current canonical in isolated workspace
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/nycif-route-v10/projector
+          original_sha="$(sha256sum data/events_discovery_accepted_canonical_v02.json | awk '{print $1}')"
+          echo "NYCIF_ORIGINAL_CANONICAL_SHA256=${original_sha}" >> "$GITHUB_ENV"
+          cp -a . /tmp/nycif-route-v10/projector/repo
+          cd /tmp/nycif-route-v10/projector/repo
+          export PYTHONPATH="$PWD:$PWD/scripts"
+          export NYCIF_ALLOW_LIVE_GEOSEARCH=no
+          export NYCIF_ALLOW_LIVE_GEOCLIENT=no
+          python3 scripts/project_events_discovery_v03.py
+          test -s data/events_discovery_accepted_canonical_v02.json
+          echo "NYCIF_ISOLATED_CANONICAL_SHA256=$(sha256sum data/events_discovery_accepted_canonical_v02.json | awk '{print $1}')"
+
+      - name: Audit rebuilt canonical occurrence handoff
         shell: bash
         run: |
           set -euo pipefail
           python3 scripts/audit_street_segment_route_canonical_handoff_v10.py \
             --v9-registry /tmp/nycif-route-v10/v9/street_segment_route_occurrence_registry_v9.json \
-            --canonical data/events_discovery_accepted_canonical_v02.json \
+            --canonical /tmp/nycif-route-v10/projector/repo/data/events_discovery_accepted_canonical_v02.json \
             --output /tmp/nycif-route-v10/street_segment_route_canonical_handoff_audit_v10.json
 
-      - name: Prove V10 remains non-public and read-only
+      - name: Prove V10 remains non-public and source workspace unchanged
         shell: bash
         run: |
           set -euo pipefail
@@ -95,6 +135,7 @@ jobs:
           assert report['release_status']=='NONPUBLIC_EVIDENCE_ONLY'
           assert all(value==0 for value in report['hard_zero_gates'].values())
           PY
+          test "$(sha256sum data/events_discovery_accepted_canonical_v02.json | awk '{print $1}')" = "$NYCIF_ORIGINAL_CANONICAL_SHA256"
           test -z "$(git status --porcelain)"
 
       - name: Upload V10 non-public handoff evidence
