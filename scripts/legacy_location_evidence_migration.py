@@ -5,6 +5,10 @@ This is deliberately narrow. It does not geocode and does not certify a point
 merely because coordinates exist. A legacy match is promotable only when the
 current official row, matched record, geometry, borough, and location text agree,
 and the current location claim maps to an already-recognized exact evidence tier.
+
+Street-segment claims are intentionally excluded from legacy-coordinate
+migration. Those rows were a known wrong-pin class in the legacy map and must be
+re-resolved by the canonical street-segment resolver before exact publication.
 """
 from __future__ import annotations
 
@@ -71,16 +75,18 @@ def _same_event_id(raw: dict[str, Any], match: dict[str, Any]) -> bool:
     return bool(raw_id and match_id and raw_id == match_id)
 
 
+def _is_street_segment_claim(raw: dict[str, Any]) -> bool:
+    normalized = normalize_text_legacy(_raw_location(raw))
+    return bool(re.search(r"\bbetween\b.+\band\b", normalized))
+
+
 def _evidence_tier(raw: dict[str, Any]) -> str | None:
     """Map a current official location claim into an existing V3 exact tier."""
     location = _raw_location(raw)
-    normalized = normalize_text_legacy(location)
     cemsids = [value for value in _split_ids(raw.get("cemsid") or raw.get("source_cemsid")) if value != "0"]
 
     if cemsids:
         return "certified_facility"
-    if re.search(r"\bbetween\b.+\band\b", normalized):
-        return "certified_street_segment"
     if re.match(r"^\d+[a-z-]*\s+\S", location.strip(), flags=re.IGNORECASE):
         return "exact_address"
     if re.search(r"\s(?:at|@|&)\s", location, flags=re.IGNORECASE):
@@ -112,6 +118,15 @@ def migration_decision(
     source = _text(match.get("source") or match.get("location_source"))
     if match_type == "location_cache" and source not in TRUSTED_LEGACY_SOURCES:
         return {"eligible": False, "reason_code": "LEGACY_PROVENANCE_NOT_ALLOWLISTED"}
+
+    # Known legacy wrong-pin class. Text/borough agreement is not proof that the
+    # old coordinate lies on the claimed blockface. Require the canonical
+    # Geoclient/segment resolver to rebuild evidence from current street claims.
+    if _is_street_segment_claim(raw):
+        return {
+            "eligible": False,
+            "reason_code": "STREET_SEGMENT_REQUIRES_CANONICAL_RERESOLUTION",
+        }
 
     tier = _evidence_tier(raw)
     if tier is None:
