@@ -263,3 +263,22 @@ def main() -> int:
     code = legacy.main()
     if code not in (None, 0):
         return int(code)
+
+    report = validate_projected_authority()
+    report_path = legacy.ROOT / "data" / "events_discovery_v3_authority_report.json"
+    report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    reconciliation_path = legacy.ROOT / "data" / "events_discovery_reconciliation_v02.json"
+    reconciliation = json.loads(reconciliation_path.read_text(encoding="utf-8"))
+    reconciliation["v3_authority"] = report
+    reconciliation_path.write_text(json.dumps(reconciliation, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    if not report["qa_pass"]:
+        raise RuntimeError(f"Projector V3 authority gate failed: {report}")
+    return 0
+
+
+_ORIGINAL_BUILD_BASE_EVENT = legacy.build_base_event
+
+if __name__ == "__main__":
+    raise SystemExit(main())
