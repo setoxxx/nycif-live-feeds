@@ -23,7 +23,7 @@
     "note": "V1 remains the sole production authority.",
     "production_authority": false
   },
-  "generated_at_utc": "2026-08-14T04:09:49Z",
+  "generated_at_utc": "2026-08-14T04:21:06Z",
   "operating_rule": "Do not commit or publish a refreshed public feed unless status is READY.",
   "pipeline": {
     "canonical_identity_clean": false,
@@ -33,7 +33,7 @@
   },
   "release_ready": false,
   "rollback": {
-    "previous_public_feed_commit": "5c335641d409424eebdc1feaed9ae31b42b4bed3",
+    "previous_public_feed_commit": "be45462ea471711871822d9ef8bbdac0766eecb9",
     "strategy": "Failed runs do not commit; revert the READY refresh commit to restore this prior commit."
   },
   "rollback_rule": "The previous serving commit remains authoritative until a later refresh is READY.",
