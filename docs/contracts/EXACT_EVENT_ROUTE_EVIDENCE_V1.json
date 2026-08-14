@@ -1,0 +1,94 @@
+{
+  "artifact_type": "nycif_exact_event_route_evidence_contract_v1",
+  "status": "recovery_evidence_only",
+  "parent_contract": "docs/contracts/EXACT_EVENT_SITE_PUBLICATION_V1.json",
+  "purpose": "Define the evidence requirements for preserving an exact supported event-route geometry as ordered official source components without converting it to a point or granting publication authority.",
+  "scope": {
+    "geometry_role": "event_route_evidence",
+    "current_lane": "NYC permitted street-between event recovery",
+    "public_renderer_enabled": false,
+    "projector_consumption_enabled": false,
+    "publication_authority_granted": false
+  },
+  "core_rules": {
+    "exactness_means_faithful_supported_geometry": true,
+    "route_geometry_must_not_be_coerced_to_point": true,
+    "source_component_geometry_must_be_preserved": true,
+    "component_geometry_integrity_must_be_hash_verifiable": true,
+    "ordered_route_bundle_integrity_must_be_hash_verifiable": true,
+    "ordered_node_pairs_must_be_contiguous": true,
+    "ambiguous_or_missing_source_edges_must_withhold_entire_route": true,
+    "missing_route_evidence_must_not_drop_event": true,
+    "contract_conformance_is_not_publication_authority": true
+  },
+  "required_route_fields": [
+    "claim_key",
+    "occurrence_count",
+    "route_geometry_bundle_certified",
+    "reason_code",
+    "publication_state",
+    "publication_allowed",
+    "projector_consumed",
+    "public_renderer_enabled",
+    "route_edge_count",
+    "route_bundle_sha256",
+    "ordered_source_edges",
+    "dissolved_geometry_created",
+    "concatenated_geometry_created",
+    "endpoint_snapping_used",
+    "synthetic_coordinate_count"
+  ],
+  "required_component_fields": [
+    "edge_index",
+    "ordered_node_pair",
+    "geometry_type",
+    "geometry_sha256",
+    "geometry",
+    "source_segment_id",
+    "source_street"
+  ],
+  "allowed_geometry_types": [
+    "LineString",
+    "MultiLineString"
+  ],
+  "prohibited_transformations": [
+    "route midpoint used as exact event point",
+    "representative point generated from route geometry",
+    "dissolving official components into a replacement source geometry",
+    "concatenating components into a synthetic source geometry",
+    "endpoint snapping",
+    "coordinate interpolation",
+    "shortest-path replacement of the certified GeoSupport route",
+    "geometry simplification that changes source-route identity without a separately reviewed contract"
+  ],
+  "contract_audit_gates": {
+    "invalid_route_entry_count_required": 0,
+    "invalid_component_entry_count_required": 0,
+    "component_geometry_hash_mismatch_count_required": 0,
+    "route_bundle_hash_mismatch_count_required": 0,
+    "route_topology_discontinuity_count_required": 0,
+    "duplicate_claim_key_count_required": 0,
+    "point_generated_count_required": 0,
+    "midpoint_publication_count_required": 0,
+    "dissolved_route_geometry_count_required": 0,
+    "concatenated_route_geometry_count_required": 0,
+    "synthetic_coordinate_count_required": 0,
+    "publication_eligible_count_required": 0,
+    "exact_pin_candidate_count_required": 0,
+    "public_renderer_enabled_required": false,
+    "projector_consumed_required": false
+  },
+  "publication_boundary": {
+    "contract_conformant_entry_meaning": "The entry is suitable for retention as non-public exact-route evidence only.",
+    "not_authorized": [
+      "MAP_READY promotion",
+      "exact-pin publication",
+      "public route rendering",
+      "production feed mutation",
+      "location-cache mutation",
+      "projector consumption"
+    ],
+    "future_requirement": "Any public route rendering requires a separately reviewed route-geometry schema, renderer contract, corpus QA, reader-safe behavior, and release decision."
+  },
+  "release_status": "NONPUBLIC_EVIDENCE_ONLY"
+}
