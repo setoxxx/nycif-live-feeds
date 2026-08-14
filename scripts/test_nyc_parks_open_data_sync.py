@@ -17,7 +17,7 @@ class ParksOpenDataSyncTests(unittest.TestCase):
         self.assertIn(parks.DATASET_ID, parks.EVENTS_URL)
         self.assertFalse("events_300_rss.json" in parks.EVENTS_URL)
 
-    def test_official_coordinate_becomes_explicit_exact_evidence(self) -> None:
+    def test_official_coordinate_is_preserved_pending_exact_site_validation(self) -> None:
         row = parks.normalize_event_item(
             {
                 "guid": "parks-1",
@@ -34,9 +34,11 @@ class ParksOpenDataSyncTests(unittest.TestCase):
         self.assertEqual(row["lng"], -73.9654)
         evidence = row["location_evidence"]
         self.assertEqual(evidence["tier"], "exact_source_coordinate")
-        self.assertEqual(evidence["validation_state"], "validated")
-        self.assertTrue(evidence["exact_pin_eligible"])
+        self.assertEqual(evidence["validation_state"], "unvalidated")
+        self.assertEqual(evidence["site_validation_state"], "pending")
+        self.assertFalse(evidence["exact_pin_eligible"])
         self.assertEqual(evidence["source_dataset_id"], "w3wp-dpdi")
+        self.assertEqual(evidence["source_event_id"], "parks-1")
         self.assertFalse(row["promotion_allowed"])
         self.assertFalse(row["public_map_modified"])
 
