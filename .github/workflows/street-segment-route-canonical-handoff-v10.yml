@@ -19,6 +19,7 @@ jobs:
     env:
       V9_ARTIFACT_ID: '9220999563'
       V9_ARTIFACT_SHA256: 'eac9b8846bb4e950b8069505e19f38951df47a7acca3d496f503376c642b873f'
+      PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/scripts
     steps:
       - name: Check out exact PR head
         uses: actions/checkout@v4
