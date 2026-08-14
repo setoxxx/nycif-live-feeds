@@ -17,33 +17,40 @@ sys.path.insert(0, str(ROOT))
 
 import scripts.test_live_event_intake_refresh as regression  # noqa: E402
 from scripts.nyc_location_gazetteer import NYCLocationGazetteer  # noqa: E402
-from scripts.nyc_location_resolver import NYCLocationResolver, ResolveResult  # noqa: E402
+from scripts.nyc_location_resolver import NYCLocationResolver  # noqa: E402
 
 
 BLOCK_PARTY_LOCATION = "EAST   74 STREET between AVENUE U and AVENUE T"
 
 
-class RecordingResolver(NYCLocationResolver):
-    def __init__(self, points: dict[str, tuple[float, float]] | None = None) -> None:
-        super().__init__(NYCLocationGazetteer({}), {}, allow_live_geosearch=False)
-        self.queries: list[tuple[str, str | None]] = []
-        self.points = points or {}
+class FakeGeoclient:
+    def __init__(self, hits: dict[tuple[str, str, str], tuple[float, float]] | None = None) -> None:
+        self.hits = hits or {}
+        self.calls: list[tuple[str, str, str]] = []
 
-    def _resolve_geosearch(self, query: str, borough: str | None = None) -> ResolveResult | None:
-        self.queries.append((query, borough))
-        if query not in self.points:
+    def resolve_intersection(self, street1: str, street2: str, borough: str):
+        key = (street1, street2, borough)
+        self.calls.append(key)
+        point = self.hits.get(key)
+        if point is None:
             return None
-        lat, lng = self.points[query]
-        return ResolveResult(
-            resolved=True,
-            tier="test_candidate",
-            lat=lat,
-            lng=lng,
-            source="test",
-            confidence="high",
-            confidence_reason="fixture",
-            label=query,
-            query_used=query,
+        lat, lng = point
+        return {
+            "lat": lat,
+            "lng": lng,
+            "geocoder_source": "nyc_geoclient_intersection",
+            "geoclient_label": f"{street1} & {street2}",
+        }
+
+
+class RecordingResolver(NYCLocationResolver):
+    def __init__(self, geoclient_hits: dict[tuple[str, str, str], tuple[float, float]] | None = None) -> None:
+        self.fake_geoclient = FakeGeoclient(geoclient_hits)
+        super().__init__(
+            NYCLocationGazetteer({}),
+            {},
+            allow_live_geosearch=False,
+            geoclient=self.fake_geoclient,
         )
 
 
@@ -57,15 +64,15 @@ def test_canonical_required_block_party_segment() -> None:
     assert result.validation_state == "validated"
     assert result.exact_pin_eligible is True
     assert result.reason_code == "SEGMENT_CERTIFIED_REFERENCE"
-    assert resolver.queries == []
+    assert resolver.fake_geoclient.calls == []
 
 
 def test_canonical_general_segment_midpoint() -> None:
     display = "TEST STREET between FIRST AVENUE and SECOND AVENUE"
     resolver = RecordingResolver(
         {
-            "TEST STREET & FIRST AVENUE": (40.6200, -73.9100),
-            "TEST STREET & SECOND AVENUE": (40.6220, -73.9100),
+            ("TEST STREET", "FIRST AVENUE", "Brooklyn"): (40.6200, -73.9100),
+            ("TEST STREET", "SECOND AVENUE", "Brooklyn"): (40.6220, -73.9100),
         }
     )
     result = resolver.resolve(display_location=display, borough="Brooklyn")
@@ -75,24 +82,21 @@ def test_canonical_general_segment_midpoint() -> None:
     assert result.lng == -73.91
     assert result.validation_state == "validated"
     assert result.exact_pin_eligible is True
-    assert result.reason_code == "SEGMENT_ENDPOINTS_VALIDATED"
+    assert result.reason_code == "SEGMENT_GEOCLIENT_ENDPOINTS_VALIDATED"
+    assert resolver.fake_geoclient.calls == [
+        ("TEST STREET", "FIRST AVENUE", "Brooklyn"),
+        ("TEST STREET", "SECOND AVENUE", "Brooklyn"),
+    ]
 
 
 def test_canonical_cross_borough_segment_abstains() -> None:
     display = "TEST STREET between FIRST AVENUE and SECOND AVENUE"
-    queries = (
-        "TEST STREET and FIRST AVENUE",
-        "TEST STREET & FIRST AVENUE",
-        "FIRST AVENUE and TEST STREET",
-        "FIRST AVENUE & TEST STREET",
-        "TEST STREET at FIRST AVENUE",
-        "TEST STREET and SECOND AVENUE",
-        "TEST STREET & SECOND AVENUE",
-        "SECOND AVENUE and TEST STREET",
-        "SECOND AVENUE & TEST STREET",
-        "TEST STREET at SECOND AVENUE",
+    resolver = RecordingResolver(
+        {
+            ("TEST STREET", "FIRST AVENUE", "Brooklyn"): (40.772418, -73.963278),
+            ("TEST STREET", "SECOND AVENUE", "Brooklyn"): (40.772500, -73.963000),
+        }
     )
-    resolver = RecordingResolver({query: (40.772418, -73.963278) for query in queries})
     result = resolver.resolve(display_location=display, borough="Brooklyn")
     assert result.resolved is False
     assert result.reason_code == "SEGMENT_UNCERTIFIED"
