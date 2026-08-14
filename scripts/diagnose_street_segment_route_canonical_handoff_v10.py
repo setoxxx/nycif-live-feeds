@@ -28,6 +28,14 @@ def _rows(path: Path) -> list[dict[str, Any]]:
     return extract_rows(payload)
 
 
+def _exact_keys(rows: list[dict[str, Any]]) -> set[tuple[str, str, str]]:
+    return {
+        occurrence_key_v2(row)
+        for row in rows
+        if identity_precision(row) != "AMBIGUOUS"
+    }
+
+
 def diagnose(
     *,
     v9: dict[str, Any],
@@ -50,12 +58,11 @@ def diagnose(
         if identity_precision(row) != "AMBIGUOUS":
             raw_by_key[occurrence_key_v2(row)].append(row)
 
-    represented_rows = staged_rows + supplemental_rows
-    represented_exact = {
-        occurrence_key_v2(row)
-        for row in represented_rows
-        if identity_precision(row) != "AMBIGUOUS"
-    }
+    # Projector V3 raw accounting begins with staged exact identities only.
+    # Supplemental identity presence is reported separately because it can affect
+    # later approved/dedupe handling but must not be mislabeled as pre-raw intake.
+    staged_exact = _exact_keys(staged_rows)
+    supplemental_exact = _exact_keys(supplemental_rows)
     contract = build_rejection_contract(disposition_rows)
 
     canonical_by_key: dict[tuple[str, str, str], list[dict[str, Any]]] = defaultdict(list)
@@ -81,7 +88,7 @@ def diagnose(
             rejection_scope = rejection_scope_applied(raw, contract)
             intake_bucket = classify_occurrence_intake(
                 raw,
-                represented_occurrences=represented_exact,
+                represented_occurrences=staged_exact,
                 rejection_contract=contract,
                 season_start=season_start,
                 season_end=season_end,
@@ -93,12 +100,14 @@ def diagnose(
                 bucket = "EXACT_CANONICAL_NOT_UNIQUE"
             elif rejection_scope:
                 bucket = f"REJECTED_{rejection_scope}"
-            elif key in represented_exact:
+            elif key in staged_exact:
                 bucket = "PRE_RAW_EXACT_OCCURRENCE_REPRESENTED"
             elif intake_bucket != "accepted_review_supplemental":
                 bucket = f"INTAKE_{intake_bucket or 'UNSPECIFIED'}"
+            elif key in supplemental_exact:
+                bucket = "ACCEPTED_RAW_AND_PRESENT_IN_SUPPLEMENTAL_BUT_NO_EXACT_CANONICAL"
             else:
-                bucket = "ACCEPTED_INTAKE_BUT_NO_EXACT_CANONICAL"
+                bucket = "ACCEPTED_RAW_BUT_NO_EXACT_CANONICAL"
 
         source_candidates = canonical_by_source_id.get(key[1], [])
         same_start_candidates = canonical_by_start.get(key[2], [])
@@ -106,7 +115,8 @@ def diagnose(
             "occurrence_key_v2": list(key),
             "classification": bucket,
             "raw_match_count": len(raw_matches),
-            "pre_raw_exact_represented": key in represented_exact,
+            "staged_exact_represented": key in staged_exact,
+            "supplemental_exact_present": key in supplemental_exact,
             "rejection_scope": rejection_scope,
             "projector_intake_bucket": intake_bucket,
             "exact_canonical_match_count": len(canonical_by_key.get(key, [])),
