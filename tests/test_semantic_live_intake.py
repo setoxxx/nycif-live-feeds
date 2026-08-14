@@ -13,6 +13,18 @@ def raw_row():
     }
 
 
+def validated_address_match():
+    return {
+        "lat": 40.7128,
+        "lng": -74.0060,
+        "resolver_tier": "exact_address",
+        "validation_state": "validated",
+        "exact_pin_eligible": True,
+        "geocoder_source": "nyc_geoclient_address",
+        "reason_code": "ADDRESS_GEOCLIENT_VALIDATED",
+    }
+
+
 def test_legacy_coordinate_match_never_becomes_exact_pin():
     match = {"lat": 40.7128, "lng": -74.0060}
     event = enrich_with_location_authority(raw_row(), "event_id", match)
@@ -24,19 +36,27 @@ def test_legacy_coordinate_match_never_becomes_exact_pin():
 
 
 def test_validated_resolver_evidence_becomes_map_ready():
+    event = enrich_with_location_authority(raw_row(), "exact_address", validated_address_match())
+    assert event["map_eligibility_state"] == "MAP_READY"
+    assert event["certified_pin"] is True
+    assert event["needs_review"] is False
+
+
+def test_legacy_geosearch_address_claim_does_not_self_certify():
     match = {
         "lat": 40.7128,
         "lng": -74.0060,
         "resolver_tier": "exact_address",
         "validation_state": "validated",
         "exact_pin_eligible": True,
-        "geocoder_source": "nyc_geosearch",
+        "geocoder_source": "nyc_geosearch_planninglabs",
         "reason_code": "address_and_borough_validated",
     }
     event = enrich_with_location_authority(raw_row(), "exact_address", match)
-    assert event["map_eligibility_state"] == "MAP_READY"
-    assert event["certified_pin"] is True
-    assert event["needs_review"] is False
+    assert event["map_eligibility_state"] == "REVIEW_REQUIRED"
+    assert event["certified_pin"] is False
+    assert event["needs_review"] is True
+    assert event["pin_integrity_reason"] == "ADDRESS_SITE_UNVERIFIED"
 
 
 def test_unresolved_match_is_list_only():
@@ -46,18 +66,7 @@ def test_unresolved_match_is_list_only():
 
 
 def test_staging_accepts_only_certified_map_ready_rows():
-    certified = enrich_with_location_authority(
-        raw_row(),
-        "exact_address",
-        {
-            "lat": 40.7128,
-            "lng": -74.0060,
-            "resolver_tier": "exact_address",
-            "validation_state": "validated",
-            "exact_pin_eligible": True,
-            "geocoder_source": "nyc_geosearch",
-        },
-    )
+    certified = enrich_with_location_authority(raw_row(), "exact_address", validated_address_match())
     legacy = enrich_with_location_authority(raw_row(), "event_id", {"lat": 40.7130, "lng": -74.0062})
     feed = {"events": [certified, legacy]}
     staged, manifest = build_semantic_staged_feed(feed)
