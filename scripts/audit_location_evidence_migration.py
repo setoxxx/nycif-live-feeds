@@ -8,7 +8,10 @@ matching stack and separately reports:
 * recovery candidates that deserve authoritative re-resolution; and
 * rows already carrying publication-ready explicit evidence.
 
-A recovery candidate is not a recovered pin.
+A recovery candidate is not a recovered pin. Recurring occurrences sharing the
+same borough/location/tier are also collapsed into a unique resolution claim so
+network and human review work can be sized without repeatedly resolving the
+same physical place.
 """
 from __future__ import annotations
 
@@ -20,10 +23,12 @@ from typing import Any
 
 try:
     from scripts import build_test_enriched_feed as enrich
+    from scripts.gps_identity import normalize_text_legacy
     from scripts.legacy_location_evidence_migration import migration_decision
     from scripts.location_evidence_contract import normalize_location_evidence
 except ModuleNotFoundError:  # pragma: no cover - direct script execution
     import build_test_enriched_feed as enrich  # type: ignore[no-redef]
+    from gps_identity import normalize_text_legacy
     from legacy_location_evidence_migration import migration_decision
     from location_evidence_contract import normalize_location_evidence
 
@@ -68,6 +73,12 @@ def classification(match_type: str, match: dict[str, Any] | None) -> str:
     return "MATCH_WITHOUT_COORDINATES"
 
 
+def _candidate_claim_key(raw: dict[str, Any], tier: str) -> str:
+    borough = normalize_text_legacy(raw.get("event_borough") or raw.get("borough"))
+    location = normalize_text_legacy(raw.get("event_location") or raw.get("location"))
+    return f"{tier}|{borough}|{location}"
+
+
 def audit_rows(
     raw_rows: list[dict[str, Any]],
     enriched: list[dict[str, Any]],
@@ -81,6 +92,8 @@ def audit_rows(
     candidate_tiers: Counter[str] = Counter()
     eligible_tiers: Counter[str] = Counter()
     candidate_agencies: Counter[str] = Counter()
+    candidate_claims: Counter[str] = Counter()
+    claim_examples: dict[str, dict[str, Any]] = {}
     by_match: dict[str, Counter[str]] = defaultdict(Counter)
     samples: dict[str, list[dict[str, Any]]] = defaultdict(list)
     recovery_candidate_count = 0
@@ -102,6 +115,19 @@ def audit_rows(
             candidate_tiers[tier] += 1
             agency = str(raw.get("event_agency") or "UNSPECIFIED").strip() or "UNSPECIFIED"
             candidate_agencies[agency] += 1
+            claim_key = _candidate_claim_key(raw, tier)
+            candidate_claims[claim_key] += 1
+            claim_examples.setdefault(
+                claim_key,
+                {
+                    "candidate_tier": tier,
+                    "borough": raw.get("event_borough") or raw.get("borough"),
+                    "event_location": raw.get("event_location") or raw.get("location"),
+                    "event_agency": raw.get("event_agency"),
+                    "reason_code": migration.get("reason_code"),
+                    "facility_ids": migration.get("facility_ids") or [],
+                },
+            )
 
         if migration.get("eligible") is True:
             publication_eligible_count += 1
@@ -133,6 +159,13 @@ def audit_rows(
     migration_debt = sum(
         count for key, count in buckets.items() if key.startswith("MIGRATION_DEBT_")
     )
+    unique_claims_by_tier = Counter(key.split("|", 1)[0] for key in candidate_claims)
+    top_claims = []
+    for claim_key, occurrence_count in candidate_claims.most_common(50):
+        item = dict(claim_examples[claim_key])
+        item["occurrence_count"] = occurrence_count
+        top_claims.append(item)
+
     return {
         "schema_version": "NYCIF_LOCATION_EVIDENCE_MIGRATION_AUDIT_V3",
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
@@ -146,6 +179,9 @@ def audit_rows(
         "recovery_candidate_count": recovery_candidate_count,
         "recovery_candidate_tier_counts": dict(sorted(candidate_tiers.items())),
         "recovery_candidate_agency_counts": dict(sorted(candidate_agencies.items())),
+        "unique_recovery_claim_count": len(candidate_claims),
+        "unique_recovery_claim_tier_counts": dict(sorted(unique_claims_by_tier.items())),
+        "top_recovery_claims": top_claims,
         "publication_eligible_count": publication_eligible_count,
         "publication_eligible_tier_counts": dict(sorted(eligible_tiers.items())),
         # Compatibility field retained so older dashboards fail safely instead
