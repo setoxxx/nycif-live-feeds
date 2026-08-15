@@ -9,26 +9,26 @@
     "list_only_remain_visible": true,
     "map_ready_standalone_marker_eligible": true
   },
-  "classes_workshops_interest_count": 956,
+  "classes_workshops_interest_count": 908,
   "classification_confidence_counts": {
-    "high": 24907,
-    "low": 3816,
-    "medium": 2596
+    "high": 25031,
+    "low": 3813,
+    "medium": 2506
   },
   "classification_version": "discovery-taxonomy-v02",
   "coordinate_status_counts": {
-    "list_only": 31319
+    "list_only": 31350
   },
   "display_disposition_counts": {
-    "list_only": 31219,
-    "maintenance_or_closure": 75,
-    "private_or_reserved_activity": 25
+    "list_only": 31254,
+    "maintenance_or_closure": 73,
+    "private_or_reserved_activity": 23
   },
   "event_role_counts": {
-    "maintenance_or_closure": 75,
-    "private_or_reserved_activity": 25,
-    "public_event": 31122,
-    "street_closure": 95,
+    "maintenance_or_closure": 73,
+    "private_or_reserved_activity": 23,
+    "public_event": 31150,
+    "street_closure": 102,
     "transportation_operation": 2
   },
   "explore_more_order": [
@@ -39,26 +39,26 @@
     "housing",
     "environment"
   ],
-  "generated_at_utc": "2026-08-14T11:28:07Z",
+  "generated_at_utc": "2026-08-15T10:58:16Z",
   "interest_counts": {
-    "arts": 366,
-    "civic": 625,
-    "education": 956,
-    "environment": 131,
-    "family": 2304,
-    "fitness": 695,
-    "general": 3816,
+    "arts": 353,
+    "civic": 692,
+    "education": 908,
+    "environment": 130,
+    "family": 2228,
+    "fitness": 686,
+    "general": 3813,
     "government": 19,
     "housing": 15,
-    "market": 395,
-    "media": 54,
-    "parks": 4259,
-    "services": 40,
-    "sports": 21058,
+    "market": 402,
+    "media": 60,
+    "parks": 4096,
+    "services": 45,
+    "sports": 21205,
     "tours": 16,
-    "volunteer": 235
+    "volunteer": 230
   },
-  "kids_family_interest_count": 2304,
+  "kids_family_interest_count": 2228,
   "legacy_major": {
     "demoted": 0,
     "quarantined": 0,
@@ -377,44 +377,6 @@
       "significance": "standard",
       "source_dataset": "nyc-parks-bigapps-events",
       "source_event_id": "2204197",
-      "tags": [
-        "fitness-class",
-        "parks-program",
-        "workshop",
-        "fitness-class"
-      ]
-    },
-    {
-      "borough": null,
-      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2208084@2026-08-13",
-      "category": "fitness",
-      "classification_confidence": "high",
-      "classification_reason": "high_confidence_program_override_shape_up",
-      "coordinate_status": "list_only",
-      "coordinates": [
-        null,
-        null
-      ],
-      "date": "2026-08-13",
-      "display_disposition": "list_only",
-      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2208084@2026-08-13",
-      "event_role": "public_event",
-      "filters": [
-        "fitness"
-      ],
-      "grouping_confidence": null,
-      "grouping_reason": null,
-      "interests": [
-        "fitness"
-      ],
-      "location": "Location under review",
-      "marker_eligible": false,
-      "needle": "Strength In Motion",
-      "parent_event_id": null,
-      "raw_category": "Fitness",
-      "significance": "standard",
-      "source_dataset": "nyc-parks-bigapps-events",
-      "source_event_id": "2208084",
       "tags": [
         "fitness-class",
         "parks-program",
@@ -934,39 +896,6 @@
     },
     {
       "borough": "Manhattan",
-      "canonical_id": "review_supplemental:tvpp-9vvx:887399@2026-08-13",
-      "category": "market",
-      "classification_confidence": "medium",
-      "classification_reason": "keyword_market+raw_unstaged_open_data_intake",
-      "coordinate_status": "list_only",
-      "coordinates": [
-        null,
-        null
-      ],
-      "date": "2026-08-13",
-      "display_disposition": "list_only",
-      "event_group_id": "review_supplemental:tvpp-9vvx:887399@2026-08-13",
-      "event_role": "public_event",
-      "filters": [
-        "market"
-      ],
-      "grouping_confidence": null,
-      "grouping_reason": null,
-      "interests": [
-        "market"
-      ],
-      "location": "Manhattan",
-      "marker_eligible": false,
-      "needle": "Green Market",
-      "parent_event_id": null,
-      "raw_category": null,
-      "significance": "standard",
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "887399",
-      "tags": []
-    },
-    {
-      "borough": "Manhattan",
       "canonical_id": "review_supplemental:tvpp-9vvx:887399@2026-08-18",
       "category": "market",
       "classification_confidence": "medium",
@@ -1099,6 +1028,39 @@
     },
     {
       "borough": "Manhattan",
+      "canonical_id": "review_supplemental:tvpp-9vvx:887399@2026-09-01",
+      "category": "market",
+      "classification_confidence": "medium",
+      "classification_reason": "keyword_market+raw_unstaged_open_data_intake",
+      "coordinate_status": "list_only",
+      "coordinates": [
+        null,
+        null
+      ],
+      "date": "2026-09-01",
+      "display_disposition": "list_only",
+      "event_group_id": "review_supplemental:tvpp-9vvx:887399@2026-09-01",
+      "event_role": "public_event",
+      "filters": [
+        "market"
+      ],
+      "grouping_confidence": null,
+      "grouping_reason": null,
+      "interests": [
+        "market"
+      ],
+      "location": "Manhattan",
+      "marker_eligible": false,
+      "needle": "Green Market",
+      "parent_event_id": null,
+      "raw_category": null,
+      "significance": "standard",
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "887399",
+      "tags": []
+    },
+    {
+      "borough": "Manhattan",
       "canonical_id": "review_supplemental:tvpp-9vvx:889689@2026-08-18",
       "category": "parks",
       "classification_confidence": "medium",
@@ -1171,27 +1133,27 @@
     }
   ],
   "primary_category_counts": {
-    "arts": 361,
-    "civic": 624,
-    "education": 143,
+    "arts": 348,
+    "civic": 691,
+    "education": 131,
     "environment": 26,
-    "family": 2152,
-    "fitness": 695,
-    "general": 3816,
+    "family": 2067,
+    "fitness": 686,
+    "general": 3813,
     "government": 19,
     "housing": 15,
-    "market": 333,
-    "media": 54,
-    "parks": 1735,
-    "services": 40,
-    "sports": 21055,
+    "market": 337,
+    "media": 60,
+    "parks": 1664,
+    "services": 45,
+    "sports": 21202,
     "tours": 16,
-    "volunteer": 235
+    "volunteer": 230
   },
   "qa_pass": true,
   "significance_counts": {
-    "major": 378,
-    "standard": 30941
+    "major": 388,
+    "standard": 30962
   },
   "strict_reconciliation": {
     "documented_human_rejected": 17,
@@ -1203,50 +1165,50 @@
   },
   "strict_reconciliation_pass": true,
   "tag_counts": {
-    "annual": 44,
-    "cleanup": 57,
-    "family-friendly": 2461,
-    "feast": 36,
-    "festival": 37,
-    "fifa": 6,
-    "film": 194,
-    "fitness-class": 1092,
+    "annual": 46,
+    "cleanup": 59,
+    "family-friendly": 2387,
+    "feast": 38,
+    "festival": 39,
+    "fifa": 4,
+    "film": 185,
+    "fitness-class": 1074,
     "food-festival": 1,
-    "free": 1996,
+    "free": 1911,
     "holiday-market": 1,
-    "kids": 4286,
-    "maintenance": 76,
-    "maintenance-or-closure": 75,
+    "kids": 4118,
+    "maintenance": 74,
+    "maintenance-or-closure": 73,
     "marathon": 1,
     "multi-day": 9,
-    "outdoor": 2836,
-    "parade": 150,
-    "parks-program": 320,
+    "outdoor": 2772,
+    "parade": 154,
+    "parks-program": 316,
     "pride": 4,
-    "private-or-reserved-activity": 25,
+    "private-or-reserved-activity": 23,
     "race": 1,
-    "religious": 260,
-    "running": 145,
-    "street-closure": 516,
+    "religious": 266,
+    "running": 144,
+    "street-closure": 593,
     "street-fair": 1,
-    "transportation": 100,
+    "transportation": 99,
     "transportation-operation": 2,
-    "workshop": 1097,
-    "world-cup": 3
+    "workshop": 1045,
+    "world-cup": 2
   },
   "totals": {
-    "accepted_canonical_records": 31319,
+    "accepted_canonical_records": 31350,
     "grouped_under_public_events": 0,
     "invalid_rejected": 0,
-    "list_only": 31219,
-    "maintenance_or_closure": 75,
+    "list_only": 31254,
+    "maintenance_or_closure": 73,
     "map_ready": 0,
-    "private_or_reserved": 25,
+    "private_or_reserved": 23,
     "standalone_public_events": 0,
-    "street_closures": 95,
+    "street_closures": 102,
     "supporting_permits": 0,
     "transportation_operations": 2
   },
   "tours_category_count": 16,
-  "volunteer_category_count": 235
+  "volunteer_category_count": 230
 }
