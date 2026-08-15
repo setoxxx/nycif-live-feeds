@@ -36,6 +36,9 @@ jobs:
         with:
           python-version: "3.11"
 
+      - name: Install test dependencies
+        run: python -m pip install --disable-pip-version-check pytest==9.0.2
+
       - name: Capture protected file fingerprints (pre)
         id: pre
         run: |
