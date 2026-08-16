@@ -15,17 +15,13 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from scripts import daily_refresh_state as refresh_state  # noqa: E402
 from scripts import sync_nyc_parks_bigapps_events as parks_sync  # noqa: E402
 from scripts.augment_daily_data_health_v03 import availability_gate  # noqa: E402
 from scripts.build_staged_production_feed import apply_one_day_street_dedupe  # noqa: E402
 from scripts.record_blocked_daily_data_health import build_payload  # noqa: E402
 from scripts.refresh_official_supplemental_occurrences import occurrence_key  # noqa: E402
-from scripts.run_daily_refresh_stage import (  # noqa: E402
-    failure_payload,
-    run_command,
-    sanitize_summary,
-    write_failure,
-)
+from scripts.run_daily_refresh_stage import failure_payload, run_command, sanitize_summary  # noqa: E402
 from scripts.sync_nyc_citywide_events_calendar import bool_flag  # noqa: E402
 
 
@@ -195,13 +191,16 @@ def test_failure_payload_never_emits_unknown_stage() -> None:
 
 def test_stage_runner_records_actionable_failure() -> None:
     with tempfile.TemporaryDirectory(dir=ROOT) as directory:
-        failure_file = Path(directory) / "failure.json"
-        exit_code = run_command(
-            [sys.executable, "-c", "import sys; print('token=top-secret'); sys.exit(7)"],
-            stage="preflight_regression_fixture",
-            command_id="intentional_failure_fixture",
-            failure_file=failure_file,
-        )
+        runtime_dir = Path(directory)
+        failure_file = runtime_dir / "failure.json"
+        with patch.object(refresh_state, "RUNTIME_DIR", runtime_dir), patch.object(
+            refresh_state, "FAILURE_JSON", failure_file
+        ):
+            exit_code = run_command(
+                [sys.executable, "-c", "import sys; print('token=top-secret'); sys.exit(7)"],
+                stage="preflight_regression_fixture",
+                command_id="intentional_failure_fixture",
+            )
         payload = json.loads(failure_file.read_text(encoding="utf-8"))
         assert exit_code == 7
         assert payload["stage"] == "preflight_regression_fixture"
@@ -213,23 +212,25 @@ def test_stage_runner_records_actionable_failure() -> None:
         assert "[REDACTED]" in payload["error_summary"]
 
 
-def test_runtime_failure_paths_stay_inside_repository() -> None:
+def test_runtime_failure_state_is_fixed_private_and_atomic() -> None:
     payload = failure_payload(
         stage="path_policy_fixture",
-        command_id="write_failure",
+        command_id="atomic_write_failure",
         exit_code=1,
         exception_class="FixtureFailure",
         error_summary="fixture",
     )
-    with tempfile.TemporaryDirectory() as directory:
-        outside_path = Path(directory) / "failure.json"
-        try:
-            write_failure(outside_path, payload)
-        except ValueError as exc:
-            assert "runtime path must stay within" in str(exc)
-        else:
-            raise AssertionError("outside-repository runtime path was accepted")
-        assert not outside_path.exists()
+    with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+        runtime_dir = Path(directory) / "private-runtime"
+        failure_file = runtime_dir / "failure.json"
+        with patch.object(refresh_state, "RUNTIME_DIR", runtime_dir), patch.object(
+            refresh_state, "FAILURE_JSON", failure_file
+        ):
+            refresh_state.atomic_write_failure(payload)
+        assert json.loads(failure_file.read_text(encoding="utf-8")) == payload
+        assert runtime_dir.stat().st_mode & 0o777 == 0o700
+        assert failure_file.stat().st_mode & 0o777 == 0o600
+        assert list(runtime_dir.glob("*.tmp")) == []
 
     for script_name in ("run_discovery_feed_refresh.sh", "publish_blocked_daily_refresh.sh"):
         source = (ROOT / "scripts" / script_name).read_text(encoding="utf-8")
@@ -317,6 +318,7 @@ def test_modified_reliability_python_files_compile() -> None:
     with tempfile.TemporaryDirectory(dir=ROOT) as directory:
         output = Path(directory)
         for source in (
+            ROOT / "scripts" / "daily_refresh_state.py",
             ROOT / "scripts" / "run_daily_refresh_stage.py",
             ROOT / "scripts" / "record_blocked_daily_data_health.py",
             ROOT / "scripts" / "augment_daily_data_health_v03.py",
@@ -347,7 +349,7 @@ def main() -> int:
         test_failure_summary_redacts_common_secrets,
         test_failure_payload_never_emits_unknown_stage,
         test_stage_runner_records_actionable_failure,
-        test_runtime_failure_paths_stay_inside_repository,
+        test_runtime_failure_state_is_fixed_private_and_atomic,
         test_public_map_availability_gate_rejects_zero_inventory,
         test_blocked_health_payload_is_fail_closed_and_actionable,
         test_current_preflight_does_not_require_mutable_historical_pages,
