@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import py_compile
 import sys
 import tempfile
@@ -19,7 +20,7 @@ from scripts import daily_refresh_state as refresh_state  # noqa: E402
 from scripts import sync_nyc_parks_bigapps_events as parks_sync  # noqa: E402
 from scripts.augment_daily_data_health_v03 import availability_gate  # noqa: E402
 from scripts.build_staged_production_feed import apply_one_day_street_dedupe  # noqa: E402
-from scripts.record_blocked_daily_data_health import build_payload  # noqa: E402
+from scripts.record_blocked_daily_data_health import build_payload, load_failure_context  # noqa: E402
 from scripts.refresh_official_supplemental_occurrences import occurrence_key  # noqa: E402
 from scripts.run_daily_refresh_stage import failure_payload, run_command, sanitize_summary  # noqa: E402
 from scripts.sync_nyc_citywide_events_calendar import bool_flag  # noqa: E402
@@ -191,11 +192,9 @@ def test_failure_payload_never_emits_unknown_stage() -> None:
 
 def test_stage_runner_records_actionable_failure() -> None:
     with tempfile.TemporaryDirectory(dir=ROOT) as directory:
-        runtime_dir = Path(directory)
-        failure_file = runtime_dir / "failure.json"
-        with patch.object(refresh_state, "RUNTIME_DIR", runtime_dir), patch.object(
-            refresh_state, "FAILURE_JSON", failure_file
-        ):
+        state_root = Path(directory)
+        failure_file = state_root / ".runtime" / refresh_state.FAILURE_NAME
+        with patch.object(refresh_state, "ROOT", state_root):
             exit_code = run_command(
                 [sys.executable, "-c", "import sys; print('token=top-secret'); sys.exit(7)"],
                 stage="preflight_regression_fixture",
@@ -221,12 +220,14 @@ def test_runtime_failure_state_is_fixed_private_and_atomic() -> None:
         error_summary="fixture",
     )
     with tempfile.TemporaryDirectory(dir=ROOT) as directory:
-        runtime_dir = Path(directory) / "private-runtime"
-        failure_file = runtime_dir / "failure.json"
-        with patch.object(refresh_state, "RUNTIME_DIR", runtime_dir), patch.object(
-            refresh_state, "FAILURE_JSON", failure_file
-        ):
+        state_root = Path(directory)
+        runtime_dir = state_root / ".runtime"
+        failure_file = runtime_dir / refresh_state.FAILURE_NAME
+        with patch.object(refresh_state, "ROOT", state_root):
             refresh_state.atomic_write_failure(payload)
+            assert refresh_state.read_failure() == payload
+            refresh_state.atomic_write_previous_commit("a" * 40)
+            assert refresh_state.read_previous_commit() == "a" * 40
         assert json.loads(failure_file.read_text(encoding="utf-8")) == payload
         assert runtime_dir.stat().st_mode & 0o777 == 0o700
         assert failure_file.stat().st_mode & 0o777 == 0o600
@@ -235,9 +236,100 @@ def test_runtime_failure_state_is_fixed_private_and_atomic() -> None:
     for script_name in ("run_discovery_feed_refresh.sh", "publish_blocked_daily_refresh.sh"):
         source = (ROOT / "scripts" / script_name).read_text(encoding="utf-8")
         assert "/tmp/nycif-daily-failure" not in source
-        assert 'RUNTIME_DIR="$REPO_ROOT/.runtime"' in source
-        assert 'if [ -L "$RUNTIME_DIR" ]' in source
+        assert "FAILURE_LEGACY" not in source
+        assert "PREVIOUS_POINTER" not in source
+        assert "RUNTIME_DIR" not in source
         assert "NYCIF_RUNTIME_DIR" not in source
+
+
+def test_runtime_state_rejects_symlinks_and_invalid_payloads() -> None:
+    payload = failure_payload(
+        stage="path_policy_fixture",
+        command_id="atomic_write_failure",
+        exit_code=1,
+        exception_class="FixtureFailure",
+        error_summary="fixture",
+    )
+    with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+        base = Path(directory)
+        state_root = base / "repo"
+        outside = base / "outside"
+        state_root.mkdir()
+        outside.mkdir()
+        victim = outside / "victim"
+        victim.write_text("untouched", encoding="utf-8")
+        (state_root / ".runtime").symlink_to(outside, target_is_directory=True)
+        with patch.object(refresh_state, "ROOT", state_root):
+            try:
+                refresh_state.atomic_write_failure(payload)
+            except (OSError, RuntimeError):
+                pass
+            else:
+                raise AssertionError("symlinked runtime directory was accepted")
+        assert victim.read_text(encoding="utf-8") == "untouched"
+
+        (state_root / ".runtime").unlink()
+        runtime = state_root / ".runtime"
+        runtime.mkdir(mode=0o700)
+        failure_leaf = runtime / refresh_state.FAILURE_NAME
+        failure_leaf.symlink_to(victim)
+        with patch.object(refresh_state, "ROOT", state_root):
+            for operation in (
+                lambda: refresh_state.atomic_write_failure(payload),
+                refresh_state.read_failure,
+            ):
+                try:
+                    operation()
+                except (OSError, RuntimeError):
+                    pass
+                else:
+                    raise AssertionError("symlinked failure leaf was accepted")
+        assert victim.read_text(encoding="utf-8") == "untouched"
+
+
+def test_runtime_state_validation_is_fail_closed() -> None:
+    valid = failure_payload(
+        stage="schema_fixture",
+        command_id="schema_fixture",
+        exit_code=9,
+        exception_class="FixtureFailure",
+        error_summary="fixture",
+    )
+    invalid_payloads = (
+        {**valid, "exit_code": "9"},
+        {**valid, "exit_code": True},
+        {**valid, "public_feed_commit_occurred": "false"},
+        {**valid, "stage": "unknown_stage"},
+        {**valid, "extra": "smuggled"},
+    )
+    with tempfile.TemporaryDirectory(dir=ROOT) as directory:
+        state_root = Path(directory)
+        failure_file = state_root / ".runtime" / refresh_state.FAILURE_NAME
+        with patch.object(refresh_state, "ROOT", state_root):
+            refresh_state.atomic_write_failure(valid)
+            original = failure_file.read_bytes()
+            for invalid in invalid_payloads:
+                try:
+                    refresh_state.atomic_write_failure(invalid)
+                except ValueError:
+                    pass
+                else:
+                    raise AssertionError(f"invalid failure payload was accepted: {invalid!r}")
+                assert failure_file.read_bytes() == original
+
+            failure_file.write_text(
+                '{"schema_version":"1.0.0","schema_version":"smuggled"}',
+                encoding="utf-8",
+            )
+            os.chmod(failure_file, 0o600)
+            context = load_failure_context()
+            assert context["exception_class"] == "MalformedFailureContext"
+            assert context["publication_state_verified"] is False
+
+            failure_file.write_bytes(b"x" * (refresh_state.MAX_STATE_BYTES + 1))
+            os.chmod(failure_file, 0o600)
+            context = load_failure_context()
+            assert context["exception_class"] == "MalformedFailureContext"
 
 
 def test_public_map_availability_gate_rejects_zero_inventory() -> None:
@@ -282,8 +374,28 @@ def test_blocked_health_payload_is_fail_closed_and_actionable() -> None:
     assert blocker["command_id"] == "preflight_fixture"
     assert blocker["exception_class"] == "AssertionError"
     assert blocker["public_feed_commit_occurred"] is False
+    assert blocker["publication_state_verified"] is True
     assert "hunter2" not in blocker["error_summary"]
     assert payload["rollback"]["previous_public_feed_commit"] == "abc123"
+    assert payload["enigma"]["production_authority"] is True
+    assert payload["enigma"]["mode"] == "projector_v3_certified_runtime"
+    assert "V1 remains" not in json.dumps(payload)
+    assert "shadow_only" not in json.dumps(payload)
+
+    unknown = build_payload(
+        stage="platform_or_uninstrumented_failure",
+        command_id="malformed_failure_context",
+        exit_code=1,
+        shell_line="not_available",
+        exception_class="MalformedFailureContext",
+        error_summary="malformed",
+        previous_commit="abc123",
+        public_feed_commit_occurred=False,
+        publication_state_verified=False,
+    )
+    assert unknown["rollback"]["publication_state_verified"] is False
+    assert "could not be verified" in unknown["rollback"]["strategy"]
+    assert "No feed rollback was required" not in unknown["rollback"]["strategy"]
 
 
 def test_current_preflight_does_not_require_mutable_historical_pages() -> None:
@@ -307,12 +419,23 @@ def test_refresh_workflow_has_structured_preflight_diagnostics() -> None:
     )
     assert "bash scripts/run_discovery_feed_refresh.sh" in workflow
     assert "bash scripts/publish_blocked_daily_refresh.sh" in workflow
+    assert "prepare_v3_runtime_validator.py" not in workflow
+    assert "cp /tmp/nycif-run-discovery-feed-refresh-v3.sh" not in workflow
     assert "scripts/run_daily_refresh_stage.py" in transaction
     assert "scripts/test_live_event_intake_refresh_current.py" in transaction
     assert "--command-id" in transaction
     assert "platform_or_uninstrumented_failure" in publisher
     assert "--exception-class" in publisher
     assert "--error-summary" in publisher
+    assert "status/nycif-last-known-good-feed.json" in publisher
+    assert "git merge-base --is-ancestor" in publisher
+    assert "git restore --source=" in publisher
+    assert "companion_state=restored_after_failure" in publisher
+    assert "NYCIF_REFRESH_PINNED_SHA" in transaction
+    assert "NYCIF_BLOCKED_PUBLISH_PINNED_SHA" in publisher
+    assert 'health_v3_runtime.get("map_ready_count")' in transaction
+    assert 'map_safe.get("exact_marker_count")' in transaction
+    assert "staged map-ready feed has no events" not in transaction
     assert 'stage="unknown_stage"' not in workflow
 
 
@@ -352,6 +475,8 @@ def main() -> int:
         test_failure_payload_never_emits_unknown_stage,
         test_stage_runner_records_actionable_failure,
         test_runtime_failure_state_is_fixed_private_and_atomic,
+        test_runtime_state_rejects_symlinks_and_invalid_payloads,
+        test_runtime_state_validation_is_fail_closed,
         test_public_map_availability_gate_rejects_zero_inventory,
         test_blocked_health_payload_is_fail_closed_and_actionable,
         test_current_preflight_does_not_require_mutable_historical_pages,

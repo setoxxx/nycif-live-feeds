@@ -3,23 +3,44 @@
 set -eEuo pipefail
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
-RUNTIME_DIR="$REPO_ROOT/.runtime"
-FAILURE_JSON="$RUNTIME_DIR/nycif-daily-failure.json"
-FAILURE_LEGACY="$RUNTIME_DIR/nycif-daily-failure"
-PREVIOUS_POINTER="$RUNTIME_DIR/nycif-previous-public-feed"
+cd "$REPO_ROOT"
 umask 077
-if [ -L "$RUNTIME_DIR" ]; then
-  echo "Refresh runtime directory must not be a symlink: $RUNTIME_DIR" >&2
-  exit 1
+
+git config user.name "github-actions[bot]"
+git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+START_ATTEMPT="${NYCIF_REFRESH_START_ATTEMPT:-1}"
+if [[ ! "$START_ATTEMPT" =~ ^[1-3]$ ]]; then
+  echo "Invalid refresh attempt: $START_ATTEMPT" >&2
+  exit 2
 fi
-install -d -m 700 "$RUNTIME_DIR"
+
+PINNED_SHA="${NYCIF_REFRESH_PINNED_SHA:-}"
+if [ -z "$PINNED_SHA" ]; then
+  git fetch origin main
+  PINNED_SHA="$(git rev-parse FETCH_HEAD)"
+  git reset --hard "$PINNED_SHA"
+  exec env \
+    NYCIF_REFRESH_PINNED_SHA="$PINNED_SHA" \
+    NYCIF_REFRESH_START_ATTEMPT="$START_ATTEMPT" \
+    bash scripts/run_discovery_feed_refresh.sh
+fi
+if [ "$(git rev-parse HEAD)" != "$PINNED_SHA" ]; then
+  echo "Pinned refresh SHA does not match the checked-out transaction." >&2
+  exit 2
+fi
+
 CURRENT_STAGE="initialization"
 CURRENT_COMMAND_ID="initialize_transaction"
 
 record_shell_failure() {
   local code="$?"
   local line="${BASH_LINENO[0]:-not_available}"
-  if [ ! -f "$FAILURE_JSON" ]; then
+  if python - <<'PY'
+from scripts import daily_refresh_state as state
+raise SystemExit(1 if state.failure_exists() else 0)
+PY
+  then
     NYCIF_FAILURE_STAGE="$CURRENT_STAGE" \
     NYCIF_FAILURE_COMMAND_ID="$CURRENT_COMMAND_ID" \
     NYCIF_FAILURE_EXIT_CODE="$code" \
@@ -44,7 +65,6 @@ payload = failure_payload(
 state.atomic_write_failure(payload)
 PY
   fi
-  printf '%s\n%s\n%s\n%s\n' "$CURRENT_STAGE" "$code" "$line" "$CURRENT_COMMAND_ID" > "$FAILURE_LEGACY"
   exit "$code"
 }
 trap record_shell_failure ERR
@@ -61,9 +81,10 @@ run_stage() {
     -- "$@"
 }
 
-git config user.name "github-actions[bot]"
-git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-rm -f "$FAILURE_JSON" "$FAILURE_LEGACY" "$PREVIOUS_POINTER"
+python - <<'PY'
+from scripts import daily_refresh_state as state
+state.clear_runtime_state()
+PY
 
 run_stage \
   "preflight_live_event_contracts" \
@@ -90,14 +111,28 @@ run_stage \
 # If main advances before push, discard generated work, reset to the new tip,
 # and rebuild the complete transaction. Never merge generated conflicts or
 # force-push over another successful data refresh.
-for attempt in 1 2 3; do
-  rm -f "$FAILURE_JSON" "$FAILURE_LEGACY"
+for ((attempt=START_ATTEMPT; attempt<=3; attempt++)); do
+  python - <<'PY'
+from scripts import daily_refresh_state as state
+state.clear_failure()
+PY
 
   run_stage "reset_to_current_main" "fetch_origin_main" git fetch origin main
-  run_stage "reset_to_current_main" "reset_to_fetched_main" git reset --hard FETCH_HEAD
-  PREVIOUS_PUBLIC_FEED_SHA="$(git rev-parse HEAD)"
+  fetched_sha="$(git rev-parse FETCH_HEAD)"
+  if [ "$fetched_sha" != "$PINNED_SHA" ]; then
+    git reset --hard "$fetched_sha"
+    exec env \
+      NYCIF_REFRESH_PINNED_SHA="$fetched_sha" \
+      NYCIF_REFRESH_START_ATTEMPT="$attempt" \
+      bash scripts/run_discovery_feed_refresh.sh
+  fi
+  PREVIOUS_PUBLIC_FEED_SHA="$PINNED_SHA"
   export PREVIOUS_PUBLIC_FEED_SHA
-  printf '%s\n' "$PREVIOUS_PUBLIC_FEED_SHA" > "$PREVIOUS_POINTER"
+  python - "$PREVIOUS_PUBLIC_FEED_SHA" <<'PY'
+import sys
+from scripts import daily_refresh_state as state
+state.atomic_write_previous_commit(sys.argv[1])
+PY
 
   run_stage \
     "official_source_live_fetch_and_permit_staging" \
@@ -217,12 +252,43 @@ if len(supplemental_rows) < len(calendar_rows) + len(parks_rows) - int(calendar_
     print("Supplemental occurrence total is lower than raw source total; strict reconciliation remains authoritative.")
 if test_manifest.get("raw_rows_loaded") != len(raw):
     sys.exit("test enrichment count does not match current permitted-event snapshot")
-if not isinstance(staged_events, list) or not staged_events:
-    sys.exit("staged map-ready feed has no events")
+if not isinstance(staged_events, list):
+    sys.exit("staged map-ready feed is not a list")
 if staged_manifest.get("staged_feed_events") != len(staged_events):
     sys.exit("staged manifest count does not match staged rows")
-if staged_manifest.get("cross_date_street_occurrences_suppressed") != 0:
-    sys.exit("cross-date recurring street occurrences were suppressed")
+
+# The legacy staged feed is telemetry only. Canonical V3 health and the
+# reader-safe MapLibre status jointly own public marker availability.
+health_v3_runtime = health.get("v3_runtime") if isinstance(health.get("v3_runtime"), dict) else {}
+v3_runtime_map_ready = health_v3_runtime.get("map_ready_count")
+maplibre_exact_markers = map_safe.get("exact_marker_count")
+
+for label, value in (
+    ("health.v3_runtime.map_ready_count", v3_runtime_map_ready),
+    ("map_safe.exact_marker_count", maplibre_exact_markers),
+):
+    if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+        sys.exit(f"{label} must be a positive integer: {value!r}")
+
+if maplibre_exact_markers != v3_runtime_map_ready:
+    sys.exit(
+        "canonical V3 and MapLibre marker counts disagree: "
+        f"v3_runtime_map_ready={v3_runtime_map_ready}, "
+        f"maplibre_exact_markers={maplibre_exact_markers}"
+    )
+health_pipeline = health.get("pipeline") if isinstance(health.get("pipeline"), dict) else {}
+cross_date_street_occurrences_suppressed = health_pipeline.get(
+    "cross_date_street_occurrences_suppressed"
+)
+if (
+    isinstance(cross_date_street_occurrences_suppressed, bool)
+    or not isinstance(cross_date_street_occurrences_suppressed, int)
+    or cross_date_street_occurrences_suppressed != 0
+):
+    sys.exit(
+        "cross-date recurring street occurrence gate failed: "
+        f"{cross_date_street_occurrences_suppressed!r}"
+    )
 if not reconciliation.get("reconciles_strict"):
     sys.exit("strict source reconciliation did not pass")
 if not v3.get("qa_pass") or not v3.get("raw_accounting_pass"):
@@ -376,7 +442,10 @@ PY
 
   if git diff --cached --quiet; then
     echo "No source or public feed changes to commit."
-    rm -f "$FAILURE_JSON" "$FAILURE_LEGACY"
+    python - <<'PY'
+from scripts import daily_refresh_state as state
+state.clear_runtime_state()
+PY
     exit 0
   fi
 
@@ -387,12 +456,19 @@ PY
   CURRENT_STAGE="push_ready_transaction"
   CURRENT_COMMAND_ID="git_push_ready_transaction"
   if git push origin HEAD:main; then
-    rm -f "$FAILURE_JSON" "$FAILURE_LEGACY"
+    python - <<'PY'
+from scripts import daily_refresh_state as state
+state.clear_runtime_state()
+PY
     echo "Pushed READY complete daily runtime on attempt ${attempt}."
     exit 0
   fi
 
-  rm -f "$FAILURE_JSON" "$FAILURE_LEGACY"
+  python - <<'PY'
+from scripts import daily_refresh_state as state
+state.clear_failure()
+PY
+  git reset --hard "$PINNED_SHA"
   echo "Push rejected because main advanced; rebuilding the full transaction (attempt ${attempt} of 3)."
   sleep $((attempt * 10))
 done
@@ -416,6 +492,5 @@ payload = failure_payload(
 )
 state.atomic_write_failure(payload)
 PY
-printf '%s\n%s\n%s\n%s\n' "$CURRENT_STAGE" "1" "not_available" "$CURRENT_COMMAND_ID" > "$FAILURE_LEGACY"
 echo "::error::Could not push a READY daily feed after 3 attempts; main remained unchanged."
 exit 1

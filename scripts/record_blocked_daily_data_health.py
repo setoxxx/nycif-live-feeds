@@ -36,22 +36,26 @@ def normalize_stage(value: str) -> str:
     return stage
 
 
+def malformed_failure_context() -> dict[str, Any]:
+    return {
+        "stage": "platform_or_uninstrumented_failure",
+        "command_id": "malformed_failure_context",
+        "exit_code": 1,
+        "exception_class": "MalformedFailureContext",
+        "error_summary": (
+            "The structured failure context was missing, unsafe, or malformed. "
+            "Review the workflow log."
+        ),
+        "public_feed_commit_occurred": False,
+        "publication_state_verified": False,
+    }
+
+
 def load_failure_context() -> dict[str, Any]:
-    path = state.FAILURE_JSON
-    if not path.is_file():
-        return {}
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError):
-        return {
-            "stage": "platform_or_uninstrumented_failure",
-            "command_id": "malformed_failure_context",
-            "exit_code": 1,
-            "exception_class": "MalformedFailureContext",
-            "error_summary": "The structured failure context was missing or malformed. Review the workflow log.",
-            "public_feed_commit_occurred": False,
-        }
-    return payload if isinstance(payload, dict) else {}
+        return state.read_failure() or {}
+    except (OSError, RuntimeError, ValueError):
+        return malformed_failure_context()
 
 def build_payload(
     *,
@@ -63,6 +67,7 @@ def build_payload(
     error_summary: str,
     previous_commit: str,
     public_feed_commit_occurred: bool,
+    publication_state_verified: bool = True,
 ) -> dict:
     normalized_stage = normalize_stage(stage)
     normalized_command = command_id.strip() or "workflow_platform_or_uninstrumented"
@@ -72,7 +77,13 @@ def build_payload(
         f"Daily production refresh failed at stage '{normalized_stage}' "
         f"(command '{normalized_command}', exit {int(exit_code)})."
     )
-    if public_feed_commit_occurred:
+    if not publication_state_verified:
+        rollback_strategy = (
+            "Publication state could not be verified from trusted failure context. "
+            "Stop automation and compare the current serving deployment and repository "
+            "history with previous_public_feed_commit before rollback or republish."
+        )
+    elif public_feed_commit_occurred:
         rollback_strategy = (
             "A public-feed commit was reported. Stop automation and review the candidate commit "
             "against previous_public_feed_commit before any rollback or republish."
@@ -111,6 +122,7 @@ def build_payload(
                 "exception_class": normalized_exception,
                 "error_summary": safe_summary,
                 "public_feed_commit_occurred": bool(public_feed_commit_occurred),
+                "publication_state_verified": bool(publication_state_verified),
             }
         ],
         "operating_rule": "Do not commit or publish a refreshed public feed unless status is READY.",
@@ -118,12 +130,16 @@ def build_payload(
         "rollback": {
             "previous_public_feed_commit": previous_commit,
             "public_feed_commit_occurred": bool(public_feed_commit_occurred),
+            "publication_state_verified": bool(publication_state_verified),
             "strategy": rollback_strategy,
         },
         "enigma": {
-            "production_authority": False,
-            "mode": "shadow_only",
-            "note": "V1 remains the sole production authority.",
+            "production_authority": True,
+            "mode": "projector_v3_certified_runtime",
+            "note": (
+                "Projector V3 semantic map decisions and reader-safe artifacts "
+                "are the certified production authority."
+            ),
         },
     }
 
@@ -138,23 +154,30 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--error-summary", default="No safe error summary was captured. Review the workflow log.")
     parser.add_argument("--previous-commit", required=True)
     parser.add_argument("--public-feed-commit-occurred", action="store_true")
+    parser.add_argument("--publication-state-unverified", action="store_true")
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
     context = load_failure_context()
+    publication_state_verified = (
+        bool(context)
+        and context.get("publication_state_verified", True)
+        and not args.publication_state_unverified
+    )
     payload = build_payload(
         stage=str(context.get("stage", args.stage)),
         command_id=str(context.get("command_id", args.command_id)),
-        exit_code=int(context.get("exit_code", args.exit_code)),
+        exit_code=context.get("exit_code", args.exit_code),
         shell_line=str(context.get("shell_line", context.get("line", args.line))),
         exception_class=str(context.get("exception_class", args.exception_class)),
         error_summary=str(context.get("error_summary", args.error_summary)),
         previous_commit=args.previous_commit,
-        public_feed_commit_occurred=bool(
-            context.get("public_feed_commit_occurred", args.public_feed_commit_occurred)
+        public_feed_commit_occurred=context.get(
+            "public_feed_commit_occurred", args.public_feed_commit_occurred
         ),
+        publication_state_verified=publication_state_verified,
     )
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(payload, indent=2, ensure_ascii=False, sort_keys=True) + "\n", encoding="utf-8")
