@@ -16,7 +16,7 @@ if [[ ! "$ATTEMPT" =~ ^[1-3]$ ]]; then
 fi
 
 PINNED_SHA="${NYCIF_BLOCKED_PUBLISH_PINNED_SHA:-}"
-if [ -z "$PINNED_SHA" ]; then
+if [[ -z "$PINNED_SHA" ]]; then
   git fetch origin main
   PINNED_SHA="$(git rev-parse FETCH_HEAD)"
   git reset --hard "$PINNED_SHA"
@@ -25,7 +25,7 @@ if [ -z "$PINNED_SHA" ]; then
     NYCIF_BLOCKED_PUBLISH_ATTEMPT="$ATTEMPT" \
     bash scripts/publish_blocked_daily_refresh.sh
 fi
-if [ "$(git rev-parse HEAD)" != "$PINNED_SHA" ]; then
+if [[ "$(git rev-parse HEAD)" != "$PINNED_SHA" ]]; then
   echo "Pinned BLOCKED publisher SHA does not match the checked-out transaction." >&2
   exit 2
 fi
@@ -56,20 +56,20 @@ else
   pointer_status="$?"
   previous="$PINNED_SHA"
   pointer_verified=false
-  if [ "$pointer_status" -eq 3 ]; then
+  if [[ "$pointer_status" -eq 3 ]]; then
     echo "No previous transaction pointer was captured; publishing conservative BLOCKED health."
   else
     echo "Previous transaction pointer was invalid; publishing conservative BLOCKED health." >&2
   fi
 fi
 
-if [ "$pointer_verified" = true ]; then
+if [[ "$pointer_verified" = true ]]; then
   if ! git cat-file -e "${previous}^{commit}" 2>/dev/null ||
      ! git merge-base --is-ancestor "$previous" "$PINNED_SHA"; then
     echo "Previous transaction pointer is not a valid ancestor; treating publication state as unverified." >&2
     previous="$PINNED_SHA"
     pointer_verified=false
-  elif [ "$previous" != "$PINNED_SHA" ]; then
+  elif [[ "$previous" != "$PINNED_SHA" ]]; then
     if ! git diff --quiet "$previous" "$PINNED_SHA" -- status/nycif-last-known-good-feed.json; then
       echo "A newer READY transaction changed the last-known-good marker; skipping stale BLOCKED status."
       exit 0
@@ -88,7 +88,7 @@ report_args=(
   --error-summary "$error_summary"
   --previous-commit "$previous"
 )
-if [ "$pointer_verified" != true ]; then
+if [[ "$pointer_verified" != true ]]; then
   report_args+=(--publication-state-unverified)
 fi
 python scripts/record_blocked_daily_data_health.py "${report_args[@]}"
@@ -110,24 +110,24 @@ if ! python scripts/generate_godview_project_state.py --fetch-github ||
 fi
 
 git add status/nycif-daily-data-health.json
-if [ "$companion_state" = complete ]; then
+if [[ "$companion_state" = complete ]]; then
   git add "${companions[@]}"
 fi
 
 while IFS= read -r changed_path; do
-  [ -z "$changed_path" ] && continue
+  [[ -z "$changed_path" ]] && continue
   allowed=false
-  if [ "$changed_path" = "status/nycif-daily-data-health.json" ]; then
+  if [[ "$changed_path" = "status/nycif-daily-data-health.json" ]]; then
     allowed=true
-  elif [ "$companion_state" = complete ]; then
+  elif [[ "$companion_state" = complete ]]; then
     for companion in "${companions[@]}"; do
-      if [ "$changed_path" = "$companion" ]; then
+      if [[ "$changed_path" = "$companion" ]]; then
         allowed=true
         break
       fi
     done
   fi
-  if [ "$allowed" != true ]; then
+  if [[ "$allowed" != true ]]; then
     echo "Unexpected staged BLOCKED artifact: $changed_path" >&2
     exit 1
   fi
@@ -147,8 +147,8 @@ PY
   exit 0
 fi
 
-if [ "$ATTEMPT" -ge 3 ]; then
-  echo "::error::Could not publish BLOCKED health after 3 compare-and-swap attempts."
+if [[ "$ATTEMPT" -ge 3 ]]; then
+  echo "::error::Could not publish BLOCKED health after 3 compare-and-swap attempts." >&2
   exit 1
 fi
 
@@ -160,4 +160,3 @@ exec env \
   NYCIF_BLOCKED_PUBLISH_PINNED_SHA="$next_sha" \
   NYCIF_BLOCKED_PUBLISH_ATTEMPT="$next_attempt" \
   bash scripts/publish_blocked_daily_refresh.sh
-

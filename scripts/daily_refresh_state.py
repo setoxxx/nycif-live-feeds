@@ -59,16 +59,17 @@ def runtime_directory_fd() -> Iterator[int]:
         os.close(runtime_fd)
 
 
-def validate_failure_payload(payload: dict[str, Any]) -> dict[str, Any]:
-    """Reject semantically malformed failure state instead of coercing it."""
+def _validate_payload_keys(payload: dict[str, Any]) -> None:
     if not isinstance(payload, dict):
         raise ValueError("failure payload must be an object")
-
     keys = set(payload)
     missing = _REQUIRED_FAILURE_KEYS - keys
     extras = keys - _REQUIRED_FAILURE_KEYS - _OPTIONAL_FAILURE_KEYS
     if missing or extras:
         raise ValueError(f"failure payload keys are invalid: missing={sorted(missing)}, extras={sorted(extras)}")
+
+
+def _validate_payload_identity(payload: dict[str, Any]) -> None:
     if payload["schema_version"] != "1.0.0":
         raise ValueError("failure payload schema_version must be 1.0.0")
     if not isinstance(payload["generated_at_utc"], str) or not _UTC_PATTERN.fullmatch(
@@ -84,6 +85,9 @@ def validate_failure_payload(payload: dict[str, Any]) -> dict[str, Any]:
     exception_class = payload["exception_class"]
     if not isinstance(exception_class, str) or not _IDENTIFIER_PATTERN.fullmatch(exception_class):
         raise ValueError("failure payload exception_class must be a safe identifier")
+
+
+def _validate_payload_summary(payload: dict[str, Any]) -> None:
     summary = payload["error_summary"]
     if not isinstance(summary, str) or not 1 <= len(summary) <= 2048:
         raise ValueError("failure payload error_summary must contain 1 to 2048 characters")
@@ -92,6 +96,8 @@ def validate_failure_payload(payload: dict[str, Any]) -> dict[str, Any]:
     except UnicodeEncodeError as exc:
         raise ValueError("failure payload error_summary must be valid UTF-8 text") from exc
 
+
+def _validate_payload_scalars(payload: dict[str, Any]) -> None:
     exit_code = payload.get("exit_code")
     if type(exit_code) is not int or exit_code == 0 or not -(2**31) <= exit_code < 2**31:
         raise ValueError("failure payload exit_code must be a nonzero signed 32-bit integer")
@@ -105,6 +111,13 @@ def validate_failure_payload(payload: dict[str, Any]) -> dict[str, Any]:
     ):
         raise ValueError("failure payload shell_line must be a bounded non-empty string")
 
+
+def validate_failure_payload(payload: dict[str, Any]) -> dict[str, Any]:
+    """Reject semantically malformed failure state instead of coercing it."""
+    _validate_payload_keys(payload)
+    _validate_payload_identity(payload)
+    _validate_payload_summary(payload)
+    _validate_payload_scalars(payload)
     return dict(payload)
 
 

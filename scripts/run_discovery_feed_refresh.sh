@@ -16,7 +16,7 @@ if [[ ! "$START_ATTEMPT" =~ ^[1-3]$ ]]; then
 fi
 
 PINNED_SHA="${NYCIF_REFRESH_PINNED_SHA:-}"
-if [ -z "$PINNED_SHA" ]; then
+if [[ -z "$PINNED_SHA" ]]; then
   git fetch origin main
   PINNED_SHA="$(git rev-parse FETCH_HEAD)"
   git reset --hard "$PINNED_SHA"
@@ -25,7 +25,7 @@ if [ -z "$PINNED_SHA" ]; then
     NYCIF_REFRESH_START_ATTEMPT="$START_ATTEMPT" \
     bash scripts/run_discovery_feed_refresh.sh
 fi
-if [ "$(git rev-parse HEAD)" != "$PINNED_SHA" ]; then
+if [[ "$(git rev-parse HEAD)" != "$PINNED_SHA" ]]; then
   echo "Pinned refresh SHA does not match the checked-out transaction." >&2
   exit 2
 fi
@@ -119,7 +119,7 @@ PY
 
   run_stage "reset_to_current_main" "fetch_origin_main" git fetch origin main
   fetched_sha="$(git rev-parse FETCH_HEAD)"
-  if [ "$fetched_sha" != "$PINNED_SHA" ]; then
+  if [[ "$fetched_sha" != "$PINNED_SHA" ]]; then
     git reset --hard "$fetched_sha"
     exec env \
       NYCIF_REFRESH_PINNED_SHA="$fetched_sha" \
