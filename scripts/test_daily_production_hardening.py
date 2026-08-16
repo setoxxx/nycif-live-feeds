@@ -211,20 +211,19 @@ def test_stage_runner_records_actionable_failure() -> None:
 def test_public_map_availability_gate_rejects_zero_inventory() -> None:
     blocked = availability_gate(
         {
+            "canonical_event_count": 31350,
             "semantic_staged_count": 0,
             "map_ready_count": 0,
             "reader_safe_event_count": 11419,
         }
     )
     assert blocked["qa_pass"] is False
-    assert blocked["failures"] == [
-        "semantic_staged_non_empty",
-        "map_ready_non_empty",
-    ]
+    assert blocked["failures"] == ["map_ready_non_empty"]
 
     ready = availability_gate(
         {
-            "semantic_staged_count": 25,
+            "canonical_event_count": 100,
+            "semantic_staged_count": 0,
             "map_ready_count": 10,
             "reader_safe_event_count": 100,
         }
