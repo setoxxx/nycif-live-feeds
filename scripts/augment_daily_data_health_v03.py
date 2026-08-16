@@ -14,7 +14,20 @@ from pathlib import Path
 from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
-HEALTH = ROOT / "status" / "nycif-daily-data-health.json"
+
+
+def repository_path(*parts: str) -> Path:
+    """Return an allowlisted repository path after resolving symlinks."""
+    repository_root = ROOT.resolve()
+    candidate = repository_root.joinpath(*parts).resolve(strict=False)
+    try:
+        candidate.relative_to(repository_root)
+    except ValueError as exc:
+        raise ValueError(f"artifact path must stay within {repository_root}") from exc
+    return candidate
+
+
+HEALTH = repository_path("status", "nycif-daily-data-health.json")
 
 
 def load(path: Path) -> Any:
