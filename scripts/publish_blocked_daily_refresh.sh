@@ -2,9 +2,10 @@
 # Publish only operator health after a failed refresh; never publish partial feeds.
 set -euo pipefail
 
-FAILURE_JSON="/tmp/nycif-daily-failure.json"
-FAILURE_LEGACY="/tmp/nycif-daily-failure"
-PREVIOUS_POINTER="/tmp/nycif-previous-public-feed"
+RUNTIME_DIR="${NYCIF_RUNTIME_DIR:-.runtime}"
+FAILURE_JSON="$RUNTIME_DIR/nycif-daily-failure.json"
+FAILURE_LEGACY="$RUNTIME_DIR/nycif-daily-failure"
+PREVIOUS_POINTER="$RUNTIME_DIR/nycif-previous-public-feed"
 
 stage="platform_or_uninstrumented_failure"
 command_id="workflow_platform_or_uninstrumented"
