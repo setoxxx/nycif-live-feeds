@@ -97,12 +97,12 @@ def test_calendar_cancellation_flags_are_typed_safely() -> None:
 
 def test_parks_source_contract_uses_current_upcoming_open_data() -> None:
     assert parks_sync.DATASET_ID == "w3wp-dpdi"
-    assert parks_sync.SOURCE_CONTRACT_VERSION == "NYCIF_PARKS_UPCOMING_OPEN_DATA_V3"
+    assert parks_sync.SOURCE_CONTRACT_VERSION == "NYCIF_PARKS_UPCOMING_OPEN_DATA_V4"
     assert parks_sync.EVENTS_URL.endswith("/w3wp-dpdi.json")
     assert parks_sync.LEGACY_BIGAPPS_URL not in parks_sync.EVENTS_URL
 
 
-def test_parks_official_coordinate_is_explicit_pending_site_evidence() -> None:
+def test_parks_official_event_record_coordinate_is_map_ready() -> None:
     result = parks_sync.normalize_event_item(
         {
             "guid": "parks-42",
@@ -122,10 +122,10 @@ def test_parks_official_coordinate_is_explicit_pending_site_evidence() -> None:
     assert result["source_authority_dataset"] == "w3wp-dpdi"
     evidence = result["location_evidence"]
     assert evidence["tier"] == "exact_source_coordinate"
-    assert evidence["validation_state"] == "unvalidated"
-    assert evidence["site_validation_state"] == "pending"
-    assert evidence["exact_pin_eligible"] is False
-    assert evidence["reason_code"] == "OFFICIAL_SOURCE_COORDINATE_SITE_VALIDATION_PENDING"
+    assert evidence["validation_state"] == "validated"
+    assert evidence["site_validation_state"] == "validated"
+    assert evidence["exact_pin_eligible"] is True
+    assert evidence["reason_code"] == "OFFICIAL_SOURCE_COORDINATE_SITE_VALIDATED"
     assert evidence["source_dataset_id"] == "w3wp-dpdi"
     assert result["promotion_allowed"] is False
     assert result["public_map_modified"] is False
@@ -311,7 +311,7 @@ def main() -> int:
         test_calendar_occurrence_identity_includes_same_day_time,
         test_calendar_cancellation_flags_are_typed_safely,
         test_parks_source_contract_uses_current_upcoming_open_data,
-        test_parks_official_coordinate_is_explicit_pending_site_evidence,
+        test_parks_official_event_record_coordinate_is_map_ready,
         test_parks_missing_or_bad_coordinate_never_invents_exact_evidence,
         test_parks_live_failure_stays_non_live_and_fails_closed,
         test_parks_uses_new_york_date_boundary,
