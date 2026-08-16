@@ -94,6 +94,46 @@ def availability_gate(addendum: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def summarize_map_states(
+    canonical_rows: list[dict[str, Any]],
+) -> tuple[dict[str, int], int]:
+    map_states = {
+        "MAP_READY": 0,
+        "GENERAL_AREA": 0,
+        "REVIEW_REQUIRED": 0,
+        "LIST_ONLY": 0,
+    }
+    semantic_rows = 0
+    for event in canonical_rows:
+        nycif = event.get("nycif") if isinstance(event.get("nycif"), dict) else {}
+        state = str(nycif.get("map_eligibility_state") or "REVIEW_REQUIRED")
+        if state not in map_states:
+            state = "REVIEW_REQUIRED"
+        map_states[state] += 1
+        if nycif.get("location_authority") == "projector_v3_semantic_map_decision":
+            semantic_rows += 1
+    return map_states, semantic_rows
+
+
+def zero_gate_counts(v3: dict[str, Any]) -> dict[str, int]:
+    keys = (
+        "silent_identity_loss",
+        "duplicate_exact_occurrences",
+        "unsupported_exact_pin_count",
+        "implicit_source_all_count",
+        "legacy_occurrence_authority_count",
+        "legacy_coordinate_authority_count",
+    )
+    return {key: int(v3.get(key) or 0) for key in keys}
+
+
+def sources_are_live(*sources: dict[str, Any]) -> bool:
+    return all(
+        source["non_empty"] and source["qa_pass"] and source["fetch_mode"] == "live"
+        for source in sources
+    )
+
+
 def build_addendum(now: datetime | None = None) -> dict[str, Any]:
     now = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
 
@@ -109,30 +149,13 @@ def build_addendum(now: datetime | None = None) -> dict[str, Any]:
     news = load(NEWS_STATUS)
     map_status = load(MAP_STATUS)
 
-    map_states = {"MAP_READY": 0, "GENERAL_AREA": 0, "REVIEW_REQUIRED": 0, "LIST_ONLY": 0}
-    semantic_rows = 0
-    for event in canonical_rows:
-        nycif = event.get("nycif") if isinstance(event.get("nycif"), dict) else {}
-        state = str(nycif.get("map_eligibility_state") or "REVIEW_REQUIRED")
-        if state not in map_states:
-            state = "REVIEW_REQUIRED"
-        map_states[state] += 1
-        if nycif.get("location_authority") == "projector_v3_semantic_map_decision":
-            semantic_rows += 1
-
+    map_states, semantic_rows = summarize_map_states(canonical_rows)
     review_count = map_states["GENERAL_AREA"] + map_states["REVIEW_REQUIRED"] + map_states["LIST_ONLY"]
     permits = source_status(permitted_report, count=len(permitted_rows), now=now)
     calendar = source_status(calendar_report, count=len(calendar_rows), now=now)
     parks = source_status(parks_report, count=len(parks_rows), now=now)
 
-    zero_gates = {
-        "silent_identity_loss": int(v3.get("silent_identity_loss") or 0),
-        "duplicate_exact_occurrences": int(v3.get("duplicate_exact_occurrences") or 0),
-        "unsupported_exact_pin_count": int(v3.get("unsupported_exact_pin_count") or 0),
-        "implicit_source_all_count": int(v3.get("implicit_source_all_count") or 0),
-        "legacy_occurrence_authority_count": int(v3.get("legacy_occurrence_authority_count") or 0),
-        "legacy_coordinate_authority_count": int(v3.get("legacy_coordinate_authority_count") or 0),
-    }
+    zero_gates = zero_gate_counts(v3)
 
     addendum = {
         "generated_at_utc": now.isoformat(),
@@ -160,10 +183,7 @@ def build_addendum(now: datetime | None = None) -> dict[str, Any]:
         },
         "projector_v3_qa_pass": bool(v3.get("qa_pass")),
         "raw_accounting_pass": bool(v3.get("raw_accounting_pass")),
-        "all_sources_live_non_empty": all(
-            item["non_empty"] and item["qa_pass"] and item["fetch_mode"] == "live"
-            for item in (permits, calendar, parks)
-        ),
+        "all_sources_live_non_empty": sources_are_live(permits, calendar, parks),
         "zero_gate_pass": all(value == 0 for value in zero_gates.values()),
     }
     addendum["availability"] = availability_gate(addendum)
