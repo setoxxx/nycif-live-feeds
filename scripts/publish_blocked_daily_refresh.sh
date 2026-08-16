@@ -6,6 +6,8 @@ RUNTIME_DIR="${NYCIF_RUNTIME_DIR:-.runtime}"
 FAILURE_JSON="$RUNTIME_DIR/nycif-daily-failure.json"
 FAILURE_LEGACY="$RUNTIME_DIR/nycif-daily-failure"
 PREVIOUS_POINTER="$RUNTIME_DIR/nycif-previous-public-feed"
+umask 077
+install -d -m 700 "$RUNTIME_DIR"
 
 stage="platform_or_uninstrumented_failure"
 command_id="workflow_platform_or_uninstrumented"
@@ -59,10 +61,6 @@ report_args=(
   --error-summary "$error_summary"
   --previous-commit "$previous"
 )
-if [ -f "$FAILURE_JSON" ]; then
-  report_args=(--failure-json "$FAILURE_JSON" "${report_args[@]}")
-fi
-
 python scripts/record_blocked_daily_data_health.py "${report_args[@]}"
 python scripts/generate_godview_project_state.py --fetch-github || true
 PREVIOUS_PUBLIC_FEED_SHA="$previous" python scripts/apply_daily_data_health_to_godview.py || true
