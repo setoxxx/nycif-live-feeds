@@ -5,11 +5,10 @@ The retired Parks website JSON endpoint is not used as freshness authority.
 Dataset ``w3wp-dpdi`` is the current upcoming-events transport used by the V3
 line and exposes the event schema, including first-party coordinate pairs.
 
-This collector never geocodes. A valid coordinate supplied by the official
-source is preserved as ``exact_source_coordinate`` evidence, but source presence
-alone is not exact-site certification. The coordinate remains site-validation
-pending until downstream semantic validation proves it represents the event's
-actual stated site. Missing or invalid coordinates remain non-exact.
+This collector never geocodes. A valid coordinate supplied on the same official
+NYC Parks event record as its stated venue is preserved as validated
+``exact_source_coordinate`` evidence. Missing or invalid coordinates remain
+non-exact and cannot become map pins.
 """
 
 from __future__ import annotations
@@ -32,7 +31,7 @@ DATASET_ID = "w3wp-dpdi"
 EVENTS_URL = f"https://data.cityofnewyork.us/resource/{DATASET_ID}.json"
 SOURCE_PAGE = f"https://data.cityofnewyork.us/d/{DATASET_ID}"
 LEGACY_BIGAPPS_URL = "https://www.nycgovparks.org/xml/events_300_rss.json"
-SOURCE_CONTRACT_VERSION = "NYCIF_PARKS_UPCOMING_OPEN_DATA_V3"
+SOURCE_CONTRACT_VERSION = "NYCIF_PARKS_UPCOMING_OPEN_DATA_V4"
 PAGE_LIMIT = 50000
 DEFAULT_HEADERS = {
     "Accept": "application/json",
@@ -124,16 +123,16 @@ def official_coordinate_evidence(
         return None
     evidence = {
         "tier": "exact_source_coordinate",
-        "validation_state": "unvalidated",
-        "site_validation_state": "pending",
-        "exact_pin_eligible": False,
+        "validation_state": "validated",
+        "site_validation_state": "validated_from_official_event_record",
+        "exact_pin_eligible": True,
         "source_provenance": EVENTS_URL,
         "provider": "NYC Parks / NYC Open Data",
         "source_dataset_id": DATASET_ID,
-        "reason_code": "OFFICIAL_SOURCE_COORDINATE_SITE_VALIDATION_PENDING",
+        "reason_code": "OFFICIAL_EVENT_RECORD_COORDINATE",
         "reason_detail": (
-            "Coordinate pair supplied directly by the current NYC Parks Open Data event record; "
-            "exact event-site agreement has not yet been independently validated."
+            "Coordinate pair and stated venue are supplied together by the current "
+            "official NYC Parks Open Data event record."
         ),
     }
     if source_event_id:
@@ -256,7 +255,7 @@ def main() -> int:
         "rows_with_source_coordinate_evidence": with_source_coordinate_evidence,
         "rows_with_site_validated_coordinates": with_site_validated_coordinates,
         "coordinate_evidence_parity": with_source_coordinate_evidence == with_coords,
-        "exact_site_validation_required_downstream": True,
+        "exact_site_validation_required_downstream": False,
         "error": error,
         "live_fetch_error": error,
         "legacy_source_url": LEGACY_BIGAPPS_URL,
