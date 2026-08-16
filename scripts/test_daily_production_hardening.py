@@ -431,6 +431,25 @@ def test_current_preflight_does_not_require_mutable_historical_pages() -> None:
     assert "test_required_event_aug1_real_approved_pages_pass" not in runner
 
 
+def test_post_push_cleanup_cannot_falsify_publication_state() -> None:
+    transaction = (ROOT / "scripts" / "run_discovery_feed_refresh.sh").read_text(
+        encoding="utf-8"
+    )
+    push_index = transaction.index("if git push origin HEAD:main; then")
+    trap_disable_index = transaction.index("trap - ERR", push_index)
+    cleanup_index = transaction.index("state.clear_runtime_state()", trap_disable_index)
+    warning_index = transaction.index(
+        "::warning::READY runtime was pushed, but runner-local state cleanup failed.",
+        cleanup_index,
+    )
+    success_index = transaction.index(
+        "Pushed READY complete daily runtime on attempt", warning_index
+    )
+    assert push_index < trap_disable_index < cleanup_index < warning_index < success_index
+    assert "CURRENT_STAGE=\"post_push_cleanup\"" in transaction[push_index:success_index]
+    assert "if ! python - <<'PY'" in transaction[push_index:cleanup_index]
+
+
 def test_refresh_workflow_has_structured_preflight_diagnostics() -> None:
     workflow = (ROOT / ".github" / "workflows" / "discovery-feed-refresh.yml").read_text(
         encoding="utf-8"
@@ -504,6 +523,7 @@ def main() -> int:
         test_public_map_availability_gate_rejects_zero_inventory,
         test_blocked_health_payload_is_fail_closed_and_actionable,
         test_current_preflight_does_not_require_mutable_historical_pages,
+        test_post_push_cleanup_cannot_falsify_publication_state,
         test_refresh_workflow_has_structured_preflight_diagnostics,
         test_modified_reliability_python_files_compile,
     ]

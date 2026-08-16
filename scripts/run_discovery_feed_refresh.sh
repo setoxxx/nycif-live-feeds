@@ -456,10 +456,18 @@ PY
   CURRENT_STAGE="push_ready_transaction"
   CURRENT_COMMAND_ID="git_push_ready_transaction"
   if git push origin HEAD:main; then
-    python - <<'PY'
+    # The public commit is now durable. Cleanup is runner-local housekeeping and
+    # must not route through the pre-publication ERR trap or falsify commit state.
+    trap - ERR
+    CURRENT_STAGE="post_push_cleanup"
+    CURRENT_COMMAND_ID="clear_runtime_state_after_push"
+    if ! python - <<'PY'
 from scripts import daily_refresh_state as state
 state.clear_runtime_state()
 PY
+    then
+      echo "::warning::READY runtime was pushed, but runner-local state cleanup failed."
+    fi
     echo "Pushed READY complete daily runtime on attempt ${attempt}."
     exit 0
   fi
