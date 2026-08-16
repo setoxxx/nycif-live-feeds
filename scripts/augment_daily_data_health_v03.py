@@ -16,19 +16,18 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def repository_path(*parts: str) -> Path:
-    """Return an allowlisted repository path after resolving symlinks."""
-    repository_root = ROOT.resolve()
-    candidate = repository_root.joinpath(*parts).resolve(strict=False)
-    try:
-        candidate.relative_to(repository_root)
-    except ValueError as exc:
-        raise ValueError(f"artifact path must stay within {repository_root}") from exc
-    return candidate
-
-
-HEALTH = repository_path("status", "nycif-daily-data-health.json")
-
+HEALTH = ROOT / "status" / "nycif-daily-data-health.json"
+PERMITTED_REPORT = ROOT / "data" / "live_sync_report.json"
+PERMITTED_SNAPSHOT = ROOT / "data" / "raw_nyc_open_data_snapshot.json"
+CALENDAR_REPORT = ROOT / "data" / "nyc_citywide_events_calendar_sync_report.json"
+CALENDAR_SNAPSHOT = ROOT / "data" / "nyc_citywide_events_calendar_snapshot.json"
+PARKS_REPORT = ROOT / "data" / "nyc_parks_bigapps_events_sync_report.json"
+PARKS_SNAPSHOT = ROOT / "data" / "nyc_parks_bigapps_events_snapshot.json"
+STAGED_MANIFEST = ROOT / "data" / "staged_live_manifest.json"
+CANONICAL_EVENTS = ROOT / "data" / "events_discovery_accepted_canonical_v02.json"
+V3_REPORT = ROOT / "data" / "events_discovery_v3_authority_report.json"
+NEWS_STATUS = ROOT / "data" / "reader-safe" / "news-desk-status-v02.json"
+MAP_STATUS = ROOT / "data" / "reader-safe" / "national-map-events-v03-status.json"
 
 def load(path: Path) -> Any:
     return json.loads(path.read_text(encoding="utf-8"))
@@ -95,20 +94,20 @@ def availability_gate(addendum: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def build_addendum(root: Path = ROOT, now: datetime | None = None) -> dict[str, Any]:
+def build_addendum(now: datetime | None = None) -> dict[str, Any]:
     now = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
 
-    permitted_report = load(root / "data" / "live_sync_report.json")
-    permitted_rows = rows(load(root / "data" / "raw_nyc_open_data_snapshot.json"))
-    calendar_report = load(root / "data" / "nyc_citywide_events_calendar_sync_report.json")
-    calendar_rows = rows(load(root / "data" / "nyc_citywide_events_calendar_snapshot.json"))
-    parks_report = load(root / "data" / "nyc_parks_bigapps_events_sync_report.json")
-    parks_rows = rows(load(root / "data" / "nyc_parks_bigapps_events_snapshot.json"))
-    staged_manifest = load(root / "data" / "staged_live_manifest.json")
-    canonical_rows = rows(load(root / "data" / "events_discovery_accepted_canonical_v02.json"))
-    v3 = load(root / "data" / "events_discovery_v3_authority_report.json")
-    news = load(root / "data" / "reader-safe" / "news-desk-status-v02.json")
-    map_status = load(root / "data" / "reader-safe" / "national-map-events-v03-status.json")
+    permitted_report = load(PERMITTED_REPORT)
+    permitted_rows = rows(load(PERMITTED_SNAPSHOT))
+    calendar_report = load(CALENDAR_REPORT)
+    calendar_rows = rows(load(CALENDAR_SNAPSHOT))
+    parks_report = load(PARKS_REPORT)
+    parks_rows = rows(load(PARKS_SNAPSHOT))
+    staged_manifest = load(STAGED_MANIFEST)
+    canonical_rows = rows(load(CANONICAL_EVENTS))
+    v3 = load(V3_REPORT)
+    news = load(NEWS_STATUS)
+    map_status = load(MAP_STATUS)
 
     map_states = {"MAP_READY": 0, "GENERAL_AREA": 0, "REVIEW_REQUIRED": 0, "LIST_ONLY": 0}
     semantic_rows = 0
