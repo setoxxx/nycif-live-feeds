@@ -1,15 +1,26 @@
 {
- "generated_at_utc": "2026-08-15T10:58:30Z",
+ "generated_at_utc": "2026-08-16T02:25:14Z",
  "identity_contract": "OccurrenceIdentityV2",
  "new_definition": "canonical v2 occurrence identity absent from previous tracked index",
  "legacy_seen_index_dual_read": true,
  "baseline_run": false,
  "window": {
-  "past_floor": "2026-08-01",
-  "today": "2026-08-15"
+  "past_floor": "2026-08-02",
+  "today": "2026-08-16"
  },
  "total_tracked": 16,
- "new_this_run": 0,
+ "new_this_run": 1,
  "identity_ambiguous": 0,
- "events": []
+ "events": [
+  {
+   "id": "v2:nyc-parks-bigapps-events:2212473@2026-08-29T18:00:00",
+   "title": "Screening of Soundtrack to a Coup d&#8217;Etat",
+   "category": "arts",
+   "event_type": "Street Festival",
+   "start_date": "2026-08-29",
+   "end_date": "2026-08-29",
+   "borough": null,
+   "first_seen_utc": "2026-08-16T02:25:14Z"
+  }
+ ]
 }

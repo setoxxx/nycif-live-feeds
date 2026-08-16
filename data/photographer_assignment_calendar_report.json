@@ -1,9 +1,10 @@
 {
   "coordinate_status_counts": {
-    "list_only": 42
+    "list_only": 38,
+    "map_ready": 3
   },
   "days_with_coverage": 15,
-  "generated_at_utc": "2026-08-15T10:58:32Z",
+  "generated_at_utc": "2026-08-16T02:25:17Z",
   "go_shoot_sample": [
     {
       "borough": null,
@@ -67,12 +68,12 @@
     }
   ],
   "lane_counts": {
-    "approved_major": 32,
+    "approved_major": 31,
     "review_high_signal": 10
   },
   "location_cache_modified": false,
   "money_day_quality": {
-    "events_removed_vs_baseline": 800,
+    "events_removed_vs_baseline": 801,
     "qa_pass": true,
     "report": "data/photographer_money_day_quality_report.json",
     "top_exclude_reasons": [
@@ -97,7 +98,7 @@
   "month_counts": [
     {
       "days_with_events": 6,
-      "event_count": 19,
+      "event_count": 18,
       "label": "August 2026"
     },
     {
@@ -113,6 +114,6 @@
   "qa_pass": true,
   "reference_today_nyc": "2026-08-15",
   "schema_version": "photographer-assignment-calendar-v2-money-day",
-  "total_events": 42,
+  "total_events": 41,
   "window_end": "2026-09-30"
 }

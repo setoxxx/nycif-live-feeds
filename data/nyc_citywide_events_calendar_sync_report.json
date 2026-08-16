@@ -2,11 +2,11 @@
   "api_gateway": "https://api.nyc.gov/",
   "api_key_source": "public_config:https://www.nyc.gov/bin/nyc/sc.ec.json",
   "borough_counts": {
-    "Bk": 361,
+    "Bk": 362,
     "Bx": 346,
     "Mn": 652,
     "Other": 52,
-    "Qn": 612,
+    "Qn": 614,
     "SI": 342
   },
   "canceled_excluded": 0,
@@ -62,7 +62,7 @@
     "Holidays,Education": 4,
     "Kids and Family,Education": 2,
     "Kids and Family,Education,General Events": 4,
-    "Parks & Recreation": 1989,
+    "Parks & Recreation": 1992,
     "Street and Neighborhood": 113,
     "Tenant Resource Fair ,Free,Housing Information Class,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 2,
     "Tenant Resource Fair ,Free,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 5,
@@ -70,9 +70,9 @@
     "Tenant Resource Fair ,Free,Property Owner Clinic,Property Owner Resource Fair,Housing Ambassador Event,General Events,HPD Outreach Event": 5,
     "Tenant Resource Fair ,Free,Property Owner Resource Fair,Housing Ambassador Event,Veteran Events,HPD Outreach Event": 1
   },
-  "duplicate_exact_occurrences_collapsed": 5,
+  "duplicate_exact_occurrences_collapsed": 2,
   "fetch_mode": "live",
-  "generated_at_utc": "2026-08-15T10:58:10.911425+00:00",
+  "generated_at_utc": "2026-08-16T02:24:48.378341+00:00",
   "location_cache_modified": false,
   "manual_review_status": "pending",
   "production_feeds_modified": false,
@@ -82,15 +82,15 @@
   "raw_observations_path": "data/nyc_citywide_events_calendar_raw_observations.json",
   "raw_observations_preserved": 2223,
   "search_path": "calendar/search",
-  "snapshot_rows": 2218,
+  "snapshot_rows": 2221,
   "source_rows_received": 2223,
   "staged_feed_modified": false,
   "window": {
-    "end_date": "2027-02-14",
+    "end_date": "2027-02-15",
     "items_returned": 2223,
     "num_pages_fetched": 186,
     "reported_total_items": 2223,
-    "start_date": "2026-08-15"
+    "start_date": "2026-08-16"
   },
   "window_days": 183
 }

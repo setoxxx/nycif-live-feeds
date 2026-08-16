@@ -1,21 +1,21 @@
 {
-  "current_future_rows": 26131,
-  "current_future_rows_with_cemsid": 25410,
+  "current_future_rows": 27198,
+  "current_future_rows_with_cemsid": 26409,
   "date_boundary_timezone": "America/New_York",
   "enriched_rows_loaded": 33084,
-  "generated_at_utc": "2026-08-15T10:57:45.023536+00:00",
+  "generated_at_utc": "2026-08-16T02:24:26.749078+00:00",
   "location_cache_entries_loaded": 40151,
   "location_cache_modified": false,
   "location_resolver_live_geosearch_calls": 0,
   "match_counts": {
-    "event_id": 14016,
-    "location_cache": 10007,
-    "none": 758,
-    "text_date_location": 176,
-    "tier_1_gazetteer_display": 710,
-    "tier_2_geosearch_cache": 464
+    "event_id": 14039,
+    "location_cache": 10898,
+    "none": 850,
+    "text_date_location": 182,
+    "tier_1_gazetteer_display": 744,
+    "tier_2_geosearch_cache": 485
   },
-  "matched_with_gps": 25373,
+  "matched_with_gps": 26348,
   "matched_without_gps_sample": [],
   "needs_enrichment_sample": [
     {
@@ -259,6 +259,28 @@
     },
     {
       "community_board": [
+        "10",
+        "9"
+      ],
+      "end_date_time": "2026-08-15T11:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "WEST  120 STREET between MORNINGSIDE DRIVE and AMSTERDAM AVENUE,  EDGECOMBE AVENUE between WEST  142 STREET and WEST  141 STREET",
+      "event_name": "TEST EVENT- Pedestrian Plaza asfsda fdsf.",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "26",
+        "30",
+        "32"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "164757",
+      "start_date_time": "2026-08-15T10:00:00.000",
+      "street_closure_type": "Full Sidewalk Closure"
+    },
+    {
+      "community_board": [
         "3"
       ],
       "end_date_time": "2026-08-15T18:00:00.000",
@@ -486,33 +508,14 @@
       "source_event_id": "928988",
       "start_date_time": "2026-08-15T10:00:00.000",
       "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "10"
-      ],
-      "end_date_time": "2026-08-15T17:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "WEST  133 STREET between LENOX AVENUE and 7 AVENUE",
-      "event_name": "block party",
-      "event_type": "Block Party",
-      "police_precinct": [
-        "32"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "933185",
-      "start_date_time": "2026-08-15T10:00:00.000",
-      "street_closure_type": "Full Street Closure"
     }
   ],
   "production_feeds_modified": false,
   "public_map_modified": false,
   "raw_page_limit": 50000,
-  "raw_rows_loaded": 27106,
-  "raw_rows_with_cemsid": 26346,
+  "raw_rows_loaded": 27229,
+  "raw_rows_with_cemsid": 26421,
   "raw_url": "https://data.cityofnewyork.us/resource/tvpp-9vvx.json",
   "today_nyc": "2026-08-15",
-  "today_utc": "2026-08-15"
+  "today_utc": "2026-08-16"
 }
