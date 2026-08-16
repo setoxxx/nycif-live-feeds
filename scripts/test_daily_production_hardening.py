@@ -235,7 +235,9 @@ def test_runtime_failure_state_is_fixed_private_and_atomic() -> None:
     for script_name in ("run_discovery_feed_refresh.sh", "publish_blocked_daily_refresh.sh"):
         source = (ROOT / "scripts" / script_name).read_text(encoding="utf-8")
         assert "/tmp/nycif-daily-failure" not in source
-        assert 'RUNTIME_DIR="${NYCIF_RUNTIME_DIR:-.runtime}"' in source
+        assert 'RUNTIME_DIR="$REPO_ROOT/.runtime"' in source
+        assert 'if [ -L "$RUNTIME_DIR" ]' in source
+        assert "NYCIF_RUNTIME_DIR" not in source
 
 
 def test_public_map_availability_gate_rejects_zero_inventory() -> None:
