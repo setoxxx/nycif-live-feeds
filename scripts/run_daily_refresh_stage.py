@@ -13,7 +13,9 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Sequence
 
-DEFAULT_FAILURE_FILE = Path("/tmp/nycif-daily-failure.json")
+ROOT = Path(__file__).resolve().parents[1]
+RUNTIME_DIR = ROOT / ".runtime"
+DEFAULT_FAILURE_FILE = RUNTIME_DIR / "nycif-daily-failure.json"
 SUMMARY_LIMIT = 1600
 
 _SECRET_PATTERNS = (
@@ -77,9 +79,21 @@ def failure_payload(
     return payload
 
 
+def repository_runtime_path(path: Path) -> Path:
+    """Resolve a generated runtime path and reject paths outside the repository."""
+    repository_root = ROOT.resolve()
+    candidate = path.resolve(strict=False)
+    try:
+        candidate.relative_to(repository_root)
+    except ValueError as exc:
+        raise ValueError(f"runtime path must stay within {repository_root}") from exc
+    return candidate
+
+
 def write_failure(path: Path, payload: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    safe_path = repository_runtime_path(path)
+    safe_path.parent.mkdir(parents=True, exist_ok=True)
+    safe_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def run_command(
@@ -109,8 +123,11 @@ def run_command(
             text=True,
             bufsize=1,
         )
-        assert process.stdout is not None
-        for line in process.stdout:
+        stdout = process.stdout
+        if stdout is None:
+            process.kill()
+            raise RuntimeError("captured process stdout was unavailable")
+        for line in stdout:
             safe_line = sanitize_text(line)
             print(safe_line, end="", flush=True)
             tail.append(safe_line)
