@@ -15,12 +15,14 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from scripts.run_daily_refresh_stage import repository_runtime_path, sanitize_summary
+    from scripts import daily_refresh_state as state
+    from scripts.run_daily_refresh_stage import sanitize_summary
 except ModuleNotFoundError:  # Direct execution from the scripts directory.
-    from run_daily_refresh_stage import repository_runtime_path, sanitize_summary
+    import daily_refresh_state as state
+    from run_daily_refresh_stage import sanitize_summary
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = repository_runtime_path(ROOT / "status" / "nycif-daily-data-health.json")
+OUT = ROOT / "status" / "nycif-daily-data-health.json"
 
 
 def utc_now() -> str:
@@ -34,14 +36,12 @@ def normalize_stage(value: str) -> str:
     return stage
 
 
-def load_failure_context(path: Path | None) -> dict[str, Any]:
-    if path is None:
-        return {}
-    safe_path = repository_runtime_path(path)
-    if not safe_path.is_file():
+def load_failure_context() -> dict[str, Any]:
+    path = state.FAILURE_JSON
+    if not path.is_file():
         return {}
     try:
-        payload = json.loads(safe_path.read_text(encoding="utf-8"))
+        payload = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return {
             "stage": "platform_or_uninstrumented_failure",
@@ -52,7 +52,6 @@ def load_failure_context(path: Path | None) -> dict[str, Any]:
             "public_feed_commit_occurred": False,
         }
     return payload if isinstance(payload, dict) else {}
-
 
 def build_payload(
     *,
@@ -131,7 +130,6 @@ def build_payload(
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--failure-json", type=Path)
     parser.add_argument("--stage", default="platform_or_uninstrumented_failure")
     parser.add_argument("--command-id", default="workflow_platform_or_uninstrumented")
     parser.add_argument("--exit-code", type=int, default=1)
@@ -145,7 +143,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    context = load_failure_context(args.failure_json)
+    context = load_failure_context()
     payload = build_payload(
         stage=str(context.get("stage", args.stage)),
         command_id=str(context.get("command_id", args.command_id)),
