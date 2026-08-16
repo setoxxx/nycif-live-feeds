@@ -4,13 +4,13 @@
 The production transaction predates the fail-closed V3 semantic projector and
 contains two legacy final-runtime assumptions:
 
-1. the staged MAP_READY feed must be non-empty; and
+1. the legacy staged MAP_READY feed owns public availability; and
 2. cross-date street suppression is reported by the staged manifest.
 
-V3 can legitimately certify zero MAP_READY occurrences when every accepted
-occurrence remains LIST_ONLY/REVIEW_REQUIRED, and the current cross-date safety
-count is emitted by the READY daily-health pipeline rather than the staged
-manifest.
+The canonical V3 health and MapLibre reader-safe artifacts now own public
+availability. Both must report the same positive certified marker count. The
+legacy staged feed remains internally validated telemetry, while the current
+cross-date safety count is emitted by the READY daily-health pipeline.
 
 This helper performs two fail-closed, exact-source transformations into a
 temporary execution copy. It never changes the repository transaction script.
@@ -33,45 +33,24 @@ V3_BLOCK = '''if not isinstance(staged_events, list):
 if staged_manifest.get("staged_feed_events") != len(staged_events):
     sys.exit("staged manifest count does not match staged rows")
 
-# A zero-row staged feed is valid only when every independent semantic source
-# agrees that there are zero certified MAP_READY occurrences. Never invent a
-# marker merely to satisfy a non-empty runtime invariant.
-staged_certified_before_dedupe = staged_manifest.get("certified_map_ready_before_dedupe")
-test_certified_map_ready = test_manifest.get("certified_map_ready_events")
+# The legacy staged feed is telemetry only. Canonical V3 health and the
+# reader-safe MapLibre status jointly own public marker availability.
 health_v3_runtime = health.get("v3_runtime") if isinstance(health.get("v3_runtime"), dict) else {}
 v3_runtime_map_ready = health_v3_runtime.get("map_ready_count")
+maplibre_exact_markers = map_safe.get("exact_marker_count")
 
-# The third count is computed by augment_daily_data_health_v03.py directly from
-# canonical semantic rows. Missing, boolean, negative, or otherwise malformed
-# values are not evidence and must fail closed.
-if (
-    isinstance(v3_runtime_map_ready, bool)
-    or not isinstance(v3_runtime_map_ready, int)
-    or v3_runtime_map_ready < 0
+for label, value in (
+    ("health.v3_runtime.map_ready_count", v3_runtime_map_ready),
+    ("map_safe.exact_marker_count", maplibre_exact_markers),
 ):
+    if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
+        sys.exit(f"{label} must be a positive integer: {value!r}")
+
+if maplibre_exact_markers != v3_runtime_map_ready:
     sys.exit(
-        "daily V3 runtime MAP_READY count is missing or malformed: "
-        f"{v3_runtime_map_ready!r}"
-    )
-if not staged_events:
-    zero_map_ready_evidence = {
-        "staged_manifest.certified_map_ready_before_dedupe": staged_certified_before_dedupe,
-        "test_manifest.certified_map_ready_events": test_certified_map_ready,
-        "health.v3_runtime.map_ready_count": v3_runtime_map_ready,
-    }
-    mismatches = {key: value for key, value in zero_map_ready_evidence.items() if value != 0}
-    if mismatches:
-        sys.exit(f"empty staged feed contradicts certified MAP_READY authority: {mismatches}")
-elif (
-    staged_certified_before_dedupe == 0
-    or test_certified_map_ready == 0
-    or v3_runtime_map_ready == 0
-):
-    sys.exit(
-        "non-empty staged feed contradicts zero certified MAP_READY authority: "
-        f"staged_before_dedupe={staged_certified_before_dedupe}, "
-        f"test_certified={test_certified_map_ready}, "
-        f"v3_runtime_map_ready={v3_runtime_map_ready}"
+        "canonical V3 and MapLibre marker counts disagree: "
+        f"v3_runtime_map_ready={v3_runtime_map_ready}, "
+        f"maplibre_exact_markers={maplibre_exact_markers}"
     )
 '''
 
@@ -120,8 +99,8 @@ def transform(source: str) -> str:
         V3_CROSS_DATE_BLOCK,
         "legacy cross-date suppression validation block",
     )
-    if "Never invent a" not in transformed:
-        raise RuntimeError("V3 zero-MAP_READY validation block was not installed")
+    if "jointly own public marker availability" not in transformed:
+        raise RuntimeError("V3 canonical availability validation block was not installed")
     if 'health_pipeline.get(' not in transformed:
         raise RuntimeError("V3 cross-date suppression validation block was not installed")
     return transformed
