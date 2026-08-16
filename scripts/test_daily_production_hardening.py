@@ -16,6 +16,7 @@ sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from scripts import sync_nyc_parks_bigapps_events as parks_sync  # noqa: E402
+from scripts.augment_daily_data_health_v03 import availability_gate  # noqa: E402
 from scripts.build_staged_production_feed import apply_one_day_street_dedupe  # noqa: E402
 from scripts.record_blocked_daily_data_health import build_payload  # noqa: E402
 from scripts.refresh_official_supplemental_occurrences import occurrence_key  # noqa: E402
@@ -207,6 +208,30 @@ def test_stage_runner_records_actionable_failure() -> None:
         assert "[REDACTED]" in payload["error_summary"]
 
 
+def test_public_map_availability_gate_rejects_zero_inventory() -> None:
+    blocked = availability_gate(
+        {
+            "canonical_event_count": 31350,
+            "semantic_staged_count": 0,
+            "map_ready_count": 0,
+            "reader_safe_event_count": 11419,
+        }
+    )
+    assert blocked["qa_pass"] is False
+    assert blocked["failures"] == ["map_ready_non_empty"]
+
+    ready = availability_gate(
+        {
+            "canonical_event_count": 100,
+            "semantic_staged_count": 0,
+            "map_ready_count": 10,
+            "reader_safe_event_count": 100,
+        }
+    )
+    assert ready["qa_pass"] is True
+    assert ready["failures"] == []
+
+
 def test_blocked_health_payload_is_fail_closed_and_actionable() -> None:
     payload = build_payload(
         stage="unknown_stage",
@@ -265,6 +290,7 @@ def test_modified_reliability_python_files_compile() -> None:
         for source in (
             ROOT / "scripts" / "run_daily_refresh_stage.py",
             ROOT / "scripts" / "record_blocked_daily_data_health.py",
+            ROOT / "scripts" / "augment_daily_data_health_v03.py",
             ROOT / "scripts" / "sync_nyc_parks_bigapps_events.py",
             ROOT / "scripts" / "test_nyc_parks_open_data_sync.py",
             ROOT / "scripts" / "test_live_event_intake_refresh_current.py",
@@ -292,6 +318,7 @@ def main() -> int:
         test_failure_summary_redacts_common_secrets,
         test_failure_payload_never_emits_unknown_stage,
         test_stage_runner_records_actionable_failure,
+        test_public_map_availability_gate_rejects_zero_inventory,
         test_blocked_health_payload_is_fail_closed_and_actionable,
         test_current_preflight_does_not_require_mutable_historical_pages,
         test_refresh_workflow_has_structured_preflight_diagnostics,

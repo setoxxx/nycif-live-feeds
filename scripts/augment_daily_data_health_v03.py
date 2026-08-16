@@ -64,6 +64,24 @@ def source_status(report: dict[str, Any], *, count: int, now: datetime) -> dict[
     }
 
 
+def availability_gate(addendum: dict[str, Any]) -> dict[str, Any]:
+    checks = {
+        "canonical_inventory_non_empty": int(addendum.get("canonical_event_count") or 0) > 0,
+        "map_ready_non_empty": int(addendum.get("map_ready_count") or 0) > 0,
+        "reader_safe_non_empty": int(addendum.get("reader_safe_event_count") or 0) > 0,
+    }
+    failures = [name for name, passed in checks.items() if not passed]
+    return {
+        "qa_pass": not failures,
+        "checks": checks,
+        "failures": failures,
+        "operating_rule": (
+            "A public-map release must contain canonical events, at least one "
+            "certified MAP_READY marker, and at least one reader-safe event."
+        ),
+    }
+
+
 def build_addendum(root: Path = ROOT, now: datetime | None = None) -> dict[str, Any]:
     now = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
 
@@ -77,6 +95,7 @@ def build_addendum(root: Path = ROOT, now: datetime | None = None) -> dict[str, 
     canonical_rows = rows(load(root / "data" / "events_discovery_accepted_canonical_v02.json"))
     v3 = load(root / "data" / "events_discovery_v3_authority_report.json")
     news = load(root / "data" / "reader-safe" / "news-desk-status-v02.json")
+    map_status = load(root / "data" / "reader-safe" / "national-map-events-v03-status.json")
 
     map_states = {"MAP_READY": 0, "GENERAL_AREA": 0, "REVIEW_REQUIRED": 0, "LIST_ONLY": 0}
     semantic_rows = 0
@@ -103,7 +122,7 @@ def build_addendum(root: Path = ROOT, now: datetime | None = None) -> dict[str, 
         "legacy_coordinate_authority_count": int(v3.get("legacy_coordinate_authority_count") or 0),
     }
 
-    return {
+    addendum = {
         "generated_at_utc": now.isoformat(),
         "authority": "projector_v3_semantic_map_decision",
         "sources": {
@@ -116,6 +135,7 @@ def build_addendum(root: Path = ROOT, now: datetime | None = None) -> dict[str, 
         "semantic_authority_row_count": semantic_rows,
         "map_state_counts": map_states,
         "map_ready_count": map_states["MAP_READY"],
+        "reader_safe_event_count": int(map_status.get("reader_safe_event_count") or 0),
         "review_count": review_count,
         "zero_gates": zero_gates,
         "news_desk": {
@@ -134,6 +154,8 @@ def build_addendum(root: Path = ROOT, now: datetime | None = None) -> dict[str, 
         ),
         "zero_gate_pass": all(value == 0 for value in zero_gates.values()),
     }
+    addendum["availability"] = availability_gate(addendum)
+    return addendum
 
 
 def main() -> int:
@@ -142,6 +164,23 @@ def main() -> int:
         raise RuntimeError("daily health payload must be an object")
     addendum = build_addendum()
     health["v3_runtime"] = addendum
+    availability = addendum["availability"]
+    pipeline = health.setdefault("pipeline", {})
+    pipeline["map_available"] = bool(availability["qa_pass"])
+    if not availability["qa_pass"]:
+        health["status"] = "BLOCKED"
+        health["release_ready"] = False
+        health.setdefault("blockers", []).append(
+            {
+                "code": "public_map_unavailable",
+                "severity": "critical",
+                "message": (
+                    "Public-map availability failed: "
+                    + ", ".join(availability["failures"])
+                ),
+                "artifact": "data/reader-safe/national-map-events-v03-status.json",
+            }
+        )
     HEALTH.write_text(json.dumps(health, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(addendum, indent=2, sort_keys=True))
 
@@ -153,6 +192,11 @@ def main() -> int:
         raise RuntimeError("one or more official live source families is not live/non-empty/QA PASS")
     if not addendum["zero_gate_pass"]:
         raise RuntimeError(f"V3 zero gate failed: {addendum['zero_gates']}")
+    if not addendum["availability"]["qa_pass"]:
+        raise RuntimeError(
+            "public-map availability gate failed: "
+            + ", ".join(addendum["availability"]["failures"])
+        )
     if addendum["news_desk"]["browser_raw_repository_required"]:
         raise RuntimeError("News Desk reader-safe status still requires raw repository data")
     return 0
