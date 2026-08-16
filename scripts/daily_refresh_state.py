@@ -87,6 +87,10 @@ def validate_failure_payload(payload: dict[str, Any]) -> dict[str, Any]:
     summary = payload["error_summary"]
     if not isinstance(summary, str) or not 1 <= len(summary) <= 2048:
         raise ValueError("failure payload error_summary must contain 1 to 2048 characters")
+    try:
+        summary.encode("utf-8")
+    except UnicodeEncodeError as exc:
+        raise ValueError("failure payload error_summary must be valid UTF-8 text") from exc
 
     exit_code = payload.get("exit_code")
     if type(exit_code) is not int or exit_code == 0 or not -(2**31) <= exit_code < 2**31:

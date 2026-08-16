@@ -301,6 +301,7 @@ def test_runtime_state_validation_is_fail_closed() -> None:
         {**valid, "public_feed_commit_occurred": "false"},
         {**valid, "stage": "unknown_stage"},
         {**valid, "extra": "smuggled"},
+        {**valid, "error_summary": "\ud800"},
     )
     with tempfile.TemporaryDirectory(dir=ROOT) as directory:
         state_root = Path(directory)
@@ -325,6 +326,29 @@ def test_runtime_state_validation_is_fail_closed() -> None:
             context = load_failure_context()
             assert context["exception_class"] == "MalformedFailureContext"
             assert context["publication_state_verified"] is False
+
+            failure_file.write_text(
+                '{"schema_version":"1.0.0","generated_at_utc":"2026-08-16T00:00:00Z",'
+                '"stage":"fixture","command_id":"fixture","exit_code":1,'
+                '"exception_class":"FixtureFailure","error_summary":"\\ud800",'
+                '"public_feed_commit_occurred":false}',
+                encoding="utf-8",
+            )
+            os.chmod(failure_file, 0o600)
+            context = load_failure_context()
+            assert context["exception_class"] == "MalformedFailureContext"
+            conservative = build_payload(
+                stage=context["stage"],
+                command_id=context["command_id"],
+                exit_code=context["exit_code"],
+                shell_line="not_available",
+                exception_class=context["exception_class"],
+                error_summary=context["error_summary"],
+                previous_commit="a" * 40,
+                public_feed_commit_occurred=context["public_feed_commit_occurred"],
+                publication_state_verified=context["publication_state_verified"],
+            )
+            json.dumps(conservative, ensure_ascii=False).encode("utf-8")
 
             failure_file.write_bytes(b"x" * (refresh_state.MAX_STATE_BYTES + 1))
             os.chmod(failure_file, 0o600)

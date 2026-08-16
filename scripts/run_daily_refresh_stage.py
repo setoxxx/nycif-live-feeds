@@ -31,7 +31,12 @@ def utc_now() -> str:
 
 def sanitize_text(value: str) -> str:
     """Redact common secret shapes while preserving log line structure."""
-    cleaned = "".join(character for character in value if character in "\n\t" or ord(character) >= 32)
+    cleaned = "".join(
+        character
+        for character in value
+        if character in "\n\t"
+        or (ord(character) >= 32 and not 0xD800 <= ord(character) <= 0xDFFF)
+    )
     for pattern in _SECRET_PATTERNS:
         if pattern.groups:
             cleaned = pattern.sub(r"\1[REDACTED]", cleaned)
