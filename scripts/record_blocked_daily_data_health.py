@@ -15,12 +15,12 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from scripts.run_daily_refresh_stage import sanitize_summary
+    from scripts.run_daily_refresh_stage import repository_runtime_path, sanitize_summary
 except ModuleNotFoundError:  # Direct execution from the scripts directory.
-    from run_daily_refresh_stage import sanitize_summary
+    from run_daily_refresh_stage import repository_runtime_path, sanitize_summary
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "status" / "nycif-daily-data-health.json"
+OUT = repository_runtime_path(ROOT / "status" / "nycif-daily-data-health.json")
 
 
 def utc_now() -> str:
@@ -35,10 +35,13 @@ def normalize_stage(value: str) -> str:
 
 
 def load_failure_context(path: Path | None) -> dict[str, Any]:
-    if path is None or not path.is_file():
+    if path is None:
+        return {}
+    safe_path = repository_runtime_path(path)
+    if not safe_path.is_file():
         return {}
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
+        payload = json.loads(safe_path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError):
         return {
             "stage": "platform_or_uninstrumented_failure",
