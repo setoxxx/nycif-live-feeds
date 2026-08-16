@@ -10,12 +10,12 @@ import subprocess
 import sys
 from collections import deque
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Sequence
 
-ROOT = Path(__file__).resolve().parents[1]
-RUNTIME_DIR = ROOT / ".runtime"
-DEFAULT_FAILURE_FILE = RUNTIME_DIR / "nycif-daily-failure.json"
+try:
+    from scripts import daily_refresh_state as state
+except ModuleNotFoundError:  # Direct execution from the scripts directory.
+    import daily_refresh_state as state
 SUMMARY_LIMIT = 1600
 
 _SECRET_PATTERNS = (
@@ -79,29 +79,11 @@ def failure_payload(
     return payload
 
 
-def repository_runtime_path(path: Path) -> Path:
-    """Resolve a generated runtime path and reject paths outside the repository."""
-    repository_root = ROOT.resolve()
-    candidate = path.resolve(strict=False)
-    try:
-        candidate.relative_to(repository_root)
-    except ValueError as exc:
-        raise ValueError(f"runtime path must stay within {repository_root}") from exc
-    return candidate
-
-
-def write_failure(path: Path, payload: dict) -> None:
-    safe_path = repository_runtime_path(path)
-    safe_path.parent.mkdir(parents=True, exist_ok=True)
-    safe_path.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-
-
 def run_command(
     command: Sequence[str],
     *,
     stage: str,
     command_id: str,
-    failure_file: Path,
 ) -> int:
     if not command:
         payload = failure_payload(
@@ -111,7 +93,7 @@ def run_command(
             exception_class="ArgumentError",
             error_summary="No executable command was supplied.",
         )
-        write_failure(failure_file, payload)
+        state.atomic_write_failure(payload)
         return 2
 
     tail: deque[str] = deque(maxlen=80)
@@ -140,7 +122,7 @@ def run_command(
             exception_class=exc.__class__.__name__,
             error_summary=str(exc),
         )
-        write_failure(failure_file, payload)
+        state.atomic_write_failure(payload)
         print(payload["error_summary"], file=sys.stderr)
         return 127
 
@@ -152,7 +134,7 @@ def run_command(
             exception_class="ProcessExitError",
             error_summary="".join(tail),
         )
-        write_failure(failure_file, payload)
+        state.atomic_write_failure(payload)
     return return_code
 
 
@@ -160,7 +142,6 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--stage", required=True)
     parser.add_argument("--command-id", required=True)
-    parser.add_argument("--failure-file", type=Path, default=DEFAULT_FAILURE_FILE)
     parser.add_argument("command", nargs=argparse.REMAINDER)
     args = parser.parse_args(argv)
     if args.command and args.command[0] == "--":
@@ -174,7 +155,6 @@ def main(argv: Sequence[str] | None = None) -> int:
         args.command,
         stage=args.stage,
         command_id=args.command_id,
-        failure_file=args.failure_file,
     )
 
 
