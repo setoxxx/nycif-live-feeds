@@ -19,7 +19,7 @@ def test_parks_official_event_record_coordinate_is_map_ready():
     assert row["lng"] == -73.9654
     assert evidence["tier"] == "exact_source_coordinate"
     assert evidence["validation_state"] == "validated"
-    assert evidence["site_validation_state"] == "validated_from_official_event_record"
+    assert evidence["site_validation_state"] == "validated"
     assert evidence["exact_pin_eligible"] is True
     assert evidence["source_provenance"]
     assert evidence["source_event_id"] == "parks-1"
