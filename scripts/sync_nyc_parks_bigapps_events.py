@@ -124,12 +124,12 @@ def official_coordinate_evidence(
     evidence = {
         "tier": "exact_source_coordinate",
         "validation_state": "validated",
-        "site_validation_state": "validated_from_official_event_record",
+        "site_validation_state": "validated",
         "exact_pin_eligible": True,
         "source_provenance": EVENTS_URL,
         "provider": "NYC Parks / NYC Open Data",
         "source_dataset_id": DATASET_ID,
-        "reason_code": "OFFICIAL_EVENT_RECORD_COORDINATE",
+        "reason_code": "OFFICIAL_SOURCE_COORDINATE_SITE_VALIDATED",
         "reason_detail": (
             "Coordinate pair and stated venue are supplied together by the current "
             "official NYC Parks Open Data event record."
