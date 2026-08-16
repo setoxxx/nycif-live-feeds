@@ -2,9 +2,11 @@
 # Atomic daily production transaction for the NYC In Focus News Desk.
 set -eEuo pipefail
 
-FAILURE_JSON="/tmp/nycif-daily-failure.json"
-FAILURE_LEGACY="/tmp/nycif-daily-failure"
-PREVIOUS_POINTER="/tmp/nycif-previous-public-feed"
+RUNTIME_DIR="${NYCIF_RUNTIME_DIR:-.runtime}"
+FAILURE_JSON="$RUNTIME_DIR/nycif-daily-failure.json"
+FAILURE_LEGACY="$RUNTIME_DIR/nycif-daily-failure"
+PREVIOUS_POINTER="$RUNTIME_DIR/nycif-previous-public-feed"
+mkdir -p "$RUNTIME_DIR"
 CURRENT_STAGE="initialization"
 CURRENT_COMMAND_ID="initialize_transaction"
 
@@ -16,6 +18,7 @@ record_shell_failure() {
     NYCIF_FAILURE_COMMAND_ID="$CURRENT_COMMAND_ID" \
     NYCIF_FAILURE_EXIT_CODE="$code" \
     NYCIF_FAILURE_LINE="$line" \
+    NYCIF_FAILURE_FILE="$FAILURE_JSON" \
       python - <<'PY'
 import os
 from pathlib import Path
@@ -33,7 +36,7 @@ payload = failure_payload(
     public_feed_commit_occurred=False,
     shell_line=os.environ.get("NYCIF_FAILURE_LINE", "not_available"),
 )
-write_failure(Path("/tmp/nycif-daily-failure.json"), payload)
+write_failure(Path(os.environ["NYCIF_FAILURE_FILE"]), payload)
 PY
   fi
   printf '%s\n%s\n%s\n%s\n' "$CURRENT_STAGE" "$code" "$line" "$CURRENT_COMMAND_ID" > "$FAILURE_LEGACY"
