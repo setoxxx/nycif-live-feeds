@@ -22,7 +22,7 @@ class PrepareV3RuntimeValidatorTests(unittest.TestCase):
         self.assertNotIn(LEGACY_CROSS_DATE_BLOCK, transformed)
         self.assertIn(V3_BLOCK, transformed)
         self.assertIn(V3_CROSS_DATE_BLOCK, transformed)
-        self.assertIn("zero_map_ready_evidence", transformed)
+        self.assertIn("jointly own public marker availability", transformed)
         self.assertIn("cross_date_street_occurrences_suppressed", transformed)
 
     def test_refuses_missing_map_ready_legacy_block(self) -> None:
@@ -41,33 +41,31 @@ class PrepareV3RuntimeValidatorTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "legacy cross-date suppression.*found 2"):
             transform(LEGACY_BLOCK + LEGACY_CROSS_DATE_BLOCK + LEGACY_CROSS_DATE_BLOCK)
 
-    def test_zero_row_rule_requires_three_independent_zero_counts(self) -> None:
+    def test_legacy_staged_feed_is_not_v3_availability_authority(self) -> None:
         transformed = transform(source_fixture())
-        self.assertIn('staged_manifest.get("certified_map_ready_before_dedupe")', transformed)
-        self.assertIn('test_manifest.get("certified_map_ready_events")', transformed)
-        self.assertIn('health.get("v3_runtime")', transformed)
+        self.assertIn('staged_manifest.get("staged_feed_events")', transformed)
         self.assertIn('health_v3_runtime.get("map_ready_count")', transformed)
-        self.assertIn('"health.v3_runtime.map_ready_count"', transformed)
-        self.assertIn('if mismatches:', transformed)
-        self.assertIn("empty staged feed contradicts certified MAP_READY authority", transformed)
+        self.assertIn('map_safe.get("exact_marker_count")', transformed)
+        self.assertNotIn("empty staged feed contradicts certified MAP_READY authority", transformed)
+        self.assertNotIn("non-empty staged feed contradicts zero certified MAP_READY authority", transformed)
+        self.assertNotIn('test_manifest.get("certified_map_ready_events")', transformed)
+        self.assertNotIn('staged_manifest.get("certified_map_ready_before_dedupe")', transformed)
+
+    def test_canonical_v3_and_maplibre_counts_are_positive_and_equal(self) -> None:
+        transformed = transform(source_fixture())
+        self.assertIn('("health.v3_runtime.map_ready_count", v3_runtime_map_ready)', transformed)
+        self.assertIn('("map_safe.exact_marker_count", maplibre_exact_markers)', transformed)
+        self.assertIn("isinstance(value, bool)", transformed)
+        self.assertIn("not isinstance(value, int)", transformed)
+        self.assertIn("value <= 0", transformed)
+        self.assertIn("must be a positive integer", transformed)
+        self.assertIn("maplibre_exact_markers != v3_runtime_map_ready", transformed)
+        self.assertIn("canonical V3 and MapLibre marker counts disagree", transformed)
 
     def test_zero_row_rule_does_not_read_count_from_raw_v3_authority_report(self) -> None:
         transformed = transform(source_fixture())
         self.assertNotIn('v3.get("map_ready_count")', transformed)
         self.assertNotIn('(v3.get("map_state_counts") or {}).get("MAP_READY")', transformed)
-
-    def test_v3_runtime_count_is_fail_closed_when_missing_or_malformed(self) -> None:
-        transformed = transform(source_fixture())
-        self.assertIn("isinstance(v3_runtime_map_ready, bool)", transformed)
-        self.assertIn("not isinstance(v3_runtime_map_ready, int)", transformed)
-        self.assertIn("v3_runtime_map_ready < 0", transformed)
-        self.assertIn("daily V3 runtime MAP_READY count is missing or malformed", transformed)
-
-    def test_nonempty_feed_cannot_contradict_zero_authority(self) -> None:
-        transformed = transform(source_fixture())
-        self.assertIn("staged_certified_before_dedupe == 0", transformed)
-        self.assertIn("v3_runtime_map_ready == 0", transformed)
-        self.assertIn("non-empty staged feed contradicts zero certified MAP_READY authority", transformed)
 
     def test_cross_date_gate_reads_ready_health_pipeline_not_staged_manifest(self) -> None:
         transformed = transform(source_fixture())
