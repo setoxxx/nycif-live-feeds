@@ -2,11 +2,16 @@
 # Atomic daily production transaction for the NYC In Focus News Desk.
 set -eEuo pipefail
 
-RUNTIME_DIR="${NYCIF_RUNTIME_DIR:-.runtime}"
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+RUNTIME_DIR="$REPO_ROOT/.runtime"
 FAILURE_JSON="$RUNTIME_DIR/nycif-daily-failure.json"
 FAILURE_LEGACY="$RUNTIME_DIR/nycif-daily-failure"
 PREVIOUS_POINTER="$RUNTIME_DIR/nycif-previous-public-feed"
 umask 077
+if [ -L "$RUNTIME_DIR" ]; then
+  echo "Refresh runtime directory must not be a symlink: $RUNTIME_DIR" >&2
+  exit 1
+fi
 install -d -m 700 "$RUNTIME_DIR"
 CURRENT_STAGE="initialization"
 CURRENT_COMMAND_ID="initialize_transaction"
