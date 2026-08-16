@@ -398,8 +398,8 @@ NYCIF_FAILURE_STAGE="$CURRENT_STAGE" \
 NYCIF_FAILURE_COMMAND_ID="$CURRENT_COMMAND_ID" \
   python - <<'PY'
 import os
-from pathlib import Path
-from scripts.run_daily_refresh_stage import failure_payload, write_failure
+from scripts import daily_refresh_state as state
+from scripts.run_daily_refresh_stage import failure_payload
 
 payload = failure_payload(
     stage=os.environ["NYCIF_FAILURE_STAGE"],
@@ -409,7 +409,7 @@ payload = failure_payload(
     error_summary="Could not push a READY daily feed after three complete rebuild attempts; main remained unchanged.",
     public_feed_commit_occurred=False,
 )
-write_failure(Path("/tmp/nycif-daily-failure.json"), payload)
+state.atomic_write_failure(payload)
 PY
 printf '%s\n%s\n%s\n%s\n' "$CURRENT_STAGE" "1" "not_available" "$CURRENT_COMMAND_ID" > "$FAILURE_LEGACY"
 echo "::error::Could not push a READY daily feed after 3 attempts; main remained unchanged."
