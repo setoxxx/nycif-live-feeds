@@ -11,7 +11,7 @@
     {
       "severity": "high",
       "source": "daily_data_health",
-      "text": "Daily production refresh failed at stage 'daily_data_health_v3_augmentation' (command 'augment_daily_data_health_v03', exit 1). [.github/workflows/discovery-feed-refresh.yml]"
+      "text": "Daily production refresh failed at stage 'final_runtime_validation' (command 'validate_complete_runtime_artifacts', exit 1). [.github/workflows/discovery-feed-refresh.yml]"
     },
     {
       "severity": "medium",
@@ -66,15 +66,15 @@
       {
         "artifact": ".github/workflows/discovery-feed-refresh.yml",
         "code": "daily_refresh_stage_failed",
-        "command_id": "augment_daily_data_health_v03",
-        "error_summary": "[truncated]    \"viral_count\": 0\n  },\n  \"projector_v3_qa_pass\": true,\n  \"raw_accounting_pass\": true,\n  \"reader_safe_event_count\": 11504,\n  \"review_count\": 31479,\n  \"semantic_authority_row_count\": 31479,\n  \"semantic_staged_count\": 0,\n  \"sources\": {\n    \"citywide_calendar\": {\n      \"age_hours\": 0.01,\n      \"count\": 2216,\n      \"fetch_mode\": \"live\",\n      \"generated_at_utc\": \"2026-08-16T01:15:23.931679+00:00\",\n      \"non_empty\": true,\n      \"qa_pass\": true\n    },\n    \"parks_bigapps\": {\n      \"age_hours\": 0.009,\n      \"count\": 1831,\n      \"fetch_mode\": \"live\",\n      \"generated_at_utc\": \"2026-08-16T01:15:24.010352+00:00\",\n      \"non_empty\": true,\n      \"qa_pass\": true\n    },\n    \"permitted_events\": {\n      \"age_hours\": 0.022,\n      \"count\": 27229,\n      \"fetch_mode\": \"live\",\n      \"generated_at_utc\": \"2026-08-16T01:14:37.589717+00:00\",\n      \"non_empty\": true,\n      \"qa_pass\": true\n    }\n  },\n  \"zero_gate_pass\": true,\n  \"zero_gates\": {\n    \"duplicate_exact_occurrences\": 0,\n    \"implicit_source_all_count\": 0,\n    \"legacy_coordinate_authority_count\": 0,\n    \"legacy_occurrence_authority_count\": 0,\n    \"silent_identity_loss\": 0,\n    \"unsupported_exact_pin_count\": 0\n  }\n}\nTraceback (most recent call last):\n  File \"/home/runner/work/nycif-live-feeds/nycif-live-feeds/scripts/augment_daily_data_health_v03.py\", line 206, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/runner/work/nycif-live-feeds/nycif-live-feeds/scripts/augment_daily_data_health_v03.py\", line 196, in main\n    raise RuntimeError(\nRuntimeError: public-map availability gate failed: map_ready_non_empty",
-        "exception_class": "ProcessExitError",
+        "command_id": "validate_complete_runtime_artifacts",
+        "error_summary": "A shell command failed before a captured stderr summary was available. Review the GitHub Actions job log for this stage.",
+        "exception_class": "ShellCommandFailure",
         "exit_code": 1,
-        "message": "Daily production refresh failed at stage 'daily_data_health_v3_augmentation' (command 'augment_daily_data_health_v03', exit 1).",
+        "message": "Daily production refresh failed at stage 'final_runtime_validation' (command 'validate_complete_runtime_artifacts', exit 1).",
         "public_feed_commit_occurred": false,
         "severity": "critical",
-        "shell_line": "50",
-        "stage": "daily_data_health_v3_augmentation"
+        "shell_line": "164",
+        "stage": "final_runtime_validation"
       }
     ],
     "company_focus": "News Desk live-data completeness, freshness, and duplicate safety",
@@ -85,7 +85,7 @@
       "note": "V1 remains the sole production authority.",
       "production_authority": false
     },
-    "generated_at_utc": "2026-08-16T01:16:00Z",
+    "generated_at_utc": "2026-08-16T02:19:00Z",
     "operating_rule": "Do not commit or publish a refreshed public feed unless status is READY.",
     "pipeline": {
       "canonical_identity_clean": false,
@@ -95,7 +95,7 @@
     },
     "release_ready": false,
     "rollback": {
-      "previous_public_feed_commit": "b8030cf455dcc6c0d48d52d17ff0b7816172975e",
+      "previous_public_feed_commit": "229843b1636fcc4ef3ef57d9f2582f16616975ae",
       "strategy": "Failed runs do not commit; revert the READY refresh commit to restore this prior commit."
     },
     "rollback_rule": "The previous serving commit remains authoritative until a later refresh is READY.",
@@ -188,11 +188,11 @@
       "viewer": 61
     }
   },
-  "generated_at_utc": "2026-08-16T01:16:00Z",
+  "generated_at_utc": "2026-08-16T02:19:00Z",
   "github_tracker": {
     "artifact_type": "nycif_github_tracker",
     "closed_issues_recent": [],
-    "generated_at_utc": "2026-08-16T01:16:00Z",
+    "generated_at_utc": "2026-08-16T02:19:00Z",
     "open_issues_field_desk": [],
     "open_issues_live_feeds": [],
     "open_prs": [],
@@ -206,7 +206,7 @@
     },
     "daily_data_health": {
       "artifact": "status/nycif-daily-data-health.json",
-      "generated_at_utc": "2026-08-16T01:16:00Z",
+      "generated_at_utc": "2026-08-16T02:19:00Z",
       "qa_pass": false,
       "status": "BLOCKED"
     },
@@ -237,7 +237,7 @@
       "text": "Field-desk deploy automation (issues #127/#128 closed)"
     },
     {
-      "resolved_at_utc": "2026-08-16T01:16:00Z",
+      "resolved_at_utc": "2026-08-16T02:19:00Z",
       "text": "M11 supplemental first-pass: 3543 rows approved in queue"
     }
   ],
@@ -414,7 +414,7 @@
         "data/schema-v1-discovery/shared-cems-occurrence-dedupe-summary.json"
       ],
       "blockers": [
-        "Daily production refresh failed at stage 'daily_data_health_v3_augmentation' (command 'augment_daily_data_health_v03', exit 1). [.github/workflows/discovery-feed-refresh.yml]"
+        "Daily production refresh failed at stage 'final_runtime_validation' (command 'validate_complete_runtime_artifacts', exit 1). [.github/workflows/discovery-feed-refresh.yml]"
       ],
       "id": "daily_live_data",
       "status": "blocked",
