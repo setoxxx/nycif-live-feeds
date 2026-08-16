@@ -1,0 +1,41 @@
+name: Disposable Sonar Main Issue Diagnostic
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/sonar-main-issue-diagnostic.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fetch unresolved main-branch Sonar issues
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --silent --show-error \
+            'https://sonarcloud.io/api/issues/search?componentKeys=setoxxx_nycif-live-feeds&branch=main&resolved=false&ps=100' \
+            > "$RUNNER_TEMP/sonar-main-issues.json"
+          python3 - "$RUNNER_TEMP/sonar-main-issues.json" <<'PY'
+          import json
+          import sys
+
+          payload = json.load(open(sys.argv[1], encoding="utf-8"))
+          issues = payload.get("issues", [])
+          print(f"SONAR MAIN ISSUES: total={len(issues)}")
+          for issue in issues:
+              print(json.dumps({
+                  "key": issue.get("key"),
+                  "rule": issue.get("rule"),
+                  "severity": issue.get("severity"),
+                  "type": issue.get("type"),
+                  "component": issue.get("component"),
+                  "line": issue.get("line"),
+                  "message": issue.get("message"),
+                  "impacts": issue.get("impacts"),
+                  "status": issue.get("status"),
+              }, sort_keys=True))
+          PY
