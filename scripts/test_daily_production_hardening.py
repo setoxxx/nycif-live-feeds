@@ -123,9 +123,9 @@ def test_parks_official_event_record_coordinate_is_map_ready() -> None:
     evidence = result["location_evidence"]
     assert evidence["tier"] == "exact_source_coordinate"
     assert evidence["validation_state"] == "validated"
-    assert evidence["site_validation_state"] == "validated_from_official_event_record"
+    assert evidence["site_validation_state"] == "validated"
     assert evidence["exact_pin_eligible"] is True
-    assert evidence["reason_code"] == "OFFICIAL_EVENT_RECORD_COORDINATE"
+    assert evidence["reason_code"] == "OFFICIAL_SOURCE_COORDINATE_SITE_VALIDATED"
     assert evidence["source_dataset_id"] == "w3wp-dpdi"
     assert result["promotion_allowed"] is False
     assert result["public_map_modified"] is False
