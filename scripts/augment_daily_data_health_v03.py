@@ -66,7 +66,7 @@ def source_status(report: dict[str, Any], *, count: int, now: datetime) -> dict[
 
 def availability_gate(addendum: dict[str, Any]) -> dict[str, Any]:
     checks = {
-        "semantic_staged_non_empty": int(addendum.get("semantic_staged_count") or 0) > 0,
+        "canonical_inventory_non_empty": int(addendum.get("canonical_event_count") or 0) > 0,
         "map_ready_non_empty": int(addendum.get("map_ready_count") or 0) > 0,
         "reader_safe_non_empty": int(addendum.get("reader_safe_event_count") or 0) > 0,
     }
@@ -76,7 +76,7 @@ def availability_gate(addendum: dict[str, Any]) -> dict[str, Any]:
         "checks": checks,
         "failures": failures,
         "operating_rule": (
-            "A public-map release must contain staged semantic events, at least one "
+            "A public-map release must contain canonical events, at least one "
             "certified MAP_READY marker, and at least one reader-safe event."
         ),
     }
