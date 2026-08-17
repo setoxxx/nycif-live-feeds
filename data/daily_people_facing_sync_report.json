@@ -7,16 +7,16 @@
     "map_ready": 3362
   },
   "failed_steps": [],
-  "generated_at_utc": "2026-08-16T10:59:49Z",
+  "generated_at_utc": "2026-08-17T11:03:15Z",
   "location_cache_modified": false,
   "notes": "Safe daily desk sync. Does not run build_staged_production_feed / build_location_cache / public WordPress publish. Pin integrity gate fail-closed: qa_pass requires ZERO bad map_ready pins. Full permit→staged refresh remains live-sync-qa (manual dispatch).",
   "photographer_calendar": {
-    "days_with_coverage": 14,
-    "events_removed_vs_baseline": 805,
+    "days_with_coverage": 13,
+    "events_removed_vs_baseline": 813,
     "month_counts": [
       {
-        "days_with_events": 5,
-        "event_count": 14,
+        "days_with_events": 4,
+        "event_count": 6,
         "label": "August 2026"
       },
       {
@@ -29,23 +29,16 @@
       "qa_pass": true,
       "today": {
         "borough_cluster_count": 0,
-        "date": "2026-08-16",
+        "date": "2026-08-17",
         "map_ready_count": 0,
-        "total_events": 8
+        "total_events": 1
       },
       "tomorrow": {
         "borough_cluster_count": 0,
-        "date": "2026-08-17",
+        "date": "2026-08-18",
         "map_ready_count": 0,
-        "top_go_shoot": [
-          {
-            "borough": "Manhattan",
-            "score": 400,
-            "time": "2026-08-17T18:00:00.000-04:00",
-            "title": "Marcus Garvey Day Parade"
-          }
-        ],
-        "total_events": 1
+        "top_go_shoot": [],
+        "total_events": 0
       }
     },
     "pin_integrity": {
@@ -64,15 +57,15 @@
       "today_certified_pins": 0,
       "tomorrow_certified_pins": 0
     },
-    "total_events": 37,
+    "total_events": 29,
     "viral_recurrence": {
       "historical_rows": 2450,
       "label_counts": {
-        "possible": 12,
-        "returning_likely": 2,
+        "possible": 11,
+        "returning_likely": 1,
         "weak": 1
       },
-      "match_count": 15,
+      "match_count": 13,
       "next_14d_crowd_magnets": 0,
       "qa_pass": true
     }

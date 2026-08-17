@@ -1,13 +1,7 @@
 {
-  "generated_at_utc": "2026-08-16T10:59:55Z",
+  "generated_at_utc": "2026-08-17T11:03:21Z",
   "location_cache_modified": false,
   "next_7_summary": [
-    {
-      "certified_pin_count": 0,
-      "date": "2026-08-16",
-      "needs_location_count": 8,
-      "top": []
-    },
     {
       "certified_pin_count": 0,
       "date": "2026-08-17",
@@ -43,6 +37,12 @@
       "date": "2026-08-22",
       "needs_location_count": 1,
       "top": []
+    },
+    {
+      "certified_pin_count": 0,
+      "date": "2026-08-23",
+      "needs_location_count": 2,
+      "top": []
     }
   ],
   "pin_integrity_qa_pass": true,
@@ -56,124 +56,10 @@
     "greenmarkets secondary",
     "only semantic MAP_READY + certified_pin exact coordinates appear in map clusters"
   ],
-  "reference_today_nyc": "2026-08-16",
+  "reference_today_nyc": "2026-08-17",
   "schema_version": "photographer-shoot-day-certified-v1",
   "staged_feed_modified": false,
   "today": {
-    "borough_clusters": [],
-    "certified_pin_count": 0,
-    "date": "2026-08-16",
-    "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-16&assignment=1",
-    "go_shoot_certified": [],
-    "needs_location": [
-      {
-        "assignment_score": 550,
-        "borough": "Brooklyn",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-08-16",
-        "display_location": "Brooklyn",
-        "id": "nyc-citywide-events-calendar-api:1045136@2026-08-16",
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "pin_integrity_reason": "missing_coords",
-        "title": "Crown Heights 5K Run\\/Walk and Street Festival"
-      },
-      {
-        "assignment_score": 400,
-        "borough": "Queens",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-08-16",
-        "display_location": "Queens",
-        "id": "nyc-citywide-events-calendar-api:1044776@2026-08-16",
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "pin_integrity_reason": "missing_coords",
-        "title": "Bolivian Day Parade"
-      },
-      {
-        "assignment_score": 400,
-        "borough": "Queens",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-08-16",
-        "display_location": "Queens",
-        "id": "nyc-citywide-events-calendar-api:1045156@2026-08-16",
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "pin_integrity_reason": "missing_coords",
-        "title": "Cultural Parade"
-      },
-      {
-        "assignment_score": 400,
-        "borough": "Manhattan",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-08-16",
-        "display_location": "Manhattan",
-        "id": "nyc-citywide-events-calendar-api:1045776@2026-08-16",
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "pin_integrity_reason": "missing_coords",
-        "title": "India Day Parade"
-      },
-      {
-        "assignment_score": 350,
-        "borough": "Brooklyn",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-08-16",
-        "display_location": "Lincoln Terrace \\/ (Arthur S. Somers Park): Central Pedestrian Walkway  Brooklyn",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:1045136@2026-08-16",
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "pin_integrity_reason": "missing_coords",
-        "title": "Crown Heights 5K Run\\/Walk and Street Festival"
-      },
-      {
-        "assignment_score": 200,
-        "borough": "Queens",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-08-16",
-        "display_location": "69 ST between 37 AVE and 35 AVE  Queens",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:1044776@2026-08-16",
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "pin_integrity_reason": "missing_coords",
-        "title": "Bolivian Day Parade"
-      },
-      {
-        "assignment_score": 200,
-        "borough": "Queens",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-08-16",
-        "display_location": "27109 80 AVENUE Queens",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:1045156@2026-08-16",
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "pin_integrity_reason": "missing_coords",
-        "title": "Cultural Parade"
-      },
-      {
-        "assignment_score": 200,
-        "borough": "Manhattan",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-08-16",
-        "display_location": "EAST   37 STREET between PARK AVENUE and 5 AVENUE  Manhattan",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:1045776@2026-08-16",
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "pin_integrity_reason": "missing_coords",
-        "title": "India Day Parade"
-      }
-    ],
-    "needs_location_count": 8
-  },
-  "tomorrow": {
     "borough_clusters": [],
     "certified_pin_count": 0,
     "date": "2026-08-17",
@@ -195,5 +81,14 @@
       }
     ],
     "needs_location_count": 1
+  },
+  "tomorrow": {
+    "borough_clusters": [],
+    "certified_pin_count": 0,
+    "date": "2026-08-18",
+    "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-18&assignment=1",
+    "go_shoot_certified": [],
+    "needs_location": [],
+    "needs_location_count": 0
   }
 }
