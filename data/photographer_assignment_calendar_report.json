@@ -1,17 +1,11 @@
 {
   "coordinate_status_counts": {
-    "list_only": 27,
+    "list_only": 26,
     "map_ready": 2
   },
-  "days_with_coverage": 13,
-  "generated_at_utc": "2026-08-17T11:03:18Z",
+  "days_with_coverage": 12,
+  "generated_at_utc": "2026-08-18T11:02:34Z",
   "go_shoot_sample": [
-    {
-      "borough": "Manhattan",
-      "date": "2026-08-17",
-      "score": 400,
-      "title": "Marcus Garvey Day Parade"
-    },
     {
       "borough": null,
       "date": "2026-08-22",
@@ -65,25 +59,31 @@
       "date": "2026-09-06",
       "score": 400,
       "title": "Labor Day Baby Parade"
+    },
+    {
+      "borough": "Queens",
+      "date": "2026-09-07",
+      "score": 400,
+      "title": "Labor Day Parade"
     }
   ],
   "lane_counts": {
-    "approved_major": 23,
+    "approved_major": 22,
     "review_high_signal": 6
   },
   "location_cache_modified": false,
   "money_day_quality": {
-    "events_removed_vs_baseline": 813,
+    "events_removed_vs_baseline": 814,
     "qa_pass": true,
     "report": "data/photographer_money_day_quality_report.json",
     "top_exclude_reasons": [
       [
         "no_money_day_keyword_signal",
-        470
+        454
       ],
       [
         "routine_activity_excluded",
-        76
+        75
       ],
       [
         "thin_or_non_money_title_excluded",
@@ -97,8 +97,8 @@
   },
   "month_counts": [
     {
-      "days_with_events": 4,
-      "event_count": 6,
+      "days_with_events": 3,
+      "event_count": 5,
       "label": "August 2026"
     },
     {
@@ -112,8 +112,8 @@
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-08-17",
+  "reference_today_nyc": "2026-08-18",
   "schema_version": "photographer-assignment-calendar-v2-money-day",
-  "total_events": 29,
+  "total_events": 28,
   "window_end": "2026-09-30"
 }

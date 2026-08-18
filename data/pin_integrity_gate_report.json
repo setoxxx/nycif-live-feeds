@@ -9,10 +9,10 @@
   "demotion_count": 0,
   "demotion_reason_counts": {},
   "demotions_artifact": "data/pin_integrity_demotions.json",
-  "generated_at_utc": "2026-08-17T11:03:21Z",
+  "generated_at_utc": "2026-08-18T11:02:36Z",
   "location_cache_modified": false,
   "map_ready_after_total": 0,
-  "map_ready_before_total": 3364,
+  "map_ready_before_total": 3347,
   "notes": "Geometry validation never creates certification. Legacy in-bounds map_ready rows without validated location evidence may remain as migration state, but certified_pin, semantic MAP_READY and exact map links are cleared.",
   "promotion_allowed": false,
   "protected_files_untouched": true,
@@ -31,7 +31,7 @@
       "map_ready_before": 2,
       "reason_counts": {
         "LEGACY_EVIDENCE_PENDING_MIGRATION": 2,
-        "missing_coords": 27
+        "missing_coords": 26
       },
       "remaining_bad_map_ready": [],
       "surface": "money_day"
@@ -67,16 +67,16 @@
       "artifact": "data/civic_people_facing_staging_feed.json",
       "demotion_count": 0,
       "map_ready_after": 0,
-      "map_ready_before": 3362,
+      "map_ready_before": 3345,
       "reason_counts": {
-        "LEGACY_EVIDENCE_PENDING_MIGRATION": 3362,
+        "LEGACY_EVIDENCE_PENDING_MIGRATION": 3345,
         "missing_coords": 1290
       },
       "surface": "civic"
     },
     {
       "artifact": "data/schema-v1-discovery/major/events.json",
-      "map_ready_scanned": 3,
+      "map_ready_scanned": 2,
       "note": "Report-only scan; legacy map_ready without exact authority is migration state, not certification.",
       "surface": "field_desk_feed",
       "unsupported_exact_claim_count": 0,
