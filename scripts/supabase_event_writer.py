@@ -20,10 +20,8 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 REPORT_PATH = ROOT / "data" / "reports" / "supabase_writer_report.json"
-
 
 ACTIONS = (
     "INSERT",
@@ -40,11 +38,27 @@ def load_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def build_report(input_count: int = 0) -> dict:
-    return {
-        "run_type": "dry_run",
-        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
-        "input_count": input_count,
+def extract_events(payload):
+    if isinstance(payload, list):
+        return payload
+    if isinstance(payload, dict):
+        return payload.get("events", [])
+    return []
+
+
+def occurrence_key(event):
+    return str(event.get("id") or event.get("occurrence_id") or "")
+
+
+def compare_to_supabase(canonical_events, supabase_state=None):
+    """Read-only comparison contract.
+
+    A future adapter will populate supabase_state. This function never writes.
+    """
+    supabase_state = supabase_state or {}
+    existing = supabase_state.get("occurrences", {})
+
+    report = {
         "actions": {key: 0 for key in ACTIONS},
         "identity": {
             "duplicate_ids": 0,
@@ -63,6 +77,33 @@ def build_report(input_count: int = 0) -> dict:
             "coordinate_changes": 0,
             "map_state_changes": 0,
         },
+    }
+
+    seen = set()
+    for event in canonical_events:
+        key = occurrence_key(event)
+        if not key:
+            report["identity"]["missing_ids"] += 1
+            continue
+        if key in seen:
+            report["identity"]["duplicate_ids"] += 1
+            continue
+        seen.add(key)
+        report["actions"]["UPDATE" if key in existing else "INSERT"] += 1
+
+    for key in existing:
+        if key not in seen:
+            report["actions"]["EXPIRE"] += 1
+
+    return report
+
+
+def build_report(input_count: int = 0, comparison=None) -> dict:
+    return {
+        "run_type": "dry_run",
+        "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+        "input_count": input_count,
+        **(comparison or compare_to_supabase([])),
         "database_write_performed": False,
     }
 
@@ -73,18 +114,13 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true", default=True)
     args = parser.parse_args()
 
-    count = 0
+    events = []
     if args.input:
-        payload = load_json(Path(args.input))
-        if isinstance(payload, list):
-            count = len(payload)
-        elif isinstance(payload, dict):
-            count = len(payload.get("events", []))
+        events = extract_events(load_json(Path(args.input)))
 
-    report = build_report(count)
+    report = build_report(len(events), compare_to_supabase(events))
     REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
     REPORT_PATH.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
-
     print(json.dumps(report, indent=2))
     return 0
 
