@@ -11,6 +11,7 @@ on:
       - 'tests/test_supabase_event_authority_sync.py'
       - 'tests/test_p0_event_reader_visibility.py'
       - 'tests/test_enigma_shadow2/test_occurrence_identity.py'
+      - 'data/events_discovery_accepted_canonical_v02.json'
       - 'supabase/migrations/20260819162000_rung8_dataset_scoped_expiration.sql'
       - 'supabase/migrations/20260819165000_event_dataset_membership_finalize.sql'
       - 'supabase/migrations/20260819170500_reader_safe_events_rpc.sql'
@@ -55,3 +56,10 @@ jobs:
 
       - name: Run OccurrenceIdentityV2 regressions
         run: python3 -m unittest tests.test_enigma_shadow2.test_occurrence_identity -v
+
+      - name: Run canonical TVPP authority dry run
+        run: |
+          python3 scripts/sync_supabase_event_authority.py \
+            --input data/events_discovery_accepted_canonical_v02.json \
+            --dataset tvpp-9vvx \
+            --chunk-size 500
