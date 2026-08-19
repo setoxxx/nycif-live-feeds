@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare the production refresh transaction with current V3 runtime gates.
+"""Prepare the production refresh transaction with current V3 and Supabase gates.
 
 The production transaction predates the fail-closed V3 semantic projector and
 contains two legacy final-runtime assumptions:
@@ -12,10 +12,14 @@ availability. Both must report the same positive certified marker count. The
 legacy staged feed remains internally validated telemetry, while the current
 cross-date safety count is emitted by the READY daily-health pipeline.
 
-This helper performs two fail-closed, exact-source transformations into a
-temporary execution copy. It never changes the repository transaction script.
-If either expected legacy block is missing, duplicated, or has drifted,
-preparation fails.
+This helper also installs the canonical Supabase authority sync immediately
+after strict source reconciliation. The sync reuses the existing bounded
+orchestrator and atomic writer; any database failure therefore fails the same
+production transaction before READY can be committed.
+
+All transformations are fail-closed and exact-source. The helper writes only a
+temporary execution copy. If an expected block is missing, duplicated, or has
+drifted, preparation fails.
 """
 from __future__ import annotations
 
@@ -75,14 +79,30 @@ if (
     )
 '''
 
+STRICT_RECONCILIATION_BLOCK = '''  run_stage \\
+    "strict_source_reconciliation" \\
+    "enforce_strict_discovery_reconciliation" \\
+    python scripts/enforce_strict_discovery_reconciliation.py
+'''
+
+SUPABASE_AUTHORITY_BLOCK = STRICT_RECONCILIATION_BLOCK + '''  run_stage \\
+    "supabase_event_authority_sync" \\
+    "sync_supabase_event_authority" \\
+    python scripts/sync_supabase_event_authority.py \\
+      --input data/events_discovery_accepted_canonical_v02.json \\
+      --dataset tvpp-9vvx \\
+      --chunk-size 500 \\
+      --write
+'''
+
 
 def _replace_exactly_once(source: str, legacy: str, replacement: str, label: str) -> str:
     occurrences = source.count(legacy)
     if occurrences != 1:
         raise RuntimeError(f"expected exactly one {label}; found {occurrences}")
     transformed = source.replace(legacy, replacement, 1)
-    if legacy in transformed:
-        raise RuntimeError(f"{label} remained after transform")
+    if legacy != replacement and source.count(legacy) == 1 and transformed.count(replacement) != 1:
+        raise RuntimeError(f"{label} replacement was not installed exactly once")
     return transformed
 
 
@@ -99,10 +119,20 @@ def transform(source: str) -> str:
         V3_CROSS_DATE_BLOCK,
         "legacy cross-date suppression validation block",
     )
+    transformed = _replace_exactly_once(
+        transformed,
+        STRICT_RECONCILIATION_BLOCK,
+        SUPABASE_AUTHORITY_BLOCK,
+        "strict source reconciliation block",
+    )
     if "jointly own public marker availability" not in transformed:
         raise RuntimeError("V3 canonical availability validation block was not installed")
     if 'health_pipeline.get(' not in transformed:
         raise RuntimeError("V3 cross-date suppression validation block was not installed")
+    if transformed.count('"supabase_event_authority_sync"') != 1:
+        raise RuntimeError("Supabase authority stage was not installed exactly once")
+    if transformed.count("scripts/sync_supabase_event_authority.py") != 1:
+        raise RuntimeError("Supabase authority command was not installed exactly once")
     return transformed
 
 
@@ -116,7 +146,7 @@ def main() -> int:
     transformed = transform(source)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(transformed, encoding="utf-8")
-    print(f"prepared V3 runtime transaction: {args.output}")
+    print(f"prepared V3 + Supabase runtime transaction: {args.output}")
     return 0
 
 
