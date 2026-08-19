@@ -64,6 +64,30 @@ def test_dry_run_contract_is_unchanged(tmp_path, monkeypatch, capsys):
     assert "dry_run" in capsys.readouterr().out
 
 
+def test_dry_run_preserves_legacy_id_precedence_when_v2_id_is_also_present(
+    tmp_path, monkeypatch
+):
+    input_path = tmp_path / "input.json"
+    snapshot_path = tmp_path / "snapshot.json"
+    report_path = tmp_path / "report.json"
+    input_path.write_text(
+        json.dumps({"events": [{"id": "legacy-id", "occurrence_id": "a" * 64}]})
+    )
+    snapshot_path.write_text(json.dumps({"occurrences": {"legacy-id": {}}}))
+    monkeypatch.setattr(writer, "REPORT_PATH", report_path)
+    monkeypatch.setattr(
+        "sys.argv",
+        ["writer", "--input", str(input_path), "--supabase-snapshot", str(snapshot_path)],
+    )
+
+    writer.main()
+
+    report = json.loads(report_path.read_text())
+    assert report["actions"]["UPDATE"] == 1
+    assert report["actions"]["INSERT"] == 0
+    assert report["actions"]["EXPIRE"] == 0
+
+
 def test_normalizer_preserves_occurrence_identity():
     identity = "a" * 64
     event = {
