@@ -2,7 +2,7 @@
   "artifact_type": "nycif_auxiliary_runtime_health",
   "blockers": [],
   "branch": "main",
-  "generated_at_utc": "2026-08-18T11:02:38Z",
+  "generated_at_utc": "2026-08-19T11:03:21Z",
   "local_runtime_checks": {
     "newly_added_sort": {
       "age_hours": 0.0,
@@ -11,13 +11,13 @@
       "duplicate_ids": 0,
       "event_count": 0,
       "fresh": true,
-      "generated_at_utc": "2026-08-18T11:02:30Z",
+      "generated_at_utc": "2026-08-19T11:03:14Z",
       "max_age_hours": 36.0,
       "missing_ids": 0,
       "name": "Newly added event-list sort",
       "new_this_run": 0,
       "qa_pass": true,
-      "total_tracked": 14
+      "total_tracked": 11
     }
   },
   "max_age_hours": 36.0,
@@ -35,10 +35,10 @@
       "name": "Active nightlife / 5PM",
       "qa_pass": true,
       "report_artifact": "data/reports/active_nightlife_feed_report.json",
-      "report_generated_at_utc": "2026-08-18T10:52:37.631Z",
+      "report_generated_at_utc": "2026-08-19T10:53:13.622Z",
       "report_qa_pass": true,
-      "reported_count": 156,
-      "row_count": 156
+      "reported_count": 155,
+      "row_count": 155
     },
     {
       "age_hours": 0.17,
@@ -51,13 +51,13 @@
       "name": "Legal cannabis dispensaries",
       "qa_pass": true,
       "report_artifact": "data/reports/legal_cannabis_dispensaries_report.json",
-      "report_generated_at_utc": "2026-08-18T10:52:38.606Z",
+      "report_generated_at_utc": "2026-08-19T10:53:14.601Z",
       "report_qa_pass": true,
       "reported_count": 255,
       "row_count": 255
     },
     {
-      "age_hours": 0.14,
+      "age_hours": 0.12,
       "count_aligned": true,
       "data_artifact": "data/nycif_smoke_vape_cannabis_correlation.json",
       "duplicate_ids": 0,
@@ -67,10 +67,10 @@
       "name": "Smoke/vape/cannabis correlation",
       "qa_pass": true,
       "report_artifact": "data/reports/smoke_vape_cannabis_correlation_report.json",
-      "report_generated_at_utc": "2026-08-18T10:54:21.080Z",
+      "report_generated_at_utc": "2026-08-19T10:55:51.765Z",
       "report_qa_pass": true,
-      "reported_count": 199,
-      "row_count": 199
+      "reported_count": 195,
+      "row_count": 195
     }
   ],
   "qa_pass": true,

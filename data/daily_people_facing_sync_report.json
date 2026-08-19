@@ -1,22 +1,22 @@
 {
   "civic": {
-    "accepted": 4635,
+    "accepted": 4623,
     "date_time_location_qa_pass": true,
     "list_only": 1290,
     "map_coverage_qa_pass": true,
-    "map_ready": 3345
+    "map_ready": 3333
   },
   "failed_steps": [],
-  "generated_at_utc": "2026-08-18T11:02:31Z",
+  "generated_at_utc": "2026-08-19T11:03:14Z",
   "location_cache_modified": false,
   "notes": "Safe daily desk sync. Does not run build_staged_production_feed / build_location_cache / public WordPress publish. Pin integrity gate fail-closed: qa_pass requires ZERO bad map_ready pins. Full permit→staged refresh remains live-sync-qa (manual dispatch).",
   "photographer_calendar": {
     "days_with_coverage": 12,
-    "events_removed_vs_baseline": 814,
+    "events_removed_vs_baseline": 813,
     "month_counts": [
       {
         "days_with_events": 3,
-        "event_count": 5,
+        "event_count": 6,
         "label": "August 2026"
       },
       {
@@ -29,13 +29,13 @@
       "qa_pass": true,
       "today": {
         "borough_cluster_count": 0,
-        "date": "2026-08-18",
+        "date": "2026-08-19",
         "map_ready_count": 0,
         "total_events": 0
       },
       "tomorrow": {
         "borough_cluster_count": 0,
-        "date": "2026-08-19",
+        "date": "2026-08-20",
         "map_ready_count": 0,
         "top_go_shoot": [],
         "total_events": 0
@@ -45,7 +45,7 @@
       "demotion_count": 0,
       "demotion_reason_counts": {},
       "map_ready_after_total": 0,
-      "map_ready_before_total": 3347,
+      "map_ready_before_total": 3335,
       "qa_pass": true,
       "report": "data/pin_integrity_gate_report.json"
     },
@@ -57,7 +57,7 @@
       "today_certified_pins": 0,
       "tomorrow_certified_pins": 0
     },
-    "total_events": 28,
+    "total_events": 29,
     "viral_recurrence": {
       "historical_rows": 2450,
       "label_counts": {

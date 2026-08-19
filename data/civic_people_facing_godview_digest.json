@@ -74,10 +74,10 @@
       "quarantined": 0
     },
     "oac_activities": {
-      "accepted": 1382,
+      "accepted": 1370,
       "list_only": 10,
-      "map_ready": 1372,
-      "quarantined": 867
+      "map_ready": 1360,
+      "quarantined": 879
     },
     "ready_ny_events": {
       "accepted": 0,
@@ -130,31 +130,31 @@
     "promotion_allowed": false
   },
   "counts": {
-    "accepted": 4635,
-    "events": 1382,
+    "accepted": 4623,
+    "events": 1370,
     "help_places": 2109,
     "list_only": 1290,
-    "map_ready": 3345,
+    "map_ready": 3333,
     "money_day_today": 0,
     "money_day_tomorrow": 0,
     "opportunities": 1144,
-    "photographer_calendar_events": 28,
+    "photographer_calendar_events": 29,
     "photographer_days_with_coverage": 12,
     "pin_demotions": 0,
     "pin_map_ready_certified": 0,
     "proposed": 489,
-    "quarantined": 6835,
+    "quarantined": 6847,
     "shoot_day_today_certified": 0,
     "shoot_day_tomorrow_certified": 0,
-    "upcoming_next_30_days": 374,
-    "upcoming_next_7_days": 96,
+    "upcoming_next_30_days": 380,
+    "upcoming_next_7_days": 103,
     "viral_next_14d_magnets": 0,
     "viral_recurrence_matches": 12,
     "viral_returning_likely": 1
   },
   "daily_pull": {
-    "last_run_utc": "2026-08-18T11:02:31Z",
-    "photographer_calendar_events": 28,
+    "last_run_utc": "2026-08-19T11:03:14Z",
+    "photographer_calendar_events": 29,
     "photographer_days_with_coverage": 12,
     "qa_pass": true,
     "report": "data/daily_people_facing_sync_report.json"
@@ -172,7 +172,7 @@
     "honesty": "NYC Open Data does not currently provide a high-quality live citywide soup-kitchen or food-pantry pin feed suitable for map publication.",
     "status": "known_gap_human_follow_up"
   },
-  "generated_at_utc": "2026-08-18T11:02:36Z",
+  "generated_at_utc": "2026-08-19T11:03:19Z",
   "lanes": {
     "Approved": "schema-v1-discovery approved permits (unchanged)",
     "Help Places": "schema-v1-civic-review/help (markets + benefits/SNAP/drop-in/Homebase/aging/NYCHA)",
@@ -189,7 +189,7 @@
   "photographer_assignment_calendar": {
     "artifact": "data/photographer_assignment_calendar_2mo.json",
     "coordinate_status_counts": {
-      "list_only": 26,
+      "list_only": 27,
       "map_ready": 2
     },
     "days_with_coverage": 12,
@@ -370,6 +370,42 @@
           "source_event_id": "2211167"
         },
         "start_date_time": "2026-08-22T10:00:00",
+        "timezone": "America/New_York",
+        "title": "CANCELLED: It's My Park at Parade Ground",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 400,
+        "borough": "Brooklyn",
+        "category": "volunteer",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-08-22",
+        "display_location": "Brooklyn",
+        "end_date_time": "2026-08-22T19:00:00.000-04:00",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-22&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1131376@2026-08-22",
+        "lane": "approved_major",
+        "latitude": null,
+        "location_cache_modified": false,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "money_day": true,
+        "photo_pick": false,
+        "pin_integrity_reason": "missing_coords",
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1131376"
+        },
+        "start_date_time": "2026-08-22T10:00:00.000-04:00",
         "timezone": "America/New_York",
         "title": "It's My Park at Parade Ground",
         "why_selected": [
@@ -604,7 +640,7 @@
         "display_location": "Brooklyn",
         "end_date_time": "2026-09-07T19:00:00.000-04:00",
         "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-07&assignment=1",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:1193496@2026-09-07",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:208972@2026-09-07",
         "lane": "approved_major",
         "latitude": null,
         "location_cache_modified": false,
@@ -619,7 +655,7 @@
         "public_map_modified": false,
         "source": {
           "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "1193496"
+          "source_event_id": "208972"
         },
         "start_date_time": "2026-09-07T10:00:00.000-04:00",
         "timezone": "America/New_York",
@@ -881,48 +917,12 @@
           "carried_major_score_capped:120",
           "keyword_civic_gathering"
         ]
-      },
-      {
-        "assignment_score": 400,
-        "borough": "Manhattan",
-        "category": "civic",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-09-27",
-        "display_location": "Manhattan",
-        "end_date_time": null,
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-27&assignment=1",
-        "id": "nyc-citywide-events-calendar-api:1046836@2026-09-27",
-        "lane": "approved_major",
-        "latitude": null,
-        "location_cache_modified": false,
-        "longitude": null,
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "money_day": true,
-        "photo_pick": false,
-        "pin_integrity_reason": "missing_coords",
-        "premium_label": "Photographer Assignment Calendar (premium/operator)",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "1046836"
-        },
-        "start_date_time": "2026-09-27T13:00:00.000-04:00",
-        "timezone": "America/New_York",
-        "title": "United American Muslim Day Parade",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_civic_gathering"
-        ]
       }
     ],
     "month_counts": [
       {
         "days_with_events": 3,
-        "event_count": 5,
+        "event_count": 6,
         "label": "August 2026"
       },
       {
@@ -936,21 +936,21 @@
     "premium_label": "Photographer Assignment Calendar (premium/operator) — Money-Day Desk v2",
     "qa_pass": true,
     "quality": {
-      "events_removed_vs_baseline": 814,
+      "events_removed_vs_baseline": 813,
       "qa_pass": true,
       "report": "data/photographer_money_day_quality_report.json",
       "top_exclude_reasons": [
         [
           "no_money_day_keyword_signal",
-          454
+          443
         ],
         [
           "routine_activity_excluded",
-          75
+          74
         ],
         [
           "thin_or_non_money_title_excluded",
-          7
+          6
         ],
         [
           "below_score_threshold",
@@ -961,19 +961,19 @@
     "report": "data/photographer_assignment_calendar_report.json",
     "today_pack": {
       "borough_cluster_count": 0,
-      "date": "2026-08-18",
+      "date": "2026-08-19",
       "map_ready_count": 0,
       "total_events": 0
     },
     "tomorrow_pack": {
       "borough_cluster_count": 0,
-      "date": "2026-08-19",
+      "date": "2026-08-20",
       "map_ready_count": 0,
       "top_go_shoot": [],
       "total_events": 0
     },
     "tomorrow_top_go_shoot": [],
-    "total_events": 28,
+    "total_events": 29,
     "viral_recurrence": {
       "artifact": "data/photographer_viral_recurrence_matches.json",
       "foil_index": "data/sapo_foil_operator_index.json",
@@ -1013,7 +1013,7 @@
     "demotion_reason_counts": {},
     "demotions": "data/pin_integrity_demotions.json",
     "map_ready_after_total": 0,
-    "map_ready_before_total": 3347,
+    "map_ready_before_total": 3335,
     "qa_pass": true,
     "report": "data/pin_integrity_gate_report.json",
     "rule": "ZERO map_ready rows may fail NYC certification"
@@ -1053,11 +1053,11 @@
     "qa_pass": true,
     "report": "data/photographer_shoot_day_certified_report.json",
     "today_certified_pins": 0,
-    "today_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-18&assignment=1",
+    "today_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-19&assignment=1",
     "today_needs_location": 0,
     "today_top": [],
     "tomorrow_certified_pins": 0,
-    "tomorrow_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-19&assignment=1",
+    "tomorrow_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-20&assignment=1",
     "tomorrow_needs_location": 0,
     "tomorrow_top": []
   }
