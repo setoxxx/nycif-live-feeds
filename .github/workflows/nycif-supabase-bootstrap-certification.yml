@@ -4,6 +4,12 @@ run-name: NYCIF Supabase Bootstrap Certification @ ${{ github.event_name }}-${{ 
 # Temporary, one-shot certification runner for issue #440.
 # It exists on main only so the approved bootstrap can run without merging PR
 # #441 first. Remove this workflow and its trigger file after evidence is captured.
+#
+# Operational lesson: a fresh NYC Open Data refresh can contain additions,
+# removals, modifications, and unchanged rows at the same time. A net row-count
+# decrease does NOT mean no new data arrived. Certification must process the full
+# fresh corpus and let dataset-scoped membership/finalization distinguish present
+# versus absent source rows without hard-deleting event history.
 
 on:
   issue_comment:
