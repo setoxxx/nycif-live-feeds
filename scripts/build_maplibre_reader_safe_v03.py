@@ -7,6 +7,10 @@ The reader-safe artifact serves two reader needs from one authority:
   with ``geometry: null`` so the Event List can still show the event without inventing
   a pin.
 
+All reader-facing features, including exact markers, are constrained to the rolling
+NYC reader window: today through today + 7 days. The full canonical corpus remains
+outside this projection.
+
 This module is projection-only. It does not geocode, repair, move, or infer pins.
 Reader links are pass-through only: an already-public HTTP(S) event URL may be
 projected as ``public_url``; backend/source-gathering URLs are never constructed.
@@ -201,6 +205,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
     evidence_failures = 0
     unsupported_markers = 0
     list_only_feature_count = 0
+    outside_reader_window_count = 0
 
     for event in canonical:
         nycif = event.get("nycif") if isinstance(event.get("nycif"), dict) else {}
@@ -208,6 +213,10 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         if state not in {"MAP_READY", "GENERAL_AREA", "REVIEW_REQUIRED", "LIST_ONLY"}:
             state = "REVIEW_REQUIRED"
         state_counts[state] += 1
+
+        if not event_in_reader_window(event, window_start, window_end):
+            outside_reader_window_count += 1
+            continue
 
         eligible, reason = marker_eligibility(event)
         if eligible:
@@ -234,7 +243,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             if reason == "location_evidence_not_validated":
                 evidence_failures += 1
 
-        if reader_visible_event(event) and event_in_reader_window(event, window_start, window_end):
+        if reader_visible_event(event):
             occurrence = occurrence_key_v2(event)
             reader_occurrence_ids.append(occurrence)
             features.append(feature(event, exact_marker=False))
@@ -254,8 +263,10 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
         "exact_marker_count": len(occurrence_ids),
         "reader_safe_event_count": len(features),
         "reader_safe_non_marker_count": list_only_feature_count,
+        "reader_window_days": READER_WINDOW_DAYS,
         "reader_window_start": window_start.isoformat(),
         "reader_window_end": window_end.isoformat(),
+        "outside_reader_window_count": outside_reader_window_count,
         "excluded_marker_candidates": dict(sorted(exclusion_counts.items())),
         "unsupported_marker_count": unsupported_markers,
         "wrong_authority_marker_count": wrong_authority,
@@ -283,6 +294,7 @@ def build() -> tuple[dict[str, Any], dict[str, Any]]:
             "exact_points_only": False,
             "general_area_as_exact_points": False,
             "non_marker_geometry": None,
+            "reader_window_days": READER_WINDOW_DAYS,
             "reader_window_start": window_start.isoformat(),
             "reader_window_end": window_end.isoformat(),
             "exact_marker_count": len(occurrence_ids),
