@@ -2,10 +2,10 @@
 """Chunked NYCIF Events authority sync.
 
 Heavy canonical processing stays on the GitHub runner. Supabase remains the
-atomic write boundary through the existing Rung 8 RPC. The full corpus is never
-sent in one request: membership is staged across bounded chunks using a shared
-sync token, and source expiration is allowed only on the final chunk after the
-RPC proves the complete expected membership has been staged.
+canonical data home and atomic write boundary through the existing Rung 8 RPC.
+The full corpus is never sent in one request. Event rows are written in bounded
+chunks with expiration disabled; membership is staged separately and a guarded
+dataset finalizer expires only records absent from the complete staged corpus.
 """
 from __future__ import annotations
 
@@ -15,10 +15,13 @@ import json
 import os
 import sys
 import time
+import urllib.error
+import urllib.request
 import uuid
 from datetime import datetime
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -31,6 +34,7 @@ DEFAULT_DATASET = "tvpp-9vvx"
 DEFAULT_CHUNK_SIZE = 500
 MAX_CHUNK_SIZE = 1000
 MIN_CHUNK_SIZE = 50
+NYC_TZ = ZoneInfo("America/New_York")
 
 
 def _parse_dt(value: Any) -> datetime | None:
@@ -43,42 +47,99 @@ def _parse_dt(value: Any) -> datetime | None:
         return None
 
 
-def apply_interval_quality(event: dict[str, Any]) -> dict[str, Any]:
-    """Flag impossible intervals without discarding the occurrence.
+def _aware_iso(value: Any, timezone_name: str) -> Any:
+    """Preserve aware timestamps and attach the declared event timezone to naive values."""
+    if value in (None, ""):
+        return value
+    parsed = _parse_dt(value)
+    if parsed is None:
+        return value
+    if parsed.tzinfo is None:
+        try:
+            zone = ZoneInfo(timezone_name)
+        except Exception:
+            zone = NYC_TZ
+        parsed = parsed.replace(tzinfo=zone)
+    return parsed.isoformat()
 
-    Existing quality data is preserved. When end < start, the row is retained
-    for lineage/accounting but cannot be treated as a clean full-time display.
-    """
+
+def _safe_public_url(event: dict[str, Any]) -> str | None:
+    for key in ("public_url", "permalink", "link", "website", "url"):
+        value = event.get(key)
+        if not isinstance(value, str):
+            continue
+        value = value.strip()
+        if value.lower().startswith(("https://", "http://")):
+            return value
+    return None
+
+
+def prepare_event_for_authority(event: dict[str, Any]) -> dict[str, Any]:
+    """Preserve canonical reader semantics and normalize timestamps before database cast."""
     result = copy.deepcopy(event)
+    timezone_name = str(result.get("timezone") or "America/New_York")
+    result["timezone"] = timezone_name
+    for key in ("start_at", "start_date_time", "end_at", "end_date_time"):
+        if key in result:
+            result[key] = _aware_iso(result.get(key), timezone_name)
+
+    source = result.get("source") if isinstance(result.get("source"), dict) else {}
+    nycif = result.get("nycif") if isinstance(result.get("nycif"), dict) else {}
+    metadata = result.get("metadata") if isinstance(result.get("metadata"), dict) else {}
+    metadata = dict(metadata)
+    existing_reader = metadata.get("reader") if isinstance(metadata.get("reader"), dict) else {}
+    reader = dict(existing_reader)
+    source_dataset = str(source.get("source_dataset") or source.get("dataset") or "")
+    source_event_id = str(source.get("source_event_id") or "")
+
+    canonical_reader = {
+        "event_role": result.get("event_role"),
+        "parent_event_id": result.get("parent_event_id"),
+        "display_disposition": nycif.get("display_disposition"),
+        "map_eligibility_state": nycif.get("map_eligibility_state"),
+        "certified_pin": nycif.get("certified_pin"),
+        "location_authority": nycif.get("location_authority"),
+        "significance": result.get("significance"),
+        "public_url": _safe_public_url(result),
+        "is_major": nycif.get("is_major"),
+        "photo_pick": nycif.get("photo_pick"),
+        "neighborhood": result.get("neighborhood"),
+        "source_dataset": source_dataset,
+        "source_event_id": source_event_id,
+    }
+    for key, value in canonical_reader.items():
+        if value is not None and value != "":
+            reader[key] = value
+    metadata["reader"] = reader
+    result["metadata"] = metadata
+
     start = _parse_dt(result.get("start_at") or result.get("start_date_time"))
     end = _parse_dt(result.get("end_at") or result.get("end_date_time"))
-    if start is None or end is None or end >= start:
-        return result
-
-    quality = result.get("quality") if isinstance(result.get("quality"), dict) else {}
-    quality = dict(quality)
-    flags = quality.get("quality_flags") if isinstance(quality.get("quality_flags"), list) else []
-    flags = list(flags)
-    if "END_BEFORE_START" not in flags:
-        flags.append("END_BEFORE_START")
-    details = quality.get("details") if isinstance(quality.get("details"), dict) else {}
-    details = dict(details)
-    details.update(
-        {
-            "interval_issue": "end_before_start",
-            "start_at": str(result.get("start_at") or result.get("start_date_time")),
-            "end_at": str(result.get("end_at") or result.get("end_date_time")),
-        }
-    )
-    quality.update(
-        {
-            "quality_status": "REVIEW_REQUIRED",
-            "quality_flags": flags,
-            "public_display_status": "LIST_ONLY",
-            "details": details,
-        }
-    )
-    result["quality"] = quality
+    if start is not None and end is not None and end < start:
+        quality = result.get("quality") if isinstance(result.get("quality"), dict) else {}
+        quality = dict(quality)
+        flags = quality.get("quality_flags") if isinstance(quality.get("quality_flags"), list) else []
+        flags = list(flags)
+        if "END_BEFORE_START" not in flags:
+            flags.append("END_BEFORE_START")
+        details = quality.get("details") if isinstance(quality.get("details"), dict) else {}
+        details = dict(details)
+        details.update(
+            {
+                "interval_issue": "end_before_start",
+                "start_at": str(result.get("start_at") or result.get("start_date_time")),
+                "end_at": str(result.get("end_at") or result.get("end_date_time")),
+            }
+        )
+        quality.update(
+            {
+                "quality_status": "REVIEW_REQUIRED",
+                "quality_flags": flags,
+                "public_display_status": "LIST_ONLY",
+                "details": details,
+            }
+        )
+        result["quality"] = quality
     return result
 
 
@@ -94,7 +155,7 @@ def normalized_dataset_rows(path: Path, dataset: str) -> list[dict[str, Any]]:
         source_dataset = str(source.get("source_dataset") or source.get("dataset") or "")
         if source_dataset != dataset:
             continue
-        rows.append(writer.normalize_event(apply_interval_quality(event)))
+        rows.append(writer.normalize_event(prepare_event_for_authority(event)))
 
     seen: set[str] = set()
     duplicates: list[str] = []
@@ -120,6 +181,35 @@ def _chunk_size(value: int) -> int:
     return value
 
 
+def _post_rpc(target_url: str, service_key: str, function_name: str, payload: dict[str, Any], timeout: int = 120):
+    request = urllib.request.Request(
+        f"{target_url}/rest/v1/rpc/{function_name}",
+        data=json.dumps(payload, separators=(",", ":")).encode("utf-8"),
+        method="POST",
+        headers={
+            "apikey": service_key,
+            "authorization": f"Bearer {service_key}",
+            "content-type": "application/json",
+        },
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=timeout) as response:
+            body = response.read().decode("utf-8")
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")
+        raise writer.SupabaseRPCError(
+            f"{function_name} failed with HTTP {exc.code}: {body}"
+        ) from exc
+    except urllib.error.URLError as exc:
+        raise writer.SupabaseRPCError(
+            f"{function_name} connection failed: {exc.reason}"
+        ) from exc
+    result = json.loads(body)
+    if not isinstance(result, dict) or result.get("transaction") != "committed":
+        raise writer.SupabaseRPCError(f"{function_name} returned an invalid success document")
+    return result
+
+
 def run_sync(
     rows: list[dict[str, Any]],
     dataset: str,
@@ -141,7 +231,6 @@ def run_sync(
     started = time.monotonic()
     aggregate = {"INSERT": 0, "UPDATE": 0, "UNCHANGED": 0, "EXPIRE": 0}
     pipeline_run_ids: list[int] = []
-    source_rows_inactivated = 0
     quality_changes = 0
     classification_changes = 0
 
@@ -153,6 +242,9 @@ def run_sync(
             "chunk_size": chunk_size,
             "chunk_count": chunk_count,
             "sync_token_generated": True,
+            "reader_metadata_rows": sum(
+                1 for row in rows if isinstance(row.get("metadata", {}).get("reader"), dict)
+            ),
             "database_write_performed": False,
         }
 
@@ -162,24 +254,19 @@ def run_sync(
         raise writer.WriteGuardError(
             "SUPABASE_SERVICE_ROLE_KEY is required in the environment"
         )
+    source_name = next(iter(source_names))
 
     for index in range(chunk_count):
         start = index * chunk_size
         chunk = copy.deepcopy(rows[start : start + chunk_size])
-        for row in chunk:
-            row["_sync_token"] = token
-            row["_sync_expected_count"] = expected_count
-            row["_sync_chunk_index"] = index + 1
-            row["_sync_chunk_count"] = chunk_count
 
-        final_chunk = index == chunk_count - 1
         result = writer.post_atomic_batch(
             target_url,
             service_key,
             {
                 "p_events": chunk,
-                "p_source_name": next(iter(source_names)),
-                "p_allow_expire": final_chunk,
+                "p_source_name": source_name,
+                "p_allow_expire": False,
                 "p_simulate_failure": False,
                 "p_expected_project_ref": project_ref,
             },
@@ -192,9 +279,42 @@ def run_sync(
         run_id = result.get("pipeline_run_id")
         if isinstance(run_id, int):
             pipeline_run_ids.append(run_id)
-        source_rows_inactivated += int(result.get("source_rows_inactivated", 0) or 0)
         quality_changes += int(result.get("quality_changes", 0) or 0)
         classification_changes += int(result.get("classification_changes", 0) or 0)
+
+        staged = _post_rpc(
+            target_url,
+            service_key,
+            "nycif_stage_event_dataset_membership",
+            {
+                "p_sync_token": token,
+                "p_source_name": source_name,
+                "p_source_dataset": dataset,
+                "p_occurrence_ids": [row["occurrence_id"] for row in chunk],
+                "p_expected_count": expected_count,
+                "p_expected_project_ref": project_ref,
+            },
+        )
+        if int(staged.get("staged_count", 0)) > expected_count:
+            raise RuntimeError("staged membership exceeded expected corpus count")
+
+    finalized = _post_rpc(
+        target_url,
+        service_key,
+        "nycif_finalize_event_dataset_sync",
+        {
+            "p_sync_token": token,
+            "p_source_name": source_name,
+            "p_source_dataset": dataset,
+            "p_expected_count": expected_count,
+            "p_expected_project_ref": project_ref,
+        },
+    )
+    final_actions = finalized.get("actions") if isinstance(finalized.get("actions"), dict) else {}
+    aggregate["EXPIRE"] += int(final_actions.get("EXPIRE", 0) or 0)
+    final_run_id = finalized.get("pipeline_run_id")
+    if isinstance(final_run_id, int):
+        pipeline_run_ids.append(final_run_id)
 
     return {
         "run_type": "supabase_authority_sync",
@@ -204,10 +324,11 @@ def run_sync(
         "chunk_count": chunk_count,
         "duration_seconds": round(time.monotonic() - started, 3),
         "actions": aggregate,
-        "source_rows_inactivated": source_rows_inactivated,
+        "source_rows_inactivated": int(finalized.get("source_rows_inactivated", 0) or 0),
         "quality_changes": quality_changes,
         "classification_changes": classification_changes,
         "pipeline_run_ids": pipeline_run_ids,
+        "membership_staged_count": int(finalized.get("staged_count", 0) or 0),
         "database_write_performed": True,
     }
 
