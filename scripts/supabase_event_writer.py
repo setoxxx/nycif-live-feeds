@@ -83,7 +83,7 @@ def load_supabase_snapshot(path: Path | None):
 
 
 def occurrence_key(event):
-    return str(event.get("occurrence_id") or event.get("id") or "")
+    return str(event.get("id") or event.get("occurrence_id") or "")
 
 
 def env_flag(name: str, default: bool = False) -> bool:
