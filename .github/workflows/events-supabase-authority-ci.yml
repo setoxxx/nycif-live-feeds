@@ -54,4 +54,4 @@ jobs:
         run: python3 -m unittest tests.test_p0_event_reader_visibility -v
 
       - name: Run OccurrenceIdentityV2 regressions
-        run: python3 tests/test_enigma_shadow2/test_occurrence_identity.py -v
+        run: python3 -m unittest tests.test_enigma_shadow2.test_occurrence_identity -v
