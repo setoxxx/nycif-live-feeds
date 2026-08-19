@@ -63,12 +63,92 @@ jobs:
           python3 -m py_compile \
             scripts/supabase_event_writer.py \
             scripts/sync_supabase_event_authority.py \
-            enigma/shadow2/occurrence_identity.py
+            enigma/shadow2/occurrence_identity.py \
+            scripts/live_event_intake_refresh.py \
+            scripts/project_events_discovery_v03.py \
+            scripts/enforce_strict_discovery_reconciliation.py
           python3 -m pytest tests/test_supabase_event_writer.py -q
           python3 -m unittest tests.test_supabase_event_authority_sync -v
           python3 -m unittest tests.test_enigma_shadow2.test_occurrence_identity -v
 
-      - name: Reconfirm bounded canonical dry run
+      - name: Capture checked-in source baseline
+        run: cp data/raw_nyc_open_data_snapshot.json /tmp/nycif-pre-refresh-raw.json
+
+      - name: Refresh live sources and rebuild canonical authority candidate
+        run: |
+          python3 scripts/live_event_intake_refresh.py
+          python3 scripts/refresh_official_supplemental_occurrences.py
+          python3 scripts/build_events_schema_v1_major.py
+          python3 scripts/build_street_festivals_feed.py
+          python3 scripts/project_events_discovery_v03.py
+          python3 scripts/enforce_strict_discovery_reconciliation.py
+
+      - name: Certify fresh NYC Open Data intake and V3 reconciliation
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import urllib.request
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          def digest(path):
+              return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+          with urllib.request.urlopen('https://data.cityofnewyork.us/api/views/tvpp-9vvx', timeout=60) as response:
+              metadata = json.load(response)
+
+          metadata_rows = None
+          for column in metadata.get('columns') or []:
+              if column.get('fieldName') == 'event_id':
+                  cached = column.get('cachedContents') or {}
+                  raw_count = cached.get('count') or cached.get('non_null')
+                  if raw_count not in (None, ''):
+                      metadata_rows = int(raw_count)
+                  break
+
+          rows_updated_at = metadata.get('rowsUpdatedAt')
+          rows_updated_iso = None
+          if isinstance(rows_updated_at, (int, float)):
+              rows_updated_iso = datetime.fromtimestamp(rows_updated_at, timezone.utc).isoformat()
+
+          before = json.loads(Path('/tmp/nycif-pre-refresh-raw.json').read_text())
+          current = json.loads(Path('data/raw_nyc_open_data_snapshot.json').read_text())
+          live = json.loads(Path('data/live_sync_report.json').read_text())
+          reconciliation = json.loads(Path('data/events_discovery_reconciliation_v02.json').read_text())
+          v3 = json.loads(Path('data/events_discovery_v3_authority_report.json').read_text())
+
+          if not isinstance(current, list) or not current:
+              raise SystemExit('fresh NYC Open Data snapshot is empty')
+          if int(live.get('raw_rows_loaded', -1)) != len(current):
+              raise SystemExit('live sync raw_rows_loaded does not match fresh raw snapshot')
+          if metadata_rows is not None and metadata_rows != len(current):
+              raise SystemExit(f'NYC Open Data metadata count {metadata_rows} != fetched raw snapshot {len(current)}')
+          if reconciliation.get('reconciles_strict') is not True:
+              raise SystemExit('fresh source strict reconciliation failed')
+          if v3.get('qa_pass') is not True or v3.get('raw_accounting_pass') is not True:
+              raise SystemExit('fresh source Projector V3 authority gate failed')
+
+          payload = {
+              'dataset': 'tvpp-9vvx',
+              'metadata_name': metadata.get('name'),
+              'metadata_rows': metadata_rows,
+              'rows_updated_at_epoch': rows_updated_at,
+              'rows_updated_at_utc': rows_updated_iso,
+              'previous_checked_in_raw_rows': len(before) if isinstance(before, list) else None,
+              'fresh_raw_rows': len(current),
+              'raw_snapshot_content_changed': digest('/tmp/nycif-pre-refresh-raw.json') != digest('data/raw_nyc_open_data_snapshot.json'),
+              'live_sync_generated_at_utc': live.get('generated_at_utc'),
+              'current_future_rows': live.get('current_future_rows'),
+              'v3_accepted_records': v3.get('accepted_records'),
+              'v3_qa_pass': v3.get('qa_pass'),
+              'strict_reconciliation': reconciliation.get('reconciles_strict'),
+          }
+          Path('/tmp/nycif-live-source-refresh.json').write_text(json.dumps(payload, indent=2, sort_keys=True) + '\n')
+          print(json.dumps(payload, indent=2, sort_keys=True))
+          PY
+
+      - name: Reconfirm bounded canonical dry run from fresh source
         run: |
           python3 scripts/sync_supabase_event_authority.py \
             --input data/events_discovery_accepted_canonical_v02.json \
@@ -84,17 +164,18 @@ jobs:
           expected = int(result.get('input_count', 0))
           if result.get('database_write_performed') is not False:
               raise SystemExit('dry run unexpectedly performed a database write')
-          if expected != 33352:
-              raise SystemExit(f'canonical corpus drifted: expected 33352, got {expected}')
+          if expected <= 0:
+              raise SystemExit('fresh canonical corpus is empty')
           if int(result.get('chunk_size', 0)) != 500:
               raise SystemExit('dry run chunk size drifted from 500')
-          if int(result.get('chunk_count', 0)) != 67:
-              raise SystemExit('dry run chunk count drifted from 67')
+          expected_chunks = (expected + 499) // 500
+          if int(result.get('chunk_count', 0)) != expected_chunks:
+              raise SystemExit('dry run chunk count does not match fresh canonical corpus')
           if int(result.get('reader_metadata_rows', 0)) != expected:
-              raise SystemExit('reader metadata does not cover the canonical corpus')
+              raise SystemExit('reader metadata does not cover the fresh canonical corpus')
           PY
 
-      - name: Bootstrap full TVPP authority
+      - name: Bootstrap full TVPP authority from fresh canonical corpus
         run: |
           python3 scripts/sync_supabase_event_authority.py \
             --input data/events_discovery_accepted_canonical_v02.json \
@@ -153,6 +234,7 @@ jobs:
         with:
           name: nycif-supabase-bootstrap-certification
           path: |
+            /tmp/nycif-live-source-refresh.json
             /tmp/nycif-tvpp-dry-run.json
             /tmp/nycif-tvpp-bootstrap-first.json
             /tmp/nycif-tvpp-bootstrap-second.json
@@ -180,6 +262,7 @@ jobs:
               except Exception as exc:
                   return {'read_error': str(exc)}
 
+          source = read_json('/tmp/nycif-live-source-refresh.json')
           dry = read_json('/tmp/nycif-tvpp-dry-run.json')
           first = read_json('/tmp/nycif-tvpp-bootstrap-first.json')
           second = read_json('/tmp/nycif-tvpp-bootstrap-second.json')
@@ -191,7 +274,12 @@ jobs:
               f'Run: {os.environ.get("RUN_URL", "UNSPECIFIED")}',
               '',
           ]
-          for label, payload in (('Dry run', dry), ('First live sync', first), ('Immediate identical rerun', second)):
+          for label, payload in (
+              ('Fresh NYC Open Data intake', source),
+              ('Dry run', dry),
+              ('First live sync', first),
+              ('Immediate identical rerun', second),
+          ):
               lines.append(f'### {label}')
               if payload is None:
                   lines.append('No result file was produced.')
