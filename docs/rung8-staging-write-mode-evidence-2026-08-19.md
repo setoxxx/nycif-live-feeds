@@ -102,8 +102,10 @@ index was removed in Rung 8.
 
 ## Repository verification
 
-- Writer and OccurrenceIdentityV2 tests: `21 passed`
-- Standalone writer tests: `12 passed`
+- Writer and OccurrenceIdentityV2 tests: `22 passed`
+- Standalone writer tests: `13 passed`
+- Independent integration review restored the legacy dry-run `id`-first key
+  precedence and added a regression test for rows that also carry a V2 ID.
 - Python compilation: passed
 - SQL function compilation in a rolled-back transaction: passed
 - Existing dry-run against the canonical artifact: `run_type=dry_run`,
