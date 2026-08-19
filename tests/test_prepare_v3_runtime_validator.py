@@ -5,6 +5,8 @@ import unittest
 from scripts.prepare_v3_runtime_validator import (
     LEGACY_BLOCK,
     LEGACY_CROSS_DATE_BLOCK,
+    STRICT_RECONCILIATION_BLOCK,
+    SUPABASE_AUTHORITY_BLOCK,
     V3_BLOCK,
     V3_CROSS_DATE_BLOCK,
     transform,
@@ -12,34 +14,78 @@ from scripts.prepare_v3_runtime_validator import (
 
 
 def source_fixture() -> str:
-    return "before\n" + LEGACY_BLOCK + LEGACY_CROSS_DATE_BLOCK + "after\n"
+    return (
+        "before\n"
+        + STRICT_RECONCILIATION_BLOCK
+        + LEGACY_BLOCK
+        + LEGACY_CROSS_DATE_BLOCK
+        + "after\n"
+    )
 
 
 class PrepareV3RuntimeValidatorTests(unittest.TestCase):
-    def test_replaces_both_legacy_runtime_assertions(self) -> None:
+    def test_replaces_legacy_runtime_assertions_and_installs_supabase_gate(self) -> None:
         transformed = transform(source_fixture())
         self.assertNotIn(LEGACY_BLOCK, transformed)
         self.assertNotIn(LEGACY_CROSS_DATE_BLOCK, transformed)
         self.assertIn(V3_BLOCK, transformed)
         self.assertIn(V3_CROSS_DATE_BLOCK, transformed)
+        self.assertIn(SUPABASE_AUTHORITY_BLOCK, transformed)
         self.assertIn("jointly own public marker availability", transformed)
         self.assertIn("cross_date_street_occurrences_suppressed", transformed)
+        self.assertEqual(transformed.count('"supabase_event_authority_sync"'), 1)
+        self.assertEqual(transformed.count("scripts/sync_supabase_event_authority.py"), 1)
+
+    def test_supabase_gate_is_immediately_after_strict_reconciliation(self) -> None:
+        transformed = transform(source_fixture())
+        self.assertIn(SUPABASE_AUTHORITY_BLOCK, transformed)
+        self.assertIn("--input data/events_discovery_accepted_canonical_v02.json", transformed)
+        self.assertIn("--dataset tvpp-9vvx", transformed)
+        self.assertIn("--chunk-size 500", transformed)
+        self.assertIn("--write", transformed)
+        self.assertLess(
+            transformed.index('"strict_source_reconciliation"'),
+            transformed.index('"supabase_event_authority_sync"'),
+        )
 
     def test_refuses_missing_map_ready_legacy_block(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "legacy staged MAP_READY.*found 0"):
-            transform(LEGACY_CROSS_DATE_BLOCK)
+            transform(STRICT_RECONCILIATION_BLOCK + LEGACY_CROSS_DATE_BLOCK)
 
     def test_refuses_duplicate_map_ready_legacy_blocks(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "legacy staged MAP_READY.*found 2"):
-            transform(LEGACY_BLOCK + LEGACY_BLOCK + LEGACY_CROSS_DATE_BLOCK)
+            transform(
+                STRICT_RECONCILIATION_BLOCK
+                + LEGACY_BLOCK
+                + LEGACY_BLOCK
+                + LEGACY_CROSS_DATE_BLOCK
+            )
 
     def test_refuses_missing_cross_date_legacy_block(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "legacy cross-date suppression.*found 0"):
-            transform(LEGACY_BLOCK)
+            transform(STRICT_RECONCILIATION_BLOCK + LEGACY_BLOCK)
 
     def test_refuses_duplicate_cross_date_legacy_blocks(self) -> None:
         with self.assertRaisesRegex(RuntimeError, "legacy cross-date suppression.*found 2"):
-            transform(LEGACY_BLOCK + LEGACY_CROSS_DATE_BLOCK + LEGACY_CROSS_DATE_BLOCK)
+            transform(
+                STRICT_RECONCILIATION_BLOCK
+                + LEGACY_BLOCK
+                + LEGACY_CROSS_DATE_BLOCK
+                + LEGACY_CROSS_DATE_BLOCK
+            )
+
+    def test_refuses_missing_strict_reconciliation_block(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "strict source reconciliation.*found 0"):
+            transform(LEGACY_BLOCK + LEGACY_CROSS_DATE_BLOCK)
+
+    def test_refuses_duplicate_strict_reconciliation_blocks(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "strict source reconciliation.*found 2"):
+            transform(
+                STRICT_RECONCILIATION_BLOCK
+                + STRICT_RECONCILIATION_BLOCK
+                + LEGACY_BLOCK
+                + LEGACY_CROSS_DATE_BLOCK
+            )
 
     def test_legacy_staged_feed_is_not_v3_availability_authority(self) -> None:
         transformed = transform(source_fixture())
