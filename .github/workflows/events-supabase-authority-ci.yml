@@ -1,0 +1,57 @@
+name: Events Supabase Authority CI
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/supabase_event_writer.py'
+      - 'scripts/sync_supabase_event_authority.py'
+      - 'scripts/build_maplibre_reader_safe_v03.py'
+      - 'enigma/shadow2/occurrence_identity.py'
+      - 'tests/test_supabase_event_writer.py'
+      - 'tests/test_supabase_event_authority_sync.py'
+      - 'tests/test_p0_event_reader_visibility.py'
+      - 'tests/test_enigma_shadow2/test_occurrence_identity.py'
+      - 'supabase/migrations/20260819162000_rung8_dataset_scoped_expiration.sql'
+      - 'supabase/migrations/20260819165000_event_dataset_membership_finalize.sql'
+      - 'supabase/migrations/20260819170500_reader_safe_events_rpc.sql'
+      - '.github/workflows/events-supabase-authority-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  authority-regressions:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install test dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Compile authority scripts
+        run: |
+          python3 -m py_compile \
+            scripts/supabase_event_writer.py \
+            scripts/sync_supabase_event_authority.py \
+            scripts/build_maplibre_reader_safe_v03.py \
+            enigma/shadow2/occurrence_identity.py
+
+      - name: Run Supabase writer guard tests
+        run: python3 -m pytest tests/test_supabase_event_writer.py -q
+
+      - name: Run chunked authority sync regressions
+        run: python3 -m unittest tests.test_supabase_event_authority_sync -v
+
+      - name: Run reader Today+7 regressions
+        run: python3 -m unittest tests.test_p0_event_reader_visibility -v
+
+      - name: Run OccurrenceIdentityV2 regressions
+        run: python3 tests/test_enigma_shadow2/test_occurrence_identity.py -v
