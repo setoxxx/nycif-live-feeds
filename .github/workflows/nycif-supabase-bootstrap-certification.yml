@@ -1,0 +1,146 @@
+name: NYCIF Supabase Bootstrap Certification
+run-name: NYCIF Supabase Bootstrap Certification @ issue-${{ github.event.issue.number }}
+
+# Temporary, one-shot certification runner for issue #440.
+# It exists on main only so an issue_comment event can trigger the approved
+# bootstrap without merging PR #441 first. Remove this workflow after evidence
+# is captured.
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nycif-supabase-bootstrap-certification
+  cancel-in-progress: false
+
+jobs:
+  certify:
+    if: >-
+      github.event.issue.number == 440 &&
+      github.event.comment.body == '/nycif-supabase-bootstrap-certify-20260819'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      SUPABASE_WRITE_ENABLED: 'true'
+      SUPABASE_TARGET_ENV: 'staging'
+      SUPABASE_PROJECT_REF: 'oggwpvdirkrnzoolparx'
+      SUPABASE_URL: 'https://oggwpvdirkrnzoolparx.supabase.co'
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+    steps:
+      - name: Check out approved certification branch
+        uses: actions/checkout@v4
+        with:
+          ref: fix/events-dataset-expiration-20260819
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: python3 -m pip install -r requirements.txt
+
+      - name: Preflight authority regressions
+        run: |
+          python3 -m py_compile \
+            scripts/supabase_event_writer.py \
+            scripts/sync_supabase_event_authority.py \
+            enigma/shadow2/occurrence_identity.py
+          python3 -m pytest tests/test_supabase_event_writer.py -q
+          python3 -m unittest tests.test_supabase_event_authority_sync -v
+          python3 -m unittest tests.test_enigma_shadow2.test_occurrence_identity -v
+
+      - name: Reconfirm bounded canonical dry run
+        run: |
+          python3 scripts/sync_supabase_event_authority.py \
+            --input data/events_discovery_accepted_canonical_v02.json \
+            --dataset tvpp-9vvx \
+            --chunk-size 500 \
+            > /tmp/nycif-tvpp-dry-run.json
+          cat /tmp/nycif-tvpp-dry-run.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path('/tmp/nycif-tvpp-dry-run.json').read_text())
+          expected = int(result.get('input_count', 0))
+          if result.get('database_write_performed') is not False:
+              raise SystemExit('dry run unexpectedly performed a database write')
+          if expected != 33352:
+              raise SystemExit(f'canonical corpus drifted: expected 33352, got {expected}')
+          if int(result.get('chunk_size', 0)) != 500:
+              raise SystemExit('dry run chunk size drifted from 500')
+          if int(result.get('chunk_count', 0)) != 67:
+              raise SystemExit('dry run chunk count drifted from 67')
+          if int(result.get('reader_metadata_rows', 0)) != expected:
+              raise SystemExit('reader metadata does not cover the canonical corpus')
+          PY
+
+      - name: Bootstrap full TVPP authority
+        run: |
+          python3 scripts/sync_supabase_event_authority.py \
+            --input data/events_discovery_accepted_canonical_v02.json \
+            --dataset tvpp-9vvx \
+            --chunk-size 500 \
+            --write \
+            > /tmp/nycif-tvpp-bootstrap-first.json
+          cat /tmp/nycif-tvpp-bootstrap-first.json
+
+      - name: Prove immediate identical rerun is idempotent
+        run: |
+          python3 scripts/sync_supabase_event_authority.py \
+            --input data/events_discovery_accepted_canonical_v02.json \
+            --dataset tvpp-9vvx \
+            --chunk-size 500 \
+            --write \
+            > /tmp/nycif-tvpp-bootstrap-second.json
+          cat /tmp/nycif-tvpp-bootstrap-second.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          dry = json.loads(Path('/tmp/nycif-tvpp-dry-run.json').read_text())
+          first = json.loads(Path('/tmp/nycif-tvpp-bootstrap-first.json').read_text())
+          second = json.loads(Path('/tmp/nycif-tvpp-bootstrap-second.json').read_text())
+          expected = int(dry['input_count'])
+
+          for label, result in (('first', first), ('second', second)):
+              if result.get('database_write_performed') is not True:
+                  raise SystemExit(f'{label} live sync did not report a database write')
+              if int(result.get('input_count', 0)) != expected:
+                  raise SystemExit(f'{label} live sync input count differs from dry run')
+              if int(result.get('membership_staged_count', 0)) != expected:
+                  raise SystemExit(f'{label} live sync did not finalize complete membership')
+
+          actions = second.get('actions') or {}
+          for action in ('INSERT', 'UPDATE', 'EXPIRE'):
+              if int(actions.get(action, 0) or 0) != 0:
+                  raise SystemExit(f'idempotence failed: second {action}={actions.get(action)}')
+          if int(second.get('source_rows_inactivated', 0) or 0) != 0:
+              raise SystemExit('idempotence failed: second run inactivated source rows')
+          if int(second.get('quality_changes', 0) or 0) != 0:
+              raise SystemExit('idempotence failed: second run changed quality rows')
+          if int(second.get('classification_changes', 0) or 0) != 0:
+              raise SystemExit('idempotence failed: second run changed classifications')
+
+          print('NYCIF_SUPABASE_BOOTSTRAP_CERTIFICATION=PASS')
+          print(f'canonical_occurrences={expected}')
+          print(f'first_actions={first.get("actions")}')
+          print(f'second_actions={second.get("actions")}')
+          PY
+
+      - name: Upload certification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nycif-supabase-bootstrap-certification
+          path: |
+            /tmp/nycif-tvpp-dry-run.json
+            /tmp/nycif-tvpp-bootstrap-first.json
+            /tmp/nycif-tvpp-bootstrap-second.json
+          if-no-files-found: warn
+          retention-days: 14
