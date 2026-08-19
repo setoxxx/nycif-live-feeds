@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-from datetime import date
+from datetime import date, datetime, timezone
 from pathlib import Path
 import sys
 import unittest
+from unittest import mock
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = ROOT / "scripts"
@@ -161,6 +162,67 @@ class P0EventReaderVisibilityTests(unittest.TestCase):
                 date(2026, 8, 15),
             )
         )
+
+    def test_reader_artifact_excludes_certified_marker_outside_today_plus_7(self) -> None:
+        class FixedDateTime(datetime):
+            @classmethod
+            def now(cls, tz=None):
+                fixed = cls(2026, 8, 19, 17, 0, 0, tzinfo=timezone.utc)
+                return fixed.astimezone(tz) if tz is not None else fixed.replace(tzinfo=None)
+
+        inside = self.synthetic_exact_event()
+        inside.update({
+            "id": "synthetic:inside@2026-08-26",
+            "borough": "Citywide",
+            "start_date_time": "2026-08-26T12:00:00.000",
+            "end_date_time": "2026-08-26T13:00:00.000",
+            "source": {"dataset": "synthetic-test", "source_event_id": "inside"},
+        })
+        outside = self.synthetic_exact_event()
+        outside.update({
+            "id": "synthetic:outside@2026-08-27",
+            "borough": "Citywide",
+            "start_date_time": "2026-08-27T12:00:00.000",
+            "end_date_time": "2026-08-27T13:00:00.000",
+            "source": {"dataset": "synthetic-test", "source_event_id": "outside"},
+        })
+        list_only = self.jamaica_event()
+        list_only.update({
+            "id": "synthetic:list-only@2026-08-20",
+            "title": "Synthetic List Only Fixture",
+            "borough": "Citywide",
+            "start_date_time": "2026-08-20T18:00:00.000",
+            "end_date_time": "2026-08-20T20:00:00.000",
+            "source": {"dataset": "synthetic-test", "source_event_id": "list-only"},
+            "nycif": {
+                "map_eligibility_state": "LIST_ONLY",
+                "certified_pin": False,
+                "location_authority": "projector_v3_semantic_map_decision",
+                "display_disposition": "standalone_public_event",
+            },
+        })
+        canonical = [inside, outside, list_only]
+
+        with mock.patch.object(reader_safe, "datetime", FixedDateTime), \
+             mock.patch.object(reader_safe, "load", return_value={"events": canonical}), \
+             mock.patch.object(reader_safe, "extract_rows", side_effect=lambda payload: payload["events"]):
+            geojson, status = reader_safe.build()
+
+        self.assertEqual(status["reader_window_start"], "2026-08-19")
+        self.assertEqual(status["reader_window_end"], "2026-08-26")
+        self.assertEqual(status["reader_safe_event_count"], 2)
+        self.assertEqual(status["exact_marker_count"], 1)
+        self.assertEqual(status["reader_safe_non_marker_count"], 1)
+        by_source_id = {
+            feature["properties"]["source_event_id"]: feature
+            for feature in geojson["features"]
+        }
+        self.assertIn("inside", by_source_id)
+        self.assertIn("list-only", by_source_id)
+        self.assertNotIn("outside", by_source_id)
+        self.assertEqual(by_source_id["inside"]["geometry"]["type"], "Point")
+        self.assertIsNone(by_source_id["list-only"]["geometry"])
+        self.assertTrue(status["qa_pass"])
 
 
 if __name__ == "__main__":
