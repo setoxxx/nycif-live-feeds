@@ -1,17 +1,22 @@
 name: NYCIF Supabase Bootstrap Certification
-run-name: NYCIF Supabase Bootstrap Certification @ issue-${{ github.event.issue.number }}
+run-name: NYCIF Supabase Bootstrap Certification @ ${{ github.event_name }}-${{ github.run_id }}
 
 # Temporary, one-shot certification runner for issue #440.
-# It exists on main only so an issue_comment event can trigger the approved
-# bootstrap without merging PR #441 first. Remove this workflow after evidence
-# is captured.
+# It exists on main only so the approved bootstrap can run without merging PR
+# #441 first. Remove this workflow and its trigger file after evidence is captured.
 
 on:
   issue_comment:
     types: [created]
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/nycif-supabase-bootstrap-trigger-main'
 
 permissions:
   contents: read
+  issues: write
 
 concurrency:
   group: nycif-supabase-bootstrap-certification
@@ -20,8 +25,10 @@ concurrency:
 jobs:
   certify:
     if: >-
-      github.event.issue.number == 440 &&
-      github.event.comment.body == '/nycif-supabase-bootstrap-certify-20260819'
+      github.event_name == 'push' ||
+      (github.event_name == 'issue_comment' &&
+       github.event.issue.number == 440 &&
+       github.event.comment.body == '/nycif-supabase-bootstrap-certify-20260819')
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
@@ -40,6 +47,13 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
+      - name: Require Supabase service-role secret
+        run: |
+          if [ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            echo '::error::SUPABASE_SERVICE_ROLE_KEY repository secret is missing.'
+            exit 1
+          fi
 
       - name: Install dependencies
         run: python3 -m pip install -r requirements.txt
@@ -144,3 +158,48 @@ jobs:
             /tmp/nycif-tvpp-bootstrap-second.json
           if-no-files-found: warn
           retention-days: 14
+
+      - name: Post certification outcome to issue 440
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+          JOB_STATUS: ${{ job.status }}
+          RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          def read_json(path):
+              p = Path(path)
+              if not p.exists():
+                  return None
+              try:
+                  return json.loads(p.read_text())
+              except Exception as exc:
+                  return {'read_error': str(exc)}
+
+          dry = read_json('/tmp/nycif-tvpp-dry-run.json')
+          first = read_json('/tmp/nycif-tvpp-bootstrap-first.json')
+          second = read_json('/tmp/nycif-tvpp-bootstrap-second.json')
+          status = os.environ.get('JOB_STATUS', 'unknown')
+          lines = [
+              '## NYCIF Supabase bootstrap certification result',
+              '',
+              f'Workflow status: **{status.upper()}**',
+              f'Run: {os.environ.get("RUN_URL", "UNSPECIFIED")}',
+              '',
+          ]
+          for label, payload in (('Dry run', dry), ('First live sync', first), ('Immediate identical rerun', second)):
+              lines.append(f'### {label}')
+              if payload is None:
+                  lines.append('No result file was produced.')
+              else:
+                  lines.append('```json')
+                  lines.append(json.dumps(payload, indent=2, sort_keys=True))
+                  lines.append('```')
+              lines.append('')
+          Path('/tmp/nycif-bootstrap-comment.md').write_text('\n'.join(lines))
+          PY
+          gh issue comment 440 --repo setoxxx/nycif-live-feeds --body-file /tmp/nycif-bootstrap-comment.md
