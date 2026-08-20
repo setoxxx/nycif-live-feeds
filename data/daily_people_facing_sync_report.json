@@ -1,13 +1,13 @@
 {
   "civic": {
-    "accepted": 4623,
+    "accepted": 4604,
     "date_time_location_qa_pass": true,
     "list_only": 1290,
     "map_coverage_qa_pass": true,
-    "map_ready": 3333
+    "map_ready": 3314
   },
   "failed_steps": [],
-  "generated_at_utc": "2026-08-19T11:03:14Z",
+  "generated_at_utc": "2026-08-20T11:04:11Z",
   "location_cache_modified": false,
   "notes": "Safe daily desk sync. Does not run build_staged_production_feed / build_location_cache / public WordPress publish. Pin integrity gate fail-closed: qa_pass requires ZERO bad map_ready pins. Full permit→staged refresh remains live-sync-qa (manual dispatch).",
   "photographer_calendar": {
@@ -29,13 +29,13 @@
       "qa_pass": true,
       "today": {
         "borough_cluster_count": 0,
-        "date": "2026-08-19",
+        "date": "2026-08-20",
         "map_ready_count": 0,
         "total_events": 0
       },
       "tomorrow": {
         "borough_cluster_count": 0,
-        "date": "2026-08-20",
+        "date": "2026-08-21",
         "map_ready_count": 0,
         "top_go_shoot": [],
         "total_events": 0
@@ -45,7 +45,7 @@
       "demotion_count": 0,
       "demotion_reason_counts": {},
       "map_ready_after_total": 0,
-      "map_ready_before_total": 3335,
+      "map_ready_before_total": 3316,
       "qa_pass": true,
       "report": "data/pin_integrity_gate_report.json"
     },
@@ -80,52 +80,52 @@
   "staged_feed_modified": false,
   "steps": [
     {
-      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_civic_people_facing_staging.py",
+      "cmd": "/opt/hostedtoolcache/Python/3.11.16/x64/bin/python scripts/build_civic_people_facing_staging.py",
       "exit_code": 0,
       "ok": true
     },
     {
-      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_civic_people_facing_map_coverage.py",
+      "cmd": "/opt/hostedtoolcache/Python/3.11.16/x64/bin/python scripts/build_civic_people_facing_map_coverage.py",
       "exit_code": 0,
       "ok": true
     },
     {
-      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_photographer_assignment_calendar.py",
+      "cmd": "/opt/hostedtoolcache/Python/3.11.16/x64/bin/python scripts/build_photographer_assignment_calendar.py",
       "exit_code": 0,
       "ok": true
     },
     {
-      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_photographer_money_day_packs.py",
+      "cmd": "/opt/hostedtoolcache/Python/3.11.16/x64/bin/python scripts/build_photographer_money_day_packs.py",
       "exit_code": 0,
       "ok": true
     },
     {
-      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/sync_nyc_permits_historical.py --skip-network",
+      "cmd": "/opt/hostedtoolcache/Python/3.11.16/x64/bin/python scripts/sync_nyc_permits_historical.py --skip-network",
       "exit_code": 0,
       "ok": true
     },
     {
-      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_photographer_viral_recurrence.py",
+      "cmd": "/opt/hostedtoolcache/Python/3.11.16/x64/bin/python scripts/build_photographer_viral_recurrence.py",
       "exit_code": 0,
       "ok": true
     },
     {
-      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_pin_integrity_gate.py",
+      "cmd": "/opt/hostedtoolcache/Python/3.11.16/x64/bin/python scripts/build_pin_integrity_gate.py",
       "exit_code": 0,
       "ok": true
     },
     {
-      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_photographer_shoot_day_certified.py",
+      "cmd": "/opt/hostedtoolcache/Python/3.11.16/x64/bin/python scripts/build_photographer_shoot_day_certified.py",
       "exit_code": 0,
       "ok": true
     },
     {
-      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_events_discovery_godview_digest_v02.py",
+      "cmd": "/opt/hostedtoolcache/Python/3.11.16/x64/bin/python scripts/build_events_discovery_godview_digest_v02.py",
       "exit_code": 0,
       "ok": true
     },
     {
-      "cmd": "/opt/hostedtoolcache/Python/3.11.15/x64/bin/python scripts/build_civic_people_facing_godview_digest.py",
+      "cmd": "/opt/hostedtoolcache/Python/3.11.16/x64/bin/python scripts/build_civic_people_facing_godview_digest.py",
       "exit_code": 0,
       "ok": true
     }
