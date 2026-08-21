@@ -1,66 +1,163 @@
 {
-  "current_future_rows": 24293,
-  "current_future_rows_with_cemsid": 23668,
+  "current_future_rows": 24495,
+  "current_future_rows_with_cemsid": 23815,
   "date_boundary_timezone": "America/New_York",
   "enriched_rows_loaded": 33084,
-  "generated_at_utc": "2026-08-20T11:03:30.427087+00:00",
+  "generated_at_utc": "2026-08-21T11:03:19.779328+00:00",
   "location_cache_entries_loaded": 40151,
   "location_cache_modified": false,
   "location_resolver_live_geosearch_calls": 0,
   "match_counts": {
-    "event_id": 9767,
-    "location_cache": 12330,
-    "none": 697,
-    "text_date_location": 171,
-    "tier_1_gazetteer_display": 829,
-    "tier_2_geosearch_cache": 499
+    "event_id": 9049,
+    "location_cache": 13153,
+    "none": 764,
+    "text_date_location": 168,
+    "tier_1_gazetteer_display": 860,
+    "tier_2_geosearch_cache": 501
   },
-  "matched_with_gps": 23596,
+  "matched_with_gps": 23731,
   "matched_without_gps_sample": [],
   "needs_enrichment_sample": [
     {
       "community_board": [
-        "7"
+        "11"
       ],
-      "end_date_time": "2026-08-20T15:00:00.000",
+      "end_date_time": "2026-08-21T23:00:00.000",
       "event_agency": "Street Activity Permit Office",
       "event_borough": "Manhattan",
-      "event_location": "WEST   60 STREET between COLUMBUS AVENUE and AMSTERDAM AVENUE",
-      "event_name": "Fordham University 2026 Urban Plunge Move In 1",
-      "event_type": "Street Event",
+      "event_location": "EAST  124 STREET between PARK AVENUE and MADISON AVENUE",
+      "event_name": "Production Parking - 124th Street",
+      "event_type": "Production Event",
       "police_precinct": [
-        "20"
+        "25"
       ],
       "source_cemsid": [],
       "source_dataset": "tvpp-9vvx",
-      "source_event_id": "914997",
-      "start_date_time": "2026-08-20T06:00:00.000",
+      "source_event_id": "967318",
+      "start_date_time": "2026-08-21T00:30:00.000",
       "street_closure_type": "Curb Lane Only"
     },
     {
       "community_board": [
-        "7"
+        "2"
       ],
-      "end_date_time": "2026-08-20T15:00:00.000",
+      "end_date_time": "2026-08-21T23:30:00.000",
       "event_agency": "Street Activity Permit Office",
       "event_borough": "Manhattan",
-      "event_location": "WEST   62 STREET between COLUMBUS AVENUE and AMSTERDAM AVENUE",
-      "event_name": "Fordham University 2026 Urban Plunge Move In 2",
-      "event_type": "Street Event",
+      "event_location": "WEST   13 STREET between 10 AVENUE and WASHINGTON STREET",
+      "event_name": "GH Concept",
+      "event_type": "Production Event",
       "police_precinct": [
-        "20"
+        "6"
       ],
       "source_cemsid": [],
       "source_dataset": "tvpp-9vvx",
-      "source_event_id": "914999",
-      "start_date_time": "2026-08-20T06:00:00.000",
+      "source_event_id": "952615",
+      "start_date_time": "2026-08-21T06:00:00.000",
+      "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "2"
+      ],
+      "end_date_time": "2026-08-21T23:30:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "GREENE STREET between GRAND STREET and CANAL STREET",
+      "event_name": "MKG - Pop-up event",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "1"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "964965",
+      "start_date_time": "2026-08-21T07:00:00.000",
+      "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "11"
+      ],
+      "end_date_time": "2026-08-21T20:00:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Manhattan",
+      "event_location": "Crack Is Wack Playground: Basketball-04",
+      "event_name": "Basketball",
+      "event_type": "Sport - Youth",
+      "police_precinct": [
+        "25"
+      ],
+      "source_cemsid": [
+        "10120"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "912273",
+      "start_date_time": "2026-08-21T08:00:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "5"
+      ],
+      "end_date_time": "2026-09-04T22:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "EAST   48 STREET between PARK AVENUE and LEXINGTON AVENUE,  EAST   47 STREET between PARK AVENUE and LEXINGTON AVENUE,  PARK AVENUE between EAST   47 STREET and EAST   48 STREET",
+      "event_name": "1-US Tennis Open 2026 Bus Shuttle-InterContinental NY Barclay Hotel: 111 E. 48th St.",
+      "event_type": "Production Event",
+      "police_precinct": [
+        "18"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "963418",
+      "start_date_time": "2026-08-21T08:00:00.000",
+      "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "5"
+      ],
+      "end_date_time": "2026-09-04T22:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "WEST   54 STREET between 6 AVENUE and 7 AVENUE",
+      "event_name": "1-US Tennis Open 2026 Bus Shuttle - Hilton Hotel",
+      "event_type": "Production Event",
+      "police_precinct": [
+        "18"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "963424",
+      "start_date_time": "2026-08-21T08:00:00.000",
+      "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "5"
+      ],
+      "end_date_time": "2026-08-21T21:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "EAST   40 STREET between 5 AVENUE and MADISON AVENUE",
+      "event_name": "Asics Athlete House",
+      "event_type": "Production Event",
+      "police_precinct": [
+        "14"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "965184",
+      "start_date_time": "2026-08-21T08:00:00.000",
       "street_closure_type": "Curb Lane Only"
     },
     {
       "community_board": [
         "10"
       ],
-      "end_date_time": "2026-08-20T20:00:00.000",
+      "end_date_time": "2026-08-21T20:00:00.000",
       "event_agency": "Parks Department",
       "event_borough": "Brooklyn",
       "event_location": "Fort Hamilton Athletic Field (Ft. Hamilton HS): Football-01",
@@ -74,113 +171,171 @@
       ],
       "source_dataset": "tvpp-9vvx",
       "source_event_id": "966413",
-      "start_date_time": "2026-08-20T08:00:00.000",
+      "start_date_time": "2026-08-21T08:00:00.000",
       "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "9"
-      ],
-      "end_date_time": "2026-08-20T14:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Bronx",
-      "event_location": "WHITE PLAINS ROAD between LAFAYETTE AVENUE and SEWARD AVENUE",
-      "event_name": "Stevenson Family Practice Health Fair /Back 2 School Event",
-      "event_type": "Health Fair",
-      "police_precinct": [
-        "43"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "955859",
-      "start_date_time": "2026-08-20T09:00:00.000",
-      "street_closure_type": "Sidewalk and Curb Lane Closure"
-    },
-    {
-      "community_board": [
-        "5",
-        "6"
-      ],
-      "end_date_time": "2026-08-20T18:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "EAST   41 STREET between LEXINGTON AVENUE and 3 AVENUE",
-      "event_name": "GRAND CENTRAL FOOD SUMMERFEST",
-      "event_type": "Single Block Festival",
-      "police_precinct": [
-        "14",
-        "17"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "900325",
-      "start_date_time": "2026-08-20T10:00:00.000",
-      "street_closure_type": "Full Street Closure"
     },
     {
       "community_board": [
         "2"
       ],
-      "end_date_time": "2026-08-20T16:00:00.000",
+      "end_date_time": "2026-09-02T17:00:00.000",
       "event_agency": "Street Activity Permit Office",
       "event_borough": "Brooklyn",
-      "event_location": "WAVERLY AVENUE between FULTON STREET and GATES AVENUE",
-      "event_name": "StartCare Health and Resource Fair",
-      "event_type": "Health Fair",
+      "event_location": "BRIDGE PARK DRIVE between ATLANTIC AVENUE and JORALEMON STREET",
+      "event_name": "Production Parking of Vehicles",
+      "event_type": "Production Event",
       "police_precinct": [
-        "88"
+        "76",
+        "84"
       ],
       "source_cemsid": [],
       "source_dataset": "tvpp-9vvx",
-      "source_event_id": "953644",
-      "start_date_time": "2026-08-20T10:00:00.000",
-      "street_closure_type": "Full Street Closure"
+      "source_event_id": "941473",
+      "start_date_time": "2026-08-21T09:00:00.000",
+      "street_closure_type": "Curb Lane Only"
     },
     {
       "community_board": [
-        "10"
+        "9"
       ],
-      "end_date_time": "2026-08-20T16:00:00.000",
+      "end_date_time": "2026-08-22T16:00:00.000",
       "event_agency": "Street Activity Permit Office",
       "event_borough": "Manhattan",
-      "event_location": "WEST  124 STREET between MOUNT MORRIS PARK WEST and MALCOLM X BOULEVARD",
-      "event_name": "PAL PLAYSTREET",
-      "event_type": "Street Event",
+      "event_location": "BROADWAY between WEST  120 STREET and WEST  122 STREET",
+      "event_name": "Student Move-In Days",
+      "event_type": "Production Event",
       "police_precinct": [
-        "28"
+        "26"
       ],
       "source_cemsid": [],
       "source_dataset": "tvpp-9vvx",
-      "source_event_id": "962698",
-      "start_date_time": "2026-08-20T10:00:00.000",
-      "street_closure_type": "Full Street Closure"
+      "source_event_id": "957510",
+      "start_date_time": "2026-08-21T09:00:00.000",
+      "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "2"
+      ],
+      "end_date_time": "2026-08-25T18:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "5 AVENUE between EAST   13 STREET and EAST   14 STREET",
+      "event_name": "The New School - Orientation",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "6"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "963200",
+      "start_date_time": "2026-08-21T09:00:00.000",
+      "street_closure_type": "Partial Sidewalk Closure"
+    },
+    {
+      "community_board": [
+        "11"
+      ],
+      "end_date_time": "2026-08-21T15:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "EAST  113 STREET between 2 AVENUE and CUL DE SAC",
+      "event_name": "2nd Annual We Will Rise Back-to-School Block Party/Street Event",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "23"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "963142",
+      "start_date_time": "2026-08-21T10:00:00.000",
+      "street_closure_type": "Sidewalk and Curb Lane Closure"
+    },
+    {
+      "community_board": [
+        "2"
+      ],
+      "end_date_time": "2026-08-22T19:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "GREENE STREET between PRINCE STREET and WEST HOUSTON STREET",
+      "event_name": "Neopets in Neo York",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "1"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "966151",
+      "start_date_time": "2026-08-21T10:00:00.000",
+      "street_closure_type": "Partial Sidewalk Closure"
     },
     {
       "community_board": [
         "5"
       ],
-      "end_date_time": "2026-08-20T15:00:00.000",
+      "end_date_time": "2026-08-23T18:00:00.000",
       "event_agency": "Street Activity Permit Office",
       "event_borough": "Manhattan",
-      "event_location": "Garment District (Broadway Boulevard) Plaza: 39/40 Broadway broadway between 39th street and 40th street",
-      "event_name": "Broadway Rhythm",
-      "event_type": "Plaza Partner Event",
+      "event_location": "Herald Square Plaza: Herald Square (34/35 Broadway) Broadway between W. 34th Street and W. 35th Street",
+      "event_name": "Dolce  Gabbana Pop Up Event",
+      "event_type": "Plaza Event",
       "police_precinct": [
         "14"
       ],
       "source_cemsid": [
-        "3537"
+        "14"
       ],
       "source_dataset": "tvpp-9vvx",
-      "source_event_id": "960036",
-      "start_date_time": "2026-08-20T11:00:00.000",
+      "source_event_id": "930060",
+      "start_date_time": "2026-08-21T11:00:00.000",
       "street_closure_type": "Pedestrian Plaza"
+    },
+    {
+      "community_board": [
+        "3"
+      ],
+      "end_date_time": "2026-08-21T16:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "PITT STREET between RIVINGTON STREET and STANTON STREET",
+      "event_name": "Grand Street Day: Back to School Celebration",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "7"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "943516",
+      "start_date_time": "2026-08-21T11:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "3"
+      ],
+      "end_date_time": "2026-08-21T18:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "FULTON STREET between RALPH AVENUE and HOWARD AVENUE",
+      "event_name": "Madame Fannie Townsley Memorial Street Festival",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "81"
+      ],
+      "source_cemsid": [
+        "0"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "922622",
+      "start_date_time": "2026-08-21T12:00:00.000",
+      "street_closure_type": "Full Street Closure"
     },
     {
       "community_board": [
         "12"
       ],
-      "end_date_time": "2026-08-20T12:00:00.000",
+      "end_date_time": "2026-08-21T12:00:00.000",
       "event_agency": "Street Activity Permit Office",
       "event_borough": "Queens",
       "event_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
@@ -192,14 +347,14 @@
       "source_cemsid": [],
       "source_dataset": "tvpp-9vvx",
       "source_event_id": "964160",
-      "start_date_time": "2026-08-20T12:00:00.000",
+      "start_date_time": "2026-08-21T12:00:00.000",
       "street_closure_type": "Partial Sidewalk Closure"
     },
     {
       "community_board": [
         "6"
       ],
-      "end_date_time": "2026-08-20T19:00:00.000",
+      "end_date_time": "2026-08-21T19:00:00.000",
       "event_agency": "Street Activity Permit Office",
       "event_borough": "Brooklyn",
       "event_location": "SACKETT STREET between VAN BRUNT STREET and DEAD END",
@@ -213,33 +368,34 @@
       ],
       "source_dataset": "tvpp-9vvx",
       "source_event_id": "964434",
-      "start_date_time": "2026-08-20T12:00:00.000",
+      "start_date_time": "2026-08-21T12:00:00.000",
       "street_closure_type": "Full Street Closure"
     },
     {
       "community_board": [
-        "3"
+        "14"
       ],
-      "end_date_time": "2026-08-20T16:00:00.000",
+      "end_date_time": "2026-08-21T14:00:00.000",
       "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "AVENUE B between EAST    6 STREET and EAST    7 STREET",
-      "event_name": "AFJ Street Fair: Summer On The Avenue",
+      "event_borough": "Queens",
+      "event_location": "ROCKAWAY BEACH BOULEVARD between BEACH   59 STREET and BEACH   56 PLACE",
+      "event_name": "Workforce 1 Community outreach Event",
       "event_type": "Street Event",
       "police_precinct": [
-        "9"
+        "100",
+        "101"
       ],
       "source_cemsid": [],
       "source_dataset": "tvpp-9vvx",
-      "source_event_id": "965026",
-      "start_date_time": "2026-08-20T12:00:00.000",
-      "street_closure_type": "Full Street Closure"
+      "source_event_id": "966252",
+      "start_date_time": "2026-08-21T12:00:00.000",
+      "street_closure_type": "Sidewalk and Curb Lane Closure"
     },
     {
       "community_board": [
         "5"
       ],
-      "end_date_time": "2026-08-20T20:00:00.000",
+      "end_date_time": "2026-08-21T20:00:00.000",
       "event_agency": "Street Activity Permit Office",
       "event_borough": "Manhattan",
       "event_location": "Herald Square Plaza: Herald Square (34/35 Broadway) Broadway between W. 34th Street and W. 35th Street",
@@ -253,73 +409,55 @@
       ],
       "source_dataset": "tvpp-9vvx",
       "source_event_id": "966461",
-      "start_date_time": "2026-08-20T12:00:00.000",
+      "start_date_time": "2026-08-21T12:00:00.000",
       "street_closure_type": "Pedestrian Plaza"
     },
     {
       "community_board": [
-        "5"
+        "2"
       ],
-      "end_date_time": "2026-08-20T17:00:00.000",
+      "end_date_time": "2026-08-21T18:00:00.000",
       "event_agency": "Street Activity Permit Office",
       "event_borough": "Bronx",
-      "event_location": "WEST BURNSIDE AVENUE between DAVIDSON AVENUE and GRAND AVENUE",
-      "event_name": "Davidson Community Center Block Party/Street Event",
-      "event_type": "Street Event",
+      "event_location": "HOE AVENUE between ALDUS STREET and BRUCKNER BOULEVARD",
+      "event_name": "Community Event",
+      "event_type": "Block Party",
       "police_precinct": [
-        "46"
+        "41"
       ],
       "source_cemsid": [],
       "source_dataset": "tvpp-9vvx",
-      "source_event_id": "949142",
-      "start_date_time": "2026-08-20T12:20:00.000",
+      "source_event_id": "956801",
+      "start_date_time": "2026-08-21T13:00:00.000",
       "street_closure_type": "Full Street Closure"
     },
     {
       "community_board": [
-        "6"
+        "6",
+        "7"
       ],
-      "end_date_time": "2026-08-20T19:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Brooklyn",
-      "event_location": "Thomas Greene Playground: Picnic Area",
-      "event_name": "Picnic",
-      "event_type": "Special Event",
-      "police_precinct": [
-        "78"
-      ],
-      "source_cemsid": [
-        "4672"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "960686",
-      "start_date_time": "2026-08-20T13:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "12"
-      ],
-      "end_date_time": "2026-08-20T15:30:00.000",
+      "end_date_time": "2026-08-21T17:00:00.000",
       "event_agency": "Street Activity Permit Office",
       "event_borough": "Bronx",
-      "event_location": "WHITE PLAINS ROAD between EAST  216 STREET and EAST  217 STREET",
-      "event_name": "Black Business Outreach: BRONX",
-      "event_type": "Street Event",
+      "event_location": "Fordham Plaza: Fordham Plaza EAST FORDHAM ROAD between WEBSTER AVENUE and FIREFIGHTERS BOULEVARD",
+      "event_name": "FIC Back to School Event",
+      "event_type": "Plaza Event",
       "police_precinct": [
-        "47"
+        "48"
       ],
-      "source_cemsid": [],
+      "source_cemsid": [
+        "11689"
+      ],
       "source_dataset": "tvpp-9vvx",
-      "source_event_id": "963863",
-      "start_date_time": "2026-08-20T13:00:00.000",
-      "street_closure_type": "Sidewalk and Curb Lane Closure"
+      "source_event_id": "939857",
+      "start_date_time": "2026-08-21T14:00:00.000",
+      "street_closure_type": "Pedestrian Plaza"
     },
     {
       "community_board": [
         "06"
       ],
-      "end_date_time": "2026-08-20T14:30:00.000",
+      "end_date_time": "2026-08-21T14:30:00.000",
       "event_agency": "Parks Department",
       "event_borough": "Bronx",
       "event_location": "Belmont Playground: Basketball-01",
@@ -333,14 +471,14 @@
       ],
       "source_dataset": "tvpp-9vvx",
       "source_event_id": "960868",
-      "start_date_time": "2026-08-20T14:00:00.000",
+      "start_date_time": "2026-08-21T14:00:00.000",
       "street_closure_type": "N/A"
     },
     {
       "community_board": [
         "10"
       ],
-      "end_date_time": "2026-08-20T20:00:00.000",
+      "end_date_time": "2026-08-21T20:00:00.000",
       "event_agency": "Parks Department",
       "event_borough": "Manhattan",
       "event_location": "Courtney Callender Playground: Basketball-01",
@@ -354,54 +492,14 @@
       ],
       "source_dataset": "tvpp-9vvx",
       "source_event_id": "912266",
-      "start_date_time": "2026-08-20T15:00:00.000",
+      "start_date_time": "2026-08-21T15:00:00.000",
       "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "5"
-      ],
-      "end_date_time": "2026-08-20T18:30:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "STANLEY AVENUE between SCHENCK AVENUE and ASHFORD STREET",
-      "event_name": "Boulevard 2026 Local NeighborhoodSTAT",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "75"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "942835",
-      "start_date_time": "2026-08-20T15:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "2"
-      ],
-      "end_date_time": "2026-08-20T20:30:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "Albee Square Plaza: Albee Square Plaza Albee Square between Fulton Street and Bond Street",
-      "event_name": "Vinyl Nights",
-      "event_type": "Plaza Event",
-      "police_precinct": [
-        "84"
-      ],
-      "source_cemsid": [
-        "3569"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "964721",
-      "start_date_time": "2026-08-20T15:00:00.000",
-      "street_closure_type": "Pedestrian Plaza"
     },
     {
       "community_board": [
         "11"
       ],
-      "end_date_time": "2026-08-20T20:00:00.000",
+      "end_date_time": "2026-08-21T20:00:00.000",
       "event_agency": "Parks Department",
       "event_borough": "Manhattan",
       "event_location": "Harlem River Park: Basketball-04",
@@ -415,115 +513,16 @@
       ],
       "source_dataset": "tvpp-9vvx",
       "source_event_id": "912257",
-      "start_date_time": "2026-08-20T16:00:00.000",
+      "start_date_time": "2026-08-21T16:00:00.000",
       "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "11"
-      ],
-      "end_date_time": "2026-08-20T20:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Manhattan",
-      "event_location": "Harlem River Park: Basketball-03",
-      "event_name": "Basketball",
-      "event_type": "Sport - Youth",
-      "police_precinct": [
-        "25"
-      ],
-      "source_cemsid": [
-        "8454"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "912261",
-      "start_date_time": "2026-08-20T16:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "11"
-      ],
-      "end_date_time": "2026-08-30T22:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "18 AVENUE between 67 STREET and BAYRIDGE PARKWAY",
-      "event_name": "FESTA DI SANTA ROSALIA",
-      "event_type": "Miscellaneous",
-      "police_precinct": [
-        "62"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "901961",
-      "start_date_time": "2026-08-20T17:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "8"
-      ],
-      "end_date_time": "2026-08-20T20:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "EAST   88 STREET between FIFTH AVENUE and MADISON AVENUE",
-      "event_name": "Late Shift Street Fest",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "19"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "953650",
-      "start_date_time": "2026-08-20T17:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "5"
-      ],
-      "end_date_time": "2026-08-20T22:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "EAST   17 STREET between UNION SQUARE EAST and UNION SQUARE WEST",
-      "event_name": "USP Movie in the Square Production Parking",
-      "event_type": "Production Event",
-      "police_precinct": [
-        "13"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "965042",
-      "start_date_time": "2026-08-20T17:00:00.000",
-      "street_closure_type": "Curb Lane Only"
-    },
-    {
-      "community_board": [
-        "2"
-      ],
-      "end_date_time": "2026-08-20T19:55:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "Gansevoort Plaza: 12/13 9 Avenue 9 AVENUE between Gansevoort st and WEST   13 STREET",
-      "event_name": "Pigeonwing Dance",
-      "event_type": "Plaza Event",
-      "police_precinct": [
-        "6"
-      ],
-      "source_cemsid": [
-        "11715"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "961649",
-      "start_date_time": "2026-08-20T18:30:00.000",
-      "street_closure_type": "Pedestrian Plaza"
     }
   ],
   "production_feeds_modified": false,
   "public_map_modified": false,
   "raw_page_limit": 50000,
-  "raw_rows_loaded": 25395,
-  "raw_rows_with_cemsid": 24728,
+  "raw_rows_loaded": 25611,
+  "raw_rows_with_cemsid": 24886,
   "raw_url": "https://data.cityofnewyork.us/resource/tvpp-9vvx.json",
-  "today_nyc": "2026-08-20",
-  "today_utc": "2026-08-20"
+  "today_nyc": "2026-08-21",
+  "today_utc": "2026-08-21"
 }

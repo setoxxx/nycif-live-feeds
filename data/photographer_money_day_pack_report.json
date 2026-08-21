@@ -4,25 +4,38 @@
     "today": "data/photographer_money_day_pack_today.json",
     "tomorrow": "data/photographer_money_day_pack_tomorrow.json"
   },
-  "generated_at_utc": "2026-08-20T11:04:14Z",
+  "generated_at_utc": "2026-08-21T11:04:11Z",
   "location_cache_modified": false,
   "promotion_allowed": false,
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-08-20",
+  "reference_today_nyc": "2026-08-21",
   "schema_version": "photographer-money-day-pack-v1",
   "today": {
     "borough_cluster_count": 0,
-    "date": "2026-08-20",
+    "date": "2026-08-21",
     "map_ready_count": 0,
     "total_events": 0
   },
   "tomorrow": {
-    "borough_cluster_count": 0,
-    "date": "2026-08-21",
-    "map_ready_count": 0,
-    "top_go_shoot": [],
-    "total_events": 0
+    "borough_cluster_count": 1,
+    "date": "2026-08-22",
+    "map_ready_count": 1,
+    "top_go_shoot": [
+      {
+        "borough": null,
+        "score": 400,
+        "time": "2026-08-22T10:00:00",
+        "title": "CANCELLED: It's My Park at Parade Ground"
+      },
+      {
+        "borough": "Brooklyn",
+        "score": 400,
+        "time": "2026-08-22T10:00:00.000-04:00",
+        "title": "It's My Park at Parade Ground"
+      }
+    ],
+    "total_events": 2
   }
 }
