@@ -2,11 +2,11 @@
   "after_v2": {
     "coordinate_status_counts": {
       "list_only": 27,
-      "map_ready": 2
+      "map_ready": 3
     },
-    "days_with_coverage": 12,
+    "days_with_coverage": 13,
     "lane_counts": {
-      "approved_major": 23,
+      "approved_major": 24,
       "review_high_signal": 6
     },
     "month_counts": [
@@ -16,12 +16,12 @@
         "label": "August 2026"
       },
       {
-        "days_with_events": 9,
-        "event_count": 23,
+        "days_with_events": 10,
+        "event_count": 24,
         "label": "September 2026"
       }
     ],
-    "total_events": 29
+    "total_events": 30
   },
   "baseline_v1_pr173": {
     "days_with_coverage": 43,
@@ -40,12 +40,12 @@
     "reference_today_nyc": "2026-07-14",
     "total_events": 842
   },
-  "considered_in_window": 517,
+  "considered_in_window": 518,
   "delta_vs_baseline": {
-    "days_coverage_after": 12,
+    "days_coverage_after": 13,
     "days_coverage_before": 43,
-    "events_kept": 29,
-    "events_removed": 813
+    "events_kept": 30,
+    "events_removed": 812
   },
   "excluded": 488,
   "filter_rules": [
@@ -53,8 +53,8 @@
     "Exclude routine sports/fitness even when major_score is high.",
     "Cap carried major_score contribution; significance alone is not enough."
   ],
-  "generated_at_utc": "2026-08-21T11:04:11Z",
-  "kept": 29,
+  "generated_at_utc": "2026-08-22T02:28:30Z",
+  "kept": 30,
   "location_cache_modified": false,
   "promotion_allowed": false,
   "protected_files_untouched": true,

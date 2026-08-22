@@ -138,8 +138,8 @@
     "money_day_today": 0,
     "money_day_tomorrow": 2,
     "opportunities": 1144,
-    "photographer_calendar_events": 29,
-    "photographer_days_with_coverage": 12,
+    "photographer_calendar_events": 30,
+    "photographer_days_with_coverage": 13,
     "pin_demotions": 0,
     "pin_map_ready_certified": 0,
     "proposed": 489,
@@ -153,9 +153,9 @@
     "viral_returning_likely": 1
   },
   "daily_pull": {
-    "last_run_utc": "2026-08-21T11:04:08Z",
-    "photographer_calendar_events": 29,
-    "photographer_days_with_coverage": 12,
+    "last_run_utc": "2026-08-22T02:28:27Z",
+    "photographer_calendar_events": 30,
+    "photographer_days_with_coverage": 13,
     "qa_pass": true,
     "report": "data/daily_people_facing_sync_report.json"
   },
@@ -172,7 +172,7 @@
     "honesty": "NYC Open Data does not currently provide a high-quality live citywide soup-kitchen or food-pantry pin feed suitable for map publication.",
     "status": "known_gap_human_follow_up"
   },
-  "generated_at_utc": "2026-08-21T11:04:13Z",
+  "generated_at_utc": "2026-08-22T02:28:33Z",
   "lanes": {
     "Approved": "schema-v1-discovery approved permits (unchanged)",
     "Help Places": "schema-v1-civic-review/help (markets + benefits/SNAP/drop-in/Homebase/aging/NYCHA)",
@@ -190,9 +190,9 @@
     "artifact": "data/photographer_assignment_calendar_2mo.json",
     "coordinate_status_counts": {
       "list_only": 27,
-      "map_ready": 2
+      "map_ready": 3
     },
-    "days_with_coverage": 12,
+    "days_with_coverage": 13,
     "go_shoot_these": [
       {
         "assignment_score": 580,
@@ -335,6 +335,43 @@
         "start_date_time": "2026-08-28T19:00:00",
         "timezone": "America/New_York",
         "title": "Bryant Park Picnic Performance: Accordion Festival: Jourdan Thibodeaux et les R&#244;dailleurs, Saami Brothers, and Chicha Libre",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_street_fair_festival",
+          "keyword_spectacle"
+        ]
+      },
+      {
+        "assignment_score": 510,
+        "borough": null,
+        "category": "civic",
+        "certified_pin": false,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-04",
+        "display_location": "Bryant Park Lawn (in Bryant Park)",
+        "end_date_time": "2026-09-04T21:30:00",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-04&assignment=1",
+        "id": "review_supplemental:nyc-parks-bigapps-events:2173508@2026-09-04",
+        "lane": "approved_major",
+        "latitude": 40.753819792011,
+        "location_cache_modified": false,
+        "longitude": -73.983734458685,
+        "map_eligibility_state": "REVIEW_REQUIRED",
+        "map_link": null,
+        "money_day": true,
+        "photo_pick": false,
+        "pin_integrity_reason": "LEGACY_EVIDENCE_PENDING_MIGRATION",
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "nyc-parks-bigapps-events",
+          "source_event_id": "2173508"
+        },
+        "start_date_time": "2026-09-04T19:00:00",
+        "timezone": "America/New_York",
+        "title": "Bryant Park Picnic Performance: Brass Festival: New Breed Brass Band, Aberdeen, and Brass Queens",
         "why_selected": [
           "significance_major_floor",
           "carried_major_score_capped:120",
@@ -881,42 +918,6 @@
           "carried_major_score_capped:120",
           "keyword_civic_gathering"
         ]
-      },
-      {
-        "assignment_score": 400,
-        "borough": "Queens",
-        "category": "civic",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-09-27",
-        "display_location": "Queens",
-        "end_date_time": "2026-09-27T14:00:00.000-04:00",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-27&assignment=1",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:1193116@2026-09-27",
-        "lane": "approved_major",
-        "latitude": null,
-        "location_cache_modified": false,
-        "longitude": null,
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "money_day": true,
-        "photo_pick": false,
-        "pin_integrity_reason": "missing_coords",
-        "premium_label": "Photographer Assignment Calendar (premium/operator)",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "1193116"
-        },
-        "start_date_time": "2026-09-27T12:00:00.000-04:00",
-        "timezone": "America/New_York",
-        "title": "Queens Hispanic Parade",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_civic_gathering"
-        ]
       }
     ],
     "month_counts": [
@@ -926,8 +927,8 @@
         "label": "August 2026"
       },
       {
-        "days_with_events": 9,
-        "event_count": 23,
+        "days_with_events": 10,
+        "event_count": 24,
         "label": "September 2026"
       }
     ],
@@ -936,7 +937,7 @@
     "premium_label": "Photographer Assignment Calendar (premium/operator) — Money-Day Desk v2",
     "qa_pass": true,
     "quality": {
-      "events_removed_vs_baseline": 813,
+      "events_removed_vs_baseline": 812,
       "qa_pass": true,
       "report": "data/photographer_money_day_quality_report.json",
       "top_exclude_reasons": [
@@ -986,7 +987,7 @@
       "total_events": 2
     },
     "tomorrow_top_go_shoot": [],
-    "total_events": 29,
+    "total_events": 30,
     "viral_recurrence": {
       "artifact": "data/photographer_viral_recurrence_matches.json",
       "foil_index": "data/sapo_foil_operator_index.json",
@@ -1026,7 +1027,7 @@
     "demotion_reason_counts": {},
     "demotions": "data/pin_integrity_demotions.json",
     "map_ready_after_total": 0,
-    "map_ready_before_total": 3301,
+    "map_ready_before_total": 3302,
     "qa_pass": true,
     "report": "data/pin_integrity_gate_report.json",
     "rule": "ZERO map_ready rows may fail NYC certification"

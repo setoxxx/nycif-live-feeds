@@ -7,12 +7,12 @@
     "map_ready": 3298
   },
   "failed_steps": [],
-  "generated_at_utc": "2026-08-21T11:04:08Z",
+  "generated_at_utc": "2026-08-22T02:28:27Z",
   "location_cache_modified": false,
   "notes": "Safe daily desk sync. Does not run build_staged_production_feed / build_location_cache / public WordPress publish. Pin integrity gate fail-closed: qa_pass requires ZERO bad map_ready pins. Full permit→staged refresh remains live-sync-qa (manual dispatch).",
   "photographer_calendar": {
-    "days_with_coverage": 12,
-    "events_removed_vs_baseline": 813,
+    "days_with_coverage": 13,
+    "events_removed_vs_baseline": 812,
     "month_counts": [
       {
         "days_with_events": 3,
@@ -20,8 +20,8 @@
         "label": "August 2026"
       },
       {
-        "days_with_events": 9,
-        "event_count": 23,
+        "days_with_events": 10,
+        "event_count": 24,
         "label": "September 2026"
       }
     ],
@@ -58,7 +58,7 @@
       "demotion_count": 0,
       "demotion_reason_counts": {},
       "map_ready_after_total": 0,
-      "map_ready_before_total": 3301,
+      "map_ready_before_total": 3302,
       "qa_pass": true,
       "report": "data/pin_integrity_gate_report.json"
     },
@@ -70,7 +70,7 @@
       "today_certified_pins": 0,
       "tomorrow_certified_pins": 0
     },
-    "total_events": 29,
+    "total_events": 30,
     "viral_recurrence": {
       "historical_rows": 2450,
       "label_counts": {

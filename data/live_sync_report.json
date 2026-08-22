@@ -1,21 +1,21 @@
 {
-  "current_future_rows": 24495,
-  "current_future_rows_with_cemsid": 23815,
+  "current_future_rows": 25781,
+  "current_future_rows_with_cemsid": 25054,
   "date_boundary_timezone": "America/New_York",
   "enriched_rows_loaded": 33084,
-  "generated_at_utc": "2026-08-21T11:03:19.779328+00:00",
+  "generated_at_utc": "2026-08-22T02:27:38.198500+00:00",
   "location_cache_entries_loaded": 40151,
   "location_cache_modified": false,
   "location_resolver_live_geosearch_calls": 0,
   "match_counts": {
-    "event_id": 9049,
-    "location_cache": 13153,
-    "none": 764,
-    "text_date_location": 168,
-    "tier_1_gazetteer_display": 860,
-    "tier_2_geosearch_cache": 501
+    "event_id": 9086,
+    "location_cache": 14274,
+    "none": 817,
+    "text_date_location": 173,
+    "tier_1_gazetteer_display": 917,
+    "tier_2_geosearch_cache": 514
   },
-  "matched_with_gps": 23731,
+  "matched_with_gps": 24964,
   "matched_without_gps_sample": [],
   "needs_enrichment_sample": [
     {
@@ -55,6 +55,27 @@
       "source_event_id": "952615",
       "start_date_time": "2026-08-21T06:00:00.000",
       "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "1"
+      ],
+      "end_date_time": "2026-08-21T19:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "178 BUSHWICK AVENUE between STAGG WALK and TEN EYCK WALK",
+      "event_name": "Project Street Beat - Keith Haring Foundation Mobile Health Center Community Event",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "90"
+      ],
+      "source_cemsid": [
+        "0"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "962473",
+      "start_date_time": "2026-08-21T06:30:00.000",
+      "street_closure_type": "Sidewalk and Curb Lane Closure"
     },
     {
       "community_board": [
@@ -333,6 +354,25 @@
     },
     {
       "community_board": [
+        "5"
+      ],
+      "end_date_time": "2026-08-21T20:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "ASHFORD STREET between BELMONT AVENUE and PITKIN AVENUE",
+      "event_name": "block party",
+      "event_type": "Block Party",
+      "police_precinct": [
+        "75"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "956892",
+      "start_date_time": "2026-08-21T12:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
         "12"
       ],
       "end_date_time": "2026-08-21T12:00:00.000",
@@ -473,56 +513,14 @@
       "source_event_id": "960868",
       "start_date_time": "2026-08-21T14:00:00.000",
       "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "10"
-      ],
-      "end_date_time": "2026-08-21T20:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Manhattan",
-      "event_location": "Courtney Callender Playground: Basketball-01",
-      "event_name": "Basketball",
-      "event_type": "Sport - Youth",
-      "police_precinct": [
-        "32"
-      ],
-      "source_cemsid": [
-        "5812"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "912266",
-      "start_date_time": "2026-08-21T15:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "11"
-      ],
-      "end_date_time": "2026-08-21T20:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Manhattan",
-      "event_location": "Harlem River Park: Basketball-04",
-      "event_name": "Basketball",
-      "event_type": "Sport - Youth",
-      "police_precinct": [
-        "25"
-      ],
-      "source_cemsid": [
-        "8452"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "912257",
-      "start_date_time": "2026-08-21T16:00:00.000",
-      "street_closure_type": "N/A"
     }
   ],
   "production_feeds_modified": false,
   "public_map_modified": false,
   "raw_page_limit": 50000,
-  "raw_rows_loaded": 25611,
-  "raw_rows_with_cemsid": 24886,
+  "raw_rows_loaded": 25811,
+  "raw_rows_with_cemsid": 25063,
   "raw_url": "https://data.cityofnewyork.us/resource/tvpp-9vvx.json",
   "today_nyc": "2026-08-21",
-  "today_utc": "2026-08-21"
+  "today_utc": "2026-08-22"
 }
