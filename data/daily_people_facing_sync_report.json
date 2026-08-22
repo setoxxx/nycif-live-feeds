@@ -1,13 +1,13 @@
 {
   "civic": {
-    "accepted": 4587,
+    "accepted": 4569,
     "date_time_location_qa_pass": true,
     "list_only": 1289,
     "map_coverage_qa_pass": true,
-    "map_ready": 3298
+    "map_ready": 3280
   },
   "failed_steps": [],
-  "generated_at_utc": "2026-08-22T02:28:27Z",
+  "generated_at_utc": "2026-08-22T23:35:13Z",
   "location_cache_modified": false,
   "notes": "Safe daily desk sync. Does not run build_staged_production_feed / build_location_cache / public WordPress publish. Pin integrity gate fail-closed: qa_pass requires ZERO bad map_ready pins. Full permit→staged refresh remains live-sync-qa (manual dispatch).",
   "photographer_calendar": {
@@ -28,27 +28,27 @@
     "packs": {
       "qa_pass": true,
       "today": {
-        "borough_cluster_count": 0,
-        "date": "2026-08-21",
-        "map_ready_count": 0,
-        "total_events": 0
-      },
-      "tomorrow": {
         "borough_cluster_count": 1,
         "date": "2026-08-22",
         "map_ready_count": 1,
+        "total_events": 2
+      },
+      "tomorrow": {
+        "borough_cluster_count": 0,
+        "date": "2026-08-23",
+        "map_ready_count": 0,
         "top_go_shoot": [
-          {
-            "borough": null,
-            "score": 400,
-            "time": "2026-08-22T10:00:00",
-            "title": "CANCELLED: It's My Park at Parade Ground"
-          },
           {
             "borough": "Brooklyn",
             "score": 400,
-            "time": "2026-08-22T10:00:00.000-04:00",
-            "title": "It's My Park at Parade Ground"
+            "time": "2026-08-23T12:00:00.000-04:00",
+            "title": "Falun Dafa Parade"
+          },
+          {
+            "borough": "Brooklyn",
+            "score": 200,
+            "time": "2026-08-23T12:00:00.000-04:00",
+            "title": "Falun Dafa Parade"
           }
         ],
         "total_events": 2
@@ -58,7 +58,7 @@
       "demotion_count": 0,
       "demotion_reason_counts": {},
       "map_ready_after_total": 0,
-      "map_ready_before_total": 3302,
+      "map_ready_before_total": 3284,
       "qa_pass": true,
       "report": "data/pin_integrity_gate_report.json"
     },

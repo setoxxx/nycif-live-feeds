@@ -9,10 +9,10 @@
   "demotion_count": 0,
   "demotion_reason_counts": {},
   "demotions_artifact": "data/pin_integrity_demotions.json",
-  "generated_at_utc": "2026-08-22T02:28:32Z",
+  "generated_at_utc": "2026-08-22T23:35:18Z",
   "location_cache_modified": false,
   "map_ready_after_total": 0,
-  "map_ready_before_total": 3302,
+  "map_ready_before_total": 3284,
   "notes": "Geometry validation never creates certification. Legacy in-bounds map_ready rows without validated location evidence may remain as migration state, but certified_pin, semantic MAP_READY and exact map links are cleared.",
   "promotion_allowed": false,
   "protected_files_untouched": true,
@@ -45,13 +45,13 @@
           "demotions": 0,
           "file": "photographer_money_day_pack_today.json",
           "map_ready_after": 0,
-          "map_ready_before": 0
+          "map_ready_before": 1
         },
         {
           "demotions": 0,
           "file": "photographer_money_day_pack_tomorrow.json",
           "map_ready_after": 0,
-          "map_ready_before": 1
+          "map_ready_before": 0
         }
       ],
       "surface": "money_day_packs"
@@ -67,9 +67,9 @@
       "artifact": "data/civic_people_facing_staging_feed.json",
       "demotion_count": 0,
       "map_ready_after": 0,
-      "map_ready_before": 3298,
+      "map_ready_before": 3280,
       "reason_counts": {
-        "LEGACY_EVIDENCE_PENDING_MIGRATION": 3298,
+        "LEGACY_EVIDENCE_PENDING_MIGRATION": 3280,
         "missing_coords": 1289
       },
       "surface": "civic"
