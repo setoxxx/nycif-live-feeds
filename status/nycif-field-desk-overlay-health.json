@@ -2,7 +2,7 @@
   "artifact_type": "nycif_auxiliary_runtime_health",
   "blockers": [],
   "branch": "main",
-  "generated_at_utc": "2026-08-22T23:35:21Z",
+  "generated_at_utc": "2026-08-23T23:36:34Z",
   "local_runtime_checks": {
     "newly_added_sort": {
       "age_hours": 0.0,
@@ -11,7 +11,7 @@
       "duplicate_ids": 0,
       "event_count": 0,
       "fresh": true,
-      "generated_at_utc": "2026-08-22T23:35:13Z",
+      "generated_at_utc": "2026-08-23T23:36:27Z",
       "max_age_hours": 36.0,
       "missing_ids": 0,
       "name": "Newly added event-list sort",
@@ -25,7 +25,7 @@
   "overlay_count": 3,
   "overlays": [
     {
-      "age_hours": 12.87,
+      "age_hours": 12.88,
       "count_aligned": true,
       "data_artifact": "data/nycif_active_nightlife_feed.json",
       "duplicate_ids": 0,
@@ -35,13 +35,13 @@
       "name": "Active nightlife / 5PM",
       "qa_pass": true,
       "report_artifact": "data/reports/active_nightlife_feed_report.json",
-      "report_generated_at_utc": "2026-08-22T10:43:23.176Z",
+      "report_generated_at_utc": "2026-08-23T10:44:03.278Z",
       "report_qa_pass": true,
-      "reported_count": 154,
-      "row_count": 154
+      "reported_count": 155,
+      "row_count": 155
     },
     {
-      "age_hours": 12.87,
+      "age_hours": 12.88,
       "count_aligned": true,
       "data_artifact": "data/nycif_legal_cannabis_dispensaries.json",
       "duplicate_ids": 0,
@@ -51,13 +51,13 @@
       "name": "Legal cannabis dispensaries",
       "qa_pass": true,
       "report_artifact": "data/reports/legal_cannabis_dispensaries_report.json",
-      "report_generated_at_utc": "2026-08-22T10:43:23.906Z",
+      "report_generated_at_utc": "2026-08-23T10:44:04.458Z",
       "report_qa_pass": true,
-      "reported_count": 255,
-      "row_count": 255
+      "reported_count": 256,
+      "row_count": 256
     },
     {
-      "age_hours": 12.83,
+      "age_hours": 12.81,
       "count_aligned": true,
       "data_artifact": "data/nycif_smoke_vape_cannabis_correlation.json",
       "duplicate_ids": 0,
@@ -67,10 +67,10 @@
       "name": "Smoke/vape/cannabis correlation",
       "qa_pass": true,
       "report_artifact": "data/reports/smoke_vape_cannabis_correlation_report.json",
-      "report_generated_at_utc": "2026-08-22T10:45:37.237Z",
+      "report_generated_at_utc": "2026-08-23T10:47:43.242Z",
       "report_qa_pass": true,
-      "reported_count": 189,
-      "row_count": 189
+      "reported_count": 192,
+      "row_count": 192
     }
   ],
   "qa_pass": true,

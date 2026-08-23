@@ -1,23 +1,11 @@
 {
   "coordinate_status_counts": {
-    "list_only": 27,
-    "map_ready": 3
+    "list_only": 26,
+    "map_ready": 2
   },
-  "days_with_coverage": 13,
-  "generated_at_utc": "2026-08-22T23:35:16Z",
+  "days_with_coverage": 12,
+  "generated_at_utc": "2026-08-23T23:36:30Z",
   "go_shoot_sample": [
-    {
-      "borough": null,
-      "date": "2026-08-22",
-      "score": 400,
-      "title": "CANCELLED: It's My Park at Parade Ground"
-    },
-    {
-      "borough": "Brooklyn",
-      "date": "2026-08-22",
-      "score": 400,
-      "title": "It's My Park at Parade Ground"
-    },
     {
       "borough": "Brooklyn",
       "date": "2026-08-23",
@@ -65,21 +53,33 @@
       "date": "2026-09-05",
       "score": 400,
       "title": "West Indian American Junior Parade"
+    },
+    {
+      "borough": "Queens",
+      "date": "2026-09-06",
+      "score": 400,
+      "title": "Labor Day Baby Parade"
+    },
+    {
+      "borough": "Queens",
+      "date": "2026-09-07",
+      "score": 400,
+      "title": "Labor Day Parade"
     }
   ],
   "lane_counts": {
-    "approved_major": 24,
+    "approved_major": 22,
     "review_high_signal": 6
   },
   "location_cache_modified": false,
   "money_day_quality": {
-    "events_removed_vs_baseline": 812,
+    "events_removed_vs_baseline": 814,
     "qa_pass": true,
     "report": "data/photographer_money_day_quality_report.json",
     "top_exclude_reasons": [
       [
         "no_money_day_keyword_signal",
-        397
+        393
       ],
       [
         "routine_activity_excluded",
@@ -97,8 +97,8 @@
   },
   "month_counts": [
     {
-      "days_with_events": 3,
-      "event_count": 6,
+      "days_with_events": 2,
+      "event_count": 4,
       "label": "August 2026"
     },
     {
@@ -112,8 +112,8 @@
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-08-22",
+  "reference_today_nyc": "2026-08-23",
   "schema_version": "photographer-assignment-calendar-v2-money-day",
-  "total_events": 30,
+  "total_events": 28,
   "window_end": "2026-09-30"
 }
