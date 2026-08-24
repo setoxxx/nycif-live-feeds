@@ -1,23 +1,11 @@
 {
   "coordinate_status_counts": {
-    "list_only": 26,
+    "list_only": 24,
     "map_ready": 2
   },
-  "days_with_coverage": 12,
-  "generated_at_utc": "2026-08-23T23:36:30Z",
+  "days_with_coverage": 11,
+  "generated_at_utc": "2026-08-24T23:38:40Z",
   "go_shoot_sample": [
-    {
-      "borough": "Brooklyn",
-      "date": "2026-08-23",
-      "score": 400,
-      "title": "Falun Dafa Parade"
-    },
-    {
-      "borough": "Brooklyn",
-      "date": "2026-08-23",
-      "score": 200,
-      "title": "Falun Dafa Parade"
-    },
     {
       "borough": null,
       "date": "2026-08-28",
@@ -65,21 +53,33 @@
       "date": "2026-09-07",
       "score": 400,
       "title": "Labor Day Parade"
+    },
+    {
+      "borough": "Brooklyn",
+      "date": "2026-09-07",
+      "score": 400,
+      "title": "West Indian American Labor Day Parade"
+    },
+    {
+      "borough": "Staten Island",
+      "date": "2026-09-12",
+      "score": 400,
+      "title": "Car Show Parade"
     }
   ],
   "lane_counts": {
-    "approved_major": 22,
-    "review_high_signal": 6
+    "approved_major": 21,
+    "review_high_signal": 5
   },
   "location_cache_modified": false,
   "money_day_quality": {
-    "events_removed_vs_baseline": 814,
+    "events_removed_vs_baseline": 816,
     "qa_pass": true,
     "report": "data/photographer_money_day_quality_report.json",
     "top_exclude_reasons": [
       [
         "no_money_day_keyword_signal",
-        393
+        391
       ],
       [
         "routine_activity_excluded",
@@ -97,8 +97,8 @@
   },
   "month_counts": [
     {
-      "days_with_events": 2,
-      "event_count": 4,
+      "days_with_events": 1,
+      "event_count": 2,
       "label": "August 2026"
     },
     {
@@ -112,8 +112,8 @@
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-08-23",
+  "reference_today_nyc": "2026-08-24",
   "schema_version": "photographer-assignment-calendar-v2-money-day",
-  "total_events": 28,
+  "total_events": 26,
   "window_end": "2026-09-30"
 }
