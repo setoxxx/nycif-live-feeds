@@ -74,10 +74,10 @@
       "quarantined": 0
     },
     "oac_activities": {
-      "accepted": 1316,
+      "accepted": 1299,
       "list_only": 9,
-      "map_ready": 1307,
-      "quarantined": 933
+      "map_ready": 1290,
+      "quarantined": 950
     },
     "ready_ny_events": {
       "accepted": 0,
@@ -130,11 +130,11 @@
     "promotion_allowed": false
   },
   "counts": {
-    "accepted": 4569,
-    "events": 1316,
+    "accepted": 4552,
+    "events": 1299,
     "help_places": 2109,
     "list_only": 1289,
-    "map_ready": 3280,
+    "map_ready": 3263,
     "money_day_today": 0,
     "money_day_tomorrow": 0,
     "opportunities": 1144,
@@ -143,17 +143,17 @@
     "pin_demotions": 0,
     "pin_map_ready_certified": 0,
     "proposed": 489,
-    "quarantined": 6901,
+    "quarantined": 6918,
     "shoot_day_today_certified": 0,
     "shoot_day_tomorrow_certified": 0,
-    "upcoming_next_30_days": 372,
-    "upcoming_next_7_days": 101,
+    "upcoming_next_30_days": 371,
+    "upcoming_next_7_days": 96,
     "viral_next_14d_magnets": 0,
     "viral_recurrence_matches": 12,
     "viral_returning_likely": 1
   },
   "daily_pull": {
-    "last_run_utc": "2026-08-24T23:38:37Z",
+    "last_run_utc": "2026-08-25T23:38:01Z",
     "photographer_calendar_events": 26,
     "photographer_days_with_coverage": 11,
     "qa_pass": true,
@@ -172,7 +172,7 @@
     "honesty": "NYC Open Data does not currently provide a high-quality live citywide soup-kitchen or food-pantry pin feed suitable for map publication.",
     "status": "known_gap_human_follow_up"
   },
-  "generated_at_utc": "2026-08-24T23:38:42Z",
+  "generated_at_utc": "2026-08-25T23:38:07Z",
   "lanes": {
     "Approved": "schema-v1-discovery approved permits (unchanged)",
     "Help Places": "schema-v1-civic-review/help (markets + benefits/SNAP/drop-in/Homebase/aging/NYCHA)",
@@ -943,11 +943,11 @@
       "top_exclude_reasons": [
         [
           "no_money_day_keyword_signal",
-          391
+          375
         ],
         [
           "routine_activity_excluded",
-          64
+          63
         ],
         [
           "thin_or_non_money_title_excluded",
@@ -962,13 +962,13 @@
     "report": "data/photographer_assignment_calendar_report.json",
     "today_pack": {
       "borough_cluster_count": 0,
-      "date": "2026-08-24",
+      "date": "2026-08-25",
       "map_ready_count": 0,
       "total_events": 0
     },
     "tomorrow_pack": {
       "borough_cluster_count": 0,
-      "date": "2026-08-25",
+      "date": "2026-08-26",
       "map_ready_count": 0,
       "top_go_shoot": [],
       "total_events": 0
@@ -1014,7 +1014,7 @@
     "demotion_reason_counts": {},
     "demotions": "data/pin_integrity_demotions.json",
     "map_ready_after_total": 0,
-    "map_ready_before_total": 3282,
+    "map_ready_before_total": 3265,
     "qa_pass": true,
     "report": "data/pin_integrity_gate_report.json",
     "rule": "ZERO map_ready rows may fail NYC certification"
@@ -1054,11 +1054,11 @@
     "qa_pass": true,
     "report": "data/photographer_shoot_day_certified_report.json",
     "today_certified_pins": 0,
-    "today_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-24&assignment=1",
+    "today_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-25&assignment=1",
     "today_needs_location": 0,
     "today_top": [],
     "tomorrow_certified_pins": 0,
-    "tomorrow_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-25&assignment=1",
+    "tomorrow_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-26&assignment=1",
     "tomorrow_needs_location": 0,
     "tomorrow_top": []
   }

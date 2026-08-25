@@ -2,12 +2,12 @@
   "api_gateway": "https://api.nyc.gov/",
   "api_key_source": "public_config:https://www.nyc.gov/bin/nyc/sc.ec.json",
   "borough_counts": {
-    "Bk": 196,
-    "Bx": 205,
-    "Mn": 374,
+    "Bk": 188,
+    "Bx": 195,
+    "Mn": 357,
     "Other": 38,
-    "Qn": 355,
-    "SI": 183
+    "Qn": 339,
+    "SI": 180
   },
   "canceled_excluded": 0,
   "categories_available": [
@@ -54,8 +54,8 @@
     "Free,Parks & Recreation,Athletic,General Events": 1,
     "Free,Parks & Recreation,Education,General Events": 1,
     "Free,Parks & Recreation,Featured": 1,
-    "Free,Parks & Recreation,General Events": 8,
-    "Free,Parks & Recreation,Kids and Family,Athletic,General Events": 1,
+    "Free,Parks & Recreation,General Events": 9,
+    "Free,Parks & Recreation,Kids and Family,Athletic,General Events": 2,
     "Free,Parks & Recreation,Kids and Family,General Events": 2,
     "Free,Property Owner Clinic,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 1,
     "Free,Property Owner Clinic,General Events,Housing Ambassador Event,HPD Outreach Event": 1,
@@ -68,7 +68,8 @@
     "Holidays,Education": 4,
     "Kids and Family,Education": 2,
     "Kids and Family,Education,General Events": 4,
-    "Parks & Recreation": 989,
+    "Parks & Recreation": 932,
+    "Public Scoping Meeting": 1,
     "Street and Neighborhood": 98,
     "Tenant Resource Fair ,Free,Housing Information Class,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 2,
     "Tenant Resource Fair ,Free,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 4,
@@ -76,9 +77,9 @@
     "Tenant Resource Fair ,Free,Property Owner Clinic,Property Owner Resource Fair,Housing Ambassador Event,General Events,HPD Outreach Event": 4,
     "Tenant Resource Fair ,Free,Property Owner Resource Fair,Housing Ambassador Event,Veteran Events,HPD Outreach Event": 1
   },
-  "duplicate_exact_occurrences_collapsed": 2,
+  "duplicate_exact_occurrences_collapsed": 1,
   "fetch_mode": "live",
-  "generated_at_utc": "2026-08-24T23:38:13.640566+00:00",
+  "generated_at_utc": "2026-08-25T23:37:40.416326+00:00",
   "location_cache_modified": false,
   "manual_review_status": "pending",
   "production_feeds_modified": false,
@@ -86,17 +87,17 @@
   "public_map_modified": false,
   "qa_pass": true,
   "raw_observations_path": "data/nyc_citywide_events_calendar_raw_observations.json",
-  "raw_observations_preserved": 1206,
+  "raw_observations_preserved": 1151,
   "search_path": "calendar/search",
-  "snapshot_rows": 1204,
-  "source_rows_received": 1206,
+  "snapshot_rows": 1150,
+  "source_rows_received": 1151,
   "staged_feed_modified": false,
   "window": {
-    "end_date": "2027-02-23",
-    "items_returned": 1206,
-    "num_pages_fetched": 101,
-    "reported_total_items": 1206,
-    "start_date": "2026-08-24"
+    "end_date": "2027-02-24",
+    "items_returned": 1151,
+    "num_pages_fetched": 96,
+    "reported_total_items": 1151,
+    "start_date": "2026-08-25"
   },
   "window_days": 183
 }

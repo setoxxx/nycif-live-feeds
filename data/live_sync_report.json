@@ -1,303 +1,23 @@
 {
-  "current_future_rows": 24303,
-  "current_future_rows_with_cemsid": 23777,
+  "current_future_rows": 24370,
+  "current_future_rows_with_cemsid": 23804,
   "date_boundary_timezone": "America/New_York",
   "enriched_rows_loaded": 33084,
-  "generated_at_utc": "2026-08-24T23:37:38.467073+00:00",
+  "generated_at_utc": "2026-08-25T23:37:17.389571+00:00",
   "location_cache_entries_loaded": 40151,
   "location_cache_modified": false,
   "location_resolver_live_geosearch_calls": 0,
   "match_counts": {
-    "event_id": 6601,
-    "location_cache": 15400,
-    "none": 627,
-    "text_date_location": 164,
-    "tier_1_gazetteer_display": 986,
-    "tier_2_geosearch_cache": 525
+    "event_id": 6065,
+    "location_cache": 15938,
+    "none": 678,
+    "text_date_location": 155,
+    "tier_1_gazetteer_display": 1010,
+    "tier_2_geosearch_cache": 524
   },
-  "matched_with_gps": 23676,
+  "matched_with_gps": 23692,
   "matched_without_gps_sample": [],
   "needs_enrichment_sample": [
-    {
-      "community_board": [
-        "12"
-      ],
-      "end_date_time": "2026-09-22T15:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "12 AVENUE between 48 STREET and 49 STREET",
-      "event_name": "sukkoth",
-      "event_type": "Religious Event",
-      "police_precinct": [
-        "66"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "967083",
-      "start_date_time": "2026-08-24T00:01:00.000",
-      "street_closure_type": "Curb Lane Only"
-    },
-    {
-      "community_board": [
-        "N/A"
-      ],
-      "end_date_time": "2026-08-30T13:29:00.000",
-      "event_agency": "Mayor's Office of Media & Entertainment",
-      "event_borough": "Manhattan",
-      "event_location": "Laura Pels Theatre: 111 West 46th Street",
-      "event_name": "Permitted Film Event",
-      "event_type": "Theater Load in and Load Outs",
-      "police_precinct": [
-        "N/A"
-      ],
-      "source_cemsid": [
-        "3576"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "964675",
-      "start_date_time": "2026-08-24T06:30:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "7"
-      ],
-      "end_date_time": "2026-08-24T21:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "WEST   62 STREET between COLUMBUS AVENUE and AMSTERDAM AVENUE",
-      "event_name": "Fordham University 2026 Move In",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "20"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "929306",
-      "start_date_time": "2026-08-24T07:00:00.000",
-      "street_closure_type": "Curb Lane Only"
-    },
-    {
-      "community_board": [
-        "2"
-      ],
-      "end_date_time": "2026-08-24T23:30:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "GREENE STREET between GRAND STREET and CANAL STREET",
-      "event_name": "MKG - Pop-up event",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "1"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "964965",
-      "start_date_time": "2026-08-24T07:00:00.000",
-      "street_closure_type": "Curb Lane Only"
-    },
-    {
-      "community_board": [
-        "10"
-      ],
-      "end_date_time": "2026-08-24T20:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Brooklyn",
-      "event_location": "Fort Hamilton Athletic Field (Ft. Hamilton HS): Football-01",
-      "event_name": "Football - Youth",
-      "event_type": "Sport - Youth",
-      "police_precinct": [
-        "68"
-      ],
-      "source_cemsid": [
-        "9614"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "966413",
-      "start_date_time": "2026-08-24T08:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "8"
-      ],
-      "end_date_time": "2026-08-24T19:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "EAST   84 STREET between FIFTH AVENUE and MADISON AVENUE",
-      "event_name": "Delivery/Collection",
-      "event_type": "Production Event",
-      "police_precinct": [
-        "19"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "966870",
-      "start_date_time": "2026-08-24T08:00:00.000",
-      "street_closure_type": "Curb Lane Only"
-    },
-    {
-      "community_board": [
-        "10"
-      ],
-      "end_date_time": "2026-08-24T16:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "WEST  124 STREET between MOUNT MORRIS PARK WEST and MALCOLM X BOULEVARD",
-      "event_name": "PAL PLAYSTREET",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "28"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "962698",
-      "start_date_time": "2026-08-24T10:00:00.000",
-      "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "12"
-      ],
-      "end_date_time": "2026-08-24T12:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Queens",
-      "event_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
-      "event_name": "Boombox in Jamaica",
-      "event_type": "Street Event",
-      "police_precinct": [
-        "103"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "964160",
-      "start_date_time": "2026-08-24T12:00:00.000",
-      "street_closure_type": "Partial Sidewalk Closure"
-    },
-    {
-      "community_board": [
-        "5"
-      ],
-      "end_date_time": "2026-08-24T20:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Manhattan",
-      "event_location": "Herald Square Plaza: Herald Square (34/35 Broadway) Broadway between W. 34th Street and W. 35th Street",
-      "event_name": "Music Performances and Fitness Classes and Circus Arts",
-      "event_type": "Plaza Partner Event",
-      "police_precinct": [
-        "14"
-      ],
-      "source_cemsid": [
-        "14"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "966461",
-      "start_date_time": "2026-08-24T12:00:00.000",
-      "street_closure_type": "Pedestrian Plaza"
-    },
-    {
-      "community_board": [
-        "10"
-      ],
-      "end_date_time": "2026-08-24T20:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Manhattan",
-      "event_location": "Courtney Callender Playground: Basketball-01",
-      "event_name": "Basketball",
-      "event_type": "Sport - Youth",
-      "police_precinct": [
-        "32"
-      ],
-      "source_cemsid": [
-        "5812"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "912266",
-      "start_date_time": "2026-08-24T15:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "11"
-      ],
-      "end_date_time": "2026-08-24T20:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Manhattan",
-      "event_location": "Harlem River Park: Basketball-04",
-      "event_name": "Basketball",
-      "event_type": "Sport - Youth",
-      "police_precinct": [
-        "25"
-      ],
-      "source_cemsid": [
-        "8452"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "912257",
-      "start_date_time": "2026-08-24T16:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "11"
-      ],
-      "end_date_time": "2026-08-24T20:00:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Manhattan",
-      "event_location": "Harlem River Park: Basketball-03",
-      "event_name": "Basketball",
-      "event_type": "Sport - Youth",
-      "police_precinct": [
-        "25"
-      ],
-      "source_cemsid": [
-        "8454"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "912261",
-      "start_date_time": "2026-08-24T16:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "10"
-      ],
-      "end_date_time": "2026-08-24T13:30:00.000",
-      "event_agency": "Parks Department",
-      "event_borough": "Bronx",
-      "event_location": "Ferry Point Park: Softball-01",
-      "event_name": "Baseball - 12 and Under (Little League)",
-      "event_type": "Sport - Youth",
-      "police_precinct": [
-        "45"
-      ],
-      "source_cemsid": [
-        "10778"
-      ],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "967553",
-      "start_date_time": "2026-08-24T16:00:00.000",
-      "street_closure_type": "N/A"
-    },
-    {
-      "community_board": [
-        "1"
-      ],
-      "end_date_time": "2026-08-24T22:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "KENT AVENUE between SOUTH    2 STREET and SOUTH    3 STREET",
-      "event_name": "Production Truck Staging at Refinery",
-      "event_type": "Production Event",
-      "police_precinct": [
-        "90"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "959098",
-      "start_date_time": "2026-08-24T17:00:00.000",
-      "street_closure_type": "Curb Lane Only"
-    },
     {
       "community_board": [
         "2"
@@ -356,6 +76,29 @@
       "source_event_id": "966777",
       "start_date_time": "2026-08-25T00:30:00.000",
       "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "4",
+        "5"
+      ],
+      "end_date_time": "2026-08-25T19:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "WYCKOFF AVENUE between LINDEN STREET and GATES  AVENUE",
+      "event_name": "Project Street Beat - Keith Haring Foundation Mobile Health Center Community Event",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "104",
+        "83"
+      ],
+      "source_cemsid": [
+        "0"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "962482",
+      "start_date_time": "2026-08-25T06:30:00.000",
+      "street_closure_type": "Sidewalk and Curb Lane Closure"
     },
     {
       "community_board": [
@@ -513,14 +256,278 @@
       "source_event_id": "966034",
       "start_date_time": "2026-08-25T10:00:00.000",
       "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "5"
+      ],
+      "end_date_time": "2026-08-25T15:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "Garment District (Broadway Boulevard) Plaza: 39/40 Broadway broadway between 39th street and 40th street",
+      "event_name": "Broadway Rhythm",
+      "event_type": "Plaza Partner Event",
+      "police_precinct": [
+        "14"
+      ],
+      "source_cemsid": [
+        "3537"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "960036",
+      "start_date_time": "2026-08-25T11:00:00.000",
+      "street_closure_type": "Pedestrian Plaza"
+    },
+    {
+      "community_board": [
+        "14"
+      ],
+      "end_date_time": "2026-08-25T15:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "EAST   19 STREET between AVENUE O and AVENUE P",
+      "event_name": "Our Tent - Grand Opening",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "70"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "946725",
+      "start_date_time": "2026-08-25T12:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "12"
+      ],
+      "end_date_time": "2026-08-25T12:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Queens",
+      "event_location": "PARSONS BOULEVARD between JAMAICA AVENUE and ARCHER AVENUE",
+      "event_name": "Boombox in Jamaica",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "103"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "964160",
+      "start_date_time": "2026-08-25T12:00:00.000",
+      "street_closure_type": "Partial Sidewalk Closure"
+    },
+    {
+      "community_board": [
+        "01"
+      ],
+      "end_date_time": "2026-08-25T15:00:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Brooklyn",
+      "event_location": "Classon Courts: Classon Plgd-Basketball-01",
+      "event_name": "88th Precinct Back to School Event",
+      "event_type": "Special Event",
+      "police_precinct": [
+        "90"
+      ],
+      "source_cemsid": [
+        "8087"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "965893",
+      "start_date_time": "2026-08-25T12:00:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "5"
+      ],
+      "end_date_time": "2026-08-25T20:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "Herald Square Plaza: Herald Square (34/35 Broadway) Broadway between W. 34th Street and W. 35th Street",
+      "event_name": "Music Performances and Fitness Classes and Circus Arts",
+      "event_type": "Plaza Partner Event",
+      "police_precinct": [
+        "14"
+      ],
+      "source_cemsid": [
+        "14"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "966461",
+      "start_date_time": "2026-08-25T12:00:00.000",
+      "street_closure_type": "Pedestrian Plaza"
+    },
+    {
+      "community_board": [
+        "4"
+      ],
+      "end_date_time": "2026-08-25T16:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Queens",
+      "event_location": "82 STREET between ROOSEVELT AVENUE and BAXTER AVENUE",
+      "event_name": "Back to School Community Fest",
+      "event_type": "Street Event",
+      "police_precinct": [
+        "110"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "952885",
+      "start_date_time": "2026-08-25T14:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
+        "10"
+      ],
+      "end_date_time": "2026-08-25T20:00:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Manhattan",
+      "event_location": "Courtney Callender Playground: Basketball-01",
+      "event_name": "Basketball",
+      "event_type": "Sport - Youth",
+      "police_precinct": [
+        "32"
+      ],
+      "source_cemsid": [
+        "5812"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "912266",
+      "start_date_time": "2026-08-25T15:00:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "11"
+      ],
+      "end_date_time": "2026-08-25T20:00:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Manhattan",
+      "event_location": "Harlem River Park: Basketball-04",
+      "event_name": "Basketball",
+      "event_type": "Sport - Youth",
+      "police_precinct": [
+        "25"
+      ],
+      "source_cemsid": [
+        "8452"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "912257",
+      "start_date_time": "2026-08-25T16:00:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "11"
+      ],
+      "end_date_time": "2026-08-25T20:00:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Manhattan",
+      "event_location": "Harlem River Park: Basketball-03",
+      "event_name": "Basketball",
+      "event_type": "Sport - Youth",
+      "police_precinct": [
+        "25"
+      ],
+      "source_cemsid": [
+        "8454"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "912261",
+      "start_date_time": "2026-08-25T16:00:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "06"
+      ],
+      "end_date_time": "2026-08-25T20:30:00.000",
+      "event_agency": "Parks Department",
+      "event_borough": "Manhattan",
+      "event_location": "Robert Moses Playground: Basketball-01",
+      "event_name": "Basketball",
+      "event_type": "Sport - Adult",
+      "police_precinct": [
+        "17"
+      ],
+      "source_cemsid": [
+        "8414"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "966379",
+      "start_date_time": "2026-08-25T18:30:00.000",
+      "street_closure_type": "N/A"
+    },
+    {
+      "community_board": [
+        "2"
+      ],
+      "end_date_time": "2026-09-10T23:59:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "BOND STREET between LAFAYETTE STREET and BROADWAY",
+      "event_name": "Walmart/Bureau Betak",
+      "event_type": "Production Event",
+      "police_precinct": [
+        "9"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "967114",
+      "start_date_time": "2026-08-26T00:01:00.000",
+      "street_closure_type": "Curb Lane Only"
+    },
+    {
+      "community_board": [
+        "4",
+        "5"
+      ],
+      "end_date_time": "2026-08-30T17:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "Times Square: 42/43 Broadway Pedestrian Plaza (Times Sq) BROADWAY between WEST   42 STREET and WEST   43 STREET,  WEST   43 STREET between BROADWAY and 8 AVENUE",
+      "event_name": "Pickle Ball in TSq",
+      "event_type": "Plaza Partner Event",
+      "police_precinct": [
+        "14"
+      ],
+      "source_cemsid": [
+        "16"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "913428",
+      "start_date_time": "2026-08-26T07:00:00.000",
+      "street_closure_type": "Pedestrian Plaza"
+    },
+    {
+      "community_board": [
+        "5"
+      ],
+      "end_date_time": "2026-08-26T18:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Manhattan",
+      "event_location": "WEST   50 STREET between ROCKEFELLER PLAZA and 5 AVENUE",
+      "event_name": "1-Council on the Environment-Greenmarket at Rockefeller Center",
+      "event_type": "Production Event",
+      "police_precinct": [
+        "18"
+      ],
+      "source_cemsid": [],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "964619",
+      "start_date_time": "2026-08-26T07:00:00.000",
+      "street_closure_type": "Curb Lane Only"
     }
   ],
   "production_feeds_modified": false,
   "public_map_modified": false,
   "raw_page_limit": 50000,
-  "raw_rows_loaded": 24336,
-  "raw_rows_with_cemsid": 23785,
+  "raw_rows_loaded": 24402,
+  "raw_rows_with_cemsid": 23814,
   "raw_url": "https://data.cityofnewyork.us/resource/tvpp-9vvx.json",
-  "today_nyc": "2026-08-24",
-  "today_utc": "2026-08-24"
+  "today_nyc": "2026-08-25",
+  "today_utc": "2026-08-25"
 }
