@@ -73,15 +73,15 @@ jobs:
       - name: Check out certification branch
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
 
       - name: Overlay current main event inputs for certification
         shell: bash
         run: |
           set -euo pipefail
-          git fetch origin main
-          git checkout origin/main -- data nycif_major_radar_map_events.json
-          echo "CERTIFICATION_BASE_MAIN=$(git rev-parse origin/main)"
+          git fetch --depth=1 origin main
+          git checkout FETCH_HEAD -- data nycif_major_radar_map_events.json
+          echo "CERTIFICATION_BASE_MAIN=$(git rev-parse FETCH_HEAD)"
           echo "CERTIFICATION_CODE_HEAD=$(git rev-parse HEAD)"
 
       - name: Set up Python
