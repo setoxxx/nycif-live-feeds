@@ -17,6 +17,7 @@ from scripts import sync_supabase_event_authority as dataset_sync
 
 DEFAULT_INPUT = ROOT / "data" / "events_discovery_accepted_canonical_v02.json"
 DEFAULT_CHUNK_SIZE = 100
+TIMEOUT_SAFE_CHUNK_SIZE = 100
 
 
 def source_dataset(event: dict[str, Any]) -> str:
@@ -37,6 +38,10 @@ def canonical_datasets(path: Path) -> list[str]:
 
 def run_all(path: Path, chunk_size: int, *, write_enabled: bool) -> dict[str, Any]:
     datasets = canonical_datasets(path)
+    # The Rung-8 RPC performs multiple comparisons/upserts per row. A live
+    # 500-row multi-source batch exceeded the hosted Postgres statement timeout.
+    # Never let a caller widen the full-corpus batch above the certified cap.
+    effective_chunk_size = min(int(chunk_size), TIMEOUT_SAFE_CHUNK_SIZE)
     results: list[dict[str, Any]] = []
     total_rows = 0
     total_reader_metadata_rows = 0
@@ -44,7 +49,7 @@ def run_all(path: Path, chunk_size: int, *, write_enabled: bool) -> dict[str, An
 
     for dataset in datasets:
         rows = dataset_sync.normalized_dataset_rows(path, dataset)
-        result = dataset_sync.run_sync(rows, dataset, chunk_size, write_enabled=write_enabled)
+        result = dataset_sync.run_sync(rows, dataset, effective_chunk_size, write_enabled=write_enabled)
         results.append(result)
         total_rows += int(result.get("input_count", 0) or 0)
         total_reader_metadata_rows += int(result.get("reader_metadata_rows", 0) or 0)
@@ -56,6 +61,8 @@ def run_all(path: Path, chunk_size: int, *, write_enabled: bool) -> dict[str, An
         "run_type": "supabase_authority_all_datasets_sync" if write_enabled else "supabase_authority_all_datasets_dry_run",
         "dataset_count": len(datasets),
         "datasets": datasets,
+        "requested_chunk_size": int(chunk_size),
+        "effective_chunk_size": effective_chunk_size,
         "input_count": total_rows,
         "reader_metadata_rows": total_reader_metadata_rows,
         "actions": aggregate_actions,
