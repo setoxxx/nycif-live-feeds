@@ -13,11 +13,15 @@ import argparse
 import json
 import os
 from pathlib import Path
+import sys
 from typing import Any
+
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 
 from scripts import sync_supabase_event_authority as dataset_sync
 
-ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_INPUT = ROOT / "data" / "events_discovery_accepted_canonical_v02.json"
 DEFAULT_CHUNK_SIZE = 500
 
