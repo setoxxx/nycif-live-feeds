@@ -45,7 +45,7 @@ class SupabaseEventAuthorityAllTests(unittest.TestCase):
 
             def run_sync(rows, dataset: str, chunk_size: int, *, write_enabled: bool):
                 self.assertIs(rows, rows_by_dataset[dataset])
-                self.assertEqual(chunk_size, 500)
+                self.assertEqual(chunk_size, sync_all.TIMEOUT_SAFE_CHUNK_SIZE)
                 self.assertFalse(write_enabled)
                 return {
                     "dataset": dataset,
@@ -61,9 +61,25 @@ class SupabaseEventAuthorityAllTests(unittest.TestCase):
 
         self.assertEqual(called.call_count, 3)
         self.assertEqual(result["dataset_count"], 3)
+        self.assertEqual(result["requested_chunk_size"], 500)
+        self.assertEqual(result["effective_chunk_size"], sync_all.TIMEOUT_SAFE_CHUNK_SIZE)
         self.assertEqual(result["input_count"], 4)
         self.assertEqual(result["reader_metadata_rows"], 4)
         self.assertFalse(result["database_write_performed"])
+
+    def test_smaller_caller_batch_is_preserved(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = self.write_canonical(Path(tmp))
+            with mock.patch.object(sync_all.dataset_sync, "normalized_dataset_rows", return_value=[{"occurrence_id": "1"}]), \
+                 mock.patch.object(sync_all.dataset_sync, "run_sync", return_value={
+                     "input_count": 1,
+                     "reader_metadata_rows": 1,
+                     "actions": {},
+                     "database_write_performed": False,
+                 }) as called:
+                result = sync_all.run_all(path, 50, write_enabled=False)
+        self.assertEqual(result["effective_chunk_size"], 50)
+        self.assertTrue(all(call.args[2] == 50 for call in called.call_args_list))
 
     def test_empty_canonical_corpus_fails_closed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
