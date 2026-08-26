@@ -5,10 +5,12 @@ on:
     paths:
       - 'scripts/supabase_event_writer.py'
       - 'scripts/sync_supabase_event_authority.py'
+      - 'scripts/sync_supabase_event_authority_all.py'
       - 'scripts/build_maplibre_reader_safe_v03.py'
       - 'enigma/shadow2/occurrence_identity.py'
       - 'tests/test_supabase_event_writer.py'
       - 'tests/test_supabase_event_authority_sync.py'
+      - 'tests/test_supabase_event_authority_all.py'
       - 'tests/test_p0_event_reader_visibility.py'
       - 'tests/test_enigma_shadow2/test_occurrence_identity.py'
       - 'data/events_discovery_accepted_canonical_v02.json'
@@ -42,14 +44,18 @@ jobs:
           python3 -m py_compile \
             scripts/supabase_event_writer.py \
             scripts/sync_supabase_event_authority.py \
+            scripts/sync_supabase_event_authority_all.py \
             scripts/build_maplibre_reader_safe_v03.py \
             enigma/shadow2/occurrence_identity.py
 
       - name: Run Supabase writer guard tests
         run: python3 -m pytest tests/test_supabase_event_writer.py -q
 
-      - name: Run chunked authority sync regressions
+      - name: Run dataset-scoped authority sync regressions
         run: python3 -m unittest tests.test_supabase_event_authority_sync -v
+
+      - name: Run all-datasets authority orchestration regressions
+        run: python3 -m unittest tests.test_supabase_event_authority_all -v
 
       - name: Run reader Today+7 regressions
         run: python3 -m unittest tests.test_p0_event_reader_visibility -v
@@ -57,9 +63,24 @@ jobs:
       - name: Run OccurrenceIdentityV2 regressions
         run: python3 -m unittest tests.test_enigma_shadow2.test_occurrence_identity -v
 
-      - name: Run canonical TVPP authority dry run
+      - name: Run full canonical authority dry run
         run: |
-          python3 scripts/sync_supabase_event_authority.py \
+          python3 scripts/sync_supabase_event_authority_all.py \
             --input data/events_discovery_accepted_canonical_v02.json \
-            --dataset tvpp-9vvx \
-            --chunk-size 500
+            --chunk-size 500 \
+            > /tmp/nycif-all-datasets-dry-run.json
+          cat /tmp/nycif-all-datasets-dry-run.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path('/tmp/nycif-all-datasets-dry-run.json').read_text())
+          if result.get('database_write_performed') is not False:
+              raise SystemExit('dry run unexpectedly performed a database write')
+          if int(result.get('dataset_count', 0)) <= 1:
+              raise SystemExit('canonical authority unexpectedly collapsed to one source dataset')
+          if int(result.get('input_count', 0)) <= 0:
+              raise SystemExit('dry run returned an empty canonical corpus')
+          if int(result.get('reader_metadata_rows', 0)) != int(result.get('input_count', 0)):
+              raise SystemExit('reader metadata does not cover the full canonical corpus')
+          PY
