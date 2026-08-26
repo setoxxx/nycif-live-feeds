@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Timeout-safe dataset sync using exact live membership proof.
 
-The existing dataset finalizer remains the only expiration authority. This helper
-only skips that expensive anti-join when a service-role REST read proves that the
-active `event_sources` occurrence-id set for the exact source_name/source_dataset
-is already identical to the complete canonical set just staged. In that case the
-finalizer has no rows it is allowed to expire, so cleanup of the temporary
-membership token is sufficient and cannot weaken expiration semantics.
+If the active dataset membership already equals the complete canonical set, the
+expensive expiration path is skipped and only the temporary staging token is
+removed. If stale active rows exist, cleanup is performed through a bounded,
+resumable finalizer RPC so large bootstrap deltas cannot exceed the hosted
+statement timeout. Expiration authority and dataset-scoped membership semantics
+remain unchanged.
 """
 from __future__ import annotations
 
@@ -24,6 +24,8 @@ from scripts import supabase_event_writer as writer
 from scripts import sync_supabase_event_authority as base
 
 REST_PAGE_SIZE = 1000
+FINALIZER_BATCH_SIZE = 1000
+MAX_FINALIZER_BATCHES = 100
 
 
 def _service_request(
@@ -216,7 +218,7 @@ def run_sync(
             raise RuntimeError("staged membership exceeded expected corpus count")
 
     active_ids = active_dataset_occurrence_ids(target_url, service_key, source_name, dataset)
-    finalizer_mode = "rpc_expiration_finalizer"
+    finalizer_mode = "bounded_rpc_expiration_finalizer"
     source_rows_inactivated = 0
     membership_staged_count = expected_count
 
@@ -232,26 +234,44 @@ def run_sync(
             raise RuntimeError(
                 f"active dataset membership missing {len(missing)} canonical occurrence IDs"
             )
-        finalized = base._post_rpc(
-            target_url,
-            service_key,
-            "nycif_finalize_event_dataset_sync",
-            {
-                "p_sync_token": token,
-                "p_source_name": source_name,
-                "p_source_dataset": dataset,
-                "p_expected_count": expected_count,
-                "p_expected_project_ref": project_ref,
-            },
+
+        finalizer_calls = 0
+        while True:
+            finalizer_calls += 1
+            if finalizer_calls > MAX_FINALIZER_BATCHES:
+                raise RuntimeError(
+                    f"bounded dataset finalizer exceeded {MAX_FINALIZER_BATCHES} batches"
+                )
+            finalized = base._post_rpc(
+                target_url,
+                service_key,
+                "nycif_finalize_event_dataset_sync_batch_v1",
+                {
+                    "p_sync_token": token,
+                    "p_source_name": source_name,
+                    "p_source_dataset": dataset,
+                    "p_expected_count": expected_count,
+                    "p_expected_project_ref": project_ref,
+                    "p_batch_size": FINALIZER_BATCH_SIZE,
+                },
+            )
+            if finalized.get("newsroom_queue_delta") != 0:
+                raise RuntimeError("bounded Supabase finalizer mutated newsroom_queue")
+            final_actions = (
+                finalized.get("actions") if isinstance(finalized.get("actions"), dict) else {}
+            )
+            aggregate["EXPIRE"] += int(final_actions.get("EXPIRE", 0) or 0)
+            final_run_id = finalized.get("pipeline_run_id")
+            if isinstance(final_run_id, int):
+                pipeline_run_ids.append(final_run_id)
+            source_rows_inactivated += int(finalized.get("source_rows_inactivated", 0) or 0)
+            membership_staged_count = int(finalized.get("staged_count", 0) or 0)
+            if finalized.get("finalization_complete") is True:
+                break
+
+        finalizer_mode = (
+            f"bounded_rpc_expiration_finalizer_extra_{len(extra)}_batches_{finalizer_calls}"
         )
-        final_actions = finalized.get("actions") if isinstance(finalized.get("actions"), dict) else {}
-        aggregate["EXPIRE"] += int(final_actions.get("EXPIRE", 0) or 0)
-        final_run_id = finalized.get("pipeline_run_id")
-        if isinstance(final_run_id, int):
-            pipeline_run_ids.append(final_run_id)
-        source_rows_inactivated = int(finalized.get("source_rows_inactivated", 0) or 0)
-        membership_staged_count = int(finalized.get("staged_count", 0) or 0)
-        finalizer_mode = f"rpc_expiration_finalizer_extra_{len(extra)}"
 
     return {
         "run_type": "supabase_authority_sync",
