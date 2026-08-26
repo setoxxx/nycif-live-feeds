@@ -34,13 +34,13 @@ class PrepareV3RuntimeValidatorTests(unittest.TestCase):
         self.assertIn("jointly own public marker availability", transformed)
         self.assertIn("cross_date_street_occurrences_suppressed", transformed)
         self.assertEqual(transformed.count('"supabase_event_authority_sync"'), 1)
-        self.assertEqual(transformed.count("scripts/sync_supabase_event_authority.py"), 1)
+        self.assertEqual(transformed.count("scripts/sync_supabase_event_authority_all.py"), 1)
+        self.assertNotIn("--dataset tvpp-9vvx", transformed)
 
     def test_supabase_gate_is_immediately_after_strict_reconciliation(self) -> None:
         transformed = transform(source_fixture())
         self.assertIn(SUPABASE_AUTHORITY_BLOCK, transformed)
         self.assertIn("--input data/events_discovery_accepted_canonical_v02.json", transformed)
-        self.assertIn("--dataset tvpp-9vvx", transformed)
         self.assertIn("--chunk-size 500", transformed)
         self.assertIn("--write", transformed)
         self.assertLess(
