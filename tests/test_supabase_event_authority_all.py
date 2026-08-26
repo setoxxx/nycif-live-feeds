@@ -31,7 +31,7 @@ class SupabaseEventAuthorityAllTests(unittest.TestCase):
                 ["citywide-calendar", "parks-events", "tvpp-9vvx"],
             )
 
-    def test_run_all_invokes_existing_dataset_scoped_transaction_per_dataset(self) -> None:
+    def test_run_all_invokes_safe_dataset_transaction_per_dataset(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             path = self.write_canonical(Path(tmp))
             rows_by_dataset = {
@@ -56,7 +56,7 @@ class SupabaseEventAuthorityAllTests(unittest.TestCase):
                 }
 
             with mock.patch.object(sync_all.dataset_sync, "normalized_dataset_rows", side_effect=normalized), \
-                 mock.patch.object(sync_all.dataset_sync, "run_sync", side_effect=run_sync) as called:
+                 mock.patch.object(sync_all.safe_sync, "run_sync", side_effect=run_sync) as called:
                 result = sync_all.run_all(path, 500, write_enabled=False)
 
         self.assertEqual(called.call_count, 3)
@@ -71,7 +71,7 @@ class SupabaseEventAuthorityAllTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path = self.write_canonical(Path(tmp))
             with mock.patch.object(sync_all.dataset_sync, "normalized_dataset_rows", return_value=[{"occurrence_id": "1"}]), \
-                 mock.patch.object(sync_all.dataset_sync, "run_sync", return_value={
+                 mock.patch.object(sync_all.safe_sync, "run_sync", return_value={
                      "input_count": 1,
                      "reader_metadata_rows": 1,
                      "actions": {},
