@@ -31,8 +31,11 @@ from scripts import supabase_event_writer as writer
 
 DEFAULT_INPUT = ROOT / "data" / "events_discovery_accepted_canonical_v02.json"
 DEFAULT_DATASET = "tvpp-9vvx"
-DEFAULT_CHUNK_SIZE = 500
-MAX_CHUNK_SIZE = 1000
+# Rung-8 performs several relational comparisons/upserts per row. A 500-row
+# live multi-source bootstrap exceeded the hosted Postgres statement timeout.
+# Keep batches deliberately small; membership finalization remains dataset-scoped.
+DEFAULT_CHUNK_SIZE = 100
+MAX_CHUNK_SIZE = 500
 MIN_CHUNK_SIZE = 50
 NYC_TZ = ZoneInfo("America/New_York")
 
@@ -48,7 +51,6 @@ def _parse_dt(value: Any) -> datetime | None:
 
 
 def _aware_iso(value: Any, timezone_name: str) -> Any:
-    """Preserve aware timestamps and attach the declared event timezone to naive values."""
     if value in (None, ""):
         return value
     parsed = _parse_dt(value)
@@ -75,7 +77,6 @@ def _safe_public_url(event: dict[str, Any]) -> str | None:
 
 
 def prepare_event_for_authority(event: dict[str, Any]) -> dict[str, Any]:
-    """Preserve canonical reader semantics and normalize timestamps before database cast."""
     result = copy.deepcopy(event)
     timezone_name = str(result.get("timezone") or "America/New_York")
     result["timezone"] = timezone_name
@@ -124,21 +125,17 @@ def prepare_event_for_authority(event: dict[str, Any]) -> dict[str, Any]:
             flags.append("END_BEFORE_START")
         details = quality.get("details") if isinstance(quality.get("details"), dict) else {}
         details = dict(details)
-        details.update(
-            {
-                "interval_issue": "end_before_start",
-                "start_at": str(result.get("start_at") or result.get("start_date_time")),
-                "end_at": str(result.get("end_at") or result.get("end_date_time")),
-            }
-        )
-        quality.update(
-            {
-                "quality_status": "REVIEW_REQUIRED",
-                "quality_flags": flags,
-                "public_display_status": "LIST_ONLY",
-                "details": details,
-            }
-        )
+        details.update({
+            "interval_issue": "end_before_start",
+            "start_at": str(result.get("start_at") or result.get("start_date_time")),
+            "end_at": str(result.get("end_at") or result.get("end_date_time")),
+        })
+        quality.update({
+            "quality_status": "REVIEW_REQUIRED",
+            "quality_flags": flags,
+            "public_display_status": "LIST_ONLY",
+            "details": details,
+        })
         result["quality"] = quality
     return result
 
@@ -156,7 +153,6 @@ def normalized_dataset_rows(path: Path, dataset: str) -> list[dict[str, Any]]:
         if source_dataset != dataset:
             continue
         rows.append(writer.normalize_event(prepare_event_for_authority(event)))
-
     seen: set[str] = set()
     duplicates: list[str] = []
     for row in rows:
@@ -165,9 +161,7 @@ def normalized_dataset_rows(path: Path, dataset: str) -> list[dict[str, Any]]:
             duplicates.append(occurrence_id)
         seen.add(occurrence_id)
     if duplicates:
-        raise RuntimeError(
-            f"duplicate OccurrenceIdentityV2 IDs in {dataset}: {len(duplicates)}"
-        )
+        raise RuntimeError(f"duplicate OccurrenceIdentityV2 IDs in {dataset}: {len(duplicates)}")
     if not rows:
         raise RuntimeError(f"no canonical rows found for source dataset {dataset!r}")
     return rows
@@ -175,9 +169,7 @@ def normalized_dataset_rows(path: Path, dataset: str) -> list[dict[str, Any]]:
 
 def _chunk_size(value: int) -> int:
     if value < MIN_CHUNK_SIZE or value > MAX_CHUNK_SIZE:
-        raise ValueError(
-            f"chunk size must be between {MIN_CHUNK_SIZE} and {MAX_CHUNK_SIZE}"
-        )
+        raise ValueError(f"chunk size must be between {MIN_CHUNK_SIZE} and {MAX_CHUNK_SIZE}")
     return value
 
 
@@ -186,37 +178,23 @@ def _post_rpc(target_url: str, service_key: str, function_name: str, payload: di
         f"{target_url}/rest/v1/rpc/{function_name}",
         data=json.dumps(payload, separators=(",", ":")).encode("utf-8"),
         method="POST",
-        headers={
-            "apikey": service_key,
-            "authorization": f"Bearer {service_key}",
-            "content-type": "application/json",
-        },
+        headers={"apikey": service_key, "authorization": f"Bearer {service_key}", "content-type": "application/json"},
     )
     try:
         with urllib.request.urlopen(request, timeout=timeout) as response:
             body = response.read().decode("utf-8")
     except urllib.error.HTTPError as exc:
         body = exc.read().decode("utf-8", errors="replace")
-        raise writer.SupabaseRPCError(
-            f"{function_name} failed with HTTP {exc.code}: {body}"
-        ) from exc
+        raise writer.SupabaseRPCError(f"{function_name} failed with HTTP {exc.code}: {body}") from exc
     except urllib.error.URLError as exc:
-        raise writer.SupabaseRPCError(
-            f"{function_name} connection failed: {exc.reason}"
-        ) from exc
+        raise writer.SupabaseRPCError(f"{function_name} connection failed: {exc.reason}") from exc
     result = json.loads(body)
     if not isinstance(result, dict) or result.get("transaction") != "committed":
         raise writer.SupabaseRPCError(f"{function_name} returned an invalid success document")
     return result
 
 
-def run_sync(
-    rows: list[dict[str, Any]],
-    dataset: str,
-    chunk_size: int,
-    *,
-    write_enabled: bool,
-) -> dict[str, Any]:
+def run_sync(rows: list[dict[str, Any]], dataset: str, chunk_size: int, *, write_enabled: bool) -> dict[str, Any]:
     chunk_size = _chunk_size(chunk_size)
     source_names = {row["source"]["source_name"] for row in rows}
     source_datasets = {row["source"]["source_dataset"] for row in rows}
@@ -236,41 +214,29 @@ def run_sync(
 
     if not write_enabled:
         return {
-            "run_type": "supabase_authority_sync_dry_run",
-            "dataset": dataset,
-            "input_count": expected_count,
-            "chunk_size": chunk_size,
-            "chunk_count": chunk_count,
+            "run_type": "supabase_authority_sync_dry_run", "dataset": dataset,
+            "input_count": expected_count, "chunk_size": chunk_size, "chunk_count": chunk_count,
             "sync_token_generated": True,
-            "reader_metadata_rows": sum(
-                1 for row in rows if isinstance(row.get("metadata", {}).get("reader"), dict)
-            ),
+            "reader_metadata_rows": sum(1 for row in rows if isinstance(row.get("metadata", {}).get("reader"), dict)),
             "database_write_performed": False,
         }
 
     project_ref, target_url = writer.validate_write_target()
     service_key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "").strip()
     if not service_key:
-        raise writer.WriteGuardError(
-            "SUPABASE_SERVICE_ROLE_KEY is required in the environment"
-        )
+        raise writer.WriteGuardError("SUPABASE_SERVICE_ROLE_KEY is required in the environment")
     source_name = next(iter(source_names))
 
     for index in range(chunk_count):
         start = index * chunk_size
         chunk = copy.deepcopy(rows[start : start + chunk_size])
-
-        result = writer.post_atomic_batch(
-            target_url,
-            service_key,
-            {
-                "p_events": chunk,
-                "p_source_name": source_name,
-                "p_allow_expire": False,
-                "p_simulate_failure": False,
-                "p_expected_project_ref": project_ref,
-            },
-        )
+        result = writer.post_atomic_batch(target_url, service_key, {
+            "p_events": chunk,
+            "p_source_name": source_name,
+            "p_allow_expire": False,
+            "p_simulate_failure": False,
+            "p_expected_project_ref": project_ref,
+        })
         if result.get("newsroom_queue_delta") != 0:
             raise RuntimeError("Supabase sync mutated newsroom_queue")
         actions = result.get("actions") if isinstance(result.get("actions"), dict) else {}
@@ -281,35 +247,24 @@ def run_sync(
             pipeline_run_ids.append(run_id)
         quality_changes += int(result.get("quality_changes", 0) or 0)
         classification_changes += int(result.get("classification_changes", 0) or 0)
-
-        staged = _post_rpc(
-            target_url,
-            service_key,
-            "nycif_stage_event_dataset_membership",
-            {
-                "p_sync_token": token,
-                "p_source_name": source_name,
-                "p_source_dataset": dataset,
-                "p_occurrence_ids": [row["occurrence_id"] for row in chunk],
-                "p_expected_count": expected_count,
-                "p_expected_project_ref": project_ref,
-            },
-        )
-        if int(staged.get("staged_count", 0)) > expected_count:
-            raise RuntimeError("staged membership exceeded expected corpus count")
-
-    finalized = _post_rpc(
-        target_url,
-        service_key,
-        "nycif_finalize_event_dataset_sync",
-        {
+        staged = _post_rpc(target_url, service_key, "nycif_stage_event_dataset_membership", {
             "p_sync_token": token,
             "p_source_name": source_name,
             "p_source_dataset": dataset,
+            "p_occurrence_ids": [row["occurrence_id"] for row in chunk],
             "p_expected_count": expected_count,
             "p_expected_project_ref": project_ref,
-        },
-    )
+        })
+        if int(staged.get("staged_count", 0)) > expected_count:
+            raise RuntimeError("staged membership exceeded expected corpus count")
+
+    finalized = _post_rpc(target_url, service_key, "nycif_finalize_event_dataset_sync", {
+        "p_sync_token": token,
+        "p_source_name": source_name,
+        "p_source_dataset": dataset,
+        "p_expected_count": expected_count,
+        "p_expected_project_ref": project_ref,
+    })
     final_actions = finalized.get("actions") if isinstance(finalized.get("actions"), dict) else {}
     aggregate["EXPIRE"] += int(final_actions.get("EXPIRE", 0) or 0)
     final_run_id = finalized.get("pipeline_run_id")
@@ -317,16 +272,11 @@ def run_sync(
         pipeline_run_ids.append(final_run_id)
 
     return {
-        "run_type": "supabase_authority_sync",
-        "dataset": dataset,
-        "input_count": expected_count,
-        "chunk_size": chunk_size,
-        "chunk_count": chunk_count,
-        "duration_seconds": round(time.monotonic() - started, 3),
-        "actions": aggregate,
+        "run_type": "supabase_authority_sync", "dataset": dataset, "input_count": expected_count,
+        "chunk_size": chunk_size, "chunk_count": chunk_count,
+        "duration_seconds": round(time.monotonic() - started, 3), "actions": aggregate,
         "source_rows_inactivated": int(finalized.get("source_rows_inactivated", 0) or 0),
-        "quality_changes": quality_changes,
-        "classification_changes": classification_changes,
+        "quality_changes": quality_changes, "classification_changes": classification_changes,
         "pipeline_run_ids": pipeline_run_ids,
         "membership_staged_count": int(finalized.get("staged_count", 0) or 0),
         "database_write_performed": True,
@@ -337,21 +287,11 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", default=str(DEFAULT_INPUT))
     parser.add_argument("--dataset", default=DEFAULT_DATASET)
-    parser.add_argument(
-        "--chunk-size",
-        type=int,
-        default=int(os.environ.get("NYCIF_SUPABASE_SYNC_CHUNK_SIZE", DEFAULT_CHUNK_SIZE)),
-    )
+    parser.add_argument("--chunk-size", type=int, default=int(os.environ.get("NYCIF_SUPABASE_SYNC_CHUNK_SIZE", DEFAULT_CHUNK_SIZE)))
     parser.add_argument("--write", action="store_true")
     args = parser.parse_args()
-
     rows = normalized_dataset_rows(Path(args.input), args.dataset)
-    result = run_sync(
-        rows,
-        args.dataset,
-        args.chunk_size,
-        write_enabled=args.write,
-    )
+    result = run_sync(rows, args.dataset, args.chunk_size, write_enabled=args.write)
     print(json.dumps(result, indent=2, sort_keys=True))
     return 0
 
