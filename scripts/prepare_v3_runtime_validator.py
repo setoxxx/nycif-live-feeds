@@ -13,9 +13,10 @@ legacy staged feed remains internally validated telemetry, while the current
 cross-date safety count is emitted by the READY daily-health pipeline.
 
 This helper also installs the canonical Supabase authority sync immediately
-after strict source reconciliation. The sync reuses the existing bounded
-orchestrator and atomic writer; any database failure therefore fails the same
-production transaction before READY can be committed.
+after strict source reconciliation. The sync enumerates every source dataset in
+the post-Projector-V3 canonical corpus, while preserving the existing bounded,
+dataset-scoped atomic writer and finalizer. Any database failure therefore fails
+the same production transaction before READY can be committed.
 
 All transformations are fail-closed and exact-source. The helper writes only a
 temporary execution copy. If an expected block is missing, duplicated, or has
@@ -88,9 +89,8 @@ STRICT_RECONCILIATION_BLOCK = '''  run_stage \\
 SUPABASE_AUTHORITY_BLOCK = STRICT_RECONCILIATION_BLOCK + '''  run_stage \\
     "supabase_event_authority_sync" \\
     "sync_supabase_event_authority" \\
-    python scripts/sync_supabase_event_authority.py \\
+    python scripts/sync_supabase_event_authority_all.py \\
       --input data/events_discovery_accepted_canonical_v02.json \\
-      --dataset tvpp-9vvx \\
       --chunk-size 500 \\
       --write
 '''
@@ -131,8 +131,10 @@ def transform(source: str) -> str:
         raise RuntimeError("V3 cross-date suppression validation block was not installed")
     if transformed.count('"supabase_event_authority_sync"') != 1:
         raise RuntimeError("Supabase authority stage was not installed exactly once")
-    if transformed.count("scripts/sync_supabase_event_authority.py") != 1:
-        raise RuntimeError("Supabase authority command was not installed exactly once")
+    if transformed.count("scripts/sync_supabase_event_authority_all.py") != 1:
+        raise RuntimeError("all-datasets Supabase authority command was not installed exactly once")
+    if "--dataset tvpp-9vvx" in transformed:
+        raise RuntimeError("TVPP-only Supabase authority scope remains in production transaction")
     return transformed
 
 
