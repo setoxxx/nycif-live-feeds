@@ -49,19 +49,35 @@ class SupabaseDatasetSyncFastpathTests(unittest.TestCase):
         cleanup.assert_called_once()
 
     @mock.patch.dict(os.environ, {"SUPABASE_SERVICE_ROLE_KEY": "service"}, clear=False)
-    def test_extra_active_membership_requires_expiration_finalizer(self) -> None:
+    def test_extra_active_membership_uses_bounded_finalizer_until_complete(self) -> None:
         rows = self.rows()
-        active = {row["occurrence_id"] for row in rows} | {"c" * 64}
+        active = {row["occurrence_id"] for row in rows} | {"c" * 64, "d" * 64}
+        finalizer_calls = 0
 
-        def rpc(_url, _key, function_name, _payload):
+        def rpc(_url, _key, function_name, payload):
+            nonlocal finalizer_calls
             if function_name == "nycif_stage_event_dataset_membership":
                 return {"transaction": "committed", "staged_count": 2}
-            if function_name == "nycif_finalize_event_dataset_sync":
+            if function_name == "nycif_finalize_event_dataset_sync_batch_v1":
+                finalizer_calls += 1
+                self.assertEqual(payload["p_batch_size"], fast.FINALIZER_BATCH_SIZE)
+                if finalizer_calls == 1:
+                    return {
+                        "transaction": "committed",
+                        "finalization_complete": False,
+                        "staged_count": 2,
+                        "source_rows_inactivated": 1,
+                        "pipeline_run_id": 9,
+                        "newsroom_queue_delta": 0,
+                        "actions": {"INSERT": 0, "UPDATE": 0, "UNCHANGED": 2, "EXPIRE": 1},
+                    }
                 return {
                     "transaction": "committed",
+                    "finalization_complete": True,
                     "staged_count": 2,
                     "source_rows_inactivated": 1,
-                    "pipeline_run_id": 9,
+                    "pipeline_run_id": 10,
+                    "newsroom_queue_delta": 0,
                     "actions": {"INSERT": 0, "UPDATE": 0, "UNCHANGED": 2, "EXPIRE": 1},
                 }
             raise AssertionError(function_name)
@@ -80,10 +96,11 @@ class SupabaseDatasetSyncFastpathTests(unittest.TestCase):
              mock.patch.object(fast, "cleanup_staged_membership") as cleanup:
             result = fast.run_sync(rows, "example", 50, write_enabled=True)
 
-        self.assertEqual(result["finalizer_mode"], "rpc_expiration_finalizer_extra_1")
-        self.assertEqual(result["source_rows_inactivated"], 1)
-        self.assertEqual(result["actions"]["EXPIRE"], 1)
-        self.assertEqual(rpc_mock.call_count, 2)
+        self.assertEqual(result["finalizer_mode"], "bounded_rpc_expiration_finalizer_extra_2_batches_2")
+        self.assertEqual(result["source_rows_inactivated"], 2)
+        self.assertEqual(result["actions"]["EXPIRE"], 2)
+        self.assertEqual(rpc_mock.call_count, 3)
+        self.assertEqual(finalizer_calls, 2)
         cleanup.assert_not_called()
 
     @mock.patch.dict(os.environ, {"SUPABASE_SERVICE_ROLE_KEY": "service"}, clear=False)
