@@ -26,9 +26,12 @@ on:
       - 'scripts/prepare_v3_runtime_validator.py'
       - 'tests/test_prepare_v3_runtime_validator.py'
       - 'scripts/sync_supabase_event_authority.py'
+      - 'scripts/supabase_dataset_sync_fastpath.py'
       - 'scripts/sync_supabase_event_authority_all.py'
+      - 'tests/test_supabase_dataset_sync_fastpath.py'
       - 'tests/test_supabase_event_authority_all.py'
       - 'scripts/supabase_event_writer.py'
+      - 'supabase/migrations/20260826035000_optimize_event_source_dataset_finalizer_membership.sql'
       - 'scripts/publish_blocked_daily_refresh.sh'
       - 'scripts/run_daily_refresh_stage.py'
       - 'scripts/test_live_event_intake_refresh_current.py'
@@ -83,12 +86,47 @@ jobs:
           python3 -m py_compile \
             scripts/supabase_event_writer.py \
             scripts/sync_supabase_event_authority.py \
+            scripts/supabase_dataset_sync_fastpath.py \
             scripts/sync_supabase_event_authority_all.py \
+            scripts/project_events_discovery_v03.py \
+            scripts/build_maplibre_reader_safe_v03.py \
             enigma/shadow2/occurrence_identity.py
           python3 -m pytest tests/test_supabase_event_writer.py -q
           python3 -m unittest tests.test_supabase_event_authority_sync -v
+          python3 -m unittest tests.test_supabase_dataset_sync_fastpath -v
           python3 -m unittest tests.test_supabase_event_authority_all -v
           python3 -m unittest tests.test_enigma_shadow2.test_occurrence_identity -v
+
+      - name: Rebuild fresh Projector V3 authority for certification
+        run: |
+          python3 scripts/project_events_discovery_v03.py
+          python3 scripts/enforce_strict_discovery_reconciliation.py
+          python3 scripts/build_maplibre_reader_safe_v03.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+
+          status = json.loads(Path('data/reader-safe/national-map-events-v03-status.json').read_text())
+          canonical = json.loads(Path('data/events_discovery_accepted_canonical_v02.json').read_text())
+          events = canonical.get('events', canonical) if isinstance(canonical, dict) else canonical
+          if not isinstance(events, list) or not events:
+              raise SystemExit('fresh Projector V3 canonical corpus is empty')
+          exact = int(status.get('exact_marker_count', 0) or 0)
+          if status.get('qa_pass') is not True:
+              raise SystemExit(f'fresh MapLibre V3 status failed QA: {status}')
+          if status.get('authority') != 'projector_v3_semantic_map_decision':
+              raise SystemExit(f'unexpected fresh V3 authority: {status.get("authority")!r}')
+          if exact < 1000:
+              raise SystemExit(f'fresh V3 corpus has too few certified markers: {exact}')
+          map_ready = 0
+          for event in events:
+              nycif = event.get('nycif') if isinstance(event, dict) and isinstance(event.get('nycif'), dict) else {}
+              if nycif.get('map_eligibility_state') == 'MAP_READY' and nycif.get('certified_pin') is True:
+                  map_ready += 1
+          if map_ready != exact:
+              raise SystemExit(f'canonical/map reader marker mismatch: canonical={map_ready} reader={exact}')
+          print(f'FRESH_V3_CERTIFICATION_CORPUS=PASS events={len(events)} exact_markers={exact}')
+          PY
 
       - name: Reconfirm bounded full-corpus dry run
         run: |
@@ -192,8 +230,9 @@ jobs:
               raise SystemExit(f'Supabase reader parity gate is not green: {result}')
           if result.get('event_data_origin') != 'supabase_only':
               raise SystemExit(f'wrong reader authority: {result.get("event_data_origin")!r}')
-          if int(result.get('exact_marker_count', 0)) < 1000:
-              raise SystemExit(f'exact marker floor not met: {result.get("exact_marker_count")}')
+          exact = result.get('reader_exact_marker_count', result.get('exact_marker_count', 0))
+          if int(exact or 0) < 1000:
+              raise SystemExit(f'exact marker floor not met: {exact}')
           PY
 
       - name: Write certification summary
