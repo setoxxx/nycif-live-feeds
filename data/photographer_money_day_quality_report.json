@@ -40,40 +40,40 @@
     "reference_today_nyc": "2026-07-14",
     "total_events": 842
   },
-  "considered_in_window": 473,
+  "considered_in_window": 439,
   "delta_vs_baseline": {
     "days_coverage_after": 11,
     "days_coverage_before": 43,
     "events_kept": 26,
     "events_removed": 816
   },
-  "excluded": 447,
+  "excluded": 413,
   "filter_rules": [
     "Require money-day keyword signal on title/category (not location).",
     "Exclude routine sports/fitness even when major_score is high.",
     "Cap carried major_score contribution; significance alone is not enough."
   ],
-  "generated_at_utc": "2026-08-25T23:38:04Z",
+  "generated_at_utc": "2026-08-27T04:32:48Z",
   "kept": 26,
   "location_cache_modified": false,
   "promotion_allowed": false,
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-08-25",
+  "reference_today_nyc": "2026-08-27",
   "schema_version": "photographer-money-day-quality-v1",
   "top_exclude_reasons": [
     [
       "no_money_day_keyword_signal",
-      375
+      347
     ],
     [
       "routine_activity_excluded",
-      63
+      58
     ],
     [
       "thin_or_non_money_title_excluded",
-      6
+      5
     ],
     [
       "below_score_threshold",
