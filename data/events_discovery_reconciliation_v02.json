@@ -1,34 +1,34 @@
 {
-  "accepted_canonical_records": 27220,
+  "accepted_canonical_records": 27384,
   "disposition_totals": {
-    "list_only_records": 25643,
-    "maintenance_or_closure_records": 53,
+    "list_only_records": 25811,
+    "maintenance_or_closure_records": 49,
     "private_or_reserved_records": 19,
     "records_grouped_under_public_events": 0,
     "standalone_public_events": 1505
   },
   "equations": {
     "accepted_equals_disposition_sum": true,
-    "accepted_sum": 27220,
-    "calendar_parks_accepted_or_unlinked": 2384,
+    "accepted_sum": 27384,
+    "calendar_parks_accepted_or_unlinked": 2252,
     "calendar_parks_documented_exclusions": 16,
     "calendar_parks_documented_human_rejected": 16,
     "calendar_parks_documented_source_canceled": 0,
     "calendar_parks_exact_duplicate_rows_excluded": 0,
-    "calendar_parks_raw": 2400,
+    "calendar_parks_raw": 2268,
     "calendar_parks_unaccounted_gap": 0,
     "calendar_parks_unaccounted_gap_raw": 16,
-    "disposition_sum": 27220,
+    "disposition_sum": 27384,
     "open_data_disposition_rejected": 0,
-    "open_data_rows": 24616,
+    "open_data_rows": 24912,
     "open_data_staged": 0,
-    "open_data_unstaged_intake": 24616,
+    "open_data_unstaged_intake": 24912,
     "projected_feast_reference_intake": 220
   },
-  "generated_at_utc": "2026-08-27T04:32:29Z",
+  "generated_at_utc": "2026-08-28T06:57:01Z",
   "generated_or_duplicative_excluded_from_source_count": true,
   "invalid_rejected_source_records": 0,
-  "list_only_coordinate_records": 25715,
+  "list_only_coordinate_records": 25879,
   "map_ready_records": 1505,
   "notes": [
     "Generated schema dumps and duplicative all-radar/enriched feeds excluded from raw intake.",
@@ -36,34 +36,34 @@
   ],
   "public_event_groups": 0,
   "raw_breakdown": {
-    "calendar": 872,
+    "calendar": 740,
     "parks_bigapps": 1528,
-    "raw_nyc_open_data": 24616
+    "raw_nyc_open_data": 24912
   },
-  "raw_intake_source_rows": 27016,
+  "raw_intake_source_rows": 27180,
   "reconciles": true,
   "reconciles_disposition_layer": true,
   "reconciles_strict": true,
   "role_totals": {
-    "maintenance_or_closure": 53,
+    "maintenance_or_closure": 49,
     "private_or_reserved_activity": 19,
-    "public_event": 26998,
-    "street_closure": 141,
+    "public_event": 27157,
+    "street_closure": 150,
     "transportation_operation": 9
   },
   "strict_gate_reason": "all source occurrences accepted or explicitly dispositioned; disposition equation balanced",
   "v3_authority": {
-    "accepted_records": 27220,
+    "accepted_records": 27384,
     "duplicate_exact_occurrences": 0,
     "implicit_source_all_count": 0,
     "invalid_publication_state_count": 0,
     "legacy_coordinate_authority_count": 0,
     "legacy_occurrence_authority_count": 0,
     "qa_pass": true,
-    "raw_accounted": 24616,
+    "raw_accounted": 24912,
     "raw_accounting_pass": true,
     "raw_intake_buckets": {
-      "accepted_review_supplemental": 24616,
+      "accepted_review_supplemental": 24912,
       "documented_duplicate": 0,
       "identity_ambiguous_review": 0,
       "invalid": 0,
@@ -72,7 +72,7 @@
       "rejected_exact": 0,
       "rejected_source_all": 0
     },
-    "raw_rows": 24616,
+    "raw_rows": 24912,
     "silent_identity_loss": 0,
     "unsupported_exact_pin_count": 0
   }

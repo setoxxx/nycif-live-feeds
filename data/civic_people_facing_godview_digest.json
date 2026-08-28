@@ -74,10 +74,10 @@
       "quarantined": 0
     },
     "oac_activities": {
-      "accepted": 1267,
-      "list_only": 9,
-      "map_ready": 1258,
-      "quarantined": 982
+      "accepted": 1250,
+      "list_only": 8,
+      "map_ready": 1242,
+      "quarantined": 999
     },
     "ready_ny_events": {
       "accepted": 0,
@@ -130,30 +130,30 @@
     "promotion_allowed": false
   },
   "counts": {
-    "accepted": 4520,
-    "events": 1267,
+    "accepted": 4503,
+    "events": 1250,
     "help_places": 2109,
-    "list_only": 1289,
-    "map_ready": 3231,
-    "money_day_today": 0,
-    "money_day_tomorrow": 2,
+    "list_only": 1288,
+    "map_ready": 3215,
+    "money_day_today": 2,
+    "money_day_tomorrow": 0,
     "opportunities": 1144,
     "photographer_calendar_events": 26,
     "photographer_days_with_coverage": 11,
     "pin_demotions": 0,
     "pin_map_ready_certified": 0,
     "proposed": 489,
-    "quarantined": 6950,
+    "quarantined": 6967,
     "shoot_day_today_certified": 0,
     "shoot_day_tomorrow_certified": 0,
-    "upcoming_next_30_days": 357,
-    "upcoming_next_7_days": 99,
+    "upcoming_next_30_days": 340,
+    "upcoming_next_7_days": 100,
     "viral_next_14d_magnets": 0,
     "viral_recurrence_matches": 12,
     "viral_returning_likely": 1
   },
   "daily_pull": {
-    "last_run_utc": "2026-08-27T04:32:45Z",
+    "last_run_utc": "2026-08-28T06:57:14Z",
     "photographer_calendar_events": 26,
     "photographer_days_with_coverage": 11,
     "qa_pass": true,
@@ -172,7 +172,7 @@
     "honesty": "NYC Open Data does not currently provide a high-quality live citywide soup-kitchen or food-pantry pin feed suitable for map publication.",
     "status": "known_gap_human_follow_up"
   },
-  "generated_at_utc": "2026-08-27T04:32:51Z",
+  "generated_at_utc": "2026-08-28T06:57:18Z",
   "lanes": {
     "Approved": "schema-v1-discovery approved permits (unchanged)",
     "Help Places": "schema-v1-civic-review/help (markets + benefits/SNAP/drop-in/Homebase/aging/NYCHA)",
@@ -943,11 +943,11 @@
       "top_exclude_reasons": [
         [
           "no_money_day_keyword_signal",
-          347
+          333
         ],
         [
           "routine_activity_excluded",
-          58
+          55
         ],
         [
           "thin_or_non_money_title_excluded",
@@ -961,30 +961,17 @@
     },
     "report": "data/photographer_assignment_calendar_report.json",
     "today_pack": {
-      "borough_cluster_count": 0,
-      "date": "2026-08-27",
-      "map_ready_count": 0,
-      "total_events": 0
-    },
-    "tomorrow_pack": {
       "borough_cluster_count": 1,
       "date": "2026-08-28",
       "map_ready_count": 1,
-      "top_go_shoot": [
-        {
-          "borough": null,
-          "score": 510,
-          "time": "2026-08-28T19:00:00",
-          "title": "Bryant Park Picnic Performance: Accordion Festival: Jourdan Thibodeaux et les R&#244;dailleurs, Saami Brothers, and Chicha Libre"
-        },
-        {
-          "borough": null,
-          "score": 380,
-          "time": "2026-08-28T18:00:00",
-          "title": "West Harlem Summer Jazz Festival"
-        }
-      ],
       "total_events": 2
+    },
+    "tomorrow_pack": {
+      "borough_cluster_count": 0,
+      "date": "2026-08-29",
+      "map_ready_count": 0,
+      "top_go_shoot": [],
+      "total_events": 0
     },
     "tomorrow_top_go_shoot": [],
     "total_events": 26,
@@ -1027,7 +1014,7 @@
     "demotion_reason_counts": {},
     "demotions": "data/pin_integrity_demotions.json",
     "map_ready_after_total": 0,
-    "map_ready_before_total": 3234,
+    "map_ready_before_total": 3218,
     "qa_pass": true,
     "report": "data/pin_integrity_gate_report.json",
     "rule": "ZERO map_ready rows may fail NYC certification"
@@ -1067,12 +1054,12 @@
     "qa_pass": true,
     "report": "data/photographer_shoot_day_certified_report.json",
     "today_certified_pins": 0,
-    "today_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-27&assignment=1",
-    "today_needs_location": 0,
+    "today_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-28&assignment=1",
+    "today_needs_location": 2,
     "today_top": [],
     "tomorrow_certified_pins": 0,
-    "tomorrow_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-28&assignment=1",
-    "tomorrow_needs_location": 2,
+    "tomorrow_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-29&assignment=1",
+    "tomorrow_needs_location": 0,
     "tomorrow_top": []
   }
 }

@@ -1,13 +1,13 @@
 {
   "civic": {
-    "accepted": 4520,
+    "accepted": 4503,
     "date_time_location_qa_pass": true,
-    "list_only": 1289,
+    "list_only": 1288,
     "map_coverage_qa_pass": true,
-    "map_ready": 3231
+    "map_ready": 3215
   },
   "failed_steps": [],
-  "generated_at_utc": "2026-08-27T04:32:45Z",
+  "generated_at_utc": "2026-08-28T06:57:14Z",
   "location_cache_modified": false,
   "notes": "Safe daily desk sync. Does not run build_staged_production_feed / build_location_cache / public WordPress publish. Pin integrity gate fail-closed: qa_pass requires ZERO bad map_ready pins. Full permit→staged refresh remains live-sync-qa (manual dispatch).",
   "photographer_calendar": {
@@ -28,37 +28,24 @@
     "packs": {
       "qa_pass": true,
       "today": {
-        "borough_cluster_count": 0,
-        "date": "2026-08-27",
-        "map_ready_count": 0,
-        "total_events": 0
-      },
-      "tomorrow": {
         "borough_cluster_count": 1,
         "date": "2026-08-28",
         "map_ready_count": 1,
-        "top_go_shoot": [
-          {
-            "borough": null,
-            "score": 510,
-            "time": "2026-08-28T19:00:00",
-            "title": "Bryant Park Picnic Performance: Accordion Festival: Jourdan Thibodeaux et les R&#244;dailleurs, Saami Brothers, and Chicha Libre"
-          },
-          {
-            "borough": null,
-            "score": 380,
-            "time": "2026-08-28T18:00:00",
-            "title": "West Harlem Summer Jazz Festival"
-          }
-        ],
         "total_events": 2
+      },
+      "tomorrow": {
+        "borough_cluster_count": 0,
+        "date": "2026-08-29",
+        "map_ready_count": 0,
+        "top_go_shoot": [],
+        "total_events": 0
       }
     },
     "pin_integrity": {
       "demotion_count": 0,
       "demotion_reason_counts": {},
       "map_ready_after_total": 0,
-      "map_ready_before_total": 3234,
+      "map_ready_before_total": 3218,
       "qa_pass": true,
       "report": "data/pin_integrity_gate_report.json"
     },

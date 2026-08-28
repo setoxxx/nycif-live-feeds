@@ -2,12 +2,12 @@
   "api_gateway": "https://api.nyc.gov/",
   "api_key_source": "public_config:https://www.nyc.gov/bin/nyc/sc.ec.json",
   "borough_counts": {
-    "Bk": 158,
-    "Bx": 150,
-    "Mn": 276,
-    "Other": 32,
-    "Qn": 263,
-    "SI": 140
+    "Bk": 146,
+    "Bx": 129,
+    "Mn": 244,
+    "Other": 28,
+    "Qn": 219,
+    "SI": 121
   },
   "canceled_excluded": 0,
   "categories_available": [
@@ -40,7 +40,7 @@
     "Cultural,Featured,General Events": 1,
     "Education": 2,
     "Featured,General Events": 3,
-    "Free,Benefits Access,General Events,Special Event": 9,
+    "Free,Benefits Access,General Events,Special Event": 8,
     "Free,Cultural,General Events": 1,
     "Free,General Events": 1,
     "Free,General Events,General Events": 1,
@@ -67,7 +67,7 @@
     "Holidays,Education": 4,
     "Kids and Family,Education": 2,
     "Kids and Family,Education,General Events": 4,
-    "Parks & Recreation": 657,
+    "Parks & Recreation": 526,
     "Public Scoping Meeting": 1,
     "Street and Neighborhood": 98,
     "Tenant Resource Fair ,Free,Housing Information Class,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 2,
@@ -76,9 +76,9 @@
     "Tenant Resource Fair ,Free,Property Owner Clinic,Property Owner Resource Fair,Housing Ambassador Event,General Events,HPD Outreach Event": 3,
     "Tenant Resource Fair ,Free,Property Owner Resource Fair,Housing Ambassador Event,Veteran Events,HPD Outreach Event": 1
   },
-  "duplicate_exact_occurrences_collapsed": 3,
+  "duplicate_exact_occurrences_collapsed": 1,
   "fetch_mode": "live",
-  "generated_at_utc": "2026-08-27T04:32:21.690444+00:00",
+  "generated_at_utc": "2026-08-28T06:56:55.876602+00:00",
   "location_cache_modified": false,
   "manual_review_status": "pending",
   "production_feeds_modified": false,
@@ -86,17 +86,17 @@
   "public_map_modified": false,
   "qa_pass": true,
   "raw_observations_path": "data/nyc_citywide_events_calendar_raw_observations.json",
-  "raw_observations_preserved": 875,
+  "raw_observations_preserved": 741,
   "search_path": "calendar/search",
-  "snapshot_rows": 872,
-  "source_rows_received": 875,
+  "snapshot_rows": 740,
+  "source_rows_received": 741,
   "staged_feed_modified": false,
   "window": {
-    "end_date": "2027-02-26",
-    "items_returned": 875,
-    "num_pages_fetched": 73,
-    "reported_total_items": 875,
-    "start_date": "2026-08-27"
+    "end_date": "2027-02-27",
+    "items_returned": 741,
+    "num_pages_fetched": 62,
+    "reported_total_items": 741,
+    "start_date": "2026-08-28"
   },
   "window_days": 183
 }
