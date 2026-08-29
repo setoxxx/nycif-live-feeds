@@ -1,22 +1,22 @@
 {
   "civic": {
-    "accepted": 4503,
+    "accepted": 4485,
     "date_time_location_qa_pass": true,
     "list_only": 1288,
     "map_coverage_qa_pass": true,
-    "map_ready": 3215
+    "map_ready": 3197
   },
   "failed_steps": [],
-  "generated_at_utc": "2026-08-28T06:57:14Z",
+  "generated_at_utc": "2026-08-29T04:11:08Z",
   "location_cache_modified": false,
   "notes": "Safe daily desk sync. Does not run build_staged_production_feed / build_location_cache / public WordPress publish. Pin integrity gate fail-closed: qa_pass requires ZERO bad map_ready pins. Full permit→staged refresh remains live-sync-qa (manual dispatch).",
   "photographer_calendar": {
-    "days_with_coverage": 11,
-    "events_removed_vs_baseline": 816,
+    "days_with_coverage": 10,
+    "events_removed_vs_baseline": 818,
     "month_counts": [
       {
-        "days_with_events": 1,
-        "event_count": 2,
+        "days_with_events": 0,
+        "event_count": 0,
         "label": "August 2026"
       },
       {
@@ -28,14 +28,14 @@
     "packs": {
       "qa_pass": true,
       "today": {
-        "borough_cluster_count": 1,
-        "date": "2026-08-28",
-        "map_ready_count": 1,
-        "total_events": 2
+        "borough_cluster_count": 0,
+        "date": "2026-08-29",
+        "map_ready_count": 0,
+        "total_events": 0
       },
       "tomorrow": {
         "borough_cluster_count": 0,
-        "date": "2026-08-29",
+        "date": "2026-08-30",
         "map_ready_count": 0,
         "top_go_shoot": [],
         "total_events": 0
@@ -45,7 +45,7 @@
       "demotion_count": 0,
       "demotion_reason_counts": {},
       "map_ready_after_total": 0,
-      "map_ready_before_total": 3218,
+      "map_ready_before_total": 3198,
       "qa_pass": true,
       "report": "data/pin_integrity_gate_report.json"
     },
@@ -57,15 +57,14 @@
       "today_certified_pins": 0,
       "tomorrow_certified_pins": 0
     },
-    "total_events": 26,
+    "total_events": 24,
     "viral_recurrence": {
       "historical_rows": 2450,
       "label_counts": {
         "possible": 10,
-        "returning_likely": 1,
-        "weak": 1
+        "returning_likely": 1
       },
-      "match_count": 12,
+      "match_count": 11,
       "next_14d_crowd_magnets": 0,
       "qa_pass": true
     }

@@ -1,7 +1,7 @@
 {
-  "current_calendar_events": 26,
+  "current_calendar_events": 24,
   "foil_operator_joins": 0,
-  "generated_at_utc": "2026-08-28T06:57:17Z",
+  "generated_at_utc": "2026-08-29T04:11:12Z",
   "historical_rows_considered": 2450,
   "historical_window": {
     "dataset": "bkfu-528j",
@@ -11,11 +11,10 @@
   },
   "label_counts": {
     "possible": 10,
-    "returning_likely": 1,
-    "weak": 1
+    "returning_likely": 1
   },
   "location_cache_modified": false,
-  "match_count": 12,
+  "match_count": 11,
   "matches": [
     {
       "current": {
@@ -567,55 +566,6 @@
       "promotion_allowed": false,
       "public_map_modified": false,
       "recurrence_label": "possible"
-    },
-    {
-      "current": {
-        "assignment_score": 380,
-        "borough": null,
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-08-28",
-        "display_location": "Location under review",
-        "end_date_time": "2026-08-28T19:30:00",
-        "event_id": "2174477",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-08-28&assignment=1",
-        "id": "review_supplemental:nyc-parks-bigapps-events:2174477@2026-08-28",
-        "lane": "approved_major",
-        "latitude": null,
-        "longitude": null,
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "pin_integrity_reason": "missing_coords",
-        "source": {
-          "dataset": "nyc-parks-bigapps-events",
-          "source_event_id": "2174477"
-        },
-        "start_date_time": "2026-08-28T18:00:00",
-        "title": "West Harlem Summer Jazz Festival"
-      },
-      "location_cache_modified": false,
-      "match_reasons": [
-        "name_strong:0.73",
-        "season_delta_days:3"
-      ],
-      "match_score": 55,
-      "prior_year": {
-        "borough": "Manhattan",
-        "cemsid": null,
-        "dataset": "bkfu-528j",
-        "date": "2025-08-25",
-        "display_location": "Tompkins Square Park: Old Bandshell",
-        "end_date_time": "2025-08-25T21:00:00.000",
-        "event_id": "810038",
-        "event_type": "Special Event",
-        "police_precinct": "9,",
-        "start_date_time": "2025-08-25T18:00:00.000",
-        "street_closure_type": "N/A",
-        "title": "Charlie Parker Jazz Festival"
-      },
-      "promotion_allowed": false,
-      "public_map_modified": false,
-      "recurrence_label": "weak"
     }
   ],
   "matching_rules_documentation": [
@@ -630,7 +580,7 @@
   "premium_label": "Viral Recurrence Memory (premium/operator)",
   "promotion_allowed": false,
   "public_map_modified": false,
-  "reference_today_nyc": "2026-08-28",
+  "reference_today_nyc": "2026-08-29",
   "schema_version": "photographer-viral-recurrence-matches-v1",
   "staged_feed_modified": false
 }
