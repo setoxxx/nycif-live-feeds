@@ -1,6 +1,6 @@
 # Discovery taxonomy v02
 
-Generated: `2026-08-30T16:58:58Z`
+Generated: `2026-08-30T17:05:14Z`
 
 - Accepted canonical records: **27703**
 - Invalid/rejected documented: **0**

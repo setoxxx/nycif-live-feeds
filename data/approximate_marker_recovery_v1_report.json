@@ -12,8 +12,11 @@
   "eligibility_counts": {
     "already_exact": 1505,
     "eligible_non_exact": 25970,
-    "no_exact_identity_candidate": 24889,
-    "not_standalone_public": 228
+    "exact_identity_candidate_match": 19474,
+    "no_exact_identity_candidate": 5415,
+    "not_standalone_public": 228,
+    "source_event_id_candidate_exists": 321,
+    "source_identity_candidate_exists": 321
   },
   "eligible_canonical_dataset_counts": {
     "nyc-citywide-events-calendar-api": 421,
@@ -21,18 +24,24 @@
     "nyc-projected-feast-reference": 220,
     "tvpp-9vvx": 25310
   },
-  "eligible_canonical_source_id_count": 25970,
+  "eligible_canonical_source_id_count": 9389,
   "exact_pin_promotions": 0,
   "invalid_approximate_marker_count": 0,
   "location_mismatch_count": 0,
   "operating_rule": "Approximate markers may improve map placement, but they never grant MAP_READY or certified_pin. Street routes/segments are excluded from point recovery.",
   "qa_pass": true,
-  "reason_counts": {},
-  "recovered_approximate_markers": 0,
+  "reason_counts": {
+    "FACILITY_SITE_VALIDATION_REQUIRED": 19474
+  },
+  "recovered_approximate_markers": 19474,
   "route_claims_blocked_from_point_recovery": 1081,
   "schema_version": "NYCIF_APPROXIMATE_MARKER_RECOVERY_V1",
   "semantic_rows": 24014,
-  "source_counts": {},
-  "source_event_id_intersection_count": 0,
-  "source_id_dataset_pairs": {}
+  "source_counts": {
+    "tvpp-9vvx": 19474
+  },
+  "source_event_id_intersection_count": 6293,
+  "source_id_dataset_pairs": {
+    "tvpp-9vvx -> tvpp-9vvx": 321
+  }
 }
