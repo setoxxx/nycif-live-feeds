@@ -54,6 +54,27 @@ def test_v3_strips_legacy_coordinates_without_evidence():
     assert event["nycif"]["display_disposition"] == "list_only"
 
 
+def test_v3_preserves_exact_source_location_when_geometry_is_withheld():
+    event = v3.v3_build_base_event(
+        base_row(
+            event_location="Marine Park: Lawn (Fillmore Avenue)",
+            location="Brooklyn",
+            lat=None,
+            lng=None,
+        ),
+        data_layer="review_supplemental",
+        index=7,
+        production_feed=False,
+        current_major_keys=set(),
+    )
+    assert event is not None
+    assert event["location"] == "Marine Park: Lawn (Fillmore Avenue)"
+    assert event["nycif"]["source_location_text"] == "Marine Park: Lawn (Fillmore Avenue)"
+    assert event["latitude"] is None
+    assert event["longitude"] is None
+    assert event["nycif"]["certified_pin"] is False
+
+
 def test_v3_validated_exact_public_event_controls_pin_and_disposition():
     event = build(base_row(lat=40.7128, lng=-74.0060, location_evidence=exact_evidence()), index=2)
     assert event is not None

@@ -54,14 +54,30 @@ def finite(value: Any) -> float | None:
     return result if math.isfinite(result) else None
 
 
+def _http_url(value: Any) -> str | None:
+    if not isinstance(value, str):
+        return None
+    value = value.strip()
+    if re.match(r"^https?://", value, flags=re.IGNORECASE):
+        return value
+    return None
+
+
 def safe_public_url(event: dict[str, Any]) -> str | None:
-    """Return an already-public HTTP(S) event URL, without constructing one."""
+    """Return an already-public HTTP(S) event URL, without constructing one.
+
+    Canonical events keep source provenance nested under ``source``. Preserve a
+    public source event page through the reader projection instead of silently
+    dropping it during the V3 handoff.
+    """
     for field in PUBLIC_URL_FIELDS:
-        value = event.get(field)
-        if not isinstance(value, str):
-            continue
-        value = value.strip()
-        if re.match(r"^https?://", value, flags=re.IGNORECASE):
+        value = _http_url(event.get(field))
+        if value:
+            return value
+    source = event.get("source") if isinstance(event.get("source"), dict) else {}
+    for field in ("public_url", "source_url", "permalink", "link", "website", "url"):
+        value = _http_url(source.get(field))
+        if value:
             return value
     return None
 
