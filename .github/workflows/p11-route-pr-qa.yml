@@ -1,0 +1,63 @@
+name: P11 Route PR QA
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/p11-route-pr-qa.yml'
+      - '.github/workflows/discovery-feed-refresh.yml'
+      - 'scripts/run_discovery_feed_refresh.sh'
+      - 'scripts/prepare_v3_runtime_validator.py'
+      - 'tests/test_prepare_v3_runtime_validator.py'
+      - 'scripts/prepare_p11_route_runtime_validator.py'
+      - 'tests/test_prepare_p11_route_runtime_validator.py'
+      - 'scripts/build_street_segment_route_authority_v1.py'
+      - 'tests/test_build_street_segment_route_authority_v1.py'
+      - 'scripts/run_street_segment_route_runtime_v1.sh'
+
+permissions:
+  contents: read
+
+jobs:
+  p11-route-qa:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/scripts
+    steps:
+      - name: Check out exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install route QA dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends gdal-bin unzip
+          docker pull nycplanning/docker-geosupport:26.2.0
+          docker run --rm nycplanning/docker-geosupport:26.2.0 \
+            python -c 'from geosupport import Geosupport; Geosupport(); print("NYCIF_GEOSUPPORT_IMPORT_OK=1")'
+          ogrinfo --version
+
+      - name: Run P11 unit and transaction gates
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m py_compile \
+            scripts/prepare_v3_runtime_validator.py \
+            scripts/prepare_p11_route_runtime_validator.py \
+            scripts/build_street_segment_route_authority_v1.py
+          python -m unittest tests.test_prepare_v3_runtime_validator -v
+          python -m unittest tests.test_prepare_p11_route_runtime_validator -v
+          python -m unittest tests.test_build_street_segment_route_authority_v1 -v
+          bash -n scripts/run_street_segment_route_runtime_v1.sh
+          python scripts/prepare_p11_route_runtime_validator.py \
+            --source scripts/run_discovery_feed_refresh.sh \
+            --output /tmp/nycif-run-discovery-feed-refresh-p11.sh
+          bash -n /tmp/nycif-run-discovery-feed-refresh-p11.sh
