@@ -27,6 +27,26 @@ jobs:
         run: python -m py_compile scripts/build_location_resolution_backlog_v1.py scripts/sync_supabase_location_registry_v1.py scripts/sources/base.py scripts/sources/ticketmaster.py
       - name: Test backlog classification
         run: python -m unittest tests.test_location_resolution_backlog_v1 -v
+      - name: Classify current canonical backlog without promotion
+        run: |
+          python scripts/build_location_resolution_backlog_v1.py
+          python - <<'PY'
+          import json
+          report = json.load(open('data/location_resolution_backlog_v1_report.json'))
+          rows = json.load(open('data/location_resolution_backlog_v1.json')).get('rows', [])
+          if report.get('qa_pass') is not True:
+              raise SystemExit('backlog report failed QA')
+          if report.get('unresolved_public_occurrence_count') != len(rows):
+              raise SystemExit('backlog report/row count mismatch')
+          if report.get('promotion_attempt_count') != 0:
+              raise SystemExit('backlog attempted promotion')
+          for key in ('public_map_modified', 'location_cache_modified', 'staged_feed_modified'):
+              if report.get(key) is not False:
+                  raise SystemExit(f'{key} must remain false')
+          if any(r.get('promotion_allowed') is not False or r.get('manual_review_status') != 'pending' for r in rows):
+              raise SystemExit('backlog contains a promoted or non-pending row')
+          print(json.dumps(report, indent=2, sort_keys=True))
+          PY
       - name: Test durable registry payload
         run: python -m unittest tests.test_supabase_location_registry_sync_v1 -v
       - name: Test Ticketmaster adapter
