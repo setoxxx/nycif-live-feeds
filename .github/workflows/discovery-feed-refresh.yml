@@ -19,6 +19,8 @@ on:
       - 'scripts/run_discovery_feed_refresh.sh'
       - 'scripts/prepare_v3_runtime_validator.py'
       - 'tests/test_prepare_v3_runtime_validator.py'
+      - 'scripts/occurrence_identity_contract.py'
+      - 'tests/test_occurrence_identity_contract.py'
       - 'scripts/apply_approximate_marker_recovery_v1.py'
       - 'scripts/build_maplibre_reader_safe_with_approx_v1.py'
       - 'scripts/build_approximate_marker_reader_v1.py'
@@ -64,6 +66,7 @@ jobs:
         run: |
           python -m py_compile scripts/prepare_v3_runtime_validator.py
           python -m unittest tests.test_prepare_v3_runtime_validator -v
+          python -m unittest tests.test_occurrence_identity_contract -v
           python scripts/prepare_v3_runtime_validator.py \
             --source scripts/run_discovery_feed_refresh.sh \
             --output /tmp/nycif-run-discovery-feed-refresh-v3.sh

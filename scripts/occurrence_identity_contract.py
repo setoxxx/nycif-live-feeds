@@ -67,6 +67,13 @@ def normalize_occurrence_start(value: Any) -> str | None:
 
 
 def source_key(row: dict[str, Any]) -> SourceKey:
+    """Return the native upstream source identity for raw or canonical rows.
+
+    Canonical NYCIF rows have their own synthetic/stable ``id`` and preserve the
+    upstream identity under ``source.source_event_id``. Native source identity
+    must therefore win over the canonical row id. Falling back to ``row.id`` is
+    retained only for older/source-less records that do not carry a native id.
+    """
     source = row.get("source") if isinstance(row.get("source"), dict) else {}
     dataset = str(
         row.get("source_dataset")
@@ -77,8 +84,8 @@ def source_key(row: dict[str, Any]) -> SourceKey:
     source_event_id = str(
         row.get("source_event_id")
         or row.get("event_id")
-        or row.get("id")
         or source.get("source_event_id")
+        or row.get("id")
         or "missing"
     ).strip()
     return dataset, source_event_id
