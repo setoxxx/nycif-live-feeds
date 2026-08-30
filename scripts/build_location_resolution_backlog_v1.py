@@ -14,10 +14,8 @@ from pathlib import Path
 from typing import Any
 
 try:
-    from scripts.discovery_v02 import extract_rows
     from scripts.occurrence_identity_contract import occurrence_key_v2
 except ModuleNotFoundError:  # pragma: no cover
-    from discovery_v02 import extract_rows  # type: ignore[no-redef]
     from occurrence_identity_contract import occurrence_key_v2  # type: ignore[no-redef]
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -38,9 +36,21 @@ PARK_RE = re.compile(r"\b(?:park|playground|recreation center|rec center|lawn|gr
 VENUE_RE = re.compile(r"\b(?:theater|theatre|hall|museum|gallery|library|school|college|university|church|synagogue|temple|club|hotel|restaurant|cafe|arena|stadium)\b", re.I)
 
 
+def extract_rows(payload: Any) -> list[dict[str, Any]]:
+    """Read common repository JSON envelopes without importing legacy packages."""
+    if isinstance(payload, list):
+        return [row for row in payload if isinstance(row, dict)]
+    if not isinstance(payload, dict):
+        return []
+    for key in ("events", "rows", "items", "records", "occurrences", "data"):
+        value = payload.get(key)
+        if isinstance(value, list):
+            return [row for row in value if isinstance(row, dict)]
+    return []
+
+
 def load_rows(path: Path) -> list[dict[str, Any]]:
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    return [row for row in extract_rows(payload) if isinstance(row, dict)]
+    return extract_rows(json.loads(path.read_text(encoding="utf-8")))
 
 
 def source_parts(row: dict[str, Any]) -> tuple[dict[str, Any], str, str]:
@@ -54,9 +64,9 @@ def location_text(row: dict[str, Any]) -> str:
     nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
     values = (nycif.get("source_location_text"), row.get("event_location"), row.get("location"), row.get("venue_name"), row.get("address"), row.get("street_address"))
     for value in values:
-        text = str(value or "").strip()
-        if text:
-            return text
+        value_text = str(value or "").strip()
+        if value_text:
+            return value_text
     return ""
 
 
@@ -64,8 +74,8 @@ def classify_row(row: dict[str, Any]) -> tuple[str, list[str]]:
     source, dataset, source_event_id = source_parts(row)
     title = str(row.get("title") or "").strip()
     start = str(row.get("start_date_time") or row.get("start_at") or "").strip()
-    text = location_text(row)
-    lower = text.lower().strip()
+    place = location_text(row)
+    lower = place.lower().strip()
     missing: list[str] = []
     if not title: missing.append("missing_title")
     if not start: missing.append("missing_start")
@@ -76,7 +86,7 @@ def classify_row(row: dict[str, Any]) -> tuple[str, list[str]]:
     borough = str(row.get("borough") or "").strip().lower()
     if not lower or lower in BOROUGHS or (borough and lower == borough):
         return "BOROUGH_ONLY", ["borough_only_location"]
-    if ROUTE_RE.search(text):
+    if ROUTE_RE.search(place):
         return "ROUTE_OR_STREET_SEGMENT", ["route_language"]
     cemsid = row.get("source_cemsid") or source.get("source_cemsid") or source.get("cemsid")
     if cemsid:
@@ -89,15 +99,15 @@ def classify_row(row: dict[str, Any]) -> tuple[str, list[str]]:
     venue_name = row.get("venue_name")
     if venue_id or venue_name:
         return "KNOWN_VENUE", ["venue_id" if venue_id else "venue_name"]
-    if PARK_RE.search(text) and (":" in text or "(" in text or SPORTS_RE.search(text)):
+    if PARK_RE.search(place) and (":" in place or "(" in place or SPORTS_RE.search(place)):
         return "PARK_SUBFACILITY", ["park_subfacility_language"]
-    if SPORTS_RE.search(text):
+    if SPORTS_RE.search(place):
         return "SPORTS_FIELD", ["sports_location_language"]
-    if ADDRESS_RE.search(text):
+    if ADDRESS_RE.search(place):
         return "EXACT_ADDRESS", ["street_number_pattern"]
-    if INTERSECTION_RE.search(text):
+    if INTERSECTION_RE.search(place):
         return "INTERSECTION", ["intersection_language"]
-    if VENUE_RE.search(text):
+    if VENUE_RE.search(place):
         return "KNOWN_VENUE", ["venue_name_pattern"]
     return "KNOWN_FACILITY", ["named_place_requires_registry_match"]
 
