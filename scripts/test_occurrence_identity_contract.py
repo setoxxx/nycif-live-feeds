@@ -61,12 +61,22 @@ def main() -> int:
         "date": "2026-07-22",
     }
 
+    canonical_form = {
+        "id": "canonical-hash-do-not-use-as-native-source-id",
+        "source": {"dataset": "tvpp-9vvx", "source_event_id": "abc123"},
+        "start_date_time": "2026-07-20T09:00:00",
+    }
+    legacy_id_only = {"dataset": "legacy-source", "id": "legacy-id"}
+
     staged_sources = {source_key(staged)}
     staged_occurrences = {occurrence_key(staged)}
     rejected_sources = {source_key(rejected)}
     rejected_occurrences = {occurrence_key(rejected)}
 
     assert source_key(staged) == ("tvpp-9vvx", "abc123")
+    assert source_key(canonical_form) == ("tvpp-9vvx", "abc123")
+    assert source_key(legacy_id_only) == ("legacy-source", "legacy-id")
+    assert occurrence_key_v2(canonical_form) == occurrence_key_v2(staged)
     assert occurrence_key(staged) == ("tvpp-9vvx", "abc123", "2026-07-20")
     assert occurrence_key_v2(staged) == ("tvpp-9vvx", "abc123", "2026-07-20T09:00:00")
     assert occurrence_key_v2(same_day_different_time) == (
@@ -79,6 +89,16 @@ def main() -> int:
     assert identity_precision(date_only) == "DAY"
     assert identity_precision(missing_time_and_date) == "AMBIGUOUS"
     assert source_id_only_matching_allowed_for_recurring_event_feeds() is False
+
+    recurring_days = [
+        {
+            "dataset": "nycif-feast",
+            "source_event_id": "18th-ave-feast-2026",
+            "start_date_time": f"2026-08-{day:02d}T12:00:00",
+        }
+        for day in (29, 30, 31)
+    ]
+    assert len({occurrence_key_v2(row) for row in recurring_days}) == 3
 
     # Exact-start rejection must not widen to a sibling occurrence on the same day.
     exact_rejection = {
