@@ -9,9 +9,11 @@ on:
       - 'scripts/export_supabase_location_registry_v1.py'
       - 'scripts/prepare_location_reuse_runtime_validator.py'
       - 'scripts/build_maplibre_reader_safe_with_approx_v1.py'
+      - 'scripts/sync_supabase_location_registry_v1.py'
       - 'tests/test_durable_location_reuse_v1.py'
       - 'tests/test_maplibre_durable_location_reuse_v1.py'
       - 'tests/test_prepare_location_reuse_runtime_validator.py'
+      - 'tests/test_supabase_location_registry_sync_v1.py'
 
 permissions:
   contents: read
@@ -38,13 +40,15 @@ jobs:
             scripts/apply_durable_location_reuse_v1.py \
             scripts/export_supabase_location_registry_v1.py \
             scripts/prepare_location_reuse_runtime_validator.py \
-            scripts/build_maplibre_reader_safe_with_approx_v1.py
+            scripts/build_maplibre_reader_safe_with_approx_v1.py \
+            scripts/sync_supabase_location_registry_v1.py
 
       - name: Run durable location reuse tests
         run: |
           python -m unittest tests.test_durable_location_reuse_v1 -v
           python -m unittest tests.test_maplibre_durable_location_reuse_v1 -v
           python -m unittest tests.test_prepare_location_reuse_runtime_validator -v
+          python -m unittest tests.test_supabase_location_registry_sync_v1 -v
 
       - name: Verify transformed production transaction syntax
         run: |
