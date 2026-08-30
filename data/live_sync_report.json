@@ -1,21 +1,21 @@
 {
-  "current_future_rows": 23018,
-  "current_future_rows_with_cemsid": 22376,
+  "current_future_rows": 25478,
+  "current_future_rows_with_cemsid": 24729,
   "date_boundary_timezone": "America/New_York",
   "enriched_rows_loaded": 33084,
-  "generated_at_utc": "2026-08-29T04:10:30.701813+00:00",
+  "generated_at_utc": "2026-08-30T01:15:20.586831+00:00",
   "location_cache_entries_loaded": 40151,
   "location_cache_modified": false,
   "location_resolver_live_geosearch_calls": 0,
   "match_counts": {
-    "event_id": 3722,
-    "location_cache": 16835,
-    "none": 794,
-    "text_date_location": 148,
-    "tier_1_gazetteer_display": 1020,
-    "tier_2_geosearch_cache": 499
+    "event_id": 3786,
+    "location_cache": 18917,
+    "none": 928,
+    "text_date_location": 160,
+    "tier_1_gazetteer_display": 1155,
+    "tier_2_geosearch_cache": 532
   },
-  "matched_with_gps": 22224,
+  "matched_with_gps": 24550,
   "matched_without_gps_sample": [],
   "needs_enrichment_sample": [
     {
@@ -316,6 +316,27 @@
     },
     {
       "community_board": [
+        "1"
+      ],
+      "end_date_time": "2026-08-30T19:00:00.000",
+      "event_agency": "Street Activity Permit Office",
+      "event_borough": "Brooklyn",
+      "event_location": "BEDFORD AVENUE - NASSAU AVENUE to MANHATTAN AVENUE: BEDFORD AVENUE - NASSAU AVENUE to MANHATTAN AVENUE",
+      "event_name": "Volunteer Fair",
+      "event_type": "Open Street Partner Event",
+      "police_precinct": [
+        "94"
+      ],
+      "source_cemsid": [
+        "13520"
+      ],
+      "source_dataset": "tvpp-9vvx",
+      "source_event_id": "968219",
+      "start_date_time": "2026-08-29T09:00:00.000",
+      "street_closure_type": "Full Street Closure"
+    },
+    {
+      "community_board": [
         "10"
       ],
       "end_date_time": "2026-08-29T16:30:00.000",
@@ -487,33 +508,14 @@
       "source_event_id": "935032",
       "start_date_time": "2026-08-29T10:00:00.000",
       "street_closure_type": "Full Street Closure"
-    },
-    {
-      "community_board": [
-        "5"
-      ],
-      "end_date_time": "2026-08-29T19:00:00.000",
-      "event_agency": "Street Activity Permit Office",
-      "event_borough": "Brooklyn",
-      "event_location": "DOSCHER STREET between BELMONT AVENUE and SUTTER AVENUE",
-      "event_name": "Empire",
-      "event_type": "Block Party",
-      "police_precinct": [
-        "75"
-      ],
-      "source_cemsid": [],
-      "source_dataset": "tvpp-9vvx",
-      "source_event_id": "941590",
-      "start_date_time": "2026-08-29T10:00:00.000",
-      "street_closure_type": "Full Street Closure"
     }
   ],
   "production_feeds_modified": false,
   "public_map_modified": false,
   "raw_page_limit": 50000,
-  "raw_rows_loaded": 24912,
-  "raw_rows_with_cemsid": 24202,
+  "raw_rows_loaded": 25517,
+  "raw_rows_with_cemsid": 24742,
   "raw_url": "https://data.cityofnewyork.us/resource/tvpp-9vvx.json",
   "today_nyc": "2026-08-29",
-  "today_utc": "2026-08-29"
+  "today_utc": "2026-08-30"
 }
