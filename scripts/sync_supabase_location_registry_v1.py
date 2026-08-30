@@ -13,21 +13,29 @@ import json
 import math
 import os
 import re
-from collections import Counter, defaultdict
+from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 from urllib.request import Request, urlopen
 
-try:
-    from scripts.discovery_v02 import extract_rows
-except ModuleNotFoundError:  # pragma: no cover
-    from discovery_v02 import extract_rows  # type: ignore[no-redef]
-
 ROOT = Path(__file__).resolve().parents[1]
 CANONICAL = ROOT / "data" / "events_discovery_accepted_canonical_v02.json"
 PAYLOAD = ROOT / "data" / "location_registry_sync_v1_payload.json"
 REPORT = ROOT / "data" / "location_registry_sync_v1_report.json"
+
+
+def extract_rows(payload: Any) -> list[dict[str, Any]]:
+    """Extract canonical rows without importing the legacy discovery package."""
+    if isinstance(payload, list):
+        return [row for row in payload if isinstance(row, dict)]
+    if not isinstance(payload, dict):
+        return []
+    for key in ("events", "rows", "items", "records", "occurrences", "data"):
+        value = payload.get(key)
+        if isinstance(value, list):
+            return [row for row in value if isinstance(row, dict)]
+    return []
 
 
 def finite(value: Any) -> float | None:
@@ -53,8 +61,10 @@ def source_dataset(row: dict[str, Any]) -> str:
 
 
 def raw_location(row: dict[str, Any]) -> str:
+    n = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
     return str(
-        row.get("event_location")
+        n.get("source_location_text")
+        or row.get("event_location")
         or row.get("location")
         or row.get("venue_name")
         or row.get("address")
@@ -85,8 +95,7 @@ def stable_location_id(row: dict[str, Any], lat: float, lng: float) -> tuple[str
 
 
 def load_rows(path: Path) -> list[dict[str, Any]]:
-    payload = json.loads(path.read_text(encoding="utf-8"))
-    return [row for row in extract_rows(payload) if isinstance(row, dict)]
+    return extract_rows(json.loads(path.read_text(encoding="utf-8")))
 
 
 def build_payload(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str, Any]]:
@@ -97,7 +106,7 @@ def build_payload(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str,
     authority_counts: Counter[str] = Counter()
     precision_counts: Counter[str] = Counter()
     id_basis_counts: Counter[str] = Counter()
-    skipped = Counter()
+    skipped: Counter[str] = Counter()
 
     for row in rows:
         nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
@@ -180,7 +189,12 @@ def build_payload(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str,
         }
         for (loc_id, normalized, dataset), count in sorted(alias_counts.items())
     ]
-    payload = {"schema_version": "NYCIF_LOCATION_REGISTRY_SYNC_V1", "generated_at_utc": generated, "locations": list(sorted(locations.values(), key=lambda x: x["location_id"])), "aliases": aliases}
+    payload = {
+        "schema_version": "NYCIF_LOCATION_REGISTRY_SYNC_V1",
+        "generated_at_utc": generated,
+        "locations": list(sorted(locations.values(), key=lambda x: x["location_id"])),
+        "aliases": aliases,
+    }
     report = {
         "schema_version": "NYCIF_LOCATION_REGISTRY_SYNC_V1_REPORT",
         "generated_at_utc": generated,
@@ -190,10 +204,13 @@ def build_payload(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str,
         "authority_observation_counts": dict(sorted(authority_counts.items())),
         "id_basis_counts": dict(sorted(id_basis_counts.items())),
         "skipped_counts": dict(sorted(skipped.items())),
-        "approximate_certified_count": sum(1 for x in locations.values() if x["precision"] == "approximate" and x["metadata"].get("exact_pin_eligible")),
+        "approximate_certified_count": sum(
+            1 for item in locations.values()
+            if item["precision"] == "approximate" and item["metadata"].get("exact_pin_eligible")
+        ),
         "protected_cache_modified": False,
         "event_rows_modified": False,
-        "qa_pass": len(locations) > 0 and all(x["precision"] in {"exact", "approximate"} for x in locations.values()),
+        "qa_pass": len(locations) > 0 and all(item["precision"] in {"exact", "approximate"} for item in locations.values()),
     }
     return payload, report
 
@@ -208,11 +225,15 @@ def apply_payload(payload: dict[str, Any]) -> dict[str, Any]:
         f"{base}/rest/v1/rpc/sync_location_registry_v1",
         data=body,
         method="POST",
-        headers={"apikey": key, "Authorization": f"Bearer {key}", "Content-Type": "application/json", "Accept": "application/json"},
+        headers={
+            "apikey": key,
+            "Authorization": f"Bearer {key}",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
     )
     with urlopen(request, timeout=120) as response:  # nosec B310 - configured HTTPS Supabase project URL
-        result = json.load(response)
-    return result
+        return json.load(response)
 
 
 def main() -> int:
