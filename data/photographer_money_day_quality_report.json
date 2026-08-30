@@ -1,12 +1,12 @@
 {
   "after_v2": {
     "coordinate_status_counts": {
-      "list_only": 23,
+      "list_only": 24,
       "map_ready": 1
     },
     "days_with_coverage": 10,
     "lane_counts": {
-      "approved_major": 19,
+      "approved_major": 20,
       "review_high_signal": 5
     },
     "month_counts": [
@@ -17,11 +17,11 @@
       },
       {
         "days_with_events": 10,
-        "event_count": 24,
+        "event_count": 25,
         "label": "September 2026"
       }
     ],
-    "total_events": 24
+    "total_events": 25
   },
   "baseline_v1_pr173": {
     "days_with_coverage": 43,
@@ -44,28 +44,28 @@
   "delta_vs_baseline": {
     "days_coverage_after": 10,
     "days_coverage_before": 43,
-    "events_kept": 24,
-    "events_removed": 818
+    "events_kept": 25,
+    "events_removed": 817
   },
-  "excluded": 378,
+  "excluded": 377,
   "filter_rules": [
     "Require money-day keyword signal on title/category (not location).",
     "Exclude routine sports/fitness even when major_score is high.",
     "Cap carried major_score contribution; significance alone is not enough."
   ],
-  "generated_at_utc": "2026-08-30T01:15:52Z",
-  "kept": 24,
+  "generated_at_utc": "2026-08-30T16:47:30Z",
+  "kept": 25,
   "location_cache_modified": false,
   "promotion_allowed": false,
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-08-29",
+  "reference_today_nyc": "2026-08-30",
   "schema_version": "photographer-money-day-quality-v1",
   "top_exclude_reasons": [
     [
       "no_money_day_keyword_signal",
-      317
+      316
     ],
     [
       "routine_activity_excluded",

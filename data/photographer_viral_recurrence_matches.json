@@ -1,7 +1,7 @@
 {
-  "current_calendar_events": 24,
+  "current_calendar_events": 25,
   "foil_operator_joins": 0,
-  "generated_at_utc": "2026-08-30T01:15:53Z",
+  "generated_at_utc": "2026-08-30T16:47:33Z",
   "historical_rows_considered": 2450,
   "historical_window": {
     "dataset": "bkfu-528j",
@@ -10,12 +10,63 @@
     "window_start": "2025-06-17"
   },
   "label_counts": {
-    "possible": 10,
-    "returning_likely": 1
+    "possible": 11,
+    "returning_likely": 5
   },
   "location_cache_modified": false,
-  "match_count": 11,
+  "match_count": 16,
   "matches": [
+    {
+      "current": {
+        "assignment_score": 400,
+        "borough": "Manhattan",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-09-20",
+        "display_location": "ADAM CLAYTON POWELL JR BOULEVARD between WEST 110 STREET and WEST 116TH STREET  Manhattan",
+        "end_date_time": null,
+        "event_id": "1044396",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-20&assignment=1",
+        "id": "nyc-citywide-events-calendar-api:1044396@2026-09-20",
+        "lane": "approved_major",
+        "latitude": null,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "pin_integrity_reason": "missing_coords",
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1044396"
+        },
+        "start_date_time": "2026-09-20T12:30:00.000-04:00",
+        "title": "57th Annual African American Day Parade"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:0.93",
+        "place_strong:0.95",
+        "season_delta_days:1",
+        "historical_street_closure_present"
+      ],
+      "match_score": 97,
+      "prior_year": {
+        "borough": "Manhattan",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-21",
+        "display_location": "ADAM CLAYTON POWELL JR BOULEVARD between WEST  110 STREET and WEST  116 STREET,  WEST  113 STREET between MALCOLM X BOULEVARD and FREDERICK DOUGLAS BOULEVARD,  ST NICHOLAS AVENUE between WEST  113 STREET and WEST  114 STREET,  WEST  111 STREET between MALCOLM X BOULEVARD and FREDERICK DOUGLAS BOULEVARD,  WEST  112 STREET between MALCOLM X BOULEVARD and FREDERICK DOUGLAS BOULEVARD,  WEST  114 STREET between ADAM CLAYTON POWELL JR BOULEVARD and FREDERICK DOUGLAS BOULEVARD,  WEST  114 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  115 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  110 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  126 STREET between LENOX AVENUE and FREDERICK DOUGLAS BOULEVARD,  FREDERICK DOUGLAS BOULEVARD between WEST  128 STREET and WEST  127 STREET,  LENOX AVENUE between WEST  132 STREET and WEST  133 STREET,  ST NICHOLAS AVENUE between ADAM CLAYTON POWELL JR BOULEVARD and WEST  115 STREET,  LENOX AVENUE between WEST  136 STREET and WEST  140 STREET,  WEST  125 STREET between LENOX AVENUE and ADAM CLAYTON POWELL JR BOULEVARD,  WEST  132 STREET between LENOX AVENUE and FIFTH AVENUE,  ADAM CLAYTON POWELL BOULEVARD between WEST  115 STREET and WEST  141 STREET,  MALCOLM X BOULEVARD between WEST  136 STREET and WEST  140 STREET,  WEST  135 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  136 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  137 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  ADAM CLAYTON POWELL JR BOULEVARD between WEST  125 STREET and WEST  126 STREET",
+        "end_date_time": "2025-09-21T18:00:00.000",
+        "event_id": "832867",
+        "event_type": "Parade",
+        "police_precinct": "22, 28, 32,",
+        "start_date_time": "2025-09-21T12:30:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "The 56th Annual African American Day Parade"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "returning_likely"
+    },
     {
       "current": {
         "assignment_score": 200,
@@ -70,11 +121,113 @@
     {
       "current": {
         "assignment_score": 400,
+        "borough": "Brooklyn",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-09-07",
+        "display_location": "EASTERN PARKWAY between BUFFALO AVENUE and UTICA AVENUE Brooklyn",
+        "end_date_time": "2026-09-07T19:00:00.000-04:00",
+        "event_id": "208972",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-07&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:208972@2026-09-07",
+        "lane": "approved_major",
+        "latitude": null,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "pin_integrity_reason": "missing_coords",
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "208972"
+        },
+        "start_date_time": "2026-09-07T10:00:00.000-04:00",
+        "title": "West Indian American Labor Day Parade"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "place_strong:0.80",
+        "season_delta_days:6",
+        "historical_street_closure_present"
+      ],
+      "match_score": 90,
+      "prior_year": {
+        "borough": "Brooklyn",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-01",
+        "display_location": "EASTERN PARKWAY between UTICA AVENUE and UNDERHILL AVENUE",
+        "end_date_time": "2025-09-01T18:00:00.000",
+        "event_id": "838711",
+        "event_type": "Street Festival",
+        "police_precinct": "71, 77, 78,",
+        "start_date_time": "2025-09-01T11:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "West Indian American Labor Day Parade"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "returning_likely"
+    },
+    {
+      "current": {
+        "assignment_score": 400,
+        "borough": "Brooklyn",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-09-07",
+        "display_location": "EASTERN PARKWAY between BUFFALO AVENUE and UTICA AVENUE Brooklyn",
+        "end_date_time": "2026-09-07T19:00:00.000-04:00",
+        "event_id": "208972",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-07&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:208972@2026-09-07",
+        "lane": "approved_major",
+        "latitude": null,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "pin_integrity_reason": "missing_coords",
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "208972"
+        },
+        "start_date_time": "2026-09-07T10:00:00.000-04:00",
+        "title": "West Indian American Labor Day Parade"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "place_strong:0.86",
+        "season_delta_days:6",
+        "historical_street_closure_present"
+      ],
+      "match_score": 90,
+      "prior_year": {
+        "borough": "Brooklyn",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-01",
+        "display_location": "EASTERN PARKWAY between BUFFALO AVENUE and UTICA AVENUE,  EASTERN PARKWAY between BUFFALO AVENUE and WASHINGTON AVENUE,  EASTERN PARKWAY between GRAND ARMY PLAZA and FLATBUSH EXTENTION",
+        "end_date_time": "2025-09-01T18:00:00.000",
+        "event_id": "838734",
+        "event_type": "Parade",
+        "police_precinct": "71, 77, 78,",
+        "start_date_time": "2025-09-01T11:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "West Indian American Labor Day Parade"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "returning_likely"
+    },
+    {
+      "current": {
+        "assignment_score": 400,
         "borough": "Staten Island",
         "certified_pin": false,
         "coordinate_status": "list_only",
         "date": "2026-09-12",
-        "display_location": "Staten Island",
+        "display_location": "366 WATCHOGUE ROAD Staten Island",
         "end_date_time": "2026-09-12T15:00:00.000-04:00",
         "event_id": "1191516",
         "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
@@ -95,10 +248,11 @@
       "location_cache_modified": false,
       "match_reasons": [
         "name_exactish:1.00",
+        "place_partial:0.57",
         "season_delta_days:1",
         "historical_street_closure_present"
       ],
-      "match_score": 73,
+      "match_score": 85,
       "prior_year": {
         "borough": "Staten Island",
         "cemsid": null,
@@ -115,6 +269,261 @@
       },
       "promotion_allowed": false,
       "public_map_modified": false,
+      "recurrence_label": "returning_likely"
+    },
+    {
+      "current": {
+        "assignment_score": 400,
+        "borough": "Queens",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-09-06",
+        "display_location": "104 STREET between 164 DRIVE and 165 AVENUE  Queens",
+        "end_date_time": "2026-09-06T16:00:00.000-04:00",
+        "event_id": "1192456",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-06&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1192456@2026-09-06",
+        "lane": "approved_major",
+        "latitude": null,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "pin_integrity_reason": "missing_coords",
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1192456"
+        },
+        "start_date_time": "2026-09-06T11:00:00.000-04:00",
+        "title": "Labor Day Baby Parade"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "place_partial:0.73",
+        "season_delta_days:6",
+        "historical_street_closure_present"
+      ],
+      "match_score": 78,
+      "prior_year": {
+        "borough": "Queens",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-08-31",
+        "display_location": "104 STREET between 164 DRIVE and 165 AVENUE,  104 STREET between RAU COURT and 165 AVENUE, 102-33  DAVENPORT COURT",
+        "end_date_time": "2025-08-31T16:00:00.000",
+        "event_id": "879423",
+        "event_type": "Parade",
+        "police_precinct": "106,",
+        "start_date_time": "2025-08-31T11:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Labor Day Baby Parade"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 400,
+        "borough": "Queens",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-09-12",
+        "display_location": "14-25 BEACH CHANNEL DRIVE Queens",
+        "end_date_time": "2026-09-12T13:30:00.000-04:00",
+        "event_id": "1191616",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1191616@2026-09-12",
+        "lane": "approved_major",
+        "latitude": null,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "pin_integrity_reason": "missing_coords",
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1191616"
+        },
+        "start_date_time": "2026-09-12T10:30:00.000-04:00",
+        "title": "Community March of Witness - United We March"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "place_partial:0.60",
+        "season_delta_days:6",
+        "historical_street_closure_present"
+      ],
+      "match_score": 78,
+      "prior_year": {
+        "borough": "Queens",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-06",
+        "display_location": "14-25 BEACH CHANNEL DRIVE, BEACH CHANNEL DRIVE between HORTON AVENUE and NAMEOKE AVENUE,  BEACH CHANNEL DRIVE between DIX AVENUE and MOTT AVENUE,  MOTT AVENUE between BEACH CHANNEL DRIVE and BEACH   22 STREET,  BEACH   22 STREET between MOTT AVENUE and CORNAGA AVENUE,  CORNAGA AVENUE between BEACH   22 STREET and BEACH   20 STREET,  BEACH   20 STREET between CORNAGA AVENUE and SEAGIRT BOULEVARD,  SEAGIRT BOULEVARD between BEACH   20 STREET and BEACH CHANNEL DRIVE,  BEACH CHANNEL DRIVE between NORTON AVENUE and BAY   32 STREET, Bayswater Park: Performance Space",
+        "end_date_time": "2025-09-06T13:30:00.000",
+        "event_id": "873274",
+        "event_type": "Parade",
+        "police_precinct": "101,",
+        "start_date_time": "2025-09-06T10:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Community March of Witness - United We March"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 400,
+        "borough": "Queens",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-09-27",
+        "display_location": "69 STREET  between 37 AVENUE  and 34 AVENUE   Queens",
+        "end_date_time": "2026-09-27T14:00:00.000-04:00",
+        "event_id": "1193116",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-27&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1193116@2026-09-27",
+        "lane": "approved_major",
+        "latitude": null,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "pin_integrity_reason": "missing_coords",
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1193116"
+        },
+        "start_date_time": "2026-09-27T12:00:00.000-04:00",
+        "title": "Queens Hispanic Parade"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "place_partial:0.74",
+        "season_delta_days:6",
+        "historical_street_closure_present"
+      ],
+      "match_score": 78,
+      "prior_year": {
+        "borough": "Queens",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-21",
+        "display_location": "69 STREET  between 37 AVENUE  and 34 AVENUE ,  37 AVENUE  between 69 STREET  and 87 STREET ,  87 STREET  between 37 AVENUE  and 35 AVENUE ,  37 AVENUE  between 85 STREET  and 86 STREET",
+        "end_date_time": "2025-09-21T14:00:00.000",
+        "event_id": "843703",
+        "event_type": "Parade",
+        "police_precinct": "115,",
+        "start_date_time": "2025-09-21T12:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Queens Hispanic Parade"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 400,
+        "borough": "Brooklyn",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-09-05",
+        "display_location": "ST JOHN PLACE between BROOKLYN AVENUE and KINGSTON AVENUE  Brooklyn",
+        "end_date_time": "2026-09-05T17:00:00.000-04:00",
+        "event_id": "1193476",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-05&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1193476@2026-09-05",
+        "lane": "approved_major",
+        "latitude": null,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "pin_integrity_reason": "missing_coords",
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1193476"
+        },
+        "start_date_time": "2026-09-05T08:00:00.000-04:00",
+        "title": "West Indian American Junior Parade"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.84",
+        "place_strong:0.81",
+        "season_delta_days:6",
+        "historical_street_closure_present"
+      ],
+      "match_score": 75,
+      "prior_year": {
+        "borough": "Brooklyn",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-08-30",
+        "display_location": "ST JOHNS PLACE between BROOKLYN AVENUE and KINGSTON AVENUE,  ST JOHNS PLACE between KINGSTON AVENUE and FRANKLIN AVENUE,  FRANKLIN AVENUE between ST JOHNS PLACE and PRESIDENT STREET,  PRESIDENT STREET between FRANKLIN AVENUE and CLASSON AVENUE,  WASHINGTON AVENUE between EASTERN PARKWAY and PRESIDENT STREET",
+        "end_date_time": "2025-08-30T17:00:00.000",
+        "event_id": "838718",
+        "event_type": "Parade",
+        "police_precinct": "71, 77, 78,",
+        "start_date_time": "2025-08-30T08:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "West Indian American Day Junior Carnival"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 400,
+        "borough": "Queens",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-09-07",
+        "display_location": "CROSS BAY BOULEVARD between EAST  20 ROAD and EAST   3 ROAD  Queens",
+        "end_date_time": "2026-09-07T15:30:00.000-04:00",
+        "event_id": "1192476",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-07&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1192476@2026-09-07",
+        "lane": "approved_major",
+        "latitude": null,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "pin_integrity_reason": "missing_coords",
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1192476"
+        },
+        "start_date_time": "2026-09-07T13:00:00.000-04:00",
+        "title": "Labor Day Parade"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.86",
+        "place_strong:0.77",
+        "season_delta_days:6",
+        "historical_street_closure_present"
+      ],
+      "match_score": 75,
+      "prior_year": {
+        "borough": "Queens",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-01",
+        "display_location": "CROSSBAY BOULEVARD between WEST   10 ROAD and WEST    8 ROAD,  CROSSBAY BOULEVARD between EAST   10 ROAD and EAST    20 ROAD,  CROSSBAY BOULEVARD between WEST   20 ROAD and EAST    1 ROAD,  CROSSBAY BOULEVARD between EAST    1 ROAD and WEST    3 ROAD",
+        "end_date_time": "2025-09-01T14:30:00.000",
+        "event_id": "883733",
+        "event_type": "Parade",
+        "police_precinct": "100,",
+        "start_date_time": "2025-09-01T13:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "BCAC Labor Day Parade"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
       "recurrence_label": "possible"
     },
     {
@@ -124,7 +533,7 @@
         "certified_pin": false,
         "coordinate_status": "list_only",
         "date": "2026-09-13",
-        "display_location": "Queens",
+        "display_location": "3551 69 STREET Queens",
         "end_date_time": null,
         "event_id": "1044936",
         "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-13&assignment=1",
@@ -220,261 +629,11 @@
     {
       "current": {
         "assignment_score": 400,
-        "borough": "Manhattan",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-09-20",
-        "display_location": "Manhattan",
-        "end_date_time": null,
-        "event_id": "1044396",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-20&assignment=1",
-        "id": "nyc-citywide-events-calendar-api:1044396@2026-09-20",
-        "lane": "approved_major",
-        "latitude": null,
-        "longitude": null,
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "pin_integrity_reason": "missing_coords",
-        "source": {
-          "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "1044396"
-        },
-        "start_date_time": "2026-09-20T12:30:00.000-04:00",
-        "title": "57th Annual African American Day Parade"
-      },
-      "location_cache_modified": false,
-      "match_reasons": [
-        "name_exactish:0.93",
-        "season_delta_days:1",
-        "historical_street_closure_present"
-      ],
-      "match_score": 73,
-      "prior_year": {
-        "borough": "Manhattan",
-        "cemsid": null,
-        "dataset": "bkfu-528j",
-        "date": "2025-09-21",
-        "display_location": "ADAM CLAYTON POWELL JR BOULEVARD between WEST  110 STREET and WEST  116 STREET,  WEST  113 STREET between MALCOLM X BOULEVARD and FREDERICK DOUGLAS BOULEVARD,  ST NICHOLAS AVENUE between WEST  113 STREET and WEST  114 STREET,  WEST  111 STREET between MALCOLM X BOULEVARD and FREDERICK DOUGLAS BOULEVARD,  WEST  112 STREET between MALCOLM X BOULEVARD and FREDERICK DOUGLAS BOULEVARD,  WEST  114 STREET between ADAM CLAYTON POWELL JR BOULEVARD and FREDERICK DOUGLAS BOULEVARD,  WEST  114 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  115 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  110 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  126 STREET between LENOX AVENUE and FREDERICK DOUGLAS BOULEVARD,  FREDERICK DOUGLAS BOULEVARD between WEST  128 STREET and WEST  127 STREET,  LENOX AVENUE between WEST  132 STREET and WEST  133 STREET,  ST NICHOLAS AVENUE between ADAM CLAYTON POWELL JR BOULEVARD and WEST  115 STREET,  LENOX AVENUE between WEST  136 STREET and WEST  140 STREET,  WEST  125 STREET between LENOX AVENUE and ADAM CLAYTON POWELL JR BOULEVARD,  WEST  132 STREET between LENOX AVENUE and FIFTH AVENUE,  ADAM CLAYTON POWELL BOULEVARD between WEST  115 STREET and WEST  141 STREET,  MALCOLM X BOULEVARD between WEST  136 STREET and WEST  140 STREET,  WEST  135 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  136 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  WEST  137 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE,  ADAM CLAYTON POWELL JR BOULEVARD between WEST  125 STREET and WEST  126 STREET",
-        "end_date_time": "2025-09-21T18:00:00.000",
-        "event_id": "832867",
-        "event_type": "Parade",
-        "police_precinct": "22, 28, 32,",
-        "start_date_time": "2025-09-21T12:30:00.000",
-        "street_closure_type": "Full Street Closure",
-        "title": "The 56th Annual African American Day Parade"
-      },
-      "promotion_allowed": false,
-      "public_map_modified": false,
-      "recurrence_label": "possible"
-    },
-    {
-      "current": {
-        "assignment_score": 400,
-        "borough": "Queens",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-09-06",
-        "display_location": "Queens",
-        "end_date_time": "2026-09-06T16:00:00.000-04:00",
-        "event_id": "1192456",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-06&assignment=1",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:1192456@2026-09-06",
-        "lane": "approved_major",
-        "latitude": null,
-        "longitude": null,
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "pin_integrity_reason": "missing_coords",
-        "source": {
-          "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "1192456"
-        },
-        "start_date_time": "2026-09-06T11:00:00.000-04:00",
-        "title": "Labor Day Baby Parade"
-      },
-      "location_cache_modified": false,
-      "match_reasons": [
-        "name_exactish:1.00",
-        "season_delta_days:6",
-        "historical_street_closure_present"
-      ],
-      "match_score": 66,
-      "prior_year": {
-        "borough": "Queens",
-        "cemsid": null,
-        "dataset": "bkfu-528j",
-        "date": "2025-08-31",
-        "display_location": "104 STREET between 164 DRIVE and 165 AVENUE,  104 STREET between RAU COURT and 165 AVENUE, 102-33  DAVENPORT COURT",
-        "end_date_time": "2025-08-31T16:00:00.000",
-        "event_id": "879423",
-        "event_type": "Parade",
-        "police_precinct": "106,",
-        "start_date_time": "2025-08-31T11:00:00.000",
-        "street_closure_type": "Full Street Closure",
-        "title": "Labor Day Baby Parade"
-      },
-      "promotion_allowed": false,
-      "public_map_modified": false,
-      "recurrence_label": "possible"
-    },
-    {
-      "current": {
-        "assignment_score": 400,
-        "borough": "Brooklyn",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-09-07",
-        "display_location": "Brooklyn",
-        "end_date_time": "2026-09-07T19:00:00.000-04:00",
-        "event_id": "208972",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-07&assignment=1",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:208972@2026-09-07",
-        "lane": "approved_major",
-        "latitude": null,
-        "longitude": null,
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "pin_integrity_reason": "missing_coords",
-        "source": {
-          "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "208972"
-        },
-        "start_date_time": "2026-09-07T10:00:00.000-04:00",
-        "title": "West Indian American Labor Day Parade"
-      },
-      "location_cache_modified": false,
-      "match_reasons": [
-        "name_exactish:1.00",
-        "season_delta_days:6",
-        "historical_street_closure_present"
-      ],
-      "match_score": 66,
-      "prior_year": {
-        "borough": "Brooklyn",
-        "cemsid": null,
-        "dataset": "bkfu-528j",
-        "date": "2025-09-01",
-        "display_location": "EASTERN PARKWAY between WASHINGTON AVENUE and UNDERHILL AVENUE,  EASTERN PARKWAY between NOSTRAND AVENUE and NEW YORK AVENUE,  EASTERN PARKWAY between SCHENECTADY AVENUE and UTICA AVENUE",
-        "end_date_time": "2025-09-02T18:00:00.000",
-        "event_id": "877738",
-        "event_type": "Street Event",
-        "police_precinct": "71, 77, 78,",
-        "start_date_time": "2025-09-01T07:30:00.000",
-        "street_closure_type": "Full Sidewalk Closure",
-        "title": "West Indian American Labor Day Parade"
-      },
-      "promotion_allowed": false,
-      "public_map_modified": false,
-      "recurrence_label": "possible"
-    },
-    {
-      "current": {
-        "assignment_score": 400,
-        "borough": "Brooklyn",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-09-07",
-        "display_location": "Brooklyn",
-        "end_date_time": "2026-09-07T19:00:00.000-04:00",
-        "event_id": "208972",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-07&assignment=1",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:208972@2026-09-07",
-        "lane": "approved_major",
-        "latitude": null,
-        "longitude": null,
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "pin_integrity_reason": "missing_coords",
-        "source": {
-          "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "208972"
-        },
-        "start_date_time": "2026-09-07T10:00:00.000-04:00",
-        "title": "West Indian American Labor Day Parade"
-      },
-      "location_cache_modified": false,
-      "match_reasons": [
-        "name_exactish:1.00",
-        "season_delta_days:6",
-        "historical_street_closure_present"
-      ],
-      "match_score": 66,
-      "prior_year": {
-        "borough": "Brooklyn",
-        "cemsid": null,
-        "dataset": "bkfu-528j",
-        "date": "2025-09-01",
-        "display_location": "EASTERN PARKWAY between UTICA AVENUE and UNDERHILL AVENUE",
-        "end_date_time": "2025-09-01T18:00:00.000",
-        "event_id": "838711",
-        "event_type": "Street Festival",
-        "police_precinct": "71, 77, 78,",
-        "start_date_time": "2025-09-01T11:00:00.000",
-        "street_closure_type": "Full Street Closure",
-        "title": "West Indian American Labor Day Parade"
-      },
-      "promotion_allowed": false,
-      "public_map_modified": false,
-      "recurrence_label": "possible"
-    },
-    {
-      "current": {
-        "assignment_score": 400,
         "borough": "Queens",
         "certified_pin": false,
         "coordinate_status": "list_only",
         "date": "2026-09-12",
-        "display_location": "Queens",
-        "end_date_time": "2026-09-12T13:30:00.000-04:00",
-        "event_id": "1191616",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:1191616@2026-09-12",
-        "lane": "approved_major",
-        "latitude": null,
-        "longitude": null,
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "pin_integrity_reason": "missing_coords",
-        "source": {
-          "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "1191616"
-        },
-        "start_date_time": "2026-09-12T10:30:00.000-04:00",
-        "title": "Community March of Witness - United We March"
-      },
-      "location_cache_modified": false,
-      "match_reasons": [
-        "name_exactish:1.00",
-        "season_delta_days:6",
-        "historical_street_closure_present"
-      ],
-      "match_score": 66,
-      "prior_year": {
-        "borough": "Queens",
-        "cemsid": null,
-        "dataset": "bkfu-528j",
-        "date": "2025-09-06",
-        "display_location": "14-25 BEACH CHANNEL DRIVE, BEACH CHANNEL DRIVE between HORTON AVENUE and NAMEOKE AVENUE,  BEACH CHANNEL DRIVE between DIX AVENUE and MOTT AVENUE,  MOTT AVENUE between BEACH CHANNEL DRIVE and BEACH   22 STREET,  BEACH   22 STREET between MOTT AVENUE and CORNAGA AVENUE,  CORNAGA AVENUE between BEACH   22 STREET and BEACH   20 STREET,  BEACH   20 STREET between CORNAGA AVENUE and SEAGIRT BOULEVARD,  SEAGIRT BOULEVARD between BEACH   20 STREET and BEACH CHANNEL DRIVE,  BEACH CHANNEL DRIVE between NORTON AVENUE and BAY   32 STREET, Bayswater Park: Performance Space",
-        "end_date_time": "2025-09-06T13:30:00.000",
-        "event_id": "873274",
-        "event_type": "Parade",
-        "police_precinct": "101,",
-        "start_date_time": "2025-09-06T10:00:00.000",
-        "street_closure_type": "Full Street Closure",
-        "title": "Community March of Witness - United We March"
-      },
-      "promotion_allowed": false,
-      "public_map_modified": false,
-      "recurrence_label": "possible"
-    },
-    {
-      "current": {
-        "assignment_score": 400,
-        "borough": "Queens",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-09-12",
-        "display_location": "Queens",
+        "display_location": "14-25 BEACH CHANNEL DRIVE Queens",
         "end_date_time": "2026-09-12T13:30:00.000-04:00",
         "event_id": "1191616",
         "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
@@ -523,12 +682,12 @@
         "borough": "Queens",
         "certified_pin": false,
         "coordinate_status": "list_only",
-        "date": "2026-09-27",
-        "display_location": "Queens",
-        "end_date_time": "2026-09-27T14:00:00.000-04:00",
-        "event_id": "1193116",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-27&assignment=1",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:1193116@2026-09-27",
+        "date": "2026-09-12",
+        "display_location": "86-01 ROCKAWAY BEACH BOULEVARD Queens",
+        "end_date_time": "2026-09-12T13:30:00.000-04:00",
+        "event_id": "1191636",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1191636@2026-09-12",
         "lane": "approved_major",
         "latitude": null,
         "longitude": null,
@@ -537,10 +696,10 @@
         "pin_integrity_reason": "missing_coords",
         "source": {
           "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "1193116"
+          "source_event_id": "1191636"
         },
-        "start_date_time": "2026-09-27T12:00:00.000-04:00",
-        "title": "Queens Hispanic Parade"
+        "start_date_time": "2026-09-12T10:00:00.000-04:00",
+        "title": "Community March of Witness - United We March"
       },
       "location_cache_modified": false,
       "match_reasons": [
@@ -553,15 +712,116 @@
         "borough": "Queens",
         "cemsid": null,
         "dataset": "bkfu-528j",
-        "date": "2025-09-21",
-        "display_location": "69 STREET  between 37 AVENUE  and 34 AVENUE ,  37 AVENUE  between 69 STREET  and 87 STREET ,  87 STREET  between 37 AVENUE  and 35 AVENUE ,  37 AVENUE  between 85 STREET  and 86 STREET",
-        "end_date_time": "2025-09-21T14:00:00.000",
-        "event_id": "843703",
+        "date": "2025-09-06",
+        "display_location": "14-25 BEACH CHANNEL DRIVE, BEACH CHANNEL DRIVE between HORTON AVENUE and NAMEOKE AVENUE,  BEACH CHANNEL DRIVE between DIX AVENUE and MOTT AVENUE,  MOTT AVENUE between BEACH CHANNEL DRIVE and BEACH   22 STREET,  BEACH   22 STREET between MOTT AVENUE and CORNAGA AVENUE,  CORNAGA AVENUE between BEACH   22 STREET and BEACH   20 STREET,  BEACH   20 STREET between CORNAGA AVENUE and SEAGIRT BOULEVARD,  SEAGIRT BOULEVARD between BEACH   20 STREET and BEACH CHANNEL DRIVE,  BEACH CHANNEL DRIVE between NORTON AVENUE and BAY   32 STREET, Bayswater Park: Performance Space",
+        "end_date_time": "2025-09-06T13:30:00.000",
+        "event_id": "873274",
         "event_type": "Parade",
-        "police_precinct": "115,",
-        "start_date_time": "2025-09-21T12:00:00.000",
+        "police_precinct": "101,",
+        "start_date_time": "2025-09-06T10:00:00.000",
         "street_closure_type": "Full Street Closure",
-        "title": "Queens Hispanic Parade"
+        "title": "Community March of Witness - United We March"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 400,
+        "borough": "Queens",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-09-12",
+        "display_location": "86-01 ROCKAWAY BEACH BOULEVARD Queens",
+        "end_date_time": "2026-09-12T13:30:00.000-04:00",
+        "event_id": "1191636",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1191636@2026-09-12",
+        "lane": "approved_major",
+        "latitude": null,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "pin_integrity_reason": "missing_coords",
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1191636"
+        },
+        "start_date_time": "2026-09-12T10:00:00.000-04:00",
+        "title": "Community March of Witness - United We March"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_exactish:1.00",
+        "season_delta_days:6",
+        "historical_street_closure_present"
+      ],
+      "match_score": 66,
+      "prior_year": {
+        "borough": "Queens",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-06",
+        "display_location": "ROCKAWAY BEACH BOULEVARD between BEACH   85 STREET and BEACH   86 STREET,  ROCKAWAY BEACH BOULEVARD between BEACH   86 STREET and BEACH   73 STREET,  BEACH   73 STREET between ROCKAWAY BEACH BOULEVARD and BEACH CHANNEL DRIVE, Bayswater Park: Performance Space Bayswater Park  between Performance Space  and e, Bayswater Park: BBQ Area Orange ,Bayswater Park: BBQ Area Yellow",
+        "end_date_time": "2025-09-06T13:30:00.000",
+        "event_id": "872950",
+        "event_type": "Parade",
+        "police_precinct": "100, 101,",
+        "start_date_time": "2025-09-06T11:00:00.000",
+        "street_closure_type": "Full Street Closure",
+        "title": "Community March of Witness - United We March"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "possible"
+    },
+    {
+      "current": {
+        "assignment_score": 400,
+        "borough": "Brooklyn",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-09-05",
+        "display_location": "ST JOHN PLACE between BROOKLYN AVENUE and KINGSTON AVENUE  Brooklyn",
+        "end_date_time": "2026-09-05T17:00:00.000-04:00",
+        "event_id": "1193476",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-05&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1193476@2026-09-05",
+        "lane": "approved_major",
+        "latitude": null,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "pin_integrity_reason": "missing_coords",
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1193476"
+        },
+        "start_date_time": "2026-09-05T08:00:00.000-04:00",
+        "title": "West Indian American Junior Parade"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.85",
+        "place_partial:0.57",
+        "season_delta_days:4",
+        "historical_street_closure_present"
+      ],
+      "match_score": 63,
+      "prior_year": {
+        "borough": "Brooklyn",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-01",
+        "display_location": "EASTERN PARKWAY between WASHINGTON AVENUE and UNDERHILL AVENUE,  EASTERN PARKWAY between NOSTRAND AVENUE and NEW YORK AVENUE,  EASTERN PARKWAY between SCHENECTADY AVENUE and UTICA AVENUE",
+        "end_date_time": "2025-09-02T18:00:00.000",
+        "event_id": "877738",
+        "event_type": "Street Event",
+        "police_precinct": "71, 77, 78,",
+        "start_date_time": "2025-09-01T07:30:00.000",
+        "street_closure_type": "Full Sidewalk Closure",
+        "title": "West Indian American Labor Day Parade"
       },
       "promotion_allowed": false,
       "public_map_modified": false,
@@ -580,7 +840,7 @@
   "premium_label": "Viral Recurrence Memory (premium/operator)",
   "promotion_allowed": false,
   "public_map_modified": false,
-  "reference_today_nyc": "2026-08-29",
+  "reference_today_nyc": "2026-08-30",
   "schema_version": "photographer-viral-recurrence-matches-v1",
   "staged_feed_modified": false
 }
