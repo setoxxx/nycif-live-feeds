@@ -2,10 +2,11 @@
 """Classify unresolved canonical event locations without promoting coordinates.
 
 The V3 map-state status counts every canonical occurrence, while only a subset is
-reader-facing. This diagnostic therefore classifies every LIST_ONLY or
-REVIEW_REQUIRED canonical occurrence and records whether each row is currently
-reader-facing public. It never changes location_cache, canonical event rows,
-map geometry, or publication state.
+reader-facing. This diagnostic classifies every LIST_ONLY or REVIEW_REQUIRED
+canonical occurrence and records whether each row is reader-facing public.
+Cross-artifact state reconciliation is enforced only when canonical and V3
+status belong to the same release window; stale checked-in artifacts are labeled
+instead of being falsely compared. No coordinates or publication state change.
 """
 from __future__ import annotations
 
@@ -68,8 +69,26 @@ def extract_rows(payload: Any) -> list[dict[str, Any]]:
     return []
 
 
-def load_rows(path: Path) -> list[dict[str, Any]]:
-    return extract_rows(json.loads(path.read_text(encoding="utf-8")))
+def load_payload(path: Path) -> tuple[Any, list[dict[str, Any]], str | None]:
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    generated = str(payload.get("generated_at_utc") or "").strip() if isinstance(payload, dict) else ""
+    return payload, extract_rows(payload), generated or None
+
+
+def parse_generated(value: Any) -> datetime | None:
+    text = str(value or "").strip()
+    if not text:
+        return None
+    try:
+        return datetime.fromisoformat(text.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
+def same_release_window(canonical_generated: Any, status_generated: Any, max_skew_seconds: int = 900) -> bool:
+    left = parse_generated(canonical_generated)
+    right = parse_generated(status_generated)
+    return bool(left and right and abs((left - right).total_seconds()) <= max_skew_seconds)
 
 
 def source_parts(row: dict[str, Any]) -> tuple[dict[str, Any], str, str]:
@@ -223,7 +242,7 @@ def build(rows: list[dict[str, Any]], *, expected_state_counts: dict[str, Any] |
         "bucket_counts": {bucket: counts.get(bucket, 0) for bucket in BUCKETS},
         "public_bucket_counts": {bucket: public_counts.get(bucket, 0) for bucket in BUCKETS},
         "expected_v3_unresolved_state_count": expected_unresolved if expected else None,
-        "canonical_state_count_matches_v3_status": state_count_matches_v3,
+        "canonical_state_count_matches_v3_status": state_count_matches_v3 if expected else None,
         "duplicate_occurrence_count": duplicate_ids, "promotion_attempt_count": 0,
         "public_map_modified": False, "location_cache_modified": False, "staged_feed_modified": False,
         "qa_pass": duplicate_ids == 0 and len(queue) == sum(counts.values()) and state_count_matches_v3,
@@ -233,9 +252,16 @@ def build(rows: list[dict[str, Any]], *, expected_state_counts: dict[str, Any] |
 
 
 def main() -> int:
+    canonical_payload, rows, canonical_generated = load_payload(CANONICAL)
     status = json.loads(V3_STATUS.read_text(encoding="utf-8")) if V3_STATUS.exists() else {}
-    expected_state_counts = status.get("map_state_counts") if isinstance(status.get("map_state_counts"), dict) else None
-    queue, report = build(load_rows(CANONICAL), expected_state_counts=expected_state_counts)
+    status_generated = status.get("generated_at_utc") if isinstance(status, dict) else None
+    comparable = same_release_window(canonical_generated, status_generated)
+    expected_state_counts = status.get("map_state_counts") if comparable and isinstance(status.get("map_state_counts"), dict) else None
+    queue, report = build(rows, expected_state_counts=expected_state_counts)
+    report["canonical_generated_at_utc"] = canonical_generated
+    report["v3_status_generated_at_utc"] = status_generated
+    report["v3_status_comparable"] = comparable
+    report["canonical_artifact_type"] = canonical_payload.get("artifact_type") if isinstance(canonical_payload, dict) else None
     OUT.write_text(json.dumps({"schema_version": report["schema_version"], "generated_at_utc": report["generated_at_utc"], "rows": queue}, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     REPORT.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2, sort_keys=True))
