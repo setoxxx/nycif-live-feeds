@@ -1,0 +1,58 @@
+name: Durable Location Reuse PR QA
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/location-reuse-pr-qa.yml'
+      - '.github/workflows/discovery-feed-refresh.yml'
+      - 'scripts/apply_durable_location_reuse_v1.py'
+      - 'scripts/export_supabase_location_registry_v1.py'
+      - 'scripts/prepare_location_reuse_runtime_validator.py'
+      - 'scripts/build_maplibre_reader_safe_with_approx_v1.py'
+      - 'scripts/sync_supabase_location_registry_v1.py'
+      - 'tests/test_durable_location_reuse_v1.py'
+      - 'tests/test_maplibre_durable_location_reuse_v1.py'
+      - 'tests/test_prepare_location_reuse_runtime_validator.py'
+      - 'tests/test_supabase_location_registry_sync_v1.py'
+
+permissions:
+  contents: read
+
+jobs:
+  durable-location-reuse:
+    runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/scripts
+    steps:
+      - name: Check out exact pull request head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Compile durable location reuse lane
+        run: |
+          python -m py_compile \
+            scripts/apply_durable_location_reuse_v1.py \
+            scripts/export_supabase_location_registry_v1.py \
+            scripts/prepare_location_reuse_runtime_validator.py \
+            scripts/build_maplibre_reader_safe_with_approx_v1.py \
+            scripts/sync_supabase_location_registry_v1.py
+
+      - name: Run durable location reuse tests
+        run: |
+          python -m unittest tests.test_durable_location_reuse_v1 -v
+          python -m unittest tests.test_maplibre_durable_location_reuse_v1 -v
+          python -m unittest tests.test_prepare_location_reuse_runtime_validator -v
+          python -m unittest tests.test_supabase_location_registry_sync_v1 -v
+
+      - name: Verify transformed production transaction syntax
+        run: |
+          python scripts/prepare_location_reuse_runtime_validator.py \
+            --source scripts/run_discovery_feed_refresh.sh \
+            --output /tmp/nycif-run-discovery-feed-refresh-reuse.sh
+          bash -n /tmp/nycif-run-discovery-feed-refresh-reuse.sh
