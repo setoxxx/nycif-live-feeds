@@ -18,7 +18,7 @@ from __future__ import annotations
 import json
 import math
 import re
-from collections import Counter
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
@@ -168,9 +168,19 @@ def apply() -> dict[str, Any]:
     candidates = build_index(semantic)
     candidate_sources = {(key[0], key[1]) for key in candidates}
     candidate_days = {identity_day(key) for key in candidates}
+    candidate_dataset_counts: Counter[str] = Counter(key[0] for key in candidates)
+    candidate_source_id_datasets: dict[str, set[str]] = defaultdict(set)
+    candidate_source_id_days: set[tuple[str, str]] = set()
+    for dataset, source_event_id, occurrence_start in candidates:
+        candidate_source_id_datasets[source_event_id].add(dataset)
+        candidate_source_id_days.add((source_event_id, occurrence_start[:10]))
+
     source_counts: Counter[str] = Counter()
     reason_counts: Counter[str] = Counter()
     eligibility_counts: Counter[str] = Counter()
+    eligible_canonical_dataset_counts: Counter[str] = Counter()
+    source_id_dataset_pairs: Counter[str] = Counter()
+    eligible_canonical_source_ids: set[str] = set()
     recovered = 0
     location_mismatch = 0
     borough_mismatch = 0
@@ -184,11 +194,13 @@ def apply() -> dict[str, Any]:
             eligibility_counts["already_exact"] += 1
             continue
         eligibility_counts["eligible_non_exact"] += 1
+        key = identity(event)
+        eligible_canonical_dataset_counts[key[0]] += 1
+        eligible_canonical_source_ids.add(key[1])
         event_location = location_text(event)
         if STREET_SEGMENT_RE.search(normalize_text_legacy(event_location)):
             route_blocked += 1
             continue
-        key = identity(event)
         candidate = candidates.get(key)
         if candidate is None:
             eligibility_counts["no_exact_identity_candidate"] += 1
@@ -196,6 +208,13 @@ def apply() -> dict[str, Any]:
                 eligibility_counts["source_identity_candidate_exists"] += 1
             if identity_day(key) in candidate_days:
                 eligibility_counts["same_day_candidate_exists"] += 1
+            candidate_datasets = candidate_source_id_datasets.get(key[1])
+            if candidate_datasets:
+                eligibility_counts["source_event_id_candidate_exists"] += 1
+                for candidate_dataset in candidate_datasets:
+                    source_id_dataset_pairs[f"{key[0]} -> {candidate_dataset}"] += 1
+                if (key[1], key[2][:10]) in candidate_source_id_days:
+                    eligibility_counts["source_event_id_same_day_candidate_exists"] += 1
             continue
         eligibility_counts["exact_identity_candidate_match"] += 1
         if normalize_text_legacy(event_location) != normalize_text_legacy(candidate["location"]):
@@ -262,6 +281,7 @@ def apply() -> dict[str, Any]:
         ):
             invalid += 1
 
+    candidate_source_ids = set(candidate_source_id_datasets)
     report = {
         "schema_version": "NYCIF_APPROXIMATE_MARKER_RECOVERY_V1",
         "authority": AUTHORITY,
@@ -270,6 +290,12 @@ def apply() -> dict[str, Any]:
         "candidate_occurrences": len(candidates),
         "candidate_source_keys": len(candidate_sources),
         "candidate_day_keys": len(candidate_days),
+        "candidate_source_id_count": len(candidate_source_ids),
+        "candidate_dataset_counts": dict(sorted(candidate_dataset_counts.items())),
+        "eligible_canonical_source_id_count": len(eligible_canonical_source_ids),
+        "eligible_canonical_dataset_counts": dict(sorted(eligible_canonical_dataset_counts.items())),
+        "source_event_id_intersection_count": len(candidate_source_ids & eligible_canonical_source_ids),
+        "source_id_dataset_pairs": dict(source_id_dataset_pairs.most_common(20)),
         "eligibility_counts": dict(sorted(eligibility_counts.items())),
         "recovered_approximate_markers": recovered,
         "source_counts": dict(sorted(source_counts.items())),
