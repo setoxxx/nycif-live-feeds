@@ -28,7 +28,11 @@ BUCKETS = (
     "PARK_SUBFACILITY", "SPORTS_FIELD", "ROUTE_OR_STREET_SEGMENT", "BOROUGH_ONLY", "MALFORMED_SOURCE",
 )
 BOROUGHS = {"bronx", "brooklyn", "manhattan", "queens", "staten island", "new york", "new york city", "nyc"}
-ADDRESS_RE = re.compile(r"^\s*\d+[a-zA-Z-]*\s+\S+")
+ADDRESS_RE = re.compile(r"^\s*(?!\d+(?:st|nd|rd|th)\b)\d+[a-zA-Z-]*\s+\S+", re.I)
+ORDINAL_STREET_RE = re.compile(
+    r"^\s*\d+(?:st|nd|rd|th)\s+(?:st(?:reet)?|ave(?:nue)?|rd|road|blvd|boulevard|dr|drive|pl|place|way|pkwy|parkway)\b",
+    re.I,
+)
 INTERSECTION_RE = re.compile(r"\b(?:and|&|at)\b.*\b(?:st(?:reet)?|ave(?:nue)?|rd|road|blvd|boulevard|dr|drive|pl|place|way|pkwy|parkway)\b", re.I)
 ROUTE_RE = re.compile(r"\b(?:between|from\b.+\bto\b|route|street closure|curb lane|roadway|march route|parade route)\b", re.I)
 SPORTS_RE = re.compile(r"\b(?:soccer|baseball|softball|football|basketball|tennis|court|field|diamond|pitch)\b", re.I)
@@ -37,7 +41,6 @@ VENUE_RE = re.compile(r"\b(?:theater|theatre|hall|museum|gallery|library|school|
 
 
 def extract_rows(payload: Any) -> list[dict[str, Any]]:
-    """Read common repository JSON envelopes without importing legacy packages."""
     if isinstance(payload, list):
         return [row for row in payload if isinstance(row, dict)]
     if not isinstance(payload, dict):
@@ -62,7 +65,10 @@ def source_parts(row: dict[str, Any]) -> tuple[dict[str, Any], str, str]:
 
 def location_text(row: dict[str, Any]) -> str:
     nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
-    values = (nycif.get("source_location_text"), row.get("event_location"), row.get("location"), row.get("venue_name"), row.get("address"), row.get("street_address"))
+    values = (
+        nycif.get("source_location_text"), row.get("event_location"), row.get("location"),
+        row.get("venue_name"), row.get("address"), row.get("street_address"),
+    )
     for value in values:
         value_text = str(value or "").strip()
         if value_text:
@@ -86,8 +92,9 @@ def classify_row(row: dict[str, Any]) -> tuple[str, list[str]]:
     borough = str(row.get("borough") or "").strip().lower()
     if not lower or lower in BOROUGHS or (borough and lower == borough):
         return "BOROUGH_ONLY", ["borough_only_location"]
-    if ROUTE_RE.search(place):
-        return "ROUTE_OR_STREET_SEGMENT", ["route_language"]
+    if ROUTE_RE.search(place) or ORDINAL_STREET_RE.search(place):
+        reason = "route_language" if ROUTE_RE.search(place) else "ordinal_street_without_house_number"
+        return "ROUTE_OR_STREET_SEGMENT", [reason]
     cemsid = row.get("source_cemsid") or source.get("source_cemsid") or source.get("cemsid")
     if cemsid:
         return "CEMSID", ["source_cemsid"]
@@ -103,10 +110,10 @@ def classify_row(row: dict[str, Any]) -> tuple[str, list[str]]:
         return "PARK_SUBFACILITY", ["park_subfacility_language"]
     if SPORTS_RE.search(place):
         return "SPORTS_FIELD", ["sports_location_language"]
-    if ADDRESS_RE.search(place):
-        return "EXACT_ADDRESS", ["street_number_pattern"]
     if INTERSECTION_RE.search(place):
         return "INTERSECTION", ["intersection_language"]
+    if ADDRESS_RE.search(place):
+        return "EXACT_ADDRESS", ["street_number_pattern"]
     if VENUE_RE.search(place):
         return "KNOWN_VENUE", ["venue_name_pattern"]
     return "KNOWN_FACILITY", ["named_place_requires_registry_match"]
