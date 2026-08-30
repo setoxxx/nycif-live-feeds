@@ -60,6 +60,28 @@ class LocationRegistrySyncTests(unittest.TestCase):
         self.assertEqual(len(payload["aliases"]), 1)
         self.assertEqual(payload["aliases"][0]["occurrence_count"], 2)
 
+    def test_reused_location_preserves_original_authority(self):
+        row = event("MAP_READY", True, "Known Place", "8", cemsid="400")
+        row["location_id"] = "cems:400"
+        row["nycif"].update({
+            "location_id": "cems:400",
+            "location_authority": "durable_location_registry_v1",
+            "location_reuse_source_authority": "nyc_parks_official_facility_geometry",
+        })
+        payload, report = build_payload([row])
+        stored = payload["locations"][0]
+        self.assertEqual(stored["location_authority"], "nyc_parks_official_facility_geometry")
+        self.assertEqual(stored["metadata"]["observed_location_authority"], "durable_location_registry_v1")
+        self.assertTrue(stored["metadata"]["reused_from_registry"])
+        self.assertEqual(report["circular_reuse_authority_count"], 0)
+        self.assertTrue(report["qa_pass"])
+
+    def test_reused_location_without_original_authority_fails_closed(self):
+        row = event("MAP_READY", True, "Known Place", "9", cemsid="500")
+        row["nycif"]["location_authority"] = "durable_location_registry_v1"
+        with self.assertRaises(RuntimeError):
+            build_payload([row])
+
 
 if __name__ == "__main__":
     unittest.main()
