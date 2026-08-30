@@ -26,6 +26,8 @@ on:
       - 'scripts/build_approximate_marker_reader_v1.py'
       - 'scripts/build_location_resolution_backlog_v1.py'
       - 'tests/test_location_resolution_backlog_v1.py'
+      - 'scripts/sync_supabase_location_registry_v1.py'
+      - 'tests/test_supabase_location_registry_sync_v1.py'
       - 'scripts/sources/**'
       - 'tests/test_ticketmaster_source_adapter.py'
       - 'supabase/migrations/**'
@@ -69,10 +71,11 @@ jobs:
 
       - name: Install guarded V3 runtime validation
         run: |
-          python -m py_compile scripts/prepare_v3_runtime_validator.py scripts/build_location_resolution_backlog_v1.py scripts/sources/base.py scripts/sources/ticketmaster.py
+          python -m py_compile scripts/prepare_v3_runtime_validator.py scripts/build_location_resolution_backlog_v1.py scripts/sync_supabase_location_registry_v1.py scripts/sources/base.py scripts/sources/ticketmaster.py
           python -m unittest tests.test_prepare_v3_runtime_validator -v
           python -m unittest tests.test_occurrence_identity_contract -v
           python -m unittest tests.test_location_resolution_backlog_v1 -v
+          python -m unittest tests.test_supabase_location_registry_sync_v1 -v
           python -m unittest tests.test_ticketmaster_source_adapter -v
           python scripts/prepare_v3_runtime_validator.py \
             --source scripts/run_discovery_feed_refresh.sh \
@@ -83,6 +86,26 @@ jobs:
       - name: Build, validate, and commit READY discovery feed
         id: production
         run: bash scripts/run_discovery_feed_refresh.sh
+
+      - name: Persist approved V3 location knowledge
+        if: success()
+        env:
+          SUPABASE_URL: 'https://oggwpvdirkrnzoolparx.supabase.co'
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          test -n "$SUPABASE_SERVICE_ROLE_KEY"
+          python scripts/sync_supabase_location_registry_v1.py --apply
+          python - <<'PY'
+          import json
+          report = json.load(open('data/location_registry_sync_v1_report.json'))
+          if report.get('qa_pass') is not True or report.get('applied') is not True:
+              raise SystemExit('durable location registry sync did not pass/apply')
+          if report.get('approximate_certified_count') != 0:
+              raise SystemExit('approximate location was incorrectly certified')
+          if report.get('protected_cache_modified') is not False or report.get('event_rows_modified') is not False:
+              raise SystemExit('location sync mutated protected source authority')
+          print(json.dumps(report, indent=2, sort_keys=True))
+          PY
 
       - name: Build non-promoting unresolved location backlog
         if: success()
@@ -102,9 +125,13 @@ jobs:
           PY
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/location_resolution_backlog_v1.json data/location_resolution_backlog_v1_report.json
+          git add \
+            data/location_registry_sync_v1_payload.json \
+            data/location_registry_sync_v1_report.json \
+            data/location_resolution_backlog_v1.json \
+            data/location_resolution_backlog_v1_report.json
           if ! git diff --cached --quiet; then
-            git commit -m "Refresh location resolution backlog"
+            git commit -m "Refresh durable location authority reports"
             git push origin HEAD:main
           fi
 
