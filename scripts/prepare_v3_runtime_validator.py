@@ -120,10 +120,6 @@ approx_safe = json.load(open("data/reader-safe/approximate-marker-recovery-v1-st
 health = json.load(open("status/nycif-daily-data-health.json"))
 '''
 
-# Include the following health check in the exact replacement anchor. The
-# recovery replacement intentionally starts with the same MapLibre qa_pass
-# assertion, so anchoring only that assertion makes the drift guard match its
-# own replacement and fail even when the transform is correct.
 MAP_SAFE_QA_BLOCK = '''if not map_safe.get("qa_pass"):
     sys.exit("MapLibre reader-safe marker audit failed")
 if not health.get("release_ready") or health.get("status") != "READY":
@@ -159,13 +155,18 @@ GIT_ADD_WITH_RECOVERY_BLOCK = '''    data/reader-safe/national-map-events-v03.ge
 
 
 def _replace_exactly_once(source: str, legacy: str, replacement: str, label: str) -> str:
+    """Replace one exact legacy block and fail closed on source drift.
+
+    The precondition is intentionally checked before replacement. Some valid
+    replacements preserve the legacy block as a prefix and add stronger V3
+    behavior after it, so checking whether the legacy substring exists in the
+    transformed output creates false failures. Required replacement tokens are
+    validated separately by ``transform``.
+    """
     occurrences = source.count(legacy)
     if occurrences != 1:
         raise RuntimeError(f"expected exactly one {label}; found {occurrences}")
-    transformed = source.replace(legacy, replacement, 1)
-    if legacy in transformed:
-        raise RuntimeError(f"{label} remained after transform")
-    return transformed
+    return source.replace(legacy, replacement, 1)
 
 
 def transform(source: str) -> str:
