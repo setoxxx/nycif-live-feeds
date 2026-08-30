@@ -24,10 +24,11 @@ on:
       - 'scripts/apply_approximate_marker_recovery_v1.py'
       - 'scripts/build_maplibre_reader_safe_with_approx_v1.py'
       - 'scripts/build_approximate_marker_reader_v1.py'
-      - 'scripts/build_location_resolution_backlog_v1.py'
-      - 'tests/test_location_resolution_backlog_v1.py'
+      - 'scripts/classify_unresolved_location_backlog_v1.py'
+      - 'tests/test_classify_unresolved_location_backlog_v1.py'
       - 'scripts/sources/**'
       - 'tests/test_ticketmaster_source_adapter.py'
+      - 'supabase/migrations/**'
       - 'scripts/publish_blocked_daily_refresh.sh'
       - 'scripts/run_daily_refresh_stage.py'
       - 'scripts/test_live_event_intake_refresh_current.py'
@@ -68,10 +69,10 @@ jobs:
 
       - name: Install guarded V3 runtime validation
         run: |
-          python -m py_compile scripts/prepare_v3_runtime_validator.py scripts/build_location_resolution_backlog_v1.py scripts/sources/base.py scripts/sources/ticketmaster.py
+          python -m py_compile scripts/prepare_v3_runtime_validator.py scripts/classify_unresolved_location_backlog_v1.py scripts/sources/base.py scripts/sources/ticketmaster.py
           python -m unittest tests.test_prepare_v3_runtime_validator -v
           python -m unittest tests.test_occurrence_identity_contract -v
-          python -m unittest tests.test_location_resolution_backlog_v1 -v
+          python -m unittest tests.test_classify_unresolved_location_backlog_v1 -v
           python -m unittest tests.test_ticketmaster_source_adapter -v
           python scripts/prepare_v3_runtime_validator.py \
             --source scripts/run_discovery_feed_refresh.sh \
@@ -83,28 +84,27 @@ jobs:
         id: production
         run: bash scripts/run_discovery_feed_refresh.sh
 
-      - name: Build non-promoting location resolution backlog
+      - name: Build non-promoting unresolved location backlog
         if: success()
         run: |
-          python scripts/build_location_resolution_backlog_v1.py
+          python scripts/classify_unresolved_location_backlog_v1.py
           python - <<'PY'
           import json
-          report = json.load(open('data/location_resolution_backlog_v1_report.json'))
+          report = json.load(open('data/unresolved_location_backlog_v1_report.json'))
           if report.get('qa_pass') is not True:
-              raise SystemExit('location resolution backlog QA failed')
-          for key in ('promotion_attempt_count',):
-              if report.get(key) != 0:
-                  raise SystemExit(f'{key} must remain zero')
-          for key in ('public_map_modified', 'location_cache_modified', 'staged_feed_modified'):
+              raise SystemExit('unresolved location backlog QA failed')
+          if report.get('promotion_count') != 0:
+              raise SystemExit('promotion_count must remain zero')
+          for key in ('public_map_modified', 'location_cache_modified'):
               if report.get(key) is not False:
                   raise SystemExit(f'{key} must remain false')
           print(json.dumps(report, indent=2, sort_keys=True))
           PY
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/location_resolution_backlog_v1.json data/location_resolution_backlog_v1_report.json
+          git add data/unresolved_location_backlog_v1.json data/unresolved_location_backlog_v1_report.json
           if ! git diff --cached --quiet; then
-            git commit -m "Refresh location resolution backlog"
+            git commit -m "Refresh unresolved location backlog"
             git push origin HEAD:main
           fi
 
