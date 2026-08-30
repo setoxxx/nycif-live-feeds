@@ -5,7 +5,9 @@ on:
     paths:
       - 'scripts/occurrence_identity_contract.py'
       - 'scripts/test_occurrence_identity_contract.py'
+      - 'tests/test_occurrence_identity_contract.py'
       - 'scripts/audit_occurrence_identity_enforcement.py'
+      - 'scripts/verify_occurrence_identity_runtime_audit.py'
       - '.github/workflows/occurrence-identity-enforcement-audit.yml'
       - 'scripts/project_events_discovery_v02.py'
       - 'data/source_lineage_registry_v01.json'
@@ -34,10 +36,21 @@ jobs:
         run: echo "AUDIT_SOURCE_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
 
       - name: Focused occurrence identity tests
-        run: python scripts/test_occurrence_identity_contract.py
+        run: |
+          python scripts/test_occurrence_identity_contract.py
+          python -m unittest tests.test_occurrence_identity_contract -v
 
-      - name: Protected occurrence identity enforcement audit
-        run: python scripts/audit_occurrence_identity_enforcement.py
+      - name: Produce protected historical/current occurrence audit evidence
+        run: |
+          set +e
+          python scripts/audit_occurrence_identity_enforcement.py
+          historical_status=$?
+          set -e
+          test -f /tmp/occurrence-identity-enforcement/occurrence_identity_enforcement_summary.json
+          echo "historical_audit_exit_status=$historical_status"
+
+      - name: Verify current-runtime occurrence identity acceptance criteria
+        run: python scripts/verify_occurrence_identity_runtime_audit.py
 
       - name: Protected source-lineage contract check
         run: |
@@ -76,7 +89,9 @@ jobs:
           import json
           from pathlib import Path
           summary = json.loads(Path('/tmp/occurrence-identity-enforcement/occurrence_identity_enforcement_summary.json').read_text())
-          assert summary['qa_pass'] is True, summary
+          gate = json.loads(Path('/tmp/occurrence-identity-enforcement/current_runtime_occurrence_identity_gate.json').read_text())
+          assert gate['qa_pass'] is True, gate
+          assert gate['computed_after_hidden_count'] == 0, gate
           assert summary['after_open_data_in_window_hidden_by_source_id'] == 0, summary
           assert summary['duplicate_canonical_id_count'] == 0, summary
           assert summary['raw_disposition_accounting_pass'] is True, summary
