@@ -19,6 +19,11 @@ on:
       - 'scripts/run_discovery_feed_refresh.sh'
       - 'scripts/prepare_v3_runtime_validator.py'
       - 'tests/test_prepare_v3_runtime_validator.py'
+      - 'scripts/prepare_p11_route_runtime_validator.py'
+      - 'tests/test_prepare_p11_route_runtime_validator.py'
+      - 'scripts/build_street_segment_route_authority_v1.py'
+      - 'tests/test_build_street_segment_route_authority_v1.py'
+      - 'scripts/run_street_segment_route_runtime_v1.sh'
       - 'scripts/occurrence_identity_contract.py'
       - 'tests/test_occurrence_identity_contract.py'
       - 'scripts/apply_approximate_marker_recovery_v1.py'
@@ -69,19 +74,40 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install guarded V3 runtime validation
+      - name: Install P11 route runtime dependencies
+        shell: bash
         run: |
-          python -m py_compile scripts/prepare_v3_runtime_validator.py scripts/build_location_resolution_backlog_v1.py scripts/sync_supabase_location_registry_v1.py scripts/sources/base.py scripts/sources/ticketmaster.py
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends gdal-bin unzip
+          docker pull nycplanning/docker-geosupport:26.2.0
+          docker run --rm nycplanning/docker-geosupport:26.2.0 \
+            python -c 'from geosupport import Geosupport; Geosupport(); print("NYCIF_GEOSUPPORT_IMPORT_OK=1")'
+          ogrinfo --version
+
+      - name: Install guarded V3 plus P11 runtime validation
+        run: |
+          python -m py_compile \
+            scripts/prepare_v3_runtime_validator.py \
+            scripts/prepare_p11_route_runtime_validator.py \
+            scripts/build_street_segment_route_authority_v1.py \
+            scripts/build_location_resolution_backlog_v1.py \
+            scripts/sync_supabase_location_registry_v1.py \
+            scripts/sources/base.py \
+            scripts/sources/ticketmaster.py
           python -m unittest tests.test_prepare_v3_runtime_validator -v
+          python -m unittest tests.test_prepare_p11_route_runtime_validator -v
+          python -m unittest tests.test_build_street_segment_route_authority_v1 -v
           python -m unittest tests.test_occurrence_identity_contract -v
           python -m unittest tests.test_location_resolution_backlog_v1 -v
           python -m unittest tests.test_supabase_location_registry_sync_v1 -v
           python -m unittest tests.test_ticketmaster_source_adapter -v
-          python scripts/prepare_v3_runtime_validator.py \
+          bash -n scripts/run_street_segment_route_runtime_v1.sh
+          python scripts/prepare_p11_route_runtime_validator.py \
             --source scripts/run_discovery_feed_refresh.sh \
-            --output /tmp/nycif-run-discovery-feed-refresh-v3.sh
-          bash -n /tmp/nycif-run-discovery-feed-refresh-v3.sh
-          cp /tmp/nycif-run-discovery-feed-refresh-v3.sh scripts/run_discovery_feed_refresh.sh
+            --output /tmp/nycif-run-discovery-feed-refresh-p11.sh
+          bash -n /tmp/nycif-run-discovery-feed-refresh-p11.sh
+          cp /tmp/nycif-run-discovery-feed-refresh-p11.sh scripts/run_discovery_feed_refresh.sh
 
       - name: Build, validate, and commit READY discovery feed
         id: production
