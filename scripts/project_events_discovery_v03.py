@@ -9,8 +9,8 @@ but replaces its two legacy authorities at runtime:
 
 The legacy module is therefore a classification/output library, not an identity
 or coordinate authority. V3 fails closed if duplicate exact occurrences,
-unsupported exact coordinates, silent raw-row loss, or legacy publication claims
-survive the projection.
+unsupported exact coordinates, silent raw-row loss, source-location loss, or
+legacy publication claims survive the projection.
 """
 from __future__ import annotations
 
@@ -74,6 +74,28 @@ def v2_rejected_identity_sets(dispositions: list[dict[str, Any]]):
     return set(contract.sources), ScopedRejectedOccurrences(set(contract.exact), set(contract.days))
 
 
+def source_location_text(row: dict[str, Any], event: dict[str, Any] | None = None) -> str | None:
+    """Preserve the most specific source-provided public location text.
+
+    Location authority and point authority are separate. Even when exact geometry
+    is withheld, the reader must retain the source's actual event_location instead
+    of degrading it to a borough-only label.
+    """
+    event = event if isinstance(event, dict) else {}
+    for value in (
+        row.get("event_location"),
+        row.get("location"),
+        row.get("display_location"),
+        row.get("address"),
+        event.get("location"),
+        event.get("address"),
+    ):
+        text = str(value or "").strip()
+        if text:
+            return text
+    return None
+
+
 def apply_v3_map_publication_gate(
     event: dict[str, Any],
     row: dict[str, Any],
@@ -85,8 +107,17 @@ def apply_v3_map_publication_gate(
     canonical occurrence must also be a standalone public event. Supporting,
     grouped, child, maintenance, private, or operator records are preserved but
     cannot retain exact public geometry.
+
+    Exact point authority is independent from display-location preservation:
+    LIST_ONLY/REVIEW_REQUIRED events still retain their exact source location
+    text so the resolver can retry later and the public event card does not lose
+    useful source evidence.
     """
     nycif = event.setdefault("nycif", {})
+    source_location = source_location_text(row, event)
+    if source_location:
+        nycif["source_location_text"] = source_location
+
     semantic_state = str(decision.get("map_eligibility_state") or "REVIEW_REQUIRED")
     semantic_exact = semantic_state == "MAP_READY" and decision.get("certified_pin") is True
     event_role = str(event.get("event_role") or "")
@@ -129,7 +160,8 @@ def apply_v3_map_publication_gate(
         elif disposition not in PRESERVED_NON_MARKER_DISPOSITIONS:
             nycif["display_disposition"] = "list_only"
         event["location"] = (
-            decision.get("general_area_label")
+            source_location
+            or decision.get("general_area_label")
             or row.get("neighborhood")
             or event.get("borough")
             or "Location under review"
@@ -152,6 +184,11 @@ def v3_build_base_event(row: dict[str, Any], **kwargs: Any) -> dict[str, Any] | 
     event = _ORIGINAL_BUILD_BASE_EVENT(row, **kwargs)
     if event is None:
         return None
+    source_location = source_location_text(row, event)
+    if source_location:
+        event["location"] = source_location
+        nycif = event.setdefault("nycif", {})
+        nycif["source_location_text"] = source_location
     decision = semantic_map_decision(row)
     return apply_v3_map_publication_gate(event, row, decision)
 
@@ -207,6 +244,7 @@ def validate_projected_authority() -> dict[str, Any]:
     unsupported = 0
     legacy_coordinate = 0
     invalid_publication_state = 0
+    source_location_loss = 0
 
     for event in accepted:
         nycif = event.get("nycif") if isinstance(event.get("nycif"), dict) else {}
@@ -223,6 +261,14 @@ def validate_projected_authority() -> dict[str, Any]:
             invalid_publication_state += 1
         if nycif.get("location_authority") != "projector_v3_semantic_map_decision":
             legacy_coordinate += 1
+
+        source = event.get("source") if isinstance(event.get("source"), dict) else {}
+        if str(source.get("dataset") or "") == "tvpp-9vvx":
+            source_location = str(nycif.get("source_location_text") or "").strip()
+            display_location = str(event.get("location") or "").strip()
+            if not source_location or not display_location:
+                source_location_loss += 1
+
         if identity_precision(event) != "AMBIGUOUS":
             exact_keys.append(occurrence_key_v2(event))
 
@@ -234,6 +280,7 @@ def validate_projected_authority() -> dict[str, Any]:
         "duplicate_exact_occurrences": duplicate_exact,
         "unsupported_exact_pin_count": unsupported,
         "invalid_publication_state_count": invalid_publication_state,
+        "source_location_loss_count": source_location_loss,
         "implicit_source_all_count": 0,
         "legacy_occurrence_authority_count": 0,
         "legacy_coordinate_authority_count": legacy_coordinate,
@@ -243,6 +290,7 @@ def validate_projected_authority() -> dict[str, Any]:
         "duplicate_exact_occurrences",
         "unsupported_exact_pin_count",
         "invalid_publication_state_count",
+        "source_location_loss_count",
         "implicit_source_all_count",
         "legacy_occurrence_authority_count",
         "legacy_coordinate_authority_count",
