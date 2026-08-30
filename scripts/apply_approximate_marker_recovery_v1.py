@@ -92,6 +92,10 @@ def identity(row: dict[str, Any]) -> tuple[str, str, str]:
         return dataset, source_event_id, start
 
 
+def identity_day(key: tuple[str, str, str]) -> tuple[str, str, str]:
+    return key[0], key[1], key[2][:10]
+
+
 def standalone_public(row: dict[str, Any]) -> bool:
     nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
     return (
@@ -162,23 +166,38 @@ def apply() -> dict[str, Any]:
     canonical = load_rows(CANONICAL)
     semantic = load_rows(SEMANTIC)
     candidates = build_index(semantic)
+    candidate_sources = {(key[0], key[1]) for key in candidates}
+    candidate_days = {identity_day(key) for key in candidates}
     source_counts: Counter[str] = Counter()
     reason_counts: Counter[str] = Counter()
+    eligibility_counts: Counter[str] = Counter()
     recovered = 0
     location_mismatch = 0
     borough_mismatch = 0
     route_blocked = 0
 
     for event in canonical:
-        if not standalone_public(event) or already_exact(event):
+        if not standalone_public(event):
+            eligibility_counts["not_standalone_public"] += 1
             continue
+        if already_exact(event):
+            eligibility_counts["already_exact"] += 1
+            continue
+        eligibility_counts["eligible_non_exact"] += 1
         event_location = location_text(event)
         if STREET_SEGMENT_RE.search(normalize_text_legacy(event_location)):
             route_blocked += 1
             continue
-        candidate = candidates.get(identity(event))
+        key = identity(event)
+        candidate = candidates.get(key)
         if candidate is None:
+            eligibility_counts["no_exact_identity_candidate"] += 1
+            if (key[0], key[1]) in candidate_sources:
+                eligibility_counts["source_identity_candidate_exists"] += 1
+            if identity_day(key) in candidate_days:
+                eligibility_counts["same_day_candidate_exists"] += 1
             continue
+        eligibility_counts["exact_identity_candidate_match"] += 1
         if normalize_text_legacy(event_location) != normalize_text_legacy(candidate["location"]):
             location_mismatch += 1
             continue
@@ -249,6 +268,9 @@ def apply() -> dict[str, Any]:
         "canonical_rows": len(canonical),
         "semantic_rows": len(semantic),
         "candidate_occurrences": len(candidates),
+        "candidate_source_keys": len(candidate_sources),
+        "candidate_day_keys": len(candidate_days),
+        "eligibility_counts": dict(sorted(eligibility_counts.items())),
         "recovered_approximate_markers": recovered,
         "source_counts": dict(sorted(source_counts.items())),
         "reason_counts": dict(sorted(reason_counts.items())),
