@@ -120,8 +120,14 @@ approx_safe = json.load(open("data/reader-safe/approximate-marker-recovery-v1-st
 health = json.load(open("status/nycif-daily-data-health.json"))
 '''
 
+# Include the following health check in the exact replacement anchor. The
+# recovery replacement intentionally starts with the same MapLibre qa_pass
+# assertion, so anchoring only that assertion makes the drift guard match its
+# own replacement and fail even when the transform is correct.
 MAP_SAFE_QA_BLOCK = '''if not map_safe.get("qa_pass"):
     sys.exit("MapLibre reader-safe marker audit failed")
+if not health.get("release_ready") or health.get("status") != "READY":
+    sys.exit("daily data health is not READY")
 '''
 MAP_SAFE_QA_WITH_RECOVERY_BLOCK = '''if not map_safe.get("qa_pass"):
     sys.exit("MapLibre reader-safe marker audit failed")
@@ -137,6 +143,8 @@ if approx_safe.get("approximate_marker_count") != approx_recovery.get("recovered
         f"recovery={approx_recovery.get('recovered_approximate_markers')}, "
         f"reader={approx_safe.get('approximate_marker_count')}"
     )
+if not health.get("release_ready") or health.get("status") != "READY":
+    sys.exit("daily data health is not READY")
 '''
 
 GIT_ADD_BLOCK = '''    data/reader-safe/national-map-events-v03.geojson \\
