@@ -35,7 +35,7 @@
         "artifact": ".github/workflows/discovery-feed-refresh.yml",
         "code": "daily_refresh_stage_failed",
         "command_id": "build_approximate_marker_reader_v1",
-        "error_summary": "{\n  \"approximate_marker_count\": 0,\n  \"authority\": \"projector_v3_approximate_recovery_v1\",\n  \"counts_match_recovery\": false,\n  \"duplicate_occurrence_count\": 0,\n  \"exact_pin_count\": 0,\n  \"generated_at_utc\": \"2026-08-30T22:32:00.630332Z\",\n  \"invalid_marker_count\": 0,\n  \"operating_rule\": \"Approximate markers are visually distinct and never count as certified exact pins.\",\n  \"qa_pass\": false,\n  \"recovery_report_count\": 20105,\n  \"schema_version\": \"NYCIF_APPROXIMATE_MARKER_READER_V1\",\n  \"source_counts\": {}\n}\nTraceback (most recent call last):\n  File \"/home/runner/work/nycif-live-feeds/nycif-live-feeds/scripts/build_approximate_marker_reader_v1.py\", line 155, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/runner/work/nycif-live-feeds/nycif-live-feeds/scripts/build_approximate_marker_reader_v1.py\", line 150, in main\n    raise RuntimeError(f\"approximate reader overlay QA failed: {status}\")\nRuntimeError: approximate reader overlay QA failed: {'schema_version': 'NYCIF_APPROXIMATE_MARKER_READER_V1', 'generated_at_utc': '2026-08-30T22:32:00.630332Z', 'authority': 'projector_v3_approximate_recovery_v1', 'approximate_marker_count': 0, 'invalid_marker_count': 0, 'duplicate_occurrence_count': 0, 'exact_pin_count': 0, 'source_counts': {}, 'recovery_report_count': 20105, 'counts_match_recovery': False, 'qa_pass': False, 'operating_rule': 'Approximate markers are visually distinct and never count as certified exact pins.'}",
+        "error_summary": "[truncated] \": false,\n  \"recovery_count_is_diagnostic_only\": true,\n  \"recovery_report_count\": 20105,\n  \"schema_version\": \"NYCIF_APPROXIMATE_MARKER_READER_V2_FINAL_STATE\",\n  \"source_counts\": {\n    \"nyc-citywide-events-calendar-api\": 1,\n    \"tvpp-9vvx\": 20404\n  }\n}\nTraceback (most recent call last):\n  File \"/home/runner/work/nycif-live-feeds/nycif-live-feeds/scripts/build_approximate_marker_reader_v1.py\", line 201, in <module>\n    raise SystemExit(main())\n                     ^^^^^^\n  File \"/home/runner/work/nycif-live-feeds/nycif-live-feeds/scripts/build_approximate_marker_reader_v1.py\", line 196, in main\n    raise RuntimeError(f\"approximate reader overlay QA failed: {status}\")\nRuntimeError: approximate reader overlay QA failed: {'schema_version': 'NYCIF_APPROXIMATE_MARKER_READER_V2_FINAL_STATE', 'generated_at_utc': '2026-08-30T22:55:13.731192Z', 'authorities': ['durable_location_registry_v1', 'projector_v3_approximate_recovery_v1'], 'authority_counts': {'durable_location_registry_v1': 20405}, 'approximate_marker_count': 20405, 'final_contract_count': 20405, 'counts_match_final_contract': True, 'invalid_marker_count': 9, 'duplicate_occurrence_count': 0, 'exact_pin_count': 0, 'source_counts': {'nyc-citywide-events-calendar-api': 1, 'tvpp-9vvx': 20404}, 'recovery_report_count': 20105, 'durable_reuse_report_count': 20405, 'recovery_count_is_diagnostic_only': True, 'qa_pass': False, 'operating_rule': 'Final canonical GENERAL_AREA geometry is authoritative for the approximate overlay. Approximate markers never count as certified exact pins; intermediate recovery counts are diagnostic only.'}",
         "exception_class": "ProcessExitError",
         "exit_code": 1,
         "message": "Daily production refresh failed at stage 'maplibre_approximate_marker_overlay' (command 'build_approximate_marker_reader_v1', exit 1).",
@@ -53,7 +53,7 @@
       "note": "V1 remains the sole production authority.",
       "production_authority": false
     },
-    "generated_at_utc": "2026-08-30T22:32:02Z",
+    "generated_at_utc": "2026-08-30T22:55:16Z",
     "operating_rule": "Do not commit or publish a refreshed public feed unless status is READY.",
     "pipeline": {
       "canonical_identity_clean": false,
@@ -63,7 +63,7 @@
     },
     "release_ready": false,
     "rollback": {
-      "previous_public_feed_commit": "71dd28dd8d322cff28fb71b2eb8406727d7a2b94",
+      "previous_public_feed_commit": "99950e212640bd867f7b2afd4574c2ce159ac41b",
       "strategy": "Failed runs do not commit; revert the READY refresh commit to restore this prior commit."
     },
     "rollback_rule": "The previous serving commit remains authoritative until a later refresh is READY.",
@@ -72,7 +72,7 @@
     "status": "BLOCKED"
   },
   "data_freshness": {
-    "last_verified_at": "2026-08-30T22:32:02Z",
+    "last_verified_at": "2026-08-30T22:55:16Z",
     "source": "generate_godview_project_state.py"
   },
   "enigma_shadow_program": {
@@ -126,7 +126,7 @@
       "viewer": 61
     }
   },
-  "generated_at_utc": "2026-08-30T22:32:02Z",
+  "generated_at_utc": "2026-08-30T22:55:16Z",
   "health": "red",
   "map_v1": {
     "freeze_artifact": "status/nycif-map-v1-freeze.json",
