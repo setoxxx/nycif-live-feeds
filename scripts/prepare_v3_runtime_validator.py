@@ -112,10 +112,12 @@ MAP_READER_WITH_RECOVERY_BLOCK = '''  run_stage \\
 '''
 
 MAP_SAFE_LOAD_BLOCK = '''map_safe = json.load(open("data/reader-safe/national-map-events-v03-status.json"))
+health = json.load(open("status/nycif-daily-data-health.json"))
 '''
 MAP_SAFE_LOAD_WITH_RECOVERY_BLOCK = '''map_safe = json.load(open("data/reader-safe/national-map-events-v03-status.json"))
 approx_recovery = json.load(open("data/approximate_marker_recovery_v1_report.json"))
 approx_safe = json.load(open("data/reader-safe/approximate-marker-recovery-v1-status.json"))
+health = json.load(open("status/nycif-daily-data-health.json"))
 '''
 
 MAP_SAFE_QA_BLOCK = '''if not map_safe.get("qa_pass"):
