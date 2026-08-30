@@ -3,7 +3,8 @@
 
 Reads canonical V3 event geography. It never edits location_cache or event rows.
 Approximate geography remains approximate and review-required; this sync cannot
-certify an event pin.
+certify an event pin. Reused locations preserve the authority that originally
+certified the durable place instead of replacing it with circular reuse metadata.
 """
 from __future__ import annotations
 
@@ -23,10 +24,10 @@ ROOT = Path(__file__).resolve().parents[1]
 CANONICAL = ROOT / "data" / "events_discovery_accepted_canonical_v02.json"
 PAYLOAD = ROOT / "data" / "location_registry_sync_v1_payload.json"
 REPORT = ROOT / "data" / "location_registry_sync_v1_report.json"
+REUSE_AUTHORITY = "durable_location_registry_v1"
 
 
 def extract_rows(payload: Any) -> list[dict[str, Any]]:
-    """Extract canonical rows without importing the legacy discovery package."""
     if isinstance(payload, list):
         return [row for row in payload if isinstance(row, dict)]
     if not isinstance(payload, dict):
@@ -72,6 +73,24 @@ def raw_location(row: dict[str, Any]) -> str:
     ).strip()
 
 
+def effective_location_authority(row: dict[str, Any]) -> tuple[str, str]:
+    """Return durable authority plus the authority observed on this occurrence.
+
+    A reused occurrence is allowed to say that its current placement came from
+    the durable registry, but syncing that occurrence back must retain the
+    original authority that certified the stored location. Otherwise repeated
+    reuse would erase provenance and make the registry self-referential.
+    """
+    nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
+    observed = str(nycif.get("location_authority") or row.get("location_authority") or "unknown")
+    if observed == REUSE_AUTHORITY:
+        original = str(nycif.get("location_reuse_source_authority") or "").strip()
+        if not original or original == REUSE_AUTHORITY:
+            raise RuntimeError("reused location is missing a non-circular source authority")
+        return original, observed
+    return observed, observed
+
+
 def stable_location_id(row: dict[str, Any], lat: float, lng: float) -> tuple[str, str]:
     nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
     s = source(row)
@@ -104,6 +123,7 @@ def build_payload(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str,
     alias_counts: Counter[tuple[str, str, str]] = Counter()
     alias_raw: dict[tuple[str, str, str], str] = {}
     authority_counts: Counter[str] = Counter()
+    observed_authority_counts: Counter[str] = Counter()
     precision_counts: Counter[str] = Counter()
     id_basis_counts: Counter[str] = Counter()
     skipped: Counter[str] = Counter()
@@ -128,7 +148,7 @@ def build_payload(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str,
             continue
 
         precision = "exact" if state == "MAP_READY" else "approximate"
-        authority = str(nycif.get("location_authority") or row.get("location_authority") or "unknown")
+        authority, observed_authority = effective_location_authority(row)
         loc_id, basis = stable_location_id(row, lat, lng)
         id_basis_counts[basis] += 1
         raw = raw_location(row)
@@ -160,6 +180,8 @@ def build_payload(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str,
                 "sync_version": "location_registry_v1",
                 "id_basis": basis,
                 "exact_pin_eligible": precision == "exact",
+                "observed_location_authority": observed_authority,
+                "reused_from_registry": observed_authority == REUSE_AUTHORITY,
             },
         }
 
@@ -167,6 +189,7 @@ def build_payload(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str,
         if existing is None or (existing["precision"] == "approximate" and precision == "exact"):
             locations[loc_id] = candidate
         authority_counts[authority] += 1
+        observed_authority_counts[observed_authority] += 1
         precision_counts[precision] += 1
 
         normalized = normalize_alias(raw)
@@ -202,15 +225,23 @@ def build_payload(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str,
         "alias_count": len(aliases),
         "precision_observation_counts": dict(sorted(precision_counts.items())),
         "authority_observation_counts": dict(sorted(authority_counts.items())),
+        "observed_authority_counts": dict(sorted(observed_authority_counts.items())),
         "id_basis_counts": dict(sorted(id_basis_counts.items())),
         "skipped_counts": dict(sorted(skipped.items())),
         "approximate_certified_count": sum(
             1 for item in locations.values()
             if item["precision"] == "approximate" and item["metadata"].get("exact_pin_eligible")
         ),
+        "circular_reuse_authority_count": sum(
+            1 for item in locations.values() if item["location_authority"] == REUSE_AUTHORITY
+        ),
         "protected_cache_modified": False,
         "event_rows_modified": False,
-        "qa_pass": len(locations) > 0 and all(item["precision"] in {"exact", "approximate"} for item in locations.values()),
+        "qa_pass": (
+            len(locations) > 0
+            and all(item["precision"] in {"exact", "approximate"} for item in locations.values())
+            and all(item["location_authority"] != REUSE_AUTHORITY for item in locations.values())
+        ),
     }
     return payload, report
 
@@ -249,7 +280,11 @@ def main() -> int:
         report["applied"] = False
     REPORT.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2, sort_keys=True))
-    if not report["qa_pass"] or report["approximate_certified_count"] != 0:
+    if (
+        not report["qa_pass"]
+        or report["approximate_certified_count"] != 0
+        or report["circular_reuse_authority_count"] != 0
+    ):
         raise RuntimeError(f"location registry sync QA failed: {report}")
     return 0
 
