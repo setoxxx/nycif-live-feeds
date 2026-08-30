@@ -20,6 +20,8 @@ permissions:
 jobs:
   p11-route-qa:
     runs-on: ubuntu-latest
+    env:
+      PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/scripts
     steps:
       - name: Check out exact PR head
         uses: actions/checkout@v4
