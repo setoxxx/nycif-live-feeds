@@ -1,0 +1,31 @@
+name: Location Authority + Source Adapter QA
+
+on:
+  pull_request:
+    paths:
+      - 'scripts/build_location_resolution_backlog_v1.py'
+      - 'tests/test_location_resolution_backlog_v1.py'
+      - 'scripts/sources/**'
+      - 'tests/test_ticketmaster_source_adapter.py'
+      - '.github/workflows/location-authority-adapters-ci.yml'
+      - '.github/workflows/discovery-feed-refresh.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  location-authority-adapters:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile
+        run: python -m py_compile scripts/build_location_resolution_backlog_v1.py scripts/sources/base.py scripts/sources/ticketmaster.py
+      - name: Test backlog classification
+        run: python -m unittest tests.test_location_resolution_backlog_v1 -v
+      - name: Test Ticketmaster adapter
+        run: python -m unittest tests.test_ticketmaster_source_adapter -v
+      - name: Protect canonical identity contract
+        run: python -m unittest tests.test_occurrence_identity_contract -v
