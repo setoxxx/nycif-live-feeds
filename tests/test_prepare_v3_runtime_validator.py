@@ -48,12 +48,13 @@ class PrepareV3RuntimeValidatorTests(unittest.TestCase):
         self.assertIn("apply_approximate_marker_recovery_v1.py", transformed)
         self.assertIn("build_maplibre_reader_safe_with_approx_v1.py", transformed)
         self.assertIn("build_approximate_marker_reader_v1.py", transformed)
+        recovery_stage = transformed.index('"approximate_marker_recovery"')
         self.assertLess(
             transformed.index("project_events_discovery_v03.py"),
-            transformed.index("apply_approximate_marker_recovery_v1.py"),
+            recovery_stage,
         )
         self.assertLess(
-            transformed.index("apply_approximate_marker_recovery_v1.py"),
+            recovery_stage,
             transformed.index("enforce_strict_discovery_reconciliation.py"),
         )
 
