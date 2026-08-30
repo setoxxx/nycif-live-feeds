@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-"""Classify unresolved public event locations without promoting coordinates.
+"""Classify unresolved canonical event locations without promoting coordinates.
 
-This is a diagnostic/review artifact only. It never changes location_cache,
-canonical event rows, map-ready geometry, or publication state.
+The V3 map-state status counts every canonical occurrence, while only a subset is
+reader-facing. This diagnostic therefore classifies every LIST_ONLY or
+REVIEW_REQUIRED canonical occurrence and records whether each row is currently
+reader-facing public. It never changes location_cache, canonical event rows,
+map geometry, or publication state.
 """
 from __future__ import annotations
 
@@ -20,6 +23,7 @@ except ModuleNotFoundError:  # pragma: no cover
 
 ROOT = Path(__file__).resolve().parents[1]
 CANONICAL = ROOT / "data" / "events_discovery_accepted_canonical_v02.json"
+V3_STATUS = ROOT / "data" / "reader-safe" / "national-map-events-v03-status.json"
 OUT = ROOT / "data" / "location_resolution_backlog_v1.json"
 REPORT = ROOT / "data" / "location_resolution_backlog_v1_report.json"
 
@@ -41,14 +45,26 @@ VENUE_RE = re.compile(r"\b(?:theater|theatre|hall|museum|gallery|library|school|
 
 
 def extract_rows(payload: Any) -> list[dict[str, Any]]:
+    """Dependency-light equivalent of discovery_v02.extract_rows."""
     if isinstance(payload, list):
         return [row for row in payload if isinstance(row, dict)]
     if not isinstance(payload, dict):
         return []
-    for key in ("events", "rows", "items", "records", "occurrences", "data"):
+    for key in ("events", "data", "rows", "features", "records", "items", "occurrences"):
         value = payload.get(key)
-        if isinstance(value, list):
-            return [row for row in value if isinstance(row, dict)]
+        if not isinstance(value, list):
+            continue
+        if key == "features":
+            rows: list[dict[str, Any]] = []
+            for feature in value:
+                if not isinstance(feature, dict):
+                    continue
+                props = feature.get("properties") if isinstance(feature.get("properties"), dict) else {}
+                row = dict(props)
+                row["_geojson_geometry"] = feature.get("geometry") if isinstance(feature.get("geometry"), dict) else {}
+                rows.append(row)
+            return rows
+        return [row for row in value if isinstance(row, dict)]
     return []
 
 
@@ -74,6 +90,24 @@ def location_text(row: dict[str, Any]) -> str:
         if value_text:
             return value_text
     return ""
+
+
+def map_state(row: dict[str, Any]) -> str:
+    nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
+    state = str(nycif.get("map_eligibility_state") or row.get("map_eligibility_state") or "REVIEW_REQUIRED").strip().upper()
+    return state if state in {"MAP_READY", "GENERAL_AREA", "REVIEW_REQUIRED", "LIST_ONLY"} else "REVIEW_REQUIRED"
+
+
+def reader_public(row: dict[str, Any]) -> bool:
+    title = str(row.get("title") or "")
+    if re.match(r"^\s*(?:CANCELED|CANCELLED)\s*:", title, re.I):
+        return False
+    nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
+    role = str(row.get("event_role") or nycif.get("event_role") or "public_event").strip()
+    if role != "public_event" or row.get("parent_event_id") not in (None, ""):
+        return False
+    disposition = str(nycif.get("display_disposition") or row.get("display_disposition") or "").strip().lower()
+    return disposition in {"standalone_public_event", "list_only"}
 
 
 def classify_row(row: dict[str, Any]) -> tuple[str, list[str]]:
@@ -126,30 +160,25 @@ def occurrence_id(row: dict[str, Any]) -> str:
     return "|".join(str(part) for part in occurrence_key_v2(row))
 
 
-def is_unresolved_public(row: dict[str, Any]) -> bool:
-    nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
-    state = str(nycif.get("map_eligibility_state") or row.get("map_eligibility_state") or "").strip()
-    if state not in {"LIST_ONLY", "REVIEW_REQUIRED"}:
-        return False
-    title = str(row.get("title") or "")
-    if re.match(r"^\s*(?:CANCELED|CANCELLED)\s*:", title, re.I):
-        return False
-    role = str(row.get("event_role") or nycif.get("event_role") or "public_event").strip()
-    if role != "public_event" or row.get("parent_event_id") not in (None, ""):
-        return False
-    disposition = str(nycif.get("display_disposition") or row.get("display_disposition") or "").lower()
-    return disposition not in {"suppressed", "private", "internal_only", "non_public", "child"}
-
-
-def build(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, Any]]:
+def build(rows: list[dict[str, Any]], *, expected_state_counts: dict[str, Any] | None = None) -> tuple[list[dict[str, Any]], dict[str, Any]]:
     generated = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     queue: list[dict[str, Any]] = []
     counts: Counter[str] = Counter()
+    public_counts: Counter[str] = Counter()
     states: Counter[str] = Counter()
+    all_states: Counter[str] = Counter()
     ids: set[str] = set()
     duplicate_ids = 0
+    cancelled_unresolved = 0
+
     for row in rows:
-        if not is_unresolved_public(row):
+        state = map_state(row)
+        all_states[state] += 1
+        if state not in {"LIST_ONLY", "REVIEW_REQUIRED"}:
+            continue
+        title = str(row.get("title") or "")
+        if re.match(r"^\s*(?:CANCELED|CANCELLED)\s*:", title, re.I):
+            cancelled_unresolved += 1
             continue
         oid = occurrence_id(row)
         if oid in ids:
@@ -157,35 +186,56 @@ def build(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], dict[str, A
             continue
         ids.add(oid)
         _source, dataset, source_event_id = source_parts(row)
-        nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
-        state = str(nycif.get("map_eligibility_state") or row.get("map_eligibility_state") or "")
         bucket, evidence = classify_row(row)
+        is_public = reader_public(row)
         counts[bucket] += 1
         states[state] += 1
+        if is_public:
+            public_counts[bucket] += 1
         queue.append({
             "occurrence_id": oid, "source_dataset": dataset, "source_event_id": source_event_id,
             "title": row.get("title"), "start_date_time": row.get("start_date_time") or row.get("start_at"),
             "borough": row.get("borough"), "event_location": location_text(row) or None,
             "resolution_bucket": bucket, "classification_evidence": evidence,
-            "current_map_eligibility_state": state, "manual_review_status": "pending",
-            "promotion_allowed": False, "public_map_modified": False,
-            "location_cache_modified": False, "staged_feed_modified": False,
+            "current_map_eligibility_state": state, "reader_public": is_public,
+            "event_role": row.get("event_role"),
+            "display_disposition": (row.get("nycif") or {}).get("display_disposition") if isinstance(row.get("nycif"), dict) else row.get("display_disposition"),
+            "manual_review_status": "pending", "promotion_allowed": False,
+            "public_map_modified": False, "location_cache_modified": False, "staged_feed_modified": False,
         })
-    queue.sort(key=lambda x: (x["resolution_bucket"], str(x.get("borough") or ""), str(x.get("start_date_time") or ""), x["occurrence_id"]))
+
+    queue.sort(key=lambda x: (not bool(x["reader_public"]), x["resolution_bucket"], str(x.get("borough") or ""), str(x.get("start_date_time") or ""), x["occurrence_id"]))
+    expected = expected_state_counts or {}
+    expected_unresolved = int(expected.get("LIST_ONLY") or 0) + int(expected.get("REVIEW_REQUIRED") or 0)
+    canonical_unresolved_before_cancel = all_states.get("LIST_ONLY", 0) + all_states.get("REVIEW_REQUIRED", 0)
+    state_count_matches_v3 = not expected or canonical_unresolved_before_cancel == expected_unresolved
+    public_unresolved = sum(public_counts.values())
     report = {
         "schema_version": "NYCIF_LOCATION_RESOLUTION_BACKLOG_V1", "generated_at_utc": generated,
-        "unresolved_public_occurrence_count": len(queue), "map_state_counts": dict(sorted(states.items())),
+        "canonical_row_count": len(rows),
+        "all_canonical_map_state_counts": dict(sorted(all_states.items())),
+        "unresolved_canonical_before_cancel_suppression": canonical_unresolved_before_cancel,
+        "cancelled_unresolved_suppressed": cancelled_unresolved,
+        "unresolved_canonical_occurrence_count": len(queue),
+        "unresolved_public_occurrence_count": public_unresolved,
+        "unresolved_nonpublic_occurrence_count": len(queue) - public_unresolved,
+        "map_state_counts": dict(sorted(states.items())),
         "bucket_counts": {bucket: counts.get(bucket, 0) for bucket in BUCKETS},
+        "public_bucket_counts": {bucket: public_counts.get(bucket, 0) for bucket in BUCKETS},
+        "expected_v3_unresolved_state_count": expected_unresolved if expected else None,
+        "canonical_state_count_matches_v3_status": state_count_matches_v3,
         "duplicate_occurrence_count": duplicate_ids, "promotion_attempt_count": 0,
         "public_map_modified": False, "location_cache_modified": False, "staged_feed_modified": False,
-        "qa_pass": duplicate_ids == 0 and len(queue) == sum(counts.values()),
-        "operating_rule": "Diagnostic classification only; no coordinates are approved or promoted by this artifact.",
+        "qa_pass": duplicate_ids == 0 and len(queue) == sum(counts.values()) and state_count_matches_v3,
+        "operating_rule": "Diagnostic classification only; all unresolved canonical rows are classified, reader-public scope is labeled separately, and no coordinates are approved or promoted by this artifact.",
     }
     return queue, report
 
 
 def main() -> int:
-    queue, report = build(load_rows(CANONICAL))
+    status = json.loads(V3_STATUS.read_text(encoding="utf-8")) if V3_STATUS.exists() else {}
+    expected_state_counts = status.get("map_state_counts") if isinstance(status.get("map_state_counts"), dict) else None
+    queue, report = build(load_rows(CANONICAL), expected_state_counts=expected_state_counts)
     OUT.write_text(json.dumps({"schema_version": report["schema_version"], "generated_at_utc": report["generated_at_utc"], "rows": queue}, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     REPORT.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2, sort_keys=True))
