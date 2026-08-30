@@ -4,6 +4,8 @@
 The reuse lane runs after approximate recovery and before street-route geometry.
 This ordering lets prior durable exact knowledge safely upgrade a current
 non-exact occurrence while preserving the dedicated route lane and all P11 gates.
+The final approximate-reader gate validates canonical final state rather than
+requiring it to equal the pre-reuse recovery-stage count.
 """
 from __future__ import annotations
 
@@ -54,6 +56,23 @@ route_safe = json.load(open("data/reader-safe/street-segment-routes-v1-status.js
 health = json.load(open("status/nycif-daily-data-health.json"))
 '''
 
+LEGACY_APPROX_COUNT_QA = '''if approx_safe.get("approximate_marker_count") != approx_recovery.get("recovered_approximate_markers"):
+    sys.exit(
+        "approximate recovery/reader counts disagree: "
+        f"recovery={approx_recovery.get('recovered_approximate_markers')}, "
+        f"reader={approx_safe.get('approximate_marker_count')}"
+    )
+'''
+FINAL_APPROX_COUNT_QA = '''if approx_safe.get("counts_match_final_contract") is not True:
+    sys.exit(
+        "final approximate reader/canonical contract counts disagree: "
+        f"final_contract={approx_safe.get('final_contract_count')}, "
+        f"reader={approx_safe.get('approximate_marker_count')}"
+    )
+if approx_safe.get("recovery_count_is_diagnostic_only") is not True:
+    sys.exit("approximate reader did not mark recovery-stage count as diagnostic")
+'''
+
 QA_ANCHOR = '''if not route_safe.get("qa_pass"):
     sys.exit("street route reader authority audit failed")
 '''
@@ -91,6 +110,7 @@ def transform(source: str) -> str:
         (COMPILE_ANCHOR, COMPILE_WITH_REUSE, "location reuse compile anchor"),
         (STAGE_ANCHOR, STAGE_WITH_REUSE, "location reuse stage anchor"),
         (STATUS_ANCHOR, STATUS_WITH_REUSE, "location reuse status anchor"),
+        (LEGACY_APPROX_COUNT_QA, FINAL_APPROX_COUNT_QA, "final approximate count QA anchor"),
         (QA_ANCHOR, QA_WITH_REUSE, "location reuse QA anchor"),
         (GIT_ADD_ANCHOR, GIT_ADD_WITH_REUSE, "location reuse git add anchor"),
     ):
@@ -102,10 +122,14 @@ def transform(source: str) -> str:
         "durable_location_reuse_v1_report.json",
         "durable location reuse promoted an ambiguous alias",
         "durable location reuse converted a route claim into a point",
+        "counts_match_final_contract",
+        "recovery_count_is_diagnostic_only",
     )
     for token in required:
         if token not in transformed:
             raise RuntimeError(f"required durable reuse transform missing: {token}")
+    if "approximate recovery/reader counts disagree" in transformed:
+        raise RuntimeError("legacy pre-reuse approximate count gate survived durable reuse transform")
     return transformed
 
 
