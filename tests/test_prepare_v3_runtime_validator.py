@@ -55,7 +55,7 @@ class PrepareV3RuntimeValidatorTests(unittest.TestCase):
         )
         self.assertLess(
             recovery_stage,
-            transformed.index("enforce_strict_discovery_reconciliation.py"),
+            transformed.index('"strict_source_reconciliation"'),
         )
 
     def test_approximate_overlay_is_fail_closed_and_committed(self) -> None:
