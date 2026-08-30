@@ -22,6 +22,11 @@ class LocationResolutionBacklogV1Tests(unittest.TestCase):
         bucket, _ = classify_row(self.row(event_location="18th Avenue between 65th Street and 75th Street"))
         self.assertEqual(bucket, "ROUTE_OR_STREET_SEGMENT")
 
+    def test_ordinal_street_without_house_number_is_not_exact_address(self):
+        bucket, evidence = classify_row(self.row(event_location="18th Avenue"))
+        self.assertEqual(bucket, "ROUTE_OR_STREET_SEGMENT")
+        self.assertIn("ordinal_street_without_house_number", evidence)
+
     def test_cemsid_bucket(self):
         bucket, _ = classify_row(self.row(source={"dataset": "fixture", "source_event_id": "1", "source_cemsid": "C123"}))
         self.assertEqual(bucket, "CEMSID")
@@ -48,6 +53,11 @@ class LocationResolutionBacklogV1Tests(unittest.TestCase):
         self.assertFalse(report["public_map_modified"])
         self.assertFalse(report["location_cache_modified"])
         self.assertFalse(report["staged_feed_modified"])
+
+    def test_cancelled_title_is_excluded(self):
+        queue, report = build([self.row(title="CANCELED: Fixture")])
+        self.assertEqual(queue, [])
+        self.assertEqual(report["unresolved_public_occurrence_count"], 0)
 
     def test_duplicate_identity_fails_closed(self):
         queue, report = build([self.row(), self.row()])
