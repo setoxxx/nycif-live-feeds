@@ -2,14 +2,13 @@
 """Build the reader-safe approximate-marker overlay from final canonical state.
 
 The approximate overlay is intentionally separate from exact MAP_READY geometry.
-It accepts either the original V3 approximate-recovery authority or the durable
-location registry authority, but only when the final canonical event still
-satisfies the complete GENERAL_AREA/non-certified approximate contract.
+Durable-registry rows may legitimately resolve either to exact or approximate
+geometry. Exact durable rows belong exclusively to the exact reader and are
+therefore excluded here, not counted as invalid approximate markers.
 
-The recovery report is diagnostic input-stage telemetry. After durable reuse,
-the final canonical approximate population may legitimately differ from that
-intermediate count, so publication QA is based on the independently recomputed
-final canonical contract rather than equality with the earlier recovery count.
+For rows that do claim the approximate lane, publication remains fail-closed:
+GENERAL_AREA, non-certified evidence, borough containment, unique occurrence
+identity, and the approved authority contract are all required.
 """
 from __future__ import annotations
 
@@ -61,8 +60,16 @@ def source_parts(row: dict[str, Any]) -> tuple[str | None, str | None]:
 def final_approximate_contract(event: dict[str, Any]) -> tuple[bool, str]:
     nycif = event.get("nycif") if isinstance(event.get("nycif"), dict) else {}
     authority = str(nycif.get("location_authority") or "")
+    state = str(nycif.get("map_eligibility_state") or "")
+    certified = nycif.get("certified_pin") is True
+
+    # Durable reuse can legitimately recover an exact location. That row is
+    # already validated by the exact reader and must never enter this overlay.
+    if authority == DURABLE_AUTHORITY and state == "MAP_READY" and certified:
+        return False, "durable_exact_lane"
     if authority not in ALLOWED_AUTHORITIES:
         return False, "authority_not_approximate_lane"
+
     lat = finite(event.get("latitude"))
     lng = finite(event.get("longitude"))
     borough = str(event.get("borough") or "").strip()
@@ -72,7 +79,7 @@ def final_approximate_contract(event: dict[str, Any]) -> tuple[bool, str]:
         and lng is not None
         and bool(borough)
         and coordinate_matches_borough(lat, lng, borough)
-        and nycif.get("map_eligibility_state") == "GENERAL_AREA"
+        and state == "GENERAL_AREA"
         and nycif.get("coordinate_status") == "approximate"
         and nycif.get("certified_pin") is False
         and evidence.get("tier") == "approximate_area"
@@ -98,6 +105,7 @@ def build(
     features: list[dict[str, Any]] = []
     source_counts: Counter[str] = Counter()
     authority_counts: Counter[str] = Counter()
+    skip_counts: Counter[str] = Counter()
     invalid = 0
     ids: set[str] = set()
     final_contract_count = 0
@@ -106,7 +114,8 @@ def build(
         valid, reason = final_approximate_contract(event)
         nycif = event.get("nycif") if isinstance(event.get("nycif"), dict) else {}
         authority = str(nycif.get("location_authority") or "")
-        if reason == "authority_not_approximate_lane":
+        if reason in {"authority_not_approximate_lane", "durable_exact_lane"}:
+            skip_counts[reason] += 1
             continue
         if not valid:
             invalid += 1
@@ -150,9 +159,12 @@ def build(
     duplicate_count = final_contract_count - len(ids)
     recovery_count = int(recovery.get("recovered_approximate_markers") or 0)
     reuse_count = int(reuse.get("approximate_reused_count") or 0) if reuse else 0
+    exact_reuse_count = int(reuse.get("exact_reused_count") or 0) if reuse else 0
+    durable_exact_excluded = int(skip_counts.get("durable_exact_lane", 0))
     counts_match_final_contract = len(features) == final_contract_count
+    exact_reuse_lane_reconciles = durable_exact_excluded == exact_reuse_count
     status = {
-        "schema_version": "NYCIF_APPROXIMATE_MARKER_READER_V2_FINAL_STATE",
+        "schema_version": "NYCIF_APPROXIMATE_MARKER_READER_V3_PRECISION_LANES",
         "generated_at_utc": generated,
         "authorities": sorted(ALLOWED_AUTHORITIES),
         "authority_counts": dict(sorted(authority_counts.items())),
@@ -163,23 +175,33 @@ def build(
         "duplicate_occurrence_count": duplicate_count,
         "exact_pin_count": 0,
         "source_counts": dict(sorted(source_counts.items())),
+        "skip_counts": dict(sorted(skip_counts.items())),
+        "durable_exact_excluded_count": durable_exact_excluded,
+        "durable_exact_report_count": exact_reuse_count,
+        "durable_exact_lane_reconciles": exact_reuse_lane_reconciles,
         "recovery_report_count": recovery_count,
         "durable_reuse_report_count": reuse_count,
         "recovery_count_is_diagnostic_only": True,
-        "qa_pass": invalid == 0 and duplicate_count == 0 and counts_match_final_contract,
+        "qa_pass": (
+            invalid == 0
+            and duplicate_count == 0
+            and counts_match_final_contract
+            and exact_reuse_lane_reconciles
+        ),
         "operating_rule": (
-            "Final canonical GENERAL_AREA geometry is authoritative for the approximate overlay. "
-            "Approximate markers never count as certified exact pins; intermediate recovery counts are diagnostic only."
+            "Exact durable locations are owned by the exact reader and excluded from the approximate overlay. "
+            "Final canonical GENERAL_AREA geometry owns approximate publication; approximate markers never grant certified exact pins."
         ),
     }
     geojson = {
         "type": "FeatureCollection",
         "metadata": {
-            "schema_version": "NYCIF_APPROXIMATE_MARKER_READER_V2_FINAL_STATE",
+            "schema_version": "NYCIF_APPROXIMATE_MARKER_READER_V3_PRECISION_LANES",
             "generated_at_utc": generated,
             "authorities": sorted(ALLOWED_AUTHORITIES),
             "marker_precision": "approximate",
             "final_contract_count": final_contract_count,
+            "durable_exact_excluded_count": durable_exact_excluded,
         },
         "features": features,
     }
