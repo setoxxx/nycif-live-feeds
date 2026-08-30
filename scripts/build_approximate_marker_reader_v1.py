@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
-"""Build a reader-safe approximate-marker overlay from canonical V3 events.
+"""Build the reader-safe approximate-marker overlay from final canonical state.
 
-This overlay is intentionally separate from the exact MapLibre V3 source. Every
-feature here is a non-certified approximate point produced by
-``projector_v3_approximate_recovery_v1``. Exact MAP_READY semantics remain owned
-by ``national-map-events-v03.geojson``.
+The approximate overlay is intentionally separate from exact MAP_READY geometry.
+It accepts either the original V3 approximate-recovery authority or the durable
+location registry authority, but only when the final canonical event still
+satisfies the complete GENERAL_AREA/non-certified approximate contract.
+
+The recovery report is diagnostic input-stage telemetry. After durable reuse,
+the final canonical approximate population may legitimately differ from that
+intermediate count, so publication QA is based on the independently recomputed
+final canonical contract rather than equality with the earlier recovery count.
 """
 from __future__ import annotations
 
@@ -27,9 +32,12 @@ except ModuleNotFoundError:  # pragma: no cover
 ROOT = Path(__file__).resolve().parents[1]
 CANONICAL = ROOT / "data" / "events_discovery_accepted_canonical_v02.json"
 RECOVERY_REPORT = ROOT / "data" / "approximate_marker_recovery_v1_report.json"
+REUSE_REPORT = ROOT / "data" / "durable_location_reuse_v1_report.json"
 OUT = ROOT / "data" / "reader-safe" / "approximate-marker-recovery-v1.geojson"
 STATUS = ROOT / "data" / "reader-safe" / "approximate-marker-recovery-v1-status.json"
-AUTHORITY = "projector_v3_approximate_recovery_v1"
+RECOVERY_AUTHORITY = "projector_v3_approximate_recovery_v1"
+DURABLE_AUTHORITY = "durable_location_registry_v1"
+ALLOWED_AUTHORITIES = {RECOVERY_AUTHORITY, DURABLE_AUTHORITY}
 
 
 def load_rows(path: Path) -> list[dict[str, Any]]:
@@ -50,43 +58,70 @@ def source_parts(row: dict[str, Any]) -> tuple[str | None, str | None]:
     return source.get("dataset"), source.get("source_event_id")
 
 
-def main() -> int:
+def final_approximate_contract(event: dict[str, Any]) -> tuple[bool, str]:
+    nycif = event.get("nycif") if isinstance(event.get("nycif"), dict) else {}
+    authority = str(nycif.get("location_authority") or "")
+    if authority not in ALLOWED_AUTHORITIES:
+        return False, "authority_not_approximate_lane"
+    lat = finite(event.get("latitude"))
+    lng = finite(event.get("longitude"))
+    borough = str(event.get("borough") or "").strip()
+    evidence = event.get("location_evidence") if isinstance(event.get("location_evidence"), dict) else {}
+    valid = (
+        lat is not None
+        and lng is not None
+        and bool(borough)
+        and coordinate_matches_borough(lat, lng, borough)
+        and nycif.get("map_eligibility_state") == "GENERAL_AREA"
+        and nycif.get("coordinate_status") == "approximate"
+        and nycif.get("certified_pin") is False
+        and evidence.get("tier") == "approximate_area"
+        and evidence.get("validation_state") == "validated"
+        and evidence.get("exact_pin_eligible") is False
+    )
+    return (valid, "final_approximate" if valid else "invalid_approximate_contract")
+
+
+def build(
+    canonical_path: Path = CANONICAL,
+    recovery_report_path: Path = RECOVERY_REPORT,
+    reuse_report_path: Path = REUSE_REPORT,
+) -> tuple[dict[str, Any], dict[str, Any]]:
     generated = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
-    canonical = load_rows(CANONICAL)
-    recovery = json.loads(RECOVERY_REPORT.read_text(encoding="utf-8"))
+    canonical = load_rows(canonical_path)
+    recovery = json.loads(recovery_report_path.read_text(encoding="utf-8"))
+    reuse = (
+        json.loads(reuse_report_path.read_text(encoding="utf-8"))
+        if reuse_report_path.exists()
+        else {}
+    )
     features: list[dict[str, Any]] = []
     source_counts: Counter[str] = Counter()
+    authority_counts: Counter[str] = Counter()
     invalid = 0
     ids: set[str] = set()
+    final_contract_count = 0
 
     for event in canonical:
+        valid, reason = final_approximate_contract(event)
         nycif = event.get("nycif") if isinstance(event.get("nycif"), dict) else {}
-        if nycif.get("location_authority") != AUTHORITY:
+        authority = str(nycif.get("location_authority") or "")
+        if reason == "authority_not_approximate_lane":
             continue
-        lat = finite(event.get("latitude"))
-        lng = finite(event.get("longitude"))
-        borough = str(event.get("borough") or "").strip()
-        evidence = event.get("location_evidence") if isinstance(event.get("location_evidence"), dict) else {}
-        occurrence = "|".join(str(part) for part in occurrence_key_v2(event))
-        valid = (
-            lat is not None
-            and lng is not None
-            and bool(borough)
-            and coordinate_matches_borough(lat, lng, borough)
-            and nycif.get("map_eligibility_state") == "GENERAL_AREA"
-            and nycif.get("coordinate_status") == "approximate"
-            and nycif.get("certified_pin") is False
-            and evidence.get("tier") == "approximate_area"
-            and evidence.get("validation_state") == "validated"
-            and evidence.get("exact_pin_eligible") is False
-            and occurrence not in ids
-        )
         if not valid:
             invalid += 1
             continue
+        final_contract_count += 1
+        occurrence = "|".join(str(part) for part in occurrence_key_v2(event))
+        if occurrence in ids:
+            invalid += 1
+            continue
         ids.add(occurrence)
+        lat = float(event["latitude"])
+        lng = float(event["longitude"])
         dataset, source_event_id = source_parts(event)
         source_counts[str(dataset or "unknown")] += 1
+        authority_counts[authority] += 1
         features.append(
             {
                 "type": "Feature",
@@ -94,6 +129,7 @@ def main() -> int:
                 "geometry": {"type": "Point", "coordinates": [lng, lat]},
                 "properties": {
                     "occurrence_id": occurrence,
+                    "location_id": event.get("location_id") or nycif.get("location_id"),
                     "title": event.get("title"),
                     "location": event.get("location"),
                     "borough": event.get("borough"),
@@ -104,46 +140,56 @@ def main() -> int:
                     "marker_precision": "approximate",
                     "certified_pin": False,
                     "map_eligibility_state": "GENERAL_AREA",
-                    "location_authority": AUTHORITY,
+                    "location_authority": authority,
+                    "location_reuse_source_authority": nycif.get("location_reuse_source_authority"),
                     "approximate_recovery_reason": nycif.get("approximate_recovery_reason"),
                 },
             }
         )
 
+    duplicate_count = final_contract_count - len(ids)
+    recovery_count = int(recovery.get("recovered_approximate_markers") or 0)
+    reuse_count = int(reuse.get("approximate_reused_count") or 0) if reuse else 0
+    counts_match_final_contract = len(features) == final_contract_count
     status = {
-        "schema_version": "NYCIF_APPROXIMATE_MARKER_READER_V1",
+        "schema_version": "NYCIF_APPROXIMATE_MARKER_READER_V2_FINAL_STATE",
         "generated_at_utc": generated,
-        "authority": AUTHORITY,
+        "authorities": sorted(ALLOWED_AUTHORITIES),
+        "authority_counts": dict(sorted(authority_counts.items())),
         "approximate_marker_count": len(features),
+        "final_contract_count": final_contract_count,
+        "counts_match_final_contract": counts_match_final_contract,
         "invalid_marker_count": invalid,
-        "duplicate_occurrence_count": len(features) - len(ids),
+        "duplicate_occurrence_count": duplicate_count,
         "exact_pin_count": 0,
         "source_counts": dict(sorted(source_counts.items())),
-        "recovery_report_count": int(recovery.get("recovered_approximate_markers") or 0),
-        "counts_match_recovery": len(features) == int(recovery.get("recovered_approximate_markers") or 0),
-        "qa_pass": invalid == 0 and len(features) == int(recovery.get("recovered_approximate_markers") or 0),
-        "operating_rule": "Approximate markers are visually distinct and never count as certified exact pins.",
+        "recovery_report_count": recovery_count,
+        "durable_reuse_report_count": reuse_count,
+        "recovery_count_is_diagnostic_only": True,
+        "qa_pass": invalid == 0 and duplicate_count == 0 and counts_match_final_contract,
+        "operating_rule": (
+            "Final canonical GENERAL_AREA geometry is authoritative for the approximate overlay. "
+            "Approximate markers never count as certified exact pins; intermediate recovery counts are diagnostic only."
+        ),
     }
+    geojson = {
+        "type": "FeatureCollection",
+        "metadata": {
+            "schema_version": "NYCIF_APPROXIMATE_MARKER_READER_V2_FINAL_STATE",
+            "generated_at_utc": generated,
+            "authorities": sorted(ALLOWED_AUTHORITIES),
+            "marker_precision": "approximate",
+            "final_contract_count": final_contract_count,
+        },
+        "features": features,
+    }
+    return geojson, status
+
+
+def main() -> int:
+    geojson, status = build()
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(
-        json.dumps(
-            {
-                "type": "FeatureCollection",
-                "metadata": {
-                    "schema_version": "NYCIF_APPROXIMATE_MARKER_READER_V1",
-                    "generated_at_utc": generated,
-                    "authority": AUTHORITY,
-                    "marker_precision": "approximate",
-                },
-                "features": features,
-            },
-            ensure_ascii=False,
-            indent=2,
-            sort_keys=True,
-        )
-        + "\n",
-        encoding="utf-8",
-    )
+    OUT.write_text(json.dumps(geojson, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     STATUS.write_text(json.dumps(status, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(json.dumps(status, indent=2, sort_keys=True))
     if not status["qa_pass"]:
