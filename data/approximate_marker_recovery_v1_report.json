@@ -1,8 +1,12 @@
 {
   "authority": "projector_v3_approximate_recovery_v1",
   "borough_mismatch_count": 0,
+  "candidate_dataset_counts": {
+    "tvpp-9vvx": 19500
+  },
   "candidate_day_keys": 19500,
   "candidate_occurrences": 19500,
+  "candidate_source_id_count": 6297,
   "candidate_source_keys": 6297,
   "canonical_rows": 27703,
   "eligibility_counts": {
@@ -11,6 +15,13 @@
     "no_exact_identity_candidate": 24889,
     "not_standalone_public": 228
   },
+  "eligible_canonical_dataset_counts": {
+    "nyc-citywide-events-calendar-api": 421,
+    "nyc-parks-bigapps-events": 19,
+    "nyc-projected-feast-reference": 220,
+    "tvpp-9vvx": 25310
+  },
+  "eligible_canonical_source_id_count": 25970,
   "exact_pin_promotions": 0,
   "invalid_approximate_marker_count": 0,
   "location_mismatch_count": 0,
@@ -21,5 +32,7 @@
   "route_claims_blocked_from_point_recovery": 1081,
   "schema_version": "NYCIF_APPROXIMATE_MARKER_RECOVERY_V1",
   "semantic_rows": 24014,
-  "source_counts": {}
+  "source_counts": {},
+  "source_event_id_intersection_count": 0,
+  "source_id_dataset_pairs": {}
 }
