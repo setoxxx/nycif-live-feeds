@@ -5,6 +5,8 @@ on:
     paths:
       - 'scripts/build_location_resolution_backlog_v1.py'
       - 'tests/test_location_resolution_backlog_v1.py'
+      - 'scripts/sync_supabase_location_registry_v1.py'
+      - 'tests/test_supabase_location_registry_sync_v1.py'
       - 'scripts/sources/**'
       - 'tests/test_ticketmaster_source_adapter.py'
       - '.github/workflows/location-authority-adapters-ci.yml'
@@ -22,9 +24,11 @@ jobs:
         with:
           python-version: '3.11'
       - name: Compile
-        run: python -m py_compile scripts/build_location_resolution_backlog_v1.py scripts/sources/base.py scripts/sources/ticketmaster.py
+        run: python -m py_compile scripts/build_location_resolution_backlog_v1.py scripts/sync_supabase_location_registry_v1.py scripts/sources/base.py scripts/sources/ticketmaster.py
       - name: Test backlog classification
         run: python -m unittest tests.test_location_resolution_backlog_v1 -v
+      - name: Test durable registry payload
+        run: python -m unittest tests.test_supabase_location_registry_sync_v1 -v
       - name: Test Ticketmaster adapter
         run: python -m unittest tests.test_ticketmaster_source_adapter -v
       - name: Protect canonical identity contract
