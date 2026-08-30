@@ -34,10 +34,18 @@ jobs:
           import json
           report = json.load(open('data/location_resolution_backlog_v1_report.json'))
           rows = json.load(open('data/location_resolution_backlog_v1.json')).get('rows', [])
+          status = json.load(open('data/reader-safe/national-map-events-v03-status.json'))
+          expected = int(status.get('map_state_counts', {}).get('LIST_ONLY', 0)) + int(status.get('map_state_counts', {}).get('REVIEW_REQUIRED', 0))
           if report.get('qa_pass') is not True:
               raise SystemExit('backlog report failed QA')
-          if report.get('unresolved_public_occurrence_count') != len(rows):
+          if report.get('canonical_state_count_matches_v3_status') is not True:
+              raise SystemExit('backlog canonical state count does not match V3 status')
+          if report.get('unresolved_canonical_before_cancel_suppression') != expected:
+              raise SystemExit('backlog unresolved canonical count does not equal V3 LIST_ONLY + REVIEW_REQUIRED')
+          if report.get('unresolved_canonical_occurrence_count') != len(rows):
               raise SystemExit('backlog report/row count mismatch')
+          if expected > 0 and report.get('unresolved_canonical_before_cancel_suppression', 0) <= 0:
+              raise SystemExit('V3 reports unresolved states but backlog classifier returned zero')
           if report.get('promotion_attempt_count') != 0:
               raise SystemExit('backlog attempted promotion')
           for key in ('public_map_modified', 'location_cache_modified', 'staged_feed_modified'):
@@ -49,6 +57,22 @@ jobs:
           PY
       - name: Test durable registry payload
         run: python -m unittest tests.test_supabase_location_registry_sync_v1 -v
+      - name: Build current durable registry payload without apply
+        run: |
+          python scripts/sync_supabase_location_registry_v1.py
+          python - <<'PY'
+          import json
+          report = json.load(open('data/location_registry_sync_v1_report.json'))
+          if report.get('qa_pass') is not True:
+              raise SystemExit('location registry dry-run QA failed')
+          if int(report.get('location_count', 0)) <= 0:
+              raise SystemExit('location registry dry-run unexpectedly produced zero locations')
+          if report.get('approximate_certified_count') != 0:
+              raise SystemExit('approximate location was incorrectly certified')
+          if report.get('applied') is not False:
+              raise SystemExit('PR QA must not apply production location writes')
+          print(json.dumps(report, indent=2, sort_keys=True))
+          PY
       - name: Test Ticketmaster adapter
         run: python -m unittest tests.test_ticketmaster_source_adapter -v
       - name: Protect canonical identity contract
