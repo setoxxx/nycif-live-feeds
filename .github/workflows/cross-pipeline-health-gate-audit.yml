@@ -1,0 +1,57 @@
+name: Cross-Pipeline Health Gate Audit
+
+on:
+  workflow_dispatch:
+
+jobs:
+  audit:
+    permissions:
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.12"
+      - name: Run focused cross-pipeline tests
+        run: python3 -m unittest tests.test_cross_pipeline_health
+      - name: Compile health gate
+        run: |
+          python3 -m py_compile \
+            scripts/cross_pipeline_health.py \
+            scripts/build_cross_pipeline_data_health.py
+      - name: Run isolated accounting contract
+        run: |
+          mkdir -p /tmp/cross-pipeline
+          python3 - <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          sys.path.insert(0, "scripts")
+          from build_cross_pipeline_data_health import build_report
+
+          report = build_report(
+              nyc_events=[
+                  {"id": "nyc:exact", "nycif": {"coordinate_status": "map_ready"}},
+                  {"id": "nyc:approx", "nycif": {"coordinate_status": "approximate"}},
+                  {"id": "nyc:list", "nycif": {"coordinate_status": "list_only"}},
+              ],
+              nj_events=[
+                  {"id": "nj:exact", "map_status": "map_safe", "coordinate_source": "ical_feed"},
+                  {"id": "nj:approx", "map_status": "approximate", "coordinate_source": "manual_config"},
+                  {"id": "nj:list", "map_status": "list_only", "coordinate_source": "none"},
+              ],
+          )
+          Path("/tmp/cross-pipeline/health.json").write_text(
+              json.dumps(report, indent=2, sort_keys=True) + "\n",
+              encoding="utf-8",
+          )
+          if not report["qa_pass"]:
+              raise SystemExit(1)
+          PY
+      - name: Upload gate artifact
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: cross-pipeline-health-gate-audit
+          path: /tmp/cross-pipeline/health.json
