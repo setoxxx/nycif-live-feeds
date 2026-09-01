@@ -2,12 +2,12 @@
   "api_gateway": "https://api.nyc.gov/",
   "api_key_source": "public_config:https://www.nyc.gov/bin/nyc/sc.ec.json",
   "borough_counts": {
-    "Bk": 105,
-    "Bx": 87,
-    "Mn": 171,
+    "Bk": 98,
+    "Bx": 84,
+    "Mn": 164,
     "Other": 19,
-    "Qn": 139,
-    "SI": 80
+    "Qn": 131,
+    "SI": 75
   },
   "canceled_excluded": 0,
   "categories_available": [
@@ -65,7 +65,7 @@
     "Holidays,Education": 4,
     "Kids and Family,Education": 2,
     "Kids and Family,Education,General Events": 4,
-    "Parks & Recreation": 258,
+    "Parks & Recreation": 228,
     "Public Scoping Meeting": 1,
     "Street and Neighborhood": 96,
     "Tenant Resource Fair ,Free,Housing Information Class,Property Owner Clinic,Property Owner Resource Fair,General Events,Housing Ambassador Event,General Events,HPD Outreach Event": 2,
@@ -74,9 +74,9 @@
     "Tenant Resource Fair ,Free,Property Owner Clinic,Property Owner Resource Fair,Housing Ambassador Event,General Events,HPD Outreach Event": 3,
     "Tenant Resource Fair ,Free,Property Owner Resource Fair,Housing Ambassador Event,Veteran Events,HPD Outreach Event": 1
   },
-  "duplicate_exact_occurrences_collapsed": 2,
+  "duplicate_exact_occurrences_collapsed": 0,
   "fetch_mode": "live",
-  "generated_at_utc": "2026-08-31T01:23:59.613838+00:00",
+  "generated_at_utc": "2026-09-01T01:51:00.371210+00:00",
   "location_cache_modified": false,
   "manual_review_status": "pending",
   "production_feeds_modified": false,
@@ -84,17 +84,17 @@
   "public_map_modified": false,
   "qa_pass": true,
   "raw_observations_path": "data/nyc_citywide_events_calendar_raw_observations.json",
-  "raw_observations_preserved": 456,
+  "raw_observations_preserved": 424,
   "search_path": "calendar/search",
-  "snapshot_rows": 454,
-  "source_rows_received": 456,
+  "snapshot_rows": 424,
+  "source_rows_received": 424,
   "staged_feed_modified": false,
   "window": {
-    "end_date": "2027-03-02",
-    "items_returned": 456,
-    "num_pages_fetched": 38,
-    "reported_total_items": 456,
-    "start_date": "2026-08-31"
+    "end_date": "2027-03-03",
+    "items_returned": 424,
+    "num_pages_fetched": 36,
+    "reported_total_items": 424,
+    "start_date": "2026-09-01"
   },
   "window_days": 183
 }
