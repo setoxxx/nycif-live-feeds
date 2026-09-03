@@ -138,6 +138,20 @@ def load_rows(path: Path) -> list[dict[str, Any]]:
     return extract_rows(json.loads(path.read_text(encoding="utf-8")))
 
 
+def alias_source_datasets(row: dict[str, Any]) -> list[str]:
+    """Return every source dataset that observed this alias, including merges."""
+    datasets: list[str] = []
+    primary = str(row.get("source_dataset") or "").strip()
+    if primary:
+        datasets.append(primary)
+    metadata = row.get("metadata") if isinstance(row.get("metadata"), dict) else {}
+    for item in metadata.get("merged_source_datasets") or []:
+        text = str(item or "").strip()
+        if text and text not in datasets:
+            datasets.append(text)
+    return datasets
+
+
 def prefer_location(existing: dict[str, Any] | None, candidate: dict[str, Any]) -> dict[str, Any]:
     """Keep exact over approximate and never certify circular reuse authority."""
     if existing is None:
@@ -171,14 +185,9 @@ def merge_alias(existing: dict[str, Any], incoming: dict[str, Any]) -> dict[str,
     merged["occurrence_count"] = exist_count + incoming_count
     datasets: list[str] = []
     for row in (existing, incoming):
-        dataset = str(row.get("source_dataset") or "").strip()
-        if dataset and dataset not in datasets:
-            datasets.append(dataset)
-        extra = row.get("metadata") if isinstance(row.get("metadata"), dict) else {}
-        for item in extra.get("merged_source_datasets") or []:
-            text = str(item or "").strip()
-            if text and text not in datasets:
-                datasets.append(text)
+        for dataset in alias_source_datasets(row):
+            if dataset not in datasets:
+                datasets.append(dataset)
     metadata: dict[str, Any] = {}
     if isinstance(existing.get("metadata"), dict):
         metadata.update(existing["metadata"])
