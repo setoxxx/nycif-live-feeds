@@ -3,14 +3,14 @@
   "approximate_reused_count": 20891,
   "authority": "durable_location_registry_v1",
   "borough_alias_keys": 1360,
-  "canonical_rows": 28048,
+  "canonical_rows": 28051,
   "dataset_alias_keys": 1352,
   "exact_reused_count": 20,
   "invalid_reuse_count": 0,
   "match_basis_counts": {
     "borough_alias": 1,
     "dataset_borough_alias": 20910,
-    "no_registry_match": 4680
+    "no_registry_match": 4677
   },
   "operating_rule": "Resolve once, certify once, store durably, match aliases, reuse automatically, and revalidate only on conflict or authority change.",
   "precision_counts": {
@@ -23,10 +23,10 @@
   "schema_version": "NYCIF_DURABLE_LOCATION_REUSE_V1",
   "skipped_counts": {
     "already_exact": 1277,
-    "missing_match_identity": 32,
-    "no_registry_match": 4680,
+    "missing_match_identity": 36,
+    "no_registry_match": 4677,
     "not_standalone_public": 209,
-    "street_route_claim": 939
+    "street_route_claim": 941
   },
   "total_reused_count": 20911
 }
