@@ -6,7 +6,9 @@ Approximate geography remains approximate and review-required; this sync cannot
 certify an event pin. Reused locations preserve the authority that originally
 certified the durable place instead of replacing it with circular reuse metadata.
 Unprovenanced reused rows are counted and omitted from the payload; they do not
-abort the persist step or invent an authority.
+abort the persist step or invent an authority. Locations are unique on
+location_id and aliases are unique on (location_id, normalized_alias) before
+apply so one INSERT cannot hit the same ON CONFLICT row twice.
 """
 from __future__ import annotations
 
@@ -136,6 +138,146 @@ def load_rows(path: Path) -> list[dict[str, Any]]:
     return extract_rows(json.loads(path.read_text(encoding="utf-8")))
 
 
+def prefer_location(existing: dict[str, Any] | None, candidate: dict[str, Any]) -> dict[str, Any]:
+    """Keep exact over approximate and never certify circular reuse authority."""
+    if existing is None:
+        kept = dict(candidate)
+    elif existing.get("precision") == "approximate" and candidate.get("precision") == "exact":
+        kept = dict(candidate)
+    else:
+        kept = dict(existing)
+
+    existing_auth = str((existing or {}).get("location_authority") or "").strip()
+    candidate_auth = str(candidate.get("location_authority") or "").strip()
+    kept_auth = str(kept.get("location_authority") or "").strip()
+    if kept_auth == REUSE_AUTHORITY:
+        for auth in (existing_auth, candidate_auth):
+            if auth and auth != REUSE_AUTHORITY:
+                kept["location_authority"] = auth
+                break
+    elif candidate_auth == REUSE_AUTHORITY and existing_auth and existing_auth != REUSE_AUTHORITY:
+        kept["location_authority"] = existing_auth
+    return kept
+
+
+def merge_alias(existing: dict[str, Any], incoming: dict[str, Any]) -> dict[str, Any]:
+    exist_count = int(existing.get("occurrence_count") or 0)
+    incoming_count = int(incoming.get("occurrence_count") or 0)
+    merged = dict(existing)
+    if incoming_count > exist_count:
+        merged["raw_alias"] = incoming.get("raw_alias") or existing.get("raw_alias")
+        if incoming.get("source_dataset"):
+            merged["source_dataset"] = incoming.get("source_dataset")
+    merged["occurrence_count"] = exist_count + incoming_count
+    datasets: list[str] = []
+    for row in (existing, incoming):
+        dataset = str(row.get("source_dataset") or "").strip()
+        if dataset and dataset not in datasets:
+            datasets.append(dataset)
+        extra = row.get("metadata") if isinstance(row.get("metadata"), dict) else {}
+        for item in extra.get("merged_source_datasets") or []:
+            text = str(item or "").strip()
+            if text and text not in datasets:
+                datasets.append(text)
+    metadata: dict[str, Any] = {}
+    if isinstance(existing.get("metadata"), dict):
+        metadata.update(existing["metadata"])
+    if isinstance(incoming.get("metadata"), dict):
+        metadata.update(incoming["metadata"])
+    if len(datasets) > 1:
+        metadata["merged_source_datasets"] = datasets
+    merged["metadata"] = metadata
+    return merged
+
+
+def unique_locations(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], int]:
+    kept: dict[str, dict[str, Any]] = {}
+    merged = 0
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        loc_id = str(row.get("location_id") or "")
+        if not loc_id:
+            continue
+        if loc_id in kept:
+            merged += 1
+            kept[loc_id] = prefer_location(kept[loc_id], row)
+        else:
+            kept[loc_id] = prefer_location(None, row)
+    return list(sorted(kept.values(), key=lambda item: str(item["location_id"]))), merged
+
+
+def unique_aliases(rows: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], int]:
+    kept: dict[tuple[str, str], dict[str, Any]] = {}
+    merged = 0
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        loc_id = str(row.get("location_id") or "")
+        normalized = str(row.get("normalized_alias") or "").strip()
+        if not loc_id or not normalized:
+            continue
+        key = (loc_id, normalized)
+        if key in kept:
+            merged += 1
+            kept[key] = merge_alias(kept[key], row)
+        else:
+            kept[key] = dict(row)
+    return [kept[key] for key in sorted(kept)], merged
+
+
+def unique_registry_payload(payload: dict[str, Any]) -> tuple[dict[str, Any], dict[str, int]]:
+    """Collapse one-command ON CONFLICT keys before the RPC sees the payload."""
+    locations, location_merged = unique_locations(list(payload.get("locations") or []))
+    aliases, alias_merged = unique_aliases(list(payload.get("aliases") or []))
+    unique_payload = dict(payload)
+    unique_payload["locations"] = locations
+    unique_payload["aliases"] = aliases
+    return unique_payload, {
+        "duplicate_location_id_rows_merged": location_merged,
+        "duplicate_alias_key_rows_merged": alias_merged,
+    }
+
+
+def duplicate_conflict_keys(payload: dict[str, Any]) -> dict[str, Any]:
+    """Return the location_id / alias keys that would fail Postgres ON CONFLICT."""
+    location_ids = [
+        str(row.get("location_id") or "")
+        for row in payload.get("locations") or []
+        if isinstance(row, dict)
+    ]
+    location_counts = Counter(location_id for location_id in location_ids if location_id)
+    duplicate_location_ids = sorted(key for key, count in location_counts.items() if count > 1)
+    alias_keys = [
+        (str(row.get("location_id") or ""), str(row.get("normalized_alias") or ""))
+        for row in payload.get("aliases") or []
+        if isinstance(row, dict)
+    ]
+    alias_counts = Counter(key for key in alias_keys if key[0] and key[1])
+    duplicate_alias_keys = [
+        {"location_id": loc_id, "normalized_alias": alias, "count": count}
+        for (loc_id, alias), count in sorted(alias_counts.items())
+        if count > 1
+    ]
+    return {
+        "duplicate_location_ids": duplicate_location_ids,
+        "duplicate_location_id_extra_rows": sum(location_counts[key] - 1 for key in duplicate_location_ids),
+        "duplicate_alias_keys": duplicate_alias_keys,
+        "duplicate_alias_key_extra_rows": sum(item["count"] - 1 for item in duplicate_alias_keys),
+        "would_fail_on_conflict": bool(duplicate_location_ids or duplicate_alias_keys),
+    }
+
+
+def registry_qa_pass(locations: list[dict[str, Any]], payload: dict[str, Any] | None = None) -> bool:
+    conflicts = duplicate_conflict_keys(payload or {"locations": locations, "aliases": []})
+    return (
+        len(locations) > 0
+        and all(item.get("precision") in {"exact", "approximate"} for item in locations)
+        and all(item.get("location_authority") != REUSE_AUTHORITY for item in locations)
+        and not conflicts["would_fail_on_conflict"]
+    )
+
+
 def build_payload(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str, Any]]:
     generated = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     locations: dict[str, dict[str, Any]] = {}
@@ -208,9 +350,7 @@ def build_payload(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str,
             },
         }
 
-        existing = locations.get(loc_id)
-        if existing is None or (existing["precision"] == "approximate" and precision == "exact"):
-            locations[loc_id] = candidate
+        locations[loc_id] = prefer_location(locations.get(loc_id), candidate)
         authority_counts[authority] += 1
         observed_authority_counts[observed_authority] += 1
         precision_counts[precision] += 1
@@ -241,30 +381,34 @@ def build_payload(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str,
         "locations": list(sorted(locations.values(), key=lambda x: x["location_id"])),
         "aliases": aliases,
     }
+    payload, dedupe = unique_registry_payload(payload)
+    locations_out = payload["locations"]
+    aliases_out = payload["aliases"]
+    conflicts = duplicate_conflict_keys(payload)
     report = {
         "schema_version": "NYCIF_LOCATION_REGISTRY_SYNC_V1_REPORT",
         "generated_at_utc": generated,
-        "location_count": len(locations),
-        "alias_count": len(aliases),
+        "location_count": len(locations_out),
+        "alias_count": len(aliases_out),
         "precision_observation_counts": dict(sorted(precision_counts.items())),
         "authority_observation_counts": dict(sorted(authority_counts.items())),
         "observed_authority_counts": dict(sorted(observed_authority_counts.items())),
         "id_basis_counts": dict(sorted(id_basis_counts.items())),
         "skipped_counts": dict(sorted(skipped.items())),
+        "duplicate_location_id_rows_merged": dedupe["duplicate_location_id_rows_merged"],
+        "duplicate_alias_key_rows_merged": dedupe["duplicate_alias_key_rows_merged"],
+        "locations_unique_on_location_id": not conflicts["duplicate_location_ids"],
+        "aliases_unique_on_location_id_normalized_alias": not conflicts["duplicate_alias_keys"],
         "approximate_certified_count": sum(
-            1 for item in locations.values()
+            1 for item in locations_out
             if item["precision"] == "approximate" and item["metadata"].get("exact_pin_eligible")
         ),
         "circular_reuse_authority_count": sum(
-            1 for item in locations.values() if item["location_authority"] == REUSE_AUTHORITY
+            1 for item in locations_out if item["location_authority"] == REUSE_AUTHORITY
         ),
         "protected_cache_modified": False,
         "event_rows_modified": False,
-        "qa_pass": (
-            len(locations) > 0
-            and all(item["precision"] in {"exact", "approximate"} for item in locations.values())
-            and all(item["location_authority"] != REUSE_AUTHORITY for item in locations.values())
-        ),
+        "qa_pass": registry_qa_pass(locations_out, payload),
     }
     return payload, report
 
@@ -274,7 +418,14 @@ def apply_payload(payload: dict[str, Any]) -> dict[str, Any]:
     key = os.environ.get("SUPABASE_SERVICE_ROLE_KEY", "")
     if not base or not key:
         raise RuntimeError("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required with --apply")
-    body = json.dumps({"payload": payload}).encode()
+    unique_payload, _ = unique_registry_payload(payload)
+    conflicts = duplicate_conflict_keys(unique_payload)
+    if conflicts["would_fail_on_conflict"]:
+        raise RuntimeError(
+            "location registry payload still has ON CONFLICT duplicate keys: "
+            f"{conflicts}"
+        )
+    body = json.dumps({"payload": unique_payload}).encode()
     request = Request(
         f"{base}/rest/v1/rpc/sync_location_registry_v1",
         data=body,
