@@ -72,7 +72,7 @@ jobs:
           staged = json.loads(Path("data/nycif_staged_live_events.json").read_text(encoding="utf-8"))
           events = staged.get("events", [])
           metadata = {
-              "generated_at_utc": datetime.now(timezone.utc).isoformat(),
+              "generated_at_utc": datetime.now(timezone.utc).replace(microsecond=0).isoformat(),
               "event_count": len(events),
               "review_only": True,
               "public_authorized": False,

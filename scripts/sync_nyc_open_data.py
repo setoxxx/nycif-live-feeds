@@ -12,6 +12,7 @@ Outputs:
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 import urllib.request
@@ -60,6 +61,20 @@ def save_json_file(path: Path, payload: Any) -> None:
         handle.write("\n")
 
 
+def soda_request_headers() -> dict[str, str]:
+    """Optional Socrata app token. Missing or empty env values stay anonymous."""
+    headers = {
+        "Accept": "application/json",
+        "User-Agent": "NYCIF-live-feed-QA/1.1",
+    }
+    for env_name in ("SOCRATA_APP_TOKEN", "NYC_SODA_APP_TOKEN"):
+        token = os.environ.get(env_name, "").strip()
+        if token:
+            headers["X-App-Token"] = token
+            break
+    return headers
+
+
 def fetch_raw_rows() -> list[dict[str, Any]]:
     """Fetch all available NYC Open Data rows instead of Socrata's default first page.
 
@@ -76,7 +91,7 @@ def fetch_raw_rows() -> list[dict[str, Any]]:
             "$order": "start_date_time,event_id",
         }
         url = f"{RAW_URL}?{urlencode(params)}"
-        request = urllib.request.Request(url, headers={"Accept": "application/json", "User-Agent": "NYCIF-live-feed-QA/1.1"})
+        request = urllib.request.Request(url, headers=soda_request_headers())
         with urllib.request.urlopen(request, timeout=90) as response:
             payload = json.loads(response.read().decode("utf-8"))
         if not isinstance(payload, list):

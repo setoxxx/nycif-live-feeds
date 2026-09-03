@@ -72,6 +72,10 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PYTHONPATH: ${{ github.workspace }}:${{ github.workspace }}/scripts
+      NYC_EVENT_CAL_API_KEY: ${{ secrets.NYC_EVENT_CAL_API_KEY }}
+      NYC_EVENT_CALENDAR_API_KEY: ${{ secrets.NYC_EVENT_CALENDAR_API_KEY }}
+      SOCRATA_APP_TOKEN: ${{ secrets.SOCRATA_APP_TOKEN }}
+      NYC_SODA_APP_TOKEN: ${{ secrets.NYC_SODA_APP_TOKEN }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
