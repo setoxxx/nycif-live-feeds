@@ -113,6 +113,26 @@ def load_json(path: Path) -> Any:
         raise FeedBuildError(f"Invalid JSON in {path}: {exc}") from exc
 
 
+CLOCK_SKEW_SECONDS = 2.0
+
+
+def evaluate_source_freshness(
+    reviewed_at: datetime,
+    source_generated: datetime,
+    max_age_hours: int,
+) -> tuple[float, bool]:
+    """Return (age_hours, fresh).
+
+    Second-truncated reviewed_at can land a few hundred milliseconds before a
+    microsecond generated_at. Treat that tiny negative age as current, not stale.
+    """
+    age_seconds = (reviewed_at - source_generated).total_seconds()
+    if -CLOCK_SKEW_SECONDS <= age_seconds < 0:
+        age_seconds = 0.0
+    age_hours = age_seconds / 3600
+    return age_hours, 0 <= age_hours <= max_age_hours
+
+
 def parse_iso_datetime(value: Any, field: str) -> datetime:
     if not isinstance(value, str) or not value.strip():
         raise FeedBuildError(f"{field} must be a non-empty ISO-8601 timestamp")
@@ -415,8 +435,11 @@ def main() -> int:
         raise FeedBuildError("Metadata input must be an object")
     source_generated = parse_iso_datetime(metadata.get("generated_at_utc"), "generated_at_utc")
     reviewed_at = parse_iso_datetime(args.reviewed_at, "reviewed-at") if args.reviewed_at else datetime.now(timezone.utc)
-    source_age_hours = (reviewed_at - source_generated).total_seconds() / 3600
-    source_fresh = 0 <= source_age_hours <= args.max_source_age_hours
+    source_age_hours, source_fresh = evaluate_source_freshness(
+        reviewed_at,
+        source_generated,
+        args.max_source_age_hours,
+    )
 
     payload = load_json(args.input)
     feed, counters, collision_ids = build_feed(

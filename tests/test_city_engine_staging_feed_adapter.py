@@ -154,6 +154,23 @@ def test_distinct_occurrences_receive_stable_derived_ids():
         temp_b.cleanup()
 
 
+def test_subsecond_clock_skew_does_not_mark_source_stale():
+    temp, root, output_dir, result = run_adapter(
+        [event()],
+        generated_at="2026-09-03T20:59:47.326624+00:00",
+        reviewed_at="2026-09-03T20:59:47+00:00",
+    )
+    try:
+        assert result.returncode == 0, result.stderr
+        report = json.loads((output_dir / "city-engine-staging-feed-report.json").read_text())
+        assert report["source_fresh"] is True
+        assert report["ready_for_protected_staging"] is True
+        assert "source feed is stale" not in report["blocking_reasons"]
+        assert report["source_age_hours"] == 0.0
+    finally:
+        temp.cleanup()
+
+
 def test_stale_source_writes_report_but_not_feed():
     temp, root, output_dir, result = run_adapter(
         [event()],
@@ -175,5 +192,6 @@ if __name__ == "__main__":
     test_builds_protected_feed_and_excludes_ineligible_rows()
     test_equivalent_duplicate_rows_collapse_to_one_feature()
     test_distinct_occurrences_receive_stable_derived_ids()
+    test_subsecond_clock_skew_does_not_mark_source_stale()
     test_stale_source_writes_report_but_not_feed()
     print("City Engine protected staging feed adapter tests passed.")
