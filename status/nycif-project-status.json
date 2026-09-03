@@ -35,7 +35,7 @@
         "artifact": ".github/workflows/discovery-feed-refresh.yml",
         "code": "daily_refresh_stage_failed",
         "command_id": "live_event_intake_refresh",
-        "error_summary": "[truncated] General Events,HPD Outreach Event\": 3,\n    \"Tenant Resource Fair ,Free,Property Owner Resource Fair,Housing Ambassador Event,Veteran Events,HPD Outreach Event\": 1\n  },\n  \"borough_counts\": {\n    \"Bk\": 94,\n    \"Bx\": 78,\n    \"Mn\": 153,\n    \"Other\": 21,\n    \"Qn\": 126,\n    \"SI\": 73\n  },\n  \"production_feeds_modified\": false,\n  \"public_map_modified\": false,\n  \"location_cache_modified\": false,\n  \"staged_feed_modified\": false,\n  \"promotion_allowed\": false,\n  \"manual_review_status\": \"pending\"\n}\n{\n  \"coordinate_evidence_parity\": true,\n  \"current_future_rows\": 0,\n  \"date_boundary_timezone\": \"America/New_York\",\n  \"error\": null,\n  \"exact_site_validation_required_downstream\": false,\n  \"fetch_mode\": \"live\",\n  \"generated_at_utc\": \"2026-09-02T01:02:45.668787+00:00\",\n  \"legacy_source_is_freshness_authority\": false,\n  \"legacy_source_url\": \"https://www.nycgovparks.org/xml/events_300_rss.json\",\n  \"live_fetch_error\": null,\n  \"location_cache_modified\": false,\n  \"manual_review_status\": \"pending\",\n  \"production_feeds_modified\": false,\n  \"promotion_allowed\": false,\n  \"public_map_modified\": false,\n  \"qa_pass\": false,\n  \"rows_with_coordinates\": 0,\n  \"rows_with_site_validated_coordinates\": 0,\n  \"rows_with_source_coordinate_evidence\": 0,\n  \"snapshot_rows\": 0,\n  \"source_contract_version\": \"NYCIF_PARKS_UPCOMING_OPEN_DATA_V4\",\n  \"source_page\": \"https://data.cityofnewyork.us/d/w3wp-dpdi\",\n  \"source_rows_received\": 1272,\n  \"source_transport\": \"nyc_open_data_current_upcoming\",\n  \"source_url\": \"https://data.cityofnewyork.us/resource/w3wp-dpdi.json\",\n  \"staged_feed_modified\": false,\n  \"today_nyc\": \"2026-09-01\"\n}",
+        "error_summary": "[truncated] ,General Events,HPD Outreach Event\": 3,\n    \"Tenant Resource Fair ,Free,Property Owner Resource Fair,Housing Ambassador Event,Veteran Events,HPD Outreach Event\": 1\n  },\n  \"borough_counts\": {\n    \"Bk\": 85,\n    \"Bx\": 67,\n    \"Mn\": 124,\n    \"Other\": 17,\n    \"Qn\": 99,\n    \"SI\": 56\n  },\n  \"production_feeds_modified\": false,\n  \"public_map_modified\": false,\n  \"location_cache_modified\": false,\n  \"staged_feed_modified\": false,\n  \"promotion_allowed\": false,\n  \"manual_review_status\": \"pending\"\n}\n{\n  \"coordinate_evidence_parity\": true,\n  \"current_future_rows\": 0,\n  \"date_boundary_timezone\": \"America/New_York\",\n  \"error\": null,\n  \"exact_site_validation_required_downstream\": false,\n  \"fetch_mode\": \"live\",\n  \"generated_at_utc\": \"2026-09-03T01:08:12.546189+00:00\",\n  \"legacy_source_is_freshness_authority\": false,\n  \"legacy_source_url\": \"https://www.nycgovparks.org/xml/events_300_rss.json\",\n  \"live_fetch_error\": null,\n  \"location_cache_modified\": false,\n  \"manual_review_status\": \"pending\",\n  \"production_feeds_modified\": false,\n  \"promotion_allowed\": false,\n  \"public_map_modified\": false,\n  \"qa_pass\": false,\n  \"rows_with_coordinates\": 0,\n  \"rows_with_site_validated_coordinates\": 0,\n  \"rows_with_source_coordinate_evidence\": 0,\n  \"snapshot_rows\": 0,\n  \"source_contract_version\": \"NYCIF_PARKS_UPCOMING_OPEN_DATA_V4\",\n  \"source_page\": \"https://data.cityofnewyork.us/d/w3wp-dpdi\",\n  \"source_rows_received\": 1291,\n  \"source_transport\": \"nyc_open_data_current_upcoming\",\n  \"source_url\": \"https://data.cityofnewyork.us/resource/w3wp-dpdi.json\",\n  \"staged_feed_modified\": false,\n  \"today_nyc\": \"2026-09-02\"\n}",
         "exception_class": "ProcessExitError",
         "exit_code": 1,
         "message": "Daily production refresh failed at stage 'official_source_live_fetch_and_permit_staging' (command 'live_event_intake_refresh', exit 1).",
@@ -53,7 +53,7 @@
       "note": "V1 remains the sole production authority.",
       "production_authority": false
     },
-    "generated_at_utc": "2026-09-02T01:02:47Z",
+    "generated_at_utc": "2026-09-03T01:08:14Z",
     "operating_rule": "Do not commit or publish a refreshed public feed unless status is READY.",
     "pipeline": {
       "canonical_identity_clean": false,
@@ -63,7 +63,7 @@
     },
     "release_ready": false,
     "rollback": {
-      "previous_public_feed_commit": "b273b966a3049453c08719bf257c877949a1ef50",
+      "previous_public_feed_commit": "c85232f1828031dc86d5bfbf6613ad03c783be43",
       "strategy": "Failed runs do not commit; revert the READY refresh commit to restore this prior commit."
     },
     "rollback_rule": "The previous serving commit remains authoritative until a later refresh is READY.",
@@ -72,7 +72,7 @@
     "status": "BLOCKED"
   },
   "data_freshness": {
-    "last_verified_at": "2026-09-02T01:02:47Z",
+    "last_verified_at": "2026-09-03T01:08:14Z",
     "source": "generate_godview_project_state.py"
   },
   "enigma_shadow_program": {
@@ -126,7 +126,7 @@
       "viewer": 61
     }
   },
-  "generated_at_utc": "2026-09-02T01:02:47Z",
+  "generated_at_utc": "2026-09-03T01:08:14Z",
   "health": "red",
   "map_v1": {
     "freeze_artifact": "status/nycif-map-v1-freeze.json",
