@@ -87,7 +87,9 @@ class DurableLocationReuseTests(unittest.TestCase):
         self.assertEqual(row["nycif"]["map_eligibility_state"], "MAP_READY")
         self.assertTrue(row["nycif"]["certified_pin"])
         self.assertTrue(row["location_evidence"]["exact_pin_eligible"])
+        self.assertEqual(row["nycif"]["location_reuse_source_authority"], "fixture_authority")
         self.assertEqual(report["exact_reused_count"], 1)
+        self.assertEqual(report["missing_source_authority_reused_count"], 0)
         self.assertTrue(report["qa_pass"])
 
     def test_approximate_registry_location_never_promotes_exact(self):
@@ -102,7 +104,9 @@ class DurableLocationReuseTests(unittest.TestCase):
         self.assertEqual(row["nycif"]["map_eligibility_state"], "GENERAL_AREA")
         self.assertFalse(row["nycif"]["certified_pin"])
         self.assertFalse(row["location_evidence"]["exact_pin_eligible"])
+        self.assertEqual(row["nycif"]["location_reuse_source_authority"], "fixture_authority")
         self.assertEqual(report["approximate_reused_count"], 1)
+        self.assertEqual(report["missing_source_authority_reused_count"], 0)
 
     def test_ambiguous_alias_fails_closed(self):
         output, report = self.run_apply(
@@ -141,6 +145,58 @@ class DurableLocationReuseTests(unittest.TestCase):
         )
         self.assertEqual(output[0]["location_id"], "known")
         self.assertEqual(output[0]["nycif"]["location_reuse_match_basis"], "borough_alias")
+        self.assertEqual(output[0]["nycif"]["location_reuse_source_authority"], "fixture_authority")
+        self.assertEqual(report["exact_reused_count"], 1)
+
+    def test_circular_stored_authority_is_not_stamped_on_exact_or_approximate_reuse(self):
+        exact_loc = location("exact-circular", "exact")
+        exact_loc["location_authority"] = "durable_location_registry_v1"
+        approx_loc = location("approx-circular", "approximate")
+        approx_loc["location_authority"] = "durable_location_registry_v1"
+        missing_loc = location("exact-missing", "exact")
+        missing_loc["location_authority"] = None
+        output, report = self.run_apply(
+            [
+                event("Exact Circular Place"),
+                event("Approx Circular Place"),
+                event("Exact Missing Place"),
+            ],
+            registry(
+                [exact_loc, approx_loc, missing_loc],
+                [
+                    alias("exact-circular", "Exact Circular Place"),
+                    alias("approx-circular", "Approx Circular Place"),
+                    alias("exact-missing", "Exact Missing Place"),
+                ],
+            ),
+        )
+        exact_row, approx_row, missing_row = output
+        self.assertEqual(exact_row["nycif"]["map_eligibility_state"], "MAP_READY")
+        self.assertTrue(exact_row["nycif"]["certified_pin"])
+        self.assertNotIn("location_reuse_source_authority", exact_row["nycif"])
+        self.assertEqual(approx_row["nycif"]["map_eligibility_state"], "GENERAL_AREA")
+        self.assertFalse(approx_row["nycif"]["certified_pin"])
+        self.assertNotIn("location_reuse_source_authority", approx_row["nycif"])
+        self.assertEqual(missing_row["nycif"]["map_eligibility_state"], "MAP_READY")
+        self.assertNotIn("location_reuse_source_authority", missing_row["nycif"])
+        self.assertEqual(report["exact_reused_count"], 2)
+        self.assertEqual(report["approximate_reused_count"], 1)
+        self.assertEqual(report["missing_source_authority_reused_count"], 3)
+        self.assertTrue(report["qa_pass"])
+
+    def test_unwraps_original_authority_from_stored_metadata_when_column_is_circular(self):
+        stored = location("known", "exact")
+        stored["location_authority"] = "durable_location_registry_v1"
+        stored["metadata"] = {"original_location_authority": "nyc_parks_official_facility_geometry"}
+        output, report = self.run_apply(
+            [event("Known Place")],
+            registry([stored], [alias("known", "Known Place")]),
+        )
+        self.assertEqual(
+            output[0]["nycif"]["location_reuse_source_authority"],
+            "nyc_parks_official_facility_geometry",
+        )
+        self.assertEqual(report["missing_source_authority_reused_count"], 0)
         self.assertEqual(report["exact_reused_count"], 1)
 
 

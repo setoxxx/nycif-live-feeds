@@ -105,6 +105,28 @@ def load_registry(path: Path) -> tuple[dict[str, dict[str, Any]], dict[tuple[str
     return locations, dataset_index, borough_index
 
 
+def non_circular_source_authority(stored: dict[str, Any]) -> str:
+    """Keep the authority that originally certified the stored place.
+
+    Reuse may observe ``durable_location_registry_v1``, but that token must not
+    be written back as the source of the stored location. If the stored row has
+    no non-circular original, leave the occurrence unstamped rather than invent
+    provenance. Exact vs approximate reuse lanes stay independent of this check.
+    """
+    metadata = stored.get("metadata") if isinstance(stored.get("metadata"), dict) else {}
+    for candidate in (
+        stored.get("location_authority"),
+        metadata.get("original_location_authority"),
+        metadata.get("source_location_authority"),
+        stored.get("location_reuse_source_authority"),
+        metadata.get("location_reuse_source_authority"),
+    ):
+        text = str(candidate or "").strip()
+        if text and text != AUTHORITY:
+            return text
+    return ""
+
+
 def choose_location(
     normalized: str,
     dataset: str,
@@ -135,6 +157,7 @@ def apply(canonical_path: Path = CANONICAL, registry_path: Path = REGISTRY, repo
     skipped: Counter[str] = Counter()
     exact_reused = 0
     approximate_reused = 0
+    missing_source_authority_reused = 0
     invalid = 0
 
     for event in canonical:
@@ -180,7 +203,12 @@ def apply(canonical_path: Path = CANONICAL, registry_path: Path = REGISTRY, repo
         nycif["source_location_text"] = raw
         nycif["location_authority"] = AUTHORITY
         nycif["location_reuse_match_basis"] = basis
-        nycif["location_reuse_source_authority"] = stored.get("location_authority")
+        original = non_circular_source_authority(stored)
+        if original:
+            nycif["location_reuse_source_authority"] = original
+        else:
+            nycif.pop("location_reuse_source_authority", None)
+            missing_source_authority_reused += 1
         nycif["location_reuse_registry_precision"] = precision
 
         if precision == "exact":
@@ -255,6 +283,7 @@ def apply(canonical_path: Path = CANONICAL, registry_path: Path = REGISTRY, repo
         "exact_reused_count": exact_reused,
         "approximate_reused_count": approximate_reused,
         "total_reused_count": exact_reused + approximate_reused,
+        "missing_source_authority_reused_count": missing_source_authority_reused,
         "precision_counts": dict(sorted(precision_counts.items())),
         "match_basis_counts": dict(sorted(match_basis_counts.items())),
         "skipped_counts": dict(sorted(skipped.items())),
