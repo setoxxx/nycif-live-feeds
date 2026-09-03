@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import py_compile
 import sys
 import tempfile
@@ -15,13 +16,14 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "scripts"))
 
+from scripts import sync_nyc_open_data as open_data_sync  # noqa: E402
 from scripts import sync_nyc_parks_bigapps_events as parks_sync  # noqa: E402
 from scripts.augment_daily_data_health_v03 import availability_gate  # noqa: E402
 from scripts.build_staged_production_feed import apply_one_day_street_dedupe  # noqa: E402
 from scripts.record_blocked_daily_data_health import build_payload  # noqa: E402
 from scripts.refresh_official_supplemental_occurrences import occurrence_key  # noqa: E402
 from scripts.run_daily_refresh_stage import failure_payload, run_command, sanitize_summary  # noqa: E402
-from scripts.sync_nyc_citywide_events_calendar import bool_flag  # noqa: E402
+from scripts.sync_nyc_citywide_events_calendar import bool_flag, resolve_api_key  # noqa: E402
 
 
 def street_row(day: str, source_event_id: str, *, priority: int = 0) -> dict:
@@ -93,6 +95,80 @@ def test_calendar_cancellation_flags_are_typed_safely() -> None:
     assert bool_flag("false") is False
     assert bool_flag("0") is False
     assert bool_flag(None) is False
+
+
+def test_calendar_api_key_prefers_primary_env_then_alias_then_public() -> None:
+    with patch.dict(
+        os.environ,
+        {
+            "NYC_EVENT_CAL_API_KEY": "fixture-primary-subscription",
+            "NYC_EVENT_CALENDAR_API_KEY": "fixture-alias-subscription",
+        },
+        clear=False,
+    ):
+        key, source = resolve_api_key()
+    assert key == "fixture-primary-subscription"
+    assert source == "environment:NYC_EVENT_CAL_API_KEY"
+
+    with patch.dict(
+        os.environ,
+        {
+            "NYC_EVENT_CAL_API_KEY": "   ",
+            "NYC_EVENT_CALENDAR_API_KEY": "fixture-alias-subscription",
+        },
+        clear=False,
+    ):
+        key, source = resolve_api_key()
+    assert key == "fixture-alias-subscription"
+    assert source == "environment:NYC_EVENT_CALENDAR_API_KEY"
+
+    with patch.dict(
+        os.environ,
+        {
+            "NYC_EVENT_CAL_API_KEY": "",
+            "NYC_EVENT_CALENDAR_API_KEY": "",
+        },
+        clear=False,
+    ), patch(
+        "scripts.sync_nyc_citywide_events_calendar.fetch_public_key",
+        return_value="fixture-public-config-key",
+    ) as mocked_public:
+        key, source = resolve_api_key()
+    assert key == "fixture-public-config-key"
+    assert source.startswith("public_config:")
+    mocked_public.assert_called()
+
+
+def test_soda_app_token_is_optional() -> None:
+    with patch.dict(
+        os.environ,
+        {"SOCRATA_APP_TOKEN": "", "NYC_SODA_APP_TOKEN": ""},
+        clear=False,
+    ):
+        headers = open_data_sync.soda_request_headers()
+    assert "X-App-Token" not in headers
+
+    with patch.dict(
+        os.environ,
+        {
+            "SOCRATA_APP_TOKEN": "fixture-socrata-token",
+            "NYC_SODA_APP_TOKEN": "fixture-nyc-soda-token",
+        },
+        clear=False,
+    ):
+        headers = open_data_sync.soda_request_headers()
+    assert headers["X-App-Token"] == "fixture-socrata-token"
+
+    with patch.dict(
+        os.environ,
+        {
+            "SOCRATA_APP_TOKEN": "",
+            "NYC_SODA_APP_TOKEN": "fixture-nyc-soda-token",
+        },
+        clear=False,
+    ):
+        headers = open_data_sync.soda_request_headers()
+    assert headers["X-App-Token"] == "fixture-nyc-soda-token"
 
 
 def test_parks_source_contract_uses_current_upcoming_open_data() -> None:
@@ -401,6 +477,10 @@ def test_refresh_workflow_has_structured_preflight_diagnostics() -> None:
     assert "supabase_event_writer.py" not in workflow
     assert "nycif_apply_staging_event_batch" not in workflow
     assert "event_occurrences" not in workflow
+    assert "NYC_EVENT_CAL_API_KEY: ${{ secrets.NYC_EVENT_CAL_API_KEY }}" in workflow
+    assert "NYC_EVENT_CALENDAR_API_KEY: ${{ secrets.NYC_EVENT_CALENDAR_API_KEY }}" in workflow
+    assert "SOCRATA_APP_TOKEN: ${{ secrets.SOCRATA_APP_TOKEN }}" in workflow
+    assert "NYC_SODA_APP_TOKEN: ${{ secrets.NYC_SODA_APP_TOKEN }}" in workflow
 
 
 def test_modified_reliability_python_files_compile() -> None:
@@ -411,6 +491,8 @@ def test_modified_reliability_python_files_compile() -> None:
             ROOT / "scripts" / "record_blocked_daily_data_health.py",
             ROOT / "scripts" / "augment_daily_data_health_v03.py",
             ROOT / "scripts" / "sync_nyc_parks_bigapps_events.py",
+            ROOT / "scripts" / "sync_nyc_citywide_events_calendar.py",
+            ROOT / "scripts" / "sync_nyc_open_data.py",
             ROOT / "scripts" / "test_nyc_parks_open_data_sync.py",
             ROOT / "scripts" / "test_live_event_intake_refresh_current.py",
             ROOT / "scripts" / "test_daily_production_hardening.py",
@@ -429,6 +511,8 @@ def main() -> int:
         test_calendar_occurrence_identity_includes_date,
         test_calendar_occurrence_identity_includes_same_day_time,
         test_calendar_cancellation_flags_are_typed_safely,
+        test_calendar_api_key_prefers_primary_env_then_alias_then_public,
+        test_soda_app_token_is_optional,
         test_parks_source_contract_uses_current_upcoming_open_data,
         test_parks_official_event_record_coordinate_is_map_ready,
         test_parks_missing_or_bad_coordinate_never_invents_exact_evidence,

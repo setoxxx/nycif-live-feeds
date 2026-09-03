@@ -29,6 +29,10 @@ REPORT_PATH = DATA_DIR / "nyc_citywide_events_calendar_sync_report.json"
 
 API_GATEWAY = os.environ.get("NYC_EVENT_CAL_API_GATEWAY", "https://api.nyc.gov/")
 API_KEY_ENV = "NYC_EVENT_CAL_API_KEY"
+API_KEY_ENV_ALIASES = (
+    "NYC_EVENT_CAL_API_KEY",
+    "NYC_EVENT_CALENDAR_API_KEY",
+)
 PUBLIC_KEY_URL = "https://www.nyc.gov/bin/nyc/sc.ec.json"
 PUBLIC_KEY_FALLBACK_URLS = (
     "https://web.archive.org/web/20240601000000/https://www.nyc.gov/bin/nyc/sc.ec.json",
@@ -61,9 +65,10 @@ def fetch_public_key(url: str) -> str:
 
 
 def resolve_api_key() -> tuple[str, str]:
-    env_key = os.environ.get(API_KEY_ENV, "").strip()
-    if env_key:
-        return env_key, "environment"
+    for env_name in API_KEY_ENV_ALIASES:
+        env_key = os.environ.get(env_name, "").strip()
+        if env_key:
+            return env_key, f"environment:{env_name}"
     errors: list[str] = []
     for url in (PUBLIC_KEY_URL, *PUBLIC_KEY_FALLBACK_URLS):
         try:
@@ -71,8 +76,8 @@ def resolve_api_key() -> tuple[str, str]:
         except Exception as exc:
             errors.append(f"{url}: {exc}")
     raise RuntimeError(
-        f"Could not resolve Event Calendar API key. Set {API_KEY_ENV} or ensure a public "
-        f"config URL is reachable. Attempts: {'; '.join(errors)}"
+        f"Could not resolve Event Calendar API key. Set {' or '.join(API_KEY_ENV_ALIASES)} "
+        f"or ensure a public config URL is reachable. Attempts: {'; '.join(errors)}"
     )
 
 
