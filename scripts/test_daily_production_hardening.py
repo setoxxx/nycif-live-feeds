@@ -148,6 +148,80 @@ def test_parks_missing_or_bad_coordinate_never_invents_exact_evidence() -> None:
         assert result["promotion_allowed"] is False
 
 
+def live_shaped_parks_row() -> dict:
+    """Current w3wp-dpdi contract: datetime lives in starttime/endtime, no startdate."""
+    return {
+        "title": "Summer Sports Experience: Pickleball",
+        "guid": "2181319",
+        "link": {"url": "http://www.nycgovparks.org/events/2099/09/03/pickleball"},
+        "starttime": "2099-09-03 07:00:00",
+        "endtime": "2099-09-03 12:00:00",
+        "location": "Greenbelt Recreation Center (in Blood Root Valley)",
+        "parknames": "Blood Root Valley",
+        "parkids": "R129",
+        "categories": "Best for Kids | Sports",
+        "coordinates": "40.59198260134300000, -74.13947248458900000",
+    }
+
+
+def test_parks_combined_datetime_without_startdate_normalizes() -> None:
+    result = parks_sync.normalize_event_item(live_shaped_parks_row())
+    assert result["source_event_id"] == "2181319"
+    assert result["title"] == "Summer Sports Experience: Pickleball"
+    assert result["start_date"] == "2099-09-03"
+    assert result["start_time"] == "07:00:00"
+    assert result["start_date_time"] == "2099-09-03T07:00:00"
+    assert result["end_date"] == "2099-09-03"
+    assert result["end_time"] == "12:00:00"
+    assert result["end_date_time"] == "2099-09-03T12:00:00"
+    assert result["lat"] == 40.591982601343
+    assert result["lng"] == -74.139472484589
+    assert result["location_evidence"]["tier"] == "exact_source_coordinate"
+
+
+def test_parks_live_shaped_upcoming_rows_pass_qa() -> None:
+    with patch.object(parks_sync, "fetch_events", return_value=[live_shaped_parks_row()]), patch.object(
+        parks_sync, "save_json"
+    ), patch("builtins.print") as mocked_print:
+        code = parks_sync.main()
+    assert code == 0
+    report = json.loads(mocked_print.call_args.args[0])
+    assert report["qa_pass"] is True
+    assert report["fetch_mode"] == "live"
+    assert report["source_rows_received"] == 1
+    assert report["snapshot_rows"] == 1
+    assert report["current_future_rows"] == 1
+    assert report["live_fetch_error"] is None
+
+
+def test_parks_empty_or_non_list_payload_still_fails_closed() -> None:
+    class DummyResponse:
+        def __init__(self, payload: object) -> None:
+            self._payload = json.dumps(payload).encode("utf-8")
+
+        def read(self) -> bytes:
+            return self._payload
+
+        def __enter__(self) -> "DummyResponse":
+            return self
+
+        def __exit__(self, *args: object) -> bool:
+            return False
+
+    with patch("urllib.request.urlopen", return_value=DummyResponse({"error": "nope"})):
+        try:
+            parks_sync.fetch_events()
+            raise AssertionError("non-list payload must fail closed")
+        except RuntimeError as exc:
+            assert "non-list" in str(exc)
+    with patch("urllib.request.urlopen", return_value=DummyResponse([])):
+        try:
+            parks_sync.fetch_events()
+            raise AssertionError("empty list must fail closed")
+        except RuntimeError as exc:
+            assert "no rows" in str(exc)
+
+
 def test_parks_live_failure_stays_non_live_and_fails_closed() -> None:
     with patch.object(parks_sync, "fetch_events", side_effect=RuntimeError("boom")), patch.object(
         parks_sync, "save_json"
@@ -313,6 +387,9 @@ def main() -> int:
         test_parks_source_contract_uses_current_upcoming_open_data,
         test_parks_official_event_record_coordinate_is_map_ready,
         test_parks_missing_or_bad_coordinate_never_invents_exact_evidence,
+        test_parks_combined_datetime_without_startdate_normalizes,
+        test_parks_live_shaped_upcoming_rows_pass_qa,
+        test_parks_empty_or_non_list_payload_still_fails_closed,
         test_parks_live_failure_stays_non_live_and_fails_closed,
         test_parks_uses_new_york_date_boundary,
         test_failure_summary_redacts_common_secrets,

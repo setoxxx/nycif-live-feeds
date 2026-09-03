@@ -5,6 +5,10 @@ The retired Parks website JSON endpoint is not used as freshness authority.
 Dataset ``w3wp-dpdi`` is the current upcoming-events transport used by the V3
 line and exposes the event schema, including first-party coordinate pairs.
 
+Live ``w3wp-dpdi`` rows currently place the calendar day inside ``starttime``
+and ``endtime`` (``YYYY-MM-DD HH:MM:SS``) and omit ``startdate`` / ``enddate``.
+The collector accepts that live shape and the older split date + clock pair.
+
 This collector never geocodes. A valid coordinate supplied on the same official
 NYC Parks event record as its stated venue is preserved as validated
 ``exact_source_coordinate`` evidence. Missing or invalid coordinates remain
@@ -82,6 +86,20 @@ def date_part(value: Any) -> str:
     return ""
 
 
+def first_date_part(*values: Any) -> str:
+    """Return the first YYYY-MM-DD found in date-only or datetime fields.
+
+    Current ``w3wp-dpdi`` rows put the calendar day inside ``starttime`` /
+    ``endtime`` (``YYYY-MM-DD HH:MM:SS``) and no longer emit ``startdate`` /
+    ``enddate``. Older snapshots still use the split date + clock pair.
+    """
+    for value in values:
+        day = date_part(value)
+        if day:
+            return day
+    return ""
+
+
 def time_part(value: Any) -> str:
     raw = text(value)
     if not raw:
@@ -142,8 +160,8 @@ def official_coordinate_evidence(
 
 def normalize_event_item(item: dict[str, Any]) -> dict[str, Any]:
     lat, lng = parse_coordinates(item.get("coordinates"))
-    start_day = date_part(item.get("startdate"))
-    end_day = date_part(item.get("enddate")) or start_day
+    start_day = first_date_part(item.get("startdate"), item.get("starttime"))
+    end_day = first_date_part(item.get("enddate"), item.get("endtime")) or start_day
     start_clock = time_part(item.get("starttime"))
     end_clock = time_part(item.get("endtime"))
     park_name = text(item.get("parknames"))
@@ -207,6 +225,11 @@ def main() -> int:
         row for row in normalized
         if row.get("source_event_id") and row.get("title") and row.get("start_date_time")
     ]
+    if not error and source_rows and not normalized:
+        error = (
+            "NYC Parks current-events dataset returned rows that could not be "
+            "normalized to title, source_event_id, and start_date_time"
+        )
     current_future = [
         row for row in normalized
         if text(row.get("end_date") or row.get("start_date") or row.get("start_date_time"))[:10] >= today_nyc
