@@ -349,6 +349,9 @@ def test_refresh_workflow_has_structured_preflight_diagnostics() -> None:
     )
     assert "bash scripts/run_discovery_feed_refresh.sh" in workflow
     assert "bash scripts/publish_blocked_daily_refresh.sh" in workflow
+    assert "workflow_dispatch:" in workflow
+    assert "cron: '0 18 * * *'" in workflow
+    assert 'timezone: "America/New_York"' in workflow
     assert "scripts/run_daily_refresh_stage.py" in transaction
     assert "scripts/test_live_event_intake_refresh_current.py" in transaction
     assert "--command-id" in transaction
