@@ -5,6 +5,8 @@ Reads canonical V3 event geography. It never edits location_cache or event rows.
 Approximate geography remains approximate and review-required; this sync cannot
 certify an event pin. Reused locations preserve the authority that originally
 certified the durable place instead of replacing it with circular reuse metadata.
+Unprovenanced reused rows are counted and omitted from the payload; they do not
+abort the persist step or invent an authority.
 """
 from __future__ import annotations
 
@@ -73,20 +75,37 @@ def raw_location(row: dict[str, Any]) -> str:
     ).strip()
 
 
-def effective_location_authority(row: dict[str, Any]) -> tuple[str, str]:
+def reuse_source_authority(row: dict[str, Any]) -> str:
+    """Return a non-circular original authority if this occurrence recorded one."""
+    nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
+    original = str(
+        nycif.get("location_reuse_source_authority")
+        or row.get("location_reuse_source_authority")
+        or ""
+    ).strip()
+    if not original or original == REUSE_AUTHORITY:
+        return ""
+    return original
+
+
+def effective_location_authority(row: dict[str, Any]) -> tuple[str, str] | None:
     """Return durable authority plus the authority observed on this occurrence.
 
     A reused occurrence is allowed to say that its current placement came from
     the durable registry, but syncing that occurrence back must retain the
     original authority that certified the stored location. Otherwise repeated
     reuse would erase provenance and make the registry self-referential.
+
+    Unprovenanced reuse is skipped rather than raised so a READY transaction can
+    still persist provenanced locations. Missing original authority is never
+    invented and never certified into the registry payload.
     """
     nycif = row.get("nycif") if isinstance(row.get("nycif"), dict) else {}
     observed = str(nycif.get("location_authority") or row.get("location_authority") or "unknown")
     if observed == REUSE_AUTHORITY:
-        original = str(nycif.get("location_reuse_source_authority") or "").strip()
-        if not original or original == REUSE_AUTHORITY:
-            raise RuntimeError("reused location is missing a non-circular source authority")
+        original = reuse_source_authority(row)
+        if not original:
+            return None
         return original, observed
     return observed, observed
 
@@ -148,7 +167,11 @@ def build_payload(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str,
             continue
 
         precision = "exact" if state == "MAP_READY" else "approximate"
-        authority, observed_authority = effective_location_authority(row)
+        resolved = effective_location_authority(row)
+        if resolved is None:
+            skipped["reused_location_missing_source_authority"] += 1
+            continue
+        authority, observed_authority = resolved
         loc_id, basis = stable_location_id(row, lat, lng)
         id_basis_counts[basis] += 1
         raw = raw_location(row)

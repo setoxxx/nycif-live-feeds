@@ -74,13 +74,37 @@ class LocationRegistrySyncTests(unittest.TestCase):
         self.assertEqual(stored["metadata"]["observed_location_authority"], "durable_location_registry_v1")
         self.assertTrue(stored["metadata"]["reused_from_registry"])
         self.assertEqual(report["circular_reuse_authority_count"], 0)
+        self.assertFalse(report["event_rows_modified"])
         self.assertTrue(report["qa_pass"])
 
-    def test_reused_location_without_original_authority_fails_closed(self):
-        row = event("MAP_READY", True, "Known Place", "9", cemsid="500")
-        row["nycif"]["location_authority"] = "durable_location_registry_v1"
-        with self.assertRaises(RuntimeError):
-            build_payload([row])
+    def test_reused_location_without_original_authority_is_skipped(self):
+        provenanced = event("MAP_READY", True, "Known Place", "8", cemsid="400")
+        provenanced["location_id"] = "cems:400"
+        provenanced["nycif"].update({
+            "location_id": "cems:400",
+            "location_authority": "durable_location_registry_v1",
+            "location_reuse_source_authority": "nyc_parks_official_facility_geometry",
+        })
+        unprovenanced = event("MAP_READY", True, "Unknown Place", "9", cemsid="500")
+        unprovenanced["location_id"] = "cems:500"
+        unprovenanced["nycif"].update({
+            "location_id": "cems:500",
+            "location_authority": "durable_location_registry_v1",
+        })
+        circular = event("GENERAL_AREA", False, "Circular Place", "10", cemsid="600")
+        circular["location_id"] = "cems:600"
+        circular["nycif"].update({
+            "location_id": "cems:600",
+            "location_authority": "durable_location_registry_v1",
+            "location_reuse_source_authority": "durable_location_registry_v1",
+        })
+        payload, report = build_payload([provenanced, unprovenanced, circular])
+        self.assertEqual([row["location_id"] for row in payload["locations"]], ["cems:400"])
+        self.assertEqual(payload["locations"][0]["location_authority"], "nyc_parks_official_facility_geometry")
+        self.assertEqual(report["skipped_counts"]["reused_location_missing_source_authority"], 2)
+        self.assertEqual(report["circular_reuse_authority_count"], 0)
+        self.assertFalse(report["event_rows_modified"])
+        self.assertTrue(report["qa_pass"])
 
 
 if __name__ == "__main__":
