@@ -138,8 +138,8 @@
     "money_day_today": 1,
     "money_day_tomorrow": 1,
     "opportunities": 1144,
-    "photographer_calendar_events": 48,
-    "photographer_days_with_coverage": 19,
+    "photographer_calendar_events": 49,
+    "photographer_days_with_coverage": 18,
     "pin_demotions": 0,
     "pin_map_ready_certified": 0,
     "proposed": 489,
@@ -149,13 +149,13 @@
     "upcoming_next_30_days": 353,
     "upcoming_next_7_days": 97,
     "viral_next_14d_magnets": 1,
-    "viral_recurrence_matches": 17,
-    "viral_returning_likely": 4
+    "viral_recurrence_matches": 18,
+    "viral_returning_likely": 5
   },
   "daily_pull": {
-    "last_run_utc": "2026-09-03T21:24:40Z",
-    "photographer_calendar_events": 48,
-    "photographer_days_with_coverage": 19,
+    "last_run_utc": "2026-09-03T21:44:31Z",
+    "photographer_calendar_events": 49,
+    "photographer_days_with_coverage": 18,
     "qa_pass": true,
     "report": "data/daily_people_facing_sync_report.json"
   },
@@ -172,7 +172,7 @@
     "honesty": "NYC Open Data does not currently provide a high-quality live citywide soup-kitchen or food-pantry pin feed suitable for map publication.",
     "status": "known_gap_human_follow_up"
   },
-  "generated_at_utc": "2026-09-03T21:24:50Z",
+  "generated_at_utc": "2026-09-03T21:44:41Z",
   "lanes": {
     "Approved": "schema-v1-discovery approved permits (unchanged)",
     "Help Places": "schema-v1-civic-review/help (markets + benefits/SNAP/drop-in/Homebase/aging/NYCHA)",
@@ -189,10 +189,10 @@
   "photographer_assignment_calendar": {
     "artifact": "data/photographer_assignment_calendar_2mo.json",
     "coordinate_status_counts": {
-      "list_only": 45,
+      "list_only": 46,
       "map_ready": 3
     },
-    "days_with_coverage": 19,
+    "days_with_coverage": 18,
     "go_shoot_these": [
       {
         "assignment_score": 580,
@@ -597,6 +597,42 @@
       },
       {
         "assignment_score": 400,
+        "borough": "Staten Island",
+        "category": "civic",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-09-12",
+        "display_location": "366 WATCHOGUE ROAD Staten Island",
+        "end_date_time": "2026-09-12T15:00:00.000-04:00",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1191516@2026-09-12",
+        "lane": "approved_major",
+        "latitude": null,
+        "location_cache_modified": false,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "money_day": true,
+        "photo_pick": false,
+        "pin_integrity_reason": "missing_coords",
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1191516"
+        },
+        "start_date_time": "2026-09-12T08:00:00.000-04:00",
+        "timezone": "America/New_York",
+        "title": "Car Show Parade",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 400,
         "borough": "Queens",
         "category": "civic",
         "certified_pin": false,
@@ -741,6 +777,42 @@
       },
       {
         "assignment_score": 400,
+        "borough": "Queens",
+        "category": "civic",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-09-20",
+        "display_location": "MAIN STREET between FRANKLIN AVENUE and SANFORD AVENUE  Queens",
+        "end_date_time": "2026-09-20T14:30:00.000-04:00",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-20&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1192796@2026-09-20",
+        "lane": "approved_major",
+        "latitude": null,
+        "location_cache_modified": false,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "money_day": true,
+        "photo_pick": false,
+        "pin_integrity_reason": "missing_coords",
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1192796"
+        },
+        "start_date_time": "2026-09-20T13:00:00.000-04:00",
+        "timezone": "America/New_York",
+        "title": "NYC AMERICA 250 YEARS CELEBRATION PARADE",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 400,
         "borough": "Brooklyn",
         "category": "civic",
         "certified_pin": false,
@@ -846,89 +918,17 @@
           "carried_major_score_capped:120",
           "keyword_civic_gathering"
         ]
-      },
-      {
-        "assignment_score": 400,
-        "borough": "Manhattan",
-        "category": "civic",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-10-03",
-        "display_location": "EAST   54 STREET between 1 AVENUE and 2 AVENUE  Manhattan",
-        "end_date_time": "2026-10-03T15:00:00.000-04:00",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-10-03&assignment=1",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:1192776@2026-10-03",
-        "lane": "approved_major",
-        "latitude": null,
-        "location_cache_modified": false,
-        "longitude": null,
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "money_day": true,
-        "photo_pick": false,
-        "pin_integrity_reason": "missing_coords",
-        "premium_label": "Photographer Assignment Calendar (premium/operator)",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "1192776"
-        },
-        "start_date_time": "2026-10-03T12:00:00.000-04:00",
-        "timezone": "America/New_York",
-        "title": "Nigeria Independence Day Parade",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_civic_gathering"
-        ]
-      },
-      {
-        "assignment_score": 400,
-        "borough": "Manhattan",
-        "category": "civic",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-10-03",
-        "display_location": "WEST   38 STREET between BROADWAY and 5 AVENUE  Manhattan",
-        "end_date_time": null,
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-10-03&assignment=1",
-        "id": "nyc-citywide-events-calendar-api:1046756@2026-10-03",
-        "lane": "approved_major",
-        "latitude": null,
-        "location_cache_modified": false,
-        "longitude": null,
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "money_day": true,
-        "photo_pick": false,
-        "pin_integrity_reason": "missing_coords",
-        "premium_label": "Photographer Assignment Calendar (premium/operator)",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "1046756"
-        },
-        "start_date_time": "2026-10-03T12:00:00.000-04:00",
-        "timezone": "America/New_York",
-        "title": "The Korean Parade",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_civic_gathering"
-        ]
       }
     ],
     "month_counts": [
       {
         "days_with_events": 11,
-        "event_count": 27,
+        "event_count": 29,
         "label": "September 2026"
       },
       {
-        "days_with_events": 8,
-        "event_count": 21,
+        "days_with_events": 7,
+        "event_count": 20,
         "label": "October 2026"
       }
     ],
@@ -937,7 +937,7 @@
     "premium_label": "Photographer Assignment Calendar (premium/operator) — Money-Day Desk v2",
     "qa_pass": true,
     "quality": {
-      "events_removed_vs_baseline": 794,
+      "events_removed_vs_baseline": 793,
       "qa_pass": true,
       "report": "data/photographer_money_day_quality_report.json",
       "top_exclude_reasons": [
@@ -981,17 +981,17 @@
       "total_events": 1
     },
     "tomorrow_top_go_shoot": [],
-    "total_events": 48,
+    "total_events": 49,
     "viral_recurrence": {
       "artifact": "data/photographer_viral_recurrence_matches.json",
       "foil_index": "data/sapo_foil_operator_index.json",
       "foil_operator_joins": 0,
       "label_counts": {
         "possible": 12,
-        "returning_likely": 4,
+        "returning_likely": 5,
         "weak": 1
       },
-      "match_count": 17,
+      "match_count": 18,
       "next_14d_crowd_magnets": 1,
       "next_14d_top": [],
       "pack": "data/photographer_viral_recurrence_pack_next_14d.json",
@@ -1032,6 +1032,15 @@
           "prior_date": "2025-09-01",
           "score": 90,
           "title": "West Indian American Labor Day Parade"
+        },
+        {
+          "borough": "Staten Island",
+          "date": "2026-09-12",
+          "label": "returning_likely",
+          "prior": "Car Show Parade",
+          "prior_date": "2025-09-13",
+          "score": 85,
+          "title": "Car Show Parade"
         }
       ]
     }
