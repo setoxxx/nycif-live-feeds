@@ -1,11 +1,17 @@
 {
   "coordinate_status_counts": {
-    "list_only": 24,
-    "map_ready": 1
+    "list_only": 46,
+    "map_ready": 3
   },
-  "days_with_coverage": 10,
-  "generated_at_utc": "2026-09-01T01:51:43Z",
+  "days_with_coverage": 19,
+  "generated_at_utc": "2026-09-03T20:57:37Z",
   "go_shoot_sample": [
+    {
+      "borough": null,
+      "date": "2026-09-03",
+      "score": 380,
+      "title": "Summer on the Hudson: Climate Film Festival"
+    },
     {
       "borough": null,
       "date": "2026-09-04",
@@ -59,52 +65,46 @@
       "date": "2026-09-12",
       "score": 400,
       "title": "Community March of Witness - United We March"
-    },
-    {
-      "borough": "Queens",
-      "date": "2026-09-12",
-      "score": 400,
-      "title": "Community March of Witness - United We March"
     }
   ],
   "lane_counts": {
-    "approved_major": 20,
-    "review_high_signal": 5
+    "approved_major": 40,
+    "review_high_signal": 9
   },
   "location_cache_modified": false,
   "money_day_quality": {
-    "events_removed_vs_baseline": 817,
+    "events_removed_vs_baseline": 793,
     "qa_pass": true,
     "report": "data/photographer_money_day_quality_report.json",
     "top_exclude_reasons": [
       [
         "no_money_day_keyword_signal",
-        316
+        579
       ],
       [
         "routine_activity_excluded",
-        53
+        98
       ],
       [
         "thin_or_non_money_title_excluded",
-        5
+        7
       ],
       [
         "below_score_threshold",
-        3
+        4
       ]
     ]
   },
   "month_counts": [
     {
-      "days_with_events": 0,
-      "event_count": 0,
-      "label": "August 2026"
+      "days_with_events": 11,
+      "event_count": 28,
+      "label": "September 2026"
     },
     {
-      "days_with_events": 10,
-      "event_count": 25,
-      "label": "September 2026"
+      "days_with_events": 8,
+      "event_count": 21,
+      "label": "October 2026"
     }
   ],
   "pin_integrity_map_ready_after": 0,
@@ -112,8 +112,8 @@
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-08-31",
+  "reference_today_nyc": "2026-09-03",
   "schema_version": "photographer-assignment-calendar-v2-money-day",
-  "total_events": 25,
-  "window_end": "2026-09-30"
+  "total_events": 49,
+  "window_end": "2026-10-31"
 }

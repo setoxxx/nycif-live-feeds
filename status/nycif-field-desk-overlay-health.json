@@ -2,22 +2,22 @@
   "artifact_type": "nycif_auxiliary_runtime_health",
   "blockers": [],
   "branch": "main",
-  "generated_at_utc": "2026-09-01T01:51:52Z",
+  "generated_at_utc": "2026-09-03T20:57:49Z",
   "local_runtime_checks": {
     "newly_added_sort": {
       "age_hours": 0.0,
       "artifact": "data/nycif_new_events.json",
       "counts_valid": true,
       "duplicate_ids": 0,
-      "event_count": 0,
+      "event_count": 4,
       "fresh": true,
-      "generated_at_utc": "2026-09-01T01:51:40Z",
+      "generated_at_utc": "2026-09-03T20:57:34Z",
       "max_age_hours": 36.0,
       "missing_ids": 0,
       "name": "Newly added event-list sort",
-      "new_this_run": 0,
+      "new_this_run": 4,
       "qa_pass": true,
-      "total_tracked": 4
+      "total_tracked": 6
     }
   },
   "max_age_hours": 36.0,
@@ -25,7 +25,7 @@
   "overlay_count": 3,
   "overlays": [
     {
-      "age_hours": 8.14,
+      "age_hours": 6.34,
       "count_aligned": true,
       "data_artifact": "data/nycif_active_nightlife_feed.json",
       "duplicate_ids": 0,
@@ -35,13 +35,13 @@
       "name": "Active nightlife / 5PM",
       "qa_pass": true,
       "report_artifact": "data/reports/active_nightlife_feed_report.json",
-      "report_generated_at_utc": "2026-08-31T17:43:16.292Z",
+      "report_generated_at_utc": "2026-09-03T14:37:09.135Z",
       "report_qa_pass": true,
-      "reported_count": 156,
-      "row_count": 156
+      "reported_count": 158,
+      "row_count": 158
     },
     {
-      "age_hours": 8.14,
+      "age_hours": 6.34,
       "count_aligned": true,
       "data_artifact": "data/nycif_legal_cannabis_dispensaries.json",
       "duplicate_ids": 0,
@@ -51,13 +51,13 @@
       "name": "Legal cannabis dispensaries",
       "qa_pass": true,
       "report_artifact": "data/reports/legal_cannabis_dispensaries_report.json",
-      "report_generated_at_utc": "2026-08-31T17:43:17.417Z",
+      "report_generated_at_utc": "2026-09-03T14:37:10.215Z",
       "report_qa_pass": true,
       "reported_count": 257,
       "row_count": 257
     },
     {
-      "age_hours": 8.09,
+      "age_hours": 6.27,
       "count_aligned": true,
       "data_artifact": "data/nycif_smoke_vape_cannabis_correlation.json",
       "duplicate_ids": 0,
@@ -67,10 +67,10 @@
       "name": "Smoke/vape/cannabis correlation",
       "qa_pass": true,
       "report_artifact": "data/reports/smoke_vape_cannabis_correlation_report.json",
-      "report_generated_at_utc": "2026-08-31T17:46:34.085Z",
+      "report_generated_at_utc": "2026-09-03T14:41:41.892Z",
       "report_qa_pass": true,
-      "reported_count": 206,
-      "row_count": 206
+      "reported_count": 219,
+      "row_count": 219
     }
   ],
   "qa_pass": true,

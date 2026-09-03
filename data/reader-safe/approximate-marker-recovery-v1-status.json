@@ -1,34 +1,34 @@
 {
-  "approximate_marker_count": 19589,
+  "approximate_marker_count": 21120,
   "authorities": [
     "durable_location_registry_v1",
     "projector_v3_approximate_recovery_v1"
   ],
   "authority_counts": {
-    "durable_location_registry_v1": 19587,
-    "projector_v3_approximate_recovery_v1": 2
+    "durable_location_registry_v1": 20891,
+    "projector_v3_approximate_recovery_v1": 229
   },
   "counts_match_final_contract": true,
   "duplicate_occurrence_count": 0,
-  "durable_exact_excluded_count": 9,
+  "durable_exact_excluded_count": 20,
   "durable_exact_lane_reconciles": true,
-  "durable_exact_report_count": 9,
-  "durable_reuse_report_count": 19587,
+  "durable_exact_report_count": 20,
+  "durable_reuse_report_count": 20891,
   "exact_pin_count": 0,
-  "final_contract_count": 19589,
-  "generated_at_utc": "2026-09-01T01:51:50.460166Z",
+  "final_contract_count": 21120,
+  "generated_at_utc": "2026-09-03T20:57:47.661877Z",
   "invalid_marker_count": 0,
   "operating_rule": "Exact durable locations are owned by the exact reader and excluded from the approximate overlay. Final canonical GENERAL_AREA geometry owns approximate publication; approximate markers never grant certified exact pins.",
   "qa_pass": true,
   "recovery_count_is_diagnostic_only": true,
-  "recovery_report_count": 19289,
+  "recovery_report_count": 20814,
   "schema_version": "NYCIF_APPROXIMATE_MARKER_READER_V3_PRECISION_LANES",
   "skip_counts": {
-    "authority_not_approximate_lane": 6457,
-    "durable_exact_lane": 9
+    "authority_not_approximate_lane": 6908,
+    "durable_exact_lane": 20
   },
   "source_counts": {
     "nyc-citywide-events-calendar-api": 1,
-    "tvpp-9vvx": 19588
+    "tvpp-9vvx": 21119
   }
 }

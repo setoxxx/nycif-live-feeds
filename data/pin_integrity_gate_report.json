@@ -9,10 +9,10 @@
   "demotion_count": 0,
   "demotion_reason_counts": {},
   "demotions_artifact": "data/pin_integrity_demotions.json",
-  "generated_at_utc": "2026-09-01T01:51:46Z",
+  "generated_at_utc": "2026-09-03T20:57:44Z",
   "location_cache_modified": false,
   "map_ready_after_total": 0,
-  "map_ready_before_total": 3198,
+  "map_ready_before_total": 3155,
   "notes": "Geometry validation never creates certification. Legacy in-bounds map_ready rows without validated location evidence may remain as migration state, but certified_pin, semantic MAP_READY and exact map links are cleared.",
   "promotion_allowed": false,
   "protected_files_untouched": true,
@@ -28,10 +28,10 @@
       "artifact": "data/photographer_assignment_calendar_2mo.json",
       "demotion_count": 0,
       "map_ready_after": 0,
-      "map_ready_before": 1,
+      "map_ready_before": 3,
       "reason_counts": {
-        "LEGACY_EVIDENCE_PENDING_MIGRATION": 1,
-        "missing_coords": 24
+        "LEGACY_EVIDENCE_PENDING_MIGRATION": 3,
+        "missing_coords": 46
       },
       "remaining_bad_map_ready": [],
       "surface": "money_day"
@@ -39,19 +39,19 @@
     {
       "demotion_count": 0,
       "map_ready_after": 0,
-      "map_ready_before": 0,
+      "map_ready_before": 2,
       "packs": [
         {
           "demotions": 0,
           "file": "photographer_money_day_pack_today.json",
           "map_ready_after": 0,
-          "map_ready_before": 0
+          "map_ready_before": 1
         },
         {
           "demotions": 0,
           "file": "photographer_money_day_pack_tomorrow.json",
           "map_ready_after": 0,
-          "map_ready_before": 0
+          "map_ready_before": 1
         }
       ],
       "surface": "money_day_packs"
@@ -60,16 +60,16 @@
       "artifact": "data/photographer_viral_recurrence_pack_next_14d.json",
       "demotion_count": 0,
       "map_ready_after": 0,
-      "map_ready_before": 0,
+      "map_ready_before": 1,
       "surface": "viral"
     },
     {
       "artifact": "data/civic_people_facing_staging_feed.json",
       "demotion_count": 0,
       "map_ready_after": 0,
-      "map_ready_before": 3197,
+      "map_ready_before": 3149,
       "reason_counts": {
-        "LEGACY_EVIDENCE_PENDING_MIGRATION": 3197,
+        "LEGACY_EVIDENCE_PENDING_MIGRATION": 3149,
         "missing_coords": 1288
       },
       "surface": "civic"
