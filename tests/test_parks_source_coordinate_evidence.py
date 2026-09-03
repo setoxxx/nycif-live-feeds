@@ -52,3 +52,23 @@ def test_parks_missing_or_bad_coordinate_never_invents_exact_evidence():
         decision = evaluate_map_eligibility(row)
         assert decision["map_eligibility"] == "LIST_ONLY"
         assert decision["exact_pin_eligible"] is False
+
+
+def test_parks_live_w3wp_datetime_in_starttime_without_startdate():
+    row = normalize_event_item(
+        {
+            "guid": "2181319",
+            "title": "Summer Sports Experience: Pickleball",
+            "starttime": "2099-09-03 07:00:00",
+            "endtime": "2099-09-03 12:00:00",
+            "coordinates": "40.59198260134300000, -74.13947248458900000",
+            "location": "Greenbelt Recreation Center (in Blood Root Valley)",
+        }
+    )
+    assert row["start_date_time"] == "2099-09-03T07:00:00"
+    assert row["end_date_time"] == "2099-09-03T12:00:00"
+    assert row["lat"] == 40.591982601343
+    assert row["lng"] == -74.139472484589
+    evidence = row["location_evidence"]
+    assert evidence["tier"] == "exact_source_coordinate"
+    assert evidence["exact_pin_eligible"] is True

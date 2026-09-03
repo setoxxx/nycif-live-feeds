@@ -5,6 +5,10 @@ The retired Parks website JSON endpoint is not used as freshness authority.
 Dataset ``w3wp-dpdi`` is the current upcoming-events transport used by the V3
 line and exposes the event schema, including first-party coordinate pairs.
 
+Live ``w3wp-dpdi`` rows currently place the calendar day inside ``starttime``
+and ``endtime`` (``YYYY-MM-DD HH:MM:SS``) and omit ``startdate`` / ``enddate``.
+The collector accepts that live shape and the older split date + clock pair.
+
 This collector never geocodes. A valid coordinate supplied on the same official
 NYC Parks event record as its stated venue is preserved as validated
 ``exact_source_coordinate`` evidence. Missing or invalid coordinates remain
@@ -82,6 +86,56 @@ def date_part(value: Any) -> str:
     return ""
 
 
+def first_date_part(*values: Any) -> str:
+    """Return the first YYYY-MM-DD found in date-only or datetime fields.
+
+    Current ``w3wp-dpdi`` rows put the calendar day inside ``starttime`` /
+    ``endtime`` (``YYYY-MM-DD HH:MM:SS``) and no longer emit ``startdate`` /
+    ``enddate``. Older snapshots still use the split date + clock pair.
+    """
+    for value in values:
+        day = date_part(value)
+        if day:
+            return day
+    return ""
+
+
+def today_in_new_york() -> str:
+    return datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+
+
+def row_window_date(row: dict[str, Any]) -> str:
+    """America/New_York civil date for the current/future Parks QA gate.
+
+    Reads both normalized fields and live SODA fields so upcoming ``w3wp-dpdi``
+    rows in the current window are not treated as an empty dataset.
+    """
+    return first_date_part(
+        row.get("end_date"),
+        row.get("start_date"),
+        row.get("start_date_time"),
+        row.get("end_date_time"),
+        row.get("enddate"),
+        row.get("startdate"),
+        row.get("endtime"),
+        row.get("starttime"),
+    )
+
+
+def select_current_future_rows(
+    rows: list[dict[str, Any]],
+    *,
+    today_nyc: str | None = None,
+) -> list[dict[str, Any]]:
+    today = today_nyc or today_in_new_york()
+    selected: list[dict[str, Any]] = []
+    for row in rows:
+        day = row_window_date(row)
+        if day and day >= today:
+            selected.append(row)
+    return selected
+
+
 def time_part(value: Any) -> str:
     raw = text(value)
     if not raw:
@@ -142,8 +196,8 @@ def official_coordinate_evidence(
 
 def normalize_event_item(item: dict[str, Any]) -> dict[str, Any]:
     lat, lng = parse_coordinates(item.get("coordinates"))
-    start_day = date_part(item.get("startdate"))
-    end_day = date_part(item.get("enddate")) or start_day
+    start_day = first_date_part(item.get("startdate"), item.get("starttime"))
+    end_day = first_date_part(item.get("enddate"), item.get("endtime")) or start_day
     start_clock = time_part(item.get("starttime"))
     end_clock = time_part(item.get("endtime"))
     park_name = text(item.get("parknames"))
@@ -202,15 +256,17 @@ def main() -> int:
         fetch_mode = "live_fetch_failed"
         error = str(exc)
 
-    today_nyc = datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+    today_nyc = today_in_new_york()
     normalized = [
         row for row in normalized
         if row.get("source_event_id") and row.get("title") and row.get("start_date_time")
     ]
-    current_future = [
-        row for row in normalized
-        if text(row.get("end_date") or row.get("start_date") or row.get("start_date_time"))[:10] >= today_nyc
-    ]
+    if not error and source_rows and not normalized:
+        error = (
+            "NYC Parks current-events dataset returned rows that could not be "
+            "normalized to title, source_event_id, and start_date_time"
+        )
+    current_future = select_current_future_rows(normalized, today_nyc=today_nyc)
     with_coords = sum(1 for row in normalized if row.get("lat") is not None and row.get("lng") is not None)
     with_source_coordinate_evidence = sum(
         1
