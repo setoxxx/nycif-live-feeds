@@ -13,40 +13,40 @@
     "classes_workshops_interest_count": 322,
     "interest_counts": {
       "arts": 295,
-      "civic": 512,
+      "civic": 508,
       "education": 322,
       "environment": 91,
       "family": 875,
       "fitness": 458,
-      "general": 2748,
-      "government": 7,
+      "general": 2750,
+      "government": 10,
       "housing": 19,
       "jobs": 1,
-      "market": 394,
+      "market": 393,
       "media": 108,
-      "parks": 1712,
-      "services": 19,
-      "sports": 21958,
+      "parks": 1714,
+      "services": 20,
+      "sports": 21956,
       "tours": 11,
       "volunteer": 96
     },
     "kids_family_interest_count": 875,
     "primary_category_counts": {
       "arts": 290,
-      "civic": 511,
+      "civic": 507,
       "education": 65,
       "environment": 36,
       "family": 799,
       "fitness": 458,
-      "general": 2748,
-      "government": 7,
+      "general": 2750,
+      "government": 10,
       "housing": 19,
       "jobs": 1,
       "market": 318,
       "media": 108,
-      "parks": 607,
-      "services": 19,
-      "sports": 21958,
+      "parks": 609,
+      "services": 20,
+      "sports": 21956,
       "tours": 11,
       "volunteer": 96
     },
@@ -56,19 +56,19 @@
   "civic_people_facing_bookmark": {
     "accepted": 4437,
     "daily_pull": {
-      "last_run_utc": "2026-09-03T20:57:35Z",
-      "last_success_utc": "2026-09-03T20:57:35Z",
+      "last_run_utc": "2026-09-03T21:12:32Z",
+      "last_success_utc": "2026-09-03T21:12:32Z",
       "qa_pass": true,
       "report": "data/daily_people_facing_sync_report.json",
       "workflow": ".github/workflows/daily-people-facing-desk-sync.yml"
     },
     "digest": "data/civic_people_facing_godview_digest.json",
     "field_desk_preview": "?v=civic-people-facing-v01&resetFilters=1&feeds=main",
-    "generated_at_utc": "2026-09-03T21:12:42Z",
+    "generated_at_utc": "2026-09-03T21:24:50Z",
     "list_only": 1288,
     "map_ready": 3149,
     "merged_pr": 171,
-    "photographer_calendar_events": 50,
+    "photographer_calendar_events": 48,
     "photographer_days_with_coverage": 19,
     "proposed": 489,
     "public_map_policy": "Civic rows are Review/Help staging only. Not silent public-map promotion.",
@@ -93,7 +93,7 @@
     "removed_count": 0,
     "removed_sample": []
   },
-  "generated_at_utc": "2026-09-03T21:12:42Z",
+  "generated_at_utc": "2026-09-03T21:24:50Z",
   "howard_assist": {
     "instruction": "Reply with confirmed category/interests per pattern_bucket, or per title for needs_howard_label. Confirmed rules will become permanent overrides for daily pulls.",
     "low_confidence_rows": [
@@ -304,6 +304,24 @@
       },
       {
         "borough": null,
+        "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1194336@2026-09-18",
+        "current_classification": "general",
+        "date": "2026-09-18",
+        "howard_status": "confirm_or_override",
+        "location": "Tremont Library, 1866 Washington Ave",
+        "pattern_bucket": "needs_howard_label",
+        "reason_for_review": "low_classification_confidence",
+        "recommended_action": "manual_category_review",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1194336",
+        "suggested_category": null,
+        "suggested_interests": [],
+        "suggested_tags": [],
+        "suggestion_note": "Howard: reply with category + interests for these titles",
+        "title": "Free Adult Programs"
+      },
+      {
+        "borough": null,
         "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1194376@2026-09-19",
         "current_classification": "general",
         "date": "2026-09-19",
@@ -319,24 +337,6 @@
         "suggested_tags": [],
         "suggestion_note": "Howard: reply with category + interests for these titles",
         "title": "Tremont Community Health Day 2026"
-      },
-      {
-        "borough": null,
-        "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:11952@2026-09-21",
-        "current_classification": "general",
-        "date": "2026-09-21",
-        "howard_status": "confirm_or_override",
-        "location": "NYC Public Schools",
-        "pattern_bucket": "needs_howard_label",
-        "reason_for_review": "low_classification_confidence",
-        "recommended_action": "manual_category_review",
-        "source_dataset": "nyc-citywide-events-calendar-api",
-        "source_event_id": "11952",
-        "suggested_category": null,
-        "suggested_interests": [],
-        "suggested_tags": [],
-        "suggestion_note": "Howard: reply with category + interests for these titles",
-        "title": "Yom Kippur"
       },
       {
         "borough": null,
@@ -373,6 +373,42 @@
         "suggested_tags": [],
         "suggestion_note": "Howard: reply with category + interests for these titles",
         "title": "Italian Heritage Day\\/Indigenous People's Day"
+      },
+      {
+        "borough": null,
+        "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:81655@2026-11-01",
+        "current_classification": "general",
+        "date": "2026-11-01",
+        "howard_status": "confirm_or_override",
+        "location": "All Boroughs",
+        "pattern_bucket": "needs_howard_label",
+        "reason_for_review": "low_classification_confidence",
+        "recommended_action": "manual_category_review",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "81655",
+        "suggested_category": null,
+        "suggested_interests": [],
+        "suggested_tags": [],
+        "suggestion_note": "Howard: reply with category + interests for these titles",
+        "title": "Daylight Saving Time Ends"
+      },
+      {
+        "borough": null,
+        "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:10723@2026-11-03",
+        "current_classification": "general",
+        "date": "2026-11-03",
+        "howard_status": "confirm_or_override",
+        "location": "NYC Public Schools",
+        "pattern_bucket": "needs_howard_label",
+        "reason_for_review": "low_classification_confidence",
+        "recommended_action": "manual_category_review",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "10723",
+        "suggested_category": null,
+        "suggested_interests": [],
+        "suggested_tags": [],
+        "suggestion_note": "Howard: reply with category + interests for these titles",
+        "title": "Election Day"
       },
       {
         "borough": null,
@@ -50024,7 +50060,7 @@
         "title": "Celebration"
       }
     ],
-    "needs_howard_label_count": 2668,
+    "needs_howard_label_count": 2670,
     "needs_howard_label_titles": [
       "06 United 20th Anniversary Charity Cup",
       "107 Precinct Touch a Truck 2026",
@@ -50208,6 +50244,7 @@
       "Daniel Bartholomew's First Birthday",
       "Day in the Life of the Hudson",
       "Day in the Life of the Hudson River",
+      "Daylight Saving Time Ends",
       "De Stefano Wedding",
       "Dean Picnic",
       "Diabetes Expo",
@@ -50218,6 +50255,7 @@
       "Eid E Miladunnobi",
       "Eid al-Adha",
       "Ekin and Leon Wedding",
+      "Election Day",
       "Electronic Waves Day",
       "Eloise's Birthday Party",
       "Elopement",
@@ -50261,6 +50299,7 @@
       "First Year Birthday Party",
       "Flying Radio Controlled Model Planes at Field",
       "Forest Fridays",
+      "Free Adult Programs",
       "Free Community Music Live",
       "Freese-Pfeiffer Elopement",
       "Front Runners New York Annual XC Meet",
@@ -50674,7 +50713,6 @@
       "Woodlawn Wednesdays",
       "Word 4DA Streetz",
       "Worth Square Food Market",
-      "Yom Kippur",
       "afternoon jam Amplified Sound",
       "aracelis mercedes",
       "birthday party",
@@ -50688,7 +50726,7 @@
       "education_or_workshop": 13,
       "fitness_class_unnamed": 9,
       "market_or_sale": 5,
-      "needs_howard_label": 2668,
+      "needs_howard_label": 2670,
       "parks_garden_environment": 4
     },
     "suggested_rules": {
@@ -50809,7 +50847,7 @@
   "photographer_assignment_bookmark": {
     "artifact": "data/photographer_assignment_calendar_2mo.json",
     "coordinate_status_counts": {
-      "list_only": 47,
+      "list_only": 45,
       "map_ready": 3
     },
     "days_with_coverage": 19,
@@ -51217,42 +51255,6 @@
       },
       {
         "assignment_score": 400,
-        "borough": "Staten Island",
-        "category": "civic",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-09-12",
-        "display_location": "366 WATCHOGUE ROAD Staten Island",
-        "end_date_time": "2026-09-12T15:00:00.000-04:00",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:1191516@2026-09-12",
-        "lane": "approved_major",
-        "latitude": null,
-        "location_cache_modified": false,
-        "longitude": null,
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "money_day": true,
-        "photo_pick": false,
-        "pin_integrity_reason": "missing_coords",
-        "premium_label": "Photographer Assignment Calendar (premium/operator)",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "1191516"
-        },
-        "start_date_time": "2026-09-12T08:00:00.000-04:00",
-        "timezone": "America/New_York",
-        "title": "Car Show Parade",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_civic_gathering"
-        ]
-      },
-      {
-        "assignment_score": 400,
         "borough": "Queens",
         "category": "civic",
         "certified_pin": false,
@@ -51397,42 +51399,6 @@
       },
       {
         "assignment_score": 400,
-        "borough": "Queens",
-        "category": "civic",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-09-20",
-        "display_location": "MAIN STREET between FRANKLIN AVENUE and SANFORD AVENUE  Queens",
-        "end_date_time": "2026-09-20T14:30:00.000-04:00",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-20&assignment=1",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:1192796@2026-09-20",
-        "lane": "approved_major",
-        "latitude": null,
-        "location_cache_modified": false,
-        "longitude": null,
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "money_day": true,
-        "photo_pick": false,
-        "pin_integrity_reason": "missing_coords",
-        "premium_label": "Photographer Assignment Calendar (premium/operator)",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "1192796"
-        },
-        "start_date_time": "2026-09-20T13:00:00.000-04:00",
-        "timezone": "America/New_York",
-        "title": "NYC AMERICA 250 YEARS CELEBRATION PARADE",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_civic_gathering"
-        ]
-      },
-      {
-        "assignment_score": 400,
         "borough": "Brooklyn",
         "category": "civic",
         "certified_pin": false,
@@ -51538,12 +51504,84 @@
           "carried_major_score_capped:120",
           "keyword_civic_gathering"
         ]
+      },
+      {
+        "assignment_score": 400,
+        "borough": "Manhattan",
+        "category": "civic",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-10-03",
+        "display_location": "EAST   54 STREET between 1 AVENUE and 2 AVENUE  Manhattan",
+        "end_date_time": "2026-10-03T15:00:00.000-04:00",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-10-03&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1192776@2026-10-03",
+        "lane": "approved_major",
+        "latitude": null,
+        "location_cache_modified": false,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "money_day": true,
+        "photo_pick": false,
+        "pin_integrity_reason": "missing_coords",
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1192776"
+        },
+        "start_date_time": "2026-10-03T12:00:00.000-04:00",
+        "timezone": "America/New_York",
+        "title": "Nigeria Independence Day Parade",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 400,
+        "borough": "Manhattan",
+        "category": "civic",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-10-03",
+        "display_location": "WEST   38 STREET between BROADWAY and 5 AVENUE  Manhattan",
+        "end_date_time": null,
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-10-03&assignment=1",
+        "id": "nyc-citywide-events-calendar-api:1046756@2026-10-03",
+        "lane": "approved_major",
+        "latitude": null,
+        "location_cache_modified": false,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "money_day": true,
+        "photo_pick": false,
+        "pin_integrity_reason": "missing_coords",
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1046756"
+        },
+        "start_date_time": "2026-10-03T12:00:00.000-04:00",
+        "timezone": "America/New_York",
+        "title": "The Korean Parade",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_civic_gathering"
+        ]
       }
     ],
     "month_counts": [
       {
         "days_with_events": 11,
-        "event_count": 29,
+        "event_count": 27,
         "label": "September 2026"
       },
       {
@@ -51557,7 +51595,7 @@
     "premium_label": "Photographer Assignment Calendar (premium/operator) — Money-Day Desk v2",
     "qa_pass": true,
     "quality": {
-      "events_removed_vs_baseline": 792,
+      "events_removed_vs_baseline": 794,
       "qa_pass": true,
       "report": "data/photographer_money_day_quality_report.json",
       "top_exclude_reasons": [
@@ -51601,17 +51639,17 @@
       "total_events": 1
     },
     "tomorrow_top_go_shoot": [],
-    "total_events": 50,
+    "total_events": 48,
     "viral_recurrence": {
       "artifact": "data/photographer_viral_recurrence_matches.json",
       "foil_index": "data/sapo_foil_operator_index.json",
       "foil_operator_joins": 0,
       "label_counts": {
         "possible": 12,
-        "returning_likely": 5,
+        "returning_likely": 4,
         "weak": 1
       },
-      "match_count": 18,
+      "match_count": 17,
       "next_14d_crowd_magnets": 1,
       "next_14d_top": [],
       "pack": "data/photographer_viral_recurrence_pack_next_14d.json",
@@ -51652,21 +51690,12 @@
           "prior_date": "2025-09-01",
           "score": 90,
           "title": "West Indian American Labor Day Parade"
-        },
-        {
-          "borough": "Staten Island",
-          "date": "2026-09-12",
-          "label": "returning_likely",
-          "prior": "Car Show Parade",
-          "prior_date": "2025-09-13",
-          "score": 85,
-          "title": "Car Show Parade"
         }
       ]
     }
   },
   "pipeline_snapshot": {
-    "accepted_canonical_records": 28051,
+    "accepted_canonical_records": 28053,
     "disposition_counts_phase1": {
       "staged_with_valid_gps": 33084
     },
@@ -51680,10 +51709,10 @@
   "queue_totals": {
     "hard_invalid_rejected": 0,
     "legacy_major_quarantined": 0,
-    "low_confidence_general_fallback": 2748,
-    "missing_or_invalid_coordinates_list_only": 26774,
+    "low_confidence_general_fallback": 2750,
+    "missing_or_invalid_coordinates_list_only": 26776,
     "phase1_gps_review_queue": 3110,
-    "possible_duplicate_groups": 1703
+    "possible_duplicate_groups": 1700
   },
   "review_queues_preview": {
     "gps_review_sample": [
@@ -52133,6 +52162,18 @@
       },
       {
         "borough": null,
+        "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1194336@2026-09-18",
+        "current_classification": "general",
+        "date": "2026-09-18",
+        "location": "Tremont Library, 1866 Washington Ave",
+        "reason_for_review": "low_classification_confidence",
+        "recommended_action": "manual_category_review",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1194336",
+        "title": "Free Adult Programs"
+      },
+      {
+        "borough": null,
         "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:1194376@2026-09-19",
         "current_classification": "general",
         "date": "2026-09-19",
@@ -52142,18 +52183,6 @@
         "source_dataset": "nyc-citywide-events-calendar-api",
         "source_event_id": "1194376",
         "title": "Tremont Community Health Day 2026"
-      },
-      {
-        "borough": null,
-        "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:11952@2026-09-21",
-        "current_classification": "general",
-        "date": "2026-09-21",
-        "location": "NYC Public Schools",
-        "reason_for_review": "low_classification_confidence",
-        "recommended_action": "manual_category_review",
-        "source_dataset": "nyc-citywide-events-calendar-api",
-        "source_event_id": "11952",
-        "title": "Yom Kippur"
       },
       {
         "borough": null,
@@ -52178,6 +52207,30 @@
         "source_dataset": "nyc-citywide-events-calendar-api",
         "source_event_id": "299301",
         "title": "Italian Heritage Day\\/Indigenous People's Day"
+      },
+      {
+        "borough": null,
+        "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:81655@2026-11-01",
+        "current_classification": "general",
+        "date": "2026-11-01",
+        "location": "All Boroughs",
+        "reason_for_review": "low_classification_confidence",
+        "recommended_action": "manual_category_review",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "81655",
+        "title": "Daylight Saving Time Ends"
+      },
+      {
+        "borough": null,
+        "canonical_id": "review_supplemental:nyc-citywide-events-calendar-api:10723@2026-11-03",
+        "current_classification": "general",
+        "date": "2026-11-03",
+        "location": "NYC Public Schools",
+        "reason_for_review": "low_classification_confidence",
+        "recommended_action": "manual_category_review",
+        "source_dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "10723",
+        "title": "Election Day"
       },
       {
         "borough": null,
@@ -52466,30 +52519,6 @@
         "source_dataset": "tvpp-9vvx",
         "source_event_id": "971339",
         "title": "Trail Thursdays"
-      },
-      {
-        "borough": null,
-        "canonical_id": "review_supplemental:tvpp-9vvx:898472@2026-09-03",
-        "current_classification": "general",
-        "date": "2026-09-03",
-        "location": "Central Park: South Dead Road A",
-        "reason_for_review": "low_classification_confidence",
-        "recommended_action": "manual_category_review",
-        "source_dataset": "tvpp-9vvx",
-        "source_event_id": "898472",
-        "title": "CPSports Summer Program"
-      },
-      {
-        "borough": null,
-        "canonical_id": "review_supplemental:tvpp-9vvx:909972@2026-09-03",
-        "current_classification": "general",
-        "date": "2026-09-03",
-        "location": "LaTourette Park & Golf Course: Model Airplane Field",
-        "reason_for_review": "low_classification_confidence",
-        "recommended_action": "manual_category_review",
-        "source_dataset": "tvpp-9vvx",
-        "source_event_id": "909972",
-        "title": "Model Aircraft Flying"
       }
     ],
     "missing_coordinates_sample": [
