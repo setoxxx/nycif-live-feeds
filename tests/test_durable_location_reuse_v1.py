@@ -200,7 +200,7 @@ class DurableLocationReuseTests(unittest.TestCase):
         self.assertEqual(report["exact_reused_count"], 1)
 
     def test_merged_alias_datasets_are_indexed_for_reuse(self):
-        stored = location("locv1:gladwin", "approximate", borough="Bronx")
+        stored = location("locv1:gladwin", "approximate")
         stored_alias = alias(
             "locv1:gladwin",
             "Walter Gladwin Park Walter Gladwin Park",
@@ -216,7 +216,6 @@ class DurableLocationReuseTests(unittest.TestCase):
             [event(
                 "Walter Gladwin Park Walter Gladwin Park",
                 dataset="nyc-citywide-events-calendar-api",
-                borough="Bronx",
             )],
             registry([stored], [stored_alias]),
         )
@@ -226,10 +225,10 @@ class DurableLocationReuseTests(unittest.TestCase):
         self.assertEqual(report["total_reused_count"], 1)
 
     def test_merged_alias_datasets_fail_closed_instead_of_stealing_another_location(self):
-        gladwin = location("locv1:gladwin", "approximate", borough="Bronx")
-        other = location("locv1:other", "approximate", borough="Bronx")
-        other["latitude"] = 40.81
-        other["longitude"] = -73.91
+        gladwin = location("locv1:gladwin", "approximate")
+        other = location("locv1:other", "approximate")
+        other["latitude"] = 40.66
+        other["longitude"] = -73.94
         gladwin_alias = alias(
             "locv1:gladwin",
             "Walter Gladwin Park Walter Gladwin Park",
@@ -250,7 +249,6 @@ class DurableLocationReuseTests(unittest.TestCase):
             [event(
                 "Walter Gladwin Park Walter Gladwin Park",
                 dataset="nyc-citywide-events-calendar-api",
-                borough="Bronx",
             )],
             registry([gladwin, other], [gladwin_alias, other_alias]),
         )
