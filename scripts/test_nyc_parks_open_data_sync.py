@@ -102,6 +102,32 @@ class ParksOpenDataSyncTests(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "no rows"):
                 parks.fetch_events()
 
+    def test_date_boundary_counts_live_starttime_rows_in_current_nyc_window(self) -> None:
+        raw = {
+            "title": "Summer Sports Experience: Pickleball",
+            "guid": "2181319",
+            "starttime": "2026-09-03 07:00:00",
+            "endtime": "2026-09-03 12:00:00",
+            "coordinates": "40.59198260134300000, -74.13947248458900000",
+            "location": "Greenbelt Recreation Center (in Blood Root Valley)",
+        }
+        self.assertEqual(parks.row_window_date(raw), "2026-09-03")
+        self.assertEqual(
+            len(parks.select_current_future_rows([raw], today_nyc="2026-09-03")),
+            1,
+        )
+        self.assertEqual(
+            len(parks.select_current_future_rows([raw], today_nyc="2026-09-02")),
+            1,
+        )
+        past = dict(raw)
+        past["starttime"] = "2026-08-01 07:00:00"
+        past["endtime"] = "2026-08-01 12:00:00"
+        self.assertEqual(
+            parks.select_current_future_rows([past], today_nyc="2026-09-03"),
+            [],
+        )
+
     def test_invalid_or_missing_coordinate_never_invents_evidence(self) -> None:
         for coordinate in (None, "", "not-a-coordinate", "0,0", "91,181"):
             row = parks.normalize_event_item(

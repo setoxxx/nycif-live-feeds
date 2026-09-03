@@ -100,6 +100,42 @@ def first_date_part(*values: Any) -> str:
     return ""
 
 
+def today_in_new_york() -> str:
+    return datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+
+
+def row_window_date(row: dict[str, Any]) -> str:
+    """America/New_York civil date for the current/future Parks QA gate.
+
+    Reads both normalized fields and live SODA fields so upcoming ``w3wp-dpdi``
+    rows in the current window are not treated as an empty dataset.
+    """
+    return first_date_part(
+        row.get("end_date"),
+        row.get("start_date"),
+        row.get("start_date_time"),
+        row.get("end_date_time"),
+        row.get("enddate"),
+        row.get("startdate"),
+        row.get("endtime"),
+        row.get("starttime"),
+    )
+
+
+def select_current_future_rows(
+    rows: list[dict[str, Any]],
+    *,
+    today_nyc: str | None = None,
+) -> list[dict[str, Any]]:
+    today = today_nyc or today_in_new_york()
+    selected: list[dict[str, Any]] = []
+    for row in rows:
+        day = row_window_date(row)
+        if day and day >= today:
+            selected.append(row)
+    return selected
+
+
 def time_part(value: Any) -> str:
     raw = text(value)
     if not raw:
@@ -220,7 +256,7 @@ def main() -> int:
         fetch_mode = "live_fetch_failed"
         error = str(exc)
 
-    today_nyc = datetime.now(ZoneInfo("America/New_York")).date().isoformat()
+    today_nyc = today_in_new_york()
     normalized = [
         row for row in normalized
         if row.get("source_event_id") and row.get("title") and row.get("start_date_time")
@@ -230,10 +266,7 @@ def main() -> int:
             "NYC Parks current-events dataset returned rows that could not be "
             "normalized to title, source_event_id, and start_date_time"
         )
-    current_future = [
-        row for row in normalized
-        if text(row.get("end_date") or row.get("start_date") or row.get("start_date_time"))[:10] >= today_nyc
-    ]
+    current_future = select_current_future_rows(normalized, today_nyc=today_nyc)
     with_coords = sum(1 for row in normalized if row.get("lat") is not None and row.get("lng") is not None)
     with_source_coordinate_evidence = sum(
         1

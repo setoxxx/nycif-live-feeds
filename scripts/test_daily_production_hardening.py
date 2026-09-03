@@ -194,6 +194,42 @@ def test_parks_live_shaped_upcoming_rows_pass_qa() -> None:
     assert report["live_fetch_error"] is None
 
 
+def test_parks_date_boundary_counts_live_upcoming_rows_as_current_future() -> None:
+    """Replica of the fail-closed gate: rows received, current_future_rows was 0."""
+    raw = live_shaped_parks_row()
+    raw["starttime"] = "2026-09-03 07:00:00"
+    raw["endtime"] = "2026-09-03 12:00:00"
+    raw.pop("startdate", None)
+    raw.pop("enddate", None)
+
+    selected_today = parks_sync.select_current_future_rows([raw], today_nyc="2026-09-03")
+    selected_prior_evening = parks_sync.select_current_future_rows(
+        [raw], today_nyc="2026-09-02"
+    )
+    assert len(selected_today) == 1
+    assert len(selected_prior_evening) == 1
+    assert parks_sync.row_window_date(raw) == "2026-09-03"
+
+    past = dict(raw)
+    past["starttime"] = "2026-08-01 07:00:00"
+    past["endtime"] = "2026-08-01 12:00:00"
+    assert parks_sync.select_current_future_rows([past], today_nyc="2026-09-03") == []
+
+    # Failed scheduled run used America/New_York 2026-09-02 at 2026-09-03T01:08Z.
+    with patch.object(parks_sync, "today_in_new_york", return_value="2026-09-02"), patch.object(
+        parks_sync, "fetch_events", return_value=[raw]
+    ), patch.object(parks_sync, "save_json"), patch("builtins.print") as mocked_print:
+        code = parks_sync.main()
+    assert code == 0
+    report = json.loads(mocked_print.call_args.args[0])
+    assert report["qa_pass"] is True
+    assert report["source_rows_received"] == 1
+    assert report["snapshot_rows"] == 1
+    assert report["current_future_rows"] == 1
+    assert report["today_nyc"] == "2026-09-02"
+    assert report["date_boundary_timezone"] == "America/New_York"
+
+
 def test_parks_empty_or_non_list_payload_still_fails_closed() -> None:
     class DummyResponse:
         def __init__(self, payload: object) -> None:
@@ -238,6 +274,8 @@ def test_parks_uses_new_york_date_boundary() -> None:
     source = (ROOT / "scripts" / "sync_nyc_parks_bigapps_events.py").read_text(encoding="utf-8")
     assert 'ZoneInfo("America/New_York")' in source
     assert '"date_boundary_timezone": "America/New_York"' in source
+    assert "def today_in_new_york(" in source
+    assert "def select_current_future_rows(" in source
 
 
 def test_failure_summary_redacts_common_secrets() -> None:
@@ -359,6 +397,10 @@ def test_refresh_workflow_has_structured_preflight_diagnostics() -> None:
     assert "--exception-class" in publisher
     assert "--error-summary" in publisher
     assert 'stage="unknown_stage"' not in workflow
+    assert "report.get('event_rows_modified') is not False" in workflow
+    assert "supabase_event_writer.py" not in workflow
+    assert "nycif_apply_staging_event_batch" not in workflow
+    assert "event_occurrences" not in workflow
 
 
 def test_modified_reliability_python_files_compile() -> None:
@@ -392,6 +434,7 @@ def main() -> int:
         test_parks_missing_or_bad_coordinate_never_invents_exact_evidence,
         test_parks_combined_datetime_without_startdate_normalizes,
         test_parks_live_shaped_upcoming_rows_pass_qa,
+        test_parks_date_boundary_counts_live_upcoming_rows_as_current_future,
         test_parks_empty_or_non_list_payload_still_fails_closed,
         test_parks_live_failure_stays_non_live_and_fails_closed,
         test_parks_uses_new_york_date_boundary,
