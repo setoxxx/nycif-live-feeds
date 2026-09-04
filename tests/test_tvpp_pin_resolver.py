@@ -2,6 +2,7 @@ from scripts.tvpp_pin_resolver import (
     TvppPinResolver,
     build_facility_index,
     cache_key,
+    clean_display_location,
     lion_line_midpoint,
     segment_identity,
 )
@@ -78,10 +79,8 @@ def test_lion_centerline_midpoint_pins_street_segment():
 
 def test_street_name_geosearch_fallback_when_intersections_miss():
     def fake_geosearch(query: str):
-        if " and " in query.lower():
-            return None
-        if "union hall" in query.lower():
-            return {"lat": 40.703791, "lng": -73.797881, "label": "9204 UNION HALL STREET"}
+        if "union hall" in query.lower() and "jamaica" in query.lower():
+            return {"lat": 40.703791, "lng": -73.797881, "label": "UNION HALL STREET & JAMAICA AVENUE"}
         return None
 
     resolver = TvppPinResolver(
@@ -165,6 +164,88 @@ def test_facility_index_reads_reference_shape():
     index = build_facility_index()
     assert index
     assert any("playground" in key for key in list(index)[:50])
+
+
+def test_clean_display_strips_trailing_borough():
+    assert (
+        clean_display_location("WEST   23 STREET between 8 AVENUE and 9 AVENUE  Manhattan")
+        == "WEST 23 STREET between 8 AVENUE and 9 AVENUE"
+    )
+    assert (
+        clean_display_location("BARNES AVENUE between LYDIG AVENUE and PELHAM PARKWAY SOUTH, Bronx, NY")
+        == "BARNES AVENUE between LYDIG AVENUE and PELHAM PARKWAY SOUTH"
+    )
+
+
+def test_street_between_never_uses_parks_facility():
+    from scripts.gps_identity import normalize_text_legacy
+
+    display = "131 STREET between LIBERTY AVENUE and VAN SICLEN STREET, Queens, NY"
+    resolver = TvppPinResolver(
+        {
+            normalize_text_legacy("131 street between liberty avenue and van siclen street"): {
+                "lat": 40.7016,
+                "lng": -73.7839,
+                "label": "Unrelated Queens park",
+            }
+        },
+        {},
+        allow_live_geosearch=False,
+    )
+    pin = resolver.resolve(display, "Queens")
+    assert pin.resolved is False
+
+
+def test_parent_cache_rejects_wrong_borough_coords():
+    resolver = TvppPinResolver(
+        {},
+        {
+            cache_key("Flushing Meadows Corona Park: Soccer-01", "Queens"): {
+                "lat": 40.533,
+                "lng": -74.2021,
+                "source": "nyc_parks_facility_reference",
+                "reason_code": "TVPP_PARKS_FACILITY_OFFICIAL",
+            }
+        },
+        allow_live_geosearch=False,
+    )
+    pin = resolver.resolve("Flushing Meadows Corona Park: North-Softball-11", "Queens")
+    assert pin.resolved is False
+    assert pin.lat is None
+
+
+def test_intersection_uses_geosearch():
+    def fake_geosearch(query: str):
+        if "125th" in query.lower() and "marginal" in query.lower():
+            return {"lat": 40.8183, "lng": -73.9617, "label": "W 125th St & Marginal St"}
+        return None
+
+    resolver = TvppPinResolver(
+        {},
+        {},
+        allow_live_geosearch=True,
+        geosearch_fn=fake_geosearch,
+    )
+    pin = resolver.resolve("125th Street and Marginal Street", "Manhattan")
+    assert pin.resolved is True
+    assert pin.lat == 40.8183
+    assert pin.source == "nyc_geosearch_planninglabs"
+
+
+def test_geosearch_midpoint_requires_two_intersections():
+    def fake_geosearch(query: str):
+        if "4th avenue" in query.lower() or "4 avenue" in query.lower():
+            return {"lat": 40.69677, "lng": -73.89646, "label": "60-04 ST FELIX AVENUE"}
+        return None
+
+    resolver = TvppPinResolver(
+        {},
+        {},
+        allow_live_geosearch=True,
+        geosearch_fn=fake_geosearch,
+    )
+    pin = resolver._geosearch_midpoint("60 STREET", "3 AVENUE", "4 AVENUE", "Brooklyn")
+    assert pin is None
 
 
 def test_facility_cannot_pin_the_wrong_borough():
