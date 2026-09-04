@@ -9,27 +9,27 @@
     "list_only_remain_visible": true,
     "map_ready_standalone_marker_eligible": true
   },
-  "classes_workshops_interest_count": 322,
+  "classes_workshops_interest_count": 321,
   "classification_confidence_counts": {
-    "high": 24120,
-    "low": 2745,
-    "medium": 1183
+    "high": 24041,
+    "low": 2751,
+    "medium": 1195
   },
   "classification_version": "discovery-taxonomy-v02",
   "coordinate_status_counts": {
-    "list_only": 26771,
-    "map_ready": 1277
+    "list_only": 26787,
+    "map_ready": 1200
   },
   "display_disposition_counts": {
-    "list_only": 26716,
-    "maintenance_or_closure": 37,
-    "private_or_reserved_activity": 18,
-    "standalone_public_event": 1277
+    "list_only": 26732,
+    "maintenance_or_closure": 36,
+    "private_or_reserved_activity": 19,
+    "standalone_public_event": 1200
   },
   "event_role_counts": {
-    "maintenance_or_closure": 37,
-    "private_or_reserved_activity": 18,
-    "public_event": 27839,
+    "maintenance_or_closure": 36,
+    "private_or_reserved_activity": 19,
+    "public_event": 27778,
     "street_closure": 145,
     "transportation_operation": 9
   },
@@ -41,27 +41,26 @@
     "housing",
     "environment"
   ],
-  "generated_at_utc": "2026-09-03T23:52:50Z",
+  "generated_at_utc": "2026-09-04T15:52:42Z",
   "interest_counts": {
-    "arts": 295,
-    "civic": 508,
-    "education": 322,
-    "environment": 91,
-    "family": 874,
-    "fitness": 458,
-    "general": 2745,
-    "government": 10,
-    "housing": 19,
-    "jobs": 1,
-    "market": 393,
-    "media": 108,
-    "parks": 1714,
-    "services": 18,
-    "sports": 21959,
-    "tours": 11,
-    "volunteer": 96
+    "arts": 294,
+    "civic": 513,
+    "education": 321,
+    "environment": 89,
+    "family": 809,
+    "fitness": 451,
+    "general": 2751,
+    "government": 11,
+    "housing": 20,
+    "market": 394,
+    "media": 110,
+    "parks": 1639,
+    "services": 21,
+    "sports": 21958,
+    "tours": 12,
+    "volunteer": 92
   },
-  "kids_family_interest_count": 874,
+  "kids_family_interest_count": 809,
   "legacy_major": {
     "demoted": 0,
     "quarantined": 0,
@@ -268,44 +267,6 @@
       "significance": "standard",
       "source_dataset": "nyc-parks-bigapps-events",
       "source_event_id": "2204211",
-      "tags": [
-        "fitness-class",
-        "parks-program",
-        "workshop",
-        "fitness-class"
-      ]
-    },
-    {
-      "borough": null,
-      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2233231@2026-09-03",
-      "category": "fitness",
-      "classification_confidence": "high",
-      "classification_reason": "high_confidence_program_override_shape_up",
-      "coordinate_status": "map_ready",
-      "coordinates": [
-        40.886241912842,
-        -73.91463470459
-      ],
-      "date": "2026-09-03",
-      "display_disposition": "standalone_public_event",
-      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2233231@2026-09-03",
-      "event_role": "public_event",
-      "filters": [
-        "fitness"
-      ],
-      "grouping_confidence": null,
-      "grouping_reason": null,
-      "interests": [
-        "fitness"
-      ],
-      "location": "NYPL - Spuyten Duyvil",
-      "marker_eligible": true,
-      "needle": "Strength In Motion",
-      "parent_event_id": null,
-      "raw_category": "Fitness",
-      "significance": "standard",
-      "source_dataset": "nyc-parks-bigapps-events",
-      "source_event_id": "2233231",
       "tags": [
         "fitness-class",
         "parks-program",
@@ -606,43 +567,6 @@
       "source_event_id": "2216747",
       "tags": [
         "outdoor"
-      ]
-    },
-    {
-      "borough": null,
-      "canonical_id": "review_supplemental:nyc-parks-bigapps-events:2220606@2026-09-03",
-      "category": "tours",
-      "classification_confidence": "high",
-      "classification_reason": "high_confidence_semantic_tours",
-      "coordinate_status": "map_ready",
-      "coordinates": [
-        40.89870071411133,
-        -73.9124984741211
-      ],
-      "date": "2026-09-03",
-      "display_disposition": "standalone_public_event",
-      "event_group_id": "review_supplemental:nyc-parks-bigapps-events:2220606@2026-09-03",
-      "event_role": "public_event",
-      "filters": [
-        "tours",
-        "education"
-      ],
-      "grouping_confidence": null,
-      "grouping_reason": null,
-      "interests": [
-        "education",
-        "tours"
-      ],
-      "location": "Wave Hill",
-      "marker_eligible": true,
-      "needle": "Public Gallery Tour",
-      "parent_event_id": null,
-      "raw_category": "Art",
-      "significance": "standard",
-      "source_dataset": "nyc-parks-bigapps-events",
-      "source_event_id": "2220606",
-      "tags": [
-        "workshop"
       ]
     },
     {
@@ -1032,34 +956,33 @@
     }
   ],
   "primary_category_counts": {
-    "arts": 290,
-    "civic": 507,
-    "education": 65,
-    "environment": 36,
-    "family": 798,
-    "fitness": 458,
-    "general": 2745,
-    "government": 10,
-    "housing": 19,
-    "jobs": 1,
+    "arts": 289,
+    "civic": 512,
+    "education": 67,
+    "environment": 35,
+    "family": 725,
+    "fitness": 451,
+    "general": 2751,
+    "government": 11,
+    "housing": 20,
     "market": 318,
-    "media": 108,
-    "parks": 609,
-    "services": 18,
-    "sports": 21959,
-    "tours": 11,
-    "volunteer": 96
+    "media": 110,
+    "parks": 615,
+    "services": 21,
+    "sports": 21958,
+    "tours": 12,
+    "volunteer": 92
   },
   "qa_pass": true,
   "significance_counts": {
-    "major": 367,
-    "standard": 27681
+    "major": 368,
+    "standard": 27619
   },
   "strict_reconciliation": {
-    "documented_human_rejected": 13,
+    "documented_human_rejected": 16,
     "documented_source_canceled": 0,
     "exact_duplicate_rows_excluded": 0,
-    "raw_calendar_parks_gap": 13,
+    "raw_calendar_parks_gap": 16,
     "source_intake_clean": true,
     "unexplained_gap": 0
   },
@@ -1067,46 +990,46 @@
   "tag_counts": {
     "annual": 47,
     "cleanup": 23,
-    "family-friendly": 930,
+    "family-friendly": 864,
     "feast": 42,
     "festival": 43,
-    "film": 77,
-    "fitness-class": 674,
+    "film": 79,
+    "fitness-class": 663,
     "food-festival": 1,
-    "free": 839,
+    "free": 770,
     "holiday-market": 1,
-    "kids": 1608,
-    "maintenance": 37,
-    "maintenance-or-closure": 37,
+    "kids": 1462,
+    "maintenance": 36,
+    "maintenance-or-closure": 36,
     "marathon": 1,
     "multi-day": 10,
-    "outdoor": 1634,
-    "parade": 142,
-    "parks-program": 272,
+    "outdoor": 1559,
+    "parade": 147,
+    "parks-program": 267,
     "pride": 1,
-    "private-or-reserved-activity": 18,
+    "private-or-reserved-activity": 19,
     "race": 1,
-    "religious": 295,
-    "running": 87,
+    "religious": 294,
+    "running": 89,
     "street-closure": 457,
     "street-fair": 1,
-    "transportation": 90,
+    "transportation": 91,
     "transportation-operation": 9,
-    "workshop": 455
+    "workshop": 449
   },
   "totals": {
-    "accepted_canonical_records": 28048,
+    "accepted_canonical_records": 27987,
     "grouped_under_public_events": 0,
     "invalid_rejected": 0,
-    "list_only": 26716,
-    "maintenance_or_closure": 37,
-    "map_ready": 1277,
-    "private_or_reserved": 18,
-    "standalone_public_events": 1277,
+    "list_only": 26732,
+    "maintenance_or_closure": 36,
+    "map_ready": 1200,
+    "private_or_reserved": 19,
+    "standalone_public_events": 1200,
     "street_closures": 145,
     "supporting_permits": 0,
     "transportation_operations": 9
   },
-  "tours_category_count": 11,
-  "volunteer_category_count": 96
+  "tours_category_count": 12,
+  "volunteer_category_count": 92
 }

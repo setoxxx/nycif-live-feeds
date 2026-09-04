@@ -74,10 +74,10 @@
       "quarantined": 0
     },
     "oac_activities": {
-      "accepted": 1184,
-      "list_only": 8,
-      "map_ready": 1176,
-      "quarantined": 1065
+      "accepted": 1168,
+      "list_only": 7,
+      "map_ready": 1161,
+      "quarantined": 1081
     },
     "ready_ny_events": {
       "accepted": 0,
@@ -130,32 +130,32 @@
     "promotion_allowed": false
   },
   "counts": {
-    "accepted": 4437,
-    "events": 1184,
+    "accepted": 4421,
+    "events": 1168,
     "help_places": 2109,
-    "list_only": 1288,
-    "map_ready": 3149,
+    "list_only": 1287,
+    "map_ready": 3134,
     "money_day_today": 1,
-    "money_day_tomorrow": 1,
+    "money_day_tomorrow": 3,
     "opportunities": 1144,
     "photographer_calendar_events": 49,
-    "photographer_days_with_coverage": 19,
+    "photographer_days_with_coverage": 18,
     "pin_demotions": 0,
     "pin_map_ready_certified": 0,
     "proposed": 489,
-    "quarantined": 7033,
+    "quarantined": 7049,
     "shoot_day_today_certified": 0,
     "shoot_day_tomorrow_certified": 0,
-    "upcoming_next_30_days": 353,
-    "upcoming_next_7_days": 97,
+    "upcoming_next_30_days": 337,
+    "upcoming_next_7_days": 99,
     "viral_next_14d_magnets": 1,
     "viral_recurrence_matches": 18,
     "viral_returning_likely": 5
   },
   "daily_pull": {
-    "last_run_utc": "2026-09-03T23:53:28Z",
+    "last_run_utc": "2026-09-04T15:53:19Z",
     "photographer_calendar_events": 49,
-    "photographer_days_with_coverage": 19,
+    "photographer_days_with_coverage": 18,
     "qa_pass": true,
     "report": "data/daily_people_facing_sync_report.json"
   },
@@ -172,7 +172,7 @@
     "honesty": "NYC Open Data does not currently provide a high-quality live citywide soup-kitchen or food-pantry pin feed suitable for map publication.",
     "status": "known_gap_human_follow_up"
   },
-  "generated_at_utc": "2026-09-03T23:53:38Z",
+  "generated_at_utc": "2026-09-04T15:53:30Z",
   "lanes": {
     "Approved": "schema-v1-discovery approved permits (unchanged)",
     "Help Places": "schema-v1-civic-review/help (markets + benefits/SNAP/drop-in/Homebase/aging/NYCHA)",
@@ -189,10 +189,10 @@
   "photographer_assignment_calendar": {
     "artifact": "data/photographer_assignment_calendar_2mo.json",
     "coordinate_status_counts": {
-      "list_only": 46,
-      "map_ready": 3
+      "list_only": 47,
+      "map_ready": 2
     },
-    "days_with_coverage": 19,
+    "days_with_coverage": 18,
     "go_shoot_these": [
       {
         "assignment_score": 580,
@@ -777,6 +777,42 @@
       },
       {
         "assignment_score": 400,
+        "borough": "Queens",
+        "category": "civic",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-09-20",
+        "display_location": "MAIN STREET between FRANKLIN AVENUE and SANFORD AVENUE  Queens",
+        "end_date_time": "2026-09-20T14:30:00.000-04:00",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-20&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1192796@2026-09-20",
+        "lane": "approved_major",
+        "latitude": null,
+        "location_cache_modified": false,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "money_day": true,
+        "photo_pick": false,
+        "pin_integrity_reason": "missing_coords",
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1192796"
+        },
+        "start_date_time": "2026-09-20T13:00:00.000-04:00",
+        "timezone": "America/New_York",
+        "title": "NYC AMERICA 250 YEARS CELEBRATION PARADE",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 400,
         "borough": "Brooklyn",
         "category": "civic",
         "certified_pin": false,
@@ -882,47 +918,11 @@
           "carried_major_score_capped:120",
           "keyword_civic_gathering"
         ]
-      },
-      {
-        "assignment_score": 400,
-        "borough": "Manhattan",
-        "category": "civic",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-10-03",
-        "display_location": "EAST   54 STREET between 1 AVENUE and 2 AVENUE  Manhattan",
-        "end_date_time": "2026-10-03T15:00:00.000-04:00",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-10-03&assignment=1",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:1192776@2026-10-03",
-        "lane": "approved_major",
-        "latitude": null,
-        "location_cache_modified": false,
-        "longitude": null,
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "money_day": true,
-        "photo_pick": false,
-        "pin_integrity_reason": "missing_coords",
-        "premium_label": "Photographer Assignment Calendar (premium/operator)",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "1192776"
-        },
-        "start_date_time": "2026-10-03T12:00:00.000-04:00",
-        "timezone": "America/New_York",
-        "title": "Nigeria Independence Day Parade",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_civic_gathering"
-        ]
       }
     ],
     "month_counts": [
       {
-        "days_with_events": 11,
+        "days_with_events": 10,
         "event_count": 28,
         "label": "September 2026"
       },
@@ -943,11 +943,11 @@
       "top_exclude_reasons": [
         [
           "no_money_day_keyword_signal",
-          579
+          565
         ],
         [
           "routine_activity_excluded",
-          98
+          95
         ],
         [
           "thin_or_non_money_title_excluded",
@@ -962,23 +962,35 @@
     "report": "data/photographer_assignment_calendar_report.json",
     "today_pack": {
       "borough_cluster_count": 1,
-      "date": "2026-09-03",
+      "date": "2026-09-04",
       "map_ready_count": 1,
       "total_events": 1
     },
     "tomorrow_pack": {
-      "borough_cluster_count": 1,
-      "date": "2026-09-04",
-      "map_ready_count": 1,
+      "borough_cluster_count": 0,
+      "date": "2026-09-05",
+      "map_ready_count": 0,
       "top_go_shoot": [
         {
-          "borough": null,
-          "score": 510,
-          "time": "2026-09-04T19:00:00",
-          "title": "Bryant Park Picnic Performance: Brass Festival: New Breed Brass Band, Aberdeen, and Brass Queens"
+          "borough": "Queens",
+          "score": 400,
+          "time": "2026-09-05T11:00:00.000-04:00",
+          "title": "Evangelical March"
+        },
+        {
+          "borough": "Queens",
+          "score": 400,
+          "time": "2026-09-05T18:00:00.000-04:00",
+          "title": "Janmastami Parade"
+        },
+        {
+          "borough": "Brooklyn",
+          "score": 400,
+          "time": "2026-09-05T08:00:00.000-04:00",
+          "title": "West Indian American Junior Parade"
         }
       ],
-      "total_events": 1
+      "total_events": 3
     },
     "tomorrow_top_go_shoot": [],
     "total_events": 49,
@@ -1057,7 +1069,7 @@
     "demotion_reason_counts": {},
     "demotions": "data/pin_integrity_demotions.json",
     "map_ready_after_total": 0,
-    "map_ready_before_total": 3155,
+    "map_ready_before_total": 3138,
     "qa_pass": true,
     "report": "data/pin_integrity_gate_report.json",
     "rule": "ZERO map_ready rows may fail NYC certification"
@@ -1097,12 +1109,12 @@
     "qa_pass": true,
     "report": "data/photographer_shoot_day_certified_report.json",
     "today_certified_pins": 0,
-    "today_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-03&assignment=1",
+    "today_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-04&assignment=1",
     "today_needs_location": 1,
     "today_top": [],
     "tomorrow_certified_pins": 0,
-    "tomorrow_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-04&assignment=1",
-    "tomorrow_needs_location": 1,
+    "tomorrow_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-05&assignment=1",
+    "tomorrow_needs_location": 3,
     "tomorrow_top": []
   }
 }

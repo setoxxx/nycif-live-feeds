@@ -4,32 +4,44 @@
     "today": "data/photographer_money_day_pack_today.json",
     "tomorrow": "data/photographer_money_day_pack_tomorrow.json"
   },
-  "generated_at_utc": "2026-09-03T23:53:31Z",
+  "generated_at_utc": "2026-09-04T15:53:22Z",
   "location_cache_modified": false,
   "promotion_allowed": false,
   "protected_files_untouched": true,
   "public_map_modified": false,
   "qa_pass": true,
-  "reference_today_nyc": "2026-09-03",
+  "reference_today_nyc": "2026-09-04",
   "schema_version": "photographer-money-day-pack-v1",
   "today": {
     "borough_cluster_count": 1,
-    "date": "2026-09-03",
+    "date": "2026-09-04",
     "map_ready_count": 1,
     "total_events": 1
   },
   "tomorrow": {
-    "borough_cluster_count": 1,
-    "date": "2026-09-04",
-    "map_ready_count": 1,
+    "borough_cluster_count": 0,
+    "date": "2026-09-05",
+    "map_ready_count": 0,
     "top_go_shoot": [
       {
-        "borough": null,
-        "score": 510,
-        "time": "2026-09-04T19:00:00",
-        "title": "Bryant Park Picnic Performance: Brass Festival: New Breed Brass Band, Aberdeen, and Brass Queens"
+        "borough": "Queens",
+        "score": 400,
+        "time": "2026-09-05T11:00:00.000-04:00",
+        "title": "Evangelical March"
+      },
+      {
+        "borough": "Queens",
+        "score": 400,
+        "time": "2026-09-05T18:00:00.000-04:00",
+        "title": "Janmastami Parade"
+      },
+      {
+        "borough": "Brooklyn",
+        "score": 400,
+        "time": "2026-09-05T08:00:00.000-04:00",
+        "title": "West Indian American Junior Parade"
       }
     ],
-    "total_events": 1
+    "total_events": 3
   }
 }

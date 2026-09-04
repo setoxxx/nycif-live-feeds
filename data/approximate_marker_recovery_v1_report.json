@@ -2,42 +2,46 @@
   "authority": "projector_v3_approximate_recovery_v1",
   "borough_mismatch_count": 0,
   "candidate_dataset_counts": {
-    "tvpp-9vvx": 20835
+    "tvpp-9vvx": 20296
   },
-  "candidate_day_keys": 20835,
-  "candidate_occurrences": 20835,
-  "candidate_source_id_count": 5553,
-  "candidate_source_keys": 5553,
-  "canonical_rows": 28048,
+  "candidate_day_keys": 20296,
+  "candidate_occurrences": 20296,
+  "candidate_source_id_count": 5482,
+  "candidate_source_keys": 5482,
+  "canonical_rows": 27987,
   "eligibility_counts": {
-    "already_exact": 1277,
-    "eligible_non_exact": 26562,
-    "exact_identity_candidate_match": 20814,
-    "no_exact_identity_candidate": 4809,
-    "not_standalone_public": 209
+    "already_exact": 1200,
+    "eligible_non_exact": 26578,
+    "exact_identity_candidate_match": 20276,
+    "no_exact_identity_candidate": 5360,
+    "not_standalone_public": 209,
+    "source_event_id_candidate_exists": 467,
+    "source_identity_candidate_exists": 467
   },
   "eligible_canonical_dataset_counts": {
-    "nyc-citywide-events-calendar-api": 164,
-    "nyc-parks-bigapps-events": 12,
+    "nyc-citywide-events-calendar-api": 179,
+    "nyc-parks-bigapps-events": 13,
     "nyc-projected-feast-reference": 220,
     "tvpp-9vvx": 26166
   },
-  "eligible_canonical_source_id_count": 7386,
+  "eligible_canonical_source_id_count": 7402,
   "exact_pin_promotions": 0,
   "invalid_approximate_marker_count": 0,
   "location_mismatch_count": 0,
   "operating_rule": "Approximate markers may improve map placement, but they never grant MAP_READY or certified_pin. Street routes/segments are excluded from point recovery.",
   "qa_pass": true,
   "reason_counts": {
-    "FACILITY_SITE_VALIDATION_REQUIRED": 20814
+    "FACILITY_SITE_VALIDATION_REQUIRED": 20276
   },
-  "recovered_approximate_markers": 20814,
-  "route_claims_blocked_from_point_recovery": 939,
+  "recovered_approximate_markers": 20276,
+  "route_claims_blocked_from_point_recovery": 942,
   "schema_version": "NYCIF_APPROXIMATE_MARKER_RECOVERY_V1",
-  "semantic_rows": 26307,
+  "semantic_rows": 25616,
   "source_counts": {
-    "tvpp-9vvx": 20814
+    "tvpp-9vvx": 20276
   },
-  "source_event_id_intersection_count": 5550,
-  "source_id_dataset_pairs": {}
+  "source_event_id_intersection_count": 5479,
+  "source_id_dataset_pairs": {
+    "tvpp-9vvx -> tvpp-9vvx": 467
+  }
 }
