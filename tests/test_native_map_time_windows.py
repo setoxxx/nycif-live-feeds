@@ -34,6 +34,8 @@ def test_tonight_keeps_only_events_starting_at_or_after_6pm():
     assert windows.overlaps_tonight("2026-09-04T18:00:00-04:00", None, today) is True
     assert windows.overlaps_tonight("2026-09-04T17:59:00-04:00", "2026-09-04T23:00:00-04:00", today) is False
     assert windows.overlaps_tonight("2026-09-04T10:00:00-04:00", "2026-09-04T11:00:00-04:00", today) is False
+    assert windows.overlaps_tonight("2026-09-04T23:59:59-04:00", None, today) is True
+    assert windows.overlaps_tonight("2026-09-05T00:00:00-04:00", None, today) is False
     assert windows.overlaps_tonight("2026-09-05T20:00:00-04:00", None, today) is False
 
 
@@ -72,4 +74,6 @@ def test_native_map_hides_borough_only_citywide_and_multi_site():
 
 def test_night_aux_layers_stay_locked():
     assert [layer["id"] for layer in windows.NIGHT_AUX_LAYERS] == ["5pm", "dispensary", "liquor"]
-    assert windows.NIGHT_AUX_LAYERS[0]["label"] == "It's 5 PM Somewhere"
+    assert windows.NIGHT_AUX_LAYERS[0]["chip_label"] == "5 P.M. Somewhere"
+    assert windows.NIGHT_AUX_LAYERS[1]["chip_label"] == "Dispensaries"
+    assert windows.NIGHT_AUX_LAYERS[2]["chip_label"] == "Liquor Stores"

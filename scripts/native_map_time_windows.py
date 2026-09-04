@@ -5,9 +5,10 @@ Friday: tomorrow through today+7, with weekday + date. Only events that
 overlap that calendar day belong in that chip. Clicking 7 Days again returns
 to Now.
 
-Tonight is the same on/off control for today's events that start at or after
-18:00 America/New_York. The locked Tonight auxiliary layers (5 PM Somewhere,
-cannabis shops, liquor stores) stay overlays, not event rows.
+Tonight is the same on/off control for today's events that start from 18:00
+through 23:59:59 America/New_York. Midnight starts the next Now day. The
+locked night chips (5 P.M. Somewhere, dispensaries, liquor stores) replace
+Tonight event pins when tapped. They are overlays, not event rows.
 """
 
 from __future__ import annotations
@@ -32,18 +33,21 @@ NIGHT_AUX_LAYERS = (
     {
         "id": "5pm",
         "label": "It's 5 PM Somewhere",
+        "chip_label": "5 P.M. Somewhere",
         "emoji": "🍹",
         "layer": "5pm",
     },
     {
         "id": "dispensary",
         "label": "Legal Cannabis Shops",
+        "chip_label": "Dispensaries",
         "emoji": "🌿",
         "layer": "dispensary",
     },
     {
         "id": "liquor",
         "label": "Liquor Stores",
+        "chip_label": "Liquor Stores",
         "emoji": "🍸",
         "layer": "liquor",
     },
@@ -117,7 +121,8 @@ def overlaps_tonight(start_at: Any, end_at: Any, today: date | None = None) -> b
     start = parse_iso(start_at)
     if start is None:
         return False
-    return start.hour * 60 + start.minute >= TONIGHT_START_MINUTE
+    minute = start.hour * 60 + start.minute
+    return TONIGHT_START_MINUTE <= minute <= 23 * 60 + 59
 
 
 def overlaps_seven(start_at: Any, end_at: Any, today: date | None = None) -> bool:

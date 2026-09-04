@@ -13,9 +13,21 @@ const cors = {
 };
 
 const NIGHT_AUX_LAYERS = [
-  { id: "5pm", label: "It's 5 PM Somewhere", emoji: "🍹", layer: "5pm" },
-  { id: "dispensary", label: "Legal Cannabis Shops", emoji: "🌿", layer: "dispensary" },
-  { id: "liquor", label: "Liquor Stores", emoji: "🍸", layer: "liquor" },
+  { id: "5pm", label: "It's 5 PM Somewhere", chip_label: "5 P.M. Somewhere", emoji: "🍹", layer: "5pm" },
+  { id: "dispensary", label: "Legal Cannabis Shops", chip_label: "Dispensaries", emoji: "🌿", layer: "dispensary" },
+  { id: "liquor", label: "Liquor Stores", chip_label: "Liquor Stores", emoji: "🍸", layer: "liquor" },
+];
+
+const TONIGHT_WINDOW = {
+  start: "18:00:00",
+  end_inclusive: "23:59:59",
+  timezone: "America/New_York",
+};
+
+const PRIMARY_CHIPS = [
+  { id: "now", label: "Now" },
+  { id: "tonight", label: "Tonight" },
+  { id: "seven", label: "7 Days" },
 ];
 
 function json(body: unknown, status = 200, head = false) {
@@ -138,7 +150,7 @@ function overlapsDay(row: Record<string, unknown>, day: string): boolean {
 
 function overlapsTonight(row: Record<string, unknown>, today: string): boolean {
   const d = eventDates(row);
-  return !!d && d.startDay === today && d.startMinute >= 18 * 60;
+  return !!d && d.startDay === today && d.startMinute >= 18 * 60 && d.startMinute <= 23 * 60 + 59;
 }
 
 function overlapsSeven(row: Record<string, unknown>, first: string, last: string): boolean {
@@ -256,7 +268,7 @@ Deno.serve(async (req: Request) => {
     }));
 
     return json({
-      schema_version: "NYCIF_NATIVE_MAP_FEED_V4",
+      schema_version: "NYCIF_NATIVE_MAP_FEED_V5",
       authority: "supabase_event_reader_rolling_v1",
       runtime_dependency: "supabase_only",
       generated_at: new Date().toISOString(),
@@ -265,9 +277,21 @@ Deno.serve(async (req: Request) => {
       selected_date: selectedDay || null,
       window_start: mode === "seven" || mode === "day" ? sevenFirst : today,
       window_end_exclusive: mode === "seven" || mode === "day" ? addDays(today, 8) : addDays(today, 1),
+      tonight_window: TONIGHT_WINDOW,
       toggle: {
         tonight: mode === "tonight",
         seven: mode === "seven" || mode === "day",
+      },
+      chip_rows: {
+        primary: PRIMARY_CHIPS,
+        night: NIGHT_AUX_LAYERS,
+        seven: dayCounts.map((day) => ({
+          id: day.date,
+          date: day.date,
+          label: day.weekday_short,
+          sublabel: day.label.replace(day.weekday + " ", ""),
+          weekday: day.weekday,
+        })),
       },
       days: dayCounts,
       tonight_aux_layers: NIGHT_AUX_LAYERS,

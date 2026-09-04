@@ -86,8 +86,8 @@ Civic help-place snapshots (SNAP, Homebase, Workforce1, …) are **not** this ev
 The native feed (`nycif-native-map-feed`) time chips:
 
 - **Now** — today's overlapping events.
-- **Tonight** — on/off. Today's events that start at or after 6pm America/New_York, plus the locked auxiliary layers (It's 5 PM Somewhere, Legal Cannabis Shops, Liquor Stores) from `nycif-night-layers`. Those layers are overlays, not event rows.
-- **7 Days** — on/off. Dropdown of the next 7 calendar days starting tomorrow (Friday → Sat–Fri), weekday + date. Only events that happen on the selected day. Click 7 Days again to close it.
+- **Tonight** — on/off. Today's events from 6:00pm through 11:59:59pm America/New_York. Midnight starts a new Now day. The second chip row is 5 P.M. Somewhere / Dispensaries / Liquor Stores from `nycif-night-layers`. Tapping one of those chips clears Tonight event pins and shows only that layer.
+- **7 Days** — on/off. Second chip row of the next 7 calendar days starting tomorrow (Friday → Sat–Fri) with weekday + date. Only events that happen on the selected day. Click 7 Days again to close the day row.
 
 Run catch-up manually from Actions → **Supabase Official Source Catch-up** → `main` only after Discovery snapshots are fresh (Parks snapshot younger than 18 hours).
 
