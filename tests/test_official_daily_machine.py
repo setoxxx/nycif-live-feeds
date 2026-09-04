@@ -39,7 +39,7 @@ def test_machine_diffs_added_and_removed_and_passes_pin_coverage(monkeypatch):
     report, index = machine.build_machine_report(
         {
             PARKS: [_row("aaa", map_ready=True, title="Parks pin")],
-            TVPP: [_row("bbb", map_ready=False, title="Street permit")],
+            TVPP: [_row("bbb", map_ready=True, title="Street permit")],
         },
         {PARKS: [], TVPP: []},
         previous_index={
@@ -101,19 +101,19 @@ def test_machine_fails_on_silent_drop(monkeypatch):
     assert report["unaccounted"][0]["unaccounted"] == 1
 
 
-def test_machine_fails_if_tvpp_is_pinned(monkeypatch):
+def test_machine_fails_if_tvpp_pin_is_missed(monkeypatch):
     monkeypatch.setattr(
         machine,
         "snapshot_items",
-        lambda dataset: [{}] if dataset == TVPP else [],
+        lambda dataset: [{"event_id": "1"}] if dataset == TVPP else [],
     )
     report, _index = machine.build_machine_report(
-        {TVPP: [_row("bbb", map_ready=True)]},
+        {TVPP: [_row("bbb", map_ready=False)]},
         {TVPP: []},
         previous_index={"datasets": {}},
     )
     assert report["qa_pass"] is False
-    assert any("list_only_dataset_pinned" in item for item in report["failures"])
+    assert any("pin_coverage_short" in item for item in report["failures"])
 
 
 def test_rejected_pin_eligible_row_is_accounted_not_a_pin_miss(monkeypatch):
@@ -164,7 +164,7 @@ def test_first_run_is_a_baseline_not_a_false_removal(monkeypatch):
         lambda dataset: [{}] if dataset in {PARKS, TVPP} else [],
     )
     report, _index = machine.build_machine_report(
-        {PARKS: [_row("aaa")], TVPP: [_row("bbb")]},
+        {PARKS: [_row("aaa")], TVPP: [_row("bbb", map_ready=True)]},
         {PARKS: [], TVPP: []},
         previous_index={"datasets": {}},
     )

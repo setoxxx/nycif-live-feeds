@@ -64,14 +64,14 @@ Today on the phone is the **overlap** window, not “starts today”:
 
 `start_at < tomorrow_midnight_ET AND coalesce(end_at, start_at + 3 hours) >= today_midnight_ET`
 
-That is why Today can show ~780 listings and ~100 pins: most rows are list-only street permits.
+That is why Today can show hundreds of listings: Parks pins when official coords exist, every public street permit is pinned, calendar/feast rows without official coords stay list-only.
 
 ## How each dataset is displayed
 
 | Dataset | City source | List | Pin |
 |---|---|---|---|
 | `nyc-parks-bigapps-events` | NYC Open Data `w3wp-dpdi` | Yes | Only with official Parks lat/lng in NYC **and** pin evidence (`exact_pin_eligible` or `OFFICIAL_SOURCE_COORDINATE_SITE_VALIDATED`) |
-| `tvpp-9vvx` | NYC Open Data street activity permits | Public events only | **Never**. Closures, shooting, production parking stay off the public list. |
+| `tvpp-9vvx` | NYC Open Data street activity permits | Yes | **Always.** Parks facility coords, NYC DCP LION centerline midpoint, Geoclient blockface midpoint, or NYC GeoSearch. No Google. |
 | `nyc-citywide-events-calendar-api` | api.nyc.gov Event Calendar | Yes | Only if the city snapshot already has official in-bounds coords. No geocoder fill. |
 | `nyc-projected-feast-reference` | NYCIF feast intake | Yes | **Never**. Proposed geocoder coords stay off the map until a human promote. |
 
@@ -94,7 +94,7 @@ The machine does four things:
 1. **Account for every snapshot row** — accepted, or rejected with a reason. Silent drops fail the job.
 2. **Diff against yesterday’s index** — `added`, `still_present`, `removed_from_city`. Removed rows are **reported only**. Catch-up still does not expire.
 3. **Pin 100% of official coordinates** — every Parks row with official in-bounds evidence, and every calendar row that already has official in-bounds coords, must come out `map_ready`. Missing those pins fails the job.
-4. **Never invent pins** — TVPP and projected feast stay list-only. Multi-site Parks rows without a single official coordinate stay on the list (`list_only_samples`). That is accounted, not a miss.
+4. **Pin every public TVPP row** — street permits go on the map from Parks facilities, NYC DCP LION, Geoclient, or NYC GeoSearch. Projected feast stays list-only. Multi-site Parks rows without a single official coordinate stay on the list (`list_only_samples`). That is accounted, not a miss.
 
 `qa_pass: true` means the factory is the well-functioning machine. Open the report instead of walking the JSON by hand.
 
@@ -120,7 +120,7 @@ Already used by Discovery / catch-up (keep these current):
 - `SOCRATA_APP_TOKEN` or `NYC_SODA_APP_TOKEN` — NYC Open Data (Parks `w3wp-dpdi`, TVPP `tvpp-9vvx`)
 - `SUPABASE_SERVICE_ROLE_KEY` — catch-up write into staging project `oggwpvdirkrnzoolparx`
 
-Geoclient and OTI keys may be used to **propose** coordinates in review artifacts. They must not set `map_ready=true` on TVPP, feast, or calendar rows that lack official source coords.
+Geoclient and OTI keys pin TVPP street segments (Geoclient) and may propose other coordinates in review artifacts. They must not set `map_ready=true` on feast, or on calendar rows that lack official source coords. TVPP pins may also come from the committed LION centerline cache and NYC GeoSearch.
 
 ## Protected files
 

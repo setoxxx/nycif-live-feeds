@@ -24,14 +24,16 @@ def test_parks_official_coordinate_certifies_and_keeps_enigma_id():
     assert float(normalized["classification"]["confidence"]) == 0.95
 
 
-def test_tvpp_never_becomes_a_map_pin():
+def test_tvpp_public_events_pin_from_official_sources():
     events = catchup.tvpp_events()
     assert events
-    assert all(event["map_ready"] is False for event in events)
-    assert all(event["lat"] is None and event["lng"] is None for event in events)
-    first = writer.normalize_event(events[0])
-    assert first["map_ready"] is False
+    pinned = [event for event in events if event["map_ready"] is True]
+    assert pinned
+    assert all(event["lat"] is not None and event["lng"] is not None for event in pinned)
+    first = writer.normalize_event(pinned[0])
+    assert first["map_ready"] is True
     assert first["source"]["source_dataset"] == "tvpp-9vvx"
+    assert first["metadata"]["reader"]["certified_pin"] is True
     assert len(first["occurrence_id"]) == 64
 
 
@@ -117,6 +119,7 @@ def test_catchup_workflow_is_separate_and_fail_closed():
     assert "github.event_name == 'workflow_run' && 'main'" in workflow
     assert "nyc-projected-feast-reference" in workflow
     assert "projected feast rows must stay list-only" in workflow
+    assert "tvpp street permits must all be pinned" in workflow
     assert "official_daily_machine.py" in workflow
     assert "official_daily_machine_report.json" in workflow
     assert "official daily machine failed" in workflow
@@ -169,12 +172,14 @@ def test_invalid_intervals_are_rejected_and_reported():
     assert inverted
 
 
-def test_tvpp_skips_operational_permits_and_stays_list_only():
+def test_tvpp_skips_operational_permits_and_pins_public_events():
     rejections: list[dict] = []
     events = catchup.tvpp_events(rejections=rejections)
     assert events
-    assert all(event["map_ready"] is False for event in events)
     assert all(event["metadata"]["reader"]["event_role"] == "public_event" for event in events)
+    pinned = [event for event in events if event["map_ready"] is True]
+    assert pinned
+    assert all(event["lat"] is not None and event["lng"] is not None for event in pinned)
     titles = {event["title"] for event in events}
     assert "Closure" not in titles
     assert any("not_public_event" in item["reason"] or item["reason"] == "invalid_interval" for item in rejections)

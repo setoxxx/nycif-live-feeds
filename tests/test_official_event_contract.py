@@ -5,8 +5,16 @@ from scripts import supabase_event_writer as writer
 from scripts import sync_supabase_official_source_catchup as catchup
 
 
-def test_tvpp_and_feast_never_pin_even_with_coords():
+def test_tvpp_pins_with_resolver_evidence_feast_never_pins():
     assert contract.apply_pin_policy("tvpp-9vvx", 40.7, -74.0) == (None, None, False)
+    lat, lng, ready = contract.apply_pin_policy(
+        "tvpp-9vvx",
+        40.7,
+        -74.0,
+        {"exact_pin_eligible": True, "reason_code": "TVPP_PARKS_FACILITY_OFFICIAL"},
+    )
+    assert ready is True
+    assert lat == 40.7
     assert contract.apply_pin_policy(
         "nyc-projected-feast-reference",
         40.742602,

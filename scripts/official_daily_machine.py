@@ -8,7 +8,7 @@ catch-up run must:
 2. Diff today's occurrence IDs against yesterday's index (added / still present /
    gone from the city source).
 3. Certify every pin-eligible official coordinate (Parks evidence, calendar
-   snapshot coords). TVPP and projected feast stay list-only.
+   snapshot coords, every public TVPP row). Projected feast stays list-only.
 4. Never expire, never edit location_cache.json, never publish to the public map.
 
 Gone-from-city IDs are reported only. They are not deleted.
@@ -87,6 +87,8 @@ def snapshot_source_event_id(dataset: str, row: dict[str, Any]) -> str:
 def pin_eligible_from_snapshot(dataset: str, row: dict[str, Any]) -> bool:
     if dataset in contract.PIN_NEVER:
         return False
+    if dataset == contract.DATASET_TVPP:
+        return True
     if dataset == contract.DATASET_PARKS:
         return catchup.official_parks_pin(row)[2] is True
     if dataset == contract.DATASET_CALENDAR:
@@ -153,6 +155,8 @@ def build_machine_report(
             if source_event_id and source_event_id in rejected_ids:
                 continue
             eligible += 1
+        if dataset == contract.DATASET_TVPP:
+            eligible = accepted
         certified = sum(1 for row in rows if row.get("map_ready") is True)
         if dataset in contract.PIN_NEVER and certified:
             failures.append(f"list_only_dataset_pinned:{dataset}")
@@ -248,7 +252,7 @@ def build_machine_report(
         "public_map_modified": False,
         "pin_rule": {
             "certified_pin_means": "official in-bounds city coordinates plus dataset pin policy",
-            "tvpp": "always list-only",
+            "tvpp": "every public tvpp-9vvx row must be a certified pin",
             "feast": "always list-only",
             "parks": "pin only with official Parks evidence",
             "calendar": "pin only when the snapshot already has official in-bounds coords",
