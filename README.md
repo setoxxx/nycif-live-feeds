@@ -11,6 +11,7 @@ NYC Open Data / api.nyc.gov
     → RPC nycif_apply_staging_event_batch
     → event_occurrences / event_sources
     → view event_reader_rolling_v1
+    → RPC nycif_native_map_feed_rows (today or 7-day overlap)
     → Edge Function nycif-native-map-feed
     → iOS EventService
     → list + pins
@@ -81,7 +82,7 @@ Civic help-place snapshots (SNAP, Homebase, Workforce1, …) are **not** this ev
 
 1. **6:00pm America/New_York** — `Discovery Feed Refresh` pulls the city APIs into GitHub snapshots (`data/raw_nyc_open_data_snapshot.json`, `data/nyc_parks_bigapps_events_snapshot.json`, `data/nyc_citywide_events_calendar_snapshot.json`).
 2. After that job succeeds — `Supabase Official Source Catch-up` turns those snapshots into the contract above and **pushes** them into Supabase. It does not expire rows. It does not edit `location_cache.json`.
-3. The phone reads Supabase. Catch-up JSON under `data/reports/` is a job artifact, not what the app loads.
+3. The phone reads Edge Function `nycif-native-map-feed`, which calls read-only RPCs `nycif_native_map_feed_rows` / `nycif_native_map_feed_stats`. It does not page the full rolling view. Catch-up JSON under `data/reports/` is a job artifact, not what the app loads.
 
 Run catch-up manually from Actions → **Supabase Official Source Catch-up** → `main` only after Discovery snapshots are fresh (Parks snapshot younger than 18 hours).
 
