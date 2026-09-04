@@ -19,6 +19,8 @@ def test_parks_official_coordinate_certifies_and_keeps_enigma_id():
     assert normalized["map_ready"] is True
     assert normalized["source"]["source_name"] == "nyc_open_data"
     assert normalized["source"]["source_dataset"] == "nyc-parks-bigapps-events"
+    assert isinstance(normalized["classification"]["confidence"], (int, float))
+    assert float(normalized["classification"]["confidence"]) == 0.95
 
 
 def test_tvpp_never_becomes_a_map_pin():

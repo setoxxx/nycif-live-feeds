@@ -31,6 +31,8 @@ SOURCE_NAME = "nyc_open_data"
 TIMEZONE = "America/New_York"
 CLASSIFICATION_REASON = "rung8_official_snapshot_catchup"
 CLASSIFIER_VERSION = "official-snapshot-catchup-v1"
+# event_classifications.confidence is numeric; do not send "high"/"medium" labels.
+CLASSIFICATION_CONFIDENCE = 0.95
 DEFAULT_CHUNK_SIZE = 80
 MAX_CHUNK_SIZE = 100
 MIN_CHUNK_SIZE = 10
@@ -182,8 +184,8 @@ def _canonical(
             "public_category": public_category,
             "public_subtype": public_subtype,
             "classification_reason": CLASSIFICATION_REASON,
-            "classifier_version": CLASSIFIER_VERSION,
-            "confidence": "high",
+                    "classifier_version": CLASSIFIER_VERSION,
+                    "confidence": CLASSIFICATION_CONFIDENCE,
             "source_event_type": source_event_type,
             "source_agency": source_agency,
         },
