@@ -110,12 +110,13 @@ def test_catchup_workflow_is_separate_and_fail_closed():
     assert "The phone reads Supabase" in workflow
     assert "pip install" not in workflow
     assert "requirements.txt" not in workflow
-    assert "cron:" not in workflow
+    assert "cron:" in workflow
+    assert 'timezone: "America/New_York"' in workflow
     assert "workflow_run:" in workflow
     assert "--from-batch" in workflow
     assert "supabase_official_today_listing.json" in workflow
     assert "supabase_official_event_batch.json" in workflow
-    assert "github.event_name == 'workflow_run' && 'main'" in workflow
+    assert "github.event_name == 'workflow_run' || github.event_name == 'schedule'" in workflow
     assert "nyc-projected-feast-reference" in workflow
     assert "projected feast rows must stay list-only" in workflow
     assert "tvpp street permits must all be pinned" in workflow
@@ -191,6 +192,45 @@ def test_calendar_normalizes_borough_codes_and_keeps_labor_day_id():
     assert normalized["occurrence_id"] == "541ec8bcd390fc4f27be5c24c83eaa82fa76815ec7e2065af9c81483b3e2fda8"
     assert catchup._borough(["Mn", "Bk", "Qn", "Bx", "SI"]) == "Citywide"
     assert catchup._borough("Bk") == "Brooklyn"
+
+
+def test_write_chunks_splits_on_statement_timeout(monkeypatch):
+    sizes: list[int] = []
+
+    def fake_validate():
+        return "oggwpvdirkrnzoolparx", "https://oggwpvdirkrnzoolparx.supabase.co"
+
+    def fake_post(target_url, service_key, payload, timeout=120):
+        events = payload["p_events"]
+        sizes.append(len(events))
+        if len(events) > 2:
+            raise catchup.writer.SupabaseRPCError(
+                'atomic RPC failed with HTTP 500: {"code":"57014","message":"canceling statement due to statement timeout"}'
+            )
+        return {
+            "transaction": "committed",
+            "actions": {"INSERT": len(events)},
+            "newsroom_queue_delta": 0,
+            "pipeline_run_id": 3,
+        }
+
+    monkeypatch.setattr(catchup.writer, "validate_write_target", fake_validate)
+    monkeypatch.setattr(catchup.writer, "post_atomic_batch", fake_post)
+    monkeypatch.setenv("SUPABASE_SERVICE_ROLE_KEY", "test-key")
+    rows = [
+        {
+            "occurrence_id": f"{index:064x}",
+            "title": f"Row {index}",
+            "source": {"source_name": "nyc_open_data"},
+            "map_ready": False,
+        }
+        for index in range(4)
+    ]
+    result = catchup.write_chunks(rows, 4)
+    assert sizes[0] == 4
+    assert sizes[1:] == [2, 2]
+    assert result["actions"]["INSERT"] == 4
+    assert result["chunks_committed"] == 2
 
 
 def test_write_chunks_records_partial_progress_on_failure(monkeypatch, tmp_path):

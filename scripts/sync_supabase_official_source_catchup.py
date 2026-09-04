@@ -58,9 +58,10 @@ CLASSIFICATION_REASON = "rung8_official_snapshot_catchup"
 CLASSIFIER_VERSION = "official-snapshot-catchup-v1"
 # event_classifications.confidence is numeric; do not send "high"/"medium" labels.
 CLASSIFICATION_CONFIDENCE = 0.95
-DEFAULT_CHUNK_SIZE = 80
+DEFAULT_CHUNK_SIZE = 20
 MAX_CHUNK_SIZE = 100
-MIN_CHUNK_SIZE = 10
+MIN_CHUNK_SIZE = 1
+WRITE_RPC_TIMEOUT_SEC = 180
 
 DATASET_TVPP = contract.DATASET_TVPP
 DATASET_PARKS = contract.DATASET_PARKS
@@ -885,6 +886,11 @@ def load_official_batch(path: Path) -> dict[str, Any]:
     return payload
 
 
+def _statement_timeout(exc: BaseException) -> bool:
+    text = str(exc).lower()
+    return "57014" in text or "statement timeout" in text
+
+
 def write_chunks(
     rows: list[dict[str, Any]],
     chunk_size: int,
@@ -900,34 +906,51 @@ def write_chunks(
     run_ids: list[int] = []
     chunk_count = (len(rows) + chunk_size - 1) // chunk_size
     committed = 0
-    try:
-        for index in range(0, len(rows), chunk_size):
-            chunk = rows[index : index + chunk_size]
+
+    def record_success(result: dict[str, Any]) -> None:
+        nonlocal committed
+        if result.get("newsroom_queue_delta") not in (0, None):
+            raise RuntimeError("official catch-up mutated newsroom_queue")
+        chunk_actions = result.get("actions") if isinstance(result.get("actions"), dict) else {}
+        for key in actions:
+            actions[key] += int(chunk_actions.get(key, 0) or 0)
+        if isinstance(result.get("pipeline_run_id"), int):
+            run_ids.append(result["pipeline_run_id"])
+        committed += 1
+        if progress is not None:
+            progress["database_write_performed"] = True
+            progress["chunks_committed"] = committed
+            progress["pipeline_run_ids"] = list(run_ids)
+            progress["actions"] = dict(actions)
+            _write_catchup_report(progress)
+
+    def post_chunk(chunk: list[dict[str, Any]]) -> None:
+        payload = {
+            "p_events": chunk,
+            "p_source_name": SOURCE_NAME,
+            "p_allow_expire": False,
+            "p_simulate_failure": False,
+            "p_expected_project_ref": project_ref,
+        }
+        try:
             result = writer.post_atomic_batch(
                 target_url,
                 service_key,
-                {
-                    "p_events": chunk,
-                    "p_source_name": SOURCE_NAME,
-                    "p_allow_expire": False,
-                    "p_simulate_failure": False,
-                    "p_expected_project_ref": project_ref,
-                },
+                payload,
+                timeout=WRITE_RPC_TIMEOUT_SEC,
             )
-            if result.get("newsroom_queue_delta") not in (0, None):
-                raise RuntimeError("official catch-up mutated newsroom_queue")
-            chunk_actions = result.get("actions") if isinstance(result.get("actions"), dict) else {}
-            for key in actions:
-                actions[key] += int(chunk_actions.get(key, 0) or 0)
-            if isinstance(result.get("pipeline_run_id"), int):
-                run_ids.append(result["pipeline_run_id"])
-            committed += 1
-            if progress is not None:
-                progress["database_write_performed"] = True
-                progress["chunks_committed"] = committed
-                progress["pipeline_run_ids"] = list(run_ids)
-                progress["actions"] = dict(actions)
-                _write_catchup_report(progress)
+        except writer.SupabaseRPCError as exc:
+            if len(chunk) > 1 and _statement_timeout(exc):
+                mid = max(1, len(chunk) // 2)
+                post_chunk(chunk[:mid])
+                post_chunk(chunk[mid:])
+                return
+            raise
+        record_success(result)
+
+    try:
+        for index in range(0, len(rows), chunk_size):
+            post_chunk(rows[index : index + chunk_size])
     except Exception as exc:
         if progress is not None:
             progress["database_write_performed"] = committed > 0
