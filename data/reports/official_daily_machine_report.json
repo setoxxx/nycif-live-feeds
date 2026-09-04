@@ -1,6 +1,6 @@
 {
   "schema": "official_daily_machine.v1",
-  "generated_at_utc": "2026-09-04T16:01:04.192398+00:00",
+  "generated_at_utc": "2026-09-04T16:29:14.851480+00:00",
   "today_nyc": "2026-09-04",
   "qa_pass": true,
   "failures": [],
@@ -341,20 +341,72 @@
       ]
     },
     "nyc-parks-bigapps-events": {
-      "snapshot_rows": 1294,
-      "accepted": 1291,
-      "rejected": 3,
-      "accounted": 1294,
+      "snapshot_rows": 1217,
+      "accepted": 1212,
+      "rejected": 5,
+      "accounted": 1217,
       "unaccounted": 0,
-      "pin_eligible": 1279,
-      "certified_pins": 1279,
-      "list_only": 12,
+      "pin_eligible": 1199,
+      "certified_pins": 1199,
+      "list_only": 13,
       "pin_coverage_pass": true,
-      "added": 0,
-      "still_present": 1291,
-      "removed_from_city": 0,
-      "added_occurrence_id_samples": [],
-      "removed_from_city_occurrence_id_samples": [],
+      "added": 98,
+      "still_present": 1114,
+      "removed_from_city": 177,
+      "added_occurrence_id_samples": [
+        "01bab48230dbb8d18c07ef8fea695b6066ffce8eda85ad433c03a468e598b043",
+        "01daa75d417b6bcedf33987f1e7fb6493246ee1869fa9aa8593fa6bf9fab7337",
+        "0339374cd54f3d026b3df11cc00f8b340510b18b0ef76e1aec31ab41a262863e",
+        "04b98dc286ed3d5bab3bff050e6d3537925cdf49e7c82549c6e4e83b3f517083",
+        "05c881ad5009cfaa2db689ae7a9298f0373048e2046c3c7db2a3d7064a81d4e0",
+        "09188835e020466cecbe7aebb09eae0d9a98e6c13818f34cd5af8239a50be476",
+        "09c5b1a71a9e370ea573826bab0642116da5e11745941d76f0d41c677a5803f1",
+        "0a3bba05b3a2b833efb2edf5e398f9d46c4ac5dbaf983fd11cbaaa1f18738cf8",
+        "138c5f2a93a88adc537a846bffa3d8d7b4ba39e979c46a8c0d5d931d4ff9b895",
+        "13c58a2331224b28297ae90f43f4404294e497492c0052bd9b1f1cd185b1cdf4",
+        "1726375ef6c11b528c58365e7131a820d21842a7b9e8cd9fdcc3515b15c39358",
+        "1afd8f813802346ce9cc0afe047a8166e52b8f77775f702be8553ba11e52423d",
+        "1cad90b644c1ba8484e6b03159b7513e57adb715c73c42e5c6d601404fe072b6",
+        "1ec18d0d1f3c492e7484f38aac8e225f6f6cd7cc643e42e7b20a1250135e7c47",
+        "2126084936431dbf1891e5c8b0a7fa7f7423c5c7517e582ea6fffd1f53f30401",
+        "285b77e97472ba9d6868af8bf54c3351bc2fb4b752b6bfa68bcebb7d1db5c003",
+        "2b647b3daf04cc94748ae2c3bfc071c3be811a5815a535fb38804c4f82e7b290",
+        "2b743906847d03ea0c49889500365c51502de0b7c8209dccb8809cc923603a92",
+        "2bf162541ca110674addc0a3c4f6ecf772084126d06e8785f871b01a65c3a85c",
+        "2fbf882384f6de2ee4c7343464629adebfe1630aecc76e168787874c3e0d9380",
+        "31f5a8745c0d7b4b6c5a3e6054ff78354fd0774ba6af3835226341e22ca5888a",
+        "331b34e861286318efd26d17a6dc0c6ed14bc6643906a031991805044ef0040f",
+        "36d2bcde78de9ee6f7e626f84ed5897243d4ef9a68ef35d60734e5aa3a142934",
+        "3719ece8b0b6642136b4ca08ad899c2f996d7bbe16bc9add8ddc744ecab9ca52",
+        "3bb4caa19e5dfbad5762129fb0a7626f4feab675b281a2557fd596e01755fa97"
+      ],
+      "removed_from_city_occurrence_id_samples": [
+        "023ab696ab16599747db9fdee3a6dbc1080d067b958c433a49b02a5db0f075fe",
+        "028d61061c0c3077bed45543c10a25990a4ee5b7f04f707edc510bf0ea30aae5",
+        "02901140ad29b86f7a5807359cdda0ba3509d9e259fd754c574f466c1e61f9ec",
+        "02eca62d9be87129441d6848dd04b7d024f5f769da4e66a69045808d09760e5c",
+        "033c1d29bd8ec1da7c70adc558023455be9e9dd60b3bb05d14660de6436f0bf2",
+        "049495b2189e9e99bbe0e43de866949f7e52bc7f265d9e7b1085b1e51d6c0762",
+        "062e6732625be57b4a4530bee9b992410f54e042a4f53eaf9ff0722f6834cb31",
+        "094c9b3d5ea4fe1927355e6785abd2c161f3843edd8c715e323f727d00c370e5",
+        "0a1e26f32f0c20b2d0534863c0af28223ae702b4a8744203e063b42d6e19ea6c",
+        "10040f50733c875b46f9e37ebd86a93904b8463bc47f7b934775ae8f9e8fe1f3",
+        "100a2e0f8effeb06af4b825d03d6b1bbdfb043bae90087d5b2e27b45490935c0",
+        "104cb2263d9591103359be9c0fe947dde049413ec7bb665bff7fb60012bf8892",
+        "10cd493cf264b49474109795606df00b0642b920b3899168fa9866e3d2461007",
+        "111eea9d50020c45c1632c7b3ccd6d5a9c036ed840e5d06d775550e9e7164823",
+        "112c6744c430bbe3e255ffdf49eb9dfa628da56d5ca5a2bd77e4e2139e3abf7b",
+        "120b46047135cbc7bee744d6b8659cb08f139a8f826b2e5ca10eb58f11453de2",
+        "12bd11c264067a03703b7acb7255e70a7f5f352a9bad5dfdcc6845a09280ba6b",
+        "143ac0562b553a9c08a91214793398409b28263f3392e96d46a571525c1f58b6",
+        "15de8bfd8dc9b61080f87e1eba5ec4e00c2e0cb2cd7769ce10267f670e6fe37f",
+        "16abe6f74e1c069ba57f813574f4b1f9ae293acbab1c340a9a2112428965dfb6",
+        "19e53fe29f215a5e8e07862ae0f1cfe22fa97cf959b6bf22a0c9f3f4bd90561f",
+        "1a2b7ee4e2e7a9bb9042b8140190d490c3f8cd1a7f5f4fbdcedc468cc5aeff69",
+        "1af16b5a762851f96bb405fc36fe5e1b2959f096ce02df498e65d71c70f2a3ec",
+        "1b1c9ca24fbe1dbe20a5cc44456f8f890906f3fa321dbd07a1bd28f1815b354a",
+        "1c22c107b588cd9e0cc97a26ce2ad3a1beeb8d8f344ae719960ab6a818f6ab2e"
+      ],
       "list_only_samples": [
         {
           "occurrence_id": "628b8080a5d666cb3957ba547f34b14c0ada4a366d553536530d0452584e9337",
@@ -396,6 +448,12 @@
           "occurrence_id": "4a1d20fe9904ec9025fcdc15208d0c90e34720de674400ac4a48400bd347e331",
           "title": "Brazilian Movement with Maria Assis",
           "display_location": "On the High Line at 30th St. (in The High Line),The Spur (in The High Line)",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "8ad978529873a24cca25e1e23d35af3efe3bd7128028fa7448fa9b387d9fd8b9",
+          "title": "OnPoint NYC's 4th Annual Care Fair",
+          "display_location": "Madison Avenue and East 122nd Street (in Marcus Garvey Park),East 124th and Madison Avenue,Madison Ave and E 123rd St Manhattan, NY",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
@@ -447,24 +505,79 @@
           "source_event_id": "2237418",
           "title": "Family Camping: Bronx",
           "reason": "invalid_interval"
+        },
+        {
+          "source_dataset": "nyc-parks-bigapps-events",
+          "source_event_id": "2232792",
+          "title": "Family Camping: Staten Island",
+          "reason": "invalid_interval"
+        },
+        {
+          "source_dataset": "nyc-parks-bigapps-events",
+          "source_event_id": "2213060",
+          "title": "Family Camping: Queens",
+          "reason": "invalid_interval"
         }
       ]
     },
     "nyc-citywide-events-calendar-api": {
-      "snapshot_rows": 194,
-      "accepted": 194,
+      "snapshot_rows": 213,
+      "accepted": 213,
       "rejected": 0,
-      "accounted": 194,
+      "accounted": 213,
       "unaccounted": 0,
       "pin_eligible": 0,
       "certified_pins": 0,
-      "list_only": 194,
+      "list_only": 213,
       "pin_coverage_pass": true,
-      "added": 0,
-      "still_present": 194,
-      "removed_from_city": 0,
-      "added_occurrence_id_samples": [],
-      "removed_from_city_occurrence_id_samples": [],
+      "added": 35,
+      "still_present": 178,
+      "removed_from_city": 16,
+      "added_occurrence_id_samples": [
+        "0e9d3652734db78ed53a490f99359a6e2e8f9d9e2934d9e97d83f876c7d52419",
+        "137f8e9bf625a5df272275559f4a4d6dbdd4ade7f54a7804605326c0d72e1906",
+        "16bf99aaab1590a0c758cbdb6f7f725796021a8aa00c86509d80ce52c046b226",
+        "1e62a29ebb5e1a742301a5edcebc09be76b19723613206b2f06c92ca7241d270",
+        "1e9bdcd96ef541fa96b3a39a95105e8e0553e24d918465adec55f4b9d63729b9",
+        "27bc2e15f7235f234d86595b2231c5f03333033bd68bc14c743c7908e1b7ef65",
+        "284ae49d5e3221ad3891a316d0e53e582b850f89f9397222e361cc500329409c",
+        "2d5e1209e45341dcf1d0c7ef2aa4cfe2e85d00ef44afce631084323b76351b56",
+        "2ecd760d098a27ac1c8aa0f2e1608186d47f532c3d1ff7dbf014febbe915718f",
+        "32c2eb13ec95736c3ec2b0ac8d85d77aabe7a976ed887ac46d2f473c961edace",
+        "401124ca5b9884a4bb5ef978e251da3b399b38e9d74a182eae08084933cd006a",
+        "42411044fc168a316225f83d79a7143104eb34396f10521f8bb58cf1b126acd5",
+        "47468448b6adbd12268368d8bd115ece6fb2162f27e2ad8e970469fff3f8be1a",
+        "4820a6d8f73e0bdd0cecab8b08acec208eae6823d108e53a637487835d62bc94",
+        "4f155f9eaf7441a48f5f643bb9d9761209c8b0d7f045d31cd13670d94e4fa1f1",
+        "4f7ca0825ad84aad2d17ce1ce12c2a69b82f2fd7a342e8e1a766a72b0fe48d6b",
+        "5a783f2da50d09766c65b8b96ced3ce492ed5ca4f79ba322605cc6bfb9192eee",
+        "659768cc5c24317ae8413cdd9d50b09535c0c17ed9d7f55d3ca458b2e951aa22",
+        "77fd3709be8fd5d96be1d6051d1339025f41be6a0d0a33cf04a48c60851e96c4",
+        "7eb41f135cc97874b57c6d44dc330b5c2810c7233c70c322b59d211abc7169dc",
+        "810f29aa89f5382a9b40b97d371954c963dd555e735a80b0debebe32924f54e6",
+        "847b90251196b8aa4eb60c1420c89a2284812845cd5634585b7137a1c04e541f",
+        "86fd60e19b209773a9e0ba2978fd0e92686fc285332270dc0ec124bc3af1aab3",
+        "88539427d41d33e44a8ebcdb6d3a2335f3ecd9aed7e7116d5976a1641717abcd",
+        "8a882087b2e5d8352adea6ac0ba4ee42edd632d30daf758f07aa24a98332bf05"
+      ],
+      "removed_from_city_occurrence_id_samples": [
+        "2d7a213e86a21976c426635b5cc221968007b852d3d588fe97164c86081a5263",
+        "2f414cceddffb7cd0280437280c7ba080d979e2f7310126a6a22103a1c39714f",
+        "3e4d43d2b4b86d8e4633fd364751cc8bef7c9430136d2952398a646d29dacdbe",
+        "4e94c28fd9ec34f0edbc1e4d18af61e51f6d87453644f7ab1a9394dd5fb3f7d0",
+        "536e0f2e099a5d5e07fbfccdc696fc8fd407694dfaa7e9be564e7e6cca64647c",
+        "6dfdd7d3ff9fb9f525af7b1b4929075db40d36375235092ce7662748e67663e5",
+        "7e2411c01ae10a77676b78543ba1050754e23763a03ed6798f7b847b6479b3e1",
+        "832ebb838de71d0b5a88ee98e809821a089c64aa4a7c0955263602f42a009a5a",
+        "8aeebce7805aa8ff6e80653cb0686104427e8052f6f739392350cdf403e1750b",
+        "8e332c8e1f06194b203771e404499ee8e9dee0e85114d4f688605b0cb004e8bf",
+        "90017a2aae559b9e672248a9d04079f8403f8dd934d5842e04a1233d2b25f43b",
+        "d3420dc2057ef843f54152ed589bea4a0d2debde9156d89a089f2a4c325e9175",
+        "e6f217312a15a794f6eaadc13a846545400a634b49b58910e4a5635a56282461",
+        "eaa810d4f89802d4d4bae45b4ccbbfd7b0fd3dd0125eb93ae05cfb8b2e97a650",
+        "f44c13aaa0ceefb0a777eae6549243c7117a280091db9e1cc08d9624ff470105",
+        "f96f7a3a0c19250bcbea78f864f22b91250dc69efa856394d1700d3be37f93a6"
+      ],
       "list_only_samples": [
         {
           "occurrence_id": "541ec8bcd390fc4f27be5c24c83eaa82fa76815ec7e2065af9c81483b3e2fda8",
@@ -473,99 +586,15 @@
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "d3420dc2057ef843f54152ed589bea4a0d2debde9156d89a089f2a4c325e9175",
+          "occurrence_id": "0e9d3652734db78ed53a490f99359a6e2e8f9d9e2934d9e97d83f876c7d52419",
           "title": "NYC Public Outdoor Pools Open for the Season",
           "display_location": "Locations across all five boroughs",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "2f414cceddffb7cd0280437280c7ba080d979e2f7310126a6a22103a1c39714f",
+          "occurrence_id": "88539427d41d33e44a8ebcdb6d3a2335f3ecd9aed7e7116d5976a1641717abcd",
           "title": "NYC Restaurant Week",
           "display_location": "Check website for a list of participating restaurants",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "e6f217312a15a794f6eaadc13a846545400a634b49b58910e4a5635a56282461",
-          "title": "175 street Greenmarket Thursday",
-          "display_location": "WEST  175 STREET between BROADWAY and WADSWORTH AVENUE  Manhattan",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "2d7a213e86a21976c426635b5cc221968007b852d3d588fe97164c86081a5263",
-          "title": "Borough Park Greenmarket Thursday",
-          "display_location": "14 AVENUE between 49 STREET and 50 STREET  Brooklyn",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "832ebb838de71d0b5a88ee98e809821a089c64aa4a7c0955263602f42a009a5a",
-          "title": "Columbia Thursday Sunday Greenmarket",
-          "display_location": "BROADWAY between WEST  113 STREET and WEST  116 STREET  Manhattan",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "f96f7a3a0c19250bcbea78f864f22b91250dc69efa856394d1700d3be37f93a6",
-          "title": "HHFM East Harlem Market",
-          "display_location": "EAST  104 STREET between THIRD AVENUE and SECOND AVENUE  Manhattan",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "3e4d43d2b4b86d8e4633fd364751cc8bef7c9430136d2952398a646d29dacdbe",
-          "title": "Special Waste Drop-Off - Bronx",
-          "display_location": "Farragut St at the East River, off Food Center Dr",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "536e0f2e099a5d5e07fbfccdc696fc8fd407694dfaa7e9be564e7e6cca64647c",
-          "title": "Special Waste Drop-Off - Brooklyn",
-          "display_location": "459 North Henry St (drop-off near 530 Kingsland)",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "eaa810d4f89802d4d4bae45b4ccbbfd7b0fd3dd0125eb93ae05cfb8b2e97a650",
-          "title": "Special Waste Drop-Off - Manhattan",
-          "display_location": "74 Pike Slip btwn Cherry & South Sts",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "6dfdd7d3ff9fb9f525af7b1b4929075db40d36375235092ce7662748e67663e5",
-          "title": "Special Waste Drop-Off - Queens",
-          "display_location": "30th Ave btwn 120th & 122nd Sts",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "7e2411c01ae10a77676b78543ba1050754e23763a03ed6798f7b847b6479b3e1",
-          "title": "Special Waste Drop-Off - Staten Island",
-          "display_location": "Off Muldoon Ave exit of southbound West Shore Expy",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "f44c13aaa0ceefb0a777eae6549243c7117a280091db9e1cc08d9624ff470105",
-          "title": "St. Anthony Flea Market",
-          "display_location": "WEST HOUSTON STREET between THOMPSON STREET and MACDOUGAL STREET  Manhattan",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "8e332c8e1f06194b203771e404499ee8e9dee0e85114d4f688605b0cb004e8bf",
-          "title": "HPD In Your District Council District 37",
-          "display_location": "56 Pennsylvania Avenue",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "90017a2aae559b9e672248a9d04079f8403f8dd934d5842e04a1233d2b25f43b",
-          "title": "JBOLC Garden Community Farmers Market",
-          "display_location": "WEST MOSHOLU PARKWAY SOUTH between GOULDEN AVENUE and SEDGWICK AVENUE  Bronx",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "8aeebce7805aa8ff6e80653cb0686104427e8052f6f739392350cdf403e1750b",
-          "title": "NYC Public Beaches",
-          "display_location": "NYC Public Beaches Citywide",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "4e94c28fd9ec34f0edbc1e4d18af61e51f6d87453644f7ab1a9394dd5fb3f7d0",
-          "title": "Mayor's Office of Mass Engagement -  Talk to Tenants in Flatbush",
-          "display_location": "Flatbush",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
@@ -611,9 +640,93 @@
           "reason": "no_official_in_bounds_coordinate"
         },
         {
+          "occurrence_id": "401124ca5b9884a4bb5ef978e251da3b399b38e9d74a182eae08084933cd006a",
+          "title": "Special Waste Drop-Off - Bronx",
+          "display_location": "Farragut St at the East River, off Food Center Dr",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "901969092096db740ca556399aae764681cfbdcf2f1b3666e2c136d9c8a3a2fb",
+          "title": "Special Waste Drop-Off - Brooklyn",
+          "display_location": "459 North Henry St (drop-off near 530 Kingsland)",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "5a783f2da50d09766c65b8b96ced3ce492ed5ca4f79ba322605cc6bfb9192eee",
+          "title": "Special Waste Drop-Off - Manhattan",
+          "display_location": "74 Pike Slip btwn Cherry & South Sts",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "1e62a29ebb5e1a742301a5edcebc09be76b19723613206b2f06c92ca7241d270",
+          "title": "Special Waste Drop-Off - Queens",
+          "display_location": "30th Ave btwn 120th & 122nd Sts",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "77fd3709be8fd5d96be1d6051d1339025f41be6a0d0a33cf04a48c60851e96c4",
+          "title": "Special Waste Drop-Off - Staten Island",
+          "display_location": "Off Muldoon Ave exit of southbound West Shore Expy",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "284ae49d5e3221ad3891a316d0e53e582b850f89f9397222e361cc500329409c",
+          "title": "St. Anthony Flea Market",
+          "display_location": "WEST HOUSTON STREET between THOMPSON STREET and MACDOUGAL STREET  Manhattan",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "deece57dc82a33c23129c1594d49a0e5d2659549b1f098bd8b34580da5b303d9",
+          "title": "JBOLC Garden Community Farmers Market",
+          "display_location": "WEST MOSHOLU PARKWAY SOUTH between GOULDEN AVENUE and SEDGWICK AVENUE  Bronx",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
           "occurrence_id": "98b684f0e2a2da43273cae43279956db0440abfe76f8653cce983971a5c5d249",
           "title": "Kids in Motion: Sol Lain Playground",
           "display_location": "290 E Broadway",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "47468448b6adbd12268368d8bd115ece6fb2162f27e2ad8e970469fff3f8be1a",
+          "title": "NYC Public Beaches",
+          "display_location": "NYC Public Beaches Citywide",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "e3d1c01ade93645c402b3d6b27e3bc19c3640ce60b94138029833ee8f8ef68b6",
+          "title": "Fordham Road BID Sidewalk Sale",
+          "display_location": "EAST FORDHAM ROAD between JEROME AVENUE and WASHINGTON AVENUE  Bronx",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "7b648160683f9d3008b991386153cfd25acdbf29c401dd5ab62cac3abbf45c2f",
+          "title": "People Against Landlord Abuse and Tenant Exploitation",
+          "display_location": "1411 Amsterdam Ave",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "64cf7eb240db7e06d8fea4f58036a32de383cced2a20122b21c62d60c6143851",
+          "title": "Summer on the Hudson: Bingo!",
+          "display_location": "125th Street and Marginal Street",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "978b25693441d456cf96dbfe829e4d5bbd43ef958a5b986fd122f3209c82bf3f",
+          "title": "Down to Earth Chelsea Farmers Market",
+          "display_location": "WEST   23 STREET between 8 AVENUE and 9 AVENUE  Manhattan",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "e790660dc7bd5f897edef30b36d8f64b6afc43a493ef2dddcb4f1d6a8a3be118",
+          "title": "Inwood Greenmarket Saturday",
+          "display_location": "ISHAM STREET between SEAMAN AVENUE and COOPER STREET  Manhattan",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "5b41beca2238a67f84f1d00e3add8d590dc88a59ef04ec0794842eaf1b28f5bf",
+          "title": "East New York Farmers Market",
+          "display_location": "SCHENCK AVENUE between NEW LOTS AVENUE and LIVONIA AVENUE  Brooklyn",
           "reason": "no_official_in_bounds_coordinate"
         }
       ],
