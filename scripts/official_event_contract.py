@@ -17,15 +17,22 @@ DATASET_CALENDAR = "nyc-citywide-events-calendar-api"
 DATASET_FEAST = "nyc-projected-feast-reference"
 OFFICIAL_DATASETS = (DATASET_TVPP, DATASET_PARKS, DATASET_CALENDAR, DATASET_FEAST)
 
-# Projected feast never becomes a certified pin. TVPP must pin from Parks
-# facilities, Geoclient blockface midpoints, NYC DCP LION centerlines, or NYC
-# GeoSearch. Parks requires
-# official source evidence. Calendar may pin only when the snapshot already
-# has official in-bounds coordinates (no geocoder fill).
-PIN_NEVER = frozenset({DATASET_FEAST})
-PIN_TVPP_RESOLVED = frozenset({DATASET_TVPP})
+# TVPP and projected-feast streets may pin only with official NYC evidence
+# (Parks facilities, Geoclient, LION, GeoSearch). Parks requires official
+# source evidence. Calendar may pin from snapshot coords or the same official
+# resolver. Borough-only / citywide / multi-site rows stay list-only.
+PIN_NEVER: frozenset[str] = frozenset()
+PIN_TVPP_RESOLVED = frozenset({DATASET_TVPP, DATASET_FEAST})
 PIN_OFFICIAL_EVIDENCE = frozenset({DATASET_PARKS})
 PIN_SNAPSHOT_COORDS = frozenset({DATASET_CALENDAR})
+PIN_RESOLVED_OFFICIAL = PIN_TVPP_RESOLVED
+BOROUGH_ONLY_LOCATIONS = frozenset(
+    {"manhattan", "brooklyn", "queens", "bronx", "staten island", "citywide", ""}
+)
+CITYWIDE_NO_SITE_RE = re.compile(
+    r"citywide|all five boroughs|check website|locations across",
+    flags=re.IGNORECASE,
+)
 
 NYC_LAT_RANGE = (40.4, 41.1)
 NYC_LNG_RANGE = (-74.35, -73.65)
@@ -80,6 +87,38 @@ def in_nyc_bounds(lat: float | None, lng: float | None) -> bool:
     if lat is None or lng is None:
         return False
     return NYC_LAT_RANGE[0] <= lat <= NYC_LAT_RANGE[1] and NYC_LNG_RANGE[0] <= lng <= NYC_LNG_RANGE[1]
+
+
+def is_borough_only_location(display: str) -> bool:
+    return str(display or "").strip().casefold() in BOROUGH_ONLY_LOCATIONS
+
+
+def is_citywide_no_site(display: str, borough: str | None = None) -> bool:
+    if str(borough or "").strip().casefold() == "citywide":
+        return True
+    return bool(CITYWIDE_NO_SITE_RE.search(f"{display or ''} {borough or ''}"))
+
+
+def is_multi_site_location(display: str) -> bool:
+    text = str(display or "")
+    if " between " in text.casefold():
+        return False
+    return text.count(",") >= 3
+
+
+def native_map_row_visible(
+    display: str,
+    borough: str | None = None,
+    source_dataset: str | None = None,
+) -> bool:
+    """Hide leftover borough-only TVPP and citywide/multi-site rows from Pending."""
+    if is_borough_only_location(display):
+        return False
+    if is_citywide_no_site(display, borough):
+        return False
+    if source_dataset == DATASET_PARKS and is_multi_site_location(display):
+        return False
+    return True
 
 
 def official_pin_evidence(evidence: Any) -> bool:

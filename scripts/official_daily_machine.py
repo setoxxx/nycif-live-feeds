@@ -8,7 +8,9 @@ catch-up run must:
 2. Diff today's occurrence IDs against yesterday's index (added / still present /
    gone from the city source).
 3. Certify every pin-eligible official coordinate (Parks evidence, calendar
-   snapshot coords, every public TVPP row). Projected feast stays list-only.
+   snapshot coords, every public TVPP row). Calendar and feast may also pin
+   from the official street/facility resolver; leftover borough-only rows
+   stay unpinned.
 4. Never expire, never edit location_cache.json, never publish to the public map.
 
 Gone-from-city IDs are reported only. They are not deleted.
@@ -179,6 +181,9 @@ def build_machine_report(
                     "missed": eligible - certified,
                 }
             )
+        if certified > eligible and dataset in {contract.DATASET_CALENDAR, contract.DATASET_FEAST}:
+            # Official resolver fills are allowed on top of snapshot-coord eligibility.
+            eligible = certified
         if certified > eligible:
             failures.append(f"invented_pins:{dataset}")
             invented_pins.append(

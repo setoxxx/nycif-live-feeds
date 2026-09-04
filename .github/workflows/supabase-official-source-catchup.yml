@@ -12,9 +12,9 @@ run-name: Official city snapshots → event_occurrences @ ${{ github.sha }}
 #
 # Dataset rules stay separate: every public tvpp-9vvx street permit is pinned
 # from Parks facilities / LION centerlines / Geoclient / NYC GeoSearch. Parks
-# pins certify only with official in-bounds coordinates. Calendar stays
-# list-only unless the snapshot already has official coords. Projected feast
-# stays list-only.
+# pins certify only with official in-bounds coordinates. Calendar and
+# projected feast pin when official snapshot coords or the street/facility
+# resolver finds an in-bounds NYC point. Borough-only leftovers stay unpinned.
 #
 # Does not expire rows, does not touch the location cache or public map feeds,
 # and is not part of Discovery Feed Refresh.
@@ -109,12 +109,14 @@ jobs:
                   raise SystemExit(f'{name} missing from Rung 8 batch JSON')
           if int(datasets['tvpp-9vvx'].get('map_ready', 0)) != int(datasets['tvpp-9vvx'].get('rows', -1)):
               raise SystemExit('tvpp street permits must all be pinned')
-          if int(datasets['nyc-projected-feast-reference'].get('map_ready', 1)) != 0:
-              raise SystemExit('projected feast rows must stay list-only')
+          feast = datasets['nyc-projected-feast-reference']
+          if int(feast.get('map_ready', 0)) + int(feast.get('list_only', 0)) != int(feast.get('rows', -1)):
+              raise SystemExit('projected feast rows must stay accounted as pin or list-only')
           if int((listing.get('by_dataset') or {}).get('tvpp-9vvx', {}).get('list_only', 1)) != 0:
               raise SystemExit('today listing must pin every tvpp street permit')
-          if int((listing.get('by_dataset') or {}).get('nyc-projected-feast-reference', {}).get('map_ready', 1)) != 0:
-              raise SystemExit('today listing must not pin projected feast rows')
+          listing_feast = (listing.get('by_dataset') or {}).get('nyc-projected-feast-reference') or {}
+          if int(listing_feast.get('map_ready', 0)) + int(listing_feast.get('list_only', 0)) != int(listing_feast.get('rows', 0)):
+              raise SystemExit('today listing feast rows must stay accounted as pin or list-only')
           machine = json.loads(Path('data/reports/official_daily_machine_report.json').read_text())
           if machine.get('qa_pass') is not True:
               raise SystemExit(f"official daily machine failed: {machine.get('failures')}")
