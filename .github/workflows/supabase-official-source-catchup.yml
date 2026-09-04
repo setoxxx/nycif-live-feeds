@@ -46,8 +46,13 @@ jobs:
       SUPABASE_URL: 'https://oggwpvdirkrnzoolparx.supabase.co'
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
     steps:
-      - name: Check out repository
+      - name: Check out latest official snapshots
         uses: actions/checkout@v4
+        with:
+          # workflow_run's head SHA is Discovery's start commit, not the
+          # snapshots Discovery just pushed. After a successful Discovery
+          # run, main has the fresh JSON this job must push.
+          ref: ${{ github.event_name == 'workflow_run' && 'main' || github.sha }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -63,11 +68,14 @@ jobs:
 
       - name: Plan official catch-up
         run: |
+          python3 -m py_compile scripts/sync_supabase_official_source_catchup.py scripts/supabase_event_writer.py
           python3 scripts/sync_supabase_official_source_catchup.py --dataset all
           python3 - <<'PY'
           import json
           from pathlib import Path
           report = json.loads(Path('data/reports/supabase_official_source_catchup_report.json').read_text())
+          batch = json.loads(Path('data/reports/supabase_official_event_batch.json').read_text())
+          listing = json.loads(Path('data/reports/supabase_official_today_listing.json').read_text())
           if report.get('expire_enabled') is not False:
               raise SystemExit('catch-up must never expire')
           if report.get('database_write_performed') is not False:
@@ -75,18 +83,31 @@ jobs:
           for key in ('location_cache_modified', 'staged_feed_modified', 'public_map_modified'):
               if report.get(key) is not False:
                   raise SystemExit(f'{key} must remain false')
+          if batch.get('schema') != 'nycif_apply_staging_event_batch.v1':
+              raise SystemExit('batch JSON is not the Rung 8 contract')
+          if batch.get('p_allow_expire') is not False:
+              raise SystemExit('batch JSON must never expire')
+          if listing.get('schema') != 'event_reader_rolling_v1.today_overlap.v1':
+              raise SystemExit('today listing JSON is not the reader contract')
+          if int(listing.get('rows') or 0) <= 0:
+              raise SystemExit('today listing produced no rows')
           datasets = report.get('datasets') or {}
           for name in ('tvpp-9vvx', 'nyc-parks-bigapps-events', 'nyc-citywide-events-calendar-api'):
               if int((datasets.get(name) or {}).get('rows', 0)) <= 0:
                   raise SystemExit(f'{name} official snapshot produced no rows')
+              if name not in (batch.get('datasets') or {}):
+                  raise SystemExit(f'{name} missing from Rung 8 batch JSON')
           if int(datasets['tvpp-9vvx'].get('map_ready', 1)) != 0:
               raise SystemExit('tvpp street permits must stay list-only')
-          print(json.dumps({k: {kk: vv for kk, vv in v.items() if kk != 'occurrence_ids'} for k, v in datasets.items()}, indent=2))
+          if int((listing.get('by_dataset') or {}).get('tvpp-9vvx', {}).get('map_ready', 1)) != 0:
+              raise SystemExit('today listing must not pin tvpp street permits')
+          today = {k: listing.get(k) for k in ('today_nyc', 'rows', 'map_ready', 'list_only', 'by_dataset')}
+          print(json.dumps({'today': today, 'datasets': {k: {kk: vv for kk, vv in v.items() if kk != 'occurrence_ids'} for k, v in datasets.items()}}, indent=2))
           PY
 
       - name: Write official snapshots through Rung 8
         run: |
-          python3 scripts/sync_supabase_official_source_catchup.py --dataset all --write --chunk-size 80
+          python3 scripts/sync_supabase_official_source_catchup.py --dataset all --write --from-batch data/reports/supabase_official_event_batch.json --chunk-size 80
           python3 - <<'PY'
           import json
           from pathlib import Path
@@ -101,5 +122,5 @@ jobs:
                   actions[key] = actions.get(key, 0) + int(value or 0)
           if int(actions.get('EXPIRE', 0)) != 0:
               raise SystemExit('official catch-up expired rows')
-          print(json.dumps({'actions': actions, 'datasets': {k: {kk: vv for kk, vv in v.items() if kk != 'occurrence_ids'} for k, v in report['datasets'].items()}}, indent=2))
+          print(json.dumps({'actions': actions, 'today': report.get('today'), 'datasets': {k: {kk: vv for kk, vv in v.items() if kk != 'occurrence_ids'} for k, v in report['datasets'].items()}}, indent=2))
           PY

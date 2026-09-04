@@ -1,4 +1,5 @@
 import json
+from datetime import timedelta
 from pathlib import Path
 
 import pytest
@@ -110,6 +111,10 @@ def test_catchup_workflow_is_separate_and_fail_closed():
     assert "requirements.txt" not in workflow
     assert "cron:" not in workflow
     assert "workflow_run:" in workflow
+    assert "--from-batch" in workflow
+    assert "supabase_official_today_listing.json" in workflow
+    assert "supabase_official_event_batch.json" in workflow
+    assert "github.event_name == 'workflow_run' && 'main'" in workflow
 
 
 def test_finite_coord_rejects_nan_and_inf():
@@ -124,6 +129,10 @@ def test_catchup_report_stays_inside_data_reports():
     assert catchup.REPORT_PATH == catchup.ROOT / "data" / "reports" / "supabase_official_source_catchup_report.json"
     assert catchup.REPORT_PATH.parent == catchup.REPORTS_DIR
     assert catchup.REPORT_PATH.name == catchup.REPORT_FILENAME
+    assert catchup.BATCH_PATH.name == catchup.BATCH_FILENAME
+    assert catchup.TODAY_LISTING_PATH.name == catchup.TODAY_LISTING_FILENAME
+    assert catchup.BATCH_PATH.parent == catchup.REPORTS_DIR
+    assert catchup.TODAY_LISTING_PATH.parent == catchup.REPORTS_DIR
 
 
 def test_naive_new_york_times_get_an_offset_without_changing_parks_ids():
@@ -207,3 +216,173 @@ def test_write_chunks_records_partial_progress_on_failure(monkeypatch, tmp_path)
     assert progress["database_write_performed"] is True
     assert progress["chunks_committed"] == 1
     assert (tmp_path / catchup.REPORT_FILENAME).exists()
+
+
+def _sample_row(*, occurrence_id: str, title: str, start_at: str, end_at: str, dataset: str, map_ready: bool = False):
+    return {
+        "occurrence_id": occurrence_id,
+        "title": title,
+        "start_at": start_at,
+        "end_at": end_at,
+        "timezone": "America/New_York",
+        "borough": "Brooklyn",
+        "display_location": "A park",
+        "lat": 40.7 if map_ready else None,
+        "lng": -74.0 if map_ready else None,
+        "map_ready": map_ready,
+        "public_category": "parks",
+        "public_subtype": None,
+        "editorial_priority": "normal",
+        "metadata": {
+            "reader": {
+                "event_role": "public_event",
+                "certified_pin": map_ready,
+                "map_eligibility_state": "MAP_READY" if map_ready else "LIST_ONLY",
+                "display_disposition": "MAP" if map_ready else "LIST_ONLY",
+                "location_authority": "test",
+                "source_dataset": dataset,
+                "source_event_id": "1",
+                "public_url": None,
+                "is_major": False,
+                "photo_pick": False,
+                "significance": "standard",
+            }
+        },
+        "source": {
+            "source_name": "nyc_open_data",
+            "source_dataset": dataset,
+            "source_event_id": "1",
+            "source_url": None,
+        },
+    }
+
+
+def test_today_listing_uses_reader_overlap_window_not_start_date_only():
+    today = catchup.today_nyc()
+    yesterday = (catchup.ny_day_bounds(today)[0] - timedelta(days=1)).date().isoformat()
+    tomorrow = (catchup.ny_day_bounds(today)[1]).date().isoformat()
+    started_yesterday = _sample_row(
+        occurrence_id="a" * 64,
+        title="Still going",
+        start_at=catchup._ny_timestamptz(f"{yesterday}T22:00:00"),
+        end_at=catchup._ny_timestamptz(f"{today}T02:00:00"),
+        dataset="tvpp-9vvx",
+    )
+    starts_today = _sample_row(
+        occurrence_id="b" * 64,
+        title="Starts today",
+        start_at=catchup._ny_timestamptz(f"{today}T09:00:00"),
+        end_at=catchup._ny_timestamptz(f"{today}T11:00:00"),
+        dataset="nyc-parks-bigapps-events",
+        map_ready=True,
+    )
+    starts_tomorrow = _sample_row(
+        occurrence_id="c" * 64,
+        title="Tomorrow only",
+        start_at=catchup._ny_timestamptz(f"{tomorrow}T09:00:00"),
+        end_at=catchup._ny_timestamptz(f"{tomorrow}T11:00:00"),
+        dataset="nyc-parks-bigapps-events",
+        map_ready=True,
+    )
+    listing = catchup.today_listing_events([started_yesterday, starts_today, starts_tomorrow], today)
+    assert {row["title"] for row in listing} == {"Still going", "Starts today"}
+    pin = next(row for row in listing if row["title"] == "Starts today")
+    assert pin["map_ready"] is True
+    assert pin["certified_pin"] is True
+    assert pin["source_dataset"] == "nyc-parks-bigapps-events"
+    street = next(row for row in listing if row["title"] == "Still going")
+    assert street["map_ready"] is False
+    assert street["lat"] is None
+    assert street["source_dataset"] == "tvpp-9vvx"
+
+
+def test_exported_json_matches_rung8_and_reader_contracts(tmp_path, monkeypatch):
+    monkeypatch.setattr(catchup, "REPORTS_DIR", tmp_path)
+    today = "2026-09-04"
+    parks = _sample_row(
+        occurrence_id="d" * 64,
+        title="Park pin",
+        start_at=catchup._ny_timestamptz("2026-09-04T10:00:00"),
+        end_at=catchup._ny_timestamptz("2026-09-04T12:00:00"),
+        dataset="nyc-parks-bigapps-events",
+        map_ready=True,
+    )
+    tvpp = _sample_row(
+        occurrence_id="e" * 64,
+        title="Street permit",
+        start_at=catchup._ny_timestamptz("2026-09-04T10:00:00"),
+        end_at=catchup._ny_timestamptz("2026-09-04T14:00:00"),
+        dataset="tvpp-9vvx",
+    )
+    batch_path, listing_path, listing = catchup.export_official_payloads(
+        {"nyc-parks-bigapps-events": [parks], "tvpp-9vvx": [tvpp]},
+        today=today,
+    )
+    batch = json.loads(batch_path.read_text())
+    loaded = catchup.load_official_batch(batch_path)
+    assert loaded["schema"] == catchup.BATCH_SCHEMA
+    assert loaded["p_allow_expire"] is False
+    assert loaded["p_source_name"] == "nyc_open_data"
+    assert loaded["p_expected_project_ref"] == "oggwpvdirkrnzoolparx"
+    assert batch["datasets"]["tvpp-9vvx"]["p_events"][0]["map_ready"] is False
+    assert listing["schema"] == catchup.TODAY_LISTING_SCHEMA
+    assert listing["today_nyc"] == today
+    assert listing["rows"] == 2
+    assert listing["map_ready"] == 1
+    assert listing["by_dataset"]["tvpp-9vvx"]["map_ready"] == 0
+    assert json.loads(listing_path.read_text())["events"][0]["source_dataset"]
+    for event in listing["events"]:
+        for key in (
+            "occurrence_id",
+            "title",
+            "start_at",
+            "map_ready",
+            "certified_pin",
+            "map_eligibility_state",
+            "event_role",
+            "source_dataset",
+            "source_event_id",
+        ):
+            assert key in event
+
+
+def test_write_from_batch_posts_file_events(monkeypatch, tmp_path):
+    monkeypatch.setattr(catchup, "REPORTS_DIR", tmp_path)
+    captured = []
+
+    def fake_validate():
+        return "oggwpvdirkrnzoolparx", "https://oggwpvdirkrnzoolparx.supabase.co"
+
+    def fake_post(target_url, service_key, payload, timeout=120):
+        captured.append(payload)
+        return {"transaction": "committed", "actions": {"INSERT": 1}, "newsroom_queue_delta": 0, "pipeline_run_id": 3}
+
+    monkeypatch.setattr(catchup.writer, "validate_write_target", fake_validate)
+    monkeypatch.setattr(catchup.writer, "post_atomic_batch", fake_post)
+    monkeypatch.setenv("SUPABASE_SERVICE_ROLE_KEY", "test-key")
+    row = _sample_row(
+        occurrence_id="f" * 64,
+        title="From file",
+        start_at=catchup._ny_timestamptz("2026-09-04T10:00:00"),
+        end_at=catchup._ny_timestamptz("2026-09-04T12:00:00"),
+        dataset="nyc-citywide-events-calendar-api",
+    )
+    batch_path, _, _ = catchup.export_official_payloads(
+        {"nyc-citywide-events-calendar-api": [row]},
+        today="2026-09-04",
+    )
+    result = catchup.write_official_batch(catchup.load_official_batch(batch_path), 10)
+    assert captured[0]["p_events"][0]["occurrence_id"] == "f" * 64
+    assert captured[0]["p_allow_expire"] is False
+    assert result["nyc-citywide-events-calendar-api"]["actions"]["INSERT"] == 1
+
+
+def test_parks_today_listing_keeps_schmul_pin_fields():
+    events = [writer.normalize_event(event) for event in catchup.parks_events()]
+    schmul = next(event for event in events if event["source"]["source_event_id"] == "2223183")
+    listing_row = catchup.reader_listing_row(schmul)
+    assert listing_row["source_dataset"] == "nyc-parks-bigapps-events"
+    assert listing_row["map_ready"] is True
+    assert listing_row["certified_pin"] is True
+    assert listing_row["lat"] == pytest.approx(40.590108078298)
+    assert listing_row["occurrence_id"] == "00acee08d465ac58c74ee7a8aff01155c89e24d0ef5cf44fab7fc1555d72eae0"

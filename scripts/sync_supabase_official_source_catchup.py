@@ -32,11 +32,20 @@ from scripts import supabase_event_writer as writer
 from scripts.discovery_v02 import classification_blob, classify_record, infer_event_role
 
 REPORT_FILENAME = "supabase_official_source_catchup_report.json"
+BATCH_FILENAME = "supabase_official_event_batch.json"
+TODAY_LISTING_FILENAME = "supabase_official_today_listing.json"
 REPORTS_DIR = ROOT / "data" / "reports"
 REPORT_PATH = REPORTS_DIR / REPORT_FILENAME
+BATCH_PATH = REPORTS_DIR / BATCH_FILENAME
+TODAY_LISTING_PATH = REPORTS_DIR / TODAY_LISTING_FILENAME
 TVPP_PATH = ROOT / "data" / "raw_nyc_open_data_snapshot.json"
 PARKS_PATH = ROOT / "data" / "nyc_parks_bigapps_events_snapshot.json"
 CALENDAR_PATH = ROOT / "data" / "nyc_citywide_events_calendar_snapshot.json"
+BATCH_SCHEMA = "nycif_apply_staging_event_batch.v1"
+TODAY_LISTING_SCHEMA = "event_reader_rolling_v1.today_overlap.v1"
+EXPECTED_PROJECT_REF = "oggwpvdirkrnzoolparx"
+# Matches public.event_reader_rolling_v1: coalesce(end_at, start_at + 3 hours).
+READER_END_PAD = timedelta(hours=3)
 
 SOURCE_NAME = "nyc_open_data"
 TIMEZONE = "America/New_York"
@@ -176,13 +185,38 @@ def assert_official_snapshots_fresh() -> None:
         )
 
 
-def _write_catchup_report(report: dict[str, Any]) -> None:
+def _write_report_json(filename: str, payload: dict[str, Any]) -> Path:
     reports_dir = REPORTS_DIR.resolve()
-    path = (reports_dir / REPORT_FILENAME).resolve()
-    if path.parent != reports_dir or path.name != REPORT_FILENAME:
-        raise SystemExit("catch-up report path escaped data/reports")
+    path = (reports_dir / filename).resolve()
+    if path.parent != reports_dir or path.name != filename:
+        raise SystemExit(f"catch-up report path escaped data/reports: {filename}")
     reports_dir.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    path.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+    return path
+
+
+def _write_catchup_report(report: dict[str, Any]) -> None:
+    _write_report_json(REPORT_FILENAME, report)
+
+
+def today_nyc(now: datetime | None = None) -> str:
+    current = now or datetime.now(NY_TZ)
+    return current.astimezone(NY_TZ).date().isoformat()
+
+
+def ny_day_bounds(today: str | None = None) -> tuple[datetime, datetime]:
+    day = datetime.fromisoformat(today).date() if today else datetime.now(NY_TZ).date()
+    start = datetime(day.year, day.month, day.day, tzinfo=NY_TZ)
+    return start, start + timedelta(days=1)
+
+
+def overlaps_today(start_at: Any, end_at: Any, today: str | None = None) -> bool:
+    start = _parsed_ny(start_at)
+    if start is None:
+        return False
+    day_start, day_end = ny_day_bounds(today)
+    end = _parsed_ny(end_at) or (start + READER_END_PAD)
+    return start < day_end and end >= day_start
 
 
 def official_parks_pin(row: dict[str, Any]) -> tuple[float | None, float | None, bool]:
@@ -300,6 +334,9 @@ def _canonical(
                 "source_dataset": source_dataset,
                 "source_event_id": source_event_id,
                 "public_url": source_url,
+                "is_major": False,
+                "photo_pick": False,
+                "significance": "standard",
             }
         },
         "source": {
@@ -643,6 +680,141 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, int]:
     }
 
 
+def reader_listing_row(row: dict[str, Any]) -> dict[str, Any]:
+    metadata = row.get("metadata") if isinstance(row.get("metadata"), dict) else {}
+    reader = metadata.get("reader") if isinstance(metadata.get("reader"), dict) else {}
+    source = row.get("source") if isinstance(row.get("source"), dict) else {}
+    map_ready = row.get("map_ready") is True
+    return {
+        "occurrence_id": row.get("occurrence_id"),
+        "title": row.get("title"),
+        "start_at": row.get("start_at"),
+        "end_at": row.get("end_at"),
+        "timezone": row.get("timezone") or TIMEZONE,
+        "borough": row.get("borough"),
+        "display_location": row.get("display_location"),
+        "lat": row.get("lat") if map_ready else None,
+        "lng": row.get("lng") if map_ready else None,
+        "public_category": row.get("public_category"),
+        "public_subtype": row.get("public_subtype"),
+        "map_ready": map_ready,
+        "editorial_priority": row.get("editorial_priority") or "normal",
+        "event_role": reader.get("event_role") or "public_event",
+        "certified_pin": bool(reader.get("certified_pin")) if reader.get("certified_pin") is not None else map_ready,
+        "map_eligibility_state": reader.get("map_eligibility_state")
+        or ("MAP_READY" if map_ready else "LIST_ONLY"),
+        "location_authority": reader.get("location_authority"),
+        "display_disposition": reader.get("display_disposition") or ("MAP" if map_ready else "LIST_ONLY"),
+        "is_major": bool(reader.get("is_major", False)),
+        "photo_pick": bool(reader.get("photo_pick", False)),
+        "significance": reader.get("significance") or "standard",
+        "source_dataset": reader.get("source_dataset") or source.get("source_dataset"),
+        "source_event_id": reader.get("source_event_id") or source.get("source_event_id"),
+        "public_url": reader.get("public_url") or source.get("source_url"),
+    }
+
+
+def today_listing_events(
+    rows: list[dict[str, Any]],
+    today: str | None = None,
+) -> list[dict[str, Any]]:
+    day = today or today_nyc()
+    listing = [
+        reader_listing_row(row)
+        for row in rows
+        if overlaps_today(row.get("start_at"), row.get("end_at"), day)
+    ]
+    listing.sort(key=lambda item: (str(item.get("start_at") or ""), str(item.get("title") or "")))
+    return listing
+
+
+def build_today_listing_payload(
+    rows_by_dataset: dict[str, list[dict[str, Any]]],
+    today: str | None = None,
+) -> dict[str, Any]:
+    day = today or today_nyc()
+    day_start, day_end = ny_day_bounds(day)
+    events: list[dict[str, Any]] = []
+    by_dataset: dict[str, dict[str, int]] = {}
+    for dataset, rows in rows_by_dataset.items():
+        listing = today_listing_events(rows, day)
+        by_dataset[dataset] = summarize(listing)
+        events.extend(listing)
+    events.sort(key=lambda item: (str(item.get("start_at") or ""), str(item.get("title") or "")))
+    return {
+        "schema": TODAY_LISTING_SCHEMA,
+        "generated_at_utc": _now_iso(),
+        "today_nyc": day,
+        "timezone": TIMEZONE,
+        "reader_view": "event_reader_rolling_v1",
+        "window": {
+            "start": day_start.isoformat(),
+            "end": day_end.isoformat(),
+            "rule": "start_at < day_end AND coalesce(end_at, start_at + 3 hours) >= day_start",
+        },
+        **summarize(events),
+        "by_dataset": by_dataset,
+        "location_cache_modified": False,
+        "staged_feed_modified": False,
+        "public_map_modified": False,
+        "promotion_allowed": False,
+        "events": events,
+    }
+
+
+def build_official_batch_payload(
+    rows_by_dataset: dict[str, list[dict[str, Any]]],
+    today: str | None = None,
+) -> dict[str, Any]:
+    return {
+        "schema": BATCH_SCHEMA,
+        "generated_at_utc": _now_iso(),
+        "today_nyc": today or today_nyc(),
+        "p_source_name": SOURCE_NAME,
+        "p_allow_expire": False,
+        "p_simulate_failure": False,
+        "p_expected_project_ref": EXPECTED_PROJECT_REF,
+        "datasets": {dataset: {"p_events": rows} for dataset, rows in rows_by_dataset.items()},
+    }
+
+
+def export_official_payloads(
+    rows_by_dataset: dict[str, list[dict[str, Any]]],
+    today: str | None = None,
+) -> tuple[Path, Path, dict[str, Any]]:
+    day = today or today_nyc()
+    batch = build_official_batch_payload(rows_by_dataset, day)
+    listing = build_today_listing_payload(rows_by_dataset, day)
+    batch_path = _write_report_json(BATCH_FILENAME, batch)
+    listing_path = _write_report_json(TODAY_LISTING_FILENAME, listing)
+    return batch_path, listing_path, listing
+
+
+def load_official_batch(path: Path) -> dict[str, Any]:
+    payload = _load_json(path)
+    if not isinstance(payload, dict):
+        raise RuntimeError("official event batch must be a JSON object")
+    if payload.get("schema") != BATCH_SCHEMA:
+        raise RuntimeError(f"official event batch schema must be {BATCH_SCHEMA}")
+    if payload.get("p_source_name") != SOURCE_NAME:
+        raise RuntimeError("official event batch source_name mismatch")
+    if payload.get("p_allow_expire") is not False:
+        raise RuntimeError("official event batch must never expire")
+    if payload.get("p_expected_project_ref") != EXPECTED_PROJECT_REF:
+        raise RuntimeError("official event batch project ref mismatch")
+    datasets = payload.get("datasets")
+    if not isinstance(datasets, dict) or not datasets:
+        raise RuntimeError("official event batch is missing datasets")
+    for name, block in datasets.items():
+        events = block.get("p_events") if isinstance(block, dict) else None
+        if not isinstance(events, list) or not events:
+            raise RuntimeError(f"official event batch {name} has no p_events")
+        for event in events:
+            if not isinstance(event, dict) or not event.get("occurrence_id"):
+                raise RuntimeError(f"official event batch {name} has a row without occurrence_id")
+    return payload
+
+
 def write_chunks(
     rows: list[dict[str, Any]],
     chunk_size: int,
@@ -703,12 +875,33 @@ def write_chunks(
     }
 
 
+def write_official_batch(
+    batch: dict[str, Any],
+    chunk_size: int,
+    progress: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    if batch.get("p_allow_expire") is not False:
+        raise RuntimeError("official event batch must never expire")
+    dataset_results: dict[str, Any] = {}
+    for dataset, block in (batch.get("datasets") or {}).items():
+        rows = list(block.get("p_events") or [])
+        dataset_results[dataset] = {
+            "dataset": dataset,
+            **summarize(rows),
+            **write_chunks(rows, chunk_size, progress=progress),
+        }
+    return dataset_results
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", choices=(*OFFICIAL_DATASETS, "all"), default="all")
     parser.add_argument("--write", action="store_true")
+    parser.add_argument("--from-batch", type=Path)
     parser.add_argument("--chunk-size", type=int, default=DEFAULT_CHUNK_SIZE)
     args = parser.parse_args()
+    if args.from_batch and not args.write:
+        raise SystemExit("--from-batch is only valid with --write")
     if args.write:
         assert_official_snapshots_fresh()
     datasets = list(OFFICIAL_DATASETS) if args.dataset == "all" else [args.dataset]
@@ -722,25 +915,62 @@ def main() -> int:
         "public_map_modified": False,
         "promotion_allowed": False,
         "manual_review_status": "pending",
+        "batch_schema": BATCH_SCHEMA,
+        "today_listing_schema": TODAY_LISTING_SCHEMA,
         "datasets": {},
         "database_write_performed": False,
     }
-    for dataset in datasets:
-        rows, rejections = normalize_dataset(dataset)
-        reasons = Counter(item.get("reason") or "unspecified" for item in rejections)
-        block = {
-            "dataset": dataset,
-            **summarize(rows),
-            "rejected_rows": len(rejections),
-            "rejection_reason_counts": dict(reasons),
-            "rejection_samples": rejections[:20],
-            "occurrence_ids": [row["occurrence_id"] for row in rows],
-        }
-        report["datasets"][dataset] = block
-        if args.write:
-            block.update(write_chunks(rows, args.chunk_size, progress=report))
-            report["database_write_performed"] = True
+    rows_by_dataset: dict[str, list[dict[str, Any]]] = {}
+    if args.from_batch:
+        batch = load_official_batch(args.from_batch)
+        missing = [name for name in datasets if name not in (batch.get("datasets") or {})]
+        if missing:
+            raise RuntimeError(f"official event batch is missing {', '.join(missing)}")
+        for dataset in datasets:
+            rows_by_dataset[dataset] = list(batch["datasets"][dataset]["p_events"])
+            report["datasets"][dataset] = {
+                "dataset": dataset,
+                **summarize(rows_by_dataset[dataset]),
+            }
+    else:
+        for dataset in datasets:
+            rows, rejections = normalize_dataset(dataset)
+            reasons = Counter(item.get("reason") or "unspecified" for item in rejections)
+            rows_by_dataset[dataset] = rows
+            report["datasets"][dataset] = {
+                "dataset": dataset,
+                **summarize(rows),
+                "rejected_rows": len(rejections),
+                "rejection_reason_counts": dict(reasons),
+                "rejection_samples": rejections[:20],
+                "occurrence_ids": [row["occurrence_id"] for row in rows],
+            }
+    batch_path, listing_path, listing = export_official_payloads(rows_by_dataset)
+    report["today"] = {
+        "today_nyc": listing["today_nyc"],
+        "window": listing["window"],
+        "rows": listing["rows"],
+        "map_ready": listing["map_ready"],
+        "list_only": listing["list_only"],
+        "by_dataset": listing["by_dataset"],
+        "listing_file": TODAY_LISTING_FILENAME,
+        "batch_file": BATCH_FILENAME,
+    }
+    report["payload_paths"] = {
+        "batch": str(batch_path),
+        "today_listing": str(listing_path),
+    }
     _write_catchup_report(report)
+    if args.write:
+        written = write_official_batch(
+            load_official_batch(batch_path),
+            args.chunk_size,
+            progress=report,
+        )
+        for dataset, result in written.items():
+            report["datasets"].setdefault(dataset, {}).update(result)
+        report["database_write_performed"] = True
+        _write_catchup_report(report)
     printable = json.loads(json.dumps(report))
     for block in printable.get("datasets", {}).values():
         block.pop("occurrence_ids", None)
