@@ -4,11 +4,10 @@ run-name: Official city snapshots → event_occurrences @ ${{ github.sha }}
 # Daily factory for the iOS/Android event app (one master repo):
 # 1) Discovery Feed Refresh pulls SODA/JSON links into GitHub snapshots at
 #    6:00pm America/New_York (after the city's ~5-6pm cut).
-# 2) This job then PUSHES those snapshots into Supabase event_occurrences
-#    only after a successful Discovery run (or on manual dispatch). It does
-#    not run on an independent clock, so it cannot write yesterday's JSON.
-# The phone reads Supabase. It does not read GitHub JSON, and Supabase does
-# not independently poll this repo.
+# 2) This job PUSHES those snapshots into Supabase event_occurrences. It runs
+#    after a successful Discovery, on a 7:00pm America/New_York backup clock,
+#    and on manual dispatch. GitHub is the factory. Supabase does not poll
+#    this repo. The phone reads Supabase only.
 #
 # Dataset rules stay separate: every public tvpp-9vvx street permit is pinned
 # from Parks facilities / LION centerlines / Geoclient / NYC GeoSearch. Parks
@@ -21,6 +20,12 @@ run-name: Official city snapshots → event_occurrences @ ${{ github.sha }}
 
 on:
   workflow_dispatch:
+  schedule:
+    # Backup after Discovery's 6:00pm America/New_York pull. workflow_run is
+    # still the primary trigger; this makes the phone refresh even if that
+    # handoff is skipped.
+    - cron: "0 19 * * *"
+      timezone: "America/New_York"
   workflow_run:
     workflows: ["Discovery Feed Refresh"]
     types: [completed]
@@ -55,9 +60,9 @@ jobs:
         uses: actions/checkout@v4
         with:
           # workflow_run's head SHA is Discovery's start commit, not the
-          # snapshots Discovery just pushed. After a successful Discovery
-          # run, main has the fresh JSON this job must push.
-          ref: ${{ github.event_name == 'workflow_run' && 'main' || github.sha }}
+          # snapshots Discovery just pushed. Schedule/workflow_run must
+          # always push current main.
+          ref: ${{ (github.event_name == 'workflow_run' || github.event_name == 'schedule') && 'main' || github.sha }}
 
       - name: Set up Python
         uses: actions/setup-python@v5

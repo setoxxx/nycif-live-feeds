@@ -110,12 +110,13 @@ def test_catchup_workflow_is_separate_and_fail_closed():
     assert "The phone reads Supabase" in workflow
     assert "pip install" not in workflow
     assert "requirements.txt" not in workflow
-    assert "cron:" not in workflow
+    assert "cron:" in workflow
+    assert 'timezone: "America/New_York"' in workflow
     assert "workflow_run:" in workflow
     assert "--from-batch" in workflow
     assert "supabase_official_today_listing.json" in workflow
     assert "supabase_official_event_batch.json" in workflow
-    assert "github.event_name == 'workflow_run' && 'main'" in workflow
+    assert "github.event_name == 'workflow_run' || github.event_name == 'schedule'" in workflow
     assert "nyc-projected-feast-reference" in workflow
     assert "projected feast rows must stay list-only" in workflow
     assert "tvpp street permits must all be pinned" in workflow

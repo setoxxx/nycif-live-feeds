@@ -80,10 +80,13 @@ Civic help-place snapshots (SNAP, Homebase, Workforce1, …) are **not** this ev
 ## How we provide the data
 
 1. **6:00pm America/New_York** — `Discovery Feed Refresh` pulls the city APIs into GitHub snapshots (`data/raw_nyc_open_data_snapshot.json`, `data/nyc_parks_bigapps_events_snapshot.json`, `data/nyc_citywide_events_calendar_snapshot.json`).
-2. After that job succeeds — `Supabase Official Source Catch-up` turns those snapshots into the contract above and **pushes** them into Supabase. It does not expire rows. It does not edit `location_cache.json`.
-3. The phone reads Supabase. Catch-up JSON under `data/reports/` is a job artifact, not what the app loads.
+2. After that job succeeds — `Supabase Official Source Catch-up` turns those snapshots into the contract above and **pushes** them into Supabase. A **7:00pm America/New_York** backup run does the same push if the handoff is skipped. It does not expire rows. It does not edit `location_cache.json`.
+3. The phone reads Supabase. Catch-up JSON under `data/reports/` is a job artifact, not what the app loads. Supabase does not poll GitHub.
 
-Run catch-up manually from Actions → **Supabase Official Source Catch-up** → `main` only after Discovery snapshots are fresh (Parks snapshot younger than 18 hours).
+**Run catch-up now (use branch `main`):**
+https://github.com/setoxxx/nycif-live-feeds/actions/workflows/supabase-official-source-catchup.yml
+
+Click **Run workflow** → branch **`main`** → **Run workflow**. Parks snapshot must be younger than 18 hours.
 
 ## Daily machine (new vs gone vs pins)
 
