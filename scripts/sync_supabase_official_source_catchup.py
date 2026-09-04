@@ -28,6 +28,7 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts import official_event_contract as contract
 from scripts import supabase_event_writer as writer
 from scripts.discovery_v02 import classification_blob, classify_record, infer_event_role
 
@@ -41,6 +42,7 @@ TODAY_LISTING_PATH = REPORTS_DIR / TODAY_LISTING_FILENAME
 TVPP_PATH = ROOT / "data" / "raw_nyc_open_data_snapshot.json"
 PARKS_PATH = ROOT / "data" / "nyc_parks_bigapps_events_snapshot.json"
 CALENDAR_PATH = ROOT / "data" / "nyc_citywide_events_calendar_snapshot.json"
+FEAST_PATH = ROOT / "data" / "staging" / "projected_feast_events_map_intake.json"
 BATCH_SCHEMA = "nycif_apply_staging_event_batch.v1"
 TODAY_LISTING_SCHEMA = "event_reader_rolling_v1.today_overlap.v1"
 EXPECTED_PROJECT_REF = "oggwpvdirkrnzoolparx"
@@ -57,13 +59,14 @@ DEFAULT_CHUNK_SIZE = 80
 MAX_CHUNK_SIZE = 100
 MIN_CHUNK_SIZE = 10
 
-DATASET_TVPP = "tvpp-9vvx"
-DATASET_PARKS = "nyc-parks-bigapps-events"
-DATASET_CALENDAR = "nyc-citywide-events-calendar-api"
-OFFICIAL_DATASETS = (DATASET_TVPP, DATASET_PARKS, DATASET_CALENDAR)
+DATASET_TVPP = contract.DATASET_TVPP
+DATASET_PARKS = contract.DATASET_PARKS
+DATASET_CALENDAR = contract.DATASET_CALENDAR
+DATASET_FEAST = contract.DATASET_FEAST
+OFFICIAL_DATASETS = contract.OFFICIAL_DATASETS
 
-NYC_LAT_RANGE = (40.4, 41.1)
-NYC_LNG_RANGE = (-74.35, -73.65)
+NYC_LAT_RANGE = contract.NYC_LAT_RANGE
+NYC_LNG_RANGE = contract.NYC_LNG_RANGE
 NY_TZ = ZoneInfo(TIMEZONE)
 MAX_SNAPSHOT_AGE = timedelta(hours=18)
 FIVE_BOROUGHS = frozenset({"Manhattan", "Brooklyn", "Queens", "Bronx", "Staten Island"})
@@ -220,21 +223,12 @@ def overlaps_today(start_at: Any, end_at: Any, today: str | None = None) -> bool
 
 
 def official_parks_pin(row: dict[str, Any]) -> tuple[float | None, float | None, bool]:
-    lat = _finite_coord(row.get("lat") if row.get("lat") is not None else row.get("latitude"))
-    lng = _finite_coord(row.get("lng") if row.get("lng") is not None else row.get("longitude"))
-    evidence = row.get("location_evidence") if isinstance(row.get("location_evidence"), dict) else {}
-    eligible = evidence.get("exact_pin_eligible") is True or evidence.get(
-        "reason_code"
-    ) == "OFFICIAL_SOURCE_COORDINATE_SITE_VALIDATED"
-    if (
-        lat is None
-        or lng is None
-        or not eligible
-        or not (NYC_LAT_RANGE[0] <= lat <= NYC_LAT_RANGE[1])
-        or not (NYC_LNG_RANGE[0] <= lng <= NYC_LNG_RANGE[1])
-    ):
-        return None, None, False
-    return lat, lng, True
+    return contract.apply_pin_policy(
+        DATASET_PARKS,
+        row.get("lat") if row.get("lat") is not None else row.get("latitude"),
+        row.get("lng") if row.get("lng") is not None else row.get("longitude"),
+        row.get("location_evidence"),
+    )
 
 
 def _category_from_text(text: str, default: str) -> tuple[str, str | None]:
@@ -309,7 +303,7 @@ def _canonical(
     if not start_stamp:
         raise ValueError("official catch-up row is missing a parseable start time")
     display = _text(display_location) or "Location under review"
-    return {
+    payload = {
         "title": title,
         "start_at": start_stamp,
         "end_at": end_stamp,
@@ -372,6 +366,7 @@ def _canonical(
             },
         },
     }
+    return contract.apply_reader_display(payload)
 
 
 def parks_events(
@@ -500,14 +495,11 @@ def calendar_events(
                 reason="invalid_interval",
             )
             continue
-        lat = _finite_coord(row.get("lat") if row.get("lat") is not None else row.get("latitude"))
-        lng = _finite_coord(row.get("lng") if row.get("lng") is not None else row.get("longitude"))
-        map_ready = False
-        if lat is not None and lng is not None:
-            if NYC_LAT_RANGE[0] <= lat <= NYC_LAT_RANGE[1] and NYC_LNG_RANGE[0] <= lng <= NYC_LNG_RANGE[1]:
-                map_ready = True
-            else:
-                lat, lng = None, None
+        lat, lng, map_ready = contract.apply_pin_policy(
+            DATASET_CALENDAR,
+            row.get("lat") if row.get("lat") is not None else row.get("latitude"),
+            row.get("lng") if row.get("lng") is not None else row.get("longitude"),
+        )
         categories = row.get("categories")
         category_text = (
             ", ".join(_text(item) for item in categories if _text(item))
@@ -642,6 +634,79 @@ def tvpp_events(
     return events
 
 
+def feast_events(
+    path: Path = FEAST_PATH,
+    rejections: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
+    payload = _load_json(path)
+    rows = payload.get("events", []) if isinstance(payload, dict) else payload
+    seen_at = _now_iso()
+    events: list[dict[str, Any]] = []
+    for row in rows:
+        if not isinstance(row, dict):
+            _note_rejection(rejections, dataset=DATASET_FEAST, source_event_id="", title="", reason="not_an_object")
+            continue
+        source_event_id = _text(row.get("source_event_id") or row.get("projected_feast_key"))
+        title = _text(row.get("title") or row.get("event_name"))
+        start_at = row.get("start_date_time") or row.get("start_at")
+        end_at = row.get("end_date_time") or row.get("end_at")
+        if not source_event_id or not title or not start_at:
+            _note_rejection(
+                rejections,
+                dataset=DATASET_FEAST,
+                source_event_id=source_event_id,
+                title=title,
+                reason="missing_id_title_or_start",
+            )
+            continue
+        if not _valid_interval(start_at, end_at):
+            _note_rejection(
+                rejections,
+                dataset=DATASET_FEAST,
+                source_event_id=source_event_id,
+                title=title,
+                reason="invalid_interval",
+            )
+            continue
+        public_category, public_subtype = _category_from_text(
+            _text(row.get("event_type") or row.get("projected_event_kind")),
+            "arts",
+        )
+        events.append(
+            _canonical(
+                source_dataset=DATASET_FEAST,
+                source_event_id=source_event_id,
+                title=title,
+                start_at=start_at,
+                end_at=end_at,
+                borough=row.get("event_borough") or row.get("borough"),
+                display_location=row.get("display_location") or row.get("location"),
+                lat=None,
+                lng=None,
+                map_ready=False,
+                public_category=public_category,
+                public_subtype=public_subtype,
+                source_event_type=row.get("event_type") or "Projected feast",
+                source_agency="NYCIF projected feast reference",
+                source_url=None,
+                source_cemsid=None,
+                seen_at=seen_at,
+                raw_record={
+                    "source_dataset": DATASET_FEAST,
+                    "source_event_id": source_event_id,
+                    "title": title,
+                    "start_date_time": start_at,
+                    "end_date_time": end_at,
+                    "location": row.get("display_location") or row.get("location"),
+                    "intake_type": row.get("intake_type"),
+                    "promotion_allowed": False,
+                },
+                location_authority="list_only_projected_feast_reference",
+            )
+        )
+    return events
+
+
 def events_for_dataset(
     dataset: str,
     rejections: list[dict[str, Any]] | None = None,
@@ -652,22 +717,15 @@ def events_for_dataset(
         return calendar_events(rejections=rejections)
     if dataset == DATASET_TVPP:
         return tvpp_events(rejections=rejections)
+    if dataset == DATASET_FEAST:
+        return feast_events(rejections=rejections)
     raise ValueError(f"unsupported official dataset: {dataset}")
 
 
 def normalize_dataset(dataset: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     rejections: list[dict[str, Any]] = []
     normalized = [writer.normalize_event(event) for event in events_for_dataset(dataset, rejections)]
-    seen: set[str] = set()
-    unique: list[dict[str, Any]] = []
-    for row in normalized:
-        occurrence_id = row["occurrence_id"]
-        if occurrence_id in seen:
-            continue
-        seen.add(occurrence_id)
-        unique.append(row)
-    if not unique:
-        raise RuntimeError(f"no official rows normalized for {dataset}")
+    unique = contract.assert_official_batch(normalized, dataset)
     return unique, rejections
 
 
