@@ -85,6 +85,19 @@ Civic help-place snapshots (SNAP, Homebase, Workforce1, …) are **not** this ev
 
 Run catch-up manually from Actions → **Supabase Official Source Catch-up** → `main` only after Discovery snapshots are fresh (Parks snapshot younger than 18 hours).
 
+## Daily machine (new vs gone vs pins)
+
+Do not eyeball the feed. Each Discovery run writes `data/reports/official_daily_machine_report.json` and `data/reports/official_occurrence_index.json`. Catch-up **will not write** to Supabase unless that report `qa_pass` is true.
+
+The machine does four things:
+
+1. **Account for every snapshot row** — accepted, or rejected with a reason. Silent drops fail the job.
+2. **Diff against yesterday’s index** — `added`, `still_present`, `removed_from_city`. Removed rows are **reported only**. Catch-up still does not expire.
+3. **Pin 100% of official coordinates** — every Parks row with official in-bounds evidence, and every calendar row that already has official in-bounds coords, must come out `map_ready`. Missing those pins fails the job.
+4. **Never invent pins** — TVPP and projected feast stay list-only. Multi-site Parks rows without a single official coordinate stay on the list (`list_only_samples`). That is accounted, not a miss.
+
+`qa_pass: true` means the factory is the well-functioning machine. Open the report instead of walking the JSON by hand.
+
 ## NYC Developer Portal subscriptions → GitHub secrets
 
 Put **Primary keys only** in GitHub repo secrets. Never commit keys. Never paste keys into issues, PRs, or this README.

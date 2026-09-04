@@ -979,6 +979,7 @@ def main() -> int:
         "database_write_performed": False,
     }
     rows_by_dataset: dict[str, list[dict[str, Any]]] = {}
+    rejections_by_dataset: dict[str, list[dict[str, Any]]] = {}
     if args.from_batch:
         batch = load_official_batch(args.from_batch)
         missing = [name for name in datasets if name not in (batch.get("datasets") or {})]
@@ -995,6 +996,7 @@ def main() -> int:
             rows, rejections = normalize_dataset(dataset)
             reasons = Counter(item.get("reason") or "unspecified" for item in rejections)
             rows_by_dataset[dataset] = rows
+            rejections_by_dataset[dataset] = rejections
             report["datasets"][dataset] = {
                 "dataset": dataset,
                 **summarize(rows),
@@ -1003,6 +1005,18 @@ def main() -> int:
                 "rejection_samples": rejections[:20],
                 "occurrence_ids": [row["occurrence_id"] for row in rows],
             }
+        from scripts import official_daily_machine as machine
+
+        machine_report = machine.build_and_persist(
+            rows_by_dataset=rows_by_dataset,
+            rejections_by_dataset=rejections_by_dataset,
+        )
+        report["daily_machine"] = machine.summary_for_catchup(machine_report)
+        if machine_report.get("qa_pass") is not True:
+            _write_catchup_report(report)
+            raise SystemExit(
+                "official daily machine failed; pin coverage or silent-drop gate blocked catch-up"
+            )
     batch_path, listing_path, listing = export_official_payloads(rows_by_dataset)
     report["today"] = {
         "today_nyc": listing["today_nyc"],

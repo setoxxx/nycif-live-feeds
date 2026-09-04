@@ -68,7 +68,7 @@ jobs:
 
       - name: Plan official catch-up
         run: |
-          python3 -m py_compile scripts/sync_supabase_official_source_catchup.py scripts/official_event_contract.py scripts/supabase_event_writer.py
+          python3 -m py_compile scripts/sync_supabase_official_source_catchup.py scripts/official_event_contract.py scripts/official_daily_machine.py scripts/supabase_event_writer.py
           python3 scripts/sync_supabase_official_source_catchup.py --dataset all
           python3 - <<'PY'
           import json
@@ -110,6 +110,13 @@ jobs:
               raise SystemExit('today listing must not pin tvpp street permits')
           if int((listing.get('by_dataset') or {}).get('nyc-projected-feast-reference', {}).get('map_ready', 1)) != 0:
               raise SystemExit('today listing must not pin projected feast rows')
+          machine = json.loads(Path('data/reports/official_daily_machine_report.json').read_text())
+          if machine.get('qa_pass') is not True:
+              raise SystemExit(f"official daily machine failed: {machine.get('failures')}")
+          if machine.get('expire_enabled') is not False:
+              raise SystemExit('daily machine must never expire')
+          if report.get('daily_machine', {}).get('qa_pass') is not True:
+              raise SystemExit('catch-up report is missing a passing daily machine gate')
           today = {k: listing.get(k) for k in ('today_nyc', 'rows', 'map_ready', 'list_only', 'by_dataset')}
           print(json.dumps({'today': today, 'datasets': {k: {kk: vv for kk, vv in v.items() if kk != 'occurrence_ids'} for k, v in datasets.items()}}, indent=2))
           PY
