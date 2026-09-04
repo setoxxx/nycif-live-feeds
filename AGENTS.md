@@ -73,7 +73,7 @@ Publishing or promotion requires explicit language such as:
 
 ## Official TVPP pins (native app)
 
-Public `tvpp-9vvx` street permits must be certified pins on the official Supabase event feed every time. Resolve them from Parks facility coordinates, NYC DCP LION centerline midpoints, Geoclient blockface midpoints, or NYC Planning Labs GeoSearch. Do not use Google. This is not Phase 2E: do not edit `location_cache.json`. Do not publish to WordPress. Projected feast stays list-only.
+Public `tvpp-9vvx` street permits must be certified pins on the official Supabase event feed every time. Resolve them from Parks facility coordinates, NYC DCP LION centerline midpoints, Geoclient blockface midpoints, or NYC Planning Labs GeoSearch. Do not use Google. This is not Phase 2E: do not edit `location_cache.json`. Do not publish to WordPress. Calendar and projected-feast streets may pin from the same official resolver; borough-only leftovers stay unpinned.
 
 ## GPS pipeline phases
 

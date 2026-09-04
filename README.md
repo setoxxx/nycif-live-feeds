@@ -72,8 +72,8 @@ That is why Today can show hundreds of listings: Parks pins when official coords
 |---|---|---|---|
 | `nyc-parks-bigapps-events` | NYC Open Data `w3wp-dpdi` | Yes | Only with official Parks lat/lng in NYC **and** pin evidence (`exact_pin_eligible` or `OFFICIAL_SOURCE_COORDINATE_SITE_VALIDATED`) |
 | `tvpp-9vvx` | NYC Open Data street activity permits | Yes | **Always.** Parks facility coords, NYC DCP LION centerline midpoint, Geoclient blockface midpoint, or NYC GeoSearch. No Google. |
-| `nyc-citywide-events-calendar-api` | api.nyc.gov Event Calendar | Yes | Only if the city snapshot already has official in-bounds coords. No geocoder fill. |
-| `nyc-projected-feast-reference` | NYCIF feast intake | Yes | **Never**. Proposed geocoder coords stay off the map until a human promote. |
+| `nyc-citywide-events-calendar-api` | api.nyc.gov Event Calendar | Yes | Snapshot official coords, or the same official street/facility resolver used for TVPP. Citywide / no-site rows stay list-only. |
+| `nyc-projected-feast-reference` | NYCIF feast intake | Yes | Official street/facility resolver only. Borough-only leftovers stay list-only. |
 
 Civic help-place snapshots (SNAP, Homebase, Workforce1, …) are **not** this event calendar. Do not dump them onto the public event map.
 
@@ -82,6 +82,12 @@ Civic help-place snapshots (SNAP, Homebase, Workforce1, …) are **not** this ev
 1. **6:00pm America/New_York** — `Discovery Feed Refresh` pulls the city APIs into GitHub snapshots (`data/raw_nyc_open_data_snapshot.json`, `data/nyc_parks_bigapps_events_snapshot.json`, `data/nyc_citywide_events_calendar_snapshot.json`).
 2. After that job succeeds — `Supabase Official Source Catch-up` turns those snapshots into the contract above and **pushes** them into Supabase. It does not expire rows. It does not edit `location_cache.json`.
 3. The phone reads Supabase. Catch-up JSON under `data/reports/` is a job artifact, not what the app loads.
+
+The native feed (`nycif-native-map-feed`) time chips:
+
+- **Now** — today's overlapping events.
+- **Tonight** — on/off. Today's events that start at or after 6pm America/New_York, plus the locked auxiliary layers (It's 5 PM Somewhere, Legal Cannabis Shops, Liquor Stores) from `nycif-night-layers`. Those layers are overlays, not event rows.
+- **7 Days** — on/off. Dropdown of the next 7 calendar days starting tomorrow (Friday → Sat–Fri), weekday + date. Only events that happen on the selected day. Click 7 Days again to close it.
 
 Run catch-up manually from Actions → **Supabase Official Source Catch-up** → `main` only after Discovery snapshots are fresh (Parks snapshot younger than 18 hours).
 
@@ -94,7 +100,7 @@ The machine does four things:
 1. **Account for every snapshot row** — accepted, or rejected with a reason. Silent drops fail the job.
 2. **Diff against yesterday’s index** — `added`, `still_present`, `removed_from_city`. Removed rows are **reported only**. Catch-up still does not expire.
 3. **Pin 100% of official coordinates** — every Parks row with official in-bounds evidence, and every calendar row that already has official in-bounds coords, must come out `map_ready`. Missing those pins fails the job.
-4. **Pin every public TVPP row** — street permits go on the map from Parks facilities, NYC DCP LION, Geoclient, or NYC GeoSearch. Projected feast stays list-only. Multi-site Parks rows without a single official coordinate stay on the list (`list_only_samples`). That is accounted, not a miss.
+4. **Pin every public TVPP row** — street permits go on the map from Parks facilities, NYC DCP LION, Geoclient, or NYC GeoSearch. Calendar and projected-feast streets pin the same way when the official resolver finds an in-bounds point. Borough-only leftovers and multi-site Parks rows stay on the list (`list_only_samples`). That is accounted, not a miss.
 
 `qa_pass: true` means the factory is the well-functioning machine. Open the report instead of walking the JSON by hand.
 
