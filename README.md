@@ -16,7 +16,7 @@ NYC Open Data / api.nyc.gov
     → list + pins
 ```
 
-Do not publish bad data. Staging, review, and catch-up writes are allowed. Promoting GPS into `data/location_cache.json` or changing the public WordPress map requires an explicit human promote.
+Do not publish bad data. Staging, review, and catch-up writes to the **native app** (Supabase `event_occurrences` → `nycif-native-map-feed`) are the product path. Promoting GPS into `data/location_cache.json` still requires an explicit human promote. WordPress is not a live map; at launch it becomes QR codes to the app.
 
 ## What the map needs
 
@@ -130,7 +130,6 @@ Do not edit unless a human explicitly names the file and the operation:
 - `data/nycif_staged_live_events.json`
 - `data/staged_live_manifest.json`
 - `data/previous_staged_live_events_snapshot.json`
-- public map / WordPress embed
 
 ## Local setup
 

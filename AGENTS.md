@@ -20,11 +20,11 @@ GitHub Pages admin experiments are retired. Do not deploy or restore:
 - `https://setoxxx.github.io/nycif-field-desk/admin/calendar.html`
 - `https://setoxxx.github.io/nycif-field-desk/admin/platform-roadmap.html`
 
-Those pages were versioned prototypes. The product client is the iOS app via Supabase (`event_reader_rolling_v1`). The WordPress `/map/` freeze still applies to the public iframe only. Do not treat God View, admin calendar, or platform-roadmap as live systems.
+Those pages were versioned prototypes. The product client is the iOS/Android app via Supabase (`event_reader_rolling_v1` / `nycif-native-map-feed`). That is the only place official event data goes. WordPress is not a live map destination; at app launch the site becomes QR codes to the app. Do not treat God View, admin calendar, platform-roadmap, or WordPress `/map/` as live event systems.
 
 The backend repo is the source of truth for generated event feeds, GPS staging artifacts, manual approval queues, GPS review findings, and GPS promotion controls.
 
-The frontend repo consumes backend feed outputs for the public map iframe only. Frontend agents must read the frontend repo `AGENTS.md` before changing map behavior. Do not add admin/God View pages.
+The frontend repo is not a live event-data surface. Do not publish official events into the WordPress iframe or field-desk admin pages. Do not add admin/God View pages.
 
 A frontend change must not treat backend GPS review artifacts as public-ready data unless the backend promotion pipeline has explicitly published them into the approved public feed.
 
@@ -32,7 +32,7 @@ A frontend change must not treat backend GPS review artifacts as public-ready da
 
 Do not publish bad data.
 
-This project is allowed to generate staging artifacts, reports, review queues, and validation outputs. It must not silently promote unreviewed GPS data or alter the public map without explicit human approval.
+This project is allowed to generate staging artifacts, reports, review queues, and validation outputs. It must not silently promote unreviewed GPS data. Official catch-up writes to the native app feed are the product path. Do not send live event data to WordPress.
 
 ## Protected files
 
@@ -42,17 +42,19 @@ Treat the following files as protected. Do not modify them unless the human expl
 - `data/nycif_staged_live_events.json`
 - `data/staged_live_manifest.json`
 - `data/previous_staged_live_events_snapshot.json`
-- public map feed outputs used by NYC In Focus
-- WordPress/public-map embed code, if present in any connected workflow
 - GitHub Actions secrets or deployment settings
 
 If a task can be completed by writing a staging/report file instead of editing a protected file, use the staging/report file.
 
-## Public-map rule
+## Product destination (native app only)
 
-Never publish to the public map unless the human explicitly says to publish or promote.
+Official events go only to the native app through Supabase catch-up (`event_occurrences` → `nycif-native-map-feed`). Do not publish live event pins to WordPress. At launch, WordPress becomes QR codes to the app, not a map.
 
-The following are not permission to publish:
+## Public-map / location-cache rule
+
+Never write `location_cache.json` or treat WordPress as a live map unless the human explicitly says to.
+
+The following are not permission to publish to WordPress or `location_cache.json`:
 
 - "review"
 - "inspect"
@@ -67,11 +69,11 @@ Publishing or promotion requires explicit language such as:
 
 - "promote these approved rows"
 - "update location_cache.json with these approved rows"
-- "publish this to the public map"
+- "publish this to WordPress" (not a live data destination)
 
 ## Official TVPP pins (native app)
 
-Public `tvpp-9vvx` street permits must be certified pins on the official Supabase event feed every time. Resolve them from Parks facility coordinates, NYC DCP LION centerline midpoints, Geoclient blockface midpoints, or NYC Planning Labs GeoSearch. Do not use Google. This is not Phase 2E: do not edit `location_cache.json` and do not change the WordPress public map. Projected feast stays list-only.
+Public `tvpp-9vvx` street permits must be certified pins on the official Supabase event feed every time. Resolve them from Parks facility coordinates, NYC DCP LION centerline midpoints, Geoclient blockface midpoints, or NYC Planning Labs GeoSearch. Do not use Google. This is not Phase 2E: do not edit `location_cache.json`. Do not publish to WordPress. Projected feast stays list-only.
 
 ## GPS pipeline phases
 
@@ -195,15 +197,15 @@ When backend changes affect frontend/map behavior:
 1. Confirm the backend artifact is intended for public or frontend consumption.
 2. Review `setoxxx/nycif-field-desk/AGENTS.md` before asking a frontend agent to change the map.
 3. Never ask the frontend to load GPS review/proposal/approval artifacts as live public event data.
-4. Keep public map behavior separate from admin/test/review behavior.
-5. If a backend public feed path changes, update the frontend repo only after QA confirms the new feed is public-ready.
-6. Before editing WordPress `nycinfocus.com/map/`, read `docs/wordpress-plugin-deploy/nycinfocus-map-page-v1-freeze.md` — production uses a fullscreen `#nycifMapAppShell` Custom HTML block, not the `[nycif_events_map]` shortcode.
+4. Keep native-app feed behavior separate from admin/test/review behavior.
+5. Do not publish official events to WordPress. The live client is the app.
+6. Do not edit WordPress `nycinfocus.com/map/` as an event map. At launch it becomes QR codes to the app.
 
 When frontend changes depend on backend data:
 
 1. Confirm the backend artifact exists.
 2. Confirm the artifact is public-ready, not just staged/review-only.
-3. Cite or inspect the backend QA report before making public-map claims.
+3. Cite or inspect the backend QA report before making native-app map claims.
 
 ## QA requirements
 
@@ -302,7 +304,7 @@ Final responses should include:
 - what must be run next
 - what remains unapproved/unpromoted
 
-Never claim public-map changes unless the public map was intentionally changed and verified.
+Never claim native-app map changes unless catch-up wrote them and the feed was verified. Never claim WordPress map changes; WordPress is not a live event destination.
 
 ## Cursor Cloud specific instructions
 
