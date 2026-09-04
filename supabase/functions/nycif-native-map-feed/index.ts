@@ -146,6 +146,16 @@ function overlapsSeven(row: Record<string, unknown>, first: string, last: string
   return !!d && d.startDay <= last && d.endDay >= first;
 }
 
+function coordsMatchBorough(lat: number, lng: number, borough: unknown): boolean {
+  const name = String(borough ?? "").trim().toLowerCase();
+  if (name === "manhattan") return lat >= 40.67 && lat <= 40.89 && lng >= -74.05 && lng <= -73.90;
+  if (name === "brooklyn") return lat >= 40.55 && lat <= 40.75 && lng >= -74.06 && lng <= -73.82;
+  if (name === "queens") return lat >= 40.53 && lat <= 40.82 && lng >= -73.98 && lng <= -73.69;
+  if (name === "bronx") return lat >= 40.77 && lat <= 40.93 && lng >= -73.95 && lng <= -73.74;
+  if (name === "staten island") return lat >= 40.47 && lat <= 40.66 && lng >= -74.27 && lng <= -74.03;
+  return true;
+}
+
 function isMapped(row: Record<string, unknown>): boolean {
   const lat = Number(row.lat);
   const lng = Number(row.lng);
@@ -154,7 +164,8 @@ function isMapped(row: Record<string, unknown>): boolean {
     && Number.isFinite(lat)
     && Number.isFinite(lng)
     && lat >= 40.45 && lat <= 40.95
-    && lng >= -74.30 && lng <= -73.65;
+    && lng >= -74.30 && lng <= -73.65
+    && coordsMatchBorough(lat, lng, row.borough);
 }
 
 function toPublicEvent(row: Record<string, unknown>) {

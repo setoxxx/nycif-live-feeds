@@ -1,6 +1,6 @@
 {
   "artifact_type": "tvpp_official_pin_cache",
-  "entry_count": 2147,
+  "entry_count": 2160,
   "location_cache_modified": false,
   "staged_feed_modified": false,
   "public_map_modified": false,
@@ -19327,6 +19327,123 @@
       "confidence": "medium",
       "confidence_reason": "Reused official pin from the same parent place 'Coney Island Beach & Boardwalk'.",
       "reason_code": "TVPP_PARENT_PLACE_CACHE",
+      "exact_pin_eligible": true
+    },
+    "manhattan|west 112 street between amsterdam avenue and broadway": {
+      "lat": 40.798489,
+      "lng": -73.950265,
+      "source": "nyc_geosearch_segment_midpoint",
+      "confidence": "high",
+      "confidence_reason": "NYC GeoSearch midpoint for WEST 112 STREET between AMSTERDAM AVENUE and BROADWAY.",
+      "reason_code": "SEGMENT_GEOSEARCH_ENDPOINTS_VALIDATED",
+      "exact_pin_eligible": true
+    },
+    "manhattan|east 42 street between lexington avenue and park avenue": {
+      "lat": 40.752878,
+      "lng": -73.981017,
+      "source": "nyc_geosearch_planninglabs",
+      "confidence": "medium",
+      "confidence_reason": "NYC GeoSearch street/address match for EAST 42 STREET between LEXINGTON AVENUE and PARK AVENUE.",
+      "reason_code": "TVPP_NYC_GEOSEARCH_STREET",
+      "exact_pin_eligible": true
+    },
+    "manhattan|amsterdam avenue between west 62 street and west 66 street": {
+      "lat": 40.770419,
+      "lng": -73.986827,
+      "source": "nyc_geosearch_planninglabs",
+      "confidence": "medium",
+      "confidence_reason": "NYC GeoSearch street/address match for AMSTERDAM AVENUE between WEST 62 STREET and WEST 66 STREET.",
+      "reason_code": "TVPP_NYC_GEOSEARCH_STREET",
+      "exact_pin_eligible": true
+    },
+    "brooklyn|70 commerce street between van brunt street and richards street": {
+      "lat": 40.680966,
+      "lng": -74.007699,
+      "source": "nyc_geosearch_planninglabs",
+      "confidence": "medium",
+      "confidence_reason": "NYC GeoSearch street/address match for 70 COMMERCE STREET between VAN BRUNT STREET and RICHARDS STREET.",
+      "reason_code": "TVPP_NYC_GEOSEARCH_STREET",
+      "exact_pin_eligible": true
+    },
+    "manhattan|west 49 street between 5 avenue and 6 avenue": {
+      "lat": 40.764607,
+      "lng": -73.992572,
+      "source": "nyc_geosearch_planninglabs",
+      "confidence": "medium",
+      "confidence_reason": "NYC GeoSearch street/address match for WEST 49 STREET between 5 AVENUE and 6 AVENUE.",
+      "reason_code": "TVPP_NYC_GEOSEARCH_STREET",
+      "exact_pin_eligible": true
+    },
+    "manhattan|290 e broadway": {
+      "lat": 40.714784,
+      "lng": -73.983922,
+      "source": "nyc_geosearch_planninglabs",
+      "confidence": "medium",
+      "confidence_reason": "NYC GeoSearch place match for '290 E Broadway'.",
+      "reason_code": "TVPP_NYC_GEOSEARCH_PLACE",
+      "exact_pin_eligible": true
+    },
+    "manhattan|1411 amsterdam ave": {
+      "lat": 40.815343,
+      "lng": -73.954473,
+      "source": "nyc_geosearch_planninglabs",
+      "confidence": "medium",
+      "confidence_reason": "NYC GeoSearch place match for '1411 Amsterdam Ave'.",
+      "reason_code": "TVPP_NYC_GEOSEARCH_PLACE",
+      "exact_pin_eligible": true
+    },
+    "bronx|farragut st at the east river off food center dr": {
+      "lat": 40.81205,
+      "lng": -73.880163,
+      "source": "nyc_geosearch_planninglabs",
+      "confidence": "medium",
+      "confidence_reason": "NYC GeoSearch place match for 'Farragut St at the East River, off Food Center Dr'.",
+      "reason_code": "TVPP_NYC_GEOSEARCH_PLACE",
+      "exact_pin_eligible": true
+    },
+    "brooklyn|459 north henry st": {
+      "lat": 40.734949,
+      "lng": -73.946219,
+      "source": "nyc_geosearch_planninglabs",
+      "confidence": "medium",
+      "confidence_reason": "NYC GeoSearch place match for '459 North Henry St'.",
+      "reason_code": "TVPP_NYC_GEOSEARCH_PLACE",
+      "exact_pin_eligible": true
+    },
+    "manhattan|74 pike slip": {
+      "lat": 40.71055,
+      "lng": -73.99257,
+      "source": "nyc_geosearch_planninglabs",
+      "confidence": "medium",
+      "confidence_reason": "NYC GeoSearch place match for '74 Pike Slip'.",
+      "reason_code": "TVPP_NYC_GEOSEARCH_PLACE",
+      "exact_pin_eligible": true
+    },
+    "queens|30th ave between 120th street and 122nd street": {
+      "lat": 40.76693,
+      "lng": -73.922066,
+      "source": "nyc_geosearch_planninglabs",
+      "confidence": "medium",
+      "confidence_reason": "NYC GeoSearch street/address match for 30th Ave between 120th Street and 122nd Street.",
+      "reason_code": "TVPP_NYC_GEOSEARCH_STREET",
+      "exact_pin_eligible": true
+    },
+    "staten island|muldoon avenue": {
+      "lat": 40.576285,
+      "lng": -74.197353,
+      "source": "nyc_geosearch_planninglabs",
+      "confidence": "medium",
+      "confidence_reason": "NYC GeoSearch place match for 'Muldoon Avenue'.",
+      "reason_code": "TVPP_NYC_GEOSEARCH_PLACE",
+      "exact_pin_eligible": true
+    },
+    "brooklyn|18 avenue between 73 street and 75 street": {
+      "lat": 40.614354,
+      "lng": -73.994667,
+      "source": "nyc_geosearch_planninglabs",
+      "confidence": "medium",
+      "confidence_reason": "NYC GeoSearch street/address match for 18 AVENUE between 73 STREET and 75 STREET.",
+      "reason_code": "TVPP_NYC_GEOSEARCH_STREET",
       "exact_pin_eligible": true
     }
   }

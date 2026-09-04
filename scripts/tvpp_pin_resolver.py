@@ -441,7 +441,18 @@ class TvppPinResolver:
             )
         return None
 
-    def _facility(self, display: str) -> TvppPin | None:
+    def _facility_hit(self, hit: dict[str, Any], borough: str | None, reason: str) -> TvppPin | None:
+        if borough and not coordinate_matches_borough(hit["lat"], hit["lng"], borough):
+            return None
+        return _pin(
+            hit["lat"],
+            hit["lng"],
+            source="nyc_parks_facility_reference",
+            reason_code="TVPP_PARKS_FACILITY_OFFICIAL",
+            reason=reason,
+        )
+
+    def _facility(self, display: str, borough: str | None = None) -> TvppPin | None:
         candidates = [
             simplified_place(display),
             normalize_text_legacy(display.split(":", 1)[0] if ":" in display else display),
@@ -452,24 +463,24 @@ class TvppPinResolver:
                 continue
             hit = self.facility_index.get(key)
             if hit:
-                return _pin(
-                    hit["lat"],
-                    hit["lng"],
-                    source="nyc_parks_facility_reference",
-                    reason_code="TVPP_PARKS_FACILITY_OFFICIAL",
-                    reason=f"Official NYC Parks facility match for '{hit.get('label') or key}'.",
+                pin = self._facility_hit(
+                    hit,
+                    borough,
+                    f"Official NYC Parks facility match for '{hit.get('label') or key}'.",
                 )
+                if pin:
+                    return pin
         parent = simplified_place(display)
-        if len(parent) >= 10:
+        if len(parent) >= 16:
             for key, hit in self.facility_index.items():
                 if parent in key or key in parent:
-                    return _pin(
-                        hit["lat"],
-                        hit["lng"],
-                        source="nyc_parks_facility_reference",
-                        reason_code="TVPP_PARKS_FACILITY_OFFICIAL",
-                        reason=f"Official NYC Parks facility substring match for '{parent}'.",
+                    pin = self._facility_hit(
+                        hit,
+                        borough,
+                        f"Official NYC Parks facility substring match for '{parent}'.",
                     )
+                    if pin:
+                        return pin
         return None
 
     def _geoclient_midpoint(self, main: str, cross1: str, cross2: str, borough: str | None) -> TvppPin | None:
@@ -672,14 +683,14 @@ class TvppPinResolver:
         cached = self.cache.get(key)
         if isinstance(cached, dict):
             hit = self._from_cache_entry(cached)
-            if hit:
+            if hit and (not borough or coordinate_matches_borough(hit.lat, hit.lng, borough)):
                 return hit
 
         pin = self._lion(display, borough)
         if pin is None:
             pin = self._street(display, borough)
         if pin is None:
-            pin = self._facility(display)
+            pin = self._facility(display, borough)
         if pin is None:
             pin = self._sibling_parent_cache(display, borough)
         if pin is None:

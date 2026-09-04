@@ -165,3 +165,23 @@ def test_facility_index_reads_reference_shape():
     index = build_facility_index()
     assert index
     assert any("playground" in key for key in list(index)[:50])
+
+
+def test_facility_cannot_pin_the_wrong_borough():
+    from scripts.gps_identity import normalize_text_legacy
+
+    display = "EAST 41 STREET between PARK AVENUE and LEXINGTON AVENUE"
+    resolver = TvppPinResolver(
+        {
+            normalize_text_legacy(display): {
+                "lat": 40.533,
+                "lng": -74.2021,
+                "label": "Wrong SI park",
+            }
+        },
+        {},
+        allow_live_geosearch=False,
+    )
+    pin = resolver.resolve(display, "Manhattan")
+    assert pin.resolved is False
+    assert pin.lat is None

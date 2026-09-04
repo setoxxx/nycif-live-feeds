@@ -27,6 +27,26 @@ as $$
   );
 $$;
 
+create or replace function public.nycif_coords_match_borough(
+  p_lat double precision,
+  p_lng double precision,
+  p_borough text
+)
+returns boolean
+language sql
+immutable
+set search_path = ''
+as $$
+  select case lower(btrim(coalesce(p_borough, '')))
+    when 'manhattan' then p_lat between 40.67 and 40.89 and p_lng between -74.05 and -73.90
+    when 'brooklyn' then p_lat between 40.55 and 40.75 and p_lng between -74.06 and -73.82
+    when 'queens' then p_lat between 40.53 and 40.82 and p_lng between -73.98 and -73.69
+    when 'bronx' then p_lat between 40.77 and 40.93 and p_lng between -73.95 and -73.74
+    when 'staten island' then p_lat between 40.47 and 40.66 and p_lng between -74.27 and -74.03
+    else true
+  end;
+$$;
+
 drop function if exists public.nycif_native_map_feed_rows(text);
 
 create or replace function public.nycif_native_map_feed_rows(
@@ -149,6 +169,7 @@ as $$
       eo.borough,
       eo.metadata -> 'reader' ->> 'source_dataset'
     )
+    and (eo.lat is null or public.nycif_coords_match_borough(eo.lat, eo.lng, eo.borough))
     and coalesce(eo.end_at, eo.start_at + interval '3 hours') >= m.window_start
     and eo.start_at < m.window_end
   order by eo.start_at asc, eo.occurrence_id asc
@@ -197,6 +218,7 @@ as $$
         eo.borough,
         eo.metadata -> 'reader' ->> 'source_dataset'
       )
+      and (eo.lat is null or public.nycif_coords_match_borough(eo.lat, eo.lng, eo.borough))
       and coalesce(eo.end_at, eo.start_at + interval '3 hours') >= b.today_start
       and eo.start_at < b.seven_end
   ),
