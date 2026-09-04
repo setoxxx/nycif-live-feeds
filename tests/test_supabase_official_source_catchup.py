@@ -105,3 +105,18 @@ def test_catchup_workflow_is_separate_and_fail_closed():
     assert "p_allow_expire" not in workflow or "--write" in workflow
     assert "location_cache.json" not in workflow
     assert "nycif_staged_live_events.json" not in workflow
+    assert "The phone reads Supabase" in workflow
+
+
+def test_finite_coord_rejects_nan_and_inf():
+    assert catchup._finite_coord("40.7") == pytest.approx(40.7)
+    assert catchup._finite_coord("not-a-number") is None
+    assert catchup._finite_coord(float("nan")) is None
+    assert catchup._finite_coord(float("inf")) is None
+    assert catchup._finite_coord(float("-inf")) is None
+
+
+def test_catchup_report_stays_inside_data_reports():
+    assert catchup.REPORT_PATH == catchup.ROOT / "data" / "reports" / "supabase_official_source_catchup_report.json"
+    assert catchup.REPORT_PATH.parent == catchup.REPORTS_DIR
+    assert catchup.REPORT_PATH.name == catchup.REPORT_FILENAME

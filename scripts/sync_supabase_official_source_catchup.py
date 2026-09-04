@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Catch today's official city snapshots into staging event_occurrences.
 
+GitHub is the daily factory. Discovery writes SODA/JSON snapshots into this
+repo. This script then pushes those snapshots into Supabase event_occurrences,
+which is what the iOS/Android app reads. Supabase does not poll GitHub JSON.
+
 Uses the existing Rung 8 writer. Occurrence IDs come from OccurrenceIdentityV2
 only. Street permits stay list-only. Parks rows with official source coordinates
 certify as map pins. Calendar rows stay list-only unless the snapshot already
@@ -11,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -22,7 +27,9 @@ if str(ROOT) not in sys.path:
 
 from scripts import supabase_event_writer as writer
 
-REPORT_PATH = ROOT / "data" / "reports" / "supabase_official_source_catchup_report.json"
+REPORT_FILENAME = "supabase_official_source_catchup_report.json"
+REPORTS_DIR = ROOT / "data" / "reports"
+REPORT_PATH = REPORTS_DIR / REPORT_FILENAME
 TVPP_PATH = ROOT / "data" / "raw_nyc_open_data_snapshot.json"
 PARKS_PATH = ROOT / "data" / "nyc_parks_bigapps_events_snapshot.json"
 CALENDAR_PATH = ROOT / "data" / "nyc_citywide_events_calendar_snapshot.json"
@@ -65,9 +72,18 @@ def _finite_coord(value: Any) -> float | None:
         number = float(value)
     except (TypeError, ValueError):
         return None
-    if number != number or number in (float("inf"), float("-inf")):
+    if not math.isfinite(number):
         return None
     return number
+
+
+def _write_catchup_report(report: dict[str, Any]) -> None:
+    reports_dir = REPORTS_DIR.resolve()
+    path = (reports_dir / REPORT_FILENAME).resolve()
+    if path.parent != reports_dir or path.name != REPORT_FILENAME:
+        raise SystemExit("catch-up report path escaped data/reports")
+    reports_dir.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
 
 
 def official_parks_pin(row: dict[str, Any]) -> tuple[float | None, float | None, bool]:
@@ -473,8 +489,7 @@ def main() -> int:
             block.update(write_chunks(rows, args.chunk_size))
             report["database_write_performed"] = True
         report["datasets"][dataset] = block
-    REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    REPORT_PATH.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    _write_catchup_report(report)
     printable = json.loads(json.dumps(report))
     for block in printable.get("datasets", {}).values():
         block.pop("occurrence_ids", None)
