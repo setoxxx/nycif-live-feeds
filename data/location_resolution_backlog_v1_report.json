@@ -1,33 +1,33 @@
 {
   "all_canonical_map_state_counts": {
-    "GENERAL_AREA": 21120,
-    "LIST_ONLY": 5427,
-    "MAP_READY": 1220,
+    "GENERAL_AREA": 21853,
+    "LIST_ONLY": 7716,
+    "MAP_READY": 1313,
     "REVIEW_REQUIRED": 220
   },
   "bucket_counts": {
     "BOROUGH_ONLY": 0,
     "CEMSID": 0,
-    "EXACT_ADDRESS": 29,
-    "INTERSECTION": 12,
-    "KNOWN_FACILITY": 155,
-    "KNOWN_VENUE": 19,
+    "EXACT_ADDRESS": 32,
+    "INTERSECTION": 161,
+    "KNOWN_FACILITY": 1972,
+    "KNOWN_VENUE": 39,
     "MALFORMED_SOURCE": 0,
-    "PARK_SUBFACILITY": 4041,
-    "ROUTE_OR_STREET_SEGMENT": 1105,
-    "SPORTS_FIELD": 286
+    "PARK_SUBFACILITY": 4216,
+    "ROUTE_OR_STREET_SEGMENT": 1203,
+    "SPORTS_FIELD": 288
   },
-  "cancelled_unresolved_suppressed": 0,
+  "cancelled_unresolved_suppressed": 25,
   "canonical_artifact_type": null,
   "canonical_generated_at_utc": null,
-  "canonical_row_count": 27987,
+  "canonical_row_count": 31102,
   "canonical_state_count_matches_v3_status": null,
   "duplicate_occurrence_count": 0,
   "expected_v3_unresolved_state_count": null,
-  "generated_at_utc": "2026-09-04T16:30:30.834031Z",
+  "generated_at_utc": "2026-09-04T23:53:25.950208Z",
   "location_cache_modified": false,
   "map_state_counts": {
-    "LIST_ONLY": 5427,
+    "LIST_ONLY": 7691,
     "REVIEW_REQUIRED": 220
   },
   "operating_rule": "Diagnostic classification only; all unresolved canonical rows are classified, reader-public scope is labeled separately, and no coordinates are approved or promoted by this artifact.",
@@ -35,23 +35,23 @@
   "public_bucket_counts": {
     "BOROUGH_ONLY": 0,
     "CEMSID": 0,
-    "EXACT_ADDRESS": 23,
-    "INTERSECTION": 12,
-    "KNOWN_FACILITY": 143,
-    "KNOWN_VENUE": 18,
+    "EXACT_ADDRESS": 26,
+    "INTERSECTION": 161,
+    "KNOWN_FACILITY": 1960,
+    "KNOWN_VENUE": 38,
     "MALFORMED_SOURCE": 0,
-    "PARK_SUBFACILITY": 4005,
-    "ROUTE_OR_STREET_SEGMENT": 951,
-    "SPORTS_FIELD": 286
+    "PARK_SUBFACILITY": 4184,
+    "ROUTE_OR_STREET_SEGMENT": 1043,
+    "SPORTS_FIELD": 288
   },
   "public_map_modified": false,
   "qa_pass": true,
   "schema_version": "NYCIF_LOCATION_RESOLUTION_BACKLOG_V1",
   "staged_feed_modified": false,
-  "unresolved_canonical_before_cancel_suppression": 5647,
-  "unresolved_canonical_occurrence_count": 5647,
-  "unresolved_nonpublic_occurrence_count": 209,
-  "unresolved_public_occurrence_count": 5438,
+  "unresolved_canonical_before_cancel_suppression": 7936,
+  "unresolved_canonical_occurrence_count": 7911,
+  "unresolved_nonpublic_occurrence_count": 211,
+  "unresolved_public_occurrence_count": 7700,
   "v3_status_comparable": false,
-  "v3_status_generated_at_utc": "2026-09-04T16:30:02.708246Z"
+  "v3_status_generated_at_utc": "2026-09-04T23:52:45.248893Z"
 }
