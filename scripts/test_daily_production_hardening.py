@@ -481,6 +481,9 @@ def test_refresh_workflow_has_structured_preflight_diagnostics() -> None:
     assert "NYC_EVENT_CALENDAR_API_KEY: ${{ secrets.NYC_EVENT_CALENDAR_API_KEY }}" in workflow
     assert "SOCRATA_APP_TOKEN: ${{ secrets.SOCRATA_APP_TOKEN }}" in workflow
     assert "NYC_SODA_APP_TOKEN: ${{ secrets.NYC_SODA_APP_TOKEN }}" in workflow
+    assert "python3 scripts/official_daily_machine.py --allow-fail" in transaction
+    assert "data/reports/official_daily_machine_report.json" in transaction
+    assert "data/reports/official_occurrence_index.json" in transaction
 
 
 def test_modified_reliability_python_files_compile() -> None:

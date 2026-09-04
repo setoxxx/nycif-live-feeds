@@ -101,6 +101,10 @@ for attempt in 1 2 3; do
     "calendar_parks_exact_occurrence_intake" \
     "refresh_official_supplemental_occurrences" \
     python scripts/refresh_official_supplemental_occurrences.py
+  run_stage \
+    "official_daily_machine_delta_and_pin_coverage" \
+    "official_daily_machine" \
+    python3 scripts/official_daily_machine.py --allow-fail
 
   run_stage \
     "discovery_major_projection" \
@@ -344,6 +348,8 @@ PY
     data/reader-safe/national-map-events-v03-status.json \
     data/reports/discovery_approved_dedupe_report.json \
     data/reports/discovery_shared_cems_occurrence_dedupe_report.json \
+    data/reports/official_daily_machine_report.json \
+    data/reports/official_occurrence_index.json \
     data/civic_*.json \
     data/photographer_assignment_calendar_*.json \
     data/photographer_money_day_*.json \

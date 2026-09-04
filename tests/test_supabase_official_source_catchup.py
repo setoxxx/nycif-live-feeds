@@ -115,6 +115,11 @@ def test_catchup_workflow_is_separate_and_fail_closed():
     assert "supabase_official_today_listing.json" in workflow
     assert "supabase_official_event_batch.json" in workflow
     assert "github.event_name == 'workflow_run' && 'main'" in workflow
+    assert "nyc-projected-feast-reference" in workflow
+    assert "projected feast rows must stay list-only" in workflow
+    assert "official_daily_machine.py" in workflow
+    assert "official_daily_machine_report.json" in workflow
+    assert "official daily machine failed" in workflow
 
 
 def test_finite_coord_rejects_nan_and_inf():
