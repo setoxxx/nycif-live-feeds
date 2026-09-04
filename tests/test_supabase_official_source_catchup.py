@@ -106,6 +106,8 @@ def test_catchup_workflow_is_separate_and_fail_closed():
     assert "location_cache.json" not in workflow
     assert "nycif_staged_live_events.json" not in workflow
     assert "The phone reads Supabase" in workflow
+    assert "pip install" not in workflow
+    assert "requirements.txt" not in workflow
 
 
 def test_finite_coord_rejects_nan_and_inf():
