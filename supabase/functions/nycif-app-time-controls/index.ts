@@ -7,8 +7,8 @@ var root=document.getElementById('nycifUnifiedApp');
 var chips=root&&root.querySelector('.u-chips');
 if(!root||!chips)return;
 
-['nycif-time-controls-v7-style','nycif-time-controls-v8-style','nycif-time-controls-v9-style','nycif-time-controls-v10-style','nycif-time-controls-v11-style','nycif-time-controls-v12-style','nycif-time-controls-v13-style','nycif-time-controls-v14-style','nycif-time-controls-v15-style','nycif-time-controls-v16-style'].forEach(function(id){var n=document.getElementById(id);if(n)n.remove();});
-var css=document.createElement('style');css.id='nycif-time-controls-v16-style';css.textContent=[
+['nycif-time-controls-v7-style','nycif-time-controls-v8-style','nycif-time-controls-v9-style','nycif-time-controls-v10-style','nycif-time-controls-v11-style','nycif-time-controls-v12-style','nycif-time-controls-v13-style','nycif-time-controls-v14-style','nycif-time-controls-v15-style','nycif-time-controls-v16-style','nycif-time-controls-v17-style'].forEach(function(id){var n=document.getElementById(id);if(n)n.remove();});
+var css=document.createElement('style');css.id='nycif-time-controls-v17-style';css.textContent=[
 '#nycifUnifiedApp .u-topbar{z-index:40!important}',
 '#nycifUnifiedApp .u-chips{position:absolute!important;z-index:9100!important;top:108px!important;left:50%!important;transform:translateX(-50%)!important;width:min(94vw,720px)!important;height:52px!important;display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px!important;padding:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important}',
 '#nycifUnifiedApp .u-chip{height:50px!important;border:1px solid rgba(255,255,255,.28)!important;border-radius:999px!important;background:#09090a!important;color:#fff!important;font-size:13px!important;font-weight:650!important;padding:0 8px!important;box-shadow:none!important}',
@@ -51,7 +51,7 @@ if(seven)seven.innerHTML='<span>7 Days</span>';
 document.querySelectorAll('.u-night-subfilters,.u-seven-preview,.u-aux-chips').forEach(function(n){n.remove();});
 var aux=document.createElement('div');
 aux.className='u-aux-chips';
-aux.setAttribute('data-nycif-aux','v16');
+aux.setAttribute('data-nycif-aux','v17');
 chips.insertAdjacentElement('afterend',aux);
 
 var oldSpecial=document.querySelector('.u-special-calendars');
@@ -71,7 +71,7 @@ function showEvents(){var m=map(),g=group();if(m&&g&&!m.hasLayer(g))g.addTo(m);}
 function clearNight(){var m=map();if(m&&nightOverlay&&m.hasLayer(nightOverlay))m.removeLayer(nightOverlay);nightOverlay=null;}
 function allEvents(){return root.__nycifAllEvents&&root.__nycifAllEvents.features||[];}
 function setSource(features){var s=source(),d={type:'FeatureCollection',features:features||[]};if(s){if(s.setData)s.setData(d);else s.data=d;}showEvents();}
-function fit(features){var a=adapter();if(a&&typeof a.fitFeatures==='function')a.fitFeatures(features||[]);}
+function applyPins(features){setSource(features);}
 function nyDate(d){return new Intl.DateTimeFormat('en-CA',{timeZone:'America/New_York',year:'numeric',month:'2-digit',day:'2-digit'}).format(d);}
 function nyAddDays(day,offset){var p=String(day).split('-').map(Number);return nyDate(new Date(Date.UTC(p[0],p[1]-1,p[2]+offset,16,0,0)));}
 function nyHour(d){return Number(new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',hour:'2-digit',hour12:false}).format(d));}
@@ -91,9 +91,9 @@ function nightIcon(k){var c=nightCfg(k);return L.divIcon({className:'nycif-night
 function labelDate(key){var p=String(key).split('-').map(Number);return new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',month:'short',day:'numeric'}).format(new Date(Date.UTC(p[0],p[1]-1,p[2],16,0,0)));}
 function labelDow(key){var p=String(key).split('-').map(Number);return new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short'}).format(new Date(Date.UTC(p[0],p[1]-1,p[2],16,0,0)));}
 
-function showNow(){nightKey=null;clearNight();var rows=mapped(nowRows());setSource(rows);fit(rows);closeList();}
-function showTonightEvents(){nightKey=null;clearNight();var rows=mapped(strictTonightRows());setSource(rows);fit(rows);closeList();}
-function showSevenEvents(day){nightKey=null;clearNight();var keys=nextSevenKeys();if(!day)day=keys[0];sevenState=day;var rows=mapped(sevenDayRows(day));setSource(rows);fit(rows);closeList();}
+function showNow(){nightKey=null;clearNight();applyPins(mapped(nowRows()));closeList();}
+function showTonightEvents(){nightKey=null;clearNight();applyPins(mapped(strictTonightRows()));closeList();}
+function showSevenEvents(day){nightKey=null;clearNight();var keys=nextSevenKeys();if(!day)day=keys[0];sevenState=day;applyPins(mapped(sevenDayRows(day)));closeList();}
 function restoreModeEvents(){if(ourMode==='TONIGHT')showTonightEvents();else if(ourMode==='7D')showSevenEvents(sevenState);else showNow();}
 
 async function loadNight(k,b){if(nightCache[k])return nightCache[k];if(b)b.classList.add('is-loading');try{var r=await fetch(NIGHT+'?layer='+encodeURIComponent(k),{cache:'no-store'});if(!r.ok)throw new Error('Layer unavailable');return nightCache[k]=await r.json();}finally{if(b)b.classList.remove('is-loading');}}
@@ -148,16 +148,19 @@ function renderAux(){
   });
 }
 
+function applyModePins(){
+  if(specialState)return;
+  if(ourMode==='7D'){specialHost.classList.remove('on');if(!nightKey)showSevenEvents(sevenState);}
+  else if(ourMode==='TONIGHT'){specialHost.classList.remove('on');if(!nightKey)showTonightEvents();}
+  else{if(collections.length&&!root.classList.contains('nycif-hide-special'))specialHost.classList.add('on');if(!nightKey)showNow();}
+}
 function syncContext(){
   root.classList.toggle('nycif-mode-now',ourMode==='NOW');
   root.classList.toggle('nycif-mode-tonight',ourMode==='TONIGHT');
   root.classList.toggle('nycif-mode-seven',ourMode==='7D');
   root.classList.toggle('nycif-context-open',ourMode!=='NOW'||specialHost.classList.contains('on')||!!nightKey);
   renderAux();
-  if(specialState)return;
-  if(ourMode==='7D'){specialHost.classList.remove('on');if(!nightKey)showSevenEvents(sevenState);}
-  else if(ourMode==='TONIGHT'){specialHost.classList.remove('on');if(!nightKey)showTonightEvents();}
-  else{if(collections.length&&!root.classList.contains('nycif-hide-special'))specialHost.classList.add('on');if(!nightKey)showNow();}
+  requestAnimationFrame(function(){setTimeout(applyModePins,0);});
 }
 
 function setPrimary(mode){
@@ -179,7 +182,7 @@ function clearSpecialButtons(){Array.prototype.forEach.call(specialHost.querySel
 function renderList(rows,title){var h=document.getElementById('uHappeningList');if(!h)return;h.innerHTML='';rows.forEach(function(f){var p=f.properties||{},b=document.createElement('button'),s=document.createElement('strong'),sm=document.createElement('small');b.className='u-list-item';s.textContent=p.title||'Event';sm.textContent=[p.day_bucket,p.start_time&&p.start_time!=='TBA'?p.start_time:null,p.location||p.venue_name||p.borough,p.access].filter(Boolean).join(' · ');b.appendChild(s);b.appendChild(sm);if(f.geometry)b.addEventListener('click',function(){var a=adapter();if(a)a.flyTo({center:f.geometry.coordinates,zoom:14});closeList();});h.appendChild(b);});h.classList.add('is-active');var st=document.getElementById('uStat');if(st)st.textContent=(title||'Events')+' · '+rows.length;}
 function bucketWeekday(c,key){if(key==='MISC/TBA')return'TBD';var f=(c.features||[]).find(function(x){return (x.properties||{}).day_bucket===key;});var p=f&&f.properties||{},v=p.event_date||p.start_at||p.start_date_time;if(!v)return'';var d=new Date(v);if(!Number.isFinite(d.getTime()))return'';return new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short'}).format(d).toUpperCase();}
 function dayLabel(key){return key==='MISC/TBA'?'TBD':String(key).replace(/^SEP\s+/i,'Sep ');}
-function applySpecial(c,bucket){specialState={id:c.collection_id,bucket:bucket||'*'};sevenState=null;nightKey=null;clearNight();root.classList.add('nycif-special-active');specialHost.classList.add('on');aux.classList.remove('is-night','is-seven');var rows=(c.features||[]).filter(function(f){return !bucket||(f.properties||{}).day_bucket===bucket;}),mappedRows=mapped(rows);setSource(mappedRows);fit(mappedRows);clearSpecialButtons();var target=bucket?specialHost.querySelector('[data-special-day="'+bucket+'"]'):specialHost.querySelector('[data-special-title="'+c.collection_id+'"]');if(target)target.classList.add('is-active');if(bucket==='MISC/TBA'||!mappedRows.length)renderList(rows,c.display_name+' · TBD');else closeList();}
+function applySpecial(c,bucket){specialState={id:c.collection_id,bucket:bucket||'*'};sevenState=null;nightKey=null;clearNight();root.classList.add('nycif-special-active');specialHost.classList.add('on');aux.classList.remove('is-night','is-seven');var rows=(c.features||[]).filter(function(f){return !bucket||(f.properties||{}).day_bucket===bucket;}),mappedRows=mapped(rows);applyPins(mappedRows);clearSpecialButtons();var target=bucket?specialHost.querySelector('[data-special-day="'+bucket+'"]'):specialHost.querySelector('[data-special-title="'+c.collection_id+'"]');if(target)target.classList.add('is-active');if(bucket==='MISC/TBA'||!mappedRows.length)renderList(rows,c.display_name+' · TBD');else closeList();}
 function leaveSpecial(){if(!specialState)return;specialState=null;root.classList.remove('nycif-special-active');clearSpecialButtons();closeList();syncContext();}
 function renderCollections(data){collections=data&&data.collections||[];specialHost.innerHTML='';if(!collections.length){specialHost.classList.remove('on');syncContext();return;}collections.forEach(function(c){var card=document.createElement('div'),title=document.createElement('button'),days=document.createElement('div');card.className='u-special-card';card.style.position='relative';title.type='button';title.className='u-special-titlebar';title.setAttribute('data-special-title',c.collection_id);title.textContent=c.display_name||c.short_label||'Special Collection';title.addEventListener('click',function(){if(specialState&&specialState.id===c.collection_id&&specialState.bucket==='*')leaveSpecial();else applySpecial(c,null);});days.className='u-special-days';(c.buckets||[]).forEach(function(x){var b=document.createElement('button');b.type='button';b.className='u-special-day';b.setAttribute('data-special-day',x.key);b.innerHTML='<span class="date">'+dayLabel(x.key)+'</span><span class="dow">'+bucketWeekday(c,x.key)+'</span>';b.addEventListener('click',function(){applySpecial(c,x.key);});days.appendChild(b);});card.appendChild(title);card.appendChild(days);specialHost.appendChild(card);});syncContext();}
 async function loadSpecial(){try{var r=await fetch(SPECIAL,{cache:'no-store',headers:{apikey:APIKEY}});if(!r.ok)throw new Error('Special calendar unavailable');renderCollections(await r.json());}catch(e){console.error(e);collections=[];specialHost.classList.remove('on');syncContext();}}
