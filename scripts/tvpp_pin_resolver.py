@@ -597,6 +597,73 @@ class TvppPinResolver:
                 return hit
         return None
 
+    def _parent_place(self, display: str) -> str:
+        if ":" in display:
+            return display.split(":", 1)[0].strip()
+        return display.split(",")[0].strip()
+
+    def _place_queries(self, display: str) -> list[str]:
+        parent = self._parent_place(display)
+        suffix = display.split(":", 1)[-1].strip() if ":" in display else ""
+        suffix = re.sub(r"\([^)]*\)", " ", suffix)
+        suffix = re.sub(r"[?]+", " ", suffix)
+        suffix = _collapse_spaces(suffix)
+        queries = [
+            parent,
+            parent.replace("&", "and"),
+            re.sub(r"\s*&\s*", " ", parent),
+            re.sub(r"beach\s*&\s*", "", parent, flags=re.I),
+            suffix,
+            re.sub(r"\bbays?\b.*", "", suffix, flags=re.I).strip(),
+            display,
+        ]
+        seen: set[str] = set()
+        ordered: list[str] = []
+        for query in queries:
+            token = _collapse_spaces(query)
+            if len(token) < 6 or token.lower() in seen:
+                continue
+            seen.add(token.lower())
+            ordered.append(token)
+        return ordered
+
+    def _sibling_parent_cache(self, display: str, borough: str | None) -> TvppPin | None:
+        if ":" not in display:
+            return None
+        parent = normalize_text_legacy(self._parent_place(display))
+        if len(parent) < 16:
+            return None
+        prefix = f"{normalize_text_legacy(borough or '')}|{parent}"
+        for key, entry in self.cache.items():
+            if key == cache_key(display, borough) or not str(key).startswith(prefix):
+                continue
+            hit = self._from_cache_entry(entry) if isinstance(entry, dict) else None
+            if hit:
+                return _pin(
+                    float(hit.lat),
+                    float(hit.lng),
+                    source=hit.source or "tvpp_official_pin_cache",
+                    reason_code="TVPP_PARENT_PLACE_CACHE",
+                    reason=f"Reused official pin from the same parent place '{self._parent_place(display)}'.",
+                    confidence=hit.confidence or "medium",
+                )
+        return None
+
+    def _place(self, display: str, borough: str | None) -> TvppPin | None:
+        for query in self._place_queries(display):
+            point = self._geosearch_point(query, borough)
+            if point is None:
+                continue
+            return _pin(
+                point[0],
+                point[1],
+                source="nyc_geosearch_planninglabs",
+                reason_code="TVPP_NYC_GEOSEARCH_PLACE",
+                reason=f"NYC GeoSearch place match for '{query}'.",
+                confidence="medium",
+            )
+        return None
+
     def resolve(self, display_location: str, borough: str | None = None) -> TvppPin:
         display = str(display_location or "").strip()
         if not display:
@@ -614,17 +681,9 @@ class TvppPinResolver:
         if pin is None:
             pin = self._facility(display)
         if pin is None:
-            parent = display.split(":", 1)[0].strip() if ":" in display else display.split(",")[0].strip()
-            point = self._geosearch_point(parent, borough) or self._geosearch_point(display, borough)
-            if point:
-                pin = _pin(
-                    point[0],
-                    point[1],
-                    source="nyc_geosearch_planninglabs",
-                    reason_code="TVPP_NYC_GEOSEARCH_PLACE",
-                    reason=f"NYC GeoSearch place match for '{parent}'.",
-                    confidence="medium",
-                )
+            pin = self._sibling_parent_cache(display, borough)
+        if pin is None:
+            pin = self._place(display, borough)
         if pin is None:
             return UNRESOLVED
         self.cache[key] = {

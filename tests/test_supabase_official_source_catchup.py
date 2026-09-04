@@ -27,10 +27,9 @@ def test_parks_official_coordinate_certifies_and_keeps_enigma_id():
 def test_tvpp_public_events_pin_from_official_sources():
     events = catchup.tvpp_events()
     assert events
-    pinned = [event for event in events if event["map_ready"] is True]
-    assert pinned
-    assert all(event["lat"] is not None and event["lng"] is not None for event in pinned)
-    first = writer.normalize_event(pinned[0])
+    assert all(event["map_ready"] is True for event in events)
+    assert all(event["lat"] is not None and event["lng"] is not None for event in events)
+    first = writer.normalize_event(events[0])
     assert first["map_ready"] is True
     assert first["source"]["source_dataset"] == "tvpp-9vvx"
     assert first["metadata"]["reader"]["certified_pin"] is True
@@ -177,9 +176,8 @@ def test_tvpp_skips_operational_permits_and_pins_public_events():
     events = catchup.tvpp_events(rejections=rejections)
     assert events
     assert all(event["metadata"]["reader"]["event_role"] == "public_event" for event in events)
-    pinned = [event for event in events if event["map_ready"] is True]
-    assert pinned
-    assert all(event["lat"] is not None and event["lng"] is not None for event in pinned)
+    assert all(event["map_ready"] is True for event in events)
+    assert all(event["lat"] is not None and event["lng"] is not None for event in events)
     titles = {event["title"] for event in events}
     assert "Closure" not in titles
     assert any("not_public_event" in item["reason"] or item["reason"] == "invalid_interval" for item in rejections)

@@ -133,6 +133,27 @@ def test_lion_line_midpoint_uses_endpoints():
     assert round(lng, 4) == -73.795
 
 
+def test_parent_place_reuses_sibling_cache_for_park_colon_locations():
+    resolver = TvppPinResolver(
+        {},
+        {
+            cache_key("Coney Island Beach & Boardwalk: West 21st St. Performance Area", "Brooklyn"): {
+                "lat": 40.57328,
+                "lng": -73.97033,
+                "source": "nyc_geosearch_planninglabs",
+                "confidence": "medium",
+                "confidence_reason": "seed",
+                "reason_code": "TVPP_NYC_GEOSEARCH_PLACE",
+            }
+        },
+        allow_live_geosearch=False,
+    )
+    pin = resolver.resolve("Coney Island Beach & Boardwalk: Steeplechase Pier", "Brooklyn")
+    assert pin.resolved is True
+    assert pin.lat == 40.57328
+    assert pin.reason_code == "TVPP_PARENT_PLACE_CACHE"
+
+
 def test_unresolved_without_live_or_facility():
     resolver = TvppPinResolver({}, {}, allow_live_geosearch=False)
     pin = resolver.resolve("UNKNOWN ALLEY between NOWHERE and NOWHERE", "Brooklyn")
