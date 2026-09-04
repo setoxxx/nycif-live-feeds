@@ -1,9 +1,11 @@
 {
   "schema": "official_daily_machine.v1",
-  "generated_at_utc": "2026-09-04T16:29:14.851480+00:00",
+  "generated_at_utc": "2026-09-04T23:51:53.995531+00:00",
   "today_nyc": "2026-09-04",
-  "qa_pass": true,
-  "failures": [],
+  "qa_pass": false,
+  "failures": [
+    "pin_coverage_short:tvpp-9vvx"
+  ],
   "baseline_established": false,
   "expire_enabled": false,
   "promotion_allowed": false,
@@ -13,7 +15,7 @@
   "public_map_modified": false,
   "pin_rule": {
     "certified_pin_means": "official in-bounds city coordinates plus dataset pin policy",
-    "tvpp": "always list-only",
+    "tvpp": "every public tvpp-9vvx row must be a certified pin",
     "feast": "always list-only",
     "parks": "pin only with official Parks evidence",
     "calendar": "pin only when the snapshot already has official in-bounds coords",
@@ -21,170 +23,222 @@
   },
   "datasets": {
     "tvpp-9vvx": {
-      "snapshot_rows": 26353,
-      "accepted": 24363,
-      "rejected": 1990,
-      "accounted": 26353,
+      "snapshot_rows": 27223,
+      "accepted": 25120,
+      "rejected": 2103,
+      "accounted": 27223,
       "unaccounted": 0,
-      "pin_eligible": 0,
-      "certified_pins": 0,
-      "list_only": 24363,
-      "pin_coverage_pass": true,
-      "added": 0,
-      "still_present": 24363,
-      "removed_from_city": 0,
-      "added_occurrence_id_samples": [],
-      "removed_from_city_occurrence_id_samples": [],
+      "pin_eligible": 25120,
+      "certified_pins": 25072,
+      "list_only": 48,
+      "pin_coverage_pass": false,
+      "added": 1393,
+      "still_present": 23727,
+      "removed_from_city": 636,
+      "added_occurrence_id_samples": [
+        "0026f94d95b1c5df4ecbd5fdf66dc4a9bdacf365918397c4678a929a7ff027b1",
+        "0043ebd8e68fec9c9c268b14d0864f9e9436784fb4f4e5465e7f0694069a8436",
+        "004fab029b8cf76c92f6a2f34c9fcc538b7b0bb449adda8b5ea76ddcefd1d9d8",
+        "0051f054128c251b9205c9e117a073b3fe5763bd4a9f9d6948b172881004ae46",
+        "00b08a7f8c02fa9448335213430d67fe613153ca5b13c6611867092effad1f1e",
+        "0109419f36ee1e887356ad508bc65b42f7879968c06f7a09dfa677b1f6d257ac",
+        "014fdad3520564e37feddd2a5974bd7a0655afbb16cbc48047befb078e619fee",
+        "01904102fd3fa334d123f28825624b39f97fb27217c6feaa7ad50e48af6d8a94",
+        "022d1d9f299525d06c50ad7d544b72f983bc512e089f459d4febc8bd7d889234",
+        "024c00c70f6ea9dfba9eccdb191ba6214bfc8cfde7632cabe730d423f0b5258e",
+        "029415f1e0824f0767192a3b7c6b9939c3dfd8238b6c3e021561eec718b9003c",
+        "029eb828936532005acd2f9b0686571d2daae54c27d5009acf9dc6b7f86a1367",
+        "02cf4cd02e26e67972f13178f8f1b38cfcf095a929f93f770531540d01dfc19e",
+        "02e9df46054442c81387655ef2fdf5c596aa149026a02677d5845ecbfe354eef",
+        "036610ac86ef0ceb8c1777e13395110daa13a6eadd5055660ce5f4f6ebc94298",
+        "03ab55173f2202c182f3b2d010e0c24e1ee95617db1564e14a574a42de62d8ab",
+        "03cca01c8f9fbc8677debe6d922980e9977bcfdf94eabe054bfa342104435e93",
+        "044a6c26740bb43c1153fc715ce414068b7fc1725383245ef4111454a90ce7a9",
+        "047dab8e16b2ecc4ab79dc0cf3f0424f33b7a950a9646fb4e4075736c7a5f11c",
+        "048bfab461471b85b96af62f0c31b6b731cf6decc9434854fd37b932fb3badf7",
+        "0491b64016fbef23519f906abf6ec4b25156af3b4397a66f9e17d19c31f5411c",
+        "04a23ffac8776d5e0bf069abbf68dba269eae1f3d63b62eb90ee5c184a9094c8",
+        "0527457d0924ef9201df2c792922683e887971fa49b388f740deddf60281eb5e",
+        "053b229d265ea4d9c84ef493a40dae0fd81adae76b448ddbf5354533111f5fe1",
+        "05593a45afce2cb350801e8d36d71d27a2ce50bad16970034108d0a84c18945e"
+      ],
+      "removed_from_city_occurrence_id_samples": [
+        "0037c50da0df70dcd0f84d15d52680e254c15422955076923218b829b60f7dc5",
+        "01cc7e464dec4cabff1970b17f3f4b33b7a79c90ea2b76616469f2263480b9d9",
+        "025c424968b6a29101a15e37f2fe46b275e87b64b44a469b618b085483fb6ee1",
+        "0260d87d1753afad8335b8ca59007f5843a772d53db468a38255c624f1acd8e7",
+        "02de38c866a515af0aa71df3f200993c9914e46a993c50315b328da5fa648cb5",
+        "03cb493f7c7b5542d8c93c6ff58be115b19efd7d4ad24de452caa58f46ea459c",
+        "03f0f4ed5a3c835021ef434458a3194817724c7842a3d4414750c4e2af84e123",
+        "0441f0546178036cb8cd77cf8136853580fe21085d9218cd452313ce01c4fb1b",
+        "04436c75cc0f8417dc4fc56a80147bf66bcf14bdf6825f84b5b960ed6c2c9007",
+        "04772497139479a3dcded9b4a756ecfcd42e1c4d44c0a1c8155358df98888098",
+        "0550fdf0573600ba7a8fd485e9f166c86fd9a7720b189dcde5d356f3e0b1c29a",
+        "05963aeeec9f91c03bc87328410df6e36dc7e3970899cf708b2e63bfcc875b75",
+        "0619bf7a2c2f1f089674ebd4d233e1ab0deee07c67e52ef0c7f68e40219c1ef9",
+        "063222f69d8fa7c26c1136adb27e4c524c16e99a6a35a8545910ee6d6d430b0a",
+        "06581db1ce6285a14db9a1f952a241841c3a9dbe61a78adf85fa44a789c794e7",
+        "06676250d878d6f7a2d8763343dc5dd584938d8994926e15c5e9105f0fe6c3da",
+        "0710cfae118209802ff01a3abd3ee14bab01d422e6ec24a50c19c09545e61e9f",
+        "071b9e66d55fc797a0741c71b5e9b6f89e79d415a19a728ed16af93e363bb1df",
+        "0750871da4ee51b4ed3eecf8e41361674d704e6429cf02dcda529024141aa9dd",
+        "07f4ed6e27cb2cf1a58f43d31ab9c16fdd21390fb6592a532595273ad454ce65",
+        "085a7bba6a8532a2f46c09f4d0ec3b17d77d0f7a318521c7a1c36b71b8e0d01c",
+        "08aece488abb32c9b99b53ab940c8ce2aa192f13a3781c368180bdd1d15b8789",
+        "08ef61d3676c4ad6887946ea044e94520b715da9c72f14b3dc79460921386fa6",
+        "091a52cc3c70d18d64b8e6c189a0af8573697d2ebbd0c73453bece8e0d3d90d1",
+        "0af4a5dc38ad6f58dd07a33797c9da2c252d7ccddcd6302345ecc053e0d03865"
+      ],
       "list_only_samples": [
         {
-          "occurrence_id": "28d9e9d70abbe1b99a829203ecb67e4971ab25b12493cb304570442e00eefcb2",
-          "title": "Street Health Outreach Wellness Program",
-          "display_location": "UNION HALL STREET between JAMAICA AVENUE and ARCHER AVENUE",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "bd6cd23020430a3dd8e5313c3b1c6ea6deac3e86ec813bfafe54d70d0a5474f2",
+          "title": "Sukkos Season prep",
+          "display_location": "NEW UTRECHT AVENUE between 50 STREET and 51 STREET",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "4643bf5fedaaca28ad32b1ba511fbf70262fa3ea32c067ac881572ea62be6fed",
-          "title": "Street Health Outreach Wellness Program",
-          "display_location": "MOUNT MORRIS PARK WEST between WEST  123 STREET and WEST  124 STREET",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "1d57f636259c78aa8939587674abcc422db9d131bd1d61e135456c33c2ba2763",
+          "title": "Sukkos Season prep",
+          "display_location": "12 AVENUE between 50 STREET and 51 STREET",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "0d892cb6d355602acb714ebfa429fa06c18511f730060073034a8c575370eb0a",
-          "title": "Street Health Outreach Wellness Program",
-          "display_location": "MYRTLE AVENUE between MARCUS GARVEY BOULEVARD and THROOP AVENUE",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "f3c7939114a09287f00924c12703ea6ec950525d7f1cd875422492151459a16a",
+          "title": "Project Street Beat - Keith Haring Foundation Mobile Health Center Community Event",
+          "display_location": "WEST TREMONT AVENUE between UNIVERSITY AVENUE and HARRISON AVENUE",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "75ab731d61418d46de770f6e0fccde80027852f144b3f3bf30f1ea0faf2965da",
-          "title": "Street Health Outreach Wellness Program",
-          "display_location": "WEBSTER AVENUE between EAST TREMONT AVENUE and EAST  178 STREET",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "4573df8b81830873fbea1992197bd99bff35ed640645dc8261f5dd5023f33916",
+          "title": "The Back to School Street Play Invitational",
+          "display_location": "ST NICHOLAS PLACE between WEST  153 STREET and WEST  155 STREET",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "58dc309f189a796fc6d19be58b6f767c7d12a0741d3ba4c7974763cbc9606cae",
-          "title": "Street Health Outreach Wellness Program",
-          "display_location": "41 AVENUE between 77 STREET and 78 STREET",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "b880d2cb5455746cd2bcf360e2e0964eb65ef0a144bd3802fc7cb6d72d7acfe4",
+          "title": "Coffee Brand pop-up line queue",
+          "display_location": "WEST   14 STREET between 9 AVENUE and WASHINGTON STREET",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "5367f9dd619961dc568106df03d4b5e519320d1a97751bfec923289736118af5",
-          "title": "Stone Street Pedestrian Mall",
-          "display_location": "MILL LANE between SOUTH WILLIAM STREET and STONE STREET,  STONE STREET between BROAD STREET and HANOVER SQUARE",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "caeada2c45637343b622cb2b19ef3be1fcb27f64ef8c4ff2a6d0d6f75d9bf675",
+          "title": "The Egyptian Day",
+          "display_location": "WEST   50 STREET between 6 AVENUE and 7 AVENUE",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "5b679838799392df9936d71d6bf2c1e2f0ada31e0abaef331ecb847d393ea331",
-          "title": "Broad St Bumpout",
-          "display_location": "BROAD STREET between EXCHANGE PLACE and BEAVER STREET",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "fa289e9a6c28df3336e4179566eb5f94ad995a901dc4a0e056e43578d00a62ab",
+          "title": "Back to School Block Festival",
+          "display_location": "220 STREET between 116 AVENUE and LINDEN BOULEVARD",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "c2387ebe457a01cce52b9c23a1ea4b30714e2bb0ba8e327492ef36f44a2d7ae6",
-          "title": "JBOLC Garden Community Farmers Market",
-          "display_location": "WEST MOSHOLU PARKWAY SOUTH between GOULDEN AVENUE and SEDGWICK AVENUE",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "b3cac660c5d12c985af36ad259274d7f004284b479428422e83b36557b629269",
+          "title": "The Holy Temple Church Community Give Back",
+          "display_location": "CLINTON AVENUE between EAST  180 STREET and OAKLAND PLACE",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "e0f649cacdc39b6a031bc1e0e7b00dd18aeb3448e75552df205d51977c6cae75",
-          "title": "Pop-up cooling stations",
-          "display_location": "Fordham Plaza: Fordham Plaza EAST FORDHAM ROAD between WEBSTER AVENUE and FIREFIGHTERS BOULEVARD",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "9466401a04a61119e195af92b22dc78706919b840cb7ee9234a4fd914dfdb47e",
+          "title": "Community space",
+          "display_location": "SAINT RAYMONDS AVENUE between WILLIAMSBRIDGE ROAD and EAST TREMONT AVENUE",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "86f8703d0ac2f24bc991b97a5875bdaafffeba25280e2ba09052439f2f9668f9",
-          "title": "170 Farm Stand",
-          "display_location": "TOWNSEND AVENUE between EAST  170 STREET and EAST  171 STREET",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "7a7611d0aa148a2f844e2b74ffbbe23736e891f41a1f883c3f248835295dd3f1",
+          "title": "Richmond County Fair",
+          "display_location": "RICHMOND ROAD between ST PATRICKS PLACE and ARTHUR KILL ROAD",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "6c75d0373a8cc1be1d0ffe90e999b715944e8b1f5f5631679f0fc98bd153c884",
-          "title": "Public Art in Broadway 35-36",
-          "display_location": "Herald Square Plaza: 35/36 Broadway  BROADWAY between WEST   35 STREET and WEST   36 STREET",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "eb368093ff7e4b380780e4fcd0acb4af545636f5ec6505c91932764c969c7db3",
+          "title": "Queens Church of the Firstborn Celebration",
+          "display_location": "226 STREET between MERRICK BOULEVARD and 133 AVENUE",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "cb524664d846fe879c594159d220f7a5d42d3d2d8defa5865b12f50b9ab745ec",
-          "title": "sukkoth",
-          "display_location": "12 AVENUE between 48 STREET and 49 STREET",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "136686260703a562884b91a71fbf6c96012661e28a8133668abff6c00163d330",
+          "title": "Gear Up and Glow - Back to School Giveaway",
+          "display_location": "WEST  131 STREET between ADAM CLAYTON POWELL JR BOULEVARD and LENOX AVENUE",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "0ad3430f59376bdfde3586ebd5b11786cf139d2b462b95b4900fbe2a0a077cdd",
-          "title": "lulevs center",
-          "display_location": "WILLIAMSBURG ST WEST between LEE AVENUE and BEDFORD AVENUE",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "14f41dbced6c12aac188119662ae4b6d801926b564c013213b2c354640fda87c",
+          "title": "TCE Presents: Solid Groove Concert at Fulton Fish Market",
+          "display_location": "RYAWA AVENUE between HALLECK STREET and WHITTIER STREET,  DRAKE STREET between VIELE AVENUE and RYAWA AVENUE,  VIELE AVENUE between WHITTIER STREET and DRAKE STREET",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "d6edf69999fd7a5fb782a4825468490d1955ff791198ad18dc6afbd6bec9f67b",
-          "title": "lulevs center",
-          "display_location": "KINGSTON AVENUE between CARROLL STREET and CROWN STREET",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "450d7bafc298c221cd28985d316d0fd576aa9782f8f5d5e5a424be898ea347cd",
+          "title": "Anti- Hate Unity Rally",
+          "display_location": "Diversity Plaza: Diversity Plaza 37 Road between Broadway and 74 Street",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "3acc1b3cd39021098d2576311151a7edbea4cba553a09330e62f6be1a706eb92",
-          "title": "lulevs center",
-          "display_location": "SOUTH    8 STREET between ROEBLING STREET and DRIGGS AVENUE",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "67667dac8b10dcbb8438f5c991985314a20f71396724696f06460280d84ce22c",
+          "title": "Peace Walk Street Event",
+          "display_location": "SHERMAN AVENUE between WEST  207 STREET and WEST  204 STREET",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "60d3ade12a19519157de8212e7812fa4abcd0f29b5ad4dc0d2f2bb18d4a9a0e1",
-          "title": "Sukkah",
-          "display_location": "13 AVENUE between 39 STREET and 40 STREET",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "90d9a40f7a0c2063c95ac5e5013fcbace33d2274207450682f2597458dddb7d7",
+          "title": "High  Holidays",
+          "display_location": "PENN STREET between BEDFORD AVENUE and WYTHE AVENUE",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "06138ffe61a4cb8b3b2723346500b0f9085a08dfdd5d5e4ed497a0a9443c0765",
-          "title": "New York Proud Photoville exhibition",
-          "display_location": "Times Square: 47/48 Broadway Pedestrian Plaza (Times Sq) BROADWAY between WEST   47 STREET and WEST   48 STREET",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "69915c1016c968c7fd8c9858e487573a7dc89335a1fd549e0ae6a4c86bd95f1b",
+          "title": "Apocalypse Community Back to School Block Party",
+          "display_location": "99 AVENUE between 217 STREET and 216 STREET",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "b9158a77bb14b4fe47840346dae00ff05a4be228e5c707cec44fd905cae10fbe",
-          "title": "FRIDGE BOX  2 TISHREI 2026",
-          "display_location": "EAST NEW YORK AVENUE between KINGSTON AVENUE and BROOKLYN AVENUE",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "649a4e920e661e7561f76189aad8045e032f07bc0092fdcabdc100a0a8b72a04",
+          "title": "Rosh Hashuna",
+          "display_location": "WALLABOUT STREET between BEDFORD AVENUE and LEE AVENUE",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "ed82a07a083d03d30e1248531ebac1d03a26a2f848f3a975499a44f9e2196f39",
-          "title": "FREEZER BOX TISHREI 2026",
-          "display_location": "EAST NEW YORK AVENUE between KINGSTON AVENUE and BROOKLYN AVENUE",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "7449c08e16820662a6f1807c7c9388258fe322ab55faf009e0cf272cadf8b533",
+          "title": "holiday storage",
+          "display_location": "LEE AVENUE between ROSS STREET and RODNEY STREET",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "f89f3854ac139d9cd4ae39afaadf93800460167da8a5286c8043a96fa83b485f",
-          "title": "Holiday Storage",
-          "display_location": "LEE AVENUE between RUTLEDGE AVENUE and PENN STREET",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "695271ec16bede523e2f2889aa93ec6a7fd26fc04b252f0ee2fdb0963a956ec5",
+          "title": "Roller Rabbit Autumn Hearts Coffee Cart",
+          "display_location": "MADISON AVENUE between EAST   85 STREET and EAST   86 STREET",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "af45c156b5b6a6d3c230b9dabfd0db68273c99c9b56ff994caacb97117134bb0",
-          "title": "HOLIDAY STOCK",
-          "display_location": "LEE AVENUE between HOOPER STREET and HEWES STREET",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "e2e3c8b691a99d607554b5d73a90670b9647b2f83c7285c5a3878458deaf26d5",
+          "title": "sukkos 2026",
+          "display_location": "HEYWARD STREET between LEE AVENUE and BEDFORD AVENUE",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "5181c1fd20c96c1e4250057156dad3a516883e7262c24d0b00d80ef75c9b46f3",
-          "title": "SUKKAH EVENT",
-          "display_location": "NEW UTRECHT AVENUE between 46 STREET and 47 STREET",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "103b790711f1a883a91a8e5cb3dc11dbc9182955ac07987299950a9809cb3953",
+          "title": "Taubers Fish",
+          "display_location": "LEE AVENUE between HEWES STREET and PENN STREET",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "fbf9803f4f956cd738f54cee6e0d7935111fc7f01020aa16185d7ab17c4a5df5",
-          "title": "rosh hashna",
-          "display_location": "AVENUE J between EAST   12 STREET and CONEY ISLAND AVENUE",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "982ff0e3ff057998825f78a24b59c260fc4d1d93a738428250aa9b46d10ae78d",
+          "title": "Astoria Mile",
+          "display_location": "BROADWAY between 38 STREET and STEINWAY STREET,  BROADWAY between 38 STREET and 31 STREET,  BROADWAY between 38 STREET and STEINWAY STREET",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "b4d8ce79fff9a628bb489063c7b4e59d8fb672d979a90553886f23fb9d1bbd3e",
-          "title": "Sukath",
-          "display_location": "13 AVENUE between 40 STREET and 41 STREET",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "8778caf8260611e26b18c0f58c23a5dd57b9d4bdb2c87eb34a605a9186d6d8de",
+          "title": "block party",
+          "display_location": "70 STREET between COOPER AVENUE and DEAD END",
+          "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "ba532828618044c58e1babfdcbf9e728e64dad8425a5c9a84e4e7db78c65c65d",
-          "title": "Rosh Hashana",
-          "display_location": "PARK AVENUE between SKILLMAN STREET and FRANKKLIN AVENUE",
-          "reason": "dataset_list_only_policy"
+          "occurrence_id": "670df5702045baa82a59f37b73161ae0b4c726a4d580af5f135ae74af5d5700d",
+          "title": "Van Buren Annual Block Party",
+          "display_location": "VAN BUREN STREET between THROOP AVENUE and TOMPKINS AVENUE",
+          "reason": "no_official_in_bounds_coordinate"
         }
       ],
       "rejection_samples": [
@@ -286,9 +340,15 @@
         },
         {
           "source_dataset": "tvpp-9vvx",
-          "source_event_id": "967107",
-          "title": "Private Party at Magic Hour Rooftop: 485 Seventh Ave.",
+          "source_event_id": "969392",
+          "title": "Production Parking - Rock Center",
           "reason": "not_public_event:street_closure"
+        },
+        {
+          "source_dataset": "tvpp-9vvx",
+          "source_event_id": "965630",
+          "title": "2-US Tennis Open 2026 Bus Shuttle-Voco Fiorello Hotel",
+          "reason": "not_public_event:transportation_operation"
         },
         {
           "source_dataset": "tvpp-9vvx",
@@ -310,20 +370,14 @@
         },
         {
           "source_dataset": "tvpp-9vvx",
-          "source_event_id": "889679",
-          "title": "The Diary Lawn - Maintenance Days - Closed All Day",
-          "reason": "not_public_event:maintenance_or_closure"
+          "source_event_id": "973498",
+          "title": "Permitted Film Event",
+          "reason": "not_public_event:public_event"
         },
         {
           "source_dataset": "tvpp-9vvx",
           "source_event_id": "963650",
           "title": "CIPRIANI EVENTS",
-          "reason": "not_public_event:street_closure"
-        },
-        {
-          "source_dataset": "tvpp-9vvx",
-          "source_event_id": "969392",
-          "title": "Production Parking - Rock Center",
           "reason": "not_public_event:street_closure"
         },
         {
@@ -334,8 +388,8 @@
         },
         {
           "source_dataset": "tvpp-9vvx",
-          "source_event_id": "970779",
-          "title": "WALDORF WEDDING",
+          "source_event_id": "968072",
+          "title": "Columbia University - 2026 Move-In",
           "reason": "not_public_event:street_closure"
         }
       ]
@@ -350,63 +404,11 @@
       "certified_pins": 1199,
       "list_only": 13,
       "pin_coverage_pass": true,
-      "added": 98,
-      "still_present": 1114,
-      "removed_from_city": 177,
-      "added_occurrence_id_samples": [
-        "01bab48230dbb8d18c07ef8fea695b6066ffce8eda85ad433c03a468e598b043",
-        "01daa75d417b6bcedf33987f1e7fb6493246ee1869fa9aa8593fa6bf9fab7337",
-        "0339374cd54f3d026b3df11cc00f8b340510b18b0ef76e1aec31ab41a262863e",
-        "04b98dc286ed3d5bab3bff050e6d3537925cdf49e7c82549c6e4e83b3f517083",
-        "05c881ad5009cfaa2db689ae7a9298f0373048e2046c3c7db2a3d7064a81d4e0",
-        "09188835e020466cecbe7aebb09eae0d9a98e6c13818f34cd5af8239a50be476",
-        "09c5b1a71a9e370ea573826bab0642116da5e11745941d76f0d41c677a5803f1",
-        "0a3bba05b3a2b833efb2edf5e398f9d46c4ac5dbaf983fd11cbaaa1f18738cf8",
-        "138c5f2a93a88adc537a846bffa3d8d7b4ba39e979c46a8c0d5d931d4ff9b895",
-        "13c58a2331224b28297ae90f43f4404294e497492c0052bd9b1f1cd185b1cdf4",
-        "1726375ef6c11b528c58365e7131a820d21842a7b9e8cd9fdcc3515b15c39358",
-        "1afd8f813802346ce9cc0afe047a8166e52b8f77775f702be8553ba11e52423d",
-        "1cad90b644c1ba8484e6b03159b7513e57adb715c73c42e5c6d601404fe072b6",
-        "1ec18d0d1f3c492e7484f38aac8e225f6f6cd7cc643e42e7b20a1250135e7c47",
-        "2126084936431dbf1891e5c8b0a7fa7f7423c5c7517e582ea6fffd1f53f30401",
-        "285b77e97472ba9d6868af8bf54c3351bc2fb4b752b6bfa68bcebb7d1db5c003",
-        "2b647b3daf04cc94748ae2c3bfc071c3be811a5815a535fb38804c4f82e7b290",
-        "2b743906847d03ea0c49889500365c51502de0b7c8209dccb8809cc923603a92",
-        "2bf162541ca110674addc0a3c4f6ecf772084126d06e8785f871b01a65c3a85c",
-        "2fbf882384f6de2ee4c7343464629adebfe1630aecc76e168787874c3e0d9380",
-        "31f5a8745c0d7b4b6c5a3e6054ff78354fd0774ba6af3835226341e22ca5888a",
-        "331b34e861286318efd26d17a6dc0c6ed14bc6643906a031991805044ef0040f",
-        "36d2bcde78de9ee6f7e626f84ed5897243d4ef9a68ef35d60734e5aa3a142934",
-        "3719ece8b0b6642136b4ca08ad899c2f996d7bbe16bc9add8ddc744ecab9ca52",
-        "3bb4caa19e5dfbad5762129fb0a7626f4feab675b281a2557fd596e01755fa97"
-      ],
-      "removed_from_city_occurrence_id_samples": [
-        "023ab696ab16599747db9fdee3a6dbc1080d067b958c433a49b02a5db0f075fe",
-        "028d61061c0c3077bed45543c10a25990a4ee5b7f04f707edc510bf0ea30aae5",
-        "02901140ad29b86f7a5807359cdda0ba3509d9e259fd754c574f466c1e61f9ec",
-        "02eca62d9be87129441d6848dd04b7d024f5f769da4e66a69045808d09760e5c",
-        "033c1d29bd8ec1da7c70adc558023455be9e9dd60b3bb05d14660de6436f0bf2",
-        "049495b2189e9e99bbe0e43de866949f7e52bc7f265d9e7b1085b1e51d6c0762",
-        "062e6732625be57b4a4530bee9b992410f54e042a4f53eaf9ff0722f6834cb31",
-        "094c9b3d5ea4fe1927355e6785abd2c161f3843edd8c715e323f727d00c370e5",
-        "0a1e26f32f0c20b2d0534863c0af28223ae702b4a8744203e063b42d6e19ea6c",
-        "10040f50733c875b46f9e37ebd86a93904b8463bc47f7b934775ae8f9e8fe1f3",
-        "100a2e0f8effeb06af4b825d03d6b1bbdfb043bae90087d5b2e27b45490935c0",
-        "104cb2263d9591103359be9c0fe947dde049413ec7bb665bff7fb60012bf8892",
-        "10cd493cf264b49474109795606df00b0642b920b3899168fa9866e3d2461007",
-        "111eea9d50020c45c1632c7b3ccd6d5a9c036ed840e5d06d775550e9e7164823",
-        "112c6744c430bbe3e255ffdf49eb9dfa628da56d5ca5a2bd77e4e2139e3abf7b",
-        "120b46047135cbc7bee744d6b8659cb08f139a8f826b2e5ca10eb58f11453de2",
-        "12bd11c264067a03703b7acb7255e70a7f5f352a9bad5dfdcc6845a09280ba6b",
-        "143ac0562b553a9c08a91214793398409b28263f3392e96d46a571525c1f58b6",
-        "15de8bfd8dc9b61080f87e1eba5ec4e00c2e0cb2cd7769ce10267f670e6fe37f",
-        "16abe6f74e1c069ba57f813574f4b1f9ae293acbab1c340a9a2112428965dfb6",
-        "19e53fe29f215a5e8e07862ae0f1cfe22fa97cf959b6bf22a0c9f3f4bd90561f",
-        "1a2b7ee4e2e7a9bb9042b8140190d490c3f8cd1a7f5f4fbdcedc468cc5aeff69",
-        "1af16b5a762851f96bb405fc36fe5e1b2959f096ce02df498e65d71c70f2a3ec",
-        "1b1c9ca24fbe1dbe20a5cc44456f8f890906f3fa321dbd07a1bd28f1815b354a",
-        "1c22c107b588cd9e0cc97a26ce2ad3a1beeb8d8f344ae719960ab6a818f6ab2e"
-      ],
+      "added": 0,
+      "still_present": 1212,
+      "removed_from_city": 0,
+      "added_occurrence_id_samples": [],
+      "removed_from_city_occurrence_id_samples": [],
       "list_only_samples": [
         {
           "occurrence_id": "628b8080a5d666cb3957ba547f34b14c0ada4a366d553536530d0452584e9337",
@@ -521,63 +523,46 @@
       ]
     },
     "nyc-citywide-events-calendar-api": {
-      "snapshot_rows": 213,
-      "accepted": 213,
+      "snapshot_rows": 2458,
+      "accepted": 2458,
       "rejected": 0,
-      "accounted": 213,
+      "accounted": 2458,
       "unaccounted": 0,
       "pin_eligible": 0,
       "certified_pins": 0,
-      "list_only": 213,
+      "list_only": 2458,
       "pin_coverage_pass": true,
-      "added": 35,
-      "still_present": 178,
-      "removed_from_city": 16,
+      "added": 2245,
+      "still_present": 213,
+      "removed_from_city": 0,
       "added_occurrence_id_samples": [
-        "0e9d3652734db78ed53a490f99359a6e2e8f9d9e2934d9e97d83f876c7d52419",
-        "137f8e9bf625a5df272275559f4a4d6dbdd4ade7f54a7804605326c0d72e1906",
-        "16bf99aaab1590a0c758cbdb6f7f725796021a8aa00c86509d80ce52c046b226",
-        "1e62a29ebb5e1a742301a5edcebc09be76b19723613206b2f06c92ca7241d270",
-        "1e9bdcd96ef541fa96b3a39a95105e8e0553e24d918465adec55f4b9d63729b9",
-        "27bc2e15f7235f234d86595b2231c5f03333033bd68bc14c743c7908e1b7ef65",
-        "284ae49d5e3221ad3891a316d0e53e582b850f89f9397222e361cc500329409c",
-        "2d5e1209e45341dcf1d0c7ef2aa4cfe2e85d00ef44afce631084323b76351b56",
-        "2ecd760d098a27ac1c8aa0f2e1608186d47f532c3d1ff7dbf014febbe915718f",
-        "32c2eb13ec95736c3ec2b0ac8d85d77aabe7a976ed887ac46d2f473c961edace",
-        "401124ca5b9884a4bb5ef978e251da3b399b38e9d74a182eae08084933cd006a",
-        "42411044fc168a316225f83d79a7143104eb34396f10521f8bb58cf1b126acd5",
-        "47468448b6adbd12268368d8bd115ece6fb2162f27e2ad8e970469fff3f8be1a",
-        "4820a6d8f73e0bdd0cecab8b08acec208eae6823d108e53a637487835d62bc94",
-        "4f155f9eaf7441a48f5f643bb9d9761209c8b0d7f045d31cd13670d94e4fa1f1",
-        "4f7ca0825ad84aad2d17ce1ce12c2a69b82f2fd7a342e8e1a766a72b0fe48d6b",
-        "5a783f2da50d09766c65b8b96ced3ce492ed5ca4f79ba322605cc6bfb9192eee",
-        "659768cc5c24317ae8413cdd9d50b09535c0c17ed9d7f55d3ca458b2e951aa22",
-        "77fd3709be8fd5d96be1d6051d1339025f41be6a0d0a33cf04a48c60851e96c4",
-        "7eb41f135cc97874b57c6d44dc330b5c2810c7233c70c322b59d211abc7169dc",
-        "810f29aa89f5382a9b40b97d371954c963dd555e735a80b0debebe32924f54e6",
-        "847b90251196b8aa4eb60c1420c89a2284812845cd5634585b7137a1c04e541f",
-        "86fd60e19b209773a9e0ba2978fd0e92686fc285332270dc0ec124bc3af1aab3",
-        "88539427d41d33e44a8ebcdb6d3a2335f3ecd9aed7e7116d5976a1641717abcd",
-        "8a882087b2e5d8352adea6ac0ba4ee42edd632d30daf758f07aa24a98332bf05"
+        "000d5f749bdb66f8f0e217cd288247db6eb697e3b4f8ba910214191bd0f42135",
+        "0020e436cdcf7bdca5722ccd3fb2c28da265cda516ff461d024ff2950d94d592",
+        "0032519771094be77aae8e927417473845596716c89dd981b957c10c190d44bc",
+        "0034c4d98db732e55be6179428b7691dcfb17b2918ee307eeb0182e1514a6424",
+        "003bb84c4c30b9f7abaa59fc1e0095200d6d5d52691f4c4001e22bbf50fe2a2c",
+        "004eb42f210d6a9e360b52f3b5d2f8f109fb80334a8bbc79e696298aaf1417b1",
+        "006ca124b88a73dfabc12dd0b35787b3e309956290821262f9b6975191dacfa1",
+        "00a1bb34cf175246ce47af8044b822070fb24a5d37571a6fd428f813dac09cdc",
+        "00b4f1f56dbf19ad528ab8a6424f015c8d96adb01074ad9b3b00c203440b9bc3",
+        "00f24213ade7593442372e181316fca0e81b6ed56b798146d39b259391ed95b3",
+        "01260472591ed6999b81f6954764c603dccfdf489dd09e3783dc33736e87e445",
+        "013744826ace415d663c6608a4ad65d249a94a214a08e1ed9f88d61f3ba6d859",
+        "013ec71fee33f3024fe355220224e3dfb7d2a46a4ff2640c163a6732fcd5e8cd",
+        "016d7634a12f098d267596a0c2e7fff2388a77921f35a24ff53953feec452da9",
+        "016d9eb3d67e06ef1fa4dda881ae608644a4edea2e191592b6f5746b626085a0",
+        "018a34b1bf906f7fd644021b60e022a7e3325584d13d76b9e300c850a7b55da4",
+        "019302c6ad5b5a859a9a586cef60306a8241d31170886ca76e72f90778b28376",
+        "019ec20e54b3059d832cbeebd71ac36a768427a8bfb9c2d481309d78c001eb57",
+        "01b36666ac3bb2ccdef11ff89a50cb788e0ea375b1b5d49b118b0c5cff51c0ed",
+        "01baa1399b4b1a7159cb4ab87a6bcffbaf3e6d1ab3a19a736cee595dfed39224",
+        "01d93943b1df1fc9a40bcd4f93666745aa444a791bed6b26a5fb3a8ee41a4d54",
+        "02085aa3ddacbc127d7e24aed67d0de6b12b063beb7ddd35d4269ed725a096aa",
+        "02552e0ceae3ff8d9da9588e905c88ba6a9f5d3b8b9c2a10605a21bb9e216274",
+        "027033b2146abea3ee5e82412e08d549089dd1829c5d85a760b16e2333deedcd",
+        "02c50ace54a7e771dd5c14ab8446cabfcb38688626010ed3747d7999d857e686"
       ],
-      "removed_from_city_occurrence_id_samples": [
-        "2d7a213e86a21976c426635b5cc221968007b852d3d588fe97164c86081a5263",
-        "2f414cceddffb7cd0280437280c7ba080d979e2f7310126a6a22103a1c39714f",
-        "3e4d43d2b4b86d8e4633fd364751cc8bef7c9430136d2952398a646d29dacdbe",
-        "4e94c28fd9ec34f0edbc1e4d18af61e51f6d87453644f7ab1a9394dd5fb3f7d0",
-        "536e0f2e099a5d5e07fbfccdc696fc8fd407694dfaa7e9be564e7e6cca64647c",
-        "6dfdd7d3ff9fb9f525af7b1b4929075db40d36375235092ce7662748e67663e5",
-        "7e2411c01ae10a77676b78543ba1050754e23763a03ed6798f7b847b6479b3e1",
-        "832ebb838de71d0b5a88ee98e809821a089c64aa4a7c0955263602f42a009a5a",
-        "8aeebce7805aa8ff6e80653cb0686104427e8052f6f739392350cdf403e1750b",
-        "8e332c8e1f06194b203771e404499ee8e9dee0e85114d4f688605b0cb004e8bf",
-        "90017a2aae559b9e672248a9d04079f8403f8dd934d5842e04a1233d2b25f43b",
-        "d3420dc2057ef843f54152ed589bea4a0d2debde9156d89a089f2a4c325e9175",
-        "e6f217312a15a794f6eaadc13a846545400a634b49b58910e4a5635a56282461",
-        "eaa810d4f89802d4d4bae45b4ccbbfd7b0fd3dd0125eb93ae05cfb8b2e97a650",
-        "f44c13aaa0ceefb0a777eae6549243c7117a280091db9e1cc08d9624ff470105",
-        "f96f7a3a0c19250bcbea78f864f22b91250dc69efa856394d1700d3be37f93a6"
-      ],
+      "removed_from_city_occurrence_id_samples": [],
       "list_only_samples": [
         {
           "occurrence_id": "541ec8bcd390fc4f27be5c24c83eaa82fa76815ec7e2065af9c81483b3e2fda8",
@@ -595,6 +580,12 @@
           "occurrence_id": "88539427d41d33e44a8ebcdb6d3a2335f3ecd9aed7e7116d5976a1641717abcd",
           "title": "NYC Restaurant Week",
           "display_location": "Check website for a list of participating restaurants",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "916f98dafbff5eac6104c00bff01331d9bb661d3ab8848ef467b6293f388011a",
+          "title": "Summer Sports Experience: Pickleball",
+          "display_location": "Greenbelt Recreation Center in Greenbelt Recreation Center",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
@@ -634,9 +625,45 @@
           "reason": "no_official_in_bounds_coordinate"
         },
         {
+          "occurrence_id": "238227c797bb395dc46644cea8292138fd7f2cfbb0063dd98672dbc044721b61",
+          "title": "Line Dance Fitness",
+          "display_location": "Handball Court in Betsy Head Park",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
           "occurrence_id": "30cc39b929e2a3716ad6c8ee2e361a217bfdf28a1a7921edcd56239ba5d01e41",
           "title": "Old Cathedral Outdoor Market",
           "display_location": "PRINCE STREET between MULBERRY STREET and MOTT STREET  Manhattan",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "f41a3e726737c72efc4730394117bb48c2d038012ab99427c678ffca6e1f575f",
+          "title": "Yoga",
+          "display_location": "Garibaldi Plaza in Washington Square Park",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "5dfaf0318a1efb7416d5c54df23f5191556cf0fd91950a14592333c12f7097b5",
+          "title": "CANCELED: Cardio Sculpt",
+          "display_location": "Athletic Courts in Torsney Playground",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "049af52a3291df29dd894ae9407cf3ad1f06d5f774ea8b0016a02d562435ea4a",
+          "title": "Forest Fridays: Volunteer Forest Restoration at Van Cortlandt Park",
+          "display_location": "Van Cortlandt Classic Playground in Van Cortlandt Park",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "cdaf460b0d3885e708ee0c8179adfe44cac6dc910a17103d35303f1a513eb013",
+          "title": "Forest Fridays: Volunteer Forest Restoration at Van Cortlandt Park",
+          "display_location": "Van Cortlandt Classic Playground in Van Cortlandt Park",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "0034c4d98db732e55be6179428b7691dcfb17b2918ee307eeb0182e1514a6424",
+          "title": "Powell's Cove Park Forest Restoration",
+          "display_location": "Powell's Cove Park",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
@@ -676,57 +703,15 @@
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "deece57dc82a33c23129c1594d49a0e5d2659549b1f098bd8b34580da5b303d9",
-          "title": "JBOLC Garden Community Farmers Market",
-          "display_location": "WEST MOSHOLU PARKWAY SOUTH between GOULDEN AVENUE and SEDGWICK AVENUE  Bronx",
+          "occurrence_id": "c6a30e835163c910ea8c1fb8335a310a0a62dafcdb562325428b112925517208",
+          "title": "Zumba Gold\u00ae",
+          "display_location": "Dance Room in Constance Baker Motley Recreation Center",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "98b684f0e2a2da43273cae43279956db0440abfe76f8653cce983971a5c5d249",
-          "title": "Kids in Motion: Sol Lain Playground",
-          "display_location": "290 E Broadway",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "47468448b6adbd12268368d8bd115ece6fb2162f27e2ad8e970469fff3f8be1a",
-          "title": "NYC Public Beaches",
-          "display_location": "NYC Public Beaches Citywide",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "e3d1c01ade93645c402b3d6b27e3bc19c3640ce60b94138029833ee8f8ef68b6",
-          "title": "Fordham Road BID Sidewalk Sale",
-          "display_location": "EAST FORDHAM ROAD between JEROME AVENUE and WASHINGTON AVENUE  Bronx",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "7b648160683f9d3008b991386153cfd25acdbf29c401dd5ab62cac3abbf45c2f",
-          "title": "People Against Landlord Abuse and Tenant Exploitation",
-          "display_location": "1411 Amsterdam Ave",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "64cf7eb240db7e06d8fea4f58036a32de383cced2a20122b21c62d60c6143851",
-          "title": "Summer on the Hudson: Bingo!",
-          "display_location": "125th Street and Marginal Street",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "978b25693441d456cf96dbfe829e4d5bbd43ef958a5b986fd122f3209c82bf3f",
-          "title": "Down to Earth Chelsea Farmers Market",
-          "display_location": "WEST   23 STREET between 8 AVENUE and 9 AVENUE  Manhattan",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "e790660dc7bd5f897edef30b36d8f64b6afc43a493ef2dddcb4f1d6a8a3be118",
-          "title": "Inwood Greenmarket Saturday",
-          "display_location": "ISHAM STREET between SEAMAN AVENUE and COOPER STREET  Manhattan",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "5b41beca2238a67f84f1d00e3add8d590dc88a59ef04ec0794842eaf1b28f5bf",
-          "title": "East New York Farmers Market",
-          "display_location": "SCHENCK AVENUE between NEW LOTS AVENUE and LIVONIA AVENUE  Brooklyn",
+          "occurrence_id": "4652480637598267aa0739d1c69e0ed5c80f012f8141584dcb8f116b8b3943e8",
+          "title": "CANCELED: Kids in Motion: Samuel Seabury Playground",
+          "display_location": "Samuel Seabury Playground",
           "reason": "no_official_in_bounds_coordinate"
         }
       ],
@@ -902,7 +887,14 @@
       "rejection_samples": []
     }
   },
-  "pin_misses": [],
+  "pin_misses": [
+    {
+      "source_dataset": "tvpp-9vvx",
+      "pin_eligible": 25120,
+      "certified_pins": 25072,
+      "missed": 48
+    }
+  ],
   "invented_pins": [],
   "unaccounted": []
 }

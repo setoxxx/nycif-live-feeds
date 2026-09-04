@@ -1,6 +1,6 @@
 {
   "coordinate_status_counts": {
-    "list_only": 47,
+    "list_only": 48,
     "map_ready": 2
   },
   "days_with_coverage": 18,
@@ -396,6 +396,42 @@
       "start_date_time": "2026-09-12T11:00:00",
       "timezone": "America/New_York",
       "title": "Flag Football Festival",
+      "why_selected": [
+        "significance_major_floor",
+        "carried_major_score_capped:120",
+        "keyword_street_fair_festival"
+      ]
+    },
+    {
+      "assignment_score": 380,
+      "borough": "Brooklyn",
+      "category": "volunteer",
+      "certified_pin": false,
+      "coordinate_status": "list_only",
+      "date": "2026-09-12",
+      "display_location": "CAUSA Festival Garden",
+      "end_date_time": "2026-09-12T14:00:00.000-04:00",
+      "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
+      "id": "review_supplemental:nyc-citywide-events-calendar-api:1243736@2026-09-12",
+      "lane": "approved_major",
+      "latitude": null,
+      "location_cache_modified": false,
+      "longitude": null,
+      "map_eligibility_state": "LIST_ONLY",
+      "map_link": null,
+      "money_day": true,
+      "photo_pick": false,
+      "pin_integrity_reason": "missing_coords",
+      "premium_label": "Photographer Assignment Calendar (premium/operator)",
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "source": {
+        "dataset": "nyc-citywide-events-calendar-api",
+        "source_event_id": "1243736"
+      },
+      "start_date_time": "2026-09-12T11:00:00.000-04:00",
+      "timezone": "America/New_York",
+      "title": "Volunteer Day: CAUSA Festival Garden",
       "why_selected": [
         "significance_major_floor",
         "carried_major_score_capped:120",
@@ -1759,7 +1795,7 @@
       ]
     }
   ],
-  "generated_at_utc": "2026-09-04T16:29:54Z",
+  "generated_at_utc": "2026-09-04T23:52:36Z",
   "go_shoot_these": [
     {
       "assignment_score": 580,
@@ -2488,7 +2524,7 @@
     }
   ],
   "lane_counts": {
-    "approved_major": 40,
+    "approved_major": 41,
     "review_high_signal": 9
   },
   "location_cache_modified": false,
@@ -2504,6 +2540,7 @@
     "review_supplemental:nyc-citywide-events-calendar-api:1191616@2026-09-12",
     "review_supplemental:nyc-citywide-events-calendar-api:1191636@2026-09-12",
     "review_supplemental:nyc-parks-bigapps-events:2235152@2026-09-12",
+    "review_supplemental:nyc-citywide-events-calendar-api:1243736@2026-09-12",
     "review_supplemental:nyc-parks-bigapps-events:2233454@2026-09-12",
     "review_supplemental:nyc-parks-bigapps-events:2174480@2026-09-12",
     "nyc-citywide-events-calendar-api:1044936@2026-09-13",
@@ -2564,6 +2601,7 @@
       "review_supplemental:nyc-citywide-events-calendar-api:1191616@2026-09-12",
       "review_supplemental:nyc-citywide-events-calendar-api:1191636@2026-09-12",
       "review_supplemental:nyc-parks-bigapps-events:2235152@2026-09-12",
+      "review_supplemental:nyc-citywide-events-calendar-api:1243736@2026-09-12",
       "review_supplemental:nyc-parks-bigapps-events:2233454@2026-09-12",
       "review_supplemental:nyc-parks-bigapps-events:2174480@2026-09-12"
     ],
@@ -2858,7 +2896,7 @@
             "top_events": []
           },
           {
-            "count": 6,
+            "count": 7,
             "date": "2026-09-12",
             "map_ready_count": 1,
             "top_events": [
@@ -2948,18 +2986,18 @@
               },
               {
                 "assignment_score": 380,
-                "borough": null,
+                "borough": "Brooklyn",
                 "coordinate_status": "list_only",
-                "display_location": "Location under review",
+                "display_location": "CAUSA Festival Garden",
                 "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-12&assignment=1",
-                "id": "review_supplemental:nyc-parks-bigapps-events:2233454@2026-09-12",
+                "id": "review_supplemental:nyc-citywide-events-calendar-api:1243736@2026-09-12",
                 "lane": "approved_major",
                 "map_link": null,
                 "source": {
-                  "dataset": "nyc-parks-bigapps-events",
-                  "source_event_id": "2233454"
+                  "dataset": "nyc-citywide-events-calendar-api",
+                  "source_event_id": "1243736"
                 },
-                "start_date_time": "2026-09-12T11:00:00",
+                "start_date_time": "2026-09-12T11:00:00.000-04:00",
                 "title": "Volunteer Day: CAUSA Festival Garden",
                 "why_selected": [
                   "significance_major_floor",
@@ -4045,7 +4083,7 @@
       "min_lat": 40.4774,
       "min_lng": -74.2591
     },
-    "certified_at_utc": "2026-09-04T16:30:00Z",
+    "certified_at_utc": "2026-09-04T23:52:43Z",
     "map_ready_before": 2,
     "semantic_map_ready_after": 0
   },
@@ -4062,7 +4100,7 @@
   ],
   "staged_feed_modified": false,
   "timezone": "America/New_York",
-  "total_events": 49,
+  "total_events": 50,
   "window_end": "2026-10-31",
   "window_start": "2026-09-04"
 }
