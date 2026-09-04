@@ -133,7 +133,7 @@ jobs:
 
       - name: Write official snapshots through Rung 8
         run: |
-          python3 scripts/sync_supabase_official_source_catchup.py --dataset all --write --from-batch data/reports/supabase_official_event_batch.json --chunk-size 80
+          python3 scripts/sync_supabase_official_source_catchup.py --dataset all --write --from-batch data/reports/supabase_official_event_batch.json --chunk-size 20
           python3 - <<'PY'
           import json
           from pathlib import Path
