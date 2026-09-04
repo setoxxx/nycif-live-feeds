@@ -1,15 +1,26 @@
 {
- "generated_at_utc": "2026-09-03T23:53:27Z",
+ "generated_at_utc": "2026-09-04T15:53:19Z",
  "identity_contract": "OccurrenceIdentityV2",
  "new_definition": "canonical v2 occurrence identity absent from previous tracked index",
  "legacy_seen_index_dual_read": true,
  "baseline_run": false,
  "window": {
-  "past_floor": "2026-08-20",
-  "today": "2026-09-03"
+  "past_floor": "2026-08-21",
+  "today": "2026-09-04"
  },
  "total_tracked": 6,
- "new_this_run": 0,
+ "new_this_run": 1,
  "identity_ambiguous": 0,
- "events": []
+ "events": [
+  {
+   "id": "v2:nyc-parks-bigapps-events:2135220@2026-09-06T13:00:00",
+   "title": "Summer on the Hudson: West Side County Fair",
+   "category": "arts",
+   "event_type": "Street Festival",
+   "start_date": "2026-09-06",
+   "end_date": "2026-09-06",
+   "borough": null,
+   "first_seen_utc": "2026-09-04T15:53:19Z"
+  }
+ ]
 }
