@@ -4,8 +4,9 @@ run-name: Official city snapshots → event_occurrences @ ${{ github.sha }}
 # Daily factory for the iOS/Android event app (one master repo):
 # 1) Discovery Feed Refresh pulls SODA/JSON links into GitHub snapshots at
 #    6:00pm America/New_York (after the city's ~5-6pm cut).
-# 2) This job then PUSHES those snapshots into Supabase event_occurrences at
-#    6:30pm ET weekdays, after a successful Discovery run, or on dispatch.
+# 2) This job then PUSHES those snapshots into Supabase event_occurrences
+#    only after a successful Discovery run (or on manual dispatch). It does
+#    not run on an independent clock, so it cannot write yesterday's JSON.
 # The phone reads Supabase. It does not read GitHub JSON, and Supabase does
 # not independently poll this repo.
 #
@@ -22,9 +23,6 @@ on:
   workflow_run:
     workflows: ["Discovery Feed Refresh"]
     types: [completed]
-  schedule:
-    - cron: '30 18 * * 1-5'
-      timezone: "America/New_York"
 
 permissions:
   contents: read

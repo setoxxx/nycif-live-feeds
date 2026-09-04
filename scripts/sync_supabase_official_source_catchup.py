@@ -16,16 +16,20 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import re
 import sys
-from datetime import datetime, timezone
+from collections import Counter
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
+from zoneinfo import ZoneInfo
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts import supabase_event_writer as writer
+from scripts.discovery_v02 import classification_blob, classify_record, infer_event_role
 
 REPORT_FILENAME = "supabase_official_source_catchup_report.json"
 REPORTS_DIR = ROOT / "data" / "reports"
@@ -51,6 +55,34 @@ OFFICIAL_DATASETS = (DATASET_TVPP, DATASET_PARKS, DATASET_CALENDAR)
 
 NYC_LAT_RANGE = (40.4, 41.1)
 NYC_LNG_RANGE = (-74.35, -73.65)
+NY_TZ = ZoneInfo(TIMEZONE)
+MAX_SNAPSHOT_AGE = timedelta(hours=18)
+FIVE_BOROUGHS = frozenset({"Manhattan", "Brooklyn", "Queens", "Bronx", "Staten Island"})
+BOROUGH_ALIASES = {
+    "mn": "Manhattan",
+    "manhattan": "Manhattan",
+    "new york": "Manhattan",
+    "bk": "Brooklyn",
+    "brooklyn": "Brooklyn",
+    "qn": "Queens",
+    "q": "Queens",
+    "queens": "Queens",
+    "bx": "Bronx",
+    "bronx": "Bronx",
+    "the bronx": "Bronx",
+    "si": "Staten Island",
+    "staten island": "Staten Island",
+}
+TVPP_NON_PUBLIC_TYPES = {
+    "shooting permit",
+    "clean-up",
+    "theater load in and load outs",
+    "production event",
+}
+TVPP_NON_PUBLIC_NAME = re.compile(
+    r"\bclosure\b|production parking|^maintenance$|shooting permit",
+    re.IGNORECASE,
+)
 
 
 def _load_json(path: Path) -> Any:
@@ -75,6 +107,73 @@ def _finite_coord(value: Any) -> float | None:
     if not math.isfinite(number):
         return None
     return number
+
+
+def _ny_timestamptz(value: Any) -> str | None:
+    if value in (None, ""):
+        return None
+    text = str(value).strip().replace("Z", "+00:00")
+    try:
+        parsed = datetime.fromisoformat(text)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=NY_TZ)
+    return parsed.isoformat()
+
+
+def _parsed_ny(value: Any) -> datetime | None:
+    text = _ny_timestamptz(value)
+    if not text:
+        return None
+    return datetime.fromisoformat(text)
+
+
+def _valid_interval(start_at: Any, end_at: Any) -> bool:
+    start = _parsed_ny(start_at)
+    if start is None:
+        return False
+    if end_at in (None, ""):
+        return True
+    end = _parsed_ny(end_at)
+    if end is None:
+        return False
+    return end >= start
+
+
+def _note_rejection(
+    rejections: list[dict[str, Any]] | None,
+    *,
+    dataset: str,
+    source_event_id: str,
+    title: str,
+    reason: str,
+) -> None:
+    if rejections is None:
+        return
+    rejections.append(
+        {
+            "source_dataset": dataset,
+            "source_event_id": source_event_id,
+            "title": title,
+            "reason": reason,
+        }
+    )
+
+
+def assert_official_snapshots_fresh() -> None:
+    payload = _load_json(PARKS_PATH)
+    generated = _text(payload.get("generated_at_utc") if isinstance(payload, dict) else "")
+    if not generated:
+        raise RuntimeError("Parks snapshot missing generated_at_utc; wait for Discovery Feed Refresh")
+    generated_at = datetime.fromisoformat(generated.replace("Z", "+00:00"))
+    if generated_at.tzinfo is None:
+        generated_at = generated_at.replace(tzinfo=timezone.utc)
+    age = datetime.now(timezone.utc) - generated_at
+    if age > MAX_SNAPSHOT_AGE:
+        raise RuntimeError(
+            f"official snapshots are {age} old; catch-up writes only after a successful Discovery run"
+        )
 
 
 def _write_catchup_report(report: dict[str, Any]) -> None:
@@ -107,6 +206,8 @@ def official_parks_pin(row: dict[str, Any]) -> tuple[float | None, float | None,
 def _category_from_text(text: str, default: str) -> tuple[str, str | None]:
     lower = text.lower()
     subtype = text or None
+    if any(token in lower for token in ("hous", "hpd")):
+        return "housing", subtype
     if any(token in lower for token in ("sport", "fitness", "athletic", "swim", "tennis", "basketball")):
         return "sports", subtype
     if any(token in lower for token in ("kid", "family", "holiday")):
@@ -120,12 +221,28 @@ def _category_from_text(text: str, default: str) -> tuple[str, str | None]:
     return default, subtype
 
 
+def _one_borough(value: Any) -> str | None:
+    text = _text(value)
+    if not text:
+        return None
+    return BOROUGH_ALIASES.get(text.casefold(), text)
+
+
 def _borough(value: Any) -> str | None:
     if isinstance(value, list):
-        parts = [_text(item) for item in value if _text(item)]
-        return ", ".join(parts) if parts else None
-    text = _text(value)
-    return text or None
+        labels: list[str] = []
+        seen: set[str] = set()
+        for item in value:
+            label = _one_borough(item)
+            if label and label not in seen:
+                seen.add(label)
+                labels.append(label)
+        if not labels:
+            return None
+        if set(labels) >= FIVE_BOROUGHS:
+            return "Citywide"
+        return ", ".join(labels)
+    return _one_borough(value)
 
 
 def _canonical(
@@ -149,14 +266,19 @@ def _canonical(
     seen_at: str,
     raw_record: dict[str, Any],
     location_authority: str,
+    event_role: str = "public_event",
 ) -> dict[str, Any]:
     if not source_event_id or not title or not start_at:
         raise ValueError("official catch-up row is missing identity, title, or start")
+    start_stamp = _ny_timestamptz(start_at)
+    end_stamp = _ny_timestamptz(end_at)
+    if not start_stamp:
+        raise ValueError("official catch-up row is missing a parseable start time")
     display = _text(display_location) or "Location under review"
     return {
         "title": title,
-        "start_at": start_at,
-        "end_at": end_at,
+        "start_at": start_stamp,
+        "end_at": end_stamp,
         "timezone": TIMEZONE,
         "borough": _borough(borough),
         "display_location": display,
@@ -170,16 +292,13 @@ def _canonical(
         "editorial_priority": "normal",
         "metadata": {
             "reader": {
-                "event_role": "public_event",
+                "event_role": event_role,
                 "certified_pin": map_ready,
                 "map_eligibility_state": "MAP_READY" if map_ready else "LIST_ONLY",
                 "display_disposition": "MAP" if map_ready else "LIST_ONLY",
                 "location_authority": location_authority,
                 "source_dataset": source_dataset,
                 "source_event_id": source_event_id,
-                "is_major": False,
-                "photo_pick": False,
-                "significance": "standard",
                 "public_url": source_url,
             }
         },
@@ -218,18 +337,39 @@ def _canonical(
     }
 
 
-def parks_events(path: Path = PARKS_PATH) -> list[dict[str, Any]]:
+def parks_events(
+    path: Path = PARKS_PATH,
+    rejections: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
     payload = _load_json(path)
     rows = payload.get("events", []) if isinstance(payload, dict) else payload
     seen_at = _text(payload.get("generated_at_utc") if isinstance(payload, dict) else "") or _now_iso()
     events: list[dict[str, Any]] = []
     for row in rows:
         if not isinstance(row, dict):
+            _note_rejection(rejections, dataset=DATASET_PARKS, source_event_id="", title="", reason="not_an_object")
             continue
         source_event_id = _text(row.get("source_event_id") or row.get("guid"))
         title = _text(row.get("title") or row.get("event_name"))
         start_at = row.get("start_date_time") or row.get("start_at")
+        end_at = row.get("end_date_time") or row.get("end_at")
         if not source_event_id or not title or not start_at:
+            _note_rejection(
+                rejections,
+                dataset=DATASET_PARKS,
+                source_event_id=source_event_id,
+                title=title,
+                reason="missing_id_title_or_start",
+            )
+            continue
+        if not _valid_interval(start_at, end_at):
+            _note_rejection(
+                rejections,
+                dataset=DATASET_PARKS,
+                source_event_id=source_event_id,
+                title=title,
+                reason="invalid_interval",
+            )
             continue
         lat, lng, map_ready = official_parks_pin(row)
         categories = row.get("categories")
@@ -247,7 +387,7 @@ def parks_events(path: Path = PARKS_PATH) -> list[dict[str, Any]]:
                 source_event_id=source_event_id,
                 title=title,
                 start_at=start_at,
-                end_at=row.get("end_date_time") or row.get("end_at"),
+                end_at=end_at,
                 borough=row.get("borough") or row.get("event_borough"),
                 display_location=row.get("display_location") or row.get("location"),
                 lat=lat,
@@ -280,18 +420,48 @@ def parks_events(path: Path = PARKS_PATH) -> list[dict[str, Any]]:
     return events
 
 
-def calendar_events(path: Path = CALENDAR_PATH) -> list[dict[str, Any]]:
+def calendar_events(
+    path: Path = CALENDAR_PATH,
+    rejections: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
     payload = _load_json(path)
     rows = payload if isinstance(payload, list) else payload.get("events", [])
     seen_at = _now_iso()
     events: list[dict[str, Any]] = []
     for row in rows:
-        if not isinstance(row, dict) or row.get("canceled") is True:
+        if not isinstance(row, dict):
+            _note_rejection(rejections, dataset=DATASET_CALENDAR, source_event_id="", title="", reason="not_an_object")
+            continue
+        if row.get("canceled") is True:
+            _note_rejection(
+                rejections,
+                dataset=DATASET_CALENDAR,
+                source_event_id=_text(row.get("source_event_id") or row.get("id")),
+                title=_text(row.get("title") or row.get("name")),
+                reason="canceled",
+            )
             continue
         source_event_id = _text(row.get("source_event_id") or row.get("id"))
         title = _text(row.get("title") or row.get("name"))
         start_at = row.get("start_date_time") or row.get("startDate")
+        end_at = row.get("end_date_time") or row.get("endDate")
         if not source_event_id or not title or not start_at:
+            _note_rejection(
+                rejections,
+                dataset=DATASET_CALENDAR,
+                source_event_id=source_event_id,
+                title=title,
+                reason="missing_id_title_or_start",
+            )
+            continue
+        if not _valid_interval(start_at, end_at):
+            _note_rejection(
+                rejections,
+                dataset=DATASET_CALENDAR,
+                source_event_id=source_event_id,
+                title=title,
+                reason="invalid_interval",
+            )
             continue
         lat = _finite_coord(row.get("lat") if row.get("lat") is not None else row.get("latitude"))
         lng = _finite_coord(row.get("lng") if row.get("lng") is not None else row.get("longitude"))
@@ -314,7 +484,7 @@ def calendar_events(path: Path = CALENDAR_PATH) -> list[dict[str, Any]]:
                 source_event_id=source_event_id,
                 title=title,
                 start_at=start_at,
-                end_at=row.get("end_date_time") or row.get("endDate"),
+                end_at=end_at,
                 borough=row.get("boroughs") or row.get("borough"),
                 display_location=row.get("address") or row.get("location"),
                 lat=lat if map_ready else None,
@@ -345,28 +515,65 @@ def calendar_events(path: Path = CALENDAR_PATH) -> list[dict[str, Any]]:
     return events
 
 
-def tvpp_events(path: Path = TVPP_PATH) -> list[dict[str, Any]]:
+def tvpp_events(
+    path: Path = TVPP_PATH,
+    rejections: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
     payload = _load_json(path)
     rows = payload if isinstance(payload, list) else payload.get("events", [])
     seen_at = _now_iso()
     events: list[dict[str, Any]] = []
     for row in rows:
         if not isinstance(row, dict):
+            _note_rejection(rejections, dataset=DATASET_TVPP, source_event_id="", title="", reason="not_an_object")
             continue
         source_event_id = _text(row.get("source_event_id") or row.get("event_id"))
         title = _text(row.get("event_name") or row.get("title"))
         start_at = row.get("start_date_time") or row.get("start_at")
+        end_at = row.get("end_date_time") or row.get("end_at")
         if not source_event_id or not title or not start_at:
+            _note_rejection(
+                rejections,
+                dataset=DATASET_TVPP,
+                source_event_id=source_event_id,
+                title=title,
+                reason="missing_id_title_or_start",
+            )
+            continue
+        if not _valid_interval(start_at, end_at):
+            _note_rejection(
+                rejections,
+                dataset=DATASET_TVPP,
+                source_event_id=source_event_id,
+                title=title,
+                reason="invalid_interval",
+            )
             continue
         event_type = _text(row.get("event_type"))
-        public_category, public_subtype = _category_from_text(event_type, "general")
+        classified = classify_record(row)
+        role = classified.get("event_role") or infer_event_role(row, classification_blob(row))[0]
+        if (
+            role != "public_event"
+            or event_type.casefold() in TVPP_NON_PUBLIC_TYPES
+            or TVPP_NON_PUBLIC_NAME.search(title)
+        ):
+            _note_rejection(
+                rejections,
+                dataset=DATASET_TVPP,
+                source_event_id=source_event_id,
+                title=title,
+                reason=f"not_public_event:{role}",
+            )
+            continue
+        public_category = str(classified.get("category") or "general")
+        _, public_subtype = _category_from_text(event_type or title, public_category)
         events.append(
             _canonical(
                 source_dataset=DATASET_TVPP,
                 source_event_id=source_event_id,
                 title=title,
                 start_at=start_at,
-                end_at=row.get("end_date_time") or row.get("end_at"),
+                end_at=end_at,
                 borough=row.get("event_borough") or row.get("borough"),
                 display_location=row.get("event_location") or row.get("location"),
                 lat=None,
@@ -389,25 +596,31 @@ def tvpp_events(path: Path = TVPP_PATH) -> list[dict[str, Any]]:
                     "event_type": event_type,
                     "event_agency": row.get("event_agency"),
                     "street_closure_type": row.get("street_closure_type"),
+                    "event_role": role,
                 },
                 location_authority="list_only_official_tvpp_snapshot",
+                event_role=role,
             )
         )
     return events
 
 
-def events_for_dataset(dataset: str) -> list[dict[str, Any]]:
+def events_for_dataset(
+    dataset: str,
+    rejections: list[dict[str, Any]] | None = None,
+) -> list[dict[str, Any]]:
     if dataset == DATASET_PARKS:
-        return parks_events()
+        return parks_events(rejections=rejections)
     if dataset == DATASET_CALENDAR:
-        return calendar_events()
+        return calendar_events(rejections=rejections)
     if dataset == DATASET_TVPP:
-        return tvpp_events()
+        return tvpp_events(rejections=rejections)
     raise ValueError(f"unsupported official dataset: {dataset}")
 
 
-def normalize_dataset(dataset: str) -> list[dict[str, Any]]:
-    normalized = [writer.normalize_event(event) for event in events_for_dataset(dataset)]
+def normalize_dataset(dataset: str) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    rejections: list[dict[str, Any]] = []
+    normalized = [writer.normalize_event(event) for event in events_for_dataset(dataset, rejections)]
     seen: set[str] = set()
     unique: list[dict[str, Any]] = []
     for row in normalized:
@@ -418,7 +631,7 @@ def normalize_dataset(dataset: str) -> list[dict[str, Any]]:
         unique.append(row)
     if not unique:
         raise RuntimeError(f"no official rows normalized for {dataset}")
-    return unique
+    return unique, rejections
 
 
 def summarize(rows: list[dict[str, Any]]) -> dict[str, int]:
@@ -430,7 +643,11 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, int]:
     }
 
 
-def write_chunks(rows: list[dict[str, Any]], chunk_size: int) -> dict[str, Any]:
+def write_chunks(
+    rows: list[dict[str, Any]],
+    chunk_size: int,
+    progress: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     if chunk_size < MIN_CHUNK_SIZE or chunk_size > MAX_CHUNK_SIZE:
         raise ValueError(f"chunk size must be between {MIN_CHUNK_SIZE} and {MAX_CHUNK_SIZE}")
     project_ref, target_url = writer.validate_write_target()
@@ -439,27 +656,51 @@ def write_chunks(rows: list[dict[str, Any]], chunk_size: int) -> dict[str, Any]:
         raise writer.WriteGuardError("SUPABASE_SERVICE_ROLE_KEY is required in the environment")
     actions = {"INSERT": 0, "UPDATE": 0, "UNCHANGED": 0, "EXPIRE": 0}
     run_ids: list[int] = []
-    for index in range(0, len(rows), chunk_size):
-        chunk = rows[index : index + chunk_size]
-        result = writer.post_atomic_batch(
-            target_url,
-            service_key,
-            {
-                "p_events": chunk,
-                "p_source_name": SOURCE_NAME,
-                "p_allow_expire": False,
-                "p_simulate_failure": False,
-                "p_expected_project_ref": project_ref,
-            },
-        )
-        if result.get("newsroom_queue_delta") not in (0, None):
-            raise RuntimeError("official catch-up mutated newsroom_queue")
-        chunk_actions = result.get("actions") if isinstance(result.get("actions"), dict) else {}
-        for key in actions:
-            actions[key] += int(chunk_actions.get(key, 0) or 0)
-        if isinstance(result.get("pipeline_run_id"), int):
-            run_ids.append(result["pipeline_run_id"])
-    return {"actions": actions, "pipeline_run_ids": run_ids, "chunk_count": (len(rows) + chunk_size - 1) // chunk_size}
+    chunk_count = (len(rows) + chunk_size - 1) // chunk_size
+    committed = 0
+    try:
+        for index in range(0, len(rows), chunk_size):
+            chunk = rows[index : index + chunk_size]
+            result = writer.post_atomic_batch(
+                target_url,
+                service_key,
+                {
+                    "p_events": chunk,
+                    "p_source_name": SOURCE_NAME,
+                    "p_allow_expire": False,
+                    "p_simulate_failure": False,
+                    "p_expected_project_ref": project_ref,
+                },
+            )
+            if result.get("newsroom_queue_delta") not in (0, None):
+                raise RuntimeError("official catch-up mutated newsroom_queue")
+            chunk_actions = result.get("actions") if isinstance(result.get("actions"), dict) else {}
+            for key in actions:
+                actions[key] += int(chunk_actions.get(key, 0) or 0)
+            if isinstance(result.get("pipeline_run_id"), int):
+                run_ids.append(result["pipeline_run_id"])
+            committed += 1
+            if progress is not None:
+                progress["database_write_performed"] = True
+                progress["chunks_committed"] = committed
+                progress["pipeline_run_ids"] = list(run_ids)
+                progress["actions"] = dict(actions)
+                _write_catchup_report(progress)
+    except Exception as exc:
+        if progress is not None:
+            progress["database_write_performed"] = committed > 0
+            progress["write_error"] = str(exc)
+            progress["chunks_committed"] = committed
+            progress["pipeline_run_ids"] = list(run_ids)
+            progress["actions"] = dict(actions)
+            _write_catchup_report(progress)
+        raise
+    return {
+        "actions": actions,
+        "pipeline_run_ids": run_ids,
+        "chunk_count": chunk_count,
+        "chunks_committed": committed,
+    }
 
 
 def main() -> int:
@@ -468,6 +709,8 @@ def main() -> int:
     parser.add_argument("--write", action="store_true")
     parser.add_argument("--chunk-size", type=int, default=DEFAULT_CHUNK_SIZE)
     args = parser.parse_args()
+    if args.write:
+        assert_official_snapshots_fresh()
     datasets = list(OFFICIAL_DATASETS) if args.dataset == "all" else [args.dataset]
     report: dict[str, Any] = {
         "run_type": "official_source_catchup_write" if args.write else "official_source_catchup_plan",
@@ -483,12 +726,20 @@ def main() -> int:
         "database_write_performed": False,
     }
     for dataset in datasets:
-        rows = normalize_dataset(dataset)
-        block = {"dataset": dataset, **summarize(rows), "occurrence_ids": [row["occurrence_id"] for row in rows]}
-        if args.write:
-            block.update(write_chunks(rows, args.chunk_size))
-            report["database_write_performed"] = True
+        rows, rejections = normalize_dataset(dataset)
+        reasons = Counter(item.get("reason") or "unspecified" for item in rejections)
+        block = {
+            "dataset": dataset,
+            **summarize(rows),
+            "rejected_rows": len(rejections),
+            "rejection_reason_counts": dict(reasons),
+            "rejection_samples": rejections[:20],
+            "occurrence_ids": [row["occurrence_id"] for row in rows],
+        }
         report["datasets"][dataset] = block
+        if args.write:
+            block.update(write_chunks(rows, args.chunk_size, progress=report))
+            report["database_write_performed"] = True
     _write_catchup_report(report)
     printable = json.loads(json.dumps(report))
     for block in printable.get("datasets", {}).values():

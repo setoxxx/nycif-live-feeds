@@ -108,6 +108,8 @@ def test_catchup_workflow_is_separate_and_fail_closed():
     assert "The phone reads Supabase" in workflow
     assert "pip install" not in workflow
     assert "requirements.txt" not in workflow
+    assert "cron:" not in workflow
+    assert "workflow_run:" in workflow
 
 
 def test_finite_coord_rejects_nan_and_inf():
@@ -122,3 +124,86 @@ def test_catchup_report_stays_inside_data_reports():
     assert catchup.REPORT_PATH == catchup.ROOT / "data" / "reports" / "supabase_official_source_catchup_report.json"
     assert catchup.REPORT_PATH.parent == catchup.REPORTS_DIR
     assert catchup.REPORT_PATH.name == catchup.REPORT_FILENAME
+
+
+def test_naive_new_york_times_get_an_offset_without_changing_parks_ids():
+    stamp = catchup._ny_timestamptz("2026-09-03T07:00:00")
+    assert stamp is not None
+    assert stamp.startswith("2026-09-03T07:00:00")
+    assert "-04:00" in stamp or "-05:00" in stamp
+    events = catchup.parks_events()
+    schmul = next(event for event in events if event["source"]["source_event_id"] == "2223183")
+    normalized = writer.normalize_event(schmul)
+    assert normalized["occurrence_id"] == "00acee08d465ac58c74ee7a8aff01155c89e24d0ef5cf44fab7fc1555d72eae0"
+    assert normalized["start_at"].endswith("-04:00") or normalized["start_at"].endswith("-05:00")
+
+
+def test_invalid_intervals_are_rejected_and_reported():
+    rejections: list[dict] = []
+    catchup._note_rejection(
+        rejections,
+        dataset="nyc-parks-bigapps-events",
+        source_event_id="1",
+        title="Bad",
+        reason="invalid_interval",
+    )
+    assert catchup._valid_interval("2026-09-03T12:00:00", "2026-09-03T11:00:00") is False
+    assert catchup._valid_interval("2026-09-03T11:00:00", "2026-09-03T12:00:00") is True
+    parks_rejections: list[dict] = []
+    catchup.parks_events(rejections=parks_rejections)
+    inverted = [item for item in parks_rejections if item["reason"] == "invalid_interval"]
+    assert inverted
+
+
+def test_tvpp_skips_operational_permits_and_stays_list_only():
+    rejections: list[dict] = []
+    events = catchup.tvpp_events(rejections=rejections)
+    assert events
+    assert all(event["map_ready"] is False for event in events)
+    assert all(event["metadata"]["reader"]["event_role"] == "public_event" for event in events)
+    titles = {event["title"] for event in events}
+    assert "Closure" not in titles
+    assert any("not_public_event" in item["reason"] or item["reason"] == "invalid_interval" for item in rejections)
+
+
+def test_calendar_normalizes_borough_codes_and_keeps_labor_day_id():
+    events = catchup.calendar_events()
+    labor = next(event for event in events if event["source"]["source_event_id"] == "10729")
+    assert labor["borough"] == "Citywide"
+    normalized = writer.normalize_event(labor)
+    assert normalized["occurrence_id"] == "541ec8bcd390fc4f27be5c24c83eaa82fa76815ec7e2065af9c81483b3e2fda8"
+    assert catchup._borough(["Mn", "Bk", "Qn", "Bx", "SI"]) == "Citywide"
+    assert catchup._borough("Bk") == "Brooklyn"
+
+
+def test_write_chunks_records_partial_progress_on_failure(monkeypatch, tmp_path):
+    calls = {"count": 0}
+
+    def fake_validate():
+        return "oggwpvdirkrnzoolparx", "https://oggwpvdirkrnzoolparx.supabase.co"
+
+    def fake_post(target_url, service_key, payload, timeout=120):
+        calls["count"] += 1
+        if calls["count"] > 1:
+            raise RuntimeError("boom")
+        return {"transaction": "committed", "actions": {"INSERT": 1}, "newsroom_queue_delta": 0, "pipeline_run_id": 9}
+
+    monkeypatch.setattr(catchup.writer, "validate_write_target", fake_validate)
+    monkeypatch.setattr(catchup.writer, "post_atomic_batch", fake_post)
+    monkeypatch.setattr(catchup, "REPORTS_DIR", tmp_path)
+    monkeypatch.setenv("SUPABASE_SERVICE_ROLE_KEY", "test-key")
+    rows = [
+        {
+            "occurrence_id": f"{index:064x}",
+            "title": f"Row {index}",
+            "source": {"source_name": "nyc_open_data"},
+            "map_ready": False,
+        }
+        for index in range(11)
+    ]
+    progress = {"database_write_performed": False, "datasets": {}}
+    with pytest.raises(RuntimeError, match="boom"):
+        catchup.write_chunks(rows, 10, progress=progress)
+    assert progress["database_write_performed"] is True
+    assert progress["chunks_committed"] == 1
+    assert (tmp_path / catchup.REPORT_FILENAME).exists()
