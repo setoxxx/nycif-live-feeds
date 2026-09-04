@@ -10,10 +10,11 @@ run-name: Official city snapshots → event_occurrences @ ${{ github.sha }}
 # The phone reads Supabase. It does not read GitHub JSON, and Supabase does
 # not independently poll this repo.
 #
-# Dataset rules stay separate: tvpp street permits are list-only, Parks pins
-# certify only with official in-bounds coordinates, calendar stays list-only
-# unless the snapshot already has official coords. All of it lands in the
-# same event calendar tables the app already reads.
+# Dataset rules stay separate: every public tvpp-9vvx street permit is pinned
+# from Parks facilities / LION centerlines / Geoclient / NYC GeoSearch. Parks
+# pins certify only with official in-bounds coordinates. Calendar stays
+# list-only unless the snapshot already has official coords. Projected feast
+# stays list-only.
 #
 # Does not expire rows, does not touch the location cache or public map feeds,
 # and is not part of Discovery Feed Refresh.
@@ -45,6 +46,10 @@ jobs:
       SUPABASE_PROJECT_REF: 'oggwpvdirkrnzoolparx'
       SUPABASE_URL: 'https://oggwpvdirkrnzoolparx.supabase.co'
       SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      NYC_GEOCLIENT_APP_ID: ${{ secrets.NYC_GEOCLIENT_APP_ID }}
+      NYC_GEOCLIENT_APP_KEY: ${{ secrets.NYC_GEOCLIENT_APP_KEY }}
+      NYCIF_ALLOW_LIVE_GEOCLIENT: 'true'
+      NYCIF_ALLOW_LIVE_GEOSEARCH: 'true'
     steps:
       - name: Check out latest official snapshots
         uses: actions/checkout@v4
@@ -68,7 +73,7 @@ jobs:
 
       - name: Plan official catch-up
         run: |
-          python3 -m py_compile scripts/sync_supabase_official_source_catchup.py scripts/official_event_contract.py scripts/official_daily_machine.py scripts/supabase_event_writer.py
+          python3 -m py_compile scripts/sync_supabase_official_source_catchup.py scripts/official_event_contract.py scripts/official_daily_machine.py scripts/supabase_event_writer.py scripts/tvpp_pin_resolver.py
           python3 scripts/sync_supabase_official_source_catchup.py --dataset all
           python3 - <<'PY'
           import json
@@ -102,12 +107,12 @@ jobs:
                   raise SystemExit(f'{name} official snapshot produced no rows')
               if name not in (batch.get('datasets') or {}):
                   raise SystemExit(f'{name} missing from Rung 8 batch JSON')
-          if int(datasets['tvpp-9vvx'].get('map_ready', 1)) != 0:
-              raise SystemExit('tvpp street permits must stay list-only')
+          if int(datasets['tvpp-9vvx'].get('map_ready', 0)) != int(datasets['tvpp-9vvx'].get('rows', -1)):
+              raise SystemExit('tvpp street permits must all be pinned')
           if int(datasets['nyc-projected-feast-reference'].get('map_ready', 1)) != 0:
               raise SystemExit('projected feast rows must stay list-only')
-          if int((listing.get('by_dataset') or {}).get('tvpp-9vvx', {}).get('map_ready', 1)) != 0:
-              raise SystemExit('today listing must not pin tvpp street permits')
+          if int((listing.get('by_dataset') or {}).get('tvpp-9vvx', {}).get('list_only', 1)) != 0:
+              raise SystemExit('today listing must pin every tvpp street permit')
           if int((listing.get('by_dataset') or {}).get('nyc-projected-feast-reference', {}).get('map_ready', 1)) != 0:
               raise SystemExit('today listing must not pin projected feast rows')
           machine = json.loads(Path('data/reports/official_daily_machine_report.json').read_text())

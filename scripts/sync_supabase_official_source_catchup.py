@@ -6,9 +6,11 @@ repo. This script then pushes those snapshots into Supabase event_occurrences,
 which is what the iOS/Android app reads. Supabase does not poll GitHub JSON.
 
 Uses the existing Rung 8 writer. Occurrence IDs come from OccurrenceIdentityV2
-only. Street permits stay list-only. Parks rows with official source coordinates
-certify as map pins. Calendar rows stay list-only unless the snapshot already
-has official coordinates. Expiration is never enabled.
+only. Every public TVPP street permit is pinned from Parks facilities, NYC DCP
+LION centerlines, Geoclient, or NYC GeoSearch. Parks rows with official source
+coordinates certify as map pins. Calendar rows stay list-only unless the
+snapshot already has official coordinates. Projected feast stays list-only.
+Expiration is never enabled.
 """
 
 from __future__ import annotations
@@ -31,6 +33,7 @@ if str(ROOT) not in sys.path:
 from scripts import official_event_contract as contract
 from scripts import supabase_event_writer as writer
 from scripts.discovery_v02 import classification_blob, classify_record, infer_event_role
+from scripts.tvpp_pin_resolver import TvppPinResolver
 
 REPORT_FILENAME = "supabase_official_source_catchup_report.json"
 BATCH_FILENAME = "supabase_official_event_batch.json"
@@ -552,6 +555,7 @@ def tvpp_events(
     rows = payload if isinstance(payload, list) else payload.get("events", [])
     seen_at = _now_iso()
     events: list[dict[str, Any]] = []
+    resolver = TvppPinResolver.load_default()
     for row in rows:
         if not isinstance(row, dict):
             _note_rejection(rejections, dataset=DATASET_TVPP, source_event_id="", title="", reason="not_an_object")
@@ -596,6 +600,11 @@ def tvpp_events(
             continue
         public_category = str(classified.get("category") or "general")
         _, public_subtype = _category_from_text(event_type or title, public_category)
+        display_location = row.get("event_location") or row.get("location")
+        borough = row.get("event_borough") or row.get("borough")
+        pin = resolver.resolve(str(display_location or ""), str(borough or "") or None)
+        lat, lng, map_ready = (pin.lat, pin.lng, True) if pin.resolved else (None, None, False)
+        evidence = pin.evidence() if pin.resolved else None
         events.append(
             _canonical(
                 source_dataset=DATASET_TVPP,
@@ -603,11 +612,11 @@ def tvpp_events(
                 title=title,
                 start_at=start_at,
                 end_at=end_at,
-                borough=row.get("event_borough") or row.get("borough"),
-                display_location=row.get("event_location") or row.get("location"),
-                lat=None,
-                lng=None,
-                map_ready=False,
+                borough=borough,
+                display_location=display_location,
+                lat=lat,
+                lng=lng,
+                map_ready=map_ready,
                 public_category=public_category,
                 public_subtype=public_subtype or event_type or None,
                 source_event_type=event_type or "Street Activity Permit",
@@ -626,11 +635,14 @@ def tvpp_events(
                     "event_agency": row.get("event_agency"),
                     "street_closure_type": row.get("street_closure_type"),
                     "event_role": role,
+                    "location_evidence": evidence,
                 },
-                location_authority="list_only_official_tvpp_snapshot",
+                location_authority=pin.source or "tvpp_pin_unresolved",
                 event_role=role,
             )
         )
+    if resolver.live_calls:
+        resolver.save_cache()
     return events
 
 

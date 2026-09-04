@@ -17,10 +17,13 @@ DATASET_CALENDAR = "nyc-citywide-events-calendar-api"
 DATASET_FEAST = "nyc-projected-feast-reference"
 OFFICIAL_DATASETS = (DATASET_TVPP, DATASET_PARKS, DATASET_CALENDAR, DATASET_FEAST)
 
-# TVPP and projected feast never become certified pins. Parks requires official
-# source evidence. Calendar may pin only when the snapshot already has official
-# in-bounds coordinates (no geocoder fill).
-PIN_NEVER = frozenset({DATASET_TVPP, DATASET_FEAST})
+# Projected feast never becomes a certified pin. TVPP must pin from Parks
+# facilities, Geoclient blockface midpoints, NYC DCP LION centerlines, or NYC
+# GeoSearch. Parks requires
+# official source evidence. Calendar may pin only when the snapshot already
+# has official in-bounds coordinates (no geocoder fill).
+PIN_NEVER = frozenset({DATASET_FEAST})
+PIN_TVPP_RESOLVED = frozenset({DATASET_TVPP})
 PIN_OFFICIAL_EVIDENCE = frozenset({DATASET_PARKS})
 PIN_SNAPSHOT_COORDS = frozenset({DATASET_CALENDAR})
 
@@ -96,6 +99,10 @@ def apply_pin_policy(
     parsed_lat = _finite_coord(lat)
     parsed_lng = _finite_coord(lng)
     if dataset in PIN_NEVER or not in_nyc_bounds(parsed_lat, parsed_lng):
+        return None, None, False
+    if dataset in PIN_TVPP_RESOLVED:
+        if official_pin_evidence(evidence):
+            return parsed_lat, parsed_lng, True
         return None, None, False
     if dataset in PIN_OFFICIAL_EVIDENCE and not official_pin_evidence(evidence):
         return None, None, False
