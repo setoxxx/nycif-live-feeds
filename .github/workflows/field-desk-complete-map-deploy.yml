@@ -9,7 +9,6 @@ on:
       - "docs/field-desk-map-deploy/shared/**"
       - "docs/field-desk-map-deploy/discovery-taxonomy-v02/discovery-patch-v02.js"
       - "docs/field-desk-map-deploy/discovery-taxonomy-v02/public-approved-overlays-v01.js"
-      - "docs/field-desk-admin-deploy/admin/**"
       - ".github/workflows/field-desk-complete-map-deploy.yml"
 
 permissions:
@@ -22,7 +21,7 @@ jobs:
       - name: Checkout live-feeds canonical deploy sources
         uses: actions/checkout@v4
 
-      - name: Sync map + admin runtime to field-desk
+      - name: Sync public map runtime to field-desk (admin Pages retired)
         env:
           FIELD_DESK_TOKEN: ${{ secrets.FIELD_DESK_DEPLOY_TOKEN }}
         run: |
@@ -33,7 +32,6 @@ jobs:
           fi
 
           MAP_SRC="$GITHUB_WORKSPACE/docs/field-desk-map-deploy"
-          ADMIN_SRC="$GITHUB_WORKSPACE/docs/field-desk-admin-deploy/admin"
           git clone "https://x-access-token:${FIELD_DESK_TOKEN}@github.com/setoxxx/nycif-field-desk.git" /tmp/field-desk
           cd /tmp/field-desk
           git config user.name "github-actions[bot]"
@@ -53,15 +51,7 @@ jobs:
           cp "$MAP_SRC/schema-v1-major-all-v01/public-map-ui.test.mjs" ./tools/public-map/public-map-ui.test.mjs
 
           rm -f ./staged-map-mode-v01.css
-
-          cp "$ADMIN_SRC/index.html" ./admin/index.html
-          cp "$ADMIN_SRC/live-pipeline-panel-v02.js" ./admin/live-pipeline-panel-v02.js
-          cp "$ADMIN_SRC/discovery-godview-panel-v02.js" ./admin/discovery-godview-panel-v02.js
-          cp "$ADMIN_SRC/civic-godview-panel-v01.js" ./admin/civic-godview-panel-v01.js
-          cp "$ADMIN_SRC/photographer-calendar-panel-v01.js" ./admin/photographer-calendar-panel-v01.js
-          cp "$ADMIN_SRC/god-view-project-control-v01.js" ./admin/god-view-project-control-v01.js
-          cp "$ADMIN_SRC/daily-data-health-panel-v01.js" ./admin/daily-data-health-panel-v01.js
-          cp "$ADMIN_SRC/legacy-admin-data-v01.js" ./admin/legacy-admin-data-v01.js
+          rm -rf ./admin
 
           grep -q "[/basketball/i, '🏀']" app-schema-v1-major-all-v01.js
           grep -q reviewManifest app-schema-v1-major-all-v01.js
@@ -85,19 +75,6 @@ jobs:
           node --check public-approved-overlays-v01.js
           node --test tools/public-map/public-map-ui.test.mjs
 
-          grep -q discovery-godview-panel-v02 admin/index.html
-          grep -q live-pipeline-panel-v02 admin/index.html
-          grep -q god-view-project-control-v01 admin/index.html
-          grep -q daily-data-health-panel-v01 admin/index.html
-          grep -q legacy-admin-data-v01 admin/index.html
-          node --check admin/live-pipeline-panel-v02.js
-          node --check admin/discovery-godview-panel-v02.js
-          node --check admin/civic-godview-panel-v01.js
-          node --check admin/photographer-calendar-panel-v01.js
-          node --check admin/god-view-project-control-v01.js
-          node --check admin/daily-data-health-panel-v01.js
-          node --check admin/legacy-admin-data-v01.js
-
           git add \
             app-schema-v1-major-all-v01.js \
             discovery-patch-v02.js \
@@ -107,19 +84,12 @@ jobs:
             public-map-v01.css \
             service-worker.js \
             nycif-tip-jar-v01.js \
-            tools/public-map/public-map-ui.test.mjs \
-            admin/index.html \
-            admin/live-pipeline-panel-v02.js \
-            admin/discovery-godview-panel-v02.js \
-            admin/civic-godview-panel-v01.js \
-            admin/photographer-calendar-panel-v01.js \
-            admin/god-view-project-control-v01.js \
-            admin/daily-data-health-panel-v01.js \
-            admin/legacy-admin-data-v01.js
+            tools/public-map/public-map-ui.test.mjs
+          git add -A -- admin || true
 
           if git diff --cached --quiet; then
-            echo "Field-desk already has canonical map + admin runtime."
+            echo "Field-desk already has canonical public map runtime (admin Pages retired)."
             exit 0
           fi
-          git commit -m "Deploy God View daily data health command panel"
+          git commit -m "Retire GitHub Pages admin; keep public map runtime"
           git push origin main

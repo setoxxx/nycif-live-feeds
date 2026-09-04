@@ -14,9 +14,17 @@ Frontend/map repo:
 
 - `setoxxx/nycif-field-desk`
 
+GitHub Pages admin experiments are retired. Do not deploy or restore:
+
+- `https://setoxxx.github.io/nycif-field-desk/admin/`
+- `https://setoxxx.github.io/nycif-field-desk/admin/calendar.html`
+- `https://setoxxx.github.io/nycif-field-desk/admin/platform-roadmap.html`
+
+Those pages were versioned prototypes. The product client is the iOS app via Supabase (`event_reader_rolling_v1`). The WordPress `/map/` freeze still applies to the public iframe only. Do not treat God View, admin calendar, or platform-roadmap as live systems.
+
 The backend repo is the source of truth for generated event feeds, GPS staging artifacts, manual approval queues, GPS review findings, and GPS promotion controls.
 
-The frontend repo consumes backend feed outputs for the NYC In Focus field desk and public map. Frontend agents must read the frontend repo `AGENTS.md` before changing map behavior.
+The frontend repo consumes backend feed outputs for the public map iframe only. Frontend agents must read the frontend repo `AGENTS.md` before changing map behavior. Do not add admin/God View pages.
 
 A frontend change must not treat backend GPS review artifacts as public-ready data unless the backend promotion pipeline has explicitly published them into the approved public feed.
 
