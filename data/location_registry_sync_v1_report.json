@@ -1,46 +1,46 @@
 {
-  "alias_count": 1478,
+  "alias_count": 1521,
   "aliases_unique_on_location_id_normalized_alias": true,
   "applied": true,
   "apply_result": {
-    "accepted_location_count": 1194,
-    "alias_rows_touched": 1194,
+    "accepted_location_count": 1215,
+    "alias_rows_touched": 1215,
     "exact_downgrade_allowed": false,
-    "input_location_count": 1478,
-    "location_rows_touched": 1194,
+    "input_location_count": 1521,
+    "location_rows_touched": 1215,
     "qa_pass": true,
-    "skipped_missing_borough": 284
+    "skipped_missing_borough": 306
   },
   "approximate_certified_count": 0,
   "authority_observation_counts": {
-    "projector_v3_approximate_recovery_v1": 21853,
-    "projector_v3_semantic_map_decision": 1294
+    "projector_v3_approximate_recovery_v1": 22631,
+    "projector_v3_semantic_map_decision": 1371
   },
   "circular_reuse_authority_count": 0,
-  "duplicate_alias_key_rows_merged": 21,
+  "duplicate_alias_key_rows_merged": 22,
   "duplicate_location_id_rows_merged": 0,
   "event_rows_modified": false,
-  "generated_at_utc": "2026-09-04T23:53:21.776527Z",
+  "generated_at_utc": "2026-09-05T23:41:38.107922Z",
   "id_basis_counts": {
-    "deterministic_location_signature": 1258,
-    "existing_location_id": 21889
+    "deterministic_location_signature": 1410,
+    "existing_location_id": 22592
   },
-  "location_count": 1478,
+  "location_count": 1521,
   "locations_unique_on_location_id": true,
   "observed_authority_counts": {
-    "durable_location_registry_v1": 21889,
-    "projector_v3_approximate_recovery_v1": 58,
-    "projector_v3_semantic_map_decision": 1200
+    "durable_location_registry_v1": 22592,
+    "projector_v3_approximate_recovery_v1": 130,
+    "projector_v3_semantic_map_decision": 1280
   },
   "precision_observation_counts": {
-    "approximate": 21853,
-    "exact": 1294
+    "approximate": 22631,
+    "exact": 1371
   },
   "protected_cache_modified": false,
   "qa_pass": true,
   "schema_version": "NYCIF_LOCATION_REGISTRY_SYNC_V1_REPORT",
   "skipped_counts": {
-    "not_geography_assigned": 7936,
-    "reused_location_missing_source_authority": 19
+    "not_geography_assigned": 8286,
+    "reused_location_missing_source_authority": 18
   }
 }
