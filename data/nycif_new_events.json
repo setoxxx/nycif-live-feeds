@@ -1,15 +1,26 @@
 {
- "generated_at_utc": "2026-09-04T23:52:33Z",
+ "generated_at_utc": "2026-09-05T23:40:41Z",
  "identity_contract": "OccurrenceIdentityV2",
  "new_definition": "canonical v2 occurrence identity absent from previous tracked index",
  "legacy_seen_index_dual_read": true,
  "baseline_run": false,
  "window": {
-  "past_floor": "2026-08-21",
-  "today": "2026-09-04"
+  "past_floor": "2026-08-22",
+  "today": "2026-09-05"
  },
- "total_tracked": 6,
- "new_this_run": 0,
+ "total_tracked": 7,
+ "new_this_run": 1,
  "identity_ambiguous": 0,
- "events": []
+ "events": [
+  {
+   "id": "v2:nyc-parks-bigapps-events:2240417@2026-09-13T14:00:00",
+   "title": "EL Garden's 2nd Annual Paw Paw Party",
+   "category": "arts",
+   "event_type": "Street Festival",
+   "start_date": "2026-09-13",
+   "end_date": "2026-09-13",
+   "borough": null,
+   "first_seen_utc": "2026-09-05T23:40:41Z"
+  }
+ ]
 }

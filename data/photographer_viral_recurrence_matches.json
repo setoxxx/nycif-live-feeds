@@ -1,7 +1,7 @@
 {
-  "current_calendar_events": 50,
+  "current_calendar_events": 51,
   "foil_operator_joins": 0,
-  "generated_at_utc": "2026-09-04T23:52:43Z",
+  "generated_at_utc": "2026-09-05T23:40:50Z",
   "historical_rows_considered": 2450,
   "historical_window": {
     "dataset": "bkfu-528j",
@@ -12,10 +12,10 @@
   "label_counts": {
     "possible": 12,
     "returning_likely": 5,
-    "weak": 1
+    "weak": 2
   },
   "location_cache_modified": false,
-  "match_count": 18,
+  "match_count": 19,
   "matches": [
     {
       "current": {
@@ -879,6 +879,55 @@
     },
     {
       "current": {
+        "assignment_score": 380,
+        "borough": "Manhattan",
+        "certified_pin": false,
+        "coordinate_status": "map_ready",
+        "date": "2026-09-19",
+        "display_location": "113th Street and Manhattan Avenue (in Morningside Park)",
+        "end_date_time": "2026-09-19T18:00:00",
+        "event_id": "2236303",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-19&assignment=1",
+        "id": "review_supplemental:nyc-parks-bigapps-events:2236303@2026-09-19",
+        "lane": "approved_major",
+        "latitude": 40.803121369492,
+        "longitude": -73.958336114883,
+        "map_eligibility_state": "REVIEW_REQUIRED",
+        "map_link": "https://www.google.com/maps?q=40.803121369492,-73.958336114883",
+        "pin_integrity_reason": "LEGACY_EVIDENCE_PENDING_MIGRATION",
+        "source": {
+          "dataset": "nyc-parks-bigapps-events",
+          "source_event_id": "2236303"
+        },
+        "start_date_time": "2026-09-19T13:00:00",
+        "title": "Common Ground Festival"
+      },
+      "location_cache_modified": false,
+      "match_reasons": [
+        "name_strong:0.75",
+        "season_delta_days:1"
+      ],
+      "match_score": 55,
+      "prior_year": {
+        "borough": "Manhattan",
+        "cemsid": null,
+        "dataset": "bkfu-528j",
+        "date": "2025-09-20",
+        "display_location": "Morningside Park: West 114th BBQ Area 03   ,Morningside Park: West 113th St Picnic Area ,Morningside Park: West 116th Street BBQ Area 04 ,Morningside Park: Morningside Park-Basketball-01",
+        "end_date_time": "2025-09-20T18:00:00.000",
+        "event_id": "852346",
+        "event_type": "Special Event",
+        "police_precinct": "26,",
+        "start_date_time": "2025-09-20T12:00:00.000",
+        "street_closure_type": "N/A",
+        "title": "Common Ground Festival in Morningside Park"
+      },
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "recurrence_label": "weak"
+    },
+    {
+      "current": {
         "assignment_score": 400,
         "borough": "Queens",
         "certified_pin": false,
@@ -941,7 +990,7 @@
   "premium_label": "Viral Recurrence Memory (premium/operator)",
   "promotion_allowed": false,
   "public_map_modified": false,
-  "reference_today_nyc": "2026-09-04",
+  "reference_today_nyc": "2026-09-05",
   "schema_version": "photographer-viral-recurrence-matches-v1",
   "staged_feed_modified": false
 }
