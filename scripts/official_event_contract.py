@@ -3,6 +3,9 @@
 Every official dataset must emit the same shape the phone already reads:
 event_reader_rolling_v1 via nycif_apply_staging_event_batch. Pin rules stay
 dataset-specific so the map never invents a dot.
+
+Corridor rows (street between X and Y) are LIST_ONLY until a later resolver
+sets CORRIDOR_READY with two certified endpoints. This module does not geocode.
 """
 
 from __future__ import annotations
@@ -31,6 +34,7 @@ NYC_LAT_RANGE = (40.4, 41.1)
 NYC_LNG_RANGE = (-74.35, -73.65)
 TIMEZONE = "America/New_York"
 OCCURRENCE_ID_RE = re.compile(r"^[0-9a-f]{64}$")
+MAP_STATES = frozenset({"MAP_READY", "LIST_ONLY", "CORRIDOR_READY"})
 REQUIRED_TOP_LEVEL = (
     "occurrence_id",
     "title",
@@ -117,6 +121,12 @@ def reader_blob(event: dict[str, Any]) -> dict[str, Any]:
     return reader
 
 
+def corridor_blob(event: dict[str, Any]) -> dict[str, Any] | None:
+    reader = reader_blob(event)
+    corridor = reader.get("corridor")
+    return corridor if isinstance(corridor, dict) else None
+
+
 def apply_reader_display(event: dict[str, Any]) -> dict[str, Any]:
     source = event.get("source") if isinstance(event.get("source"), dict) else {}
     dataset = str(source.get("source_dataset") or "")
@@ -131,8 +141,18 @@ def apply_reader_display(event: dict[str, Any]) -> dict[str, Any]:
     metadata = event.get("metadata") if isinstance(event.get("metadata"), dict) else {}
     reader = metadata.get("reader") if isinstance(metadata.get("reader"), dict) else {}
     reader["certified_pin"] = map_ready
-    reader["map_eligibility_state"] = "MAP_READY" if map_ready else "LIST_ONLY"
-    reader["display_disposition"] = "MAP" if map_ready else "LIST_ONLY"
+    if map_ready:
+        reader["map_eligibility_state"] = "MAP_READY"
+        reader["display_disposition"] = "MAP"
+    elif reader.get("map_eligibility_state") == "CORRIDOR_READY":
+        reader["certified_pin"] = False
+        reader["display_disposition"] = "CORRIDOR"
+        event["map_ready"] = False
+        event["lat"] = None
+        event["lng"] = None
+    else:
+        reader["map_eligibility_state"] = "LIST_ONLY"
+        reader["display_disposition"] = "LIST_ONLY"
     reader["source_dataset"] = dataset
     reader["source_event_id"] = str(source.get("source_event_id") or reader.get("source_event_id") or "")
     if "event_role" not in reader:
@@ -140,9 +160,32 @@ def apply_reader_display(event: dict[str, Any]) -> dict[str, Any]:
     metadata["reader"] = reader
     event["metadata"] = metadata
     quality = event.get("quality") if isinstance(event.get("quality"), dict) else {}
-    quality["public_display_status"] = "FULL_TIME" if map_ready else "LIST_ONLY"
+    if map_ready:
+        quality["public_display_status"] = "FULL_TIME"
+    elif reader.get("map_eligibility_state") == "CORRIDOR_READY":
+        quality["public_display_status"] = "CORRIDOR"
+    else:
+        quality["public_display_status"] = "LIST_ONLY"
     event["quality"] = quality
     return event
+
+
+def _assert_corridor(reader: dict[str, Any]) -> None:
+    corridor = reader.get("corridor") if isinstance(reader.get("corridor"), dict) else None
+    if not corridor:
+        raise OfficialEventContractError("CORRIDOR_READY rows need metadata.reader.corridor")
+    point_a = corridor.get("point_a") if isinstance(corridor.get("point_a"), dict) else {}
+    point_b = corridor.get("point_b") if isinstance(corridor.get("point_b"), dict) else {}
+    lat_a = _finite_coord(point_a.get("lat"))
+    lng_a = _finite_coord(point_a.get("lng"))
+    lat_b = _finite_coord(point_b.get("lat"))
+    lng_b = _finite_coord(point_b.get("lng"))
+    if not in_nyc_bounds(lat_a, lng_a) or not in_nyc_bounds(lat_b, lng_b):
+        raise OfficialEventContractError("CORRIDOR_READY needs two in-bounds endpoints")
+    if reader.get("certified_pin") is True:
+        raise OfficialEventContractError("corridor rows cannot be certified point pins")
+    if reader.get("display_disposition") != "CORRIDOR":
+        raise OfficialEventContractError("corridor rows must use display_disposition=CORRIDOR")
 
 
 def assert_rung8_event(event: dict[str, Any]) -> dict[str, Any]:
@@ -177,9 +220,19 @@ def assert_rung8_event(event: dict[str, Any]) -> dict[str, Any]:
         raise OfficialEventContractError("reader.source_dataset must match source.source_dataset")
     if str(reader.get("source_event_id") or "") != str(source.get("source_event_id") or ""):
         raise OfficialEventContractError("reader.source_event_id must match source.source_event_id")
+    state = str(reader.get("map_eligibility_state") or "")
+    if state not in MAP_STATES:
+        raise OfficialEventContractError(f"unsupported map_eligibility_state: {state}")
     map_ready = event.get("map_ready") is True
     lat = _finite_coord(event.get("lat"))
     lng = _finite_coord(event.get("lng"))
+    if state == "CORRIDOR_READY":
+        if map_ready:
+            raise OfficialEventContractError("CORRIDOR_READY rows must keep map_ready false")
+        if event.get("lat") is not None or event.get("lng") is not None:
+            raise OfficialEventContractError("CORRIDOR_READY rows must not carry a single lat/lng")
+        _assert_corridor(reader)
+        return event
     if map_ready:
         if not in_nyc_bounds(lat, lng):
             raise OfficialEventContractError("map_ready rows need in-bounds lat/lng")
