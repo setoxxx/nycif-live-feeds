@@ -53,6 +53,16 @@ BETWEEN_IN_TEXT = re.compile(
     r"(?P<main>[A-Z0-9 .'-]+?)\s+between\s+(?P<cross1>.+?)\s+and\s+(?P<cross2>[^,]+)",
     flags=re.IGNORECASE,
 )
+AND_INTERSECTION = re.compile(
+    r"^(?P<a>.+?)\s+(?:and|&)\s+(?P<b>.+)$",
+    flags=re.IGNORECASE,
+)
+BOROUGH_TRAILING = re.compile(
+    r"(?:,?\s+(?:manhattan|brooklyn|queens|the bronx|bronx|staten island)"
+    r"(?:,?\s+n\.?y\.?)?)\s*$",
+    flags=re.IGNORECASE,
+)
+NY_TRAILING = re.compile(r",?\s+n\.?y\.?\s*$", flags=re.IGNORECASE)
 STREET_NUMBER = re.compile(
     r"^(?:(?P<dir>east|west|north|south)\s+)?(?P<num>\d+)\s+"
     r"(?P<kind>street|st|avenue|ave|road|rd|boulevard|blvd)\b",
@@ -118,6 +128,12 @@ def segment_identity(borough: str | None, main: str, cross1: str, cross2: str) -
             crosses[1],
         ]
     )
+
+
+def is_known_bad_si_dump(lat: float | None, lng: float | None) -> bool:
+    if lat is None or lng is None:
+        return False
+    return abs(float(lat) - 40.533) < 0.0006 and abs(float(lng) + 74.2021) < 0.0006
 
 
 def cache_key(display: str, borough: str | None) -> str:
@@ -200,22 +216,49 @@ def _segments(display: str) -> list[str]:
 
 
 def _between_claim(text: str) -> tuple[str, str, str] | None:
-    parsed = parse_street_between(text.strip())
+    cleaned = clean_display_location(text)
+    parsed = parse_street_between(cleaned)
     if parsed:
         main, cross1, cross2 = parsed
         return _collapse_spaces(main), _collapse_spaces(cross1), _collapse_spaces(cross2)
-    match = BETWEEN_IN_TEXT.search(text)
+    match = BETWEEN_IN_TEXT.search(cleaned)
     if not match:
         return None
     return (
         _collapse_spaces(match.group("main")),
-        _collapse_spaces(match.group("cross1")),
-        _collapse_spaces(match.group("cross2")),
+        _collapse_spaces(clean_display_location(match.group("cross1"))),
+        _collapse_spaces(clean_display_location(match.group("cross2"))),
     )
 
 
 def _collapse_spaces(text: str) -> str:
     return re.sub(r"\s+", " ", str(text or "")).strip()
+
+
+def clean_display_location(display: str) -> str:
+    """Drop trailing borough / NY tokens so LION and GeoSearch can parse the street."""
+    text = _collapse_spaces(display)
+    for _ in range(3):
+        nxt = BOROUGH_TRAILING.sub("", text)
+        nxt = NY_TRAILING.sub("", nxt).strip(" ,")
+        if nxt == text:
+            break
+        text = nxt
+    return text
+
+
+def _intersection_claim(text: str) -> tuple[str, str] | None:
+    cleaned = clean_display_location(text)
+    if " between " in cleaned.casefold():
+        return None
+    match = AND_INTERSECTION.match(cleaned)
+    if not match:
+        return None
+    left = _collapse_spaces(match.group("a"))
+    right = _collapse_spaces(match.group("b"))
+    if not left or not right:
+        return None
+    return left, right
 
 
 def _flatten_line_coords(geometry: dict[str, Any] | None) -> list[list[float]]:
@@ -345,6 +388,8 @@ class TvppPinResolver:
     def _from_cache_entry(self, entry: dict[str, Any]) -> TvppPin | None:
         if not valid_nyc_lat_lng(entry.get("lat"), entry.get("lng")):
             return None
+        if is_known_bad_si_dump(entry.get("lat"), entry.get("lng")):
+            return None
         return _pin(
             float(entry["lat"]),
             float(entry["lng"]),
@@ -441,7 +486,22 @@ class TvppPinResolver:
             )
         return None
 
-    def _facility(self, display: str) -> TvppPin | None:
+    def _facility_hit(self, hit: dict[str, Any], borough: str | None, reason: str) -> TvppPin | None:
+        if is_known_bad_si_dump(hit.get("lat"), hit.get("lng")):
+            return None
+        if borough and not coordinate_matches_borough(hit["lat"], hit["lng"], borough):
+            return None
+        return _pin(
+            hit["lat"],
+            hit["lng"],
+            source="nyc_parks_facility_reference",
+            reason_code="TVPP_PARKS_FACILITY_OFFICIAL",
+            reason=reason,
+        )
+
+    def _facility(self, display: str, borough: str | None = None) -> TvppPin | None:
+        if _between_claim(display):
+            return None
         candidates = [
             simplified_place(display),
             normalize_text_legacy(display.split(":", 1)[0] if ":" in display else display),
@@ -452,24 +512,24 @@ class TvppPinResolver:
                 continue
             hit = self.facility_index.get(key)
             if hit:
-                return _pin(
-                    hit["lat"],
-                    hit["lng"],
-                    source="nyc_parks_facility_reference",
-                    reason_code="TVPP_PARKS_FACILITY_OFFICIAL",
-                    reason=f"Official NYC Parks facility match for '{hit.get('label') or key}'.",
+                pin = self._facility_hit(
+                    hit,
+                    borough,
+                    f"Official NYC Parks facility match for '{hit.get('label') or key}'.",
                 )
+                if pin:
+                    return pin
         parent = simplified_place(display)
-        if len(parent) >= 10:
+        if len(parent) >= 16:
             for key, hit in self.facility_index.items():
                 if parent in key or key in parent:
-                    return _pin(
-                        hit["lat"],
-                        hit["lng"],
-                        source="nyc_parks_facility_reference",
-                        reason_code="TVPP_PARKS_FACILITY_OFFICIAL",
-                        reason=f"Official NYC Parks facility substring match for '{parent}'.",
+                    pin = self._facility_hit(
+                        hit,
+                        borough,
+                        f"Official NYC Parks facility substring match for '{parent}'.",
                     )
+                    if pin:
+                        return pin
         return None
 
     def _geoclient_midpoint(self, main: str, cross1: str, cross2: str, borough: str | None) -> TvppPin | None:
@@ -516,10 +576,10 @@ class TvppPinResolver:
             points.append(point)
             if len(points) == 2:
                 break
-        if not points:
+        if len(points) < 2:
             return None
         first = points[0]
-        second = points[1] if len(points) > 1 else points[0]
+        second = points[1]
         distance = haversine_m(first[0], first[1], second[0], second[1])
         if first != second and not 20.0 <= distance <= 5000.0:
             second = first
@@ -553,7 +613,7 @@ class TvppPinResolver:
                 queries.append(f"{n1 * 100} {main_t}")
         if n1 is not None:
             queries.append(f"{n1} {main_t}")
-        queries.extend([main_t, main, cross_t, f"{main_t} and {cross_t}"])
+        queries.extend([f"{main_t} and {cross_t}", f"{main} and {cross1}"])
         seen: set[str] = set()
         ordered: list[str] = []
         for query in queries:
@@ -595,6 +655,21 @@ class TvppPinResolver:
             hit = self._geosearch_street(main, cross1, cross2, borough)
             if hit:
                 return hit
+        intersection = _intersection_claim(display)
+        if intersection:
+            left, right = intersection
+            point = self._geosearch_point(f"{tidy_street(left)} and {tidy_street(right)}", borough)
+            if point is None:
+                point = self._geosearch_point(f"{left} and {right}", borough)
+            if point is not None:
+                return _pin(
+                    point[0],
+                    point[1],
+                    source="nyc_geosearch_planninglabs",
+                    reason_code="TVPP_NYC_GEOSEARCH_STREET",
+                    reason=f"NYC GeoSearch intersection match for {left} and {right}.",
+                    confidence="medium",
+                )
         return None
 
     def _parent_place(self, display: str) -> str:
@@ -617,6 +692,16 @@ class TvppPinResolver:
             re.sub(r"\bbays?\b.*", "", suffix, flags=re.I).strip(),
             display,
         ]
+        in_place = re.search(r"\bin\s+(?P<place>[A-Za-z0-9 .'-]*Park)\b", display, flags=re.I)
+        if in_place:
+            queries.append(in_place.group("place"))
+        alias_key = normalize_text_legacy(display)
+        if alias_key in {
+            "125th street and marginal street",
+            "west 125th street and marginal street",
+            "w 125th street and marginal street",
+        }:
+            queries.append("West Harlem Piers")
         seen: set[str] = set()
         ordered: list[str] = []
         for query in queries:
@@ -638,7 +723,7 @@ class TvppPinResolver:
             if key == cache_key(display, borough) or not str(key).startswith(prefix):
                 continue
             hit = self._from_cache_entry(entry) if isinstance(entry, dict) else None
-            if hit:
+            if hit and (not borough or coordinate_matches_borough(hit.lat, hit.lng, borough)):
                 return _pin(
                     float(hit.lat),
                     float(hit.lng),
@@ -665,21 +750,26 @@ class TvppPinResolver:
         return None
 
     def resolve(self, display_location: str, borough: str | None = None) -> TvppPin:
-        display = str(display_location or "").strip()
+        raw = str(display_location or "").strip()
+        display = clean_display_location(raw)
         if not display:
             return UNRESOLVED
-        key = cache_key(display, borough)
-        cached = self.cache.get(key)
-        if isinstance(cached, dict):
-            hit = self._from_cache_entry(cached)
-            if hit:
-                return hit
+        key = cache_key(raw, borough)
+        cleaned_key = cache_key(display, borough)
+        for lookup in (key, cleaned_key):
+            cached = self.cache.get(lookup)
+            if isinstance(cached, dict):
+                if _between_claim(display) and str(cached.get("source") or "").startswith("nyc_parks_facility"):
+                    continue
+                hit = self._from_cache_entry(cached)
+                if hit and (not borough or coordinate_matches_borough(hit.lat, hit.lng, borough)):
+                    return hit
 
         pin = self._lion(display, borough)
         if pin is None:
             pin = self._street(display, borough)
         if pin is None:
-            pin = self._facility(display)
+            pin = self._facility(display, borough)
         if pin is None:
             pin = self._sibling_parent_cache(display, borough)
         if pin is None:

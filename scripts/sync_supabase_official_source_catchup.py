@@ -8,8 +8,9 @@ which is what the iOS/Android app reads. Supabase does not poll GitHub JSON.
 Uses the existing Rung 8 writer. Occurrence IDs come from OccurrenceIdentityV2
 only. Every public TVPP street permit is pinned from Parks facilities, NYC DCP
 LION centerlines, Geoclient, or NYC GeoSearch. Parks rows with official source
-coordinates certify as map pins. Calendar rows stay list-only unless the
-snapshot already has official coordinates. Projected feast stays list-only.
+coordinates certify as map pins. Calendar and projected-feast rows pin when
+the snapshot already has official coordinates or the official street/facility
+resolver finds an in-bounds NYC point. Borough-only leftovers stay unpinned.
 Expiration is never enabled.
 """
 
@@ -463,6 +464,7 @@ def calendar_events(
     rows = payload if isinstance(payload, list) else payload.get("events", [])
     seen_at = _now_iso()
     events: list[dict[str, Any]] = []
+    resolver = TvppPinResolver.load_default()
     for row in rows:
         if not isinstance(row, dict):
             _note_rejection(rejections, dataset=DATASET_CALENDAR, source_event_id="", title="", reason="not_an_object")
@@ -498,11 +500,23 @@ def calendar_events(
                 reason="invalid_interval",
             )
             continue
+        display_location = row.get("address") or row.get("location")
+        borough = row.get("boroughs") or row.get("borough")
         lat, lng, map_ready = contract.apply_pin_policy(
             DATASET_CALENDAR,
             row.get("lat") if row.get("lat") is not None else row.get("latitude"),
             row.get("lng") if row.get("lng") is not None else row.get("longitude"),
         )
+        evidence = None
+        if not map_ready and contract.native_map_row_visible(
+            str(display_location or ""), str(borough or ""), DATASET_CALENDAR
+        ):
+            pin = resolver.resolve(str(display_location or ""), str(borough or "") or None)
+            if pin.resolved:
+                lat, lng, map_ready = contract.apply_pin_policy(
+                    DATASET_CALENDAR, pin.lat, pin.lng, pin.evidence()
+                )
+                evidence = pin.evidence() if map_ready else None
         categories = row.get("categories")
         category_text = (
             ", ".join(_text(item) for item in categories if _text(item))
@@ -510,6 +524,18 @@ def calendar_events(
             else _text(categories)
         )
         public_category, public_subtype = _category_from_text(category_text, "general")
+        raw_record = {
+            "source_dataset": DATASET_CALENDAR,
+            "source_event_id": source_event_id,
+            "title": title,
+            "start_date_time": start_at,
+            "end_date_time": row.get("end_date_time"),
+            "address": row.get("address"),
+            "permalink": row.get("permalink"),
+            "canceled": False,
+        }
+        if evidence:
+            raw_record["location_evidence"] = evidence
         events.append(
             _canonical(
                 source_dataset=DATASET_CALENDAR,
@@ -517,8 +543,8 @@ def calendar_events(
                 title=title,
                 start_at=start_at,
                 end_at=end_at,
-                borough=row.get("boroughs") or row.get("borough"),
-                display_location=row.get("address") or row.get("location"),
+                borough=borough,
+                display_location=display_location,
                 lat=lat if map_ready else None,
                 lng=lng if map_ready else None,
                 map_ready=map_ready,
@@ -529,21 +555,16 @@ def calendar_events(
                 source_url=row.get("permalink") or row.get("website"),
                 source_cemsid=None,
                 seen_at=seen_at,
-                raw_record={
-                    "source_dataset": DATASET_CALENDAR,
-                    "source_event_id": source_event_id,
-                    "title": title,
-                    "start_date_time": start_at,
-                    "end_date_time": row.get("end_date_time"),
-                    "address": row.get("address"),
-                    "permalink": row.get("permalink"),
-                    "canceled": False,
-                },
-                location_authority="official_calendar_coordinate"
-                if map_ready
-                else "list_only_official_calendar_snapshot",
+                raw_record=raw_record,
+                location_authority=(
+                    ((evidence or {}).get("geocoder_source") or "official_calendar_coordinate")
+                    if map_ready
+                    else "list_only_official_calendar_snapshot"
+                ),
             )
         )
+    if resolver.live_calls:
+        resolver.save_cache()
     return events
 
 
@@ -654,6 +675,7 @@ def feast_events(
     rows = payload.get("events", []) if isinstance(payload, dict) else payload
     seen_at = _now_iso()
     events: list[dict[str, Any]] = []
+    resolver = TvppPinResolver.load_default()
     for row in rows:
         if not isinstance(row, dict):
             _note_rejection(rejections, dataset=DATASET_FEAST, source_event_id="", title="", reason="not_an_object")
@@ -684,6 +706,32 @@ def feast_events(
             _text(row.get("event_type") or row.get("projected_event_kind")),
             "arts",
         )
+        display_location = row.get("display_location") or row.get("location")
+        borough = row.get("event_borough") or row.get("borough")
+        lat = lng = None
+        map_ready = False
+        evidence = None
+        if contract.native_map_row_visible(
+            str(display_location or ""), str(borough or ""), DATASET_FEAST
+        ):
+            pin = resolver.resolve(str(display_location or ""), str(borough or "") or None)
+            if pin.resolved:
+                lat, lng, map_ready = contract.apply_pin_policy(
+                    DATASET_FEAST, pin.lat, pin.lng, pin.evidence()
+                )
+                evidence = pin.evidence() if map_ready else None
+        raw_record = {
+            "source_dataset": DATASET_FEAST,
+            "source_event_id": source_event_id,
+            "title": title,
+            "start_date_time": start_at,
+            "end_date_time": end_at,
+            "location": display_location,
+            "intake_type": row.get("intake_type"),
+            "promotion_allowed": False,
+        }
+        if evidence:
+            raw_record["location_evidence"] = evidence
         events.append(
             _canonical(
                 source_dataset=DATASET_FEAST,
@@ -691,11 +739,11 @@ def feast_events(
                 title=title,
                 start_at=start_at,
                 end_at=end_at,
-                borough=row.get("event_borough") or row.get("borough"),
-                display_location=row.get("display_location") or row.get("location"),
-                lat=None,
-                lng=None,
-                map_ready=False,
+                borough=borough,
+                display_location=display_location,
+                lat=lat if map_ready else None,
+                lng=lng if map_ready else None,
+                map_ready=map_ready,
                 public_category=public_category,
                 public_subtype=public_subtype,
                 source_event_type=row.get("event_type") or "Projected feast",
@@ -703,19 +751,16 @@ def feast_events(
                 source_url=None,
                 source_cemsid=None,
                 seen_at=seen_at,
-                raw_record={
-                    "source_dataset": DATASET_FEAST,
-                    "source_event_id": source_event_id,
-                    "title": title,
-                    "start_date_time": start_at,
-                    "end_date_time": end_at,
-                    "location": row.get("display_location") or row.get("location"),
-                    "intake_type": row.get("intake_type"),
-                    "promotion_allowed": False,
-                },
-                location_authority="list_only_projected_feast_reference",
+                raw_record=raw_record,
+                location_authority=(
+                    ((evidence or {}).get("geocoder_source") or "official_feast_street_pin")
+                    if map_ready
+                    else "list_only_projected_feast_reference"
+                ),
             )
         )
+    if resolver.live_calls:
+        resolver.save_cache()
     return events
 
 

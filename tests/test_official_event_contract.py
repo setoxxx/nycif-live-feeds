@@ -5,7 +5,7 @@ from scripts import supabase_event_writer as writer
 from scripts import sync_supabase_official_source_catchup as catchup
 
 
-def test_tvpp_pins_with_resolver_evidence_feast_never_pins():
+def test_tvpp_and_feast_pin_only_with_resolver_evidence():
     assert contract.apply_pin_policy("tvpp-9vvx", 40.7, -74.0) == (None, None, False)
     lat, lng, ready = contract.apply_pin_policy(
         "tvpp-9vvx",
@@ -19,8 +19,16 @@ def test_tvpp_pins_with_resolver_evidence_feast_never_pins():
         "nyc-projected-feast-reference",
         40.742602,
         -73.876637,
-        {"exact_pin_eligible": True, "reason_code": "OFFICIAL_SOURCE_COORDINATE_SITE_VALIDATED"},
     ) == (None, None, False)
+    feast_lat, feast_lng, feast_ready = contract.apply_pin_policy(
+        "nyc-projected-feast-reference",
+        40.742602,
+        -73.876637,
+        {"exact_pin_eligible": True, "reason_code": "TVPP_NYC_GEOSEARCH_STREET"},
+    )
+    assert feast_ready is True
+    assert feast_lat == pytest.approx(40.742602)
+    assert feast_lng == pytest.approx(-73.876637)
 
 
 def test_parks_requires_official_evidence():
@@ -95,11 +103,16 @@ def test_all_official_datasets_emit_reader_contract():
             assert row["lng"] is None
 
 
-def test_feast_intake_coords_are_stripped():
+def test_feast_pins_only_with_official_street_evidence():
     events = catchup.feast_events()
     assert events
-    assert all(event["map_ready"] is False for event in events)
-    assert all(event["lat"] is None and event["lng"] is None for event in events)
+    for event in events:
+        if event.get("map_ready") is True:
+            assert event.get("lat") is not None and event.get("lng") is not None
+            evidence = ((event.get("source") or {}).get("raw_record") or {}).get("location_evidence")
+            assert contract.official_pin_evidence(evidence) is True
+        else:
+            assert event.get("lat") is None and event.get("lng") is None
     first = writer.normalize_event(events[0])
     checked = contract.assert_official_batch([first], "nyc-projected-feast-reference")
-    assert checked[0]["map_ready"] is False
+    assert checked[0]["source"]["source_dataset"] == "nyc-projected-feast-reference"
