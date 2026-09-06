@@ -60,6 +60,14 @@ def validate(settings: dict[str, bool] | None = None) -> dict[str, Any]:
         "fdny": _rows(STAGING_DIR / "fdny_firehouses.json"),
         "shelter": _rows(STAGING_DIR / "shelters.json"),
     }
+    calendar = {
+        "workforce1": _rows(STAGING_DIR / "workforce1_events.json"),
+        "nybc": _rows(STAGING_DIR / "nybc_blood_drives.json"),
+        "show": _rows(STAGING_DIR / "show_mobile_clinics.json"),
+        "dol": _rows(STAGING_DIR / "dol_career_events.json"),
+        "cuny": _rows(STAGING_DIR / "cuny_career_events.json"),
+        "aspca": _rows(STAGING_DIR / "aspca_mobile.json"),
+    }
 
     if not HOWARD_CSV.exists() and not storefronts:
         notes.append("Howard ~91 CSV not dropped; zero curated storefronts (correct, not invented).")
@@ -96,6 +104,17 @@ def validate(settings: dict[str, bool] | None = None) -> dict[str, Any]:
             failures.append("census-only shelter staging has pins")
         notes.append("Shelter dataset treated as census-only; pins correctly omitted.")
 
+    calendar_rows = [row for group in calendar.values() for row in group]
+    published_cal = [
+        row
+        for row in calendar_rows
+        if row.get("promotion_allowed") is True or row.get("map_ready") is True
+    ]
+    if published_cal:
+        failures.append("help-calendar staging has map_ready or promotion_allowed true")
+    if calendar_rows:
+        notes.append(f"{len(calendar_rows)} help-calendar staging rows remain unpublished.")
+
     enabled = _gate_false(gates)
     if enabled:
         failures.append(f"reader gates still enabled: {enabled}")
@@ -125,6 +144,8 @@ def validate(settings: dict[str, bool] | None = None) -> dict[str, Any]:
         "curated_row_count": len(storefronts),
         "accepted_count": len(accepted),
         "civic_row_counts": {key: len(value) for key, value in civic.items()},
+        "calendar_row_counts": {key: len(value) for key, value in calendar.items()},
+        "invented_events": False,
         "howard_csv_present": HOWARD_CSV.exists(),
         "protected_files_untouched": list(PROTECTED),
         "wordpress_modified": False,

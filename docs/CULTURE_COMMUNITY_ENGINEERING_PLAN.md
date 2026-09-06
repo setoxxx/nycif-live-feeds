@@ -33,6 +33,11 @@ of fake “ethnic businesses.” It is:
 6. **8-day Culture calendar** — same Now / Tonight / 7 Days UX pattern as
    events, but Culture-sorted (worship services, cultural festivals, ASPCA van
    days, community clinics) for **today + next 7 days**.
+7. **Rolling public-help calendar** (map pin only when that occurrence already
+   has lat/lng) — mobile blood drives, H+H S.H.O.W. clinics / resource vans,
+   ASPCA mobile pet, Workforce1 and NYS DOL job fairs/workshops, CUNY career
+   events. These **move**. Store them as `culture_calendar_occurrence_v1`, not
+   fake fixed storefronts.
 
 ---
 
@@ -115,6 +120,11 @@ Add per-layer gates (all default `false`):
 | `pet_care_layer_enabled` | ASPCA / low-cost pet care **pins** (usually off; calendar first) |
 | `resource_layer_enabled` | pinable sanctuary resources |
 | `calendar_publication_enabled` | `nycif-culture-calendar` |
+| `help_calendar_publication_enabled` | Master switch for public-help chips |
+| `blood_layer_enabled` | 🩸 blood drives |
+| `mobile_clinic_layer_enabled` | 🏥 SHOW / resource vans |
+| `jobs_layer_enabled` | 💼 Workforce1 / DOL |
+| `college_layer_enabled` | 🎓 CUNY career events |
 
 A layer is visible only when **its gate AND** (for civic children)
 `civic_publication_enabled` are true **and** the row is `ACCEPTED` with
@@ -166,7 +176,7 @@ ids). **Not** written into `event_occurrences`.
 | Column | Notes |
 | --- | --- |
 | `occurrence_id` | Deterministic |
-| `calendar_kind` | `worship_service` / `cultural_festival` / `aspca_van` / `community_clinic` / `other` |
+| `calendar_kind` / `occurrence_kind` | Culture: `worship_service` / `cultural_festival` / `aspca_van` / `community_clinic` / `other`. Help: `blood_drive` / `mobile_clinic` / `job_fair` / `workshop` / `pet_mobile` / `resource_van`. |
 | `title`, `start_at`, `end_at`, `timezone` | `America/New_York` |
 | `place_id` / `facility_id` | Optional link |
 | `map_ready` | True only with certified NYC coords |
@@ -209,7 +219,12 @@ Hotlines: `is_hotline=true`, `lat`/`lng` null, never `map_ready`.
 | SNAP / benefits / markets | Existing civic help-place snapshots | Stay in civic review lane until a Culture resource gate is explicitly enabled. |
 | NYC Care / H+H / FQHC | Official directories (TBD, not invented) | Phase 2 ingest after a named dataset is approved. |
 | Food pantries | Official city / Food Bank directory (TBD) | Same. |
-| ASPCA Community Medicine | ASPCA published schedule (zip / waitlist) | Calendar occurrences. `waitlist_gated=true`. No fake van pins. |
+| ASPCA Community Medicine | ASPCA published schedule (zip / waitlist) | Calendar occurrences (`pet_mobile`). `waitlist_gated=true`. No fake van pins. Stub: `pull_aspca_mobile.py`. |
+| Mobile blood drives 🩸 | New York Blood Center `donate.nybc.org` | `pull_nybc_blood_drives.py` — fixture in CI; live scrape/API **not wired**. Do not invent drive sites. |
+| Mobile clinics / vans 🏥 | NYC H+H S.H.O.W. + other H+H mobile schedules | `pull_show_mobile_clinics.py`. Require address **and** time before a pin is even *proposed*. |
+| Workforce1 job fairs 💼 | NYC Open Data `kf2b-aeh5` | **Real SODA pull:** `pull_workforce1_events.py`. Reuses civic field names (`event_title`, `event_date`, `check_in_*`). Not merged into `event_occurrences`. |
+| NYS DOL / Career Center 💼 | dol.ny.gov / Trumba NYC-region | `pull_dol_career_events.py` — NYC-region filter; live Trumba not wired. Albany etc. dropped. |
+| CUNY career fairs 🎓 | Public campus career pages | `data/culture/cuny_career_source_registry.json` + `pull_cuny_career_events.py`. Registry-only ⇒ **0** invented events. |
 | DCWP licenses (`w7w3-xahh`) | `nycif-data-pipeline` `culture/` only | Evidence overlay + human review. **Not** a storefront publisher. Name-lead ≠ ACCEPTED. |
 
 Do not use Google Places to backfill Howard’s list.
@@ -243,6 +258,22 @@ required.**
 
 Hotlines first (non-map). Addressable clinics/pantries second. ASPCA as
 8-day occurrences with zip/waitlist semantics.
+
+### Phase C3b — rolling public-help calendar (this follow-up)
+
+Staging fetchers only. Gates stay false.
+
+| Chip | Emoji | `occurrence_kind` | Script |
+| --- | --- | --- | --- |
+| Blood | 🩸 | `blood_drive` | `pull_nybc_blood_drives.py` (stub + fixture) |
+| Mobile clinic | 🏥 | `mobile_clinic`, `resource_van` | `pull_show_mobile_clinics.py` (stub + fixture) |
+| Jobs | 💼 | `job_fair`, `workshop` | `pull_workforce1_events.py` (SODA `kf2b-aeh5`), `pull_dol_career_events.py` (stub + NYC filter) |
+| College | 🎓 | `job_fair` / `workshop` + `source_family=cuny` | `pull_cuny_career_events.py` + source registry |
+| Pet care | 🐾 | `pet_mobile` | `pull_aspca_mobile.py` (stub + fixture) |
+
+Shared shape: `scripts/culture/calendar_normalize.py` →
+`culture_calendar_occurrence_v1` JSON. `map_ready` stays false. Missing
+title or start ⇒ row dropped, never invented.
 
 ### Phase C4 — edge readers (still gated)
 
@@ -286,6 +317,13 @@ Package: `scripts/culture/`.
 | `pull_fdny_firehouses.py` | `hc8x-tcnd` → `data/culture/staging/fdny_firehouses.json` |
 | `pull_shelters.py` | `g9nt-57fp` → staging + addressability report |
 | `import_curated_storefronts.py` | CSV → staging. Missing CSV exits nonzero. |
+| `calendar_normalize.py` | Shared help-calendar occurrence shape + chips |
+| `pull_workforce1_events.py` | SODA `kf2b-aeh5` → calendar staging |
+| `pull_nybc_blood_drives.py` | NYBC stub + fixture (no live scrape in CI) |
+| `pull_show_mobile_clinics.py` | H+H SHOW stub + fixture |
+| `pull_dol_career_events.py` | DOL/Trumba stub + NYC-region filter |
+| `pull_cuny_career_events.py` | CUNY source registry; 0 events unless fixture |
+| `pull_aspca_mobile.py` | ASPCA waitlist/zip calendar stub |
 | `validate_before_publish.py` | Fail-closed gate. Default outcome: publication blocked. |
 
 All writes stay under `data/culture/**`. They must not rewrite
@@ -365,14 +403,16 @@ they must not skip Howard’s CSV or the ACCEPTED gate.
 - Does not write WordPress, `location_cache.json`, or the official event feed.
 - Does not treat `g9nt-57fp` census rows as shelter pins.
 - Does not pin ASPCA vans at guessed addresses.
+- Does not invent blood drives, SHOW clinics, DOL fairs, or CUNY career events.
+- Does not wire live NYBC / Trumba / CUNY scrapes (CI is fixture-only).
 
 ---
 
 ## 12. What to run next
 
 ```bash
-python3 -m pytest tests/test_culture_community_scaffold.py
-python3 -m compileall scripts/culture tests/test_culture_community_scaffold.py
+python3 -m pytest tests/test_culture_community_scaffold.py tests/test_culture_help_calendar.py
+python3 -m compileall scripts/culture tests/test_culture_community_scaffold.py tests/test_culture_help_calendar.py
 python3 scripts/culture/validate_before_publish.py
 # Expected: qa_pass true, publication_allowed false
 ```
@@ -390,10 +430,20 @@ Civic pulls (optional network):
 python3 scripts/culture/pull_nypd_precincts.py --fixture tests/fixtures/culture/nypd_precincts.fixture.json
 python3 scripts/culture/pull_fdny_firehouses.py --fixture tests/fixtures/culture/fdny_firehouses.fixture.json
 python3 scripts/culture/pull_shelters.py --fixture tests/fixtures/culture/shelters_census_only.fixture.json
+python3 scripts/culture/pull_workforce1_events.py --fixture tests/fixtures/culture/workforce1_events.fixture.json
+# optional live SODA (not required for CI):
+# python3 scripts/culture/pull_workforce1_events.py --live
+python3 scripts/culture/pull_nybc_blood_drives.py --fixture tests/fixtures/culture/nybc_blood_drives.fixture.json
+python3 scripts/culture/pull_show_mobile_clinics.py --fixture tests/fixtures/culture/show_mobile_clinics.fixture.json
+python3 scripts/culture/pull_dol_career_events.py --fixture tests/fixtures/culture/dol_career_events.fixture.json
+python3 scripts/culture/pull_cuny_career_events.py
+python3 scripts/culture/pull_aspca_mobile.py --fixture tests/fixtures/culture/aspca_mobile.fixture.json
+python3 -m pytest tests/test_culture_help_calendar.py
 ```
 
 Still unapproved / unpromoted after this PR: every storefront, civic pin,
-shelter, ASPCA occurrence, and sanctuary resource.
+shelter, ASPCA occurrence, sanctuary resource, blood drive, mobile clinic,
+job fair, and college career event.
 
 ---
 
@@ -406,3 +456,5 @@ shelter, ASPCA occurrence, and sanctuary resource.
 - [ ] Edge functions implemented in a later PR, gates still false
 - [ ] iOS calendar / civic chips in `NYCInFocus` after feeds exist
 - [ ] Explicit human order to flip any publication gate
+- [ ] Howard CSV received for storefronts (still blocked; unrelated to help calendar)
+- [x] Help-calendar fetchers + fixtures (Workforce1 SODA-ready; others stubbed)

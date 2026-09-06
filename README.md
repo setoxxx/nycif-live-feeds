@@ -79,7 +79,7 @@ Civic help-place snapshots (SNAP, Homebase, Workforce1, …) are **not** this ev
 
 ## Culture community (gated, not public)
 
-Sanctuary-city Culture enrichment (curated storefronts, civic 👮/🚒/shelters, 8-day Culture calendar) is planned in [`docs/CULTURE_COMMUNITY_ENGINEERING_PLAN.md`](docs/CULTURE_COMMUNITY_ENGINEERING_PLAN.md). Publication stays off. Howard must drop the ~91 storefront CSV — this repo does not invent businesses. Cross-repo notes: [`docs/cross-repo/`](docs/cross-repo/).
+Sanctuary-city Culture enrichment (curated storefronts, civic 👮/🚒/shelters, 8-day Culture calendar, rolling public-help 🩸🏥💼🎓) is planned in [`docs/CULTURE_COMMUNITY_ENGINEERING_PLAN.md`](docs/CULTURE_COMMUNITY_ENGINEERING_PLAN.md). Publication stays off. Howard must drop the ~91 storefront CSV — this repo does not invent businesses or help-calendar events. Cross-repo notes: [`docs/cross-repo/`](docs/cross-repo/).
 
 ## How we provide the data
 

@@ -1,0 +1,72 @@
+{
+  "artifact_type": "cuny_career_source_registry",
+  "schema_version": "culture-help-calendar-v1",
+  "publication_allowed": false,
+  "live_fetch_wired": false,
+  "note": "Documented public CUNY career pages only. Fetchers must not invent fairs. Live scrape is a later PR.",
+  "sources": [
+    {
+      "id": "cuny-central-careers",
+      "label": "CUNY Careers / student employment",
+      "campus": "system",
+      "url": "https://www.cuny.edu/about/administration/offices/hr/careers/",
+      "status": "documented_not_fetched"
+    },
+    {
+      "id": "cuny-hunter-career",
+      "label": "Hunter College Career Development",
+      "campus": "Hunter",
+      "borough": "Manhattan",
+      "url": "https://hunter.cuny.edu/students/career-development/",
+      "status": "documented_not_fetched"
+    },
+    {
+      "id": "cuny-baruch-starr",
+      "label": "Baruch Starr Career Development Center",
+      "campus": "Baruch",
+      "borough": "Manhattan",
+      "url": "https://studentaffairs.baruch.cuny.edu/starr-career-development-center/",
+      "status": "documented_not_fetched"
+    },
+    {
+      "id": "cuny-city-college-career",
+      "label": "City College Career and Professional Development",
+      "campus": "City College",
+      "borough": "Manhattan",
+      "url": "https://www.ccny.cuny.edu/careerdev",
+      "status": "documented_not_fetched"
+    },
+    {
+      "id": "cuny-brooklyn-college-career",
+      "label": "Brooklyn College Magner Career Center",
+      "campus": "Brooklyn College",
+      "borough": "Brooklyn",
+      "url": "https://www.brooklyn.edu/career/",
+      "status": "documented_not_fetched"
+    },
+    {
+      "id": "cuny-queens-college-career",
+      "label": "Queens College Career Development",
+      "campus": "Queens College",
+      "borough": "Queens",
+      "url": "https://www.qc.cuny.edu/career/",
+      "status": "documented_not_fetched"
+    },
+    {
+      "id": "cuny-lehman-career",
+      "label": "Lehman College Career Services",
+      "campus": "Lehman",
+      "borough": "Bronx",
+      "url": "https://www.lehman.edu/career-services/",
+      "status": "documented_not_fetched"
+    },
+    {
+      "id": "cuny-csi-career",
+      "label": "College of Staten Island Career Center",
+      "campus": "CSI",
+      "borough": "Staten Island",
+      "url": "https://www.csi.cuny.edu/campus-life/student-services/career-and-scholarship-center",
+      "status": "documented_not_fetched"
+    }
+  ]
+}
