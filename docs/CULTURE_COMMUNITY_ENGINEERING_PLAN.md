@@ -298,6 +298,13 @@ Extend `nycif-culture-places` (already exists, gated). Add
 `nycif-culture-civic` and `nycif-culture-calendar`. Deploy with **all gates
 false**. iOS can decode empty feeds.
 
+Live apply (2026-09-06): `20260906154500_culture_calendar_civic_live_v1.sql`
+adds civic/calendar tables and gate columns on the existing
+`culture_reader_settings` singleton (`id = 'v1'`). Do **not** apply the
+draft `id = 1` scaffold as-is. `business_publication_enabled` is not
+assigned. Edge source: `supabase/functions/nycif-culture-calendar/index.ts`
+and `nycif-culture-civic/index.ts`, `verify_jwt=false`.
+
 ### Phase C5 — iOS Culture UX
 
 `NYCInFocus` only, after feeds exist:
@@ -364,10 +371,8 @@ Outlines live next to the existing native-map function:
 
 - `supabase/functions/nycif-culture-places/README.md` — already live and
   gated; extend `place_kind`, keep `business_publication_enabled`.
-- `supabase/functions/nycif-culture-civic/README.md` — **new**, not deployed
-  by this PR.
-- `supabase/functions/nycif-culture-calendar/README.md` — **new**, not
-  deployed by this PR.
+- `supabase/functions/nycif-culture-civic/` — gated reader (`index.ts`).
+- `supabase/functions/nycif-culture-calendar/` — gated reader (`index.ts`).
 
 Shared rules:
 

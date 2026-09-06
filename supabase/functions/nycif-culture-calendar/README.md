@@ -1,6 +1,8 @@
-# `nycif-culture-calendar` (planned — not deployed)
+# `nycif-culture-calendar` (deployed, gated)
 
-Outline only. Do not deploy from this scaffold PR.
+Public Culture / help-calendar reader. Deployed with `verify_jwt=false` like
+`nycif-culture-places` and `nycif-native-map-feed`. Gates stay off until
+Phase C6.
 
 ## Purpose
 
@@ -20,18 +22,19 @@ van days, community clinics, plus rolling public-help:
 | Pet care | 🐾 | `pet_mobile` |
 
 Help-layer gates (`help_calendar_publication_enabled`, `blood_layer_enabled`,
-…) default false. Do not deploy this function from the scaffold PRs.
+…) default false.
 
 ASPCA / waitlist programs: `waitlist_gated=true`, `pin_policy=zip_area_only`
 or `list_only`. Do not emit a street pin until a public site exists.
 
-## Suggested response
+## Response
 
 ```json
 {
   "authority": "nycif-culture-calendar",
   "schema_version": "culture-calendar-v1",
   "calendar_publication_enabled": false,
+  "help_calendar_publication_enabled": false,
   "timezone": "America/New_York",
   "today": "2026-09-06",
   "window_days": 8,
@@ -51,7 +54,7 @@ or `list_only`. Do not emit a street pin until a public site exists.
 
 Query: `?mode=now|tonight|seven` (default `seven`).
 
-Overlap rules should copy `nycif-native-map-feed`:
+Overlap rules copy `nycif-native-map-feed`:
 
 - Now / today: overlap with today midnight–tomorrow midnight ET
 - Tonight: `start_at` in 17:00–23:59:59 ET today
@@ -67,9 +70,10 @@ Overlap rules should copy `nycif-native-map-feed`:
 ## Security
 
 Service role in the function only. No `service_role` in iOS. RLS deny-all.
-GET/HEAD/OPTIONS.
+GET/HEAD/OPTIONS. `verify_jwt=false` (publishable / anon key, same as other
+Culture readers).
 
 ## iOS
 
-New `CultureService.fetchCalendar()` after this function exists. Missing
-endpoint ⇒ empty Culture calendar, same explanation style as gated storefronts.
+`CultureService.fetchCalendar()` treats HTTP 200 + gate false as empty, not
+as a missing function. HTTP 404 remains “not shipped yet.”
