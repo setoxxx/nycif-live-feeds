@@ -1,7 +1,7 @@
 {
   "schema": "official_daily_machine.v1",
-  "generated_at_utc": "2026-09-06T03:39:25.674443+00:00",
-  "today_nyc": "2026-09-05",
+  "generated_at_utc": "2026-09-06T04:40:16.688241+00:00",
+  "today_nyc": "2026-09-06",
   "qa_pass": false,
   "failures": [
     "pin_coverage_short:tvpp-9vvx"
@@ -483,24 +483,72 @@
       ]
     },
     "nyc-citywide-events-calendar-api": {
-      "snapshot_rows": 2361,
-      "accepted": 2361,
+      "snapshot_rows": 2221,
+      "accepted": 2221,
       "rejected": 0,
-      "accounted": 2361,
+      "accounted": 2221,
       "unaccounted": 0,
       "pin_eligible": 0,
       "certified_pins": 0,
-      "list_only": 2361,
+      "list_only": 2221,
       "pin_coverage_pass": true,
-      "added": 3,
-      "still_present": 2358,
-      "removed_from_city": 0,
+      "added": 27,
+      "still_present": 2194,
+      "removed_from_city": 167,
       "added_occurrence_id_samples": [
-        "2cb06777bf8460381a3fc59a6654da07d41891d18708e891c2d93b44cf0e82b4",
-        "728980077d71b4fdde550ff2b269af4eacb90ae9b4ba4a19e309a52804ff4034",
-        "b0edcb4310d1626d0fc32a074192319457db2132aba82e5286fc343012763aca"
+        "08551ede91718ea3ba4df80f7aae1ac930c0345ffc5d123948d03963d2ddea64",
+        "0c820ac018e849eb7b82c11587b3945f59de693b460a5393fa6cd9a1a11aa16a",
+        "2a523274b2be724bebc9e04b8863ab93f6181144773d744a66fd0a0d8cf49090",
+        "2f179a0e9eb53d5236dc98f6720745891cf2bd06e18982dfb78580737c992e00",
+        "305cf9d8cd20723c2ae1e0074cd8aee23abaf954906d02b3fb8c9b4668e4a841",
+        "38c4f032c1f1bbed24fe4cc11f61d839035b42c55af228f5c50ecd10543607f9",
+        "4fcace8a74f946e5229c64d17c1f7c79bfe5001ba73d4d43d9bab1316564856a",
+        "54972486140784beaa86f6896e8dfc6ee7284a1d7fddd49ae75673b13b537053",
+        "61ce6089ce9b3cd590521c6be64e3d905eeffd2ce0ceaadcb9da576c903cbb9d",
+        "66ee846ae90c16e1a26782bce4fb07d11ab08ba5378aa3bbced9318c1b4bef9e",
+        "6b6c906995cb3cb227d4693afb0a496a7be56760bda648a33b7abd26a80b8dd2",
+        "75c3925d637b52e30e111b8b2d39f66b5d8f21cb2509a72960fa1dc8251f04d3",
+        "81cfb7230de6ac576ef312f2c8de5706edc80a49c722fbc4b3848426de5de534",
+        "82e8d3e81ae03cb3caaeb88208d7c6286a91a100370c25aea0de429f85a4ec21",
+        "92e778a8b68c99245be5e8278aac8a50dd1cb411c626d771e9a8b90fefc100a4",
+        "938cea27250e8a55ff734a3ba7f53bd66cbd73ffa586d4074a84cbd1e63ac8a0",
+        "9c97119f318867480f09963082d08fb29e0e1d173de0ddefdc2eb5c97b866c77",
+        "a839a8ffe2a8539b48cb16753260cfa86e879fad4e50ea2f8c7bc66b6ef9813d",
+        "b7d02ba565c8a7c3527b3950ab73768cd227cadfa80219dc67e548bd79fabd54",
+        "ba2f5fe8ed69362b86ca09667e886c1664d3cfc5e5de38f584ec38398b698a15",
+        "bb2a99977211e7ce3832f938e0543ef4af6152c65c5d0f30878ab0321a1cf38b",
+        "c9a6de1a20928259ee7bbdfcd8c6a351832b3e96285345d982192a63218869b1",
+        "da41e9d42c81826ea6da984fb4bcfbd0a75a95074524a2fbc8e861a394ac2fd8",
+        "dab3b7fe417f7de2401d46d876d98c036a59f8860983474a6f4aeabebdca5eee",
+        "de8fbd80d3f38a54c68c5405ba52cc5050b10adc235fb84778904ada346fabb0"
       ],
-      "removed_from_city_occurrence_id_samples": [],
+      "removed_from_city_occurrence_id_samples": [
+        "000d5f749bdb66f8f0e217cd288247db6eb697e3b4f8ba910214191bd0f42135",
+        "00a1bb34cf175246ce47af8044b822070fb24a5d37571a6fd428f813dac09cdc",
+        "03392c363ed0521d142a2f2ceee1ee7f656a031412ca224cd4f34aa8f382844a",
+        "05750cfd71eaf60432b8f0bb3dbde5a4563419a9399ad58c1d5c7e1d249d3729",
+        "059af1d56a9d954eefa492b3f54ee4fcccca2fbef81ff0a08f20821927455b95",
+        "05ad60d10fd6da0fd54c3fc116743629406d3b2307946c331c1cca78e36e9d28",
+        "072488e1f1014ad99fde72000fcd0a8ae389a6de624e79c6ed4f9cff31249f1a",
+        "07b7cdc3dc6f53bd303aa6ed8cc5071dbdf52bc8eb0efdb9ed16ef38a3523694",
+        "0a852ce464debd7ac8e710c76c1136b66002db003ad48365afe1a70c413320d8",
+        "0b7d3a15e7096d78e91d401769205dcaa3baec279de1ea84f2d7dd4957b69936",
+        "0da4a277f7f09ef4f8592356927b99e945b2701e10354a79f32200fd2a37389c",
+        "10be05fc042d9f4877f8d2d63c0bfe1e52f15d87c46409083073d39702678537",
+        "121d97dd7ee1fb2b434f12372777236a4ea39563499adb659392a11c29fb1cec",
+        "128650acec6fc88110febbdec3dab570c6de3355d4bf25d8101de0be0195e4ea",
+        "17e871ac24f29fb01c68cd1f4c8aa60866cd96356d48d11e825bf509d77f923a",
+        "1865bb085ab863b91e31ad5a6b4a53331aad02e3d233289d703024d96b301009",
+        "18f3ef35ee4f75554781b04729d3116a9e02a945304152ca2acfa6c48f27149a",
+        "190de77321b889b6d314019d6b8925d54f894cf735351c23a6476768d5e63ce5",
+        "1a4632f908ed1338fba48804a54cfa66409809e21c0b557d776d9f348ebbb7b6",
+        "1f2eb0c3bdc34e6cf29c7399601a0db71c028d4f28eeafd849fbc9c6a7784ef9",
+        "225ffde3a50c8c6fe3d74bf403035258d8aa5a89fd4cb6f26aede29cc0fd411a",
+        "237c7a47f8e3c45879929befec686e3bc638c7b758b2707a0036c7b95e07ca50",
+        "251dc6110642511730918e1097b246e4a42f971b9ac02787e5cacf266f5b6804",
+        "28de0a8d541f8f8767c054ce3fb19d1fec2760d76911f1a74b0519ddf904791a",
+        "2c65dc9613692bb1cfae0978a743ba8238d00a73ffb7e712648a3cc879ab681c"
+      ],
       "list_only_samples": [
         {
           "occurrence_id": "541ec8bcd390fc4f27be5c24c83eaa82fa76815ec7e2065af9c81483b3e2fda8",
@@ -509,147 +557,147 @@
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "993d2ead632a8a4cd2b9fc7b26ec98bced8417e4cc1d7641838b1cbdb679b30b",
+          "occurrence_id": "da41e9d42c81826ea6da984fb4bcfbd0a75a95074524a2fbc8e861a394ac2fd8",
           "title": "NYC Public Outdoor Pools Open for the Season",
           "display_location": "Locations across all five boroughs",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "d71aac576656d95652fc0964629ec5f496acf1f1912fc3da0ffe5c6c0c750c10",
+          "occurrence_id": "c9a6de1a20928259ee7bbdfcd8c6a351832b3e96285345d982192a63218869b1",
           "title": "NYC Restaurant Week",
           "display_location": "Check website for a list of participating restaurants",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "978b25693441d456cf96dbfe829e4d5bbd43ef958a5b986fd122f3209c82bf3f",
-          "title": "Down to Earth Chelsea Farmers Market",
-          "display_location": "WEST   23 STREET between 8 AVENUE and 9 AVENUE  Manhattan",
+          "occurrence_id": "5f69f26de998ee7ba535335abc13de022aa0705cf785fb220cd4db4d81cfe828",
+          "title": "Murray Hill Farmers Market",
+          "display_location": "2 AVENUE between EAST   32 STREET and EAST   33 STREET  Manhattan",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "e790660dc7bd5f897edef30b36d8f64b6afc43a493ef2dddcb4f1d6a8a3be118",
-          "title": "Inwood Greenmarket Saturday",
-          "display_location": "ISHAM STREET between SEAMAN AVENUE and COOPER STREET  Manhattan",
+          "occurrence_id": "08968f2b3d86bf8783f1dabef8ee54e5acb69d8a4a70470a1f192fd2777c68e4",
+          "title": "Down to Earth Park Slope Farmers Market",
+          "display_location": "4 STREET between 5 AVENUE and DEAD END  Brooklyn",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "5b41beca2238a67f84f1d00e3add8d590dc88a59ef04ec0794842eaf1b28f5bf",
-          "title": "East New York Farmers Market",
-          "display_location": "SCHENCK AVENUE between NEW LOTS AVENUE and LIVONIA AVENUE  Brooklyn",
+          "occurrence_id": "0e65b6d3b4080c68d2cd5793f3eb3247863beb869f87431fd83cb1e298bbcd1b",
+          "title": "Carroll Gardens Greenmarket Sunday",
+          "display_location": "CARROLL STREET between SMITH STREET and COURT STREET  Brooklyn",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "0b7d3a15e7096d78e91d401769205dcaa3baec279de1ea84f2d7dd4957b69936",
-          "title": "4th Avenue Sunset Park Greenmarket Saturday",
-          "display_location": "60 STREET between 3 AVENUE and 4 AVENUE  Brooklyn",
+          "occurrence_id": "810f29aa89f5382a9b40b97d371954c963dd555e735a80b0debebe32924f54e6",
+          "title": "Columbia Thursday Sunday Greenmarket",
+          "display_location": "BROADWAY between WEST  113 STREET and WEST  116 STREET  Manhattan",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "67c0abc5b49879c3869239a2b1bba59d748db2ca8d36dfed1e1ccedd5150910f",
-          "title": "57 Street Saturday Greenmarket",
-          "display_location": "10 AVENUE between WEST   57 STREET and WEST   58 STREET  Manhattan",
+          "occurrence_id": "e1a5244dabe8366214dfdb6b429b4edca36516d7befc4bed1f302f5830fcf2a1",
+          "title": "Cortelyou Greenmarket Sunday",
+          "display_location": "CORTELYOU ROAD between RUGBY ROAD and ARGYLE ROAD  Brooklyn",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "a16a042df72426916975e37a6feace410d70d4f3f529825173b5192ed29f530e",
-          "title": "82 Street Greenmarket Saturday",
-          "display_location": "EAST   82 STREET between 1 AVENUE and YORK AVENUE  Manhattan",
+          "occurrence_id": "0f81f1fee9b2d35adf6dbe88f983962a590f3ec0975bda9276a5c3e7fcd7b5fd",
+          "title": "Forest Hills Greenmarket Sunday",
+          "display_location": "QUEENS BOULEVARD between 69 ROAD and 70 AVENUE  Queens",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "a899b57e4f7e1a33fd8eba52b8da2dbf36aefe8f712cb818c082142c4e6d037e",
-          "title": "Fit Club Circuit Training",
-          "display_location": "Bay Terrace Playground Handball",
+          "occurrence_id": "bbbf9ace711601a8291ae778d86d899eeac83e8cd373cf01955e0334b446a869",
+          "title": "Jackson Heights Greenmarket Sunday",
+          "display_location": "79 STREET between NORTHERN BOULEVARD and 34 AVENUE  Queens",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "9b4bea2002b2152c3086f36213a92fc4dcd5ddd7159ee9df24ef6da66126b012",
-          "title": "HHFM Lenox Avenue Market",
-          "display_location": "LENOX AVENUE between WEST  117 STREET and WEST  118 STREET  Manhattan",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "e1de384ab968753df371dfa44c5835b70e517449a09a221352b837ecff56b487",
+          "occurrence_id": "305cf9d8cd20723c2ae1e0074cd8aee23abaf954906d02b3fb8c9b4668e4a841",
           "title": "Old Cathedral Outdoor Market",
           "display_location": "PRINCE STREET between MULBERRY STREET and MOTT STREET  Manhattan",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "9dcbf5053a219c39f25b8ec74659bb16a04001610cf411dd446d0aaa0d5202df",
+          "occurrence_id": "61ce6089ce9b3cd590521c6be64e3d905eeffd2ce0ceaadcb9da576c903cbb9d",
           "title": "Pompeii Flea Market",
           "display_location": "BLEECKER STREET between LEROY STREET and CARMINE STREET  Manhattan",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "225ffde3a50c8c6fe3d74bf403035258d8aa5a89fd4cb6f26aede29cc0fd411a",
-          "title": "RiseBoro Farmers Markets at Maria Hernandez Park",
-          "display_location": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET  Brooklyn",
+          "occurrence_id": "2c302ed2b161f8e90367c7db21db0214bc3f37c1c4f02170750a259bc338815a",
+          "title": "Summer on the Hudson: Tai Chi",
+          "display_location": "Soldiers' and Sailors' Monument in Riverside Park",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "a66f7e934a020eb8aa9c681057b7fbeb4ca517a2cae2feb4791683137d98b8e8",
+          "occurrence_id": "a40faa979c0566ab8c1bd9a6bf89323791661e4a143c137ef11a9ac62696b955",
           "title": "Summer Sports Experience: Basketball",
           "display_location": "Greenbelt Recreation Center in Greenbelt Recreation Center",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "53a6adb2f10e536df09c100820b41e6848a5051b434495fd4a053f20d6f2bfb4",
-          "title": "West Indian American Junior Parade",
-          "display_location": "ST JOHN PLACE between BROOKLYN AVENUE and KINGSTON AVENUE  Brooklyn",
+          "occurrence_id": "5dd6a9eabb7409aab79e59b71e808b2b01a45fcf9b9ae22e0785a1569ca313e3",
+          "title": "NYRR Open Run: Cunningham Park",
+          "display_location": "Cunningham Park Parking Lot in Cunningham Park",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "0da4a277f7f09ef4f8592356927b99e945b2701e10354a79f32200fd2a37389c",
-          "title": "Forest Fitness",
-          "display_location": "Margaret Corbin Circle in Fort Tryon Park",
+          "occurrence_id": "c1ce0709d7c54a82fc17ae425293538ccb4e6c4fafb2674b4f27122bd566e07f",
+          "title": "Girl's Softball Clinic",
+          "display_location": "Ballfield 11",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "d8c64977ec277cb8526dcebcbef9abc1c90e6414db1c7f420a48bc778596e72a",
-          "title": "NYRR Open Run: Astoria Park",
-          "display_location": "Astoria Park",
+          "occurrence_id": "b09d269b4969e85bcd8914e5f895974c31e8b5ebb03ef92ff261fad8d8c3a448",
+          "title": "NYRR Open Run: Conference House Park Back to School Chalk Challenge",
+          "display_location": "Conference House Park",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "53130c5433e8870e029eb0044ce38ddc9cf1e010041803eab307068d8a528e8d",
-          "title": "NYRR Open Run: Baisley Pond Park",
-          "display_location": "Baisley Pond Park House in Baisley Pond Park",
+          "occurrence_id": "5963d7ecc013c5981080168ecfbeb7d6dd183032b34515a3ca46dea4428cd6a2",
+          "title": "NYRR Open Run: Marine Park Back to School Chalk Challenge",
+          "display_location": "Carmine Carro Community Center in Marine Park",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "ffbff0b7011a7b178689b5400d6436a3b77f71008aff822471a40603fbb4bcab",
-          "title": "NYRR Open Run: Crocheron Park",
-          "display_location": "Entrance to John Golden Park in John Golden Park",
+          "occurrence_id": "ed105426291b7558e468402fff6a9590443fea66b733e3d86263c75411672003",
+          "title": "RiseBoro Farmers Markets at Irving Square Park",
+          "display_location": "KNICKERBOCKER AVENUE between STARR STREET and SUYDAM STREET  Brooklyn",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "53ff8faa6b5a3c9fa2e755de1109be8fc28ee69cea55ceeac6d32cb24e606a54",
-          "title": "NYRR Open Run: Crocheron Park",
-          "display_location": "John Golden Parking Lot in John Golden Park",
+          "occurrence_id": "54972486140784beaa86f6896e8dfc6ee7284a1d7fddd49ae75673b13b537053",
+          "title": "St. Anthony Flea Market",
+          "display_location": "WEST HOUSTON STREET between THOMPSON STREET and MACDOUGAL STREET  Manhattan",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "5b739e8af56fe712973259b3dbe243e2ce8a8bb458d514fed78502765a8b7ff4",
-          "title": "NYRR Open Run: Inwood Hill Park Back to School Chalk Challenge",
-          "display_location": "Seaman Avenue and Isham Street Entrance in Inwood Hill Park",
+          "occurrence_id": "767627fce2f13bc27dd1eac8b3f636ee1340935d3a2c4bdbbf9cd22b3db1a524",
+          "title": "Strength & Cardio Circuit Training",
+          "display_location": "Dance Room in St. John&rsquo;s Recreation Center",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "720af5df39bb0b1df52a7e01b221b69bf8907d37fe5e23ddd323ab4dbf67d91a",
-          "title": "NYRR Open Run: Shore Road Park",
-          "display_location": "Lawn Near 79th Street Entrance in Shore Park and Parkway",
+          "occurrence_id": "e7cac7be9911f197db3e50c8d15c19f48d1dec00d37ae4dcd5010107971b0b08",
+          "title": "CANCELLED: Urban Farm Volunteers",
+          "display_location": "Urban Farm in Randall's Island Park",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "31390a43ef40d7bd91cacccc48b8aefa4c4e31340a3c5c579144ddfd80ee5787",
-          "title": "NYRR Open Run: Soundview Park",
-          "display_location": "Entrance - Lafayette Avenue and Morrison Avenue in Soundview Park",
+          "occurrence_id": "9d85941caf1aac2659259ad5c01b74a7b3b14408aef563545df4fc0a97682bc3",
+          "title": "Family Art Project: Paint and Fly with Monarch Butterflies",
+          "display_location": "Wave Hill",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "f1326140e0d4fd2931548701652845c5703aab72bd6395def9608508483dfc4c",
-          "title": "NYRR Open Run: St. Marys Park",
-          "display_location": "St. Mary's Annual 5K Start",
+          "occurrence_id": "ba2f5fe8ed69362b86ca09667e886c1664d3cfc5e5de38f584ec38398b698a15",
+          "title": "JBOLC Garden Community Farmers Market",
+          "display_location": "WEST MOSHOLU PARKWAY SOUTH between GOULDEN AVENUE and SEDGWICK AVENUE  Bronx",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "41cc06c1fb444cfaddb4c3113309d0098d71038068a589935efb9af5aeebf0d9",
+          "title": "LaBlast\u00ae Fitness",
+          "display_location": "Parachute Jump in Coney Island Beach & Boardwalk",
           "reason": "no_official_in_bounds_coordinate"
         }
       ],

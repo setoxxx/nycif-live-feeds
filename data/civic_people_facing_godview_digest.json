@@ -135,27 +135,27 @@
     "help_places": 2109,
     "list_only": 1287,
     "map_ready": 3116,
-    "money_day_today": 3,
-    "money_day_tomorrow": 1,
+    "money_day_today": 1,
+    "money_day_tomorrow": 2,
     "opportunities": 1144,
-    "photographer_calendar_events": 51,
-    "photographer_days_with_coverage": 17,
+    "photographer_calendar_events": 48,
+    "photographer_days_with_coverage": 16,
     "pin_demotions": 0,
     "pin_map_ready_certified": 0,
     "proposed": 489,
     "quarantined": 7067,
     "shoot_day_today_certified": 0,
     "shoot_day_tomorrow_certified": 0,
-    "upcoming_next_30_days": 335,
+    "upcoming_next_30_days": 347,
     "upcoming_next_7_days": 81,
     "viral_next_14d_magnets": 2,
-    "viral_recurrence_matches": 19,
+    "viral_recurrence_matches": 17,
     "viral_returning_likely": 5
   },
   "daily_pull": {
-    "last_run_utc": "2026-09-06T03:40:04Z",
-    "photographer_calendar_events": 51,
-    "photographer_days_with_coverage": 17,
+    "last_run_utc": "2026-09-06T04:40:56Z",
+    "photographer_calendar_events": 48,
+    "photographer_days_with_coverage": 16,
     "qa_pass": true,
     "report": "data/daily_people_facing_sync_report.json"
   },
@@ -172,7 +172,7 @@
     "honesty": "NYC Open Data does not currently provide a high-quality live citywide soup-kitchen or food-pantry pin feed suitable for map publication.",
     "status": "known_gap_human_follow_up"
   },
-  "generated_at_utc": "2026-09-06T03:40:14Z",
+  "generated_at_utc": "2026-09-06T04:41:06Z",
   "lanes": {
     "Approved": "schema-v1-discovery approved permits (unchanged)",
     "Help Places": "schema-v1-civic-review/help (markets + benefits/SNAP/drop-in/Homebase/aging/NYCHA)",
@@ -189,10 +189,10 @@
   "photographer_assignment_calendar": {
     "artifact": "data/photographer_assignment_calendar_2mo.json",
     "coordinate_status_counts": {
-      "list_only": 48,
+      "list_only": 45,
       "map_ready": 3
     },
-    "days_with_coverage": 17,
+    "days_with_coverage": 16,
     "go_shoot_these": [
       {
         "assignment_score": 580,
@@ -340,114 +340,6 @@
           "carried_major_score_capped:120",
           "keyword_civic_gathering",
           "keyword_street_fair_festival"
-        ]
-      },
-      {
-        "assignment_score": 400,
-        "borough": "Queens",
-        "category": "civic",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-09-05",
-        "display_location": "CORNAGA AVENUE between BEACH   19 STREET and BEACH CHANNEL DRIVE  Queens",
-        "end_date_time": "2026-09-05T12:30:00.000-04:00",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-05&assignment=1",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:1191896@2026-09-05",
-        "lane": "approved_major",
-        "latitude": null,
-        "location_cache_modified": false,
-        "longitude": null,
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "money_day": true,
-        "photo_pick": false,
-        "pin_integrity_reason": "missing_coords",
-        "premium_label": "Photographer Assignment Calendar (premium/operator)",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "1191896"
-        },
-        "start_date_time": "2026-09-05T11:00:00.000-04:00",
-        "timezone": "America/New_York",
-        "title": "Evangelical March",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_civic_gathering"
-        ]
-      },
-      {
-        "assignment_score": 400,
-        "borough": "Queens",
-        "category": "civic",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-09-05",
-        "display_location": "Major Mark Park: Major Mark Park  Queens",
-        "end_date_time": "2026-09-05T20:00:00.000-04:00",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-05&assignment=1",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:1192376@2026-09-05",
-        "lane": "approved_major",
-        "latitude": null,
-        "location_cache_modified": false,
-        "longitude": null,
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "money_day": true,
-        "photo_pick": false,
-        "pin_integrity_reason": "missing_coords",
-        "premium_label": "Photographer Assignment Calendar (premium/operator)",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "1192376"
-        },
-        "start_date_time": "2026-09-05T18:00:00.000-04:00",
-        "timezone": "America/New_York",
-        "title": "Janmastami Parade",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_civic_gathering"
-        ]
-      },
-      {
-        "assignment_score": 400,
-        "borough": "Brooklyn",
-        "category": "civic",
-        "certified_pin": false,
-        "coordinate_status": "list_only",
-        "date": "2026-09-05",
-        "display_location": "ST JOHN PLACE between BROOKLYN AVENUE and KINGSTON AVENUE  Brooklyn",
-        "end_date_time": "2026-09-05T17:00:00.000-04:00",
-        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-05&assignment=1",
-        "id": "review_supplemental:nyc-citywide-events-calendar-api:1193476@2026-09-05",
-        "lane": "approved_major",
-        "latitude": null,
-        "location_cache_modified": false,
-        "longitude": null,
-        "map_eligibility_state": "LIST_ONLY",
-        "map_link": null,
-        "money_day": true,
-        "photo_pick": false,
-        "pin_integrity_reason": "missing_coords",
-        "premium_label": "Photographer Assignment Calendar (premium/operator)",
-        "promotion_allowed": false,
-        "public_map_modified": false,
-        "source": {
-          "dataset": "nyc-citywide-events-calendar-api",
-          "source_event_id": "1193476"
-        },
-        "start_date_time": "2026-09-05T08:00:00.000-04:00",
-        "timezone": "America/New_York",
-        "title": "West Indian American Junior Parade",
-        "why_selected": [
-          "significance_major_floor",
-          "carried_major_score_capped:120",
-          "keyword_civic_gathering"
         ]
       },
       {
@@ -917,12 +809,120 @@
           "carried_major_score_capped:120",
           "keyword_civic_gathering"
         ]
+      },
+      {
+        "assignment_score": 400,
+        "borough": "Manhattan",
+        "category": "civic",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-10-03",
+        "display_location": "WEST   38 STREET between BROADWAY and 5 AVENUE  Manhattan",
+        "end_date_time": null,
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-10-03&assignment=1",
+        "id": "nyc-citywide-events-calendar-api:1046756@2026-10-03",
+        "lane": "approved_major",
+        "latitude": null,
+        "location_cache_modified": false,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "money_day": true,
+        "photo_pick": false,
+        "pin_integrity_reason": "missing_coords",
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1046756"
+        },
+        "start_date_time": "2026-10-03T12:00:00.000-04:00",
+        "timezone": "America/New_York",
+        "title": "The Korean Parade",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 400,
+        "borough": "Manhattan",
+        "category": "civic",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-10-04",
+        "display_location": "EAST   36 STREET between 5 AVENUE and MADISON AVENUE  Manhattan",
+        "end_date_time": null,
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-10-04&assignment=1",
+        "id": "nyc-citywide-events-calendar-api:1044436@2026-10-04",
+        "lane": "approved_major",
+        "latitude": null,
+        "location_cache_modified": false,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "money_day": true,
+        "photo_pick": false,
+        "pin_integrity_reason": "missing_coords",
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1044436"
+        },
+        "start_date_time": "2026-10-04T12:00:00.000-04:00",
+        "timezone": "America/New_York",
+        "title": "89th Pulaski Day Parade",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_civic_gathering"
+        ]
+      },
+      {
+        "assignment_score": 400,
+        "borough": "Queens",
+        "category": "civic",
+        "certified_pin": false,
+        "coordinate_status": "list_only",
+        "date": "2026-10-04",
+        "display_location": "69 STREET between 37 AVENUE and 34 AVENUE  Queens",
+        "end_date_time": "2026-10-04T15:00:00.000-04:00",
+        "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-10-04&assignment=1",
+        "id": "review_supplemental:nyc-citywide-events-calendar-api:1193096@2026-10-04",
+        "lane": "approved_major",
+        "latitude": null,
+        "location_cache_modified": false,
+        "longitude": null,
+        "map_eligibility_state": "LIST_ONLY",
+        "map_link": null,
+        "money_day": true,
+        "photo_pick": false,
+        "pin_integrity_reason": "missing_coords",
+        "premium_label": "Photographer Assignment Calendar (premium/operator)",
+        "promotion_allowed": false,
+        "public_map_modified": false,
+        "source": {
+          "dataset": "nyc-citywide-events-calendar-api",
+          "source_event_id": "1193096"
+        },
+        "start_date_time": "2026-10-04T12:00:00.000-04:00",
+        "timezone": "America/New_York",
+        "title": "Queens Dominican Parade",
+        "why_selected": [
+          "significance_major_floor",
+          "carried_major_score_capped:120",
+          "keyword_civic_gathering"
+        ]
       }
     ],
     "month_counts": [
       {
-        "days_with_events": 9,
-        "event_count": 30,
+        "days_with_events": 8,
+        "event_count": 27,
         "label": "September 2026"
       },
       {
@@ -936,7 +936,7 @@
     "premium_label": "Photographer Assignment Calendar (premium/operator) — Money-Day Desk v2",
     "qa_pass": true,
     "quality": {
-      "events_removed_vs_baseline": 791,
+      "events_removed_vs_baseline": 794,
       "qa_pass": true,
       "report": "data/photographer_money_day_quality_report.json",
       "top_exclude_reasons": [
@@ -961,36 +961,42 @@
     "report": "data/photographer_assignment_calendar_report.json",
     "today_pack": {
       "borough_cluster_count": 0,
-      "date": "2026-09-05",
+      "date": "2026-09-06",
       "map_ready_count": 0,
-      "total_events": 3
+      "total_events": 1
     },
     "tomorrow_pack": {
       "borough_cluster_count": 0,
-      "date": "2026-09-06",
+      "date": "2026-09-07",
       "map_ready_count": 0,
       "top_go_shoot": [
         {
           "borough": "Queens",
           "score": 400,
-          "time": "2026-09-06T11:00:00.000-04:00",
-          "title": "Labor Day Baby Parade"
+          "time": "2026-09-07T13:00:00.000-04:00",
+          "title": "Labor Day Parade"
+        },
+        {
+          "borough": "Brooklyn",
+          "score": 400,
+          "time": "2026-09-07T10:00:00.000-04:00",
+          "title": "West Indian American Labor Day Parade"
         }
       ],
-      "total_events": 1
+      "total_events": 2
     },
     "tomorrow_top_go_shoot": [],
-    "total_events": 51,
+    "total_events": 48,
     "viral_recurrence": {
       "artifact": "data/photographer_viral_recurrence_matches.json",
       "foil_index": "data/sapo_foil_operator_index.json",
       "foil_operator_joins": 0,
       "label_counts": {
-        "possible": 12,
+        "possible": 10,
         "returning_likely": 5,
         "weak": 2
       },
-      "match_count": 19,
+      "match_count": 17,
       "next_14d_crowd_magnets": 2,
       "next_14d_top": [],
       "pack": "data/photographer_viral_recurrence_pack_next_14d.json",
@@ -1096,12 +1102,12 @@
     "qa_pass": true,
     "report": "data/photographer_shoot_day_certified_report.json",
     "today_certified_pins": 0,
-    "today_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-05&assignment=1",
-    "today_needs_location": 3,
+    "today_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-06&assignment=1",
+    "today_needs_location": 1,
     "today_top": [],
     "tomorrow_certified_pins": 0,
-    "tomorrow_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-06&assignment=1",
-    "tomorrow_needs_location": 1,
+    "tomorrow_field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-07&assignment=1",
+    "tomorrow_needs_location": 2,
     "tomorrow_top": []
   }
 }

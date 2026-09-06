@@ -7,16 +7,16 @@
     "map_ready": 3116
   },
   "failed_steps": [],
-  "generated_at_utc": "2026-09-06T03:40:04Z",
+  "generated_at_utc": "2026-09-06T04:40:56Z",
   "location_cache_modified": false,
   "notes": "Safe daily desk sync. Does not run build_staged_production_feed / build_location_cache / public WordPress publish. Pin integrity gate fail-closed: qa_pass requires ZERO bad map_ready pins. Full permit→staged refresh remains live-sync-qa (manual dispatch).",
   "photographer_calendar": {
-    "days_with_coverage": 17,
-    "events_removed_vs_baseline": 791,
+    "days_with_coverage": 16,
+    "events_removed_vs_baseline": 794,
     "month_counts": [
       {
-        "days_with_events": 9,
-        "event_count": 30,
+        "days_with_events": 8,
+        "event_count": 27,
         "label": "September 2026"
       },
       {
@@ -29,23 +29,29 @@
       "qa_pass": true,
       "today": {
         "borough_cluster_count": 0,
-        "date": "2026-09-05",
+        "date": "2026-09-06",
         "map_ready_count": 0,
-        "total_events": 3
+        "total_events": 1
       },
       "tomorrow": {
         "borough_cluster_count": 0,
-        "date": "2026-09-06",
+        "date": "2026-09-07",
         "map_ready_count": 0,
         "top_go_shoot": [
           {
             "borough": "Queens",
             "score": 400,
-            "time": "2026-09-06T11:00:00.000-04:00",
-            "title": "Labor Day Baby Parade"
+            "time": "2026-09-07T13:00:00.000-04:00",
+            "title": "Labor Day Parade"
+          },
+          {
+            "borough": "Brooklyn",
+            "score": 400,
+            "time": "2026-09-07T10:00:00.000-04:00",
+            "title": "West Indian American Labor Day Parade"
           }
         ],
-        "total_events": 1
+        "total_events": 2
       }
     },
     "pin_integrity": {
@@ -64,15 +70,15 @@
       "today_certified_pins": 0,
       "tomorrow_certified_pins": 0
     },
-    "total_events": 51,
+    "total_events": 48,
     "viral_recurrence": {
       "historical_rows": 2450,
       "label_counts": {
-        "possible": 12,
+        "possible": 10,
         "returning_likely": 5,
         "weak": 2
       },
-      "match_count": 19,
+      "match_count": 17,
       "next_14d_crowd_magnets": 2,
       "qa_pass": true
     }

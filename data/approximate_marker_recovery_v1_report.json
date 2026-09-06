@@ -2,42 +2,46 @@
   "authority": "projector_v3_approximate_recovery_v1",
   "borough_mismatch_count": 0,
   "candidate_dataset_counts": {
-    "tvpp-9vvx": 22326
+    "tvpp-9vvx": 21476
   },
-  "candidate_day_keys": 22326,
-  "candidate_occurrences": 22326,
-  "candidate_source_id_count": 5698,
-  "candidate_source_keys": 5698,
-  "canonical_rows": 32309,
+  "candidate_day_keys": 21476,
+  "candidate_occurrences": 21476,
+  "candidate_source_id_count": 5552,
+  "candidate_source_keys": 5552,
+  "canonical_rows": 32169,
   "eligibility_counts": {
     "already_exact": 1280,
-    "eligible_non_exact": 30807,
-    "exact_identity_candidate_match": 22306,
-    "no_exact_identity_candidate": 7441,
-    "not_standalone_public": 222
+    "eligible_non_exact": 30667,
+    "exact_identity_candidate_match": 21456,
+    "no_exact_identity_candidate": 8154,
+    "not_standalone_public": 222,
+    "source_event_id_candidate_exists": 704,
+    "source_identity_candidate_exists": 704
   },
   "eligible_canonical_dataset_counts": {
-    "nyc-citywide-events-calendar-api": 2328,
+    "nyc-citywide-events-calendar-api": 2188,
     "nyc-parks-bigapps-events": 15,
     "nyc-projected-feast-reference": 220,
     "tvpp-9vvx": 28244
   },
-  "eligible_canonical_source_id_count": 9867,
+  "eligible_canonical_source_id_count": 9727,
   "exact_pin_promotions": 0,
   "invalid_approximate_marker_count": 0,
   "location_mismatch_count": 0,
   "operating_rule": "Approximate markers may improve map placement, but they never grant MAP_READY or certified_pin. Street routes/segments are excluded from point recovery.",
   "qa_pass": true,
   "reason_counts": {
-    "FACILITY_SITE_VALIDATION_REQUIRED": 22306
+    "FACILITY_SITE_VALIDATION_REQUIRED": 21456
   },
-  "recovered_approximate_markers": 22306,
-  "route_claims_blocked_from_point_recovery": 1060,
+  "recovered_approximate_markers": 21456,
+  "route_claims_blocked_from_point_recovery": 1057,
   "schema_version": "NYCIF_APPROXIMATE_MARKER_RECOVERY_V1",
-  "semantic_rows": 28392,
+  "semantic_rows": 27310,
   "source_counts": {
-    "tvpp-9vvx": 22306
+    "tvpp-9vvx": 21456
   },
-  "source_event_id_intersection_count": 5696,
-  "source_id_dataset_pairs": {}
+  "source_event_id_intersection_count": 5550,
+  "source_id_dataset_pairs": {
+    "tvpp-9vvx -> tvpp-9vvx": 704
+  }
 }
