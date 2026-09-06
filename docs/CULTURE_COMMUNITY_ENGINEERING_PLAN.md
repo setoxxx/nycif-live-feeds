@@ -78,7 +78,8 @@ Tonight liquor / dispensary / 5pm layers are a **different** authority
 - GPS: NYC bounds from `scripts/schema_v1_common.py` (`40.4774–40.9176`,
   `-74.2591–-73.7004`). No Google geocoder. Proposed coords stay
   `promotion_allowed=false` until a human approve.
-- Civic Open Data pulls write **staging artifacts only**. They do not promote.
+- Civic Open Data pulls write staging artifacts, then may upsert **pending**
+  rows into live civic/calendar tables. They do not promote or flip gates.
 
 Required safety fields on every Culture staging row (same family as GPS review):
 
@@ -278,7 +279,8 @@ title or start ⇒ row dropped, never invented.
 #### Approved pull cadence (Howard, 2026-09-06)
 
 Daily job: `.github/workflows/culture-help-calendar-daily.yml`. Staging
-artifacts only. No Supabase writes, no gate flips, no edge deploys.
+artifacts plus a gated upsert into `culture_calendar_occurrence_v1` when
+`SUPABASE_SERVICE_ROLE_KEY` is present. No gate flips, no edge deploys.
 
 GitHub cron is UTC-only. `0 10 * * *` is **6:00 AM America/New_York during
 EDT (UTC−4)**. During EST (UTC−5) the same cron fires at 5:00 AM local.
@@ -287,7 +289,7 @@ Ops keep 10:00 UTC year-round as the morning ET job.
 | Cadence | America/New_York | UTC cron (EDT) | Sources |
 | --- | --- | --- | --- |
 | Daily | 6:00 AM | `0 10 * * *` | Workforce1, NYS DOL, CUNY, NYBC, H+H SHOW, ASPCA |
-| Weekly | morning ET (not wired this PR) | — | NYPD precincts, FDNY firehouses, shelters |
+| Weekly | Monday 6:00 AM | `0 10 * * 1` | NYPD precincts, FDNY firehouses, shelters |
 | Optional later | 2:00 PM | `0 18 * * *` (EDT; not scheduled yet) | Blood / mobile refresh if a live scrape is later wired |
 
 Manual run notes: `scripts/culture/README.md`.
@@ -349,12 +351,23 @@ Package: `scripts/culture/`.
 | `pull_cuny_career_events.py` | CUNY source registry; 0 events unless fixture |
 | `pull_aspca_mobile.py` | ASPCA waitlist/zip calendar stub |
 | `validate_before_publish.py` | Fail-closed gate. Default outcome: publication blocked. |
+| `load_calendar_civic_staging.py` | Upsert pending staging rows into live calendar/civic tables. Dry-run default. Never flips gates. |
+| `backfill_calendar_civic.py` | One-shot pull (live + fixture fallback) then load. |
 
 Daily Actions job (6:00 AM ET / `0 10 * * *` UTC):
 `.github/workflows/culture-help-calendar-daily.yml` runs Workforce1 live
 SODA, stubs via `--fixture` when `--live` exits 2/3, then
 `validate_before_publish.py`. Uploads `data/culture/staging/` and
-`reports/` as artifacts. Does not commit them.
+`reports/` as artifacts. When the service-role secret is present, upserts
+pending calendar rows into `culture_calendar_occurrence_v1`. Does not
+commit staging JSON. Does not flip gates.
+
+Weekly civic job: `.github/workflows/culture-civic-weekly.yml` (`0 10 * * 1`
+UTC). Same fail-closed load into `culture_civic_facility_v1`.
+
+One-shot replay + Howard flip recipe:
+`docs/CULTURE_CALENDAR_CIVIC_PUBLICATION.md`.
+`scripts/culture/backfill_calendar_civic.py` / `load_calendar_civic_staging.py`.
 
 All writes stay under `data/culture/**`. They must not rewrite
 `data/nypd_precinct_boundaries_reference.json` (already used by press
@@ -397,9 +410,8 @@ Today the app already:
 - Uses name-lead labels **only when published**
 - Ships no `service_role`
 
-Next iOS work (not this PR): civic layer chips, 8-day Culture calendar,
-hotline sheet. The client must treat missing new endpoints as empty, not as
-a license to fabricate pins.
+iOS PR #12 already reads the gated calendar/civic edges. Missing or
+gate-false responses stay empty. The client must not fabricate pins.
 
 ---
 
@@ -439,11 +451,14 @@ they must not skip Howard’s CSV or the ACCEPTED gate.
 ## 12. What to run next
 
 ```bash
-python3 -m pytest tests/test_culture_community_scaffold.py tests/test_culture_help_calendar.py tests/test_culture_help_calendar_daily_workflow.py
-python3 -m compileall scripts/culture tests/test_culture_community_scaffold.py tests/test_culture_help_calendar.py tests/test_culture_help_calendar_daily_workflow.py
+python3 -m pytest tests/test_culture_community_scaffold.py tests/test_culture_help_calendar.py tests/test_culture_help_calendar_daily_workflow.py tests/test_culture_calendar_civic_load.py
+python3 -m compileall scripts/culture tests/test_culture_community_scaffold.py tests/test_culture_help_calendar.py tests/test_culture_help_calendar_daily_workflow.py tests/test_culture_calendar_civic_load.py
 python3 scripts/culture/validate_before_publish.py
 # Expected: qa_pass true, publication_allowed false
 # Daily 6am ET job: Actions → Culture help-calendar daily pull (workflow_dispatch)
+# Weekly civic: Actions → Culture civic weekly pull
+# One-shot: python3 scripts/culture/backfill_calendar_civic.py --dataset all
+# Howard flip (after review only): docs/CULTURE_CALENDAR_CIVIC_PUBLICATION.md
 ```
 
 After Howard drops the CSV:
@@ -482,9 +497,11 @@ job fair, and college career event.
 - [ ] Howard CSV received (blocked)
 - [ ] Shelter dataset confirmed addressable (or replacement chosen)
 - [ ] SQL reviewed against live `culture_place_beta_v1` before any apply
-- [ ] Edge functions implemented in a later PR, gates still false
-- [ ] iOS calendar / civic chips in `NYCInFocus` after feeds exist
+- [x] Edge functions deployed gated (PR #479)
+- [x] iOS calendar / civic chips merged (`NYCInFocus` #12); still empty until Phase C6
 - [ ] Explicit human order to flip any publication gate
 - [ ] Howard CSV received for storefronts (still blocked; unrelated to help calendar)
 - [x] Help-calendar fetchers + fixtures (Workforce1 SODA-ready; others stubbed)
-- [x] Daily 6am ET help-calendar Actions job (staging artifacts only)
+- [x] Daily 6am ET help-calendar Actions job (staging + gated table load)
+- [x] Weekly civic Actions job (NYPD / FDNY / shelters → gated table load)
+- [x] One-shot backfill + Howard flip recipe (`docs/CULTURE_CALENDAR_CIVIC_PUBLICATION.md`)

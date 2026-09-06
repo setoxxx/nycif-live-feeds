@@ -8,8 +8,12 @@ Scaffold outputs only. **Not public. Not promoted.**
   dumps unless a human asks. Tiny fixtures live under `tests/fixtures/culture/`.
 - Do not write `location_cache.json` or WordPress from this folder.
 - `cuny_career_source_registry.json` is a documented source list, not events.
-  Help-calendar pulls write `staging/` only and stay unpublished.
+  Help-calendar pulls write `staging/` and may upsert pending rows into
+  live calendar/civic tables. Publication stays off.
 
 To run pullers by hand (Workforce1 `--live`, stubs `--fixture`, then
-`validate_before_publish.py`), see `scripts/culture/README.md`. Daily 6:00 AM
-ET is `.github/workflows/culture-help-calendar-daily.yml`.
+`validate_before_publish.py` / `backfill_calendar_civic.py`), see
+`scripts/culture/README.md`. Daily 6:00 AM ET is
+`.github/workflows/culture-help-calendar-daily.yml`. Weekly civic is
+`.github/workflows/culture-civic-weekly.yml`. Howard flip recipe:
+`docs/CULTURE_CALENDAR_CIVIC_PUBLICATION.md`.

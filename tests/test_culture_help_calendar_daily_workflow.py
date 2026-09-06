@@ -30,6 +30,9 @@ def test_daily_workflow_is_staging_only_and_fail_closed():
         "data/culture/staging/*.json",
         "data/culture/reports/*.json",
         "retention-days: 7",
+        "scripts/culture/load_calendar_civic_staging.py",
+        "--dataset calendar",
+        "Gates were not written",
     )
     for value in required:
         assert value in text, f"missing {value!r}"
@@ -38,8 +41,6 @@ def test_daily_workflow_is_staging_only_and_fail_closed():
         "git push",
         "git commit",
         "contents: write",
-        "SUPABASE_SERVICE_ROLE",
-        "service_role",
         "supabase db",
         "supabase functions deploy",
         "wpcom",
@@ -48,6 +49,8 @@ def test_daily_workflow_is_staging_only_and_fail_closed():
         "peaceiris/actions-gh-pages",
         "business_publication_enabled: true",
         "help_calendar_publication_enabled: true",
+        "calendar_publication_enabled: true",
+        "civic_publication_enabled: true",
         "publication_allowed=true",
         "websockets",
         "realtime",

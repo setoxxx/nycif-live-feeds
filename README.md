@@ -79,7 +79,7 @@ Civic help-place snapshots (SNAP, Homebase, Workforce1, …) are **not** this ev
 
 ## Culture community (gated, not public)
 
-Sanctuary-city Culture enrichment (curated storefronts, civic 👮/🚒/shelters, 8-day Culture calendar, rolling public-help 🩸🏥💼🎓) is planned in [`docs/CULTURE_COMMUNITY_ENGINEERING_PLAN.md`](docs/CULTURE_COMMUNITY_ENGINEERING_PLAN.md). Publication stays off. Howard must drop the ~91 storefront CSV — this repo does not invent businesses or help-calendar events. Daily 6:00 AM ET staging pull: [`.github/workflows/culture-help-calendar-daily.yml`](.github/workflows/culture-help-calendar-daily.yml) (artifacts only; no Supabase, no gate flip). Manual commands: [`scripts/culture/README.md`](scripts/culture/README.md). Cross-repo notes: [`docs/cross-repo/`](docs/cross-repo/).
+Sanctuary-city Culture enrichment (curated storefronts, civic 👮/🚒/shelters, 8-day Culture calendar, rolling public-help 🩸🏥💼🎓) is planned in [`docs/CULTURE_COMMUNITY_ENGINEERING_PLAN.md`](docs/CULTURE_COMMUNITY_ENGINEERING_PLAN.md). Publication stays off. Howard must drop the ~91 storefront CSV — this repo does not invent businesses or help-calendar events. Daily 6:00 AM ET help-calendar pull: [`.github/workflows/culture-help-calendar-daily.yml`](.github/workflows/culture-help-calendar-daily.yml) (staging artifacts + gated upsert into `culture_calendar_occurrence_v1`; no gate flip). Weekly civic: [`.github/workflows/culture-civic-weekly.yml`](.github/workflows/culture-civic-weekly.yml). Flip recipe: [`docs/CULTURE_CALENDAR_CIVIC_PUBLICATION.md`](docs/CULTURE_CALENDAR_CIVIC_PUBLICATION.md). Manual commands: [`scripts/culture/README.md`](scripts/culture/README.md). Cross-repo notes: [`docs/cross-repo/`](docs/cross-repo/).
 
 ## How we provide the data
 
