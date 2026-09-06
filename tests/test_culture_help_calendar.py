@@ -178,6 +178,8 @@ def test_sql_and_plan_document_help_kinds():
     assert "kf2b-aeh5" in plan
     assert "donate.nybc.org" in plan
     assert "S.H.O.W." in plan or "SHOW" in plan
+    assert "6:00 AM America/New_York" in plan
+    assert "culture-help-calendar-daily.yml" in plan
     assert REGISTRY.exists()
     registry = culture_common.load_json(REGISTRY, {})
     assert registry.get("live_fetch_wired") is False

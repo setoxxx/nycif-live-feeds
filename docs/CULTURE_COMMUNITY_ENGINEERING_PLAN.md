@@ -275,6 +275,23 @@ Shared shape: `scripts/culture/calendar_normalize.py` →
 `culture_calendar_occurrence_v1` JSON. `map_ready` stays false. Missing
 title or start ⇒ row dropped, never invented.
 
+#### Approved pull cadence (Howard, 2026-09-06)
+
+Daily job: `.github/workflows/culture-help-calendar-daily.yml`. Staging
+artifacts only. No Supabase writes, no gate flips, no edge deploys.
+
+GitHub cron is UTC-only. `0 10 * * *` is **6:00 AM America/New_York during
+EDT (UTC−4)**. During EST (UTC−5) the same cron fires at 5:00 AM local.
+Ops keep 10:00 UTC year-round as the morning ET job.
+
+| Cadence | America/New_York | UTC cron (EDT) | Sources |
+| --- | --- | --- | --- |
+| Daily | 6:00 AM | `0 10 * * *` | Workforce1, NYS DOL, CUNY, NYBC, H+H SHOW, ASPCA |
+| Weekly | morning ET (not wired this PR) | — | NYPD precincts, FDNY firehouses, shelters |
+| Optional later | 2:00 PM | `0 18 * * *` (EDT; not scheduled yet) | Blood / mobile refresh if a live scrape is later wired |
+
+Manual run notes: `scripts/culture/README.md`.
+
 ### Phase C4 — edge readers (still gated)
 
 Extend `nycif-culture-places` (already exists, gated). Add
@@ -325,6 +342,12 @@ Package: `scripts/culture/`.
 | `pull_cuny_career_events.py` | CUNY source registry; 0 events unless fixture |
 | `pull_aspca_mobile.py` | ASPCA waitlist/zip calendar stub |
 | `validate_before_publish.py` | Fail-closed gate. Default outcome: publication blocked. |
+
+Daily Actions job (6:00 AM ET / `0 10 * * *` UTC):
+`.github/workflows/culture-help-calendar-daily.yml` runs Workforce1 live
+SODA, stubs via `--fixture` when `--live` exits 2/3, then
+`validate_before_publish.py`. Uploads `data/culture/staging/` and
+`reports/` as artifacts. Does not commit them.
 
 All writes stay under `data/culture/**`. They must not rewrite
 `data/nypd_precinct_boundaries_reference.json` (already used by press
@@ -411,10 +434,11 @@ they must not skip Howard’s CSV or the ACCEPTED gate.
 ## 12. What to run next
 
 ```bash
-python3 -m pytest tests/test_culture_community_scaffold.py tests/test_culture_help_calendar.py
-python3 -m compileall scripts/culture tests/test_culture_community_scaffold.py tests/test_culture_help_calendar.py
+python3 -m pytest tests/test_culture_community_scaffold.py tests/test_culture_help_calendar.py tests/test_culture_help_calendar_daily_workflow.py
+python3 -m compileall scripts/culture tests/test_culture_community_scaffold.py tests/test_culture_help_calendar.py tests/test_culture_help_calendar_daily_workflow.py
 python3 scripts/culture/validate_before_publish.py
 # Expected: qa_pass true, publication_allowed false
+# Daily 6am ET job: Actions → Culture help-calendar daily pull (workflow_dispatch)
 ```
 
 After Howard drops the CSV:
@@ -458,3 +482,4 @@ job fair, and college career event.
 - [ ] Explicit human order to flip any publication gate
 - [ ] Howard CSV received for storefronts (still blocked; unrelated to help calendar)
 - [x] Help-calendar fetchers + fixtures (Workforce1 SODA-ready; others stubbed)
+- [x] Daily 6am ET help-calendar Actions job (staging artifacts only)

@@ -1,0 +1,247 @@
+name: Culture help-calendar daily pull
+
+# Staging-only public-help calendar ingest. Does not write production Supabase,
+# does not flip reader gates, does not deploy edges, does not invent events.
+#
+# Schedule: 6:00 AM America/New_York during EDT (UTC-4) = 10:00 UTC.
+# GitHub Actions cron is UTC-only. `0 10 * * *` is 6:00 AM EDT.
+# During EST (UTC-5) the same cron fires at 5:00 AM local. Ops keep 10:00 UTC
+# year-round as the morning ET job.
+#
+# Howard-approved cadence (see docs/CULTURE_COMMUNITY_ENGINEERING_PLAN.md):
+#   daily 6am ET — Workforce1 / DOL / CUNY / NYBC / SHOW / ASPCA
+#   weekly — NYPD / FDNY / shelters (not this workflow)
+#   optional later 2pm ET — blood / mobile if a live scrape is later wired
+
+on:
+  schedule:
+    - cron: "0 10 * * *"
+  workflow_dispatch:
+    inputs:
+      workforce1_mode:
+        description: "Workforce1 source. live = SODA kf2b-aeh5. fixture = committed test rows."
+        required: false
+        default: "live"
+        type: choice
+        options:
+          - live
+          - fixture
+
+permissions:
+  contents: read
+
+concurrency:
+  group: culture-help-calendar-daily
+  cancel-in-progress: false
+
+jobs:
+  help-calendar-staging:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pipeline dependencies
+        run: python3 -m pip install --disable-pip-version-check -r requirements.txt
+
+      - name: Capture protected file fingerprints (pre)
+        id: pre
+        run: |
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          paths = [
+              "data/location_cache.json",
+              "data/nycif_staged_live_events.json",
+              "data/staged_live_manifest.json",
+              "data/previous_staged_live_events_snapshot.json",
+          ]
+          out = {}
+          for rel in paths:
+              path = Path(rel)
+              out[rel] = hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
+          Path("/tmp/culture_protected_pre.json").write_text(json.dumps(out, indent=2) + "\n")
+          print(json.dumps(out, indent=2))
+          PY
+
+      - name: Pull Workforce1 events (live SODA unless fixture requested)
+        id: workforce1
+        run: |
+          MODE="${{ github.event.inputs.workforce1_mode || 'live' }}"
+          if [ "$MODE" = "fixture" ]; then
+            python3 scripts/culture/pull_workforce1_events.py \
+              --fixture tests/fixtures/culture/workforce1_events.fixture.json
+          else
+            python3 scripts/culture/pull_workforce1_events.py --live
+          fi
+
+      - name: Stage DOL career events from fixture (live Trumba not wired)
+        run: |
+          set +e
+          python3 scripts/culture/pull_dol_career_events.py --live
+          rc=$?
+          set -e
+          if [ "$rc" -eq 0 ]; then
+            echo "DOL live pull unexpectedly succeeded"
+            exit 0
+          fi
+          if [ "$rc" -eq 2 ] || [ "$rc" -eq 3 ]; then
+            echo "DOL live scrape not wired (exit $rc); staging fixture rows, inventing nothing"
+            python3 scripts/culture/pull_dol_career_events.py \
+              --fixture tests/fixtures/culture/dol_career_events.fixture.json
+            exit 0
+          fi
+          echo "DOL unexpected exit $rc" >&2
+          exit "$rc"
+
+      - name: Compile CUNY career source registry (no invented events)
+        run: |
+          set +e
+          python3 scripts/culture/pull_cuny_career_events.py --live
+          rc=$?
+          set -e
+          if [ "$rc" -eq 0 ]; then
+            echo "CUNY live scrape unexpectedly succeeded"
+            exit 0
+          fi
+          if [ "$rc" -eq 2 ] || [ "$rc" -eq 3 ]; then
+            echo "CUNY live scrape not wired (exit $rc); compiling registry only (0 invented events)"
+            python3 scripts/culture/pull_cuny_career_events.py
+            exit 0
+          fi
+          echo "CUNY unexpected exit $rc" >&2
+          exit "$rc"
+
+      - name: Stage NYBC blood drives from fixture (live scrape not wired)
+        run: |
+          set +e
+          python3 scripts/culture/pull_nybc_blood_drives.py --live
+          rc=$?
+          set -e
+          if [ "$rc" -eq 0 ]; then
+            echo "NYBC live pull unexpectedly succeeded"
+            exit 0
+          fi
+          if [ "$rc" -eq 2 ] || [ "$rc" -eq 3 ]; then
+            echo "NYBC live scrape not wired (exit $rc); staging fixture rows, inventing nothing"
+            python3 scripts/culture/pull_nybc_blood_drives.py \
+              --fixture tests/fixtures/culture/nybc_blood_drives.fixture.json
+            exit 0
+          fi
+          echo "NYBC unexpected exit $rc" >&2
+          exit "$rc"
+
+      - name: Stage H+H SHOW clinics from fixture (live scrape not wired)
+        run: |
+          set +e
+          python3 scripts/culture/pull_show_mobile_clinics.py --live
+          rc=$?
+          set -e
+          if [ "$rc" -eq 0 ]; then
+            echo "SHOW live pull unexpectedly succeeded"
+            exit 0
+          fi
+          if [ "$rc" -eq 2 ] || [ "$rc" -eq 3 ]; then
+            echo "SHOW live scrape not wired (exit $rc); staging fixture rows, inventing nothing"
+            python3 scripts/culture/pull_show_mobile_clinics.py \
+              --fixture tests/fixtures/culture/show_mobile_clinics.fixture.json
+            exit 0
+          fi
+          echo "SHOW unexpected exit $rc" >&2
+          exit "$rc"
+
+      - name: Stage ASPCA mobile from fixture (live scrape not wired)
+        run: |
+          set +e
+          python3 scripts/culture/pull_aspca_mobile.py --live
+          rc=$?
+          set -e
+          if [ "$rc" -eq 0 ]; then
+            echo "ASPCA live pull unexpectedly succeeded"
+            exit 0
+          fi
+          if [ "$rc" -eq 2 ] || [ "$rc" -eq 3 ]; then
+            echo "ASPCA live scrape not wired (exit $rc); staging fixture rows, inventing nothing"
+            python3 scripts/culture/pull_aspca_mobile.py \
+              --fixture tests/fixtures/culture/aspca_mobile.fixture.json
+            exit 0
+          fi
+          echo "ASPCA unexpected exit $rc" >&2
+          exit "$rc"
+
+      - name: Validate before publish (fail-closed)
+        if: always()
+        run: python3 scripts/culture/validate_before_publish.py
+
+      - name: Enforce publication_allowed stays false
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          path = Path("data/culture/reports/validate_before_publish.json")
+          if not path.exists():
+              print("missing data/culture/reports/validate_before_publish.json")
+              sys.exit(1)
+          report = json.loads(path.read_text(encoding="utf-8"))
+          allowed = report.get("publication_allowed")
+          would = report.get("would_publish")
+          print(
+              f"qa_pass={report.get('qa_pass')} "
+              f"publication_allowed={allowed} would_publish={would}"
+          )
+          if allowed is not False:
+              print("publication_allowed must stay false")
+              sys.exit(1)
+          if would is True:
+              print("would_publish must stay false")
+              sys.exit(1)
+          if report.get("wordpress_modified") is True:
+              print("wordpress_modified must stay false")
+              sys.exit(1)
+          if report.get("location_cache_modified") is True:
+              print("location_cache_modified must stay false")
+              sys.exit(1)
+          print("Fail-closed: publication stays off.")
+          PY
+
+      - name: Enforce protected files untouched
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import sys
+          from pathlib import Path
+
+          pre = json.loads(Path("/tmp/culture_protected_pre.json").read_text(encoding="utf-8"))
+          bad = []
+          for rel, before in pre.items():
+              path = Path(rel)
+              after = hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else None
+              if before != after:
+                  bad.append(rel)
+          if bad:
+              print("PROTECTED FILES CHANGED:", bad)
+              sys.exit(1)
+          print("Protected files untouched.")
+          PY
+
+      - name: Upload Culture help-calendar staging artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: culture-help-calendar-staging
+          if-no-files-found: warn
+          retention-days: 7
+          path: |
+            data/culture/staging/*.json
+            data/culture/reports/*.json
