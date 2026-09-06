@@ -21,6 +21,41 @@ New rows arrive as `review_status=pending`, `promotion_allowed=false`,
 `map_ready=false`, `map_eligible=false`. Flipping a gate alone still returns
 empty arrays. That is intentional.
 
+## Gated backfill results (2026-09-06)
+
+Loaded into `oggwpvdirkrnzoolparx` with every publication / layer gate
+**false**. Public edges stayed HTTP 200 with empty arrays.
+
+| Table | Rows | Status |
+| --- | --- | --- |
+| `culture_calendar_occurrence_v1` | 661 | all `pending`, `promotion_allowed=false`, `map_ready=false` |
+| `culture_civic_facility_v1` | 297 | all `pending`, `promotion_allowed=false`, `map_eligible=false` |
+| `culture_reader_settings` | unchanged | do not write from pull/load jobs |
+
+Calendar breakdown:
+
+| Source | Kind | Rows | Notes |
+| --- | --- | --- | --- |
+| Workforce1 live SODA `kf2b-aeh5` | `job_fair` | 656 | Official pull. The live dataset currently returns March 2020 rows, not the current week. |
+| NYBC fixture | `blood_drive` | 1 | Title contains `(fixture)` — do not accept unless intentional |
+| SHOW fixture | `mobile_clinic` + `resource_van` | 2 | Live puller not wired (exit 3) |
+| NYS DOL fixture | `job_fair` | 1 | Live puller not wired (exit 3) |
+| ASPCA fixture | `pet_mobile` | 1 | Live puller not wired (exit 3) |
+| CUNY | — | 0 | Registry only; no events invented |
+
+Civic breakdown:
+
+| Kind | Dataset | Rows | Notes |
+| --- | --- | --- | --- |
+| `civic_nypd` | `y76i-bdw7` | 78 | Live precinct polygons. `addressable=false`. Not house pins. |
+| `civic_fdny` | `hc8x-tcnd` | 219 | Live firehouses. In-bounds coords, `addressable=true`, still `map_eligible=false`. |
+| `shelter` | `g9nt-57fp` | 0 | Live census succeeded and returned 0 rows (`census_only`). Related dirs `bmxf-3rd4` / `ntcm-2w4k` were not substituted. Not a silent drop. |
+
+Only 5 calendar rows fall in/near the reader's 8-day window, and those 5 are
+fixtures. Accepting the 2020 Workforce1 rows and flipping gates will **not**
+fill iOS Now/Tonight/7 Days until SODA has current events. The daily 6:00 AM
+ET job re-pulls `kf2b-aeh5` and upserts without undoing ACCEPTED rows.
+
 ## One-shot / replay
 
 ```bash
