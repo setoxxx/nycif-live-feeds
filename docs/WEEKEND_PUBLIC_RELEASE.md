@@ -34,7 +34,7 @@ Paste from `docs/ios/EventService+headers-and-corridor.swift`:
 5. List-only stays in the list. Relabel “pending” to “List only”.
 6. 7 Days subchips call `mode=day&date=YYYY-MM-DD`.
 
-Tonight: the function already reports `stats.tonight` 74/63 but `events` is empty before 18:00. That is an Edge Function change, not missing Friday data.
+Tonight: start at **5pm ET** (`start_at >= today 17:00`). The previous 18:00 JS filter dropped the 5pm hour and could empty `events` while `stats.tonight` still counted SQL rows. Dispensary / liquor / 5 P.M. Somewhere stay Tonight aux chips via `nycif-night-layers`, not event rows.
 
 ## Do not merge
 

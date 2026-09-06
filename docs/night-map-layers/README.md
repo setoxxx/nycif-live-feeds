@@ -3,7 +3,7 @@
 Status: production behavior contract
 Locked: 2026-09-01
 Runtime authority: Supabase project `oggwpvdirkrnzoolparx`
-Public map: `https://nycinfocus.com/map/`
+Public map: native app via `nycif-native-map-feed` `chip_rows.night` → `nycif-night-layers`. WordPress `/map/` is not a live event destination.
 
 ## Purpose
 
