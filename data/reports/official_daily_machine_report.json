@@ -1,6 +1,6 @@
 {
   "schema": "official_daily_machine.v1",
-  "generated_at_utc": "2026-09-06T04:40:16.688241+00:00",
+  "generated_at_utc": "2026-09-06T14:53:34.908816+00:00",
   "today_nyc": "2026-09-06",
   "qa_pass": false,
   "failures": [
@@ -29,8 +29,8 @@
       "accounted": 28444,
       "unaccounted": 0,
       "pin_eligible": 26277,
-      "certified_pins": 26176,
-      "list_only": 101,
+      "certified_pins": 26172,
+      "list_only": 105,
       "pin_coverage_pass": false,
       "added": 0,
       "still_present": 26277,
@@ -63,6 +63,18 @@
           "reason": "no_official_in_bounds_coordinate"
         },
         {
+          "occurrence_id": "caeada2c45637343b622cb2b19ef3be1fcb27f64ef8c4ff2a6d0d6f75d9bf675",
+          "title": "The Egyptian Day",
+          "display_location": "WEST   50 STREET between 6 AVENUE and 7 AVENUE",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "fa289e9a6c28df3336e4179566eb5f94ad995a901dc4a0e056e43578d00a62ab",
+          "title": "Back to School Block Festival",
+          "display_location": "220 STREET between 116 AVENUE and LINDEN BOULEVARD",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
           "occurrence_id": "b3cac660c5d12c985af36ad259274d7f004284b479428422e83b36557b629269",
           "title": "The Holy Temple Church Community Give Back",
           "display_location": "CLINTON AVENUE between EAST  180 STREET and OAKLAND PLACE",
@@ -78,6 +90,18 @@
           "occurrence_id": "7a7611d0aa148a2f844e2b74ffbbe23736e891f41a1f883c3f248835295dd3f1",
           "title": "Richmond County Fair",
           "display_location": "RICHMOND ROAD between ST PATRICKS PLACE and ARTHUR KILL ROAD",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "eb368093ff7e4b380780e4fcd0acb4af545636f5ec6505c91932764c969c7db3",
+          "title": "Queens Church of the Firstborn Celebration",
+          "display_location": "226 STREET between MERRICK BOULEVARD and 133 AVENUE",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "77876060c762af3c4f21e2de020500e0ee54c63502977981a87bef82a3f5cb6f",
+          "title": "Theory 9 Back-to-School Health Fair",
+          "display_location": "WEST  231 STREET between SEDGEWICK AVENUE and KINGSBRIDGE TERRACE",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
@@ -160,30 +184,6 @@
         },
         {
           "occurrence_id": "5c0fb615f7731716e0787c7950e58fe950df8cbe9aac96a0c29dd9ccbbf0accb",
-          "title": "Tennis",
-          "display_location": "Pier 42: Tennis-15",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "1e2dfd21c8ce6f55e79e99cffb2aa2701b51122e72f53c861d041e4033b6ba6d",
-          "title": "Jazz at Jitu",
-          "display_location": "Jitu Weusi (Putnam) Plaza: Jitu Weusi Plaza Putnam Ave between Fulton Street and Grand Ave",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "83afc566b1f3f07ce60e8562997ddb43788db2cbc40df20def71c1d43b56c43f",
-          "title": "Fragrance Launch - Stephan Weiss Studio: 711 Greenwich St.",
-          "display_location": "GREENWICH STREET between WEST   10 STREET and CHARLES STREET,  CHARLES STREET between GREENWICH STREET and HUDSON STREET",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "8b0d57eef8eb449c91b427ebc8721ca418d2d4c1c971d770211c5ee15e45ffbb",
-          "title": "CHIPS Distribution",
-          "display_location": "Kensington Plaza: Kensington Plaza CHURCH AVENUE between BEVERLY ROAD and MCDONALD AVENUE",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "0cdb7b927b7e8303980ba3271cddd80915fc72fd77cadb74ac81662f67616e5f",
           "title": "Tennis",
           "display_location": "Pier 42: Tennis-15",
           "reason": "no_official_in_bounds_coordinate"
@@ -343,33 +343,73 @@
       ]
     },
     "nyc-parks-bigapps-events": {
-      "snapshot_rows": 1300,
-      "accepted": 1295,
+      "snapshot_rows": 1198,
+      "accepted": 1193,
       "rejected": 5,
-      "accounted": 1300,
+      "accounted": 1198,
       "unaccounted": 0,
-      "pin_eligible": 1280,
-      "certified_pins": 1280,
-      "list_only": 15,
+      "pin_eligible": 1180,
+      "certified_pins": 1180,
+      "list_only": 13,
       "pin_coverage_pass": true,
-      "added": 0,
-      "still_present": 1295,
-      "removed_from_city": 0,
-      "added_occurrence_id_samples": [],
-      "removed_from_city_occurrence_id_samples": [],
+      "added": 30,
+      "still_present": 1163,
+      "removed_from_city": 132,
+      "added_occurrence_id_samples": [
+        "165e21ec14bec22fa6d190b7459ff521ca911b7941f20419d3cb479389897c77",
+        "17c6e78ea1089a5d56da16202ee0a16c8a1d0cc6eef1ff8bbf85968734c27cc5",
+        "1f7439ea2111b0c0f0c962138025859ef13506c73826543932288ad2abe05fa6",
+        "24eb2a6ea91c9714132c7dc478fde86ebd72005fc60504303d1e68df8642b7f9",
+        "25c2f28dd2b1d3b1c5427cab50543599074610eeeabb78c49886ce49b0115f5e",
+        "2ce583c37bff30395096904a9c051013aa064c3e8d4d1dc79f3dee90703d0038",
+        "34cb7f668eeb630d575f92651bb371c0619301ca58703ec8d33ef9eb032fe828",
+        "3cc172465c8d282b10d05aff8a1acda604a6b82a983d52dbdb4e7507fbf03154",
+        "4088b920112d3ca2fae3ca6380f7c26730b53ed0627e7b3a0463135322e0948c",
+        "43df866ae2f73ad92456ab679e683e39e5a7182967a664b887ef4fcf9b143340",
+        "44742aad7bcd4ab5300a43baed41bc526e36c0a896ad81b7b5c9bc00f4213942",
+        "4fca7471971e0359f5aecd38d74629450f85e802ddc2d8e5043a6c2d30c7b8b7",
+        "5511215726ebe7c2a93c38b036521d3ec98dd23eeac2213899a7ed57f64d10d1",
+        "60766f0517d0f561158156a9b0caaf7b713df75c3bcab4d0d3c97c799dd5cde3",
+        "666b0ecd6149249cd763de0badde4b47b5d37cc905c3356c367b7d88fe66bcfe",
+        "6c2446c33d0045ca8ac8023da172f236d5fe346363900ea8fd8d8738898d4a0e",
+        "78bfefc98ea5023a1812b2c6e565da1b8a921004a99111f9137c6379985eb999",
+        "892cd4c46ff27771dcb9df3a656d0d266cad48e8b57511ca5e9681cfa0ff4121",
+        "8979fc1611014b46f406cac2e27238deaccda56f4de97c640af4a6fd2f814953",
+        "90a08f34722f4cea314a43e9e73e279236e29a014099f5c4423c2945e07d37fe",
+        "9e70fe96019eef5d2d7c41ace5e9d5d412de5df94d2b25bce01aba7216fbf6d3",
+        "a91a0c80eca721033de57e0bd98dfc51cf61c60f27e6180337d9d604a8ab3968",
+        "b21cc80e3811aebf1c9582309caca6668b26741159738261edb69c8be8f3567f",
+        "ba4d99ce6b7a9e2c449b89ef40f7c8845e7ab6e5ed5f121133da99298aa650a7",
+        "c1eef0f2df9721033c8e00d191dbf874d2e9bf99eb886d36313a87a5cae08484"
+      ],
+      "removed_from_city_occurrence_id_samples": [
+        "075e8d1b4dabaf27195b791a41e3d2d85a8e8481538787c25158610d2b33f7d0",
+        "089418310afee84107cc83f5abf021199924b587daae3470fda4bb71131df7bb",
+        "0906ab0e3eb3e82a09f5c5a7fde5883fa73f7353d651d6a6b05eee4624ee28f6",
+        "0ab95890b24d26ad279a790c69c16f7a4a5ba19919b09981902c23aa9cc07ae9",
+        "0f22c75559d97c45a8f900f7b027ed64b9a619a8dd38dcb046dd7bfa8d2ad72b",
+        "0fd7867360767323c7727f30e8c31ff460c69b46aedfdc97cd1eeaa5b55ce90f",
+        "1162c618ac80e3868b19a10c6f5b7fc53b1faf0e0688cf6f893eed371b48d8eb",
+        "1311f19822baa678c9fb0f82991e0c9ab880ca035fac7e23d9da5e8512b41d47",
+        "1525fcaa89043aa8a261f4f1f147ba87f317b989a6da1c6be14f4bf1e14985b8",
+        "155b8766295fc9d5c9bf86eb3c5173937e47d27a775244931769bb75bcb43b6f",
+        "17250bb4518617c1c8b0bc3fc80dbfd9458cc317fc0cf98c0111b84807df2dc3",
+        "1761b63e4c923fd0b6733a95f51d34fac21209a785f4266c8d0da87fe84cc95d",
+        "18179fc2c03def366f95af1f42d08672659aa112e25a2a2a7284a7393e9eef62",
+        "182c2a18d577998e4802516a11ef6824e2bc31c591547ca795713eb623b56b29",
+        "18e80ab7bd8dc1c3494f55b0ae34ba8ba492ab0419587b782b4ed19e1defd0d3",
+        "1987097db185c95a313a4f4951d9db4601a64e3f22787def9c7a631a5c246eff",
+        "1c4b86e317b7be2da409e799bd15819ecdef69a6a4cd0a40789741dcca01356a",
+        "1d9ce4e9306e43615520ad2002852ce30a1d287f820e95e445d6cf06090d4722",
+        "1efb65a5a3d160fe3a068447394cd75688efe851583dbc69817b2b221fbb2d28",
+        "2242c2dc9b7adadfd900f0a05cdc40d046a030582d0385ef82575a54a259923e",
+        "23fcb0cf4b292d2a36b9e0f5e14b0d77313de3fafbba1816cc40bb73ddd5587e",
+        "25eac0ebfbeec55cbc6808b9d369486e7561bb138f727be491f562678cb77f42",
+        "275387e860867972843c38faf8e90d8ed9e13844380dfa357c69f2aca48121b4",
+        "29f917074c202e78a6a68e28c246046a98f897ec1fe024c495090e411937da53",
+        "2a9f27225ce9af8ea9a74db670df028208fdbf6824e41a708f56df6de16b3d72"
+      ],
       "list_only_samples": [
-        {
-          "occurrence_id": "f831ed6d0125959e8e67488ab417a9b944e0eaf960bdfc54a92e9bede2f74c9d",
-          "title": "NYRR Open Run: Crocheron Park",
-          "display_location": "Entrance to John Golden Park (in John Golden Park),John Golden Parking Lot (in John Golden Park)",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "c03a108b8ca6583264162bc68e4306b5065613e97920d6cc93d945f4d370b43c",
-          "title": "Wheel Fun Rentals Celebrates America's 250th with Patriotic LED Bike Ride",
-          "display_location": "Meadow Lake North (in Flushing Meadows Corona Park),Sand Lane and Father Capadanno Boulevard (in Franklin D. Roosevelt Boardwalk and Beach),Marine Park,Bensonhurst Park,David Dinkins Circle (in Flushing Meadows Corona Park)",
-          "reason": "no_official_in_bounds_coordinate"
-        },
         {
           "occurrence_id": "eb0d0fcb3527deb29e049b6666ad8253b65fe46d408cf3519384dc372592b635",
           "title": "Tea at Discovery Garden",
@@ -483,71 +523,21 @@
       ]
     },
     "nyc-citywide-events-calendar-api": {
-      "snapshot_rows": 2221,
-      "accepted": 2221,
+      "snapshot_rows": 2220,
+      "accepted": 2220,
       "rejected": 0,
-      "accounted": 2221,
+      "accounted": 2220,
       "unaccounted": 0,
       "pin_eligible": 0,
       "certified_pins": 0,
-      "list_only": 2221,
+      "list_only": 2220,
       "pin_coverage_pass": true,
-      "added": 27,
-      "still_present": 2194,
-      "removed_from_city": 167,
-      "added_occurrence_id_samples": [
-        "08551ede91718ea3ba4df80f7aae1ac930c0345ffc5d123948d03963d2ddea64",
-        "0c820ac018e849eb7b82c11587b3945f59de693b460a5393fa6cd9a1a11aa16a",
-        "2a523274b2be724bebc9e04b8863ab93f6181144773d744a66fd0a0d8cf49090",
-        "2f179a0e9eb53d5236dc98f6720745891cf2bd06e18982dfb78580737c992e00",
-        "305cf9d8cd20723c2ae1e0074cd8aee23abaf954906d02b3fb8c9b4668e4a841",
-        "38c4f032c1f1bbed24fe4cc11f61d839035b42c55af228f5c50ecd10543607f9",
-        "4fcace8a74f946e5229c64d17c1f7c79bfe5001ba73d4d43d9bab1316564856a",
-        "54972486140784beaa86f6896e8dfc6ee7284a1d7fddd49ae75673b13b537053",
-        "61ce6089ce9b3cd590521c6be64e3d905eeffd2ce0ceaadcb9da576c903cbb9d",
-        "66ee846ae90c16e1a26782bce4fb07d11ab08ba5378aa3bbced9318c1b4bef9e",
-        "6b6c906995cb3cb227d4693afb0a496a7be56760bda648a33b7abd26a80b8dd2",
-        "75c3925d637b52e30e111b8b2d39f66b5d8f21cb2509a72960fa1dc8251f04d3",
-        "81cfb7230de6ac576ef312f2c8de5706edc80a49c722fbc4b3848426de5de534",
-        "82e8d3e81ae03cb3caaeb88208d7c6286a91a100370c25aea0de429f85a4ec21",
-        "92e778a8b68c99245be5e8278aac8a50dd1cb411c626d771e9a8b90fefc100a4",
-        "938cea27250e8a55ff734a3ba7f53bd66cbd73ffa586d4074a84cbd1e63ac8a0",
-        "9c97119f318867480f09963082d08fb29e0e1d173de0ddefdc2eb5c97b866c77",
-        "a839a8ffe2a8539b48cb16753260cfa86e879fad4e50ea2f8c7bc66b6ef9813d",
-        "b7d02ba565c8a7c3527b3950ab73768cd227cadfa80219dc67e548bd79fabd54",
-        "ba2f5fe8ed69362b86ca09667e886c1664d3cfc5e5de38f584ec38398b698a15",
-        "bb2a99977211e7ce3832f938e0543ef4af6152c65c5d0f30878ab0321a1cf38b",
-        "c9a6de1a20928259ee7bbdfcd8c6a351832b3e96285345d982192a63218869b1",
-        "da41e9d42c81826ea6da984fb4bcfbd0a75a95074524a2fbc8e861a394ac2fd8",
-        "dab3b7fe417f7de2401d46d876d98c036a59f8860983474a6f4aeabebdca5eee",
-        "de8fbd80d3f38a54c68c5405ba52cc5050b10adc235fb84778904ada346fabb0"
-      ],
+      "added": 0,
+      "still_present": 2220,
+      "removed_from_city": 1,
+      "added_occurrence_id_samples": [],
       "removed_from_city_occurrence_id_samples": [
-        "000d5f749bdb66f8f0e217cd288247db6eb697e3b4f8ba910214191bd0f42135",
-        "00a1bb34cf175246ce47af8044b822070fb24a5d37571a6fd428f813dac09cdc",
-        "03392c363ed0521d142a2f2ceee1ee7f656a031412ca224cd4f34aa8f382844a",
-        "05750cfd71eaf60432b8f0bb3dbde5a4563419a9399ad58c1d5c7e1d249d3729",
-        "059af1d56a9d954eefa492b3f54ee4fcccca2fbef81ff0a08f20821927455b95",
-        "05ad60d10fd6da0fd54c3fc116743629406d3b2307946c331c1cca78e36e9d28",
-        "072488e1f1014ad99fde72000fcd0a8ae389a6de624e79c6ed4f9cff31249f1a",
-        "07b7cdc3dc6f53bd303aa6ed8cc5071dbdf52bc8eb0efdb9ed16ef38a3523694",
-        "0a852ce464debd7ac8e710c76c1136b66002db003ad48365afe1a70c413320d8",
-        "0b7d3a15e7096d78e91d401769205dcaa3baec279de1ea84f2d7dd4957b69936",
-        "0da4a277f7f09ef4f8592356927b99e945b2701e10354a79f32200fd2a37389c",
-        "10be05fc042d9f4877f8d2d63c0bfe1e52f15d87c46409083073d39702678537",
-        "121d97dd7ee1fb2b434f12372777236a4ea39563499adb659392a11c29fb1cec",
-        "128650acec6fc88110febbdec3dab570c6de3355d4bf25d8101de0be0195e4ea",
-        "17e871ac24f29fb01c68cd1f4c8aa60866cd96356d48d11e825bf509d77f923a",
-        "1865bb085ab863b91e31ad5a6b4a53331aad02e3d233289d703024d96b301009",
-        "18f3ef35ee4f75554781b04729d3116a9e02a945304152ca2acfa6c48f27149a",
-        "190de77321b889b6d314019d6b8925d54f894cf735351c23a6476768d5e63ce5",
-        "1a4632f908ed1338fba48804a54cfa66409809e21c0b557d776d9f348ebbb7b6",
-        "1f2eb0c3bdc34e6cf29c7399601a0db71c028d4f28eeafd849fbc9c6a7784ef9",
-        "225ffde3a50c8c6fe3d74bf403035258d8aa5a89fd4cb6f26aede29cc0fd411a",
-        "237c7a47f8e3c45879929befec686e3bc638c7b758b2707a0036c7b95e07ca50",
-        "251dc6110642511730918e1097b246e4a42f971b9ac02787e5cacf266f5b6804",
-        "28de0a8d541f8f8767c054ce3fb19d1fec2760d76911f1a74b0519ddf904791a",
-        "2c65dc9613692bb1cfae0978a743ba8238d00a73ffb7e712648a3cc879ab681c"
+        "034d2a549f1314baa146e99367fd1d8fc341c21e87b3446a6ad51b6c4adb41ed"
       ],
       "list_only_samples": [
         {
@@ -877,8 +867,8 @@
     {
       "source_dataset": "tvpp-9vvx",
       "pin_eligible": 26277,
-      "certified_pins": 26176,
-      "missed": 101
+      "certified_pins": 26172,
+      "missed": 105
     }
   ],
   "invented_pins": [],

@@ -138,7 +138,7 @@
     "money_day_today": 1,
     "money_day_tomorrow": 2,
     "opportunities": 1144,
-    "photographer_calendar_events": 48,
+    "photographer_calendar_events": 49,
     "photographer_days_with_coverage": 16,
     "pin_demotions": 0,
     "pin_map_ready_certified": 0,
@@ -153,8 +153,8 @@
     "viral_returning_likely": 5
   },
   "daily_pull": {
-    "last_run_utc": "2026-09-06T04:40:56Z",
-    "photographer_calendar_events": 48,
+    "last_run_utc": "2026-09-06T14:54:16Z",
+    "photographer_calendar_events": 49,
     "photographer_days_with_coverage": 16,
     "qa_pass": true,
     "report": "data/daily_people_facing_sync_report.json"
@@ -172,7 +172,7 @@
     "honesty": "NYC Open Data does not currently provide a high-quality live citywide soup-kitchen or food-pantry pin feed suitable for map publication.",
     "status": "known_gap_human_follow_up"
   },
-  "generated_at_utc": "2026-09-06T04:41:06Z",
+  "generated_at_utc": "2026-09-06T14:54:27Z",
   "lanes": {
     "Approved": "schema-v1-discovery approved permits (unchanged)",
     "Help Places": "schema-v1-civic-review/help (markets + benefits/SNAP/drop-in/Homebase/aging/NYCHA)",
@@ -190,7 +190,7 @@
     "artifact": "data/photographer_assignment_calendar_2mo.json",
     "coordinate_status_counts": {
       "list_only": 45,
-      "map_ready": 3
+      "map_ready": 4
     },
     "days_with_coverage": 16,
     "go_shoot_these": [
@@ -922,7 +922,7 @@
     "month_counts": [
       {
         "days_with_events": 8,
-        "event_count": 27,
+        "event_count": 28,
         "label": "September 2026"
       },
       {
@@ -936,7 +936,7 @@
     "premium_label": "Photographer Assignment Calendar (premium/operator) — Money-Day Desk v2",
     "qa_pass": true,
     "quality": {
-      "events_removed_vs_baseline": 794,
+      "events_removed_vs_baseline": 793,
       "qa_pass": true,
       "report": "data/photographer_money_day_quality_report.json",
       "top_exclude_reasons": [
@@ -986,7 +986,7 @@
       "total_events": 2
     },
     "tomorrow_top_go_shoot": [],
-    "total_events": 48,
+    "total_events": 49,
     "viral_recurrence": {
       "artifact": "data/photographer_viral_recurrence_matches.json",
       "foil_index": "data/sapo_foil_operator_index.json",
@@ -1062,7 +1062,7 @@
     "demotion_reason_counts": {},
     "demotions": "data/pin_integrity_demotions.json",
     "map_ready_after_total": 0,
-    "map_ready_before_total": 3121,
+    "map_ready_before_total": 3122,
     "qa_pass": true,
     "report": "data/pin_integrity_gate_report.json",
     "rule": "ZERO map_ready rows may fail NYC certification"

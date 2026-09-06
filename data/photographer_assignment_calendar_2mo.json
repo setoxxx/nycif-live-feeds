@@ -1,7 +1,7 @@
 {
   "coordinate_status_counts": {
     "list_only": 45,
-    "map_ready": 3
+    "map_ready": 4
   },
   "days_with_coverage": 16,
   "events": [
@@ -686,6 +686,42 @@
         "significance_major_floor",
         "carried_major_score_capped:120",
         "keyword_civic_gathering"
+      ]
+    },
+    {
+      "assignment_score": 380,
+      "borough": null,
+      "category": "arts",
+      "certified_pin": false,
+      "coordinate_status": "map_ready",
+      "date": "2026-09-20",
+      "display_location": "Miracle Garden",
+      "end_date_time": "2026-09-20T15:00:00",
+      "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-20&assignment=1",
+      "id": "review_supplemental:nyc-parks-bigapps-events:2238562@2026-09-20",
+      "lane": "approved_major",
+      "latitude": 40.722599029541016,
+      "location_cache_modified": false,
+      "longitude": -73.9834976196289,
+      "map_eligibility_state": "REVIEW_REQUIRED",
+      "map_link": null,
+      "money_day": true,
+      "photo_pick": false,
+      "pin_integrity_reason": "LEGACY_EVIDENCE_PENDING_MIGRATION",
+      "premium_label": "Photographer Assignment Calendar (premium/operator)",
+      "promotion_allowed": false,
+      "public_map_modified": false,
+      "source": {
+        "dataset": "nyc-parks-bigapps-events",
+        "source_event_id": "2238562"
+      },
+      "start_date_time": "2026-09-20T13:00:00",
+      "timezone": "America/New_York",
+      "title": "Baby Soda Jazz Band (2026 LUNGS Harvest Arts Festival)",
+      "why_selected": [
+        "significance_major_floor",
+        "carried_major_score_capped:120",
+        "keyword_street_fair_festival"
       ]
     },
     {
@@ -1722,7 +1758,7 @@
       ]
     }
   ],
-  "generated_at_utc": "2026-09-06T04:40:59Z",
+  "generated_at_utc": "2026-09-06T14:54:19Z",
   "go_shoot_these": [
     {
       "assignment_score": 580,
@@ -2450,7 +2486,7 @@
     }
   ],
   "lane_counts": {
-    "approved_major": 39,
+    "approved_major": 40,
     "review_high_signal": 9
   },
   "location_cache_modified": false,
@@ -2474,6 +2510,7 @@
     "review_supplemental:nyc-citywide-events-calendar-api:1046116@2026-09-19",
     "nyc-citywide-events-calendar-api:1044396@2026-09-20",
     "review_supplemental:nyc-citywide-events-calendar-api:1192796@2026-09-20",
+    "review_supplemental:nyc-parks-bigapps-events:2238562@2026-09-20",
     "review_supplemental:nyc-citywide-events-calendar-api:1044396@2026-09-20",
     "review_supplemental:nyc-citywide-events-calendar-api:1193136@2026-09-26",
     "nyc-citywide-events-calendar-api:1046876@2026-09-27",
@@ -2535,6 +2572,7 @@
     "2026-09-20": [
       "nyc-citywide-events-calendar-api:1044396@2026-09-20",
       "review_supplemental:nyc-citywide-events-calendar-api:1192796@2026-09-20",
+      "review_supplemental:nyc-parks-bigapps-events:2238562@2026-09-20",
       "review_supplemental:nyc-citywide-events-calendar-api:1044396@2026-09-20"
     ],
     "2026-09-26": [
@@ -3031,9 +3069,9 @@
             ]
           },
           {
-            "count": 3,
+            "count": 4,
             "date": "2026-09-20",
-            "map_ready_count": 0,
+            "map_ready_count": 1,
             "top_events": [
               {
                 "assignment_score": 400,
@@ -3075,6 +3113,27 @@
                   "significance_major_floor",
                   "carried_major_score_capped:120",
                   "keyword_civic_gathering"
+                ]
+              },
+              {
+                "assignment_score": 380,
+                "borough": null,
+                "coordinate_status": "map_ready",
+                "display_location": "Miracle Garden",
+                "field_desk_link": "https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-09-20&assignment=1",
+                "id": "review_supplemental:nyc-parks-bigapps-events:2238562@2026-09-20",
+                "lane": "approved_major",
+                "map_link": "https://www.google.com/maps?q=40.722599029541016,-73.9834976196289",
+                "source": {
+                  "dataset": "nyc-parks-bigapps-events",
+                  "source_event_id": "2238562"
+                },
+                "start_date_time": "2026-09-20T13:00:00",
+                "title": "Baby Soda Jazz Band (2026 LUNGS Harvest Arts Festival)",
+                "why_selected": [
+                  "significance_major_floor",
+                  "carried_major_score_capped:120",
+                  "keyword_street_fair_festival"
                 ]
               },
               {
@@ -3956,8 +4015,8 @@
       "min_lat": 40.4774,
       "min_lng": -74.2591
     },
-    "certified_at_utc": "2026-09-06T04:41:05Z",
-    "map_ready_before": 3,
+    "certified_at_utc": "2026-09-06T14:54:26Z",
+    "map_ready_before": 4,
     "semantic_map_ready_after": 0
   },
   "premium_label": "Photographer Assignment Calendar (premium/operator) — Money-Day Desk v2",
@@ -3973,7 +4032,7 @@
   ],
   "staged_feed_modified": false,
   "timezone": "America/New_York",
-  "total_events": 48,
+  "total_events": 49,
   "window_end": "2026-10-31",
   "window_start": "2026-09-06"
 }
