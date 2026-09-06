@@ -196,12 +196,76 @@ function stats(rows: Record<string, unknown>[]) {
   return { total: rows.length, mapped, list_only: rows.length - mapped };
 }
 
-function normalizeMode(value: string): "now" | "tonight" | "seven" | "day" {
+function normalizeMode(value: string): "now" | "tonight" | "seven" | "day" | "layer" {
   const mode = value.toLowerCase();
   if (mode === "tonight") return "tonight";
   if (mode === "seven" || mode === "7d") return "seven";
   if (mode === "day") return "day";
+  if (mode === "layer" || mode === "dispensary" || mode === "liquor" || mode === "5pm") return "layer";
   return "now";
+}
+
+function requestedLayer(url: URL, modeValue: string): string {
+  const explicit = String(url.searchParams.get("layer") ?? "").toLowerCase();
+  if (NIGHT_AUX_LAYER_DEFS.some((layer) => layer.layer === explicit)) return explicit;
+  const asMode = modeValue.toLowerCase();
+  if (NIGHT_AUX_LAYER_DEFS.some((layer) => layer.layer === asMode)) return asMode;
+  return "";
+}
+
+function countyToBorough(county: unknown, city: unknown): string | null {
+  const name = String(county ?? "").trim().toLowerCase();
+  if (name === "new york") return "Manhattan";
+  if (name === "kings") return "Brooklyn";
+  if (name === "queens") return "Queens";
+  if (name === "bronx") return "Bronx";
+  if (name === "richmond") return "Staten Island";
+  const place = String(city ?? "").trim().toLowerCase();
+  if (place === "new york") return "Manhattan";
+  if (place === "brooklyn") return "Brooklyn";
+  if (place === "queens") return "Queens";
+  if (place === "bronx") return "Bronx";
+  if (place === "staten island") return "Staten Island";
+  return null;
+}
+
+function layerFeatureToRow(
+  feature: Record<string, unknown>,
+  layer: string,
+  startAt: string,
+): Record<string, unknown> {
+  const props = (feature.properties ?? {}) as Record<string, unknown>;
+  const geometry = (feature.geometry ?? {}) as Record<string, unknown>;
+  const coords = Array.isArray(geometry.coordinates) ? geometry.coordinates : [];
+  const lng = Number(coords[0]);
+  const lat = Number(coords[1]);
+  const mapped = Number.isFinite(lat) && Number.isFinite(lng);
+  const address = String(props.address ?? "").trim();
+  const city = String(props.city ?? "").trim();
+  return {
+    occurrence_id: String(props.id ?? `${layer}:${props.license_id ?? "unknown"}`),
+    title: String(props.title ?? props.name ?? "Location"),
+    start_at: startAt,
+    end_at: null,
+    timezone: "America/New_York",
+    borough: countyToBorough(props.county, props.city),
+    location_id: props.license_id ?? null,
+    display_location: address ? (city ? `${address}, ${city}` : address) : (props.title ?? "Location"),
+    lat: mapped ? lat : null,
+    lng: mapped ? lng : null,
+    public_category: layer,
+    public_subtype: props.license_type ?? props.category ?? layer,
+    certified_pin: mapped,
+    map_eligibility_state: mapped ? "MAP_READY" : "LIST_ONLY",
+    location_authority: props.source_name ?? "nycif_night_layer_cache",
+    display_disposition: mapped ? "MAP" : "LIST_ONLY",
+    is_major: false,
+    photo_pick: false,
+    significance: props.activity_label ?? props.operational_status ?? null,
+    source_dataset: `nycif-night-layer:${layer}`,
+    source_event_id: props.license_id ?? props.id ?? null,
+    public_url: props.source_url ?? null,
+  };
 }
 
 function nightLayers(
@@ -210,6 +274,7 @@ function nightLayers(
   return NIGHT_AUX_LAYER_DEFS.map((layer) => ({
     ...layer,
     url: `${NIGHT_LAYER_BASE}?layer=${encodeURIComponent(layer.layer)}`,
+    native_feed_url: `${SUPABASE_URL.replace(/\/$/, "")}/functions/v1/nycif-native-map-feed?mode=layer&layer=${encodeURIComponent(layer.layer)}`,
     auth: "publishable",
     feature_count: counts[layer.layer]?.feature_count ?? null,
     source_refreshed_at: counts[layer.layer]?.source_refreshed_at ?? null,
@@ -223,7 +288,9 @@ Deno.serve(async (req: Request) => {
   }
 
   const url = new URL(req.url);
-  const mode = normalizeMode(String(url.searchParams.get("mode") ?? "now"));
+  const rawMode = String(url.searchParams.get("mode") ?? "now");
+  const mode = normalizeMode(rawMode);
+  const layerId = requestedLayer(url, rawMode);
   const today = dayKey(new Date());
   const days = nextSevenDays(today);
   const requestedDay = String(url.searchParams.get("date") ?? "");
@@ -231,18 +298,23 @@ Deno.serve(async (req: Request) => {
   const sevenFirst = days[0].date;
   const sevenLast = days[6].date;
 
+  if (mode === "layer" && !layerId) {
+    return json({ error: "invalid_layer", allowed: NIGHT_AUX_LAYER_DEFS.map((layer) => layer.layer) }, 400, req.method === "HEAD");
+  }
+
   try {
     const [nowResult, tonightResult, sevenResult, statsResult, layerResult] = await Promise.all([
       db.rpc("nycif_native_map_feed_rows", { p_mode: "now" }),
       db.rpc("nycif_native_map_feed_rows", { p_mode: "tonight" }),
       db.rpc("nycif_native_map_feed_rows", { p_mode: "seven" }),
       db.rpc("nycif_native_map_feed_stats"),
-      db.from("nycif_night_layer_cache").select("layer, feature_count, source_refreshed_at"),
+      db.from("nycif_night_layer_cache").select("layer, feature_count, source_refreshed_at, geojson"),
     ]);
 
     if (nowResult.error) throw nowResult.error;
     if (tonightResult.error) throw tonightResult.error;
     if (sevenResult.error) throw sevenResult.error;
+    if (layerResult.error) throw layerResult.error;
 
     const nowRows = ((nowResult.data ?? []) as Record<string, unknown>[])
       .filter((row) => !explicitCancelled(row.title) && overlapsDay(row, today));
@@ -252,13 +324,27 @@ Deno.serve(async (req: Request) => {
       .filter((row) => !explicitCancelled(row.title) && overlapsSeven(row, sevenFirst, sevenLast));
     const dayRows = selectedDay ? sevenRows.filter((row) => overlapsDay(row, selectedDay)) : sevenRows;
 
+    const layerRows = (() => {
+      if (mode !== "layer" || !layerId) return [] as Record<string, unknown>[];
+      const cached = ((layerResult.data ?? []) as Array<Record<string, unknown>>)
+        .find((row) => String(row.layer) === layerId);
+      const geojson = (cached?.geojson ?? {}) as Record<string, unknown>;
+      const features = Array.isArray(geojson.features) ? geojson.features : [];
+      const startAt = new Date().toISOString();
+      return features
+        .filter((feature): feature is Record<string, unknown> => !!feature && typeof feature === "object")
+        .map((feature) => layerFeatureToRow(feature, layerId, startAt));
+    })();
+
     const selected = mode === "tonight"
       ? tonightRows
       : mode === "seven"
         ? sevenRows
         : mode === "day"
           ? dayRows
-          : nowRows;
+          : mode === "layer"
+            ? layerRows
+            : nowRows;
 
     const dayCounts = days.map((day) => ({
       ...day,
@@ -275,12 +361,13 @@ Deno.serve(async (req: Request) => {
     const auxLayers = nightLayers(layerCounts);
 
     return json({
-      schema_version: "NYCIF_NATIVE_MAP_FEED_V6",
+      schema_version: "NYCIF_NATIVE_MAP_FEED_V7",
       authority: "supabase_event_reader_rolling_v1",
       runtime_dependency: "supabase_only",
       generated_at: new Date().toISOString(),
       timezone: "America/New_York",
       mode: mode === "day" && selectedDay ? "day" : mode,
+      selected_layer: layerId || null,
       selected_date: selectedDay || null,
       window_start: mode === "seven" || mode === "day" ? sevenFirst : today,
       window_end_exclusive: mode === "seven" || mode === "day" ? addDays(today, 8) : addDays(today, 1),

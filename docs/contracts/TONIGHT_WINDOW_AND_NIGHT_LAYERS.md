@@ -43,7 +43,16 @@ Locked chips (also the iOS `SecondaryChip` set):
 | `dispensary` | Legal Cannabis Shops / Dispensaries | `nycif-night-layers?layer=dispensary` |
 | `liquor` | Liquor Stores | `nycif-night-layers?layer=liquor` |
 
-The native feed exposes them on `chip_rows.night` / `tonight_aux_layers` with a public `url`. iOS already renders those chips under Tonight; tap should fetch the GeoJSON with the publishable key, not show "Coming next".
+The native feed exposes them on `chip_rows.night` / `tonight_aux_layers` with:
+
+- `url` — GeoJSON from `nycif-night-layers?layer=…`
+- `native_feed_url` — same pins as `nycif-native-map-feed?mode=layer&layer=…` event rows (the iOS `EventService` path)
+
+Do **not** look in `event_collections` (NYFW only), `culture_place_beta_v1` (culture businesses), or DCWP. Authority is `nycif_night_layer_cache`:
+
+- dispensary: NYS Office of Cannabis Management / Buy Legal NY
+- liquor: NYS Liquor Authority `9s3h-dpkz`
+- 5pm: NYC 311 noise evidence matched to public-facing venues
 
 They are **not** hamburger/menu special collections. `nycif-special-calendars` / `event_collections` remain NYFW-style calendars.
 

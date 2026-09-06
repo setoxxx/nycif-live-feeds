@@ -70,3 +70,21 @@ enum NightLayerService {
         return try JSONDecoder().decode(NightLayerFeatureCollection.self, from: data).features
     }
 }
+
+extension EventService {
+    /// Preferred Tonight-aux path. Reuses EventService.makeEvent.
+    /// GET nycif-native-map-feed?mode=layer&layer=dispensary|liquor|5pm
+    static func fetchNightLayer(_ layer: String) async throws -> EventLoadResult {
+        var components = URLComponents(url: SupabaseService.nativeMapFeedURL, resolvingAgainstBaseURL: false)!
+        components.queryItems = [
+            URLQueryItem(name: "mode", value: "layer"),
+            URLQueryItem(name: "layer", value: layer),
+        ]
+        let request = authorizedRequest(url: components.url!)
+        let (data, response) = try await URLSession.shared.data(for: request)
+        guard let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) else {
+            throw EventServiceError.invalidResponse
+        }
+        return try decodeMapFeed(data)
+    }
+}

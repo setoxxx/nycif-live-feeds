@@ -28,7 +28,10 @@ def test_edge_function_reads_sql_tonight_and_exposes_night_layer_urls():
     assert 'id: "liquor"' in source
     assert 'id: "5pm"' in source
     assert "SUPABASE_SERVICE_ROLE_KEY" in source
-    assert "NYCIF_NATIVE_MAP_FEED_V6" in source
+    assert "NYCIF_NATIVE_MAP_FEED_V7" in source
+    assert 'mode === "layer"' in source
+    assert "native_feed_url" in source
+    assert "layerFeatureToRow" in source
 
 
 def test_contract_keeps_layers_off_the_event_corpus():
@@ -38,3 +41,5 @@ def test_contract_keeps_layers_off_the_event_corpus():
     assert "not `event_occurrences`" in text or "not event_occurrences" in text.lower()
     assert "nycif-night-layers?layer=dispensary" in text
     assert "nycif-night-layers?layer=liquor" in text
+    assert "event_collections" in text
+    assert "mode=layer" in text
