@@ -1,23 +1,23 @@
 {
   "ambiguous_promotions": 0,
-  "approximate_reused_count": 22631,
+  "approximate_reused_count": 22437,
   "authority": "durable_location_registry_v1",
   "borough_alias_keys": 1446,
-  "canonical_rows": 32066,
+  "canonical_rows": 31822,
   "dataset_alias_keys": 1438,
-  "exact_reused_count": 109,
+  "exact_reused_count": 110,
   "invalid_reuse_count": 0,
   "match_basis_counts": {
     "ambiguous_borough_alias": 4,
-    "borough_alias": 3,
-    "dataset_borough_alias": 22737,
-    "no_registry_match": 6771
+    "borough_alias": 1,
+    "dataset_borough_alias": 22546,
+    "no_registry_match": 6786
   },
-  "missing_source_authority_reused_count": 18,
+  "missing_source_authority_reused_count": 19,
   "operating_rule": "Resolve once, certify once, store durably, match aliases, reuse automatically, and revalidate only on conflict or authority change.",
   "precision_counts": {
-    "approximate": 22631,
-    "exact": 109
+    "approximate": 22437,
+    "exact": 110
   },
   "qa_pass": true,
   "registry_location_count": 1449,
@@ -27,9 +27,9 @@
     "already_exact": 1180,
     "ambiguous_borough_alias": 4,
     "missing_match_identity": 91,
-    "no_registry_match": 6771,
-    "not_standalone_public": 222,
-    "street_route_claim": 1058
+    "no_registry_match": 6786,
+    "not_standalone_public": 216,
+    "street_route_claim": 998
   },
-  "total_reused_count": 22740
+  "total_reused_count": 22547
 }
