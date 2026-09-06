@@ -1,0 +1,324 @@
+================================================================================
+NYCIF GOD VIEW TEMPLATE — NEWS DESK COMPLETION PROMPT
+================================================================================
+Bookmark date: 2026-07-16
+Purpose: Copy-paste this entire document into a new Cursor Cloud Agent (or human
+operator checklist) to finish landing News Desk + Parade Census into the God View
+template and Field Desk operator mode.
+
+Repos
+  setoxxx/nycif-live-feeds   (backend / feeds / digests — source of truth)
+  setoxxx/nycif-field-desk   (map + admin Pages — human push required)
+
+Read AGENTS.md in BOTH repos before any change.
+
+Prime directive: Do not publish bad data.
+God View / News Desk / checklist / census are OPERATOR tools.
+They must never silently become the public map.
+
+
+================================================================================
+1) MISSION (WHAT SUCCESS LOOKS LIKE)
+================================================================================
+
+Finish the God View template rollout for the News Desk lane:
+
+  A. Merge backend PR #179 so census + checklist + digest live on main
+  B. Wire/verify News Desk God View admin panel (same pattern as Civic God View)
+  C. Push Field Desk operator overlay so ?assignment=1 / ?desk=1 shows the desk
+  D. Confirm daily sync keeps regenerating artifacts fail-closed
+  E. Leave public map / location_cache / staged permit feed UNCHANGED
+
+Definition of done:
+  [ ] PR #179 merged to main (or equivalent green PR)
+  [ ] data/civic_people_facing_godview_digest.json on main includes:
+        news_desk_checklist + parade_census blocks with qa_pass true
+  [ ] Admin shows News Desk + Parade Census panel (read-only KPIs + links)
+  [ ] Field Desk ?assignment=1 loads checklist / census overlay
+  [ ] Field Desk WITHOUT ?assignment=1 / ?desk=1 shows NO News Desk UI
+  [ ] daily-people-facing-desk-sync.yml still fail-closed; protected files untouched
+  [ ] map_eligible false / promotion_allowed false everywhere on this lane
+  [ ] status/nycif-project-status.json updated to reflect News Desk checkpoint
+
+
+================================================================================
+2) GOD VIEW TEMPLATE (COPY THIS PATTERN FOR EVERY NEW LANE)
+================================================================================
+
+Every operator lane follows the same shape. News Desk must match Civic:
+
+  1. Source sync / extract          → staging artifacts under data/
+  2. Build staging feed/checklist   → report JSON with qa_pass
+  3. Integrity gate (pin / eligibility) → demote bad rows; never invent pins
+  4. God View digest bookmark       → data/*_godview_digest*.json
+  5. Admin panel (read-only)        → docs/field-desk-admin-deploy/admin/*
+  6. Field Desk deep-link           → ?assignment=1 or ?desk=1 only
+  7. Daily orchestrator allowlist   → scripts/run_daily_people_facing_desk_sync.py
+  8. Safety fields always present:
+       promotion_allowed: false
+       public_map_modified: false
+       location_cache_modified: false
+       staged_feed_modified: false
+       map_eligible: false   (News Desk / census until explicit promotion)
+
+Do NOT invent a second publish path. Do NOT load review artifacts as the public
+default feed.
+
+
+================================================================================
+3) WHERE WE ARE NOW (VERIFIED)
+================================================================================
+
+Main (already shipped):
+  - Civic people-facing intake + God View (PRs #171 / #172)
+  - Photographer Money-Day Desk v2 + viral recurrence + pin integrity + Shoot Day
+  - Discovery God View digest v02
+  - Daily desk sync workflow: .github/workflows/daily-people-facing-desk-sync.yml
+  - Admin panels: civic-godview-panel-v01, discovery-godview-panel-v02,
+    photographer-calendar-panel-v01, live-pipeline-panel-v02
+
+Open backend PR (DO NOT rebuild from scratch):
+  PR #179 — Citywide parade census + News Desk checklist (staging)
+  Branch: cursor/citywide-parade-census-bfb8
+  URL: https://github.com/setoxxx/nycif-live-feeds/pull/179
+
+Already implemented on that branch (verify, don't rewrite):
+  [x] data/nycif_citywide_parade_anchor_registry.json
+  [x] scripts/build_citywide_parade_census.py + citywide_parade_census_common.py
+  [x] data/citywide_parade_census_snapshot.json / _report.json (qa_pass)
+  [x] scripts/build_news_desk_assignment_checklist.py + news_desk_checklist_common.py
+  [x] data/news_desk_assignment_checklist.json / .csv / _report.json (qa_pass)
+      ~661 rows, today_count ~17, priority_unchecked ~514, map_ready ~497
+      map_eligible_count: 0 (correct)
+  [x] ODB street co-naming highest priority (permit 945819, Jul 25 Brooklyn)
+  [x] Wired into run_daily_people_facing_desk_sync.py (census → checklist)
+  [x] Civic God View digest fields: news_desk_checklist + parade_census
+  [x] Admin: docs/field-desk-admin-deploy/admin/news-desk-godview-panel-v01.js
+  [x] Field Desk package:
+        docs/field-desk-map-deploy/civic-people-facing-v01/field-desk-news-desk-v01.js
+        docs/field-desk-map-deploy/civic-people-facing-v01/field-desk-operator-layer-v01.js
+  [x] Tests: test_citywide_parade_census.py, test_news_desk_assignment_checklist.py
+
+Longer specs already on the PR branch (read if needed):
+  docs/NYCIF-NEWS-DESK-FULL-PROMPT.txt
+  docs/NYCIF-NEWS-DESK-NEXT-PROMPT.txt
+  docs/NYCIF-NEWS-DESK-NEXT-PROMPT.md
+
+
+================================================================================
+4) EXACT WORK TO COMPLETE (IN ORDER)
+================================================================================
+
+------------------------------------------------------------------------
+TASK 1 — Backend PR #179 merge readiness (nycif-live-feeds)
+------------------------------------------------------------------------
+Work on branch cursor/citywide-parade-census-bfb8 (or rebase onto latest main).
+
+1. Rebase/merge latest main if needed; resolve conflicts without touching protected files.
+2. Run:
+     python3 scripts/build_citywide_parade_census.py
+     python3 scripts/build_news_desk_assignment_checklist.py
+     python3 scripts/build_civic_people_facing_godview_digest.py
+     python3 -m pytest tests/test_citywide_parade_census.py \
+       tests/test_news_desk_assignment_checklist.py \
+       tests/test_civic_people_facing_intake.py \
+       tests/test_pin_integrity.py -q
+     python3 -m compileall scripts tools tests
+3. Confirm reports:
+     data/citywide_parade_census_report.json → qa_pass true
+     data/news_desk_assignment_checklist_report.json → qa_pass true
+     data/civic_people_facing_godview_digest.json includes news_desk_checklist
+       and parade_census with qa_pass true
+4. Confirm safety:
+     map_eligible false on ALL checklist/census rows
+     promotion_allowed false
+     git diff does NOT change:
+       data/location_cache.json
+       data/nycif_staged_live_events.json
+       data/staged_live_manifest.json
+       data/previous_staged_live_events_snapshot.json
+5. Update status/nycif-project-status.json:
+     current_phase → "News Desk + Parade Census (staging)"
+     active_prs / recent_prs for #179
+     next_action → Field Desk human push + admin God View verify
+     blockers still include: field-desk bot cannot push; Phase 2E unauthorized;
+       WordPress publish unauthorized; FOIL index empty
+6. Commit, push, keep/update PR #179. Ask Howard to merge when CI green.
+
+------------------------------------------------------------------------
+TASK 2 — Admin God View wiring (same template as Civic)
+------------------------------------------------------------------------
+Files (live-feeds deploy package → field-desk admin/):
+
+  docs/field-desk-admin-deploy/admin/news-desk-godview-panel-v01.js
+  docs/field-desk-admin-deploy/admin/civic-godview-panel-v01.js
+  docs/field-desk-admin-deploy/admin/index.html
+
+Required behavior:
+  - Read-only panel "News Desk + Parade Census (staging)"
+  - Loads data/civic_people_facing_godview_digest.json from main
+    (fallback branch cursor/citywide-parade-census-bfb8 until merge)
+  - KPI cards: checklist qa_pass, today_count, priority_unchecked_count,
+    parade census qa_pass / merged_total / priority_event_count, map_ready_count
+  - Links:
+      Assignment mode Field Desk URL
+      news_desk_assignment_checklist.json
+      citywide_parade_census_snapshot.json
+      checklist QA report
+  - No write / approve / promote / publish controls
+  - Script tag wired in admin/index.html (same style as civic/discovery panels)
+
+After merge to main, BRANCH_CANDIDATES in the panel should prefer "main".
+
+------------------------------------------------------------------------
+TASK 3 — Field Desk operator deploy (HUMAN PUSH — bot cannot push)
+------------------------------------------------------------------------
+cursor[bot] cannot push setoxxx/nycif-field-desk. Howard must copy/push.
+
+Copy from live-feeds into field-desk:
+
+  docs/field-desk-map-deploy/civic-people-facing-v01/index.html
+  docs/field-desk-map-deploy/civic-people-facing-v01/civic-patch-v01.js
+  docs/field-desk-map-deploy/civic-people-facing-v01/public-map-defaults-v01.js
+  docs/field-desk-map-deploy/civic-people-facing-v01/service-worker.js
+  docs/field-desk-map-deploy/civic-people-facing-v01/field-desk-operator-layer-v01.js
+  docs/field-desk-map-deploy/civic-people-facing-v01/field-desk-news-desk-v01.js
+  docs/field-desk-map-deploy/schema-v1-major-all-v01/app-schema-v1-major-all-v01.js
+  docs/field-desk-map-deploy/schema-v1-major-all-v01/event-feed-schema-v1.js
+  docs/field-desk-admin-deploy/admin/*  →  admin/
+
+Suggested field-desk branch name:
+  cursor/news-desk-staging-overlay-bfb8
+
+Hard rules:
+  - Operator layer / News Desk JS must no-op unless ?desk=1 or ?assignment=1
+  - Public visitors: no extra DOM, no News Desk network fetches, no UI
+  - Pins require backend certified_pin + map_ready AND client NYC-box recertify
+  - list_only / demoted rows stay in lists with LIST ONLY badge — never ocean pins
+  - Do not change Approved permit default feed behavior
+
+Verify URLs after Pages deploy:
+  Civic preview:
+    https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main
+  Assignment / News Desk:
+    https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&assignment=1
+  ODB money day (Jul 25 Brooklyn):
+    https://setoxxx.github.io/nycif-field-desk/?v=civic-people-facing-v01&resetFilters=1&feeds=main&mode=all&date=2026-07-25&assignment=1&borough=Brooklyn
+  Admin:
+    https://setoxxx.github.io/nycif-field-desk/admin/index.html
+    (or interim) https://setoxxx.github.io/nycif-live-feeds/admin/index.html
+
+QA checklist:
+  [ ] ?assignment=1 shows News Desk / Operator Desk UI
+  [ ] No ?assignment=1 → no News Desk UI
+  [ ] Checklist priority rows visible; ODB highest present
+  [ ] Parade census staging pins only in operator mode
+  [ ] list_only never plotted as markers when pin gate green
+  [ ] Admin News Desk panel loads digest KPIs from main after merge
+  [ ] WordPress https://nycinfocus.com/map/ unchanged
+
+------------------------------------------------------------------------
+TASK 4 — Daily sync confirmation (fail-closed)
+------------------------------------------------------------------------
+Workflow: .github/workflows/daily-people-facing-desk-sync.yml
+
+Must keep News Desk in the allowlisted orchestrator order after civic/photo builds:
+  ... → build_citywide_parade_census.py
+     → build_news_desk_assignment_checklist.py
+     → (major radar rebuild if already wired)
+     → build_pin_integrity_gate.py
+     → build_photographer_shoot_day_certified.py
+     → build_events_discovery_godview_digest_v02.py
+     → build_civic_people_facing_godview_digest.py
+
+Enforce:
+  - Protected file fingerprint check still fails the job if those files change
+  - news_desk + parade census qa_pass required for daily report qa_pass
+  - Commit only desk/staging artifacts, never protected feeds
+
+Optional offline verify:
+  python3 scripts/run_daily_people_facing_desk_sync.py --skip-network-sync
+
+
+================================================================================
+5) OUT OF SCOPE / FORBIDDEN UNLESS HUMAN EXPLICITLY SAYS SO
+================================================================================
+
+FORBIDDEN:
+  - Editing data/location_cache.json
+  - Editing data/nycif_staged_live_events.json / staged manifests
+  - Setting promotion_allowed true or map_eligible true for mass publish
+  - Phase 2E promotion scripts/runs
+  - WordPress /nycinfocus.com/map publish or plugin release
+  - Loading News Desk / census / GPS review artifacts as the public default feed
+  - Broad unrelated refactors
+
+Allowed later (separate authorization):
+  - Filling data/sapo_foil_operator_index.json after FOIL PDFs arrive (human)
+  - Expanding parade anchor registry as 2026 dates confirm
+  - Explicit "promote these approved rows" / "publish to public map"
+
+
+================================================================================
+6) ARTIFACT CONTRACT (RAW URLS AFTER MERGE TO MAIN)
+================================================================================
+
+God View digest (operator bookmark):
+  https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/civic_people_facing_godview_digest.json
+
+News Desk checklist:
+  https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/news_desk_assignment_checklist.json
+
+Parade census:
+  https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/citywide_parade_census_snapshot.json
+
+Daily sync report:
+  https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/daily_people_facing_sync_report.json
+
+Public staged feed (DEFAULT — do not replace with News Desk):
+  https://raw.githubusercontent.com/setoxxx/nycif-live-feeds/main/data/nycif_staged_live_events.json
+
+
+================================================================================
+7) FINAL RESPONSE FORMAT FOR THE AGENT
+================================================================================
+
+When done, report:
+  - Files changed (backend + deploy package paths)
+  - PR URL(s)
+  - Safety confirmation (protected files untouched; promotion_allowed false;
+    map_eligible false; public map unmodified)
+  - What Howard must run/push next (field-desk Pages)
+  - What remains unapproved/unpromoted
+
+Do not claim WordPress/public-map changes unless intentionally done and verified.
+
+
+================================================================================
+8) SHORT COPY-PASTE KICKOFF
+================================================================================
+
+Complete the NYCIF God View template for News Desk:
+
+1) Finish/merge live-feeds PR #179 (branch cursor/citywide-parade-census-bfb8):
+   parade census + news_desk_assignment_checklist + godview digest fields + tests.
+2) Verify admin news-desk-godview-panel-v01.js is wired like civic-godview-panel-v01
+   and reads civic_people_facing_godview_digest.json (main after merge).
+3) Prepare/push Field Desk package (human push — bot 403):
+   field-desk-news-desk-v01.js + field-desk-operator-layer-v01.js only under
+   ?assignment=1 / ?desk=1; public map unchanged.
+4) Confirm daily-people-facing-desk-sync keep census→checklist→godview fail-closed
+   and never touches location_cache / staged live feed.
+5) QA assignment mode + admin KPIs; leave WordPress public map alone.
+
+Read AGENTS.md in both repos. Use this file as the full completion contract:
+  docs/NYCIF-GODVIEW-NEWS-DESK-COMPLETION-PROMPT.txt
+
+Related longer specs on PR branch:
+  docs/NYCIF-NEWS-DESK-FULL-PROMPT.txt
+  docs/NYCIF-NEWS-DESK-NEXT-PROMPT.md
+
+
+================================================================================
+END OF PROMPT
+================================================================================
