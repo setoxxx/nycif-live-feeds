@@ -1,7 +1,8 @@
 name: Culture help-calendar daily pull
 
-# Staging-only public-help calendar ingest. Does not write production Supabase,
-# does not flip reader gates, does not deploy edges, does not invent events.
+# Public-help calendar ingest. Writes pending rows into
+# culture_calendar_occurrence_v1 when SUPABASE_SERVICE_ROLE_KEY is present.
+# Does not flip reader gates, does not deploy edges, does not invent events.
 #
 # Schedule: 6:00 AM America/New_York during EDT (UTC-4) = 10:00 UTC.
 # GitHub Actions cron is UTC-only. `0 10 * * *` is 6:00 AM EDT.
@@ -212,6 +213,45 @@ jobs:
               sys.exit(1)
           print("Fail-closed: publication stays off.")
           PY
+
+      - name: Load help-calendar staging into gated Supabase tables
+        id: calendar_load
+        env:
+          SUPABASE_URL: "https://oggwpvdirkrnzoolparx.supabase.co"
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: |
+          if [ -z "${SUPABASE_SERVICE_ROLE_KEY:-}" ]; then
+            echo "SUPABASE_SERVICE_ROLE_KEY missing; skipping live table load (staging artifacts still uploaded)"
+            echo "applied=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          python3 scripts/culture/load_calendar_civic_staging.py --dataset calendar --write
+          python3 - <<'PY'
+          import json
+          import sys
+          from pathlib import Path
+
+          report = json.loads(Path("data/culture/reports/calendar_civic_load_report.json").read_text(encoding="utf-8"))
+          print(
+              f"applied={report.get('applied')} calendar={report.get('calendar_row_count')} "
+              f"gates_touched={report.get('gates_touched')} "
+              f"settings_after_enabled={report.get('settings_after_enabled')}"
+          )
+          if report.get("gates_touched") is True:
+              print("loader must not touch reader gates")
+              sys.exit(1)
+          if report.get("publication_allowed") is True or report.get("would_publish") is True:
+              print("load report must stay unpublished")
+              sys.exit(1)
+          if report.get("settings_after_enabled"):
+              print("reader gates must stay false after load", report.get("settings_after_enabled"))
+              sys.exit(1)
+          if report.get("event_occurrences_modified") is True:
+              print("event_occurrences must stay untouched")
+              sys.exit(1)
+          print("Gates were not written. Calendar staging loaded behind the gate.")
+          PY
+          echo "applied=true" >> "$GITHUB_OUTPUT"
 
       - name: Enforce protected files untouched
         if: always()

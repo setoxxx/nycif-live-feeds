@@ -1,8 +1,10 @@
 # Culture ingest scripts
 
-Staging only. **Publication stays off.** These scripts write
-`data/culture/staging/` and `data/culture/reports/` locally. They do not write
-production Supabase, flip reader gates, deploy edges, or invent events.
+Staging first, then optional gated Supabase upsert. **Publication stays off.**
+Pullers write `data/culture/staging/` and `data/culture/reports/` locally.
+`load_calendar_civic_staging.py` may upsert pending rows into
+`culture_calendar_occurrence_v1` / `culture_civic_facility_v1`. It does not
+flip reader gates, deploy edges, or invent events.
 
 Daily 6:00 AM America/New_York (EDT) is wired in
 `.github/workflows/culture-help-calendar-daily.yml` (`0 10 * * *` UTC). During
@@ -27,7 +29,18 @@ python3 scripts/culture/pull_aspca_mobile.py --fixture tests/fixtures/culture/as
 
 # Fail-closed gate. Expected: qa_pass=true publication_allowed=false
 python3 scripts/culture/validate_before_publish.py
+
+# Map staging → live tables (dry-run). Add --write to upsert; gates stay false.
+python3 scripts/culture/load_calendar_civic_staging.py --dataset all
+
+# One-shot pull + load (live SODA where wired, else fixtures)
+python3 scripts/culture/backfill_calendar_civic.py --dataset all
+# SUPABASE_URL=https://oggwpvdirkrnzoolparx.supabase.co \
+# SUPABASE_SERVICE_ROLE_KEY=… \
+# python3 scripts/culture/backfill_calendar_civic.py --dataset all --write
 ```
 
-Weekly civic pullers (NYPD / FDNY / shelters) are not part of the daily job.
-See `docs/CULTURE_COMMUNITY_ENGINEERING_PLAN.md` for Howard’s schedule table.
+Weekly civic pullers (NYPD / FDNY / shelters):
+`.github/workflows/culture-civic-weekly.yml` (`0 10 * * 1` UTC).
+Howard flip recipe (after review only):
+`docs/CULTURE_CALENDAR_CIVIC_PUBLICATION.md`.

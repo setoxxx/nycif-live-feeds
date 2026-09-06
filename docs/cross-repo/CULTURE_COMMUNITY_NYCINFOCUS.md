@@ -23,7 +23,7 @@ Authority for the backend slice:
 2. **Sanctuary resources** — hotlines as a list/sheet (MOIA, NYC Care);
    pin only when the civic/resource feed returns certified coords.
 3. **Civic layers** — 👮 NYPD, 🚒 FDNY, shelters. New endpoint
-   `nycif-culture-civic` (not deployed in the live-feeds scaffold PR).
+   `nycif-culture-civic` (deployed, gated; empty until Phase C6).
 4. **8-day Culture calendar** — same chip pattern as Home
    Now / Tonight / 7 Days, Culture-sorted, from `nycif-culture-calendar`.
    Tonight = 17:00–23:59:59 America/New_York (same as events).
