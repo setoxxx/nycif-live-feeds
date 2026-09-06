@@ -77,6 +77,10 @@ That is why Today can show hundreds of listings: Parks pins when official coords
 
 Civic help-place snapshots (SNAP, Homebase, Workforce1, …) are **not** this event calendar. Do not dump them onto the public event map.
 
+## Culture community (gated, not public)
+
+Sanctuary-city Culture enrichment (curated storefronts, civic 👮/🚒/shelters, 8-day Culture calendar) is planned in [`docs/CULTURE_COMMUNITY_ENGINEERING_PLAN.md`](docs/CULTURE_COMMUNITY_ENGINEERING_PLAN.md). Publication stays off. Howard must drop the ~91 storefront CSV — this repo does not invent businesses. Cross-repo notes: [`docs/cross-repo/`](docs/cross-repo/).
+
 ## How we provide the data
 
 1. **6:00pm America/New_York** — `Discovery Feed Refresh` pulls the city APIs into GitHub snapshots (`data/raw_nyc_open_data_snapshot.json`, `data/nyc_parks_bigapps_events_snapshot.json`, `data/nyc_citywide_events_calendar_snapshot.json`).

@@ -1,0 +1,64 @@
+# `nycif-culture-calendar` (planned — not deployed)
+
+Outline only. Do not deploy from this scaffold PR.
+
+## Purpose
+
+8-day Culture calendar for the native app: **today + next 7 days** in
+`America/New_York`, same chip pattern as `nycif-native-map-feed`
+Now / Tonight / 7 Days, but Culture-sorted.
+
+Row kinds: worship services, cultural festivals, ASPCA Community Medicine
+van days, community clinics.
+
+ASPCA / waitlist programs: `waitlist_gated=true`, `pin_policy=zip_area_only`
+or `list_only`. Do not emit a street pin until a public site exists.
+
+## Suggested response
+
+```json
+{
+  "authority": "nycif-culture-calendar",
+  "schema_version": "culture-calendar-v1",
+  "calendar_publication_enabled": false,
+  "timezone": "America/New_York",
+  "today": "2026-09-06",
+  "window_days": 8,
+  "tonight_window": {
+    "start": "17:00:00",
+    "end_inclusive": "23:59:59",
+    "timezone": "America/New_York"
+  },
+  "chips": [
+    { "id": "now", "label": "Now" },
+    { "id": "tonight", "label": "Tonight" },
+    { "id": "seven", "label": "7 Days" }
+  ],
+  "occurrences": []
+}
+```
+
+Query: `?mode=now|tonight|seven` (default `seven`).
+
+Overlap rules should copy `nycif-native-map-feed`:
+
+- Now / today: overlap with today midnight–tomorrow midnight ET
+- Tonight: `start_at` in 17:00–23:59:59 ET today
+- 7 Days: overlap today through today+7
+
+## Fail-closed
+
+- `calendar_publication_enabled` false ⇒ `occurrences: []`
+- Exclude pending / sample / rejected
+- `map_ready` only with certified NYC coords and `pin_policy=certified_pin`
+- Do not write these rows into `event_occurrences`
+
+## Security
+
+Service role in the function only. No `service_role` in iOS. RLS deny-all.
+GET/HEAD/OPTIONS.
+
+## iOS
+
+New `CultureService.fetchCalendar()` after this function exists. Missing
+endpoint ⇒ empty Culture calendar, same explanation style as gated storefronts.
