@@ -14,32 +14,32 @@
   "approximate_certified_count": 0,
   "authority_observation_counts": {
     "projector_v3_approximate_recovery_v1": 22631,
-    "projector_v3_semantic_map_decision": 1376
+    "projector_v3_semantic_map_decision": 1371
   },
   "circular_reuse_authority_count": 0,
   "duplicate_alias_key_rows_merged": 26,
   "duplicate_location_id_rows_merged": 0,
   "event_rows_modified": false,
-  "generated_at_utc": "2026-09-06T03:40:41.240280Z",
+  "generated_at_utc": "2026-09-06T04:41:33.871065Z",
   "id_basis_counts": {
     "deterministic_location_signature": 1280,
-    "existing_location_id": 22727
+    "existing_location_id": 22722
   },
   "location_count": 1521,
   "locations_unique_on_location_id": true,
   "observed_authority_counts": {
-    "durable_location_registry_v1": 22727,
+    "durable_location_registry_v1": 22722,
     "projector_v3_semantic_map_decision": 1280
   },
   "precision_observation_counts": {
     "approximate": 22631,
-    "exact": 1376
+    "exact": 1371
   },
   "protected_cache_modified": false,
   "qa_pass": true,
   "schema_version": "NYCIF_LOCATION_REGISTRY_SYNC_V1_REPORT",
   "skipped_counts": {
-    "not_geography_assigned": 8284,
+    "not_geography_assigned": 8149,
     "reused_location_missing_source_authority": 18
   }
 }
