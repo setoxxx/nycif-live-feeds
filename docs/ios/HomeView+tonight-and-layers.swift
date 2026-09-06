@@ -2,12 +2,10 @@
 // Apply on setoxxx/NYCInFocus Features/NYCInFocus/Features/Home/HomeView.swift
 
 // 1) Tonight must call mode=tonight, not mode=now.
-//    Current main (SHA 966c651) has:
-//      EventService.fetchMapEvents(mode: mode == .tonight ? .now : mode)
-//    Replace with:
-            let result = try await EventService.fetchMapEvents(
-                mode: mode
-            )
+//    Current main HomeView (SHA c8187eb) already uses:
+//      EventService.fetchMapEvents(mode: mode)
+//    If a branch still has `mode == .tonight ? .now : mode`, replace it
+//    with `mode: mode` so Tonight hits nycif-native-map-feed?mode=tonight.
 
 // 2) Tonight aux chips must load night-layer pins through the native feed.
 //    Current main only sets overlayMessage = "Coming next: …"

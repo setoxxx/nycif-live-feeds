@@ -308,7 +308,11 @@ Deno.serve(async (req: Request) => {
       db.rpc("nycif_native_map_feed_rows", { p_mode: "tonight" }),
       db.rpc("nycif_native_map_feed_rows", { p_mode: "seven" }),
       db.rpc("nycif_native_map_feed_stats"),
-      db.from("nycif_night_layer_cache").select("layer, feature_count, source_refreshed_at, geojson"),
+      db.from("nycif_night_layer_cache").select(
+        mode === "layer"
+          ? "layer, feature_count, source_refreshed_at, geojson"
+          : "layer, feature_count, source_refreshed_at",
+      ),
     ]);
 
     if (nowResult.error) throw nowResult.error;

@@ -71,6 +71,7 @@ enum NightLayerService {
     }
 }
 
+// Add inside enum EventService in EventService.swift (makeEvent is private).
 extension EventService {
     /// Preferred Tonight-aux path. Reuses EventService.makeEvent.
     /// GET nycif-native-map-feed?mode=layer&layer=dispensary|liquor|5pm
@@ -82,9 +83,17 @@ extension EventService {
         ]
         let request = authorizedRequest(url: components.url!)
         let (data, response) = try await URLSession.shared.data(for: request)
-        guard let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) else {
+        guard let http = response as? HTTPURLResponse else {
             throw EventServiceError.invalidResponse
         }
-        return try decodeMapFeed(data)
+        guard (200...299).contains(http.statusCode) else {
+            throw EventServiceError.server(http.statusCode)
+        }
+        let payload = try JSONDecoder().decode(NativeMapFeedResponse.self, from: data)
+        return EventLoadResult(
+            events: payload.events.compactMap(makeEvent),
+            counts: payload.modeCounts,
+            mode: payload.mode
+        )
     }
 }
