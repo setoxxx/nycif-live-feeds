@@ -47,6 +47,12 @@ CALENDAR_KINDS = (
     "cultural_festival",
     "aspca_van",
     "community_clinic",
+    "blood_drive",
+    "mobile_clinic",
+    "job_fair",
+    "workshop",
+    "pet_mobile",
+    "resource_van",
     "other",
 )
 
@@ -62,6 +68,7 @@ RESOURCE_KINDS = (
 NYPD_DATASET = "y76i-bdw7"
 FDNY_DATASET = "hc8x-tcnd"
 SHELTER_DATASET = "g9nt-57fp"
+WORKFORCE1_EVENTS_DATASET = "kf2b-aeh5"
 
 ADDRESS_COLUMN_HINTS = (
     "address",
@@ -103,6 +110,11 @@ def default_reader_gates() -> dict[str, bool]:
         "shelter_layer_enabled": False,
         "pet_care_layer_enabled": False,
         "resource_layer_enabled": False,
+        "help_calendar_publication_enabled": False,
+        "blood_layer_enabled": False,
+        "mobile_clinic_layer_enabled": False,
+        "jobs_layer_enabled": False,
+        "college_layer_enabled": False,
     }
 
 
@@ -162,7 +174,7 @@ def load_rows_from_fixture(path: Path) -> list[dict[str, Any]]:
     if isinstance(payload, list):
         return [row for row in payload if isinstance(row, dict)]
     if isinstance(payload, dict):
-        for key in ("rows", "features", "precincts", "places"):
+        for key in ("rows", "features", "precincts", "places", "events", "occurrences"):
             value = payload.get(key)
             if isinstance(value, list):
                 return [row for row in value if isinstance(row, dict)]
@@ -241,6 +253,7 @@ __all__ = [
     "RESOURCE_KINDS",
     "SHELTER_DATASET",
     "STAGING_DIR",
+    "WORKFORCE1_EVENTS_DATASET",
     "TEMPLATE_CSV",
     "default_reader_gates",
     "fetch_soda_rows",

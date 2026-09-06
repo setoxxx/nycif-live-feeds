@@ -9,7 +9,18 @@ Outline only. Do not deploy from this scaffold PR.
 Now / Tonight / 7 Days, but Culture-sorted.
 
 Row kinds: worship services, cultural festivals, ASPCA Community Medicine
-van days, community clinics.
+van days, community clinics, plus rolling public-help:
+
+| Chip | Emoji | `occurrence_kind` |
+| --- | --- | --- |
+| Blood | 🩸 | `blood_drive` |
+| Mobile clinic | 🏥 | `mobile_clinic`, `resource_van` |
+| Jobs | 💼 | `job_fair`, `workshop` |
+| College | 🎓 | same kinds, `source_family=cuny` |
+| Pet care | 🐾 | `pet_mobile` |
+
+Help-layer gates (`help_calendar_publication_enabled`, `blood_layer_enabled`,
+…) default false. Do not deploy this function from the scaffold PRs.
 
 ASPCA / waitlist programs: `waitlist_gated=true`, `pin_policy=zip_area_only`
 or `list_only`. Do not emit a street pin until a public site exists.

@@ -29,6 +29,9 @@ Authority for the backend slice:
    Tonight = 17:00–23:59:59 America/New_York (same as events).
 5. **ASPCA / pet care** — calendar occurrences; do not drop a pin unless
    the feed says `map_ready` and the layer gate is on.
+6. **Rolling public-help chips** (server-gated): 🩸 Blood, 🏥 Mobile clinic,
+   💼 Jobs, 🎓 College. Same 8-day window. Pins only when that occurrence
+   already has certified coords. Do not cache invented fairs on device.
 
 ## Client contract (fail closed)
 
