@@ -1,35 +1,35 @@
 {
   "ambiguous_promotions": 0,
-  "approximate_reused_count": 22501,
+  "approximate_reused_count": 22631,
   "authority": "durable_location_registry_v1",
-  "borough_alias_keys": 1425,
-  "canonical_rows": 32306,
-  "dataset_alias_keys": 1417,
-  "exact_reused_count": 109,
+  "borough_alias_keys": 1446,
+  "canonical_rows": 32309,
+  "dataset_alias_keys": 1438,
+  "exact_reused_count": 114,
   "invalid_reuse_count": 0,
   "match_basis_counts": {
     "ambiguous_borough_alias": 3,
-    "borough_alias": 1,
-    "dataset_borough_alias": 22609,
-    "no_registry_match": 7035
+    "borough_alias": 5,
+    "dataset_borough_alias": 22740,
+    "no_registry_match": 6903
   },
   "missing_source_authority_reused_count": 18,
   "operating_rule": "Resolve once, certify once, store durably, match aliases, reuse automatically, and revalidate only on conflict or authority change.",
   "precision_counts": {
-    "approximate": 22501,
-    "exact": 109
+    "approximate": 22631,
+    "exact": 114
   },
   "qa_pass": true,
-  "registry_location_count": 1428,
+  "registry_location_count": 1449,
   "route_point_promotions": 0,
   "schema_version": "NYCIF_DURABLE_LOCATION_REUSE_V1",
   "skipped_counts": {
     "already_exact": 1280,
     "ambiguous_borough_alias": 3,
     "missing_match_identity": 95,
-    "no_registry_match": 7035,
+    "no_registry_match": 6903,
     "not_standalone_public": 222,
     "street_route_claim": 1061
   },
-  "total_reused_count": 22610
+  "total_reused_count": 22745
 }

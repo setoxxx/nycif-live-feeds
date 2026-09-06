@@ -8,34 +8,34 @@
       "age_hours": 0.02,
       "artifact": "data/staged_live_manifest.json",
       "fresh": true,
-      "generated_at_utc": "2026-09-05T23:39:57.908893+00:00",
+      "generated_at_utc": "2026-09-06T03:39:20.605908+00:00",
       "name": "Map-ready staged feed",
       "qa_pass": true,
       "record_count": 0
     },
     {
-      "age_hours": 0.01,
+      "age_hours": 0.02,
       "artifact": "data/schema-v1-discovery/approved/manifest.json",
       "fresh": true,
-      "generated_at_utc": "2026-09-05T23:40:04Z",
+      "generated_at_utc": "2026-09-06T03:39:27Z",
       "name": "Approved public discovery feed",
       "qa_pass": true,
       "record_count": 3959
     },
     {
-      "age_hours": 0.01,
+      "age_hours": 0.02,
       "artifact": "data/reports/discovery_approved_dedupe_report.json",
       "fresh": true,
-      "generated_at_utc": "2026-09-05T23:40:04Z",
+      "generated_at_utc": "2026-09-06T03:39:27Z",
       "name": "Cross-source dedupe evidence",
       "qa_pass": true,
       "record_count": 3959
     },
     {
-      "age_hours": 0.01,
+      "age_hours": 0.02,
       "artifact": "data/schema-v1-discovery/shared-cems-occurrence-dedupe-summary.json",
       "fresh": true,
-      "generated_at_utc": "2026-09-05T23:40:04Z",
+      "generated_at_utc": "2026-09-06T03:39:27Z",
       "name": "Shared-CEMS dedupe evidence",
       "qa_pass": true,
       "record_count": 3959
@@ -44,7 +44,7 @@
       "age_hours": 0.0,
       "artifact": "data/runtime_fallback_feed_report.json",
       "fresh": true,
-      "generated_at_utc": "2026-09-05T23:40:57.043134+00:00",
+      "generated_at_utc": "2026-09-06T03:40:20.215177+00:00",
       "name": "Emergency major fallback",
       "qa_pass": true,
       "record_count": 70
@@ -53,7 +53,7 @@
       "age_hours": 0.0,
       "artifact": "data/photographer_assignment_calendar_report.json",
       "fresh": true,
-      "generated_at_utc": "2026-09-05T23:40:44Z",
+      "generated_at_utc": "2026-09-06T03:40:07Z",
       "name": "News Desk money-day calendar",
       "qa_pass": true,
       "record_count": 51
@@ -62,7 +62,7 @@
       "age_hours": 0.0,
       "artifact": "data/photographer_viral_recurrence_report.json",
       "fresh": true,
-      "generated_at_utc": "2026-09-05T23:40:50Z",
+      "generated_at_utc": "2026-09-06T03:40:13Z",
       "name": "News Desk viral recurrence overlay",
       "qa_pass": true,
       "record_count": 19
@@ -78,20 +78,20 @@
     "blockers": [],
     "branch": "main",
     "check_exit_code": 0,
-    "generated_at_utc": "2026-09-05T23:40:57Z",
+    "generated_at_utc": "2026-09-06T03:40:20Z",
     "local_runtime_checks": {
       "newly_added_sort": {
         "age_hours": 0.0,
         "artifact": "data/nycif_new_events.json",
         "counts_valid": true,
         "duplicate_ids": 0,
-        "event_count": 1,
+        "event_count": 0,
         "fresh": true,
-        "generated_at_utc": "2026-09-05T23:40:41Z",
+        "generated_at_utc": "2026-09-06T03:40:04Z",
         "max_age_hours": 36.0,
         "missing_ids": 0,
         "name": "Newly added event-list sort",
-        "new_this_run": 1,
+        "new_this_run": 0,
         "qa_pass": true,
         "total_tracked": 7
       }
@@ -101,7 +101,7 @@
     "overlay_count": 3,
     "overlays": [
       {
-        "age_hours": 10.17,
+        "age_hours": 14.16,
         "count_aligned": true,
         "data_artifact": "data/nycif_active_nightlife_feed.json",
         "duplicate_ids": 0,
@@ -117,7 +117,7 @@
         "row_count": 155
       },
       {
-        "age_hours": 10.17,
+        "age_hours": 14.16,
         "count_aligned": true,
         "data_artifact": "data/nycif_legal_cannabis_dispensaries.json",
         "duplicate_ids": 0,
@@ -133,7 +133,7 @@
         "row_count": 243
       },
       {
-        "age_hours": 10.11,
+        "age_hours": 14.1,
         "count_aligned": true,
         "data_artifact": "data/nycif_smoke_vape_cannabis_correlation.json",
         "duplicate_ids": 0,
@@ -153,7 +153,7 @@
     "repository": "setoxxx/nycif-field-desk",
     "schema_version": "1.1.0"
   },
-  "generated_at_utc": "2026-09-05T23:40:57Z",
+  "generated_at_utc": "2026-09-06T03:40:20Z",
   "operating_rule": "Do not commit or publish a refreshed public feed unless status is READY.",
   "pipeline": {
     "calendar_parks_unaccounted_gap": 0,
@@ -196,7 +196,7 @@
     }
   },
   "rollback": {
-    "previous_public_feed_commit": "c8de1e86cbef4d60d8146ae15360dabdf5ab7109",
+    "previous_public_feed_commit": "ad5fecf4b7c3a86eacb6efca1604d9676cd37420",
     "strategy": "Failed runs do not commit; revert the READY refresh commit to restore this prior commit."
   },
   "rollback_rule": "A failed refresh leaves public feed JSON unchanged and publishes only a BLOCKED God View status.",
@@ -216,12 +216,12 @@
   "schema_version": "1.4.0",
   "sources": [
     {
-      "age_hours": 0.04,
+      "age_hours": 0.02,
       "artifact": "data/live_sync_report.json",
       "error": null,
       "fetch_mode": "live",
       "fresh": true,
-      "generated_at_utc": "2026-09-05T23:38:29.811028+00:00",
+      "generated_at_utc": "2026-09-06T03:38:55.572081+00:00",
       "live_fetch": true,
       "max_age_hours": 36.0,
       "name": "NYC permitted events",
@@ -234,12 +234,12 @@
       "error": null,
       "fetch_mode": "live",
       "fresh": true,
-      "generated_at_utc": "2026-09-05T23:39:52.384706+00:00",
+      "generated_at_utc": "2026-09-06T03:39:15.248121+00:00",
       "live_fetch": true,
       "max_age_hours": 36.0,
       "name": "NYC Citywide Calendar",
       "qa_pass": true,
-      "record_count": 2358
+      "record_count": 2361
     },
     {
       "age_hours": 0.02,
@@ -247,7 +247,7 @@
       "error": null,
       "fetch_mode": "live",
       "fresh": true,
-      "generated_at_utc": "2026-09-05T23:39:52.461270+00:00",
+      "generated_at_utc": "2026-09-06T03:39:15.328887+00:00",
       "live_fetch": true,
       "max_age_hours": 36.0,
       "name": "NYC Parks BigApps",
@@ -269,35 +269,35 @@
       "operating_rule": "A public-map release must contain canonical events, at least one certified MAP_READY marker, and at least one reader-safe event.",
       "qa_pass": true
     },
-    "canonical_event_count": 32306,
-    "generated_at_utc": "2026-09-05T23:40:57.967866+00:00",
-    "map_ready_count": 1389,
+    "canonical_event_count": 32309,
+    "generated_at_utc": "2026-09-06T03:40:21.300739+00:00",
+    "map_ready_count": 1394,
     "map_state_counts": {
       "GENERAL_AREA": 22631,
-      "LIST_ONLY": 8066,
-      "MAP_READY": 1389,
+      "LIST_ONLY": 8064,
+      "MAP_READY": 1394,
       "REVIEW_REQUIRED": 220
     },
     "news_desk": {
       "age_hours": 0.002,
       "browser_raw_repository_required": false,
-      "generated_at_utc": "2026-09-05T23:40:51Z",
+      "generated_at_utc": "2026-09-06T03:40:14Z",
       "money_count": 3,
       "unsupported_exact_pin_count": 0,
       "viral_count": 0
     },
     "projector_v3_qa_pass": true,
     "raw_accounting_pass": true,
-    "reader_safe_event_count": 9292,
-    "review_count": 30917,
-    "semantic_authority_row_count": 9566,
+    "reader_safe_event_count": 9298,
+    "review_count": 30915,
+    "semantic_authority_row_count": 9564,
     "semantic_staged_count": 0,
     "sources": {
       "citywide_calendar": {
         "age_hours": 0.018,
-        "count": 2358,
+        "count": 2361,
         "fetch_mode": "live",
-        "generated_at_utc": "2026-09-05T23:39:52.384706+00:00",
+        "generated_at_utc": "2026-09-06T03:39:15.248121+00:00",
         "non_empty": true,
         "qa_pass": true
       },
@@ -305,15 +305,15 @@
         "age_hours": 0.018,
         "count": 1300,
         "fetch_mode": "live",
-        "generated_at_utc": "2026-09-05T23:39:52.461270+00:00",
+        "generated_at_utc": "2026-09-06T03:39:15.328887+00:00",
         "non_empty": true,
         "qa_pass": true
       },
       "permitted_events": {
-        "age_hours": 0.041,
+        "age_hours": 0.024,
         "count": 28444,
         "fetch_mode": "live",
-        "generated_at_utc": "2026-09-05T23:38:29.811028+00:00",
+        "generated_at_utc": "2026-09-06T03:38:55.572081+00:00",
         "non_empty": true,
         "qa_pass": true
       }

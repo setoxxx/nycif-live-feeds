@@ -1,6 +1,6 @@
 {
   "schema": "official_daily_machine.v1",
-  "generated_at_utc": "2026-09-05T23:40:03.139401+00:00",
+  "generated_at_utc": "2026-09-06T03:39:25.674443+00:00",
   "today_nyc": "2026-09-05",
   "qa_pass": false,
   "failures": [
@@ -29,67 +29,27 @@
       "accounted": 28444,
       "unaccounted": 0,
       "pin_eligible": 26277,
-      "certified_pins": 26165,
-      "list_only": 112,
+      "certified_pins": 26176,
+      "list_only": 101,
       "pin_coverage_pass": false,
-      "added": 1739,
-      "still_present": 24538,
-      "removed_from_city": 582,
-      "added_occurrence_id_samples": [
-        "0095fe8dd69d94bc85aa3b75c16d36ef9b79e3cbc63a0191bea3a3935666db9a",
-        "00c1b67c734a7608290749e5e030ba85295d42422a0c27973b2a187f2b671d42",
-        "00d838e8bc77b72858d229a7112f43731ad2987be8e2d45113e880f52421e4b2",
-        "00d8df8a0a52ea72ac3acbb3d37c3fe491c0f9fbb8991841589da40f8fb92b90",
-        "00f4e8711f73a696d937e9eee7b71bd5d65f582ce9c8d062a0a484ec5909195c",
-        "0112f6380e12cae0102bc33788b36aa29afd22fffc81a5f539994c256075eefe",
-        "012b3845bb399a287017bb6135dc602a2bd96a440d3c684f6595c34f26d3a72f",
-        "014f29a2121f2afc249ab699ea170879a164bb576214e9236760c8cd380522bf",
-        "016819f4a5c98fa036c71b2688002b5d14f71a97831c70579893fbfa8cb1e769",
-        "01cd77ba24966e6646eb2b7fd89ed1d05eb8661793d080f0d6ae69575b71e55d",
-        "01ed12ec16a43826bff0b1173f50dc690217a515cace69d6fc0e2f0f1fc5f9fb",
-        "01fc30c4b6bae23c841b361f94db54989e24b31b47842f5cbe25c0f32e445532",
-        "0217946a54da155f8b70bba16a155b5352fdbc75e28978e1667a4f54631a7611",
-        "026bd3c458d37d036197295a523daa2f4f5de8897fbb590a7e4d423e6747cb29",
-        "0282eb752e56c4169de6e7f22a53d14091a6b43e8a02a26c16cd0145280ad9e4",
-        "02ef01c92698450c5dc42385f056ee2211e304d8217038d5294414f7254d97ca",
-        "0302fcf8771063fbf97ad094f621ed56e4faaf7d1189e1a4bfde64598db53e8e",
-        "03a0ced4f6bd0c44c9ddc9d19675a6366981463003184e868fd12109dc49c4be",
-        "03bfcdcd058479395c8bfc54611f6d2744e7da68e967727315c9d2dc06714d92",
-        "03d3093a626ef83acb427fffbb817559ee75f20cb6c221ba5d70aa5b804a7a8c",
-        "03e28fac8e1971db50fc2de390e62e239f6c24881d8fc26679e270c6591ac8ac",
-        "03e29acbcac9ad4228ea46e279df8b2311cc8e5f7bd95780f8a5272ce3ed45f9",
-        "03e693636f4b6aee2bd52f975431e43bf4dc127399827f11e20e3d237fc62530",
-        "03f1f26bf251ed2161f251bb545c073a52ed7a9ad0ac183f83b8e4dd315a6992",
-        "04025f49b118e0dc35568db04e724c8a56723f9a96e1169c1efdd78870df2457"
-      ],
-      "removed_from_city_occurrence_id_samples": [
-        "000c346db1b8ee248fd7103eb09c4e177500369ff1922ab8bf5ae6df2e2b2e45",
-        "0422ced8308d0739a041af1e7069f797f31c65d012701788f6582849c6687140",
-        "04444fb393f108e6d9fbe91904cc55cb08e6fecebd43ad8f6f236f3ed1854fd2",
-        "04ad9f97cddbfc052eec63eb46cf87815c212bb3908296e9152ea4dcbe4a86bd",
-        "04c33443f2b844aae912141f2d1bab2ff0a1f9769e932a76abbeeef7223a8bd0",
-        "04cf17b26d64757ea2f11eed0e6bf5ba1c869722d8beea523bc202c6e8e05d54",
-        "050a79f36e3df539bbbfd3a8add61c9bec44045c10ba66afd613b4a45cde42de",
-        "05b46ca4769a8eb3f14c925745ab3209c67c734885b9f74af21391b10c35ae90",
-        "062048b5bffeb2e84b0e6a4a63f59595c5ae073393d730cd6811d5b4e80bdf4d",
-        "068a3b1e8ee1c04cd3c6836189fb4a0ca16a20fda2fbee005676a61c3ab6375c",
-        "0700546ad9742d91023d25c21c42b3a51df5daa6639d642f0b5d1d8840207ab1",
-        "074640454c0c54ec2a35ce54b118c3192b62212b7e749a7a3d868f8696139f0a",
-        "074ffbe7440c417c1fb6bb99e251285700bdacdb387a2ff2506375879c5eb8d9",
-        "0764912f636115301f441612a4f9c858365e6d2a8e31bae6af5146ff79575481",
-        "08074607905cef10f5353f99e85598482c8b75861291266535744bf82994b186",
-        "08ef7a8040349202f65ab455a94fdab0823935defe7a556f746877310608be60",
-        "093f3a359bbe10d0fd1a698b95fedba0925da8002e726ce666936979d2ec59ac",
-        "09afd20cfd79afc0256cc380a173667df8f00c650d00199652809045f0b58117",
-        "09dbfd48ae37da84c24bec149f7b63cf31ca8006c925211120081aef49806beb",
-        "0a94c924e783f23bdf8983fde3dfafc9d5dd89251c0663481e3823d6314a3e69",
-        "0aa13ff33be7994e632bb6a9c39afa1e095993ec843fe3c84f0ac2984536bc93",
-        "0b1d5fb002ff9c7a41c5e74c37724a5db7ac6c23894992f47e59310358847d3f",
-        "0b239890490b93e5e6c043feb58e863185e3ecb74ea1d1b41cc8dba56b4cbe0e",
-        "0bbc8819e65b20aac1dde78c2c40bf4e10e2c1973ae5c4b773f10f57133b14ba",
-        "0c3241159d1352972a56f789ce7b8d00cb1c9b718cc5529584b824ad3f4b69fc"
-      ],
+      "added": 0,
+      "still_present": 26277,
+      "removed_from_city": 0,
+      "added_occurrence_id_samples": [],
+      "removed_from_city_occurrence_id_samples": [],
       "list_only_samples": [
+        {
+          "occurrence_id": "bd6cd23020430a3dd8e5313c3b1c6ea6deac3e86ec813bfafe54d70d0a5474f2",
+          "title": "Sukkos Season prep",
+          "display_location": "NEW UTRECHT AVENUE between 50 STREET and 51 STREET",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "1d57f636259c78aa8939587674abcc422db9d131bd1d61e135456c33c2ba2763",
+          "title": "Sukkos Season prep",
+          "display_location": "12 AVENUE between 50 STREET and 51 STREET",
+          "reason": "no_official_in_bounds_coordinate"
+        },
         {
           "occurrence_id": "4573df8b81830873fbea1992197bd99bff35ed640645dc8261f5dd5023f33916",
           "title": "The Back to School Street Play Invitational",
@@ -118,12 +78,6 @@
           "occurrence_id": "7a7611d0aa148a2f844e2b74ffbbe23736e891f41a1f883c3f248835295dd3f1",
           "title": "Richmond County Fair",
           "display_location": "RICHMOND ROAD between ST PATRICKS PLACE and ARTHUR KILL ROAD",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "77876060c762af3c4f21e2de020500e0ee54c63502977981a87bef82a3f5cb6f",
-          "title": "Theory 9 Back-to-School Health Fair",
-          "display_location": "WEST  231 STREET between SEDGEWICK AVENUE and KINGSBRIDGE TERRACE",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
@@ -175,12 +129,6 @@
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "5d545796cfb8b53375d00891f1b350cd4940463b1a65e46daedf20fe9afdb5b4",
-          "title": "Peppermayo Truck",
-          "display_location": "BROADWAY between SPRING STREET and BROOME STREET",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
           "occurrence_id": "2656220d14b95715d0a0a429500bf9219feb0aa9f23673738a34d35a40c39bdc",
           "title": "Tennis",
           "display_location": "Pier 42: Tennis-15",
@@ -193,21 +141,9 @@
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "41809bd8b4ec21eb04b572c642b919c53a7714662ea25818fe23336f72f5310f",
-          "title": "Ice Magazine No. 3 Launch - Morton St.",
-          "display_location": "MORTON STREET between BLEECKER STREET and 7 AVENUE SOUTH",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
           "occurrence_id": "e2e3c8b691a99d607554b5d73a90670b9647b2f83c7285c5a3878458deaf26d5",
           "title": "sukkos 2026",
           "display_location": "HEYWARD STREET between LEE AVENUE and BEDFORD AVENUE",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
-          "occurrence_id": "04126b8eb5afdee80b0adff40bbac93e7b87fdccc860f18d1bb3119cb85e8e07",
-          "title": "Starbucks 1",
-          "display_location": "WEST   42 STREET between 5 AVENUE and 6 AVENUE",
           "reason": "no_official_in_bounds_coordinate"
         },
         {
@@ -229,15 +165,27 @@
           "reason": "no_official_in_bounds_coordinate"
         },
         {
-          "occurrence_id": "ebc37ecbbe7f7e58f7a601021a785b5e5f066aca46335d1692312ad20e2623b6",
-          "title": "Moncler Store Opening - E. 58th St.",
-          "display_location": "EAST   58 STREET between 5 AVENUE and MADISON AVENUE",
-          "reason": "no_official_in_bounds_coordinate"
-        },
-        {
           "occurrence_id": "1e2dfd21c8ce6f55e79e99cffb2aa2701b51122e72f53c861d041e4033b6ba6d",
           "title": "Jazz at Jitu",
           "display_location": "Jitu Weusi (Putnam) Plaza: Jitu Weusi Plaza Putnam Ave between Fulton Street and Grand Ave",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "83afc566b1f3f07ce60e8562997ddb43788db2cbc40df20def71c1d43b56c43f",
+          "title": "Fragrance Launch - Stephan Weiss Studio: 711 Greenwich St.",
+          "display_location": "GREENWICH STREET between WEST   10 STREET and CHARLES STREET,  CHARLES STREET between GREENWICH STREET and HUDSON STREET",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "8b0d57eef8eb449c91b427ebc8721ca418d2d4c1c971d770211c5ee15e45ffbb",
+          "title": "CHIPS Distribution",
+          "display_location": "Kensington Plaza: Kensington Plaza CHURCH AVENUE between BEVERLY ROAD and MCDONALD AVENUE",
+          "reason": "no_official_in_bounds_coordinate"
+        },
+        {
+          "occurrence_id": "0cdb7b927b7e8303980ba3271cddd80915fc72fd77cadb74ac81662f67616e5f",
+          "title": "Tennis",
+          "display_location": "Pier 42: Tennis-15",
           "reason": "no_official_in_bounds_coordinate"
         }
       ],
@@ -404,63 +352,11 @@
       "certified_pins": 1280,
       "list_only": 15,
       "pin_coverage_pass": true,
-      "added": 180,
-      "still_present": 1115,
-      "removed_from_city": 97,
-      "added_occurrence_id_samples": [
-        "0130ac2f0eb7e531e2f771f4097c000d915bc8712da1084c568f7684e07f59d2",
-        "015848f432a96f873a4dc87e8078e78fba51403e1902097e14c438fe8ca03b7e",
-        "02f5c5c7da1ecc22929640e1b570a7f57d1fd9ef13ae2a8be8c199602e935c14",
-        "04c4f692db9487b89b1418306c8b28a7ffb40c6e480804790fafd101a86818cd",
-        "0520e740866dd8b1858294c8fd9e40d0d759fbc88532f58ee2e6a89fcb6f050d",
-        "06058f77dbbaa0ad10eae047821f7f539a729ba35c1fe9e9dc39465083f36844",
-        "06b61ad1d9842f5e0954dc664903b18193fa854a3850bd82ca1f067484632844",
-        "0b1968c44af94dce1de9198a7c3163eca2c5c1a9d93e2649a695eab26b993952",
-        "0c2bbc6bb7549b2efcd0b79f97f868f36170b93142aada3f40bf511b291d2944",
-        "0d30bf1e87f15a932fe6a9dae78b2c071fe2283a434b8d27db9924c1ccc27376",
-        "0dbedda57d6e611cd37b963ca22af987a1177fcbf1dd8ebc7832f4fdab3c4aad",
-        "0e6b63bf7928c30d3846b80d8fc57c4d1673b02fbce571ab67d65a3b6cbf22f3",
-        "0f00bc2543e1cb44c9d01ace8d244d1393c6a6c46415cd8de29be44519a22464",
-        "0fb3e5b0cf5b374fc0dfa180c9f9189bec201594b1ab9cdbd6edafc303d50eb6",
-        "11c0eb9c645322a4e999f1fd19c201d6026c665f3794a4f624ea74d25418a349",
-        "122ded49b72ef17eb6d9f9250fef40d064704a06061576ad180298c0f41e556a",
-        "140891ab94226b1fb47c13ea395f4818550398b5cab91e5ea273649772de38cf",
-        "15ce31f220cd97e5dc178e534a8e08e53182d99ea3d81d347ff06caa2e887a49",
-        "169d3a279d8cbfc75281202a21b2119a64fc32128433d93b2ba163b6cf6ad526",
-        "184282f009f33c0bceb1ad8f6ad954abfe0e10baf2307f281f0e036a01021f7f",
-        "1873092abfbb3fbc894a13954e7a9e3dbbc965bb3f18162b2d6055427247c236",
-        "187a84fb2ff67b904c3a917771c2400aa86d4437a0a15d76222541d4a9c25d85",
-        "1a33ebdade5baa4af72e40212061a19aac05b4e29c33271c69d40bcdecaddb86",
-        "1b72a3b0c1a7f3242809ccae90c46e1cbd5aae4f239eba80f5ef36ca23077373",
-        "1d336b6c6e431b42310517f3aba4e6fef26216c663389ac7b9f3ee208cc91df9"
-      ],
-      "removed_from_city_occurrence_id_samples": [
-        "0841204869e8c3f4f67307ca84e95842c7496f7bf730c39e897ed50e3d79104b",
-        "0ea6a2ec1ee1da59839b165ca96e193cc675f57b795bc89545f2212b52cdcc90",
-        "10d9c67813ee0225e223cf58abcbdc03dd62a58b9f46b9b64a31ed999c10cb5c",
-        "1269652956bc9bb51e2e88024257ab30aad6adf3026d405455a4dfdefd7562bb",
-        "158e6f8cb7e9e5858802d2a24f085463072e3b622b77e473aa22beee846e2fb2",
-        "194a06670dd77b2e7f50cbe695eedc3c13cd7576a2b0bb884264e540c9e5874d",
-        "197515b701f8692529992ea0cc3712cd524d84f6b4d6db979b4883dae48fa306",
-        "1bfd52efa5c986febc400da912f45163bb80802a1a99cf76df1828218b0a0fc5",
-        "1c1c53b65eec116123cecd3f384b64299655b3e03967ddeb0469cbdedc620aee",
-        "2044b4d1c93af0c5672a3ca1abe06b28f45f9b77d84a8f5104f85d2efe06fa92",
-        "209d856f1ddfcd7188eab61645e990350dfca42f94c03f2888c8f746284cf5b0",
-        "250de70b521e52a480336d018a18e807904aa0e3d6c0c355802976fe46e73c08",
-        "27bd45eaad5260b77cd24f02d994d5e8ea3345198e72d47746530f9c1f7a7430",
-        "2e4a3eb41f563b3822a94fe7049862df7de8e4bc28af514b7407d3d2f0dea44d",
-        "310e2396b8f67ba852025b611410d08bc5ee9e259657957b0a0d0d6521a44c18",
-        "33be515c45069e0623ef29608fca22d343867fbb1a69acec0656f401cb85ad3b",
-        "34ea9a3e3e02bf4d22f5565afa6d47849c9951757b511142ad11315d97bcd526",
-        "34f684c9b87b6fa9c3467768b76a859b9e94a3c90cf4c0f76dfdbbf58fd5f146",
-        "3549d6e8159b308f5947cbd9a3aa7ce71344e9266c156374af001a9cf38ab8d6",
-        "36d2bcde78de9ee6f7e626f84ed5897243d4ef9a68ef35d60734e5aa3a142934",
-        "397fa2bbc7ff4a95beff82aa3c4ff5a296bda22f2c9dadfd1a9b24d7f8788e0c",
-        "3c3e3c73427dc00eb98406d6fb72b0408e491377735458d6b615f176ed245f32",
-        "4118d14eedce93e73605fb30d2d9eee6a336c022ddea892a6da7e3939e6c8888",
-        "42b232ade2f84503e5ca370de2eb09d35ee07a5e6b68585affc5bd6b4f413799",
-        "4328d168fc47c1b4fb148adbc4fbdfe4fe8ee4b05d6241e3af1ea0ccf400a1af"
-      ],
+      "added": 0,
+      "still_present": 1295,
+      "removed_from_city": 0,
+      "added_occurrence_id_samples": [],
+      "removed_from_city_occurrence_id_samples": [],
       "list_only_samples": [
         {
           "occurrence_id": "f831ed6d0125959e8e67488ab417a9b944e0eaf960bdfc54a92e9bede2f74c9d",
@@ -587,69 +483,24 @@
       ]
     },
     "nyc-citywide-events-calendar-api": {
-      "snapshot_rows": 2358,
-      "accepted": 2358,
+      "snapshot_rows": 2361,
+      "accepted": 2361,
       "rejected": 0,
-      "accounted": 2358,
+      "accounted": 2361,
       "unaccounted": 0,
       "pin_eligible": 0,
       "certified_pins": 0,
-      "list_only": 2358,
+      "list_only": 2361,
       "pin_coverage_pass": true,
-      "added": 22,
-      "still_present": 2336,
-      "removed_from_city": 122,
+      "added": 3,
+      "still_present": 2358,
+      "removed_from_city": 0,
       "added_occurrence_id_samples": [
-        "072488e1f1014ad99fde72000fcd0a8ae389a6de624e79c6ed4f9cff31249f1a",
-        "0a852ce464debd7ac8e710c76c1136b66002db003ad48365afe1a70c413320d8",
-        "1a4632f908ed1338fba48804a54cfa66409809e21c0b557d776d9f348ebbb7b6",
-        "2c65dc9613692bb1cfae0978a743ba8238d00a73ffb7e712648a3cc879ab681c",
-        "2c713e1799ab420cff5b1e6a3cf1d0dab359c24e9806fbe5586d41ca333b9803",
-        "3bb92319cedbb8bf98edda2b898175efdd6e771084f4f2a20a4ed351c71d720b",
-        "3df92ec9573b1864cedb79a874a5c3611dde5c41cff608321acd16b6be68a1b1",
-        "441456e70463d3c6f165cbbd3a64778b94d5997821e8976687b27235370a3450",
-        "464974608af91c6de2171604c7e2a305234543691783d60ad6ed3fcb70d2f4ce",
-        "511e51c79b8d8a9c6ab8358e3aa37721c05a8ec2f828a32201eeb4d4218fda24",
-        "531ccc4c6e792302b80fda3cda3acc06965b426070f63d1b4bc723615bcfde40",
-        "6434d35934cb90ae581b84c4df361b641df6f850790521bd54c9504536a1bf6d",
-        "653a9a1f384b92baba4ce94a3c8fdd344bbce491906c53b91d840872cfd81229",
-        "705872f2d260ab0e0d76c537d071d3375c1778dd7081d4c7708d66e59b3efecf",
-        "75be4913faf4f09be2ac9c1982298da6af54198d66aa8aa4d437792b9d1a59e5",
-        "91f0e32b30f4969075e87ec8ea7a38b42ef0450f70e71b487bb85b06968ff79c",
-        "993d2ead632a8a4cd2b9fc7b26ec98bced8417e4cc1d7641838b1cbdb679b30b",
-        "a020d4854dc695e4d863c3a4985dcea8dbc079edf3ae219c13a74d7925f08eb0",
-        "afaf26cf22e17161506bc07f94618df5eaaeb798bda75280d13ec17170e24798",
-        "d71aac576656d95652fc0964629ec5f496acf1f1912fc3da0ffe5c6c0c750c10",
-        "e1de384ab968753df371dfa44c5835b70e517449a09a221352b837ecff56b487",
-        "fc71d4e7461aa3ce049f8f7ce2f988cc820256a7a11a1236799441225de56af5"
+        "2cb06777bf8460381a3fc59a6654da07d41891d18708e891c2d93b44cf0e82b4",
+        "728980077d71b4fdde550ff2b269af4eacb90ae9b4ba4a19e309a52804ff4034",
+        "b0edcb4310d1626d0fc32a074192319457db2132aba82e5286fc343012763aca"
       ],
-      "removed_from_city_occurrence_id_samples": [
-        "0034c4d98db732e55be6179428b7691dcfb17b2918ee307eeb0182e1514a6424",
-        "049af52a3291df29dd894ae9407cf3ad1f06d5f774ea8b0016a02d562435ea4a",
-        "06f4656831e053f7aa2abe6102531b803202d9a661a6912352fe97ccd1095251",
-        "0816e5d1512e84b3f6ca8103f072aa53141ed89c8fa7dedbd0b2849e3045307c",
-        "0949b2663af91012f4e7d656ff2da53d9f98197cca432f80e5f79879e18b7b62",
-        "09ccecd9473983856957c957c073f3a2e36ef24c36886ab910f5f57ca4794f31",
-        "0c820ac018e849eb7b82c11587b3945f59de693b460a5393fa6cd9a1a11aa16a",
-        "0d3754cc78bf2c682c1675191ec1408800a535ccf63d58ad2ecde4586d8bcc87",
-        "0e9d3652734db78ed53a490f99359a6e2e8f9d9e2934d9e97d83f876c7d52419",
-        "0f2cd676c12304540b9a953a822579cb3f914be9c1cccf3ec1c4cae7fac0808b",
-        "1280fee013860c2f5ae17271bc3e10baef86bd6eae0f45bad38a2f205236796e",
-        "128387db151e4d03bc426a67fbb910b906b44e30d3236e822db671d58aa914d8",
-        "12d14a800b48776df8e78824262b03e6bece6316bf693a1f2b2a4245162f5157",
-        "18538f8278d33d2dde4543615e8b46597832080ae0c75d60e7c50120326854c8",
-        "19c10626ecf97f6c0460f55ab9ea9e8f1e53a109f123fcedbb51a6fa0afdb10c",
-        "1e4bf5814cb179d366d67c2fd8e2b31913ccc4e15ec8074ab29c298e02f1af6f",
-        "1e62a29ebb5e1a742301a5edcebc09be76b19723613206b2f06c92ca7241d270",
-        "1f38462a879b90c5a936b020919aee4285a6672ae1fcec4b0332f3e441f65ebd",
-        "1f5a10f1dfa04efa97bf7233e10086b5eecedf85d0605c67a065d8661155edce",
-        "20630296485cd9eea26cc79147bdce1a5e08a948036a1e01f9ba8205e58a53cb",
-        "238227c797bb395dc46644cea8292138fd7f2cfbb0063dd98672dbc044721b61",
-        "23dbb022944f280348c511c42419a2ff20b56519c770f0e2be482487843e10bb",
-        "254f3d86bfc112e859edd8b651228a0bcf5a47318309cb72e693c1e803ec91b4",
-        "273d8d22e4d073921c46f1adb4ed2560321cf34c353242fbf161b21ccbd00377",
-        "277fd4ad6ce52388b41e5b54e4fa556e726dc7e144ee38f8b776614e5739d388"
-      ],
+      "removed_from_city_occurrence_id_samples": [],
       "list_only_samples": [
         {
           "occurrence_id": "541ec8bcd390fc4f27be5c24c83eaa82fa76815ec7e2065af9c81483b3e2fda8",
@@ -978,8 +829,8 @@
     {
       "source_dataset": "tvpp-9vvx",
       "pin_eligible": 26277,
-      "certified_pins": 26165,
-      "missed": 112
+      "certified_pins": 26176,
+      "missed": 101
     }
   ],
   "invented_pins": [],
