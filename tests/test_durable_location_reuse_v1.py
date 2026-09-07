@@ -3,7 +3,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.apply_durable_location_reuse_v1 import apply
+from scripts.apply_durable_location_reuse_v1 import apply, load_registry
 
 
 def event(location: str, *, dataset: str = "fixture", borough: str = "Brooklyn"):
@@ -198,6 +198,106 @@ class DurableLocationReuseTests(unittest.TestCase):
         )
         self.assertEqual(report["missing_source_authority_reused_count"], 0)
         self.assertEqual(report["exact_reused_count"], 1)
+
+    def test_merged_alias_datasets_are_indexed_for_reuse(self):
+        stored = location("locv1:gladwin", "approximate")
+        stored_alias = alias(
+            "locv1:gladwin",
+            "Walter Gladwin Park Walter Gladwin Park",
+            dataset="tvpp-9vvx",
+        )
+        stored_alias["metadata"] = {
+            "merged_source_datasets": [
+                "nyc-citywide-events-calendar-api",
+                "tvpp-9vvx",
+            ]
+        }
+        output, report = self.run_apply(
+            [event(
+                "Walter Gladwin Park Walter Gladwin Park",
+                dataset="nyc-citywide-events-calendar-api",
+            )],
+            registry([stored], [stored_alias]),
+        )
+        self.assertEqual(output[0]["location_id"], "locv1:gladwin")
+        self.assertEqual(output[0]["nycif"]["location_reuse_match_basis"], "dataset_borough_alias")
+        self.assertEqual(report["approximate_reused_count"], 1)
+        self.assertEqual(report["total_reused_count"], 1)
+
+    def test_merged_alias_datasets_fail_closed_instead_of_stealing_another_location(self):
+        gladwin = location("locv1:gladwin", "approximate")
+        other = location("locv1:other", "approximate")
+        other["latitude"] = 40.66
+        other["longitude"] = -73.94
+        gladwin_alias = alias(
+            "locv1:gladwin",
+            "Walter Gladwin Park Walter Gladwin Park",
+            dataset="tvpp-9vvx",
+        )
+        gladwin_alias["metadata"] = {
+            "merged_source_datasets": [
+                "nyc-citywide-events-calendar-api",
+                "tvpp-9vvx",
+            ]
+        }
+        other_alias = alias(
+            "locv1:other",
+            "Walter Gladwin Park Walter Gladwin Park",
+            dataset="nyc-citywide-events-calendar-api",
+        )
+        output, report = self.run_apply(
+            [event(
+                "Walter Gladwin Park Walter Gladwin Park",
+                dataset="nyc-citywide-events-calendar-api",
+            )],
+            registry([gladwin, other], [gladwin_alias, other_alias]),
+        )
+        self.assertIsNone(output[0].get("location_id"))
+        self.assertIsNone(output[0]["latitude"])
+        self.assertEqual(output[0]["nycif"]["map_eligibility_state"], "LIST_ONLY")
+        self.assertEqual(report["total_reused_count"], 0)
+        self.assertEqual(report["skipped_counts"]["ambiguous_dataset_borough_alias"], 1)
+
+    def test_load_registry_indexes_every_merged_source_dataset(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            path = Path(temp_dir) / "registry.json"
+            path.write_text(
+                json.dumps(
+                    registry(
+                        [location("locv1:gladwin", "approximate", borough="Bronx")],
+                        [{
+                            "location_id": "locv1:gladwin",
+                            "raw_alias": "Walter Gladwin Park: Walter Gladwin Park",
+                            "normalized_alias": "walter gladwin park walter gladwin park",
+                            "source_dataset": "tvpp-9vvx",
+                            "metadata": {
+                                "merged_source_datasets": [
+                                    "nyc-citywide-events-calendar-api",
+                                    "tvpp-9vvx",
+                                ]
+                            },
+                        }],
+                    )
+                ),
+                encoding="utf-8",
+            )
+            _locations, dataset_index, _borough_index = load_registry(path)
+        self.assertEqual(
+            dataset_index[(
+                "walter gladwin park walter gladwin park",
+                "tvpp-9vvx",
+                "bronx",
+            )],
+            {"locv1:gladwin"},
+        )
+        self.assertEqual(
+            dataset_index[(
+                "walter gladwin park walter gladwin park",
+                "nyc-citywide-events-calendar-api",
+                "bronx",
+            )],
+            {"locv1:gladwin"},
+        )
 
 
 if __name__ == "__main__":

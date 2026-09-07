@@ -3,6 +3,7 @@ import unittest
 
 from scripts.sync_supabase_location_registry_v1 import (
     REUSE_AUTHORITY,
+    alias_source_datasets,
     build_payload,
     duplicate_conflict_keys,
     prefer_location,
@@ -197,6 +198,11 @@ class LocationRegistrySyncTests(unittest.TestCase):
         alias_keys = [(row["location_id"], row["normalized_alias"]) for row in unique["aliases"]]
         self.assertEqual(len(loc_ids), len(set(loc_ids)))
         self.assertEqual(len(alias_keys), len(set(alias_keys)))
+        self.assertEqual(
+            set(alias_source_datasets(alias)),
+            {"nyc-citywide-events-calendar-api", "tvpp-9vvx"},
+        )
+        self.assertIn(alias["source_dataset"], alias["metadata"]["merged_source_datasets"])
 
     def test_build_payload_merges_cross_dataset_alias_conflict_keys(self):
         calendar = event(

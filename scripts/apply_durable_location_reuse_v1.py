@@ -19,9 +19,11 @@ from typing import Any
 try:
     from scripts.discovery_v02 import extract_rows
     from scripts.nyc_location_resolver import coordinate_matches_borough
+    from scripts.sync_supabase_location_registry_v1 import alias_source_datasets
 except ModuleNotFoundError:  # pragma: no cover
     from discovery_v02 import extract_rows  # type: ignore[no-redef]
     from nyc_location_resolver import coordinate_matches_borough  # type: ignore[no-redef]
+    from sync_supabase_location_registry_v1 import alias_source_datasets  # type: ignore[no-redef]
 
 ROOT = Path(__file__).resolve().parents[1]
 CANONICAL = ROOT / "data" / "events_discovery_accepted_canonical_v02.json"
@@ -96,10 +98,9 @@ def load_registry(path: Path) -> tuple[dict[str, dict[str, Any]], dict[tuple[str
         location = locations.get(loc_id)
         normalized = normalize_alias(alias.get("normalized_alias") or alias.get("raw_alias"))
         borough = normalize_alias(location.get("borough") if location else "")
-        dataset = str(alias.get("source_dataset") or "").strip()
         if not loc_id or not normalized or not borough or location is None:
             continue
-        if dataset:
+        for dataset in alias_source_datasets(alias):
             dataset_index[(normalized, dataset, borough)].add(loc_id)
         borough_index[(normalized, borough)].add(loc_id)
     return locations, dataset_index, borough_index
